@@ -88,8 +88,8 @@
                             invisible="state != 'draft'"/>
                     <button name="action_settle" type="object"
                             string="Tất toán thủ công"
-                            invisible="state not in ('issued','extended')"
-                            confirm="Xác nhận tất toán BL? Hạn mức facility sẽ được khôi phục. (Có thể bỏ qua nếu chưa thanh toán đủ — bình thường nên đợi auto-settle khi đủ phí + ký quỹ + phạt.)"/>
+                            invisible="state not in ('issued','extended','forfeited')"
+                            confirm="Xác nhận tất toán BL? Hạn mức facility sẽ được khôi phục. (Có thể bỏ qua nếu chưa thanh toán đủ — bình thường nên đợi auto-settle khi đủ phí + ký quỹ + phạt + tiền gốc.)"/>
                     <button name="action_forfeit" type="object"
                             string="Đánh dấu Bị thu"
                             class="btn-danger"

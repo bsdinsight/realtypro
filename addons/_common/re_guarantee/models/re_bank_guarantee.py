@@ -419,13 +419,19 @@ class ReBankGuarantee(models.Model):
     def action_settle(self):
         """Tất toán BL — khôi phục hạn mức facility.
 
-        Workflow mới: state issued/extended → settled khi đã thanh
-        toán đủ (auto qua _check_auto_settle, hoặc manual qua nút).
+        Workflow mới: state issued/extended/forfeited → settled khi
+        đã thanh toán đủ (auto qua _check_auto_settle, hoặc manual
+        qua nút).
+
+        Case 'forfeited': NH đã trả tiền thay beneficiary; applicant
+        hoàn trả NH (principal + phí + ký quỹ + phạt) → settled →
+        khôi phục hạn mức (vì BL không còn outstanding obligation).
         """
         for rec in self:
-            if rec.state not in ('issued', 'extended'):
+            if rec.state not in ('issued', 'extended', 'forfeited'):
                 raise UserError(_(
-                    "Chỉ BL Đã phát hành / Gia hạn mới tất toán được."))
+                    "Chỉ BL Đã phát hành / Gia hạn / Bị thu mới tất "
+                    "toán được."))
             rec.state = 'settled'
             rec.date_settled = fields.Date.context_today(rec)
             # Recompute facility — settled cert không còn trong
@@ -439,9 +445,10 @@ class ReBankGuarantee(models.Model):
                 f=rec.facility_id.name or ''))
 
     def _check_auto_settle(self):
-        """Nếu fully paid + state in (issued, extended) → auto settle."""
+        """Nếu fully paid + state in (issued, extended, forfeited)
+        → auto settle."""
         for rec in self.filtered(
-                lambda r: r.state in ('issued', 'extended')
+                lambda r: r.state in ('issued', 'extended', 'forfeited')
                 and r.is_fully_paid):
             rec.action_settle()
 

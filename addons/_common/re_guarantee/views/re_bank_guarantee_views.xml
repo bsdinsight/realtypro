@@ -90,10 +90,6 @@
                             string="Tất toán thủ công"
                             invisible="state not in ('issued','extended')"
                             confirm="Xác nhận tất toán BL? Hạn mức facility sẽ được khôi phục. (Có thể bỏ qua nếu chưa thanh toán đủ — bình thường nên đợi auto-settle khi đủ phí + ký quỹ + phạt.)"/>
-                    <button name="action_release" type="object"
-                            string="Giải tỏa (legacy)"
-                            invisible="state not in ('issued','extended')"
-                            confirm="Xác nhận giải tỏa BL (legacy)? Beneficiary đã trả lại chứng thư cho NH. Workflow mới khuyến nghị dùng 'Tất toán'."/>
                     <button name="action_forfeit" type="object"
                             string="Đánh dấu Bị thu"
                             class="btn-danger"

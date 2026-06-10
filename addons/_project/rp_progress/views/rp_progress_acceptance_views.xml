@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- List BBN — group by contract, decorate trễ SLA               -->
+    <!-- ============================================================ -->
+    <record id="view_rp_progress_acceptance_list" model="ir.ui.view">
+        <field name="name">rp.progress.acceptance.list</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'"
+                  decoration-warning="state == 'proposed'"
+                  decoration-success="state == 'approved'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-danger="is_overdue_response">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="contractor_id" optional="show"/>
+                <field name="date_submitted"/>
+                <field name="date_approved"/>
+                <field name="deadline_response" optional="show"/>
+                <field name="is_overdue_response" optional="hide"/>
+                <field name="days_overdue" optional="hide"/>
+                <field name="total_value_period" sum="Σ kỳ"/>
+                <field name="total_value_to_date" sum="Σ lũy kế" optional="show"/>
+                <field name="progress_percent" widget="percentage"/>
+                <field name="report_year" optional="hide"/>
+                <field name="report_month" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'proposed'"
+                       decoration-success="state == 'approved'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Kanban BBN — board theo state                                 -->
+    <!-- ============================================================ -->
+    <record id="view_rp_progress_acceptance_kanban" model="ir.ui.view">
+        <field name="name">rp.progress.acceptance.kanban</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="total_value_period"/>
+                <field name="progress_percent"/>
+                <field name="is_overdue_response"/>
+                <field name="days_overdue"/>
+                <field name="state"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card">
+                            <div class="o_kanban_record_top">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div>HĐ: <field name="contract_id"/></div>
+                            <div>Kỳ:
+                                <field name="report_month"/>/<field name="report_year"/>
+                            </div>
+                            <div>Giá trị:
+                                <field name="total_value_period"
+                                       widget="monetary"/>
+                            </div>
+                            <div t-if="record.progress_percent.raw_value &gt; 0">
+                                <field name="progress_percent"
+                                       widget="progressbar"/>
+                            </div>
+                            <div t-if="record.is_overdue_response.raw_value"
+                                 class="text-danger">
+                                <i class="fa fa-exclamation-triangle"
+                                   title="Cảnh báo trễ SLA"/>
+                                Trễ SLA <field name="days_overdue"/> ngày
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form BBN                                                       -->
+    <!-- ============================================================ -->
+    <record id="view_rp_progress_acceptance_form" model="ir.ui.view">
+        <field name="name">rp.progress.acceptance.form</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_propose" type="object"
+                            string="Đề xuất nghiệm thu" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object"
+                            string="CĐT duyệt" class="btn-primary"
+                            invisible="state != 'proposed'"
+                            groups="rp_progress.group_progress_manager"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state not in ('proposed','cancelled')"/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state in ('approved','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,proposed,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Tự sinh khi save..."/></h1>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_overdue_response">
+                        <i class="fa fa-exclamation-triangle" title="Cảnh báo"/>
+                        <b>Trễ SLA trả lời:</b>
+                        <field name="days_overdue" class="oe_inline"/>
+                        ngày sau hạn
+                        (<field name="deadline_response" class="oe_inline"/>).
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="project_id"/>
+                            <field name="contractor_id"/>
+                        </group>
+                        <group>
+                            <field name="date_submitted"
+                                   readonly="state not in ('draft','proposed')"/>
+                            <field name="date_approved"/>
+                            <field name="deadline_response"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Người ký">
+                            <field name="representative_contractor"/>
+                            <field name="representative_owner"/>
+                        </group>
+                        <group string="Tổng giá trị">
+                            <field name="total_value_period"/>
+                            <field name="total_value_to_date"/>
+                            <field name="progress_percent"
+                                   widget="percentage"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Khối lượng nghiệm thu" name="lines">
+                            <field name="line_ids"
+                                   readonly="state not in ('draft','proposed')">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"
+                                           column_invisible="1"/>
+                                    <field name="contract_structure_ids"
+                                           column_invisible="1"/>
+                                    <field name="cost_category_id"
+                                           string="Nhóm chi phí"
+                                           optional="hide"/>
+                                    <field name="structure_id"
+                                           string="Hạng mục"
+                                           options="{'no_create': True, 'no_quick_create': True}"/>
+                                    <field name="uom_id"
+                                           string="Đơn vị tính"/>
+                                    <field name="quantity_this_period"
+                                           string="Khối lượng" sum="Σ"/>
+                                    <field name="unit_price"
+                                           string="Đơn giá"/>
+                                    <field name="amount_this_period"
+                                           string="Thành tiền" sum="Σ"/>
+                                    <!-- Các field BOQ / lũy kế / % - power user
+                                         có thể bật qua menu "tùy chọn" -->
+                                    <field name="estimate_line_id"
+                                           optional="hide"/>
+                                    <field name="description"
+                                           string="Diễn giải"
+                                           optional="hide"/>
+                                    <field name="quantity_estimated"
+                                           string="KL dự toán"
+                                           optional="hide"/>
+                                    <field name="quantity_to_date_prev"
+                                           string="KL lũy kế trước"
+                                           optional="hide"/>
+                                    <field name="quantity_to_date"
+                                           string="KL lũy kế"
+                                           optional="hide"/>
+                                    <field name="amount_to_date"
+                                           string="Giá trị lũy kế"
+                                           optional="hide"/>
+                                    <field name="progress_percent"
+                                           widget="percentage"
+                                           optional="hide"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"
+                                   placeholder="Ghi chú thêm về BBN..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Search                                                         -->
+    <!-- ============================================================ -->
+    <record id="view_rp_progress_acceptance_search" model="ir.ui.view">
+        <field name="name">rp.progress.acceptance.search</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="contractor_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_proposed" string="Đã đề xuất"
+                        domain="[('state','=','proposed')]"/>
+                <filter name="f_approved" string="CĐT duyệt"
+                        domain="[('state','=','approved')]"/>
+                <separator/>
+                <filter name="f_overdue" string="Trễ SLA"
+                        domain="[('state','=','proposed'),
+                                 ('deadline_response','&lt;',
+                                  context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="g_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_month" string="Tháng đề xuất"
+                        context="{'group_by': 'date_submitted:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_progress_acceptance" model="ir.actions.act_window">
+        <field name="name">BBN Nghiệm thu KL</field>
+        <field name="res_model">rp.progress.acceptance</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_rp_progress_acceptance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có BBN nào
+            </p>
+            <p>
+                Tạo BBNT Nghiệm thu Khối lượng cho 1 HĐ nhà thầu trong 1 kỳ.
+                NT đề xuất → CĐT duyệt → drive % tiến độ + thanh toán.
+            </p>
+        </field>
+    </record>
+
+</odoo>

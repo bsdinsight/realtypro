@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Smart button "Chứng thư BL" trên Facility form (guarantee_line) -->
+    <record id="view_re_loan_facility_form_inherit_guarantee"
+            model="ir.ui.view">
+        <field name="name">re.loan.facility.form.guarantee</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="oe_button_box" name="button_box_guarantee"
+                     invisible="facility_type != 'guarantee_line'">
+                    <button name="action_view_guarantees" type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o">
+                        <field name="guarantee_count" widget="statinfo"
+                               string="Chứng thư BL"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='note']" position="before">
+                <page string="Chứng thư BL" name="guarantee"
+                      invisible="facility_type != 'guarantee_line'">
+                    <group>
+                        <group>
+                            <field name="guarantee_count"/>
+                            <field name="guarantee_total_outstanding"/>
+                        </group>
+                    </group>
+                    <field name="guarantee_ids">
+                        <list decoration-success="state in ('issued','extended')"
+                              decoration-muted="state in ('released','expired')"
+                              decoration-danger="state == 'forfeited'">
+                            <field name="name"/>
+                            <field name="guarantee_type"/>
+                            <field name="beneficiary_partner_id"/>
+                            <field name="date_issue"/>
+                            <field name="date_expiry"/>
+                            <field name="days_remaining"/>
+                            <field name="amount" sum="Σ"/>
+                            <field name="state" widget="badge"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

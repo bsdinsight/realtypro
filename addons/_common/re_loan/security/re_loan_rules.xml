@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Multi-company record rules for Realty Loan.
+
+    Each loan-related model carries a `company_id` field, so the standard
+    Odoo multi-company pattern applies: filter rows by the user's
+    `company_ids` (the set of companies the session is currently allowed
+    to see, which is the user's allowed_company_ids intersected with the
+    company switcher).
+
+    Rules are `global="True"` — they apply to ALL users, including users
+    in `group_loan_manager`. This is intentional: a manager scoped to
+    Company A should not see Company B's HĐ tín dụng / khế ước / lãi /
+    thế chấp. The Odoo super user (`base.group_system`) implicitly
+    bypasses ir.rule, so the system admin still has cross-company access.
+
+    `re.loan.collateral.type` is reference data (collateral classifications
+    like real-estate, securities, equipment), shared across companies, so
+    no rule is defined for it.
+
+    Pattern: ('company_id', 'in', company_ids) — supports users with
+    multiple allowed companies switching via the topbar widget.
+-->
+<odoo>
+
+    <record id="rule_re_loan_credit_contract_company" model="ir.rule">
+        <field name="name">re.loan.credit.contract: multi-company</field>
+        <field name="model_id" ref="model_re_loan_credit_contract"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_facility_company" model="ir.rule">
+        <field name="name">re.loan.facility: multi-company</field>
+        <field name="model_id" ref="model_re_loan_facility"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_facility_project_allocation_company" model="ir.rule">
+        <field name="name">re.loan.facility.project.allocation: multi-company</field>
+        <field name="model_id" ref="model_re_loan_facility_project_allocation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_note_company" model="ir.rule">
+        <field name="name">re.loan.note: multi-company</field>
+        <field name="model_id" ref="model_re_loan_note"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_note_disbursement_company" model="ir.rule">
+        <field name="name">re.loan.note.disbursement: multi-company</field>
+        <field name="model_id" ref="model_re_loan_note_disbursement"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_note_interest_line_company" model="ir.rule">
+        <field name="name">re.loan.note.interest.line: multi-company</field>
+        <field name="model_id" ref="model_re_loan_note_interest_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_note_repayment_company" model="ir.rule">
+        <field name="name">re.loan.note.repayment: multi-company</field>
+        <field name="model_id" ref="model_re_loan_note_repayment"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_note_amendment_company" model="ir.rule">
+        <field name="name">re.loan.note.amendment: multi-company</field>
+        <field name="model_id" ref="model_re_loan_note_amendment"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_collateral_company" model="ir.rule">
+        <field name="name">re.loan.collateral: multi-company</field>
+        <field name="model_id" ref="model_re_loan_collateral"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_collateral_valuation_company" model="ir.rule">
+        <field name="name">re.loan.collateral.valuation: multi-company</field>
+        <field name="model_id" ref="model_re_loan_collateral_valuation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_collateral_pledge_company" model="ir.rule">
+        <field name="name">re.loan.collateral.pledge: multi-company</field>
+        <field name="model_id" ref="model_re_loan_collateral_pledge"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

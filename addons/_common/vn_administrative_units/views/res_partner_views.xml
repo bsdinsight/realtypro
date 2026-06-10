@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Vietnamese address layout: Country → Province → Ward → Street.
+
+        IMPORTANT: Odoo's o_address_format div uses CSS grid layout
+        based on field classes (o_address_country, o_address_state,
+        o_address_zip, o_address_city, o_address_street). Class names
+        determine grid placement, NOT XML order.
+
+        For Vietnamese top-down logical order, we use a SIMPLE COLUMN
+        layout (no grid) — each field on its own row, in XML order.
+        We replace the o_address_format div entirely with a plain
+        d-flex flex-column container.
+    -->
+    <record id="view_res_partner_form_vn_address" model="ir.ui.view">
+        <field name="name">res.partner.form.vn.address</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace contact address div with VN top-down layout -->
+            <xpath expr="//div[hasclass('o_address_format')]" position="replace">
+                <div class="d-flex flex-column gap-1 o_address_format_vn">
+                    <field name="country_id"
+                           placeholder="Country"
+                           options="{'no_open': True, 'no_create': True}"/>
+                    <field name="state_id"
+                           placeholder="Province / Tỉnh-Thành"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'country_id': country_id, 'default_country_id': country_id}"/>
+                    <field name="ward_id"
+                           placeholder="Ward / Phường-Xã"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_state_id': state_id}"/>
+                    <field name="street"
+                           placeholder="Street / Số nhà + tên đường..."/>
+                    <!-- Hidden but kept in DOM for save/load -->
+                    <field name="street2" invisible="1"/>
+                    <field name="city" invisible="1"/>
+                    <field name="zip" invisible="1"/>
+                </div>
+            </xpath>
+
+            <!-- Add Permanent Address as a new tab in the notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Permanent Address" name="permanent_address"
+                      groups="base.group_user">
+                    <group>
+                        <field name="permanent_same_as_contact"/>
+                    </group>
+                    <group string="Địa chỉ thường trú (Legal address for contracts)"
+                           invisible="permanent_same_as_contact">
+                        <field name="permanent_country_id"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <field name="permanent_state_id"
+                               options="{'no_open': True, 'no_quick_create': True}"
+                               context="{'country_id': permanent_country_id}"/>
+                        <field name="permanent_ward_id"
+                               options="{'no_open': True, 'no_quick_create': True}"/>
+                        <field name="permanent_street"/>
+                    </group>
+                    <group string="Địa chỉ thường trú (sync với địa chỉ liên lạc)"
+                           invisible="not permanent_same_as_contact">
+                        <field name="permanent_country_id" readonly="1"
+                               options="{'no_open': True}"/>
+                        <field name="permanent_state_id" readonly="1"
+                               options="{'no_open': True}"/>
+                        <field name="permanent_ward_id" readonly="1"
+                               options="{'no_open': True}"/>
+                        <field name="permanent_street" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+        Search view: enable filtering partners by ward.
+    -->
+    <record id="view_res_partner_filter_vn_ward" model="ir.ui.view">
+        <field name="name">res.partner.search.vn.ward</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="ward_id" string="Ward / Phường-Xã"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

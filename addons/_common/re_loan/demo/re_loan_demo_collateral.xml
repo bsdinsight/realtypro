@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo: tài sản thế chấp + định giá + thế chấp cho KW-2026/0001 -->
+    <record id="demo_collateral_khu_a" model="re.loan.collateral">
+        <field name="name">Đất dự án Khu A</field>
+        <field name="code">TS-001</field>
+        <field name="type_id" ref="collateral_type_real_estate"/>
+        <field name="legal_info">Sổ đỏ số 12345, Sở TNMT TP.HCM</field>
+    </record>
+    <record id="demo_valuation_khu_a" model="re.loan.collateral.valuation">
+        <field name="collateral_id" ref="demo_collateral_khu_a"/>
+        <field name="date">2026-01-10</field>
+        <field name="amount">800000000000</field>
+        <field name="method">appraisal</field>
+        <field name="appraiser">Cty Thẩm định giá ABC</field>
+    </record>
+    <record id="demo_pledge_khu_a" model="re.loan.collateral.pledge">
+        <field name="name">TC-001</field>
+        <field name="collateral_id" ref="demo_collateral_khu_a"/>
+        <field name="note_id" ref="demo_note_rev_1"/>
+        <field name="secured_amount">300000000000</field>
+    </record>
+</odoo>

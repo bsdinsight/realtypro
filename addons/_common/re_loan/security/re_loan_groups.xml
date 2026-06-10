@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Realty Loan — user groups + Odoo 19 user-form integration.
+
+    Odoo 19 replaced the old `category_id` field on res.groups with a
+    three-layer model:
+
+        ir.module.category    →  top-level section header in the
+                                  Settings → Users form
+              ↑
+        res.groups.privilege  →  one labelled radio row inside that
+                                  section (e.g. "Quản lý vay")
+              ↑
+        res.groups            →  the actual roles, shown as the radio
+                                  options of the privilege
+
+    Without a privilege_id, groups exist but never appear in the
+    categorised user form — admins can only assign them via Settings →
+    Technical → Groups, which is inadequate for routine onboarding.
+
+    Pattern reference: addons/sales_team/security/sales_team_security.xml.
+-->
+<odoo>
+
+    <!-- Section header in the user form. Standalone top-level category
+         (no parent_id), placed between Project (sequence 30) and
+         Living (40) categories declared by re_core. -->
+    <record id="module_category_realty_loan" model="ir.module.category">
+        <field name="name">Realty Loan</field>
+        <field name="description">Quản lý vay vốn, lãi vay, thế chấp, vay nội bộ.</field>
+        <field name="sequence">35</field>
+    </record>
+
+    <!-- One privilege row inside the Realty Loan section. The User /
+         Manager groups below appear as its radio options. -->
+    <record id="privilege_loan" model="res.groups.privilege">
+        <field name="name">Quản lý vay</field>
+        <field name="sequence">1</field>
+        <field name="category_id" ref="module_category_realty_loan"/>
+    </record>
+
+    <record id="group_loan_user" model="res.groups">
+        <field name="name">Người dùng</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_loan"/>
+        <!-- Anyone with the loan-user role is also a regular internal
+             user — needed to reach menus, dashboards, etc. -->
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Loan user — quản lý HĐTD, hạn mức, khế ước, giải ngân, trả nợ, thế chấp.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_loan_manager" model="res.groups">
+        <field name="name">Quản trị viên</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="privilege_loan"/>
+        <!-- Manager implies user → keeps the inheritance the existing
+             ir.model.access.csv rows rely on (manager rows reference
+             group_loan_manager only; manager gets user perms via
+             implication). -->
+        <field name="implied_ids" eval="[(4, ref('group_loan_user'))]"/>
+        <field name="comment">Loan manager — cấu hình, huỷ, xoá; bao gồm toàn bộ quyền Người dùng.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

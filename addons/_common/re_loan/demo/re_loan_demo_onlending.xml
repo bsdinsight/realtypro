@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo: cấu trúc tập đoàn + 1 khoản cho vay lại từ KW-2026/0001 -->
+    <record id="demo_partner_cc1" model="res.partner">
+        <field name="name">Tổng Công ty CC1</field>
+        <field name="is_company" eval="True"/>
+    </record>
+    <record id="demo_partner_cc1_sub" model="res.partner">
+        <field name="name">CC1 - Công ty con Miền Nam</field>
+        <field name="is_company" eval="True"/>
+        <field name="parent_company_id" ref="demo_partner_cc1"/>
+    </record>
+
+    <record id="demo_note_onlend_1" model="re.loan.note">
+        <field name="loan_type">onlending</field>
+        <field name="name">KW-OL-2026/01</field>
+        <field name="source_note_id" ref="demo_note_rev_1"/>
+        <field name="counterparty_id" ref="demo_partner_cc1_sub"/>
+        <field name="amount">80000000000</field>
+        <field name="date_note">2026-02-15</field>
+        <field name="tenor_months">12</field>
+        <field name="interest_rate">9.5</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+        <field name="state">active</field>
+        <field name="purpose">Cho công ty con vay lại thi công gói thầu A</field>
+    </record>
+    <record id="demo_disb_onlend_1" model="re.loan.note.disbursement">
+        <field name="note_id" ref="demo_note_onlend_1"/>
+        <field name="date">2026-02-16</field>
+        <field name="amount">80000000000</field>
+    </record>
+</odoo>

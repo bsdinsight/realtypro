@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contractor_specialty_search" model="ir.ui.view">
+        <field name="name">rp.contractor.specialty.search</field>
+        <field name="model">rp.contractor.specialty</field>
+        <field name="arch" type="xml">
+            <search string="Chuyên môn nhà thầu">
+                <field name="name"/>
+                <field name="code"/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rp_contractor_specialty_list" model="ir.ui.view">
+        <field name="name">rp.contractor.specialty.list</field>
+        <field name="model">rp.contractor.specialty</field>
+        <field name="arch" type="xml">
+            <list string="Chuyên môn" editable="bottom" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="description" optional="show"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_contractor_specialty_form" model="ir.ui.view">
+        <field name="name">rp.contractor.specialty.form</field>
+        <field name="model">rp.contractor.specialty</field>
+        <field name="arch" type="xml">
+            <form string="Chuyên môn nhà thầu">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Móng - Cọc"/>
+                        </h1>
+                        <div>
+                            <label for="code" class="oe_edit_only"/>
+                            <field name="code" placeholder="e.g. MONG"/>
+                        </div>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                    </group>
+                    <field name="description" placeholder="Mô tả chuyên môn..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_contractor_specialty" model="ir.actions.act_window">
+        <field name="name">Chuyên môn nhà thầu</field>
+        <field name="res_model">rp.contractor.specialty</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_contractor_specialty_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Master list of contractor specialties.
+            </p>
+            <p>
+                Module install seeds 20 default Vietnamese construction
+                specialties (Móng cọc, MEP, Facade, ...). Add your own
+                or archive unused ones. Each rp.contractor record can
+                tag multiple specialties.
+            </p>
+        </field>
+    </record>
+
+</odoo>

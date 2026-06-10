@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_unit_type_list" model="ir.ui.view">
+        <field name="name">re.unit.type.list</field>
+        <field name="model">re.unit.type</field>
+        <field name="arch" type="xml">
+            <list string="Unit Types">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="default_bedroom_count"/>
+                <field name="default_bathroom_count"/>
+                <field name="default_area_min" optional="show"/>
+                <field name="default_area_max" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_unit_type_kanban" model="ir.ui.view">
+        <field name="name">re.unit.type.kanban</field>
+        <field name="model">re.unit.type</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="default_bedroom_count"/>
+                <field name="default_bathroom_count"/>
+                <field name="default_area_min"/>
+                <field name="default_area_max"/>
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <strong><field name="name"/></strong>
+                            <div class="text-muted">
+                                <field name="code"/> · <field name="category"/>
+                            </div>
+                            <div>
+                                <field name="default_bedroom_count"/> BR ·
+                                <field name="default_bathroom_count"/> BA
+                            </div>
+                            <div t-if="record.default_area_min.raw_value">
+                                <field name="default_area_min"/> -
+                                <field name="default_area_max"/> m²
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_re_unit_type_form" model="ir.ui.view">
+        <field name="name">re.unit.type.form</field>
+        <field name="model">re.unit.type</field>
+        <field name="arch" type="xml">
+            <form string="Unit Type">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Unit type..."/></h1>
+                        <field name="tagline" placeholder="Tagline..."/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                            <field name="icon"/>
+                            <field name="target_segment"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Defaults" name="defaults">
+                            <group>
+                                <group string="Layout Defaults">
+                                    <field name="default_bedroom_count"/>
+                                    <field name="default_bathroom_count"/>
+                                    <field name="default_balcony_count"/>
+                                    <field name="default_view_type"/>
+                                </group>
+                                <group string="Area Range (m²)">
+                                    <field name="default_area_min"/>
+                                    <field name="default_area_max"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Classification" name="classification">
+                            <group>
+                                <field name="is_residential"/>
+                                <field name="is_corner"/>
+                                <field name="requires_furniture"/>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_unit_type" model="ir.actions.act_window">
+        <field name="name">Unit Types</field>
+        <field name="res_model">re.unit.type</field>
+        <field name="view_mode">list,kanban,form</field>
+    </record>
+
+</odoo>

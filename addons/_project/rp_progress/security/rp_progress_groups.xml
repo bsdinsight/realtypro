@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_progress_user" model="res.groups">
+        <field name="name">Realty Project / Progress User</field>
+        <field name="comment">Đọc + tạo BBN, đề xuất nghiệm thu. Không duyệt được.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_progress_manager" model="res.groups">
+        <field name="name">Realty Project / Progress Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_progress_user'))]"/>
+        <field name="comment">Duyệt BBN, sửa SLA, cấu hình.</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

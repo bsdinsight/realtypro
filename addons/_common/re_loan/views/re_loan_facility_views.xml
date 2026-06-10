@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_facility_list" model="ir.ui.view">
+        <field name="name">re.loan.facility.list</field>
+        <field name="model">re.loan.facility</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="purpose"/>
+                <field name="facility_type"/>
+                <field name="amount_limit" sum="Tổng hạn mức"/>
+                <field name="flexible_limits" widget="boolean_toggle"
+                       optional="show"/>
+                <field name="amount_used" sum="Tổng đã dùng"/>
+                <field name="amount_available" sum="Tổng còn lại"/>
+                <field name="interest_rate_default"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_facility_form" model="ir.ui.view">
+        <field name="name">re.loan.facility.form</field>
+        <field name="model">re.loan.facility</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Tên hạn mức"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="credit_contract_id"/>
+                            <field name="purpose"/>
+                            <field name="facility_type"/>
+                            <field name="amount_limit"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                        <group>
+                            <field name="interest_rate_default"/>
+                            <field name="interest_method"/>
+                            <field name="day_count"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Sử dụng hạn mức">
+                            <field name="amount_used"/>
+                            <field name="amount_available"/>
+                            <div colspan="2" class="alert alert-success small"
+                                 role="alert"
+                                 style="margin-top:4px; padding:6px 10px;"
+                                 invisible="facility_type not in ('revolving','overdraft')">
+                                <i class="fa fa-refresh"/>
+                                <b>Tuần hoàn:</b> hạn mức được <b>KHÔI PHỤC
+                                tự động</b> khi KW trả gốc. Vd KW vay 2 tỷ,
+                                trả gốc 1 tỷ → "Đã sử dụng" giảm còn 1 tỷ,
+                                "Còn lại" tăng thêm 1 tỷ.
+                            </div>
+                            <div colspan="2" class="text-muted small"
+                                 style="margin-top:4px;"
+                                 invisible="facility_type in ('revolving','overdraft')">
+                                <i class="fa fa-info-circle"/>
+                                Loại này <b>KHÔNG khôi phục</b> hạn mức khi
+                                trả gốc — đã rút là chiếm hạn mức đến hết kỳ.
+                            </div>
+                        </group>
+                        <group string="Liên thông">
+                            <field name="flexible_limits"
+                                   widget="boolean_toggle"/>
+                            <div colspan="2" class="text-muted small"
+                                 style="margin-top:4px;">
+                                <i class="fa fa-info-circle"/>
+                                Tick <b>Hạn mức liên thông</b> để chia
+                                sẻ phần thừa hạn mức với các facility KHÁC
+                                cùng tick liên thông (vd: Vay đầu tư còn
+                                200 tỷ liên thông với Bảo lãnh còn 100 tỷ
+                                → pool 300 tỷ dùng chung). Σ limit luôn ≤
+                                tổng HĐTD — liên thông KHÔNG bypass total.
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Phân bổ dự án" name="project_allocation">
+                            <group>
+                                <group>
+                                    <field name="amount_allocated_to_projects"/>
+                                    <field name="amount_unallocated"/>
+                                </group>
+                            </group>
+                            <field name="project_allocation_ids"
+                                   context="{'default_facility_id': id}">
+                                <list editable="bottom">
+                                    <field name="project_id"/>
+                                    <field name="amount" sum="Σ phân bổ"/>
+                                    <field name="description"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="TSBĐ riêng Facility" name="pledge">
+                            <div class="alert alert-info small" role="alert">
+                                <i class="fa fa-info-circle"/>
+                                Chỉ thêm pledge ở đây khi TSBĐ chỉ bảo
+                                đảm RIÊNG Facility này (vd dự án X là
+                                TSBĐ của riêng Facility "Vay đầu tư DA X").
+                                Phần lớn TSBĐ nên gắn ở cấp HĐTD.
+                            </div>
+                            <field name="pledge_ids"
+                                   context="{'default_facility_id': id,
+                                             'default_pledge_target': 'facility'}">
+                                <list editable="bottom"
+                                      decoration-muted="state == 'released'">
+                                    <field name="name"/>
+                                    <field name="collateral_id"/>
+                                    <field name="date_pledge"/>
+                                    <field name="secured_amount" sum="Tổng đảm bảo"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'active'"
+                                           decoration-muted="state == 'released'"/>
+                                    <button name="action_release" type="object"
+                                            string="Giải chấp" icon="fa-unlock"
+                                            invisible="state != 'active'"/>
+                                    <field name="pledge_target"
+                                           column_invisible="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" placeholder="Ghi chú..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_facility" model="ir.actions.act_window">
+        <field name="name">Hạn mức tín dụng</field>
+        <field name="res_model">re.loan.facility</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

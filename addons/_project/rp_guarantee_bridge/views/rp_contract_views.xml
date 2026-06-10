@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit rp.contract form: smart button + danh sách Đề nghị BL -->
+    <record id="view_rp_contract_form_inherit_guarantee"
+            model="ir.ui.view">
+        <field name="name">rp.contract.form.inherit.guarantee</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <!-- 2 smart buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_guarantee_requests" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o">
+                    <field name="guarantee_request_count"
+                           widget="statinfo" string="Đề nghị BL"/>
+                </button>
+                <button name="action_view_guarantees" type="object"
+                        class="oe_stat_button" icon="fa-shield">
+                    <field name="guarantee_count" widget="statinfo"
+                           string="Chứng thư BL"/>
+                </button>
+            </xpath>
+
+            <!-- Trong tab "Bảo lãnh" sẵn có, thêm list các đề nghị BL
+                 phía dưới 3 nhóm BL inline cũ -->
+            <xpath expr="//page[@name='guarantees']" position="inside">
+                <separator string="Đề nghị phát hành BL (chi tiết, theo HĐTD/facility)"/>
+                <field name="guarantee_request_ids"
+                       context="{'default_rp_contract_id': id,
+                                 'default_project_id': project_id}">
+                    <list decoration-info="state == 'draft'"
+                          decoration-success="state == 'active'"
+                          decoration-muted="state in ('settled','cancelled')"
+                          decoration-danger="state == 'active' and penalty_days &gt; 0">
+                        <field name="name"/>
+                        <field name="guarantee_type"/>
+                        <field name="facility_id"/>
+                        <field name="beneficiary_partner_id"/>
+                        <field name="date_request"/>
+                        <field name="date_expiry"/>
+                        <field name="amount" sum="Σ"/>
+                        <field name="guarantee_fee_remaining" optional="show"/>
+                        <field name="penalty_amount" optional="show"/>
+                        <field name="state" widget="badge"
+                               decoration-info="state == 'draft'"
+                               decoration-success="state == 'active'"
+                               decoration-muted="state in ('settled','cancelled')"/>
+                        <field name="penalty_days" column_invisible="1"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

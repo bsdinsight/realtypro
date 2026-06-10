@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_inherit_progress" model="ir.ui.view">
+        <field name="name">re.project.form.progress</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <!-- Smart buttons trên header -->
+            <xpath expr="//sheet" position="before">
+                <div class="oe_button_box" name="button_box_progress">
+                    <button name="action_view_acceptances" type="object"
+                            class="oe_stat_button" icon="fa-check-square-o">
+                        <field name="acceptance_count" widget="statinfo"
+                               string="BBN Nghiệm thu"/>
+                    </button>
+                    <button name="action_view_structures" type="object"
+                            class="oe_stat_button" icon="fa-cubes">
+                        <field name="completed_structure_count"
+                               widget="statinfo"
+                               string="Hạng mục hoàn thành"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Tiến độ tổng dự án">
+                    <group>
+                        <field name="weighted_progress_percent"
+                               widget="percentage"/>
+                        <field name="project_status" widget="badge"
+                               decoration-success="project_status == 'on_track'"
+                               decoration-warning="project_status == 'at_risk'"
+                               decoration-danger="project_status in ('behind','critical')"/>
+                    </group>
+                    <group>
+                        <field name="completed_structure_count"/>
+                        <field name="delayed_structure_count"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_collateral_list" model="ir.ui.view">
+        <field name="name">re.loan.collateral.list</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'available'"
+                  decoration-info="state == 'partial_pledged'"
+                  decoration-warning="state == 'fully_pledged'"
+                  decoration-danger="state == 'over_pledged'"
+                  decoration-muted="state == 'disposed'">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type_id"/>
+                <field name="owner_company_id" groups="base.group_multi_company"/>
+                <field name="value_current" sum="Σ giá trị"/>
+                <field name="total_secured" sum="Σ đã thế chấp"/>
+                <field name="value_available" sum="Σ còn lại"/>
+                <field name="coverage_percent" widget="percentage"/>
+                <field name="active_pledge_count" string="# Pledge"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-info="state == 'partial_pledged'"
+                       decoration-warning="state == 'fully_pledged'"
+                       decoration-danger="state == 'over_pledged'"
+                       decoration-muted="state == 'disposed'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_collateral_form" model="ir.ui.view">
+        <field name="name">re.loan.collateral.form</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Tên tài sản..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="type_id"/>
+                            <field name="owner_company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="owner_partner_id"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                        <group string="Giá trị tài sản">
+                            <field name="value_current"/>
+                            <field name="total_secured"/>
+                            <field name="value_available"
+                                   decoration-bf="True"
+                                   decoration-success="value_available &gt; 0"
+                                   decoration-danger="value_available &lt; 0"/>
+                            <field name="coverage_percent"
+                                   widget="percentage"/>
+                            <field name="active_pledge_count"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'available'"
+                                   decoration-info="state == 'partial_pledged'"
+                                   decoration-warning="state == 'fully_pledged'"
+                                   decoration-danger="state == 'over_pledged'"
+                                   decoration-muted="state == 'disposed'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state != 'over_pledged'">
+                        <i class="fa fa-exclamation-triangle"
+                           title="Cảnh báo quá thế chấp"/>
+                        <b>Quá thế chấp:</b> Σ giá trị đảm bảo (
+                        <field name="total_secured" class="oe_inline"/>)
+                        vượt giá trị hiện hành của TS (
+                        <field name="value_current" class="oe_inline"/>).
+                        Kiểm tra lại số tiền đảm bảo trên các pledge.
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'partial_pledged'">
+                        <i class="fa fa-info-circle" title="Còn dư"/>
+                        <b>Còn dư giá trị:</b>
+                        <field name="value_available" class="oe_inline"/>
+                        — có thể đem TS này thế chấp thêm cho HĐTD khác
+                        (cùng NH hoặc NH khác).
+                    </div>
+                    <notebook>
+                        <page string="Định giá" name="valuation">
+                            <field name="valuation_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="method"/>
+                                    <field name="appraiser"/>
+                                    <field name="note"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Thế chấp (multi-bank)" name="pledge">
+                            <div class="alert alert-info small" role="alert">
+                                <i class="fa fa-info-circle" title="Multi-pledge"/>
+                                1 tài sản có thể thế chấp NHIỀU HĐTD ở
+                                các NGÂN HÀNG KHÁC NHAU — miễn Σ giá trị
+                                đảm bảo không vượt giá trị TS.
+                            </div>
+                            <field name="pledge_ids">
+                                <list editable="bottom"
+                                      decoration-muted="state == 'released'">
+                                    <field name="name"/>
+                                    <field name="date_pledge"/>
+                                    <field name="partner_id"
+                                           string="Ngân hàng"/>
+                                    <field name="credit_contract_id"
+                                           string="HĐTD"/>
+                                    <field name="pledge_target"
+                                           widget="badge"
+                                           optional="show"/>
+                                    <field name="facility_id"
+                                           optional="hide"/>
+                                    <field name="note_id" optional="hide"/>
+                                    <field name="secured_amount"
+                                           sum="Σ đảm bảo"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'active'"
+                                           decoration-muted="state == 'released'"/>
+                                    <field name="release_date"/>
+                                    <button name="action_release"
+                                            type="object" string="Giải chấp"
+                                            icon="fa-unlock"
+                                            invisible="state != 'active'"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Pháp lý / Mô tả" name="legal">
+                            <field name="legal_info"
+                                   placeholder="Sổ đỏ/sổ hồng, đăng ký..."/>
+                            <field name="description" placeholder="Mô tả..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_collateral_search" model="ir.ui.view">
+        <field name="name">re.loan.collateral.search</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type_id"/>
+                <filter name="f_available" string="Sẵn sàng (chưa TC)"
+                        domain="[('state','=','available')]"/>
+                <filter name="f_partial" string="Còn dư có thể TC thêm"
+                        domain="[('state','=','partial_pledged')]"/>
+                <filter name="f_fully" string="Đã TC hết"
+                        domain="[('state','=','fully_pledged')]"/>
+                <filter name="f_over" string="Cảnh báo: Quá TC"
+                        domain="[('state','=','over_pledged')]"/>
+                <separator/>
+                <filter name="f_has_room" string="Còn giá trị thế chấp"
+                        domain="[('value_available','&gt;', 0),
+                                 ('state','!=','disposed')]"/>
+                <separator/>
+                <filter name="g_type" string="Loại tài sản"
+                        context="{'group_by': 'type_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_owner" string="Chủ sở hữu"
+                        context="{'group_by': 'owner_partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_collateral" model="ir.actions.act_window">
+        <field name="name">Tài sản thế chấp</field>
+        <field name="res_model">re.loan.collateral</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_loan_collateral_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo tài sản thế chấp đầu tiên
+            </p>
+            <p>
+                Tài sản đảm bảo cho khoản vay: BĐS, phương tiện, quyền tài
+                sản, cổ phần... Định giá nhiều lần; một tài sản có thể thế
+                chấp cho nhiều khoản (multi-pledge).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_collateral"
+              name="Tài sản thế chấp"
+              parent="menu_re_loan_root"
+              action="action_re_loan_collateral"
+              sequence="30"/>
+
+</odoo>

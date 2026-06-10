@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit form BL: thêm rp_contract_id vào group Liên kết -->
+    <record id="view_re_bank_guarantee_form_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.bank.guarantee.form.inherit.rp.contract</field>
+        <field name="model">re.bank.guarantee</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_bank_guarantee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_contract_id']"
+                   position="after">
+                <field name="rp_contract_id"
+                       options="{'no_create': True}"/>
+                <field name="rp_project_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit list BL: thêm cột HĐ nhà thầu -->
+    <record id="view_re_bank_guarantee_list_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.bank.guarantee.list.inherit.rp.contract</field>
+        <field name="model">re.bank.guarantee</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_bank_guarantee_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='guarantee_type']"
+                   position="after">
+                <field name="rp_contract_id" optional="show"/>
+                <field name="rp_project_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit search BL: filter theo HĐ nhà thầu + dự án -->
+    <record id="view_re_bank_guarantee_search_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.bank.guarantee.search.inherit.rp.contract</field>
+        <field name="model">re.bank.guarantee</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_bank_guarantee_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="rp_contract_id"/>
+                <field name="rp_project_id"/>
+                <separator/>
+                <filter name="g_rp_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'rp_contract_id'}"/>
+                <filter name="g_rp_project" string="Dự án"
+                        context="{'group_by': 'rp_project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Đề nghị BL: thêm rp_contract_id ===== -->
+    <record id="view_re_guarantee_request_form_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.guarantee.request.form.rp.contract</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_guarantee_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="rp_contract_id"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_re_guarantee_request_list_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.guarantee.request.list.rp.contract</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_guarantee_request_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="rp_contract_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_re_guarantee_request_search_inherit_rp_contract"
+            model="ir.ui.view">
+        <field name="name">re.guarantee.request.search.rp.contract</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="inherit_id"
+               ref="re_guarantee.view_re_guarantee_request_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="rp_contract_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='g_project']" position="after">
+                <filter name="g_rp_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'rp_contract_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit form KW: thêm nút Post trên các dòng disbursement / interest / repayment -->
+    <record id="view_re_loan_note_form_inherit_account" model="ir.ui.view">
+        <field name="name">re.loan.note.form.account</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <!-- Disbursement list: add Post button + move_id column -->
+            <xpath expr="//page[@name='disbursement']//list" position="inside">
+                <field name="is_posted" optional="hide"/>
+                <field name="move_id" optional="show"/>
+                <button name="action_post_journal_entry" type="object"
+                        string="Post" icon="fa-bookmark"
+                        invisible="is_posted"/>
+            </xpath>
+            <!-- Repayment list: add Post button -->
+            <xpath expr="//page[@name='repayment']//list" position="inside">
+                <field name="is_posted" optional="hide"/>
+                <field name="move_id" optional="show"/>
+                <button name="action_post_journal_entry" type="object"
+                        string="Post" icon="fa-bookmark"
+                        invisible="is_posted"/>
+            </xpath>
+            <!-- Interest line: add Post Accrual button + capitalized/expense -->
+            <xpath expr="//page[@name='interest']//list" position="inside">
+                <field name="capitalized_amount" optional="show"/>
+                <field name="expense_amount" optional="show"/>
+                <field name="is_posted" optional="hide"/>
+                <field name="move_id" optional="hide"/>
+                <button name="action_post_accrual" type="object"
+                        string="Ghi nhận" icon="fa-bookmark"
+                        invisible="is_posted"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

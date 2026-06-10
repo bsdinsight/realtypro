@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_contractor_specialty_user,rp.contractor.specialty.user,model_rp_contractor_specialty,re_base.group_re_user,1,0,0,0
+access_rp_contractor_specialty_manager,rp.contractor.specialty.manager,model_rp_contractor_specialty,re_base.group_re_manager,1,1,1,0
+access_rp_contractor_specialty_admin,rp.contractor.specialty.admin,model_rp_contractor_specialty,re_base.group_re_admin,1,1,1,1
+access_rp_contractor_user,rp.contractor.user,model_rp_contractor,re_base.group_re_user,1,0,0,0
+access_rp_contractor_manager,rp.contractor.manager,model_rp_contractor,re_base.group_re_manager,1,1,1,0
+access_rp_contractor_admin,rp.contractor.admin,model_rp_contractor,re_base.group_re_admin,1,1,1,1

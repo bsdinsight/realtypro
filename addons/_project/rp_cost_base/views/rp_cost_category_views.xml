@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search view -->
+    <record id="view_rp_cost_category_search" model="ir.ui.view">
+        <field name="name">rp.cost.category.search</field>
+        <field name="model">rp.cost.category</field>
+        <field name="arch" type="xml">
+            <search string="Cost Categories">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <field name="complete_path" string="Path"/>
+                <separator/>
+                <filter name="contingency" string="Contingency"
+                        domain="[('is_contingency', '=', True)]"/>
+                <filter name="land_cost" string="Land Cost"
+                        domain="[('is_land_cost', '=', True)]"/>
+                <separator/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Project" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="Level" name="group_level"
+                        context="{'group_by': 'level'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List view -->
+    <record id="view_rp_cost_category_list" model="ir.ui.view">
+        <field name="name">rp.cost.category.list</field>
+        <field name="model">rp.cost.category</field>
+        <field name="arch" type="xml">
+            <list string="Cost Categories" sample="1" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="project_id"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="complete_path"/>
+                <field name="level" readonly="1"/>
+                <field name="is_contingency" optional="show"/>
+                <field name="is_land_cost" optional="show"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_rp_cost_category_form" model="ir.ui.view">
+        <field name="name">rp.cost.category.form</field>
+        <field name="model">rp.cost.category</field>
+        <field name="arch" type="xml">
+            <form string="Cost Category">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Construction Cost / Chi phí xây dựng"/>
+                        </h1>
+                        <div>
+                            <label for="code" class="oe_edit_only"/>
+                            <field name="code" placeholder="e.g. 3 or 3.2"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="project_id"
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="parent_id"
+                                   domain="[('project_id', '=', project_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                            <field name="level" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="complete_path" readonly="1"/>
+                            <field name="is_contingency"/>
+                            <field name="is_land_cost"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Description" name="desc">
+                            <field name="description"/>
+                        </page>
+                        <page string="Sub-categories" name="children"
+                              invisible="level >= 3">
+                            <field name="child_ids"
+                                   context="{'default_project_id': project_id,
+                                             'default_parent_id': id}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action (no menu — rp_estimate mounts this) -->
+    <record id="action_rp_cost_category" model="ir.actions.act_window">
+        <field name="name">Cost Categories</field>
+        <field name="res_model">rp.cost.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_cost_category_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Project-scoped cost classification trees.
+            </p>
+            <p>
+                Each project has its own cost category tree (max 3 levels),
+                automatically seeded with a Vietnamese real-estate default
+                set when the project is created. Add or customize categories
+                here per-project — changes do not propagate to other
+                projects.
+            </p>
+        </field>
+    </record>
+
+</odoo>

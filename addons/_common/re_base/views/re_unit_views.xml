@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_unit_list" model="ir.ui.view">
+        <field name="name">re.unit.list</field>
+        <field name="model">re.unit</field>
+        <field name="arch" type="xml">
+            <list string="Units"
+                  decoration-success="state == 'available'"
+                  decoration-warning="state in ('on_hold', 'booked')"
+                  decoration-info="state in ('deposited', 'contracted')"
+                  decoration-muted="state in ('locked', 'cancelled')">
+                <field name="unit_code"/>
+                <field name="project_id"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="unit_type_id"/>
+                <field name="area_gross" optional="show"/>
+                <field name="area_net" optional="show"/>
+                <field name="area_sellable" optional="show"/>
+                <field name="bedroom_count"/>
+                <field name="direction"/>
+                <field name="original_price" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_unit_kanban" model="ir.ui.view">
+        <field name="name">re.unit.kanban</field>
+        <field name="model">re.unit</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="unit_code"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="bedroom_count"/>
+                <field name="area_net"/>
+                <field name="direction"/>
+                <field name="original_price"/>
+                <field name="currency_id"/>
+                <field name="is_premium"/>
+                <field name="is_featured"/>
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <strong>
+                                <field name="unit_code"/>
+                                <span t-if="record.is_premium.raw_value"
+                                      class="badge text-bg-warning ms-2">Premium</span>
+                                <span t-if="record.is_featured.raw_value"
+                                      class="badge text-bg-info ms-2">★</span>
+                            </strong>
+                            <div class="text-muted">
+                                <field name="building_id"/> · <field name="floor_id"/>
+                            </div>
+                            <div>
+                                <field name="bedroom_count"/> BR ·
+                                <field name="area_net"/> m²
+                            </div>
+                            <div t-if="record.direction.raw_value" class="small text-muted">
+                                <field name="direction"/>
+                            </div>
+                            <div class="mt-2">
+                                <strong><field name="original_price" widget="monetary"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_re_unit_form" model="ir.ui.view">
+        <field name="name">re.unit.form</field>
+        <field name="model">re.unit</field>
+        <field name="arch" type="xml">
+            <form string="Unit">
+                <header>
+                    <button name="action_set_available" type="object" string="Set Available"
+                            class="btn-primary" invisible="state == 'available'"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_lock" type="object" string="Lock"
+                            invisible="state == 'locked'" groups="re_base.group_re_manager"/>
+                    <button name="action_unlock" type="object" string="Unlock"
+                            invisible="state != 'locked'" groups="re_base.group_re_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state == 'cancelled'" groups="re_base.group_re_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,available,booked,deposited,contracted,handed_over"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="unit_code"/>
+                        <h1><field name="unit_code" placeholder="e.g., DSM-142"/></h1>
+                    </div>
+                    <group>
+                        <group string="Location">
+                            <field name="project_id"/>
+                            <field name="subzone_id" readonly="1"/>
+                            <field name="building_id"/>
+                            <field name="floor_id"/>
+                        </group>
+                        <group string="Type &amp; Position">
+                            <field name="unit_type_id"/>
+                            <field name="position_on_floor"/>
+                            <field name="unit_number_on_floor"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Specifications" name="specs">
+                            <group>
+                                <group string="Areas (Planned)">
+                                    <field name="area_gross"/>
+                                    <field name="area_net"/>
+                                    <field name="area_sellable"/>
+                                    <field name="area_balcony"/>
+                                    <field name="area_garden"/>
+                                    <field name="area_terrace"/>
+                                    <field name="area_parking"/>
+                                </group>
+                                <group string="Layout">
+                                    <field name="bedroom_count"/>
+                                    <field name="bathroom_count"/>
+                                    <field name="balcony_count"/>
+                                    <field name="direction"/>
+                                    <field name="view_type"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Amenities">
+                                    <field name="parking_slot_count"/>
+                                    <field name="motorbike_slot_count"/>
+                                    <field name="storage_room"/>
+                                    <field name="storage_area" invisible="not storage_room"/>
+                                </group>
+                                <group string="Interior">
+                                    <field name="interior_status"/>
+                                    <field name="furniture_brand"
+                                           invisible="interior_status not in ['fully_furnished', 'luxury_furnished']"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Pricing" name="pricing">
+                            <group>
+                                <group string="Base Price">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="original_price" widget="monetary"/>
+                                    <field name="price_per_m2" widget="monetary"/>
+                                </group>
+                                <group string="Tax &amp; Fees">
+                                    <field name="vat_rate"/>
+                                    <field name="maintenance_fee_rate"/>
+                                </group>
+                            </group>
+                            <separator string="Pricing Breakdown (computed)"/>
+                            <group>
+                                <group>
+                                    <field name="vat_amount" widget="monetary"/>
+                                    <field name="maintenance_fee_amount" widget="monetary"/>
+                                </group>
+                                <group>
+                                    <field name="total_price" widget="monetary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Marketing" name="marketing">
+                            <group>
+                                <field name="is_featured"/>
+                                <field name="is_premium"/>
+                            </group>
+                            <separator string="Selling Points"/>
+                            <field name="selling_point" nolabel="1"/>
+                            <separator string="Marketing Description"/>
+                            <field name="marketing_description" nolabel="1"/>
+                        </page>
+                        <page string="Legal" name="legal">
+                            <group>
+                                <group>
+                                    <field name="legal_doc_type"/>
+                                    <field name="land_use_type"/>
+                                </group>
+                                <group>
+                                    <field name="red_book_number"/>
+                                    <field name="red_book_issue_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Handover" name="handover">
+                            <group>
+                                <group string="Product Handover (Bàn giao nhà)">
+                                    <field name="expected_handover_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="product_handover_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="handover_condition"/>
+                                </group>
+                                <group string="Certificate (Sổ hồng / Sổ đỏ)">
+                                    <field name="certificate_handover_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                    <field name="certificate_number"/>
+                                </group>
+                            </group>
+                            <separator string="Areas (Actual — measured at handover)"/>
+                            <p class="text-muted">
+                                Measured after construction completes. Variance vs.
+                                planned areas may trigger price adjustment per the
+                                sale contract.
+                            </p>
+                            <group>
+                                <group>
+                                    <field name="area_gross_actual"/>
+                                    <field name="area_net_actual"/>
+                                    <field name="area_sellable_actual"/>
+                                </group>
+                            </group>
+                            <separator string="Handover Notes"/>
+                            <field name="handover_notes" nolabel="1"/>
+                        </page>
+                        <page string="Floor Plan" name="layout">
+                            <field name="layout_image" widget="image" options="{'size': [800, 600]}"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_unit_search" model="ir.ui.view">
+        <field name="name">re.unit.search</field>
+        <field name="model">re.unit</field>
+        <field name="arch" type="xml">
+            <search string="Units">
+                <field name="unit_code" string="Unit Code"
+                       filter_domain="[('unit_code', 'ilike', self)]"/>
+                <field name="project_id"/>
+                <field name="subzone_id"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="unit_type_id"/>
+                <field name="direction"/>
+                <field name="view_type"/>
+
+                <separator/>
+                <filter string="Featured ★" name="featured"
+                        domain="[('is_featured', '=', True)]"/>
+                <filter string="Premium ◆" name="premium"
+                        domain="[('is_premium', '=', True)]"/>
+                <filter string="Corner Units" name="corner"
+                        domain="[('position_on_floor', '=', 'corner')]"/>
+
+                <separator/>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Available" name="available"
+                        domain="[('state', '=', 'available')]"/>
+                <filter string="Booked" name="booked"
+                        domain="[('state', '=', 'booked')]"/>
+
+                <separator/>
+                <filter string="Project" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="Building" name="group_building"
+                        context="{'group_by': 'building_id'}"/>
+                <filter string="Floor" name="group_floor"
+                        context="{'group_by': 'floor_id'}"/>
+                <filter string="Unit Type" name="group_unit_type"
+                        context="{'group_by': 'unit_type_id'}"/>
+                <filter string="Status" name="group_state"
+                        context="{'group_by': 'state'}"/>
+
+                <!-- Smart filter sidebar (LEFT side) -->
+                <searchpanel>
+                    <field name="project_id"
+                           icon="fa-building-o"
+                           enable_counters="1"/>
+                    <field name="state"
+                           icon="fa-check-circle"
+                           select="multi"
+                           enable_counters="1"/>
+                    <field name="building_id"
+                           icon="fa-building"
+                           select="multi"
+                           enable_counters="1"/>
+                    <field name="unit_type_id"
+                           icon="fa-th-large"
+                           select="multi"
+                           enable_counters="1"/>
+                    <field name="direction"
+                           icon="fa-compass"
+                           select="multi"
+                           enable_counters="1"/>
+                    <field name="view_type"
+                           icon="fa-eye"
+                           select="multi"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_unit" model="ir.actions.act_window">
+        <field name="name">Units</field>
+        <field name="res_model">re.unit</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_re_unit_search"/>
+    </record>
+
+</odoo>

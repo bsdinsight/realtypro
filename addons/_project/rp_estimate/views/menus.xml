@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Leaf menu entries for Realty Project Phase 2 (v1.4.3-r4).
+
+        Phase 2 menu structure:
+
+        Realty Project
+        ├── Project Master
+        │   ├── Projects              [re_base.action_re_project — shortcut]
+        │   ├── Subzones              [re_base.action_re_subzone — shortcut]
+        │   ├── Buildings             [re_base.action_re_building — shortcut]
+        │   ├── Floors                [re_base.action_re_floor — shortcut]
+        │   ├── Units                 [re_base.action_re_unit — shortcut]
+        │   ├── Unit Types            [re_base.action_re_unit_type — shortcut]
+        │   ├── Hạng mục dự án        [rp.structure]
+        │   ├── Cost Categories       [rp.cost.category]
+        │   ├── Gói thầu              [rp.tender.package]
+        │   ├── Nhà thầu              [rp.contractor from rp_contractor]
+        │   └── Chuyên môn nhà thầu   [rp.contractor.specialty from rp_contractor]
+        └── Estimate
+            └── Khái toán             [rp.structure.estimate.line pivot]
+
+        v1.4.1 RESUME Section 2.4 exception: shared entities
+        (Projects, Subzones, Buildings, Floors, Units, Unit Types)
+        are mounted here for UX convenience. Records remain owned by
+        re_base.
+
+        v1.4.3-r4 changes: "Dự toán" and "Budget" removed (Phase 3/4
+        will redesign). "Khái toán" now points to summary pivot view
+        of rp.structure.estimate.line.
+    -->
+
+    <!--
+        ===== Project Master submenu (sequence 5 group) =====
+    -->
+
+    <!-- Shortcuts to Realty Core entities (sequences 10-60) -->
+    <menuitem id="menu_pm_projects"
+              name="Projects"
+              parent="menu_project_master"
+              action="re_base.action_re_project"
+              sequence="10"/>
+
+    <menuitem id="menu_pm_subzones"
+              name="Subzones"
+              parent="menu_project_master"
+              action="re_base.action_re_subzone"
+              sequence="20"/>
+
+    <menuitem id="menu_pm_buildings"
+              name="Buildings"
+              parent="menu_project_master"
+              action="re_base.action_re_building"
+              sequence="30"/>
+
+    <menuitem id="menu_pm_floors"
+              name="Floors"
+              parent="menu_project_master"
+              action="re_base.action_re_floor"
+              sequence="40"/>
+
+    <menuitem id="menu_pm_units"
+              name="Units"
+              parent="menu_project_master"
+              action="re_base.action_re_unit"
+              sequence="50"/>
+
+    <menuitem id="menu_pm_unit_types"
+              name="Unit Types"
+              parent="menu_project_master"
+              action="re_base.action_re_unit_type"
+              sequence="60"/>
+
+    <!-- Realty Project domain master entities (sequences 70+) -->
+    <menuitem id="menu_pm_rp_structure"
+              name="Hạng mục dự án"
+              parent="menu_project_master"
+              action="rp_cost_base.action_rp_structure"
+              sequence="70"/>
+
+    <menuitem id="menu_pm_rp_cost_category"
+              name="Cost Categories"
+              parent="menu_project_master"
+              action="rp_cost_base.action_rp_cost_category"
+              sequence="80"/>
+
+    <menuitem id="menu_pm_rp_tender_package"
+              name="Gói thầu"
+              parent="menu_project_master"
+              action="rp_estimate.action_rp_tender_package"
+              sequence="90"/>
+
+    <menuitem id="menu_pm_rp_contractor"
+              name="Nhà thầu"
+              parent="menu_project_master"
+              action="rp_contractor.action_rp_contractor"
+              sequence="100"/>
+
+    <menuitem id="menu_pm_rp_contractor_specialty"
+              name="Chuyên môn nhà thầu"
+              parent="menu_project_master"
+              action="rp_contractor.action_rp_contractor_specialty"
+              sequence="110"/>
+
+    <!--
+        ===== Estimate submenu (sequence 10 group) =====
+    -->
+
+    <menuitem id="menu_estimate_preliminary"
+              name="Khái toán"
+              parent="menu_estimate_workflows"
+              action="rp_cost_base.action_rp_structure_estimate_summary"
+              sequence="10"/>
+
+</odoo>

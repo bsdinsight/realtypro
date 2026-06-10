@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- Block tích hợp vào trang Settings > Accounting               -->
+    <!-- ============================================================ -->
+    <record id="res_config_settings_view_form_loan" model="ir.ui.view">
+        <field name="name">res.config.settings.form.re_loan_account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Realty Loan Accounts" string="Realty Loan"
+                     name="re_loan_account">
+                <block title="Tài khoản Quản lý Vay (Realty Loan)"
+                       name="re_loan_accounts">
+                    <setting help="Map tài khoản kế toán theo COA của công ty bạn. VAS TT 200: 3411/3412 Vay, 1121 Tiền gửi NH, 33531 Lãi phải trả, 635 CP lãi, 241 XDCB capitalize.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="loan_account_principal_id"
+                                       class="col-lg-5"/>
+                                <field name="loan_account_principal_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="loan_account_bank_id"
+                                       class="col-lg-5"/>
+                                <field name="loan_account_bank_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="loan_account_interest_payable_id"
+                                       class="col-lg-5"/>
+                                <field name="loan_account_interest_payable_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="loan_account_interest_expense_id"
+                                       class="col-lg-5"/>
+                                <field name="loan_account_interest_expense_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="loan_account_interest_capitalized_id"
+                                       class="col-lg-5"/>
+                                <field name="loan_account_interest_capitalized_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="loan_journal_id" class="col-lg-5"/>
+                                <field name="loan_journal_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form rút gọn — CHỈ tài khoản Loan, để mở từ menu Quản lý Vay -->
+    <!-- ============================================================ -->
+    <record id="res_config_settings_view_form_loan_focused" model="ir.ui.view">
+        <field name="name">res.config.settings.form.re_loan_focused</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Cấu hình tài khoản Quản lý Vay"
+                  class="o_base_settings">
+                <header>
+                    <button string="Lưu" type="object" name="execute"
+                            class="oe_highlight"/>
+                    <button string="Bỏ" type="object" name="cancel"
+                            class="oe_link"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Tài khoản kế toán — Quản lý Vay</h1>
+                        <p class="text-muted">
+                            Map tài khoản kế toán theo COA của công ty.
+                            VAS TT 200: 3411/3412 Vay, 1121 Tiền gửi NH,
+                            33531 Lãi phải trả, 635 CP lãi, 241 XDCB
+                            capitalize.
+                        </p>
+                    </div>
+                    <group>
+                        <group string="Tài khoản nợ vay">
+                            <field name="loan_account_principal_id"/>
+                            <field name="loan_account_bank_id"/>
+                        </group>
+                        <group string="Tài khoản lãi vay">
+                            <field name="loan_account_interest_payable_id"/>
+                            <field name="loan_account_interest_expense_id"/>
+                            <field name="loan_account_interest_capitalized_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Sổ Nhật ký">
+                            <field name="loan_journal_id"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <h5><i class="fa fa-book"/> Sơ đồ định khoản VAS TT 200</h5>
+                        <ul style="margin-bottom: 0;">
+                            <li><b>Giải ngân</b>: Nợ 1121 / Có 3411 (hoặc 3412 dài hạn)</li>
+                            <li><b>Ghi nhận lãi (accrual)</b>: Nợ 635 (hoặc 241 capitalize) / Có 33531</li>
+                            <li><b>Trả gốc</b>: Nợ 3411/3412 / Có 1121</li>
+                            <li><b>Trả lãi</b>: Nợ 33531 / Có 1121</li>
+                        </ul>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_account_config" model="ir.actions.act_window">
+        <field name="name">Cấu hình tài khoản kế toán Vay</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="res_config_settings_view_form_loan_focused"/>
+        <field name="target">current</field>
+        <field name="context">{'module': 're_loan_account'}</field>
+    </record>
+
+    <menuitem id="menu_re_loan_account_config"
+              name="Tài khoản kế toán"
+              parent="re_loan.menu_re_loan_config"
+              action="action_re_loan_account_config"
+              sequence="10"/>
+</odoo>

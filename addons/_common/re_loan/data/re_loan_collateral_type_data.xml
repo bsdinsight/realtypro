@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Seed loại tài sản thế chấp phổ biến của DN xây dựng VN -->
+    <record id="collateral_type_real_estate" model="re.loan.collateral.type">
+        <field name="name">Bất động sản</field>
+        <field name="code">BDS</field>
+        <field name="sequence">10</field>
+        <field name="note">Đất, nhà, công trình trên đất.</field>
+    </record>
+
+    <record id="collateral_type_vehicle" model="re.loan.collateral.type">
+        <field name="name">Phương tiện / Thiết bị</field>
+        <field name="code">PT</field>
+        <field name="sequence">20</field>
+        <field name="note">Xe, máy thi công, thiết bị.</field>
+    </record>
+
+    <record id="collateral_type_inventory" model="re.loan.collateral.type">
+        <field name="name">Hàng tồn kho</field>
+        <field name="code">HTK</field>
+        <field name="sequence">30</field>
+        <field name="note">Vật tư, hàng hoá.</field>
+    </record>
+
+    <record id="collateral_type_receivable" model="re.loan.collateral.type">
+        <field name="name">Quyền tài sản</field>
+        <field name="code">QTS</field>
+        <field name="sequence">40</field>
+        <field name="note">Quyền đòi nợ từ chủ đầu tư, quyền phát sinh từ hợp đồng.</field>
+    </record>
+
+    <record id="collateral_type_shares" model="re.loan.collateral.type">
+        <field name="name">Cổ phần / Phần vốn góp</field>
+        <field name="code">CP</field>
+        <field name="sequence">50</field>
+        <field name="note">Cổ phần công ty con / công ty liên kết.</field>
+    </record>
+
+    <record id="collateral_type_third_party" model="re.loan.collateral.type">
+        <field name="name">Bảo lãnh bên thứ ba</field>
+        <field name="code">BL3</field>
+        <field name="sequence">60</field>
+        <field name="note">Bảo lãnh của bên thứ ba cho khoản vay.</field>
+    </record>
+</odoo>

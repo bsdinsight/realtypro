@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Demo: vài khế ước nhận nợ trên HĐTD-2026/001 (BIDV) để minh hoạ
+        giải ngân + trả nợ + tiêu hạn mức end-to-end.
+        state đặt sẵn 'active'; disbursement/repayment sẽ cập nhật lifecycle.
+    -->
+
+    <!-- KW revolving: giải ngân 200 tỷ, trả gốc 50 tỷ → partial_paid -->
+    <record id="demo_note_rev_1" model="re.loan.note">
+        <field name="name">KW-2026/0001</field>
+        <field name="facility_id" ref="demo_facility_bidv_revolving"/>
+        <field name="amount">200000000000</field>
+        <field name="date_note">2026-02-01</field>
+        <field name="tenor_months">12</field>
+        <field name="interest_rate">8.5</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+        <field name="state">active</field>
+        <field name="purpose">Vốn lưu động thi công.</field>
+    </record>
+    <record id="demo_disb_rev_1" model="re.loan.note.disbursement">
+        <field name="note_id" ref="demo_note_rev_1"/>
+        <field name="date">2026-02-03</field>
+        <field name="amount">200000000000</field>
+        <field name="reference">GN-001</field>
+    </record>
+    <record id="demo_repay_rev_1" model="re.loan.note.repayment">
+        <field name="note_id" ref="demo_note_rev_1"/>
+        <field name="date">2026-04-01</field>
+        <field name="amount_principal">50000000000</field>
+        <field name="amount_interest">4250000000</field>
+        <field name="reference">TT-001</field>
+    </record>
+
+    <!-- KW term: giải ngân 150 tỷ, chưa trả → active -->
+    <record id="demo_note_term_1" model="re.loan.note">
+        <field name="name">KW-2026/0002</field>
+        <field name="facility_id" ref="demo_facility_bidv_term"/>
+        <field name="amount">150000000000</field>
+        <field name="date_note">2026-02-10</field>
+        <field name="tenor_months">24</field>
+        <field name="interest_rate">10.0</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+        <field name="state">active</field>
+        <field name="purpose">Đầu tư thiết bị thi công.</field>
+    </record>
+    <record id="demo_disb_term_1" model="re.loan.note.disbursement">
+        <field name="note_id" ref="demo_note_term_1"/>
+        <field name="date">2026-02-12</field>
+        <field name="amount">150000000000</field>
+        <field name="reference">GN-002</field>
+    </record>
+</odoo>

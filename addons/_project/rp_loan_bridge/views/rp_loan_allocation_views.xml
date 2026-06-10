@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_loan_allocation_list" model="ir.ui.view">
+        <field name="name">rp.loan.allocation.list</field>
+        <field name="model">rp.loan.allocation</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="note_id"/>
+                <field name="project_id"/>
+                <field name="structure_id"/>
+                <field name="cost_category_id"/>
+                <field name="tender_package_id" optional="hide"/>
+                <field name="contract_id"/>
+                <field name="base"/>
+                <field name="method"/>
+                <field name="percent"/>
+                <field name="amount"/>
+                <field name="amount_allocated" sum="Σ phân bổ"/>
+                <field name="description" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_loan_allocation_form" model="ir.ui.view">
+        <field name="name">rp.loan.allocation.form</field>
+        <field name="model">rp.loan.allocation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="note_id"/>
+                            <field name="project_id"/>
+                            <field name="structure_id"/>
+                            <field name="cost_category_id"/>
+                        </group>
+                        <group>
+                            <field name="tender_package_id"/>
+                            <field name="contract_id"/>
+                            <field name="base"/>
+                            <field name="method"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="percent"
+                                   invisible="method != 'percent'"/>
+                            <field name="amount"
+                                   invisible="method != 'amount'"/>
+                            <field name="amount_allocated"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Diễn giải..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_loan_allocation_pivot" model="ir.ui.view">
+        <field name="name">rp.loan.allocation.pivot</field>
+        <field name="model">rp.loan.allocation</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân bổ vay theo công trình">
+                <field name="project_id" type="row"/>
+                <field name="structure_id" type="row"/>
+                <field name="base" type="col"/>
+                <field name="amount_allocated" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_loan_allocation_search" model="ir.ui.view">
+        <field name="name">rp.loan.allocation.search</field>
+        <field name="model">rp.loan.allocation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="note_id"/>
+                <field name="project_id"/>
+                <field name="structure_id"/>
+                <field name="contract_id"/>
+                <filter name="f_interest" string="Lãi vay"
+                        domain="[('base','=','interest')]"/>
+                <filter name="f_principal" string="Gốc vay"
+                        domain="[('base','=','principal')]"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_structure" string="Hạng mục"
+                        context="{'group_by': 'structure_id'}"/>
+                <filter name="g_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_category" string="Nhóm chi phí"
+                        context="{'group_by': 'cost_category_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_loan_allocation" model="ir.actions.act_window">
+        <field name="name">Phân bổ vay theo công trình</field>
+        <field name="res_model">rp.loan.allocation</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_rp_loan_allocation_search"/>
+    </record>
+
+</odoo>

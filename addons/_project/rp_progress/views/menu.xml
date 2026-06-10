@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_rp_progress_root"
+              name="Tiến độ"
+              parent="rp_estimate.menu_realty_project_root"
+              sequence="40"/>
+
+    <menuitem id="menu_rp_progress_acceptance"
+              name="BBN Nghiệm thu KL"
+              parent="menu_rp_progress_root"
+              action="action_rp_progress_acceptance"
+              sequence="10"/>
+
+    <menuitem id="menu_rp_progress_config"
+              name="Cấu hình"
+              parent="menu_rp_progress_root"
+              sequence="90"/>
+
+    <menuitem id="menu_rp_progress_uom"
+              name="Đơn vị tính (Xây dựng)"
+              parent="menu_rp_progress_config"
+              action="action_rp_progress_uom"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_unit_import_wizard_form" model="ir.ui.view">
+        <field name="name">re.unit.import.wizard.form</field>
+        <field name="model">re.unit.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Units">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,validated,done"/>
+                </header>
+                <sheet>
+                    <!-- DRAFT: setup + upload -->
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'draft'">
+                        <strong>💡 Workflow:</strong>
+                        <ol class="mb-0">
+                            <li>Chọn Project và (tùy chọn) Building, bấm <b>Download Template</b></li>
+                            <li>Điền data vào file Excel</li>
+                            <li>Upload file, bấm <b>Validate</b> để kiểm tra</li>
+                            <li>Bấm <b>Import Valid Rows</b> để tạo units</li>
+                        </ol>
+                    </div>
+
+                    <group invisible="state == 'done'">
+                        <field name="project_id"
+                               readonly="state == 'validated'"/>
+                        <field name="building_id" options="{'no_create': True}"
+                               readonly="state == 'validated'"/>
+                        <field name="excel_file" filename="file_name"
+                               readonly="state == 'validated'"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+
+                    <!-- VALIDATED: show validation summary + log -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state != 'validated' or error_count == 0">
+                        <strong>⚠ Validation found errors.</strong>
+                        Review the validation log below. You can either:
+                        <ul class="mb-0">
+                            <li>Fix the errors in Excel and re-upload (bấm Set to Draft)</li>
+                            <li>Click <b>Import Valid Rows</b> to import only the valid rows
+                                (invalid ones will be skipped with detailed log)</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-success" role="alert"
+                         invisible="state != 'validated' or error_count != 0">
+                        <strong>✓ All rows passed validation!</strong>
+                        Click <b>Import Valid Rows</b> to proceed.
+                    </div>
+
+                    <group invisible="state != 'validated'">
+                        <group>
+                            <field name="valid_row_count"
+                                   string="Valid Rows (will be imported)"
+                                   class="text-success font-weight-bold"/>
+                            <field name="error_count"
+                                   string="Invalid Rows (will be skipped)"
+                                   class="text-danger"/>
+                            <field name="skipped_count"
+                                   string="Empty Rows"/>
+                        </group>
+                    </group>
+
+                    <separator string="Validation Log" invisible="state != 'validated'"/>
+                    <field name="validation_log" widget="text" nolabel="1" readonly="1"
+                           invisible="state != 'validated'"/>
+
+                    <!-- DONE: show final import log -->
+                    <group invisible="state != 'done'">
+                        <group>
+                            <field name="success_count"
+                                   string="Successfully Imported"
+                                   class="text-success font-weight-bold"/>
+                            <field name="error_count"
+                                   string="Errors"
+                                   class="text-danger"/>
+                            <field name="skipped_count"/>
+                        </group>
+                    </group>
+
+                    <separator string="Import Log" invisible="state != 'done'"/>
+                    <field name="log_text" widget="text" nolabel="1" readonly="1"
+                           invisible="state != 'done'"/>
+                </sheet>
+                <footer>
+                    <!-- DRAFT actions -->
+                    <button name="action_download_template"
+                            string="Download Template" type="object"
+                            class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_validate"
+                            string="Validate" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+
+                    <!-- VALIDATED actions -->
+                    <button name="action_import"
+                            string="Import Valid Rows" type="object"
+                            class="btn-primary"
+                            invisible="state != 'validated'"
+                            confirm="Import valid rows now? Invalid rows will be skipped (logged)."/>
+                    <button name="action_set_to_draft"
+                            string="Set to Draft" type="object"
+                            class="btn-secondary"
+                            invisible="state != 'validated'"/>
+
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_unit_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Units</field>
+        <field name="res_model">re.unit.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

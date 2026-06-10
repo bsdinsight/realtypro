@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_pivot" model="ir.ui.view">
+        <field name="name">rp.contract.pivot</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <pivot string="HĐ nhà thầu">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="contract_value_total" type="measure"/>
+                <field name="amount_paid" type="measure"/>
+                <field name="amount_remaining" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_graph" model="ir.ui.view">
+        <field name="name">rp.contract.graph</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <graph string="HĐ nhà thầu" type="bar">
+                <field name="contractor_id"/>
+                <field name="contract_value_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_rp_contract_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo HĐ nhà thầu</field>
+        <field name="res_model">rp.contract</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="search_view_id" ref="view_rp_contract_search"/>
+    </record>
+
+    <record id="action_rp_contract_payment_due" model="ir.actions.act_window">
+        <field name="name">Mốc thanh toán đến hạn</field>
+        <field name="res_model">rp.contract.payment.milestone</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','!=','paid')]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="view_rp_contract_milestone_list" model="ir.ui.view">
+        <field name="name">rp.contract.payment.milestone.list</field>
+        <field name="model">rp.contract.payment.milestone</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="contract_id"/>
+                <field name="name"/>
+                <field name="due_date"/>
+                <field name="percent"/>
+                <field name="amount" sum="Σ"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'paid'"
+                       decoration-info="state == 'invoiced'"
+                       decoration-muted="state == 'planned'"/>
+                <field name="paid_date"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

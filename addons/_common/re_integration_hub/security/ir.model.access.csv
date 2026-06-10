@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_api_key_user,re.api.key.user,model_re_api_key,re_integration_hub.group_integration_user,1,0,0,0
+access_re_api_key_admin,re.api.key.admin,model_re_api_key,re_integration_hub.group_integration_admin,1,1,1,1
+access_re_webhook_outbound_user,re.webhook.outbound.user,model_re_webhook_outbound,re_integration_hub.group_integration_user,1,0,0,0
+access_re_webhook_outbound_admin,re.webhook.outbound.admin,model_re_webhook_outbound,re_integration_hub.group_integration_admin,1,1,1,1
+access_re_webhook_log_user,re.webhook.log.user,model_re_webhook_log,re_integration_hub.group_integration_user,1,0,0,0
+access_re_webhook_log_admin,re.webhook.log.admin,model_re_webhook_log,re_integration_hub.group_integration_admin,1,1,1,1

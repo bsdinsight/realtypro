@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Force date format DD/MM/YYYY for the en_US language.
+
+        Real estate transactions span 5-30 years (construction, handover,
+        warranty, maintenance). Dates without year are ambiguous and
+        dangerous in legal contracts.
+
+        Note: noupdate="1" means this record is NOT overwritten on module
+        upgrade. After install, admins can still change format manually.
+        Remove `noupdate` (or set to "0") if you want every upgrade to
+        re-apply the format.
+    -->
+
+    <function model="res.lang" name="search">
+        <value eval="[('code', '=', 'en_US')]"/>
+    </function>
+
+    <function model="res.lang" name="write">
+        <value model="res.lang" eval="obj().search([('code', '=', 'en_US')]).ids"/>
+        <value eval="{
+            'date_format': '%d/%m/%Y',
+            'time_format': '%H:%M:%S',
+        }"/>
+    </function>
+
+</odoo>

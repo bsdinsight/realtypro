@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Realty Core: top-level application menu and the master-data
+         hub shared by every Realty Pro suite.
+
+         Menu IDs follow the convention
+             menu_re_core_<area>[_<entity>]
+         so suites depending on this module can reliably reference
+         them as ``re_core.menu_re_core_master_data`` etc.
+
+         Actions referenced here are defined in their respective
+         "owning" modules (re_base for property entities,
+         vn_administrative_units for VN admin data, etc.). This file
+         only mounts them under the Realty Core menu.
+         ============================================================ -->
+
+    <!-- ===== Top-level suite ===== -->
+
+    <menuitem id="menu_re_core_root"
+              name="Realty Core"
+              sequence="10"
+              web_icon="re_core,static/description/icon.png"
+              groups="re_base.group_re_user"/>
+
+    <!-- ===== Master Data section ===== -->
+
+    <menuitem id="menu_re_core_master_data"
+              name="Master Data"
+              parent="menu_re_core_root"
+              sequence="10"/>
+
+    <menuitem id="menu_re_core_project"
+              name="Projects"
+              action="re_base.action_re_project"
+              parent="menu_re_core_master_data"
+              sequence="10"/>
+
+    <menuitem id="menu_re_core_subzone"
+              name="Subzones"
+              action="re_base.action_re_subzone"
+              parent="menu_re_core_master_data"
+              sequence="20"/>
+
+    <menuitem id="menu_re_core_building"
+              name="Buildings"
+              action="re_base.action_re_building"
+              parent="menu_re_core_master_data"
+              sequence="30"/>
+
+    <menuitem id="menu_re_core_floor"
+              name="Floors"
+              action="re_base.action_re_floor"
+              parent="menu_re_core_master_data"
+              sequence="40"/>
+
+    <menuitem id="menu_re_core_unit"
+              name="Units"
+              action="re_base.action_re_unit"
+              parent="menu_re_core_master_data"
+              sequence="50"/>
+
+    <menuitem id="menu_re_core_unit_type"
+              name="Unit Types"
+              action="re_base.action_re_unit_type"
+              parent="menu_re_core_master_data"
+              sequence="60"
+              groups="re_base.group_re_manager"/>
+
+    <!-- Bulk-data tools sit below the master entries (sequence 100+). -->
+
+    <menuitem id="menu_re_core_floor_generate"
+              name="Generate Floors"
+              action="re_base.action_re_floor_generate_wizard"
+              parent="menu_re_core_master_data"
+              sequence="100"
+              groups="re_base.group_re_manager"/>
+
+    <menuitem id="menu_re_core_floor_import"
+              name="Import Floors"
+              action="re_base.action_re_floor_import_wizard"
+              parent="menu_re_core_master_data"
+              sequence="110"
+              groups="re_base.group_re_manager"/>
+
+    <menuitem id="menu_re_core_unit_import"
+              name="Import Units"
+              action="re_base.action_re_unit_import_wizard"
+              parent="menu_re_core_master_data"
+              sequence="120"
+              groups="re_base.group_re_manager"/>
+
+    <!-- ===== Configuration section =====
+         References are commented placeholders until the underlying
+         modules grow real actions. To add: replace the comment with
+         a <menuitem .../> referencing module.action_xxx — see the
+         master-data section above for the pattern.
+         -->
+
+    <menuitem id="menu_re_core_configuration"
+              name="Configuration"
+              parent="menu_re_core_root"
+              sequence="90"
+              groups="re_base.group_re_manager"/>
+
+    <!-- VN Administrative Units: only the Ward action is registered
+         today. Expand here when province/district actions are added. -->
+    <menuitem id="menu_re_core_admin_unit_ward"
+              name="Wards (Phường/Xã)"
+              action="vn_administrative_units.action_vau_ward"
+              parent="menu_re_core_configuration"
+              sequence="40"/>
+
+    <!-- Placeholder slots, kept here so future modules know where to
+         hook in. Uncomment + populate as features land:
+
+         <menuitem id="menu_re_core_party"        action="re_party.action_re_party"
+                   parent="menu_re_core_configuration" sequence="10"/>
+         <menuitem id="menu_re_core_document"     action="re_document.action_re_document_template"
+                   parent="menu_re_core_configuration" sequence="20"/>
+         <menuitem id="menu_re_core_vendor"       action="re_vendor.action_re_vendor"
+                   parent="menu_re_core_configuration" sequence="30"/>
+         -->
+
+</odoo>

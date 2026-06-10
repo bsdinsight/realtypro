@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search -->
+    <record id="view_rp_contractor_search" model="ir.ui.view">
+        <field name="name">rp.contractor.search</field>
+        <field name="model">rp.contractor</field>
+        <field name="arch" type="xml">
+            <search string="Nhà thầu">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="tax_code"/>
+                <field name="primary_contact_name" string="Liên hệ"/>
+                <field name="specialty_ids"/>
+                <field name="project_ids"/>
+                <separator/>
+                <filter name="prospect" string="Prospect"
+                        domain="[('state', '=', 'prospect')]"/>
+                <filter name="approved" string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="suspended" string="Suspended"
+                        domain="[('state', '=', 'suspended')]"/>
+                <filter name="blacklisted" string="Blacklisted"
+                        domain="[('state', '=', 'blacklisted')]"/>
+                <separator/>
+                <filter name="general" string="Tổng thầu"
+                        domain="[('contractor_type', '=', 'general')]"/>
+                <filter name="subcontractor" string="Nhà thầu phụ"
+                        domain="[('contractor_type', '=', 'subcontractor')]"/>
+                <filter name="supplier" string="Nhà cung cấp"
+                        domain="[('contractor_type', '=', 'supplier')]"/>
+                <filter name="consultant" string="Tư vấn"
+                        domain="[('contractor_type', '=', 'consultant')]"/>
+                <separator/>
+                <filter name="license_expired" string="License hết hạn"
+                        domain="[('construction_license_expired', '=', True)]"/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="State" name="group_state"
+                        context="{'group_by': 'state'}"/>
+                <filter string="Type" name="group_type"
+                        context="{'group_by': 'contractor_type'}"/>
+                <filter string="Class" name="group_class"
+                        context="{'group_by': 'construction_license_class'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_rp_contractor_list" model="ir.ui.view">
+        <field name="name">rp.contractor.list</field>
+        <field name="model">rp.contractor</field>
+        <field name="arch" type="xml">
+            <list string="Nhà thầu" sample="1"
+                  decoration-success="state == 'approved'"
+                  decoration-warning="state == 'suspended'"
+                  decoration-danger="state == 'blacklisted'"
+                  decoration-muted="not active">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="tax_code" optional="show"/>
+                <field name="contractor_type"/>
+                <field name="construction_license_class" optional="show"/>
+                <field name="construction_license_expiry" optional="hide"/>
+                <field name="construction_license_expired" optional="hide"
+                       widget="boolean_toggle"/>
+                <field name="primary_contact_name" optional="show"/>
+                <field name="primary_contact_phone" optional="show"/>
+                <field name="specialty_ids" widget="many2many_tags" optional="show"/>
+                <field name="project_count" optional="hide"/>
+                <field name="state" widget="badge"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_rp_contractor_form" model="ir.ui.view">
+        <field name="name">rp.contractor.form</field>
+        <field name="model">rp.contractor</field>
+        <field name="arch" type="xml">
+            <form string="Nhà thầu">
+                <header>
+                    <button name="action_approve" string="Approve"
+                            type="object" class="btn-primary"
+                            invisible="state not in ['prospect', 'suspended']"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_suspend" string="Suspend"
+                            type="object" class="btn-warning"
+                            invisible="state != 'approved'"
+                            groups="re_base.group_re_manager"
+                            confirm="Suspend this contractor? They cannot be
+                                     selected for new tender packages while
+                                     suspended."/>
+                    <button name="action_blacklist" string="Blacklist"
+                            type="object" class="btn-danger"
+                            invisible="state == 'blacklisted'"
+                            groups="re_base.group_re_admin"
+                            confirm="Blacklist this contractor? Reversible
+                                     only by an admin."/>
+                    <button name="action_reset_to_prospect" string="Reset to Prospect"
+                            type="object"
+                            invisible="state == 'prospect'"
+                            groups="re_base.group_re_admin"
+                            confirm="Reset state to prospect? Admin override."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="prospect,approved,suspended,blacklisted"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <widget name="web_ribbon" title="License Expired"
+                            bg_color="text-bg-warning"
+                            invisible="not construction_license_expired or not active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="construction_license_expired" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Công ty CP Xây dựng Hòa Bình"/>
+                        </h1>
+                        <div>
+                            <label for="code" class="oe_edit_only"/>
+                            <field name="code" placeholder="e.g. NT001"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Identity">
+                            <field name="contractor_type"/>
+                            <field name="tax_code"
+                                   placeholder="10 hoặc 13 chữ số"/>
+                            <field name="business_license_number"/>
+                            <field name="business_license_date"/>
+                            <field name="partner_id"
+                                   options="{'no_create_edit': True}"
+                                   help="Optional link to res.partner"/>
+                        </group>
+                        <group string="Construction Capability">
+                            <field name="construction_license_number"/>
+                            <field name="construction_license_class"/>
+                            <field name="construction_license_expiry"/>
+                            <field name="specialty_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create_edit': True, 'color_field': 'sequence'}"/>
+                        </group>
+                    </group>
+
+                    <group string="Address">
+                        <field name="headquarters_address" nolabel="1"/>
+                    </group>
+
+                    <group string="Primary Contact">
+                        <group>
+                            <field name="primary_contact_name"/>
+                            <field name="primary_contact_phone"/>
+                        </group>
+                        <group>
+                            <field name="primary_contact_email"
+                                   widget="email"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Projects" name="projects">
+                            <field name="project_ids" widget="many2many"
+                                   options="{'no_create': True}">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"
+                                   placeholder="Free-form notes about this contractor..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_rp_contractor" model="ir.actions.act_window">
+        <field name="name">Nhà thầu</field>
+        <field name="res_model">rp.contractor</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_contractor_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first nhà thầu (contractor).
+            </p>
+            <p>
+                Master data for contractors who will perform work on
+                your projects. Track legal information (tax code,
+                business license), construction capability
+                (license class, specialties), and project history.
+            </p>
+            <p>
+                State machine:
+                Prospect → Approved (manager) → Suspended ⇄ Approved → Blacklisted (admin).
+            </p>
+        </field>
+    </record>
+
+</odoo>

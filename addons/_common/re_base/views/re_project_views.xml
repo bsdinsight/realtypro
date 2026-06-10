@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_list" model="ir.ui.view">
+        <field name="name">re.project.list</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <list string="Projects">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_type" optional="show"/>
+                <field name="development_type" optional="show"/>
+                <field name="segment" optional="hide"/>
+                <field name="state_id" optional="show"/>
+                <field name="developer_id" optional="show"/>
+                <field name="primary_state" widget="badge"
+                       decoration-success="primary_state == 'operation'"
+                       decoration-info="primary_state == 'selling'"
+                       decoration-warning="primary_state == 'construction'"
+                       decoration-muted="primary_state in ('planning', 'closed')"/>
+                <field name="state_summary" optional="show"/>
+                <field name="lifecycle_level" optional="hide"/>
+                <field name="subzone_count"/>
+                <field name="building_count"/>
+                <field name="unit_count"/>
+                <field name="available_unit_count"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_project_kanban" model="ir.ui.view">
+        <field name="name">re.project.kanban</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="image"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="primary_state"/>
+                <field name="state_summary"/>
+                <field name="state_id"/>
+                <field name="unit_count"/>
+                <field name="available_unit_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <field name="image" widget="image" class="me-2"
+                                   options="{'img_class': 'object-fit-cover', 'size': [64, 64]}"/>
+                            <div class="flex-grow-1">
+                                <strong><field name="name"/></strong>
+                                <div class="text-muted">
+                                    <field name="code"/> · <field name="state_id"/>
+                                </div>
+                                <div><field name="primary_state" widget="badge"/></div>
+                                <div class="text-muted small" t-if="record.state_summary.raw_value">
+                                    <field name="state_summary"/>
+                                </div>
+                                <div class="mt-2">
+                                    <field name="available_unit_count"/> /
+                                    <field name="unit_count"/> available
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_re_project_form" model="ir.ui.view">
+        <field name="name">re.project.form</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <header>
+                    <!-- Project has NO transition buttons of its own:
+                         the lifecycle owner (subzone or building) holds
+                         the state machine. Header shows the rollup
+                         primary_state for orientation.
+
+                         Manage transitions on individual buildings or
+                         subzones below in the Buildings / Subzones tabs. -->
+                    <field name="primary_state" widget="statusbar"
+                           statusbar_visible="planning,pre_launch,selling,construction,product_handover,certificate_handover,operation"
+                           readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_subzones" type="object"
+                                class="oe_stat_button" icon="fa-th-large">
+                            <field name="subzone_count" widget="statinfo" string="Subzones"/>
+                        </button>
+                        <button name="action_view_buildings" type="object"
+                                class="oe_stat_button" icon="fa-building">
+                            <field name="building_count" widget="statinfo" string="Buildings"/>
+                        </button>
+                        <button name="action_view_units" type="object"
+                                class="oe_stat_button" icon="fa-home">
+                            <field name="unit_count" widget="statinfo" string="Units"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Project name..."/></h1>
+                        <field name="tagline" placeholder="Tagline / Slogan..."/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="project_type"/>
+                            <field name="segment"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" options="{'format': 'dd/MM/yyyy'}"/>
+                            <field name="expected_handover_date" options="{'format': 'dd/MM/yyyy'}"/>
+                            <field name="sequence"/>
+                            <field name="is_open_for_sale" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Lifecycle">
+                        <group>
+                            <field name="development_type"/>
+                            <field name="lifecycle_level"
+                                   help="Auto-set from Development Type. Can override per project."/>
+                        </group>
+                        <group>
+                            <field name="state_summary" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Location" name="location">
+                            <group>
+                                <group>
+                                    <field name="country_id"
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="state_id"
+                                           options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="ward_id"
+                                           options="{'no_open': True, 'no_quick_create': True}"/>
+                                    <field name="street"/>
+                                </group>
+                                <group>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Master Plan" name="master_plan">
+                            <group>
+                                <group>
+                                    <field name="total_area_ha"/>
+                                    <field name="built_area_ha"/>
+                                </group>
+                                <group>
+                                    <field name="green_area_percent"/>
+                                    <field name="density_percent"/>
+                                </group>
+                            </group>
+                            <separator string="Masterplan Image"/>
+                            <field name="masterplan_image" widget="image"
+                                   options="{'size': [1200, 800]}"/>
+                        </page>
+                        <page string="Developers" name="developers">
+                            <group>
+                                <field name="master_developer_id"/>
+                                <field name="developer_id"/>
+                            </group>
+                            <separator string="Co-Developers"/>
+                            <field name="co_developer_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Legal" name="legal">
+                            <group>
+                                <field name="legal_status"/>
+                                <field name="legal_doc_number"/>
+                                <field name="legal_doc_date" options="{'format': 'dd/MM/yyyy'}"/>
+                            </group>
+                        </page>
+                        <page string="Marketing" name="marketing">
+                            <separator string="Selling Points"/>
+                            <field name="selling_point" nolabel="1"/>
+                            <separator string="Description"/>
+                            <field name="description" nolabel="1"/>
+                            <separator string="Brochures &amp; Documents"/>
+                            <field name="brochure_attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Sales Contact" name="sales_contact">
+                            <group>
+                                <group>
+                                    <field name="sales_office_address"/>
+                                    <field name="sales_phone"/>
+                                </group>
+                                <group>
+                                    <field name="sales_email" widget="email"/>
+                                    <field name="website_url" widget="url"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Statistics" name="stats">
+                            <group>
+                                <group>
+                                    <field name="subzone_count"/>
+                                    <field name="building_count"/>
+                                    <field name="floor_count"/>
+                                </group>
+                                <group>
+                                    <field name="unit_count"/>
+                                    <field name="available_unit_count"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_project_search" model="ir.ui.view">
+        <field name="name">re.project.search</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <search string="Projects">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state_id"/>
+                <field name="ward_id"/>
+                <field name="developer_id"/>
+                <separator/>
+                <filter string="Pre-Launch" name="pre_launch"
+                        domain="[('primary_state', '=', 'pre_launch')]"/>
+                <filter string="Selling" name="selling"
+                        domain="[('primary_state', '=', 'selling')]"/>
+                <filter string="Construction" name="construction"
+                        domain="[('primary_state', '=', 'construction')]"/>
+                <filter string="Product Handover" name="product_handover"
+                        domain="[('primary_state', '=', 'product_handover')]"/>
+                <filter string="Certificate Handover" name="certificate_handover"
+                        domain="[('primary_state', '=', 'certificate_handover')]"/>
+                <filter string="Operation" name="operation"
+                        domain="[('primary_state', '=', 'operation')]"/>
+                <separator/>
+                <filter string="High-Rise" name="high_rise"
+                        domain="[('development_type', '=', 'high_rise')]"/>
+                <filter string="Low-Rise" name="low_rise"
+                        domain="[('development_type', '=', 'low_rise')]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Project Type" name="group_type" context="{'group_by': 'project_type'}"/>
+                <filter string="Phase" name="group_state" context="{'group_by': 'primary_state'}"/>
+                <filter string="Development Type" name="group_dev_type" context="{'group_by': 'development_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_project" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">re.project</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_re_project_search"/>
+    </record>
+
+</odoo>

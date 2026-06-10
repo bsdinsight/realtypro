@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Demo: vài HĐTD + hạn mức để test nhanh.
+        Tham chiếu các res.partner ngân hàng ở re_loan_demo_banks.xml.
+    -->
+
+    <!-- ===== HĐTD 1: BIDV - 500 tỷ - Hiệu lực ===== -->
+    <record id="demo_contract_bidv" model="re.loan.credit.contract">
+        <field name="name">HĐTD-2026/001</field>
+        <field name="partner_id" ref="demo_bank_partner_bidv"/>
+        <field name="bank_id" ref="demo_bank_bidv"/>
+        <field name="amount_total">500000000000</field>
+        <field name="sign_date">2026-01-15</field>
+        <field name="date_start">2026-01-15</field>
+        <field name="date_end">2029-01-15</field>
+        <field name="representative">Nguyễn Văn Tổng</field>
+        <field name="state">active</field>
+        <field name="note">Hạn mức tài trợ thi công các công trình trọng điểm.</field>
+    </record>
+    <record id="demo_facility_bidv_revolving" model="re.loan.facility">
+        <field name="name">Hạn mức vốn lưu động (Revolving)</field>
+        <field name="credit_contract_id" ref="demo_contract_bidv"/>
+        <field name="facility_type">revolving</field>
+        <field name="amount_limit">300000000000</field>
+        <field name="interest_rate_default">8.5</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+    </record>
+    <record id="demo_facility_bidv_term" model="re.loan.facility">
+        <field name="name">Hạn mức trung hạn (Term)</field>
+        <field name="credit_contract_id" ref="demo_contract_bidv"/>
+        <field name="facility_type">term</field>
+        <field name="amount_limit">200000000000</field>
+        <field name="interest_rate_default">10.0</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+    </record>
+
+    <!-- ===== HĐTD 2: Vietcombank - 300 tỷ - Hiệu lực ===== -->
+    <record id="demo_contract_vcb" model="re.loan.credit.contract">
+        <field name="name">HĐTD-2026/002</field>
+        <field name="partner_id" ref="demo_bank_partner_vcb"/>
+        <field name="bank_id" ref="demo_bank_vcb"/>
+        <field name="amount_total">300000000000</field>
+        <field name="sign_date">2026-03-01</field>
+        <field name="date_start">2026-03-01</field>
+        <field name="date_end">2028-03-01</field>
+        <field name="representative">Nguyễn Văn Tổng</field>
+        <field name="state">active</field>
+    </record>
+    <record id="demo_facility_vcb_revolving" model="re.loan.facility">
+        <field name="name">Hạn mức vốn lưu động</field>
+        <field name="credit_contract_id" ref="demo_contract_vcb"/>
+        <field name="facility_type">revolving</field>
+        <field name="amount_limit">300000000000</field>
+        <field name="interest_rate_default">8.0</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+    </record>
+
+    <!-- ===== HĐTD 3: VietinBank - 1000 tỷ - Nháp ===== -->
+    <record id="demo_contract_ctg" model="re.loan.credit.contract">
+        <field name="name">HĐTD-2026/003</field>
+        <field name="partner_id" ref="demo_bank_partner_ctg"/>
+        <field name="bank_id" ref="demo_bank_ctg"/>
+        <field name="amount_total">1000000000000</field>
+        <field name="sign_date">2026-05-10</field>
+        <field name="date_start">2026-06-01</field>
+        <field name="date_end">2031-06-01</field>
+        <field name="representative">Trần Thị Phó</field>
+        <field name="state">draft</field>
+        <field name="note">Đang chờ ký kết - tài trợ dự án lớn.</field>
+    </record>
+    <record id="demo_facility_ctg_term" model="re.loan.facility">
+        <field name="name">Hạn mức dài hạn dự án</field>
+        <field name="credit_contract_id" ref="demo_contract_ctg"/>
+        <field name="facility_type">term</field>
+        <field name="amount_limit">700000000000</field>
+        <field name="interest_rate_default">9.5</field>
+        <field name="interest_method">declining</field>
+        <field name="day_count">act_360</field>
+    </record>
+    <record id="demo_facility_ctg_guarantee" model="re.loan.facility">
+        <field name="name">Hạn mức bảo lãnh</field>
+        <field name="credit_contract_id" ref="demo_contract_ctg"/>
+        <field name="facility_type">guarantee_line</field>
+        <field name="amount_limit">300000000000</field>
+        <field name="interest_rate_default">2.0</field>
+        <field name="interest_method">flat</field>
+        <field name="day_count">act_360</field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!-- Demo: HĐ nhà thầu cho 1 gói thầu giả lập (cần seed thủ công nếu DB
+         không có demo dự án + gói thầu). Bộ này chỉ load khi cài demo. -->
+</odoo>

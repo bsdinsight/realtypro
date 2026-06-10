@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="cron_webhook_outbound_sender" model="ir.cron">
+        <field name="name">RealtyPro: Send pending webhooks</field>
+        <field name="model_id" ref="model_re_webhook_outbound"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_send_pending()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

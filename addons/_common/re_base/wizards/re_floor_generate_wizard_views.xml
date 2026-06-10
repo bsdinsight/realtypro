@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_floor_generate_wizard_form" model="ir.ui.view">
+        <field name="name">re.floor.generate.wizard.form</field>
+        <field name="model">re.floor.generate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Floors">
+                <sheet>
+                    <group invisible="state == 'done'">
+                        <group>
+                            <field name="building_id" options="{'no_create': True}"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="mode"/>
+                        </group>
+                        <group>
+                            <field name="conflict_strategy"/>
+                        </group>
+                    </group>
+                    <group string="Range" invisible="state == 'done' or mode == 'custom'">
+                        <group>
+                            <field name="floor_from"/>
+                            <field name="floor_to"/>
+                            <field name="skip_floors_text" invisible="mode != 'skip'"/>
+                        </group>
+                        <group>
+                            <field name="code_pattern"/>
+                            <field name="name_pattern"/>
+                        </group>
+                    </group>
+                    <group string="Custom Pattern" invisible="state == 'done' or mode != 'custom'">
+                        <p>One floor per line. Format: <code>NUMBER|CODE|NAME</code></p>
+                        <field name="custom_pattern" nolabel="1" widget="text"/>
+                    </group>
+                    <separator string="Preview" invisible="state == 'done'"/>
+                    <field name="preview_text" widget="text" nolabel="1" readonly="1"
+                           invisible="state == 'done'"/>
+                    <group invisible="state != 'done'">
+                        <group>
+                            <field name="created_count"/>
+                            <field name="updated_count"/>
+                        </group>
+                        <group>
+                            <field name="skipped_count"/>
+                            <field name="deleted_count"/>
+                        </group>
+                    </group>
+                    <separator string="Log" invisible="state != 'done'"/>
+                    <field name="log_text" widget="text" nolabel="1" readonly="1"
+                           invisible="state != 'done'"/>
+                    <field name="state" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_generate" string="Generate Floors" type="object"
+                            class="btn-primary" invisible="state == 'done'"/>
+                    <button name="action_view_floors" string="View Floors" type="object"
+                            class="btn-primary" invisible="state != 'done'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_floor_generate_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Floors</field>
+        <field name="res_model">re.floor.generate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

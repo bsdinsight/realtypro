@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Pivot view chung cho báo cáo dư nợ / aging ===== -->
+    <record id="view_re_loan_note_pivot" model="ir.ui.view">
+        <field name="name">re.loan.note.pivot</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <pivot string="Dư nợ vay">
+                <field name="partner_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="principal_outstanding" type="measure"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_graph" model="ir.ui.view">
+        <field name="name">re.loan.note.graph</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <graph string="Dư nợ vay" type="bar">
+                <field name="partner_id"/>
+                <field name="principal_outstanding" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ===== Báo cáo: Dư nợ vay ===== -->
+    <record id="action_re_loan_report_outstanding" model="ir.actions.act_window">
+        <field name="name">Dư nợ vay</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+    </record>
+
+    <!-- ===== Báo cáo: Lịch trả nợ đến hạn ===== -->
+    <record id="action_re_loan_report_due" model="ir.actions.act_window">
+        <field name="name">Khế ước đến hạn</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <field name="context">{'search_default_f_due_90': 1}</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+    </record>
+
+    <!-- ===== Báo cáo: Nợ quá hạn (Aging) ===== -->
+    <record id="action_re_loan_report_aging" model="ir.actions.act_window">
+        <field name="name">Nợ quá hạn (Aging)</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <field name="context">{'search_default_f_overdue': 1, 'search_default_g_aging': 1}</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+    </record>
+
+    <!-- ===== Menu Báo cáo ===== -->
+    <menuitem id="menu_re_loan_report"
+              name="Báo cáo"
+              parent="menu_re_loan_root"
+              sequence="50"/>
+    <menuitem id="menu_re_loan_report_outstanding"
+              name="Dư nợ vay"
+              parent="menu_re_loan_report"
+              action="action_re_loan_report_outstanding"
+              sequence="10"/>
+    <menuitem id="menu_re_loan_report_due"
+              name="Khế ước đến hạn"
+              parent="menu_re_loan_report"
+              action="action_re_loan_report_due"
+              sequence="20"/>
+    <menuitem id="menu_re_loan_report_aging"
+              name="Nợ quá hạn (Aging)"
+              parent="menu_re_loan_report"
+              action="action_re_loan_report_aging"
+              sequence="30"/>
+
+    <!-- ===== Báo cáo (5): Tiến độ thanh toán ===== -->
+    <record id="view_re_loan_note_progress_list" model="ir.ui.view">
+        <field name="name">re.loan.note.progress.list</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="principal_variance &lt; 0 or interest_variance &lt; 0"
+                  decoration-muted="state in ('fully_paid','cancelled')">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_note"/>
+                <field name="date_maturity"/>
+                <field name="amount"/>
+                <field name="repayment_plan"/>
+                <field name="principal_due_to_date" sum="Σ KH gốc"/>
+                <field name="amount_repaid_principal" sum="Σ trả gốc"/>
+                <field name="principal_variance" sum="Chênh lệch gốc"/>
+                <field name="interest_due_to_date" sum="Σ KH lãi"/>
+                <field name="amount_repaid_interest" sum="Σ trả lãi"/>
+                <field name="interest_variance" sum="Chênh lệch lãi"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_report_progress" model="ir.actions.act_window">
+        <field name="name">Tiến độ thanh toán</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_re_loan_note_progress_list"/>
+        <field name="domain">[('state','in',('active','partial_paid','overdue'))]</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+    </record>
+
+    <menuitem id="menu_re_loan_report_progress"
+              name="Tiến độ thanh toán"
+              parent="menu_re_loan_report"
+              action="action_re_loan_report_progress"
+              sequence="40"/>
+
+    <!-- ===== Báo cáo: Phân bổ hạn mức HĐTD theo Dự án × Mục đích ===== -->
+    <record id="view_re_loan_facility_alloc_pivot" model="ir.ui.view">
+        <field name="name">re.loan.facility.project.allocation.pivot</field>
+        <field name="model">re.loan.facility.project.allocation</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân bổ HĐTD theo Dự án × Mục đích">
+                <field name="project_id" type="row"/>
+                <field name="purpose" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_re_loan_facility_alloc_list" model="ir.ui.view">
+        <field name="name">re.loan.facility.project.allocation.list</field>
+        <field name="model">re.loan.facility.project.allocation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="credit_contract_id"/>
+                <field name="facility_id"/>
+                <field name="purpose"/>
+                <field name="project_id"/>
+                <field name="amount" sum="Σ"/>
+                <field name="description"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_facility_alloc_search" model="ir.ui.view">
+        <field name="name">re.loan.facility.project.allocation.search</field>
+        <field name="model">re.loan.facility.project.allocation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="credit_contract_id"/>
+                <field name="facility_id"/>
+                <field name="project_id"/>
+                <field name="purpose"/>
+                <filter name="g_contract" string="HĐTD"
+                        context="{'group_by': 'credit_contract_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_purpose" string="Mục đích"
+                        context="{'group_by': 'purpose'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_facility_alloc" model="ir.actions.act_window">
+        <field name="name">Phân bổ HĐTD (Dự án × Mục đích)</field>
+        <field name="res_model">re.loan.facility.project.allocation</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_re_loan_facility_alloc_search"/>
+    </record>
+
+    <menuitem id="menu_re_loan_report_facility_alloc"
+              name="Phân bổ HĐTD theo Dự án × Mục đích"
+              parent="menu_re_loan_report"
+              action="action_re_loan_facility_alloc"
+              sequence="45"/>
+
+    <!-- ============================================================ -->
+    <!-- Báo cáo: Phân bổ HĐTD theo Khế ước                          -->
+    <!-- Group by HĐTD, list KW với cột gốc/lãi/đã trả/dư nợ          -->
+    <!-- ============================================================ -->
+    <record id="view_re_loan_note_alloc_by_contract_list"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.alloc.by.contract.list</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <list string="Phân bổ HĐTD theo Khế ước"
+                  default_order="credit_contract_id, date_note, name"
+                  decoration-muted="state in ('fully_paid','cancelled')"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'active'"
+                  decoration-warning="state == 'partial_paid'"
+                  decoration-danger="state == 'overdue'">
+                <field name="credit_contract_id" optional="show"/>
+                <field name="name" string="Số KW"/>
+                <field name="loan_type" string="Loại khoản vay"/>
+                <field name="date_note" string="Ngày nhận nợ"/>
+                <field name="tenor_months" string="Kỳ hạn (Tháng)"/>
+                <field name="date_maturity" string="Ngày đáo hạn"/>
+                <field name="amount" string="Số tiền KW" sum="Σ"/>
+                <field name="interest_rate" string="Lãi suất"/>
+                <field name="interest_total_planned"
+                       string="Tiền lãi" sum="Σ"/>
+                <field name="amount_repaid_principal"
+                       string="Tiền gốc đã trả" sum="Σ"/>
+                <field name="amount_repaid_interest"
+                       string="Tiền lãi đã trả" sum="Σ"/>
+                <field name="principal_outstanding"
+                       string="Dư nợ gốc" sum="Σ"/>
+                <field name="interest_outstanding"
+                       string="Dư nợ lãi" sum="Σ"/>
+                <field name="total_outstanding"
+                       string="Tổng dư nợ (gốc + lãi)" sum="Σ"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'partial_paid'"
+                       decoration-info="state == 'draft'"
+                       decoration-danger="state == 'overdue'"
+                       decoration-muted="state in ('fully_paid','cancelled')"
+                       optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_alloc_by_contract_pivot"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.alloc.by.contract.pivot</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân bổ HĐTD theo Khế ước">
+                <field name="credit_contract_id" type="row"/>
+                <field name="name" type="row"/>
+                <field name="amount" type="measure"/>
+                <field name="interest_total_planned" type="measure"/>
+                <field name="amount_repaid_principal" type="measure"/>
+                <field name="amount_repaid_interest" type="measure"/>
+                <field name="principal_outstanding" type="measure"/>
+                <field name="interest_outstanding" type="measure"/>
+                <field name="total_outstanding" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_alloc_by_contract_search"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.alloc.by.contract.search</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="credit_contract_id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="facility_id"/>
+                <filter name="f_active" string="Đang hiệu lực"
+                        domain="[('state','in',['active','partial_paid','overdue'])]"/>
+                <filter name="f_open" string="Chưa tất toán"
+                        domain="[('state','not in',['fully_paid','cancelled'])]"/>
+                <separator/>
+                <filter name="g_contract" string="HĐTD"
+                        context="{'group_by': 'credit_contract_id'}"/>
+                <filter name="g_partner" string="Đối tác (NH)"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_facility" string="Facility"
+                        context="{'group_by': 'facility_id'}"/>
+                <filter name="g_loan_type" string="Loại khoản vay"
+                        context="{'group_by': 'loan_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_alloc_by_contract"
+            model="ir.actions.act_window">
+        <field name="name">Phân bổ HĐTD theo Khế ước</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'sequence': 10, 'view_mode': 'list',
+                    'view_id': ref('view_re_loan_note_alloc_by_contract_list')}),
+            (0, 0, {'sequence': 20, 'view_mode': 'pivot',
+                    'view_id': ref('view_re_loan_note_alloc_by_contract_pivot')}),
+        ]"/>
+        <field name="search_view_id"
+               ref="view_re_loan_note_alloc_by_contract_search"/>
+        <field name="context">{
+            'search_default_g_contract': 1,
+            'search_default_f_open': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có KW nào</p>
+            <p>Liệt kê KW theo HĐTD: số tiền, lãi suất, tổng lãi dự kiến,
+            đã trả gốc/lãi, dư nợ gốc/lãi, tổng dư nợ. Mặc định group
+            theo HĐTD + lọc các KW chưa tất toán.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_report_alloc_by_contract"
+              name="Phân bổ HĐTD theo Khế ước"
+              parent="menu_re_loan_report"
+              action="action_re_loan_alloc_by_contract"
+              sequence="48"/>
+
+    <!-- ============================================================ -->
+    <!-- Báo cáo: Kế hoạch thanh toán KW theo năm                     -->
+    <!-- UNION lịch lãi (plan) + repayment (paid). Pivot row HĐTD/KW,  -->
+    <!-- col tháng × kind, measure amount.                              -->
+    <!-- ============================================================ -->
+    <record id="view_re_loan_payment_plan_report_pivot"
+            model="ir.ui.view">
+        <field name="name">re.loan.payment.plan.report.pivot</field>
+        <field name="model">re.loan.payment.plan.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Kế hoạch thanh toán KW theo năm"
+                   sample="1">
+                <field name="credit_contract_id" type="row"/>
+                <field name="note_id" type="row"/>
+                <field name="period_month" interval="month" type="col"/>
+                <field name="kind" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="amount_principal"
+                       type="measure" invisible="1"/>
+                <field name="amount_interest"
+                       type="measure" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_re_loan_payment_plan_report_graph"
+            model="ir.ui.view">
+        <field name="name">re.loan.payment.plan.report.graph</field>
+        <field name="model">re.loan.payment.plan.report</field>
+        <field name="arch" type="xml">
+            <graph string="Kế hoạch thanh toán theo tháng"
+                   type="bar" stacked="1">
+                <field name="period_month" interval="month"/>
+                <field name="kind"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_re_loan_payment_plan_report_search"
+            model="ir.ui.view">
+        <field name="name">re.loan.payment.plan.report.search</field>
+        <field name="model">re.loan.payment.plan.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="credit_contract_id"/>
+                <field name="note_id"/>
+                <field name="partner_id"/>
+                <field name="period_year"/>
+                <filter name="f_this_year" string="Năm hiện tại"
+                        domain="[('period_year', '=',
+                                  context_today().strftime('%Y'))]"/>
+                <filter name="f_next_year" string="Năm tới"
+                        domain="[('period_year', '=',
+                                  (context_today() + relativedelta(years=1)).strftime('%Y'))]"/>
+                <filter name="f_plan" string="Kế hoạch"
+                        domain="[('kind','=','plan')]"/>
+                <filter name="f_paid" string="Đã trả"
+                        domain="[('kind','=','paid')]"/>
+                <separator/>
+                <filter name="g_contract" string="HĐTD"
+                        context="{'group_by': 'credit_contract_id'}"/>
+                <filter name="g_note" string="Khế ước"
+                        context="{'group_by': 'note_id'}"/>
+                <filter name="g_partner" string="NH"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_month" string="Tháng"
+                        context="{'group_by': 'period_month:month'}"/>
+                <filter name="g_kind" string="Loại"
+                        context="{'group_by': 'kind'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_payment_plan_report"
+            model="ir.actions.act_window">
+        <field name="name">Kế hoạch thanh toán KW theo năm</field>
+        <field name="res_model">re.loan.payment.plan.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id"
+               ref="view_re_loan_payment_plan_report_search"/>
+        <field name="context">{
+            'search_default_f_this_year': 1,
+            'pivot_row_groupby': ['credit_contract_id', 'note_id'],
+            'pivot_column_groupby': ['period_month:month', 'kind'],
+            'pivot_measures': ['amount'],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Báo cáo kế hoạch thanh toán KW theo năm
+            </p>
+            <p>
+                Pivot 2 chiều: <b>Hàng</b> = HĐTD → Khế ước, <b>Cột</b> =
+                Tháng × {Kế hoạch / Đã trả}. <b>Kế hoạch</b> lấy từ
+                lịch lãi (gốc + lãi), <b>Đã trả</b> lấy từ trả nợ
+                thực tế. Mặc định: năm hiện tại.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_report_payment_plan"
+              name="Kế hoạch thanh toán KW (năm)"
+              parent="menu_re_loan_report"
+              action="action_re_loan_payment_plan_report"
+              sequence="50"/>
+
+</odoo>

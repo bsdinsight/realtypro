@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Thêm Ward / Phường-Xã vào form res.bank, chèn sau Street 2 -->
+    <record id="view_res_bank_form_inherit_vau" model="ir.ui.view">
+        <field name="name">res.bank.form.vau</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="ward_id"
+                       options="{'no_create': True}"
+                       placeholder="Phường / Xã / Đặc khu"/>
+            </field>
+        </field>
+    </record>
+</odoo>

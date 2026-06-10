@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+         34 Vietnamese provinces / municipalities
+         per Resolution 202/2025/QH15 (effective 12/06/2025)
+         and Decree 19/2025/QĐ-TTg.
+
+         External ID format: vn_state_<code>
+         (e.g. vn_state_79 = Thành phố Hồ Chí Minh)
+    -->
+
+    <record id="vn_state_01" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Hà Nội</field>
+        <field name="code">01</field>
+    </record>
+
+    <record id="vn_state_04" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Cao Bằng</field>
+        <field name="code">04</field>
+    </record>
+
+    <record id="vn_state_08" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Tuyên Quang</field>
+        <field name="code">08</field>
+    </record>
+
+    <record id="vn_state_11" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Điện Biên</field>
+        <field name="code">11</field>
+    </record>
+
+    <record id="vn_state_12" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Lai Châu</field>
+        <field name="code">12</field>
+    </record>
+
+    <record id="vn_state_14" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Sơn La</field>
+        <field name="code">14</field>
+    </record>
+
+    <record id="vn_state_15" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Lào Cai</field>
+        <field name="code">15</field>
+    </record>
+
+    <record id="vn_state_19" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Thái Nguyên</field>
+        <field name="code">19</field>
+    </record>
+
+    <record id="vn_state_20" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Lạng Sơn</field>
+        <field name="code">20</field>
+    </record>
+
+    <record id="vn_state_22" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Quảng Ninh</field>
+        <field name="code">22</field>
+    </record>
+
+    <record id="vn_state_24" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Bắc Ninh</field>
+        <field name="code">24</field>
+    </record>
+
+    <record id="vn_state_25" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Phú Thọ</field>
+        <field name="code">25</field>
+    </record>
+
+    <record id="vn_state_31" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Hải Phòng</field>
+        <field name="code">31</field>
+    </record>
+
+    <record id="vn_state_33" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Hưng Yên</field>
+        <field name="code">33</field>
+    </record>
+
+    <record id="vn_state_37" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Ninh Bình</field>
+        <field name="code">37</field>
+    </record>
+
+    <record id="vn_state_38" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Thanh Hóa</field>
+        <field name="code">38</field>
+    </record>
+
+    <record id="vn_state_40" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Nghệ An</field>
+        <field name="code">40</field>
+    </record>
+
+    <record id="vn_state_42" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Hà Tĩnh</field>
+        <field name="code">42</field>
+    </record>
+
+    <record id="vn_state_44" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Quảng Trị</field>
+        <field name="code">44</field>
+    </record>
+
+    <record id="vn_state_46" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Huế</field>
+        <field name="code">46</field>
+    </record>
+
+    <record id="vn_state_48" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Đà Nẵng</field>
+        <field name="code">48</field>
+    </record>
+
+    <record id="vn_state_51" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Quảng Ngãi</field>
+        <field name="code">51</field>
+    </record>
+
+    <record id="vn_state_52" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Gia Lai</field>
+        <field name="code">52</field>
+    </record>
+
+    <record id="vn_state_56" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Khánh Hòa</field>
+        <field name="code">56</field>
+    </record>
+
+    <record id="vn_state_66" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Đắk Lắk</field>
+        <field name="code">66</field>
+    </record>
+
+    <record id="vn_state_68" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Lâm Đồng</field>
+        <field name="code">68</field>
+    </record>
+
+    <record id="vn_state_75" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Đồng Nai</field>
+        <field name="code">75</field>
+    </record>
+
+    <record id="vn_state_79" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Hồ Chí Minh</field>
+        <field name="code">79</field>
+    </record>
+
+    <record id="vn_state_80" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Tây Ninh</field>
+        <field name="code">80</field>
+    </record>
+
+    <record id="vn_state_82" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Đồng Tháp</field>
+        <field name="code">82</field>
+    </record>
+
+    <record id="vn_state_86" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Vĩnh Long</field>
+        <field name="code">86</field>
+    </record>
+
+    <record id="vn_state_91" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh An Giang</field>
+        <field name="code">91</field>
+    </record>
+
+    <record id="vn_state_92" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Thành phố Cần Thơ</field>
+        <field name="code">92</field>
+    </record>
+
+    <record id="vn_state_96" model="res.country.state">
+        <field name="country_id" ref="base.vn"/>
+        <field name="name">Tỉnh Cà Mau</field>
+        <field name="code">96</field>
+    </record>
+
+</odoo>

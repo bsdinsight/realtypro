@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_re_bank_guarantee" model="ir.sequence">
+        <field name="name">Chứng thư BL</field>
+        <field name="code">re.bank.guarantee</field>
+        <field name="prefix">BL/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_re_guarantee_request" model="ir.sequence">
+        <field name="name">Đề nghị phát hành BL</field>
+        <field name="code">re.guarantee.request</field>
+        <field name="prefix">ĐNBL/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

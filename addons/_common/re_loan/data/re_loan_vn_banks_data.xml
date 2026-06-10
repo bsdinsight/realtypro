@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Master data: 20 NHTM lớn của Việt Nam (theo danh sách NHNN).
+        Mỗi NH có:
+          - res.partner (is_bank=True, is_company=True) → dùng cho
+            "Ngân hàng / Bên cho vay" trên HĐTD.
+          - res.bank (linked partner_id) → dùng cho "Chi nhánh / Mã NH"
+            trên HĐTD; có thể tạo thêm record res.bank cho từng chi nhánh.
+        noupdate="1" để không ghi đè khi user edit (tên/địa chỉ chi nhánh).
+    -->
+
+    <!-- =================== NHTM Nhà nước / Big 4 =================== -->
+    <record id="bank_partner_vcb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_vcb" model="res.bank">
+        <field name="name">Vietcombank</field>
+        <field name="bic">BFTVVNVX</field>
+        <field name="partner_id" ref="bank_partner_vcb"/>
+    </record>
+
+    <record id="bank_partner_bidv" model="res.partner">
+        <field name="name">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_bidv" model="res.bank">
+        <field name="name">BIDV</field>
+        <field name="bic">BIDVVNVX</field>
+        <field name="partner_id" ref="bank_partner_bidv"/>
+    </record>
+
+    <record id="bank_partner_ctg" model="res.partner">
+        <field name="name">Ngân hàng TMCP Công thương Việt Nam (VietinBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_ctg" model="res.bank">
+        <field name="name">VietinBank</field>
+        <field name="bic">ICBVVNVX</field>
+        <field name="partner_id" ref="bank_partner_ctg"/>
+    </record>
+
+    <record id="bank_partner_agribank" model="res.partner">
+        <field name="name">Ngân hàng Nông nghiệp và PTNT Việt Nam (Agribank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_agribank" model="res.bank">
+        <field name="name">Agribank</field>
+        <field name="bic">VBAAVNVX</field>
+        <field name="partner_id" ref="bank_partner_agribank"/>
+    </record>
+
+    <!-- =================== NHTM tư nhân lớn =================== -->
+    <record id="bank_partner_tcb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_tcb" model="res.bank">
+        <field name="name">Techcombank</field>
+        <field name="bic">VTCBVNVX</field>
+        <field name="partner_id" ref="bank_partner_tcb"/>
+    </record>
+
+    <record id="bank_partner_mb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Quân Đội (MB Bank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_mb" model="res.bank">
+        <field name="name">MB Bank</field>
+        <field name="bic">MSCBVNVX</field>
+        <field name="partner_id" ref="bank_partner_mb"/>
+    </record>
+
+    <record id="bank_partner_acb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Á Châu (ACB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_acb" model="res.bank">
+        <field name="name">ACB</field>
+        <field name="bic">ASCBVNVX</field>
+        <field name="partner_id" ref="bank_partner_acb"/>
+    </record>
+
+    <record id="bank_partner_vpb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_vpb" model="res.bank">
+        <field name="name">VPBank</field>
+        <field name="bic">VPBKVNVX</field>
+        <field name="partner_id" ref="bank_partner_vpb"/>
+    </record>
+
+    <record id="bank_partner_shb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_shb" model="res.bank">
+        <field name="name">SHB</field>
+        <field name="bic">SHBAVNVX</field>
+        <field name="partner_id" ref="bank_partner_shb"/>
+    </record>
+
+    <record id="bank_partner_sacombank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_sacombank" model="res.bank">
+        <field name="name">Sacombank</field>
+        <field name="bic">SGTTVNVX</field>
+        <field name="partner_id" ref="bank_partner_sacombank"/>
+    </record>
+
+    <record id="bank_partner_hdbank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Phát triển TP.HCM (HDBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_hdbank" model="res.bank">
+        <field name="name">HDBank</field>
+        <field name="bic">HDBCVNVX</field>
+        <field name="partner_id" ref="bank_partner_hdbank"/>
+    </record>
+
+    <record id="bank_partner_vib" model="res.partner">
+        <field name="name">Ngân hàng TMCP Quốc tế Việt Nam (VIB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_vib" model="res.bank">
+        <field name="name">VIB</field>
+        <field name="bic">VNIBVNVX</field>
+        <field name="partner_id" ref="bank_partner_vib"/>
+    </record>
+
+    <record id="bank_partner_tpb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Tiên Phong (TPBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_tpb" model="res.bank">
+        <field name="name">TPBank</field>
+        <field name="bic">TPBVVNVX</field>
+        <field name="partner_id" ref="bank_partner_tpb"/>
+    </record>
+
+    <record id="bank_partner_seabank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Đông Nam Á (SeABank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_seabank" model="res.bank">
+        <field name="name">SeABank</field>
+        <field name="bic">SEAVVNVX</field>
+        <field name="partner_id" ref="bank_partner_seabank"/>
+    </record>
+
+    <record id="bank_partner_lpbank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Lộc Phát Việt Nam (LPBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_lpbank" model="res.bank">
+        <field name="name">LPBank</field>
+        <field name="bic">LVBKVNVX</field>
+        <field name="partner_id" ref="bank_partner_lpbank"/>
+    </record>
+
+    <record id="bank_partner_eximbank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Xuất Nhập khẩu Việt Nam (Eximbank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_eximbank" model="res.bank">
+        <field name="name">Eximbank</field>
+        <field name="bic">EBVIVNVX</field>
+        <field name="partner_id" ref="bank_partner_eximbank"/>
+    </record>
+
+    <record id="bank_partner_msb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Hàng Hải Việt Nam (MSB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_msb" model="res.bank">
+        <field name="name">MSB</field>
+        <field name="bic">MCOBVNVX</field>
+        <field name="partner_id" ref="bank_partner_msb"/>
+    </record>
+
+    <record id="bank_partner_ocb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Phương Đông (OCB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_ocb" model="res.bank">
+        <field name="name">OCB</field>
+        <field name="bic">ORCOVNVX</field>
+        <field name="partner_id" ref="bank_partner_ocb"/>
+    </record>
+
+    <record id="bank_partner_namabank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Nam Á (Nam A Bank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_namabank" model="res.bank">
+        <field name="name">Nam A Bank</field>
+        <field name="bic">NAMAVNVX</field>
+        <field name="partner_id" ref="bank_partner_namabank"/>
+    </record>
+
+    <record id="bank_partner_pgbank" model="res.partner">
+        <field name="name">Ngân hàng TMCP Thịnh Vượng và Phát triển (PGBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="bank_pgbank" model="res.bank">
+        <field name="name">PGBank</field>
+        <field name="bic">PGBLVNVX</field>
+        <field name="partner_id" ref="bank_partner_pgbank"/>
+    </record>
+
+</odoo>

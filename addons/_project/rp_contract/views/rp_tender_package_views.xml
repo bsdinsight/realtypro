@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit form Gói thầu — thêm smart button HĐ + tab HĐ -->
+    <record id="view_rp_tender_package_form_inherit_contract"
+            model="ir.ui.view">
+        <field name="name">rp.tender.package.form.contract</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id" ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='lines']" position="after">
+                <page string="Hợp đồng nhà thầu" name="contracts">
+                    <group class="oe_subtotal_footer">
+                        <field name="contract_count"/>
+                        <field name="contract_value_signed"/>
+                    </group>
+                    <field name="contract_ids" readonly="1">
+                        <list decoration-muted="state in ('completed','terminated')"
+                              decoration-success="state == 'executing'">
+                            <field name="name"/>
+                            <field name="contractor_id"/>
+                            <field name="contract_date"/>
+                            <field name="contract_value_total" sum="Σ"/>
+                            <field name="amount_paid"/>
+                            <field name="payment_progress" widget="progressbar"/>
+                            <field name="state" widget="badge"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <button name="action_view_contracts" type="object"
+                            string="Mở hợp đồng" class="btn-link"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        crm.lead form: VN address layout.
+
+        Strategy: locate the address container div (similar to res.partner's
+        o_address_format), replace its contents with our 4-field VN layout.
+        Lead form uses `class="o_address_format"` for the address block,
+        same as res.partner. We can use the same xpath pattern.
+    -->
+    <record id="view_crm_lead_form_vn_address" model="ir.ui.view">
+        <field name="name">crm.lead.form.vn.address</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace the entire address block in lead form -->
+            <xpath expr="//div[hasclass('o_address_format')]" position="replace">
+                <div class="d-flex flex-column gap-1 o_address_format_vn">
+                    <field name="country_id"
+                           placeholder="Country"
+                           options="{'no_open': True, 'no_create': True}"/>
+                    <field name="state_id"
+                           placeholder="Province / Tỉnh-Thành"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'country_id': country_id, 'default_country_id': country_id}"/>
+                    <field name="ward_id"
+                           placeholder="Ward / Phường-Xã"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_state_id': state_id}"/>
+                    <field name="street"
+                           placeholder="Street / Số nhà + tên đường..."/>
+                    <!-- Hidden fields (kept in DOM so Odoo doesn't break) -->
+                    <field name="street2" invisible="1"/>
+                    <field name="city" invisible="1"/>
+                    <field name="zip" invisible="1"/>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

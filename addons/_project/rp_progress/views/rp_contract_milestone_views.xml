@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit list milestone: thêm 2 button "Tạo BBNT" + "Tạo HĐơn" -->
+    <record id="view_rp_contract_form_inherit_milestone_progress"
+            model="ir.ui.view">
+        <field name="name">rp.contract.form.milestone.progress</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='milestones']//list" position="inside">
+                <field name="acceptance_id" optional="show"
+                       readonly="1"/>
+                <field name="acceptance_state" optional="show"/>
+                <field name="invoice_count" string="# HĐơn"
+                       optional="show"/>
+                <field name="invoice_amount_total"
+                       string="Σ HĐơn" optional="show"/>
+                <!-- Button Bước 1: Tạo BBNT -->
+                <button name="action_create_acceptance" type="object"
+                        string="Tạo BBNT" icon="fa-file-text-o"
+                        invisible="acceptance_id"
+                        class="btn-primary"/>
+                <button name="action_create_acceptance" type="object"
+                        string="Mở BBNT" icon="fa-folder-open-o"
+                        invisible="not acceptance_id"/>
+                <!-- Button Bước 2: Tạo Hóa đơn (chỉ khi BBNT approved) -->
+                <button name="action_create_invoice" type="object"
+                        string="Tạo HĐơn" icon="fa-file"
+                        invisible="acceptance_state != 'approved' or invoice_count &gt; 0"
+                        class="btn-primary"/>
+                <button name="action_view_invoices" type="object"
+                        string="Xem HĐơn" icon="fa-list"
+                        invisible="invoice_count == 0"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

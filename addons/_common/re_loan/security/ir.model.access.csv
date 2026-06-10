@@ -1,0 +1,29 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_loan_collateral_type_user,re.loan.collateral.type user,model_re_loan_collateral_type,group_loan_user,1,0,0,0
+access_re_loan_collateral_type_manager,re.loan.collateral.type manager,model_re_loan_collateral_type,group_loan_manager,1,1,1,1
+access_re_loan_credit_contract_user,re.loan.credit.contract user,model_re_loan_credit_contract,group_loan_user,1,1,1,0
+access_re_loan_credit_contract_manager,re.loan.credit.contract manager,model_re_loan_credit_contract,group_loan_manager,1,1,1,1
+access_re_loan_facility_user,re.loan.facility user,model_re_loan_facility,group_loan_user,1,1,1,0
+access_re_loan_facility_manager,re.loan.facility manager,model_re_loan_facility,group_loan_manager,1,1,1,1
+access_re_loan_facility_proj_alloc_user,re.loan.facility.project.allocation user,model_re_loan_facility_project_allocation,group_loan_user,1,1,1,1
+access_re_loan_facility_proj_alloc_manager,re.loan.facility.project.allocation manager,model_re_loan_facility_project_allocation,group_loan_manager,1,1,1,1
+access_re_loan_note_user,re.loan.note user,model_re_loan_note,group_loan_user,1,1,1,0
+access_re_loan_note_manager,re.loan.note manager,model_re_loan_note,group_loan_manager,1,1,1,1
+access_re_loan_note_disbursement_user,re.loan.note.disbursement user,model_re_loan_note_disbursement,group_loan_user,1,1,1,1
+access_re_loan_note_disbursement_manager,re.loan.note.disbursement manager,model_re_loan_note_disbursement,group_loan_manager,1,1,1,1
+access_re_loan_note_repayment_user,re.loan.note.repayment user,model_re_loan_note_repayment,group_loan_user,1,1,1,1
+access_re_loan_note_repayment_manager,re.loan.note.repayment manager,model_re_loan_note_repayment,group_loan_manager,1,1,1,1
+access_re_loan_note_interest_line_user,re.loan.note.interest.line user,model_re_loan_note_interest_line,group_loan_user,1,1,1,1
+access_re_loan_note_interest_line_manager,re.loan.note.interest.line manager,model_re_loan_note_interest_line,group_loan_manager,1,1,1,1
+access_re_loan_note_amendment_user,re.loan.note.amendment user,model_re_loan_note_amendment,group_loan_user,1,1,1,0
+access_re_loan_note_amendment_manager,re.loan.note.amendment manager,model_re_loan_note_amendment,group_loan_manager,1,1,1,1
+access_re_loan_collateral_user,re.loan.collateral user,model_re_loan_collateral,group_loan_user,1,1,1,0
+access_re_loan_collateral_manager,re.loan.collateral manager,model_re_loan_collateral,group_loan_manager,1,1,1,1
+access_re_loan_collateral_valuation_user,re.loan.collateral.valuation user,model_re_loan_collateral_valuation,group_loan_user,1,1,1,1
+access_re_loan_collateral_valuation_manager,re.loan.collateral.valuation manager,model_re_loan_collateral_valuation,group_loan_manager,1,1,1,1
+access_re_loan_collateral_pledge_user,re.loan.collateral.pledge user,model_re_loan_collateral_pledge,group_loan_user,1,1,1,1
+access_re_loan_collateral_pledge_manager,re.loan.collateral.pledge manager,model_re_loan_collateral_pledge,group_loan_manager,1,1,1,1
+access_re_project_loan_user,re.project loan read,re_base.model_re_project,group_loan_user,1,0,0,0
+access_re_project_loan_manager,re.project loan read,re_base.model_re_project,group_loan_manager,1,0,0,0
+access_re_loan_payment_plan_report_user,re.loan.payment.plan.report user,model_re_loan_payment_plan_report,group_loan_user,1,0,0,0
+access_re_loan_payment_plan_report_manager,re.loan.payment.plan.report manager,model_re_loan_payment_plan_report,group_loan_manager,1,0,0,0

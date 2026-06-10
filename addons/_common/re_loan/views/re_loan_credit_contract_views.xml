@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_credit_contract_list" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.list</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('closed','cancelled')"
+                  decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="sign_date"/>
+                <field name="date_end"/>
+                <field name="amount_total" sum="Tổng hạn mức"/>
+                <field name="amount_facility_total" sum="Đã cấp"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state in ('closed','cancelled')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_credit_contract_form" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Kích hoạt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_set_expired" type="object"
+                            string="Đánh dấu Hết hạn"
+                            invisible="state != 'active'"/>
+                    <button name="action_close" type="object"
+                            string="Tất toán"
+                            invisible="state not in ('active','expired')"/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state in ('closed','cancelled')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Số HĐTD..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="bank_id"
+                                   readonly="not partner_id"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   placeholder="Chọn NH ở trên trước..."/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="representative"/>
+                        </group>
+                        <group>
+                            <field name="amount_total"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="sign_date"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Hạn mức (cấp)">
+                            <field name="amount_facility_total"/>
+                            <field name="amount_facility_available"/>
+                        </group>
+                        <group string="Sử dụng HĐTD">
+                            <field name="amount_pool_used"/>
+                            <field name="amount_pool_available"/>
+                            <field name="has_flexible_facility"
+                                   invisible="not has_flexible_facility"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not has_flexible_facility">
+                        <i class="fa fa-info-circle"/>
+                        HĐTD này có facility tick <b>Hạn mức liên thông</b>.
+                        Các facility liên thông sẽ chia sẻ phần thừa hạn
+                        mức với nhau (vd: Vay đầu tư còn 200 tỷ + Bảo lãnh
+                        còn 100 tỷ → cả 2 đều thấy "Còn lại" = 300 tỷ và
+                        bên nào rút trước cũng được, miễn Σ used ≤ Σ limit
+                        của pool).
+                    </div>
+                    <notebook>
+                        <page string="Hạn mức (Facility)" name="facilities">
+                            <div class="alert alert-info small"
+                                 role="alert" style="margin-bottom:6px;">
+                                <i class="fa fa-info-circle"/>
+                                Click vào dòng facility để mở dialog
+                                chi tiết — nhập <b>Phân bổ hạn mức theo
+                                dự án × mục đích</b> ở tab "Phân bổ dự án".
+                            </div>
+                            <field name="facility_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="purpose"/>
+                                    <field name="facility_type"/>
+                                    <field name="amount_limit" sum="Tổng"/>
+                                    <field name="flexible_limits"
+                                           widget="boolean_toggle"
+                                           optional="show"/>
+                                    <field name="amount_used"/>
+                                    <field name="amount_available"/>
+                                    <field name="amount_allocated_to_projects"
+                                           string="Đã phân bổ dự án"
+                                           optional="show"/>
+                                    <field name="amount_unallocated"
+                                           string="Chưa phân bổ"
+                                           optional="show"
+                                           decoration-warning="amount_unallocated &gt; 0"/>
+                                    <field name="interest_rate_default"
+                                           optional="hide"/>
+                                    <field name="interest_method"
+                                           optional="hide"/>
+                                    <field name="day_count" optional="hide"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tài sản thế chấp" name="pledge">
+                            <field name="pledge_ids"
+                                   context="{'default_credit_contract_id': id,
+                                             'default_pledge_target': 'contract'}">
+                                <list editable="bottom"
+                                      decoration-muted="state == 'released'">
+                                    <field name="name"/>
+                                    <field name="collateral_id"/>
+                                    <field name="date_pledge"/>
+                                    <field name="secured_amount" sum="Tổng đảm bảo"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'active'"
+                                           decoration-muted="state == 'released'"/>
+                                    <button name="action_release" type="object"
+                                            string="Giải chấp" icon="fa-unlock"
+                                            invisible="state != 'active'"/>
+                                    <field name="pledge_target"
+                                           column_invisible="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" placeholder="Ghi chú..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_credit_contract_search" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.search</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_active" string="Hiệu lực"
+                        domain="[('state','=','active')]"/>
+                <separator/>
+                <filter name="f_expiring" string="Sắp hết hạn (30 ngày)"
+                        domain="[('date_end','&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d')), ('state','=','active')]"/>
+                <filter name="g_partner" string="Ngân hàng"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_credit_contract" model="ir.actions.act_window">
+        <field name="name">Hợp đồng tín dụng</field>
+        <field name="res_model">re.loan.credit.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_loan_credit_contract_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo Hợp đồng tín dụng đầu tiên
+            </p>
+            <p>
+                HĐTD là hợp đồng khung ký với ngân hàng. Dưới mỗi HĐTD khai báo
+                các hạn mức (facility); mỗi lần rút vốn tạo 1 khế ước nhận nợ.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_credit_contract"
+              name="Hợp đồng tín dụng"
+              parent="menu_re_loan_root"
+              action="action_re_loan_credit_contract"
+              sequence="10"/>
+
+    <menuitem id="menu_re_loan_facility"
+              name="Hạn mức tín dụng"
+              parent="menu_re_loan_root"
+              action="action_re_loan_facility"
+              sequence="20"/>
+
+</odoo>

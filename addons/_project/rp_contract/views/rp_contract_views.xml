@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_list" model="ir.ui.view">
+        <field name="name">rp.contract.list</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('completed','terminated')"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'executing'">
+                <field name="name"/>
+                <field name="tender_package_id"/>
+                <field name="contractor_id"/>
+                <field name="project_id"/>
+                <field name="contract_date"/>
+                <field name="contract_value_pretax" sum="Σ trước thuế"/>
+                <field name="contract_value_total" sum="Σ sau thuế"/>
+                <field name="amount_paid" sum="Σ đã trả"/>
+                <field name="payment_progress" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state in ('signed','executing')"
+                       decoration-muted="state in ('completed','terminated')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_form" model="ir.ui.view">
+        <field name="name">rp.contract.form</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sign" type="object"
+                            string="Ký HĐ" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start_execution" type="object"
+                            string="Khởi công"
+                            invisible="state != 'signed'"/>
+                    <button name="action_complete" type="object"
+                            string="Hoàn thành"
+                            invisible="state not in ('signed','executing')"/>
+                    <button name="action_terminate" type="object"
+                            string="Chấm dứt"
+                            invisible="state in ('completed','terminated','draft')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'terminated'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,signed,executing,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_milestones" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="payment_milestone_count" widget="statinfo"
+                                   string="Mốc TT"/>
+                        </button>
+                        <button name="action_view_amendments" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="amendment_count" widget="statinfo"
+                                   string="Phụ lục"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Số HĐ..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tender_package_id"/>
+                            <field name="contractor_id"/>
+                            <field name="project_id"/>
+                            <field name="subzone_ids" widget="many2many_tags"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="contract_date"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Giá trị HĐ">
+                        <group>
+                            <field name="contract_value_pretax"/>
+                            <field name="vat_rate"/>
+                            <field name="vat_amount"/>
+                            <field name="contract_value_total"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                        <group>
+                            <field name="advance_percent"/>
+                            <field name="amount_advance"/>
+                            <field name="retention_percent"/>
+                            <field name="amount_retention"/>
+                        </group>
+                    </group>
+                    <group string="Tiến độ thanh toán">
+                        <group>
+                            <field name="amount_paid"/>
+                            <field name="amount_remaining"/>
+                            <field name="payment_progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lịch thanh toán" name="milestones">
+                            <field name="payment_milestone_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="due_date"/>
+                                    <field name="percent"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="reference"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'paid'"
+                                           decoration-info="state == 'invoiced'"
+                                           decoration-muted="state == 'planned'"/>
+                                    <field name="paid_date"/>
+                                    <button name="action_set_invoiced" type="object"
+                                            icon="fa-file-text"
+                                            string="HĐơn"
+                                            invisible="state != 'planned'"/>
+                                    <button name="action_set_paid" type="object"
+                                            icon="fa-check"
+                                            string="Đã trả"
+                                            invisible="state == 'paid'"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Khối lượng (BOQ)" name="lines">
+                            <field name="line_ids"
+                                   context="{'default_contract_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="description"/>
+                                    <field name="structure_id"/>
+                                    <field name="unit_of_measure"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="amount" sum="Σ khối lượng"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="line_total"/>
+                            </group>
+                        </page>
+                        <page string="Phụ lục" name="amendments">
+                            <field name="amendment_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date_effective"/>
+                                    <field name="amendment_type"/>
+                                    <field name="value_old"/>
+                                    <field name="value_new"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'applied'"
+                                           decoration-info="state == 'draft'"/>
+                                    <button name="action_apply" type="object"
+                                            string="Áp dụng" icon="fa-check"
+                                            invisible="state != 'draft'"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="amendment_type"/>
+                                            <field name="date_effective"/>
+                                            <field name="state"/>
+                                        </group>
+                                        <group>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="new_date_end"
+                                                   invisible="amendment_type != 'extension'"
+                                                   required="amendment_type == 'extension'"/>
+                                            <field name="new_contract_value_pretax"
+                                                   invisible="amendment_type != 'value'"
+                                                   required="amendment_type == 'value'"/>
+                                        </group>
+                                    </group>
+                                    <field name="description" required="1"
+                                           placeholder="Diễn giải..."/>
+                                    <group invisible="state != 'applied'"
+                                           string="Audit">
+                                        <field name="value_old"/>
+                                        <field name="value_new"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Bảo lãnh" name="guarantees">
+                            <group>
+                                <group string="BL thực hiện HĐ">
+                                    <field name="guarantee_performance_no"/>
+                                    <field name="guarantee_performance_bank_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="guarantee_performance_amount"/>
+                                    <field name="guarantee_performance_expiry"/>
+                                </group>
+                                <group string="BL tạm ứng">
+                                    <field name="guarantee_advance_no"/>
+                                    <field name="guarantee_advance_bank_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="guarantee_advance_amount"/>
+                                    <field name="guarantee_advance_expiry"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="BL bảo hành">
+                                    <field name="guarantee_warranty_no"/>
+                                    <field name="guarantee_warranty_bank_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="guarantee_warranty_amount"/>
+                                    <field name="guarantee_warranty_expiry"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" placeholder="Ghi chú HĐ..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_search" model="ir.ui.view">
+        <field name="name">rp.contract.search</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contractor_id"/>
+                <field name="tender_package_id"/>
+                <field name="project_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_signed" string="Đã ký"
+                        domain="[('state','=','signed')]"/>
+                <filter name="f_executing" string="Đang thực hiện"
+                        domain="[('state','=','executing')]"/>
+                <filter name="f_completed" string="Hoàn thành"
+                        domain="[('state','=','completed')]"/>
+                <separator/>
+                <filter name="g_contractor" string="Nhà thầu"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_contract" model="ir.actions.act_window">
+        <field name="name">Hợp đồng nhà thầu</field>
+        <field name="res_model">rp.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_contract_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo HĐ nhà thầu đầu tiên</p>
+            <p>HĐ giữa Chủ đầu tư và Nhà thầu sau khi đấu thầu xong. Mỗi HĐ
+            thuộc 1 Gói thầu, 1 Nhà thầu, có lịch thanh toán + bảo lãnh.</p>
+        </field>
+    </record>
+
+</odoo>

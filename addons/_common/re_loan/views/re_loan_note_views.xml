@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form view cho 1 dòng giải ngân (dialog khi click trên list) -->
+    <record id="view_re_loan_note_disbursement_form" model="ir.ui.view">
+        <field name="name">re.loan.note.disbursement.form</field>
+        <field name="model">re.loan.note.disbursement</field>
+        <field name="arch" type="xml">
+            <form string="Giải ngân khế ước">
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Gửi NH duyệt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object"
+                            string="NH duyệt" class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_disburse" type="object"
+                            string="Đánh dấu đã giải ngân"
+                            class="btn-primary"
+                            invisible="state != 'approved'"
+                            confirm="Xác nhận NH đã chuyển tiền vào TK nhà thầu? Lịch lãi của KW sẽ tính từ Ngày NH duyệt."/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state in ('draft','disbursed')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('disbursed','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved,disbursed"/>
+                </header>
+                <sheet>
+                    <!-- Số chứng từ + Ngày GN: auto, ẩn khỏi form -->
+                    <field name="name" invisible="1"/>
+                    <field name="date" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="note_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="amount" sum="Total"
+                                   readonly="state not in ('draft','submitted')"/>
+                            <field name="date_bank_approved"
+                                   readonly="state == 'disbursed'"
+                                   required="state == 'approved'"
+                                   placeholder="Nhập khi NH duyệt..."/>
+                            <field name="reference"/>
+                            <field name="description"/>
+                        </group>
+                        <group string="Bên thụ hưởng (Nhà thầu)">
+                            <field name="beneficiary_partner_id"
+                                   readonly="state not in ('draft','submitted')"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="beneficiary_bank_account_id"
+                                   readonly="state not in ('draft','submitted')"
+                                   options="{'no_quick_create': True}"
+                                   placeholder="Chọn Nhà thầu trước..."/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Phân bổ dự án">
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="allowed_project_ids"
+                                   invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info small" role="alert"
+                         invisible="state != 'draft'">
+                        <i class="fa fa-info-circle" title="Lưu ý"/>
+                        <b>Chuẩn NH VN:</b> giải ngân chuyển TRỰC TIẾP về
+                        tài khoản nhà thầu, KHÔNG qua tài khoản CC1. Cần
+                        điền đủ "Bên nhận tiền" + "TK NH của Nhà thầu"
+                        trước khi gửi NH duyệt.
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Form view cho 1 dòng lịch lãi: Odoo tự mở dạng dialog khi user
+         click row trên O2M list (không có editable="bottom"). -->
+    <record id="view_re_loan_note_interest_line_form" model="ir.ui.view">
+        <field name="name">re.loan.note.interest.line.form</field>
+        <field name="model">re.loan.note.interest.line</field>
+        <field name="arch" type="xml">
+            <form string="Dòng lịch lãi">
+                <header>
+                    <button name="action_create_repayment" type="object"
+                            string="Tạo thanh toán cho kỳ này"
+                            class="btn-primary"
+                            invisible="state == 'paid'"
+                            confirm="Tạo 1 dòng trả nợ với gốc + lãi của kỳ này?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="planned,accrued,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            Kỳ <field name="period_no" readonly="1"
+                                     class="oe_inline"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Thời gian">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="days" readonly="1"/>
+                        </group>
+                        <group string="Cơ sở &amp; Lãi suất">
+                            <field name="principal_base"/>
+                            <field name="interest_rate"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Tiền phải trả">
+                            <field name="principal_due"/>
+                            <field name="interest_amount" readonly="is_overridden == False"/>
+                            <field name="total_due" readonly="1"/>
+                        </group>
+                        <group string="Sửa tay tiền lãi (khi NH tính lệch)">
+                            <field name="is_overridden"
+                                   widget="boolean_toggle"/>
+                            <field name="interest_amount_manual"
+                                   invisible="not is_overridden"
+                                   required="is_overridden"/>
+                        </group>
+                    </group>
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_list" model="ir.ui.view">
+        <field name="name">re.loan.note.list</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('fully_paid','cancelled')"
+                  decoration-danger="is_overdue"
+                  decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="facility_id"/>
+                <field name="date_note"/>
+                <field name="date_maturity"/>
+                <field name="amount" sum="Tổng KW"/>
+                <field name="amount_disbursed" sum="Đã giải ngân"/>
+                <field name="principal_outstanding" sum="Dư nợ gốc"/>
+                <field name="interest_rate"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'partial_paid'"
+                       decoration-danger="state == 'overdue'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state in ('fully_paid','cancelled')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_form" model="ir.ui.view">
+        <field name="name">re.loan.note.form</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_send_to_bank" type="object"
+                            string="Gửi Ngân hàng" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_activate" type="object"
+                            string="Kích hoạt" class="btn-primary"
+                            invisible="state != 'sent_to_bank'"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('fully_paid','cancelled')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state not in ('cancelled','sent_to_bank')"/>
+                    <button name="action_generate_interest_schedule" type="object"
+                            string="Tạo lại lịch lãi"
+                            invisible="state in ('draft','sent_to_bank','cancelled')"/>
+                    <button name="action_release_guarantee" type="object"
+                            string="Giải tỏa BL / L-C"
+                            class="btn-warning"
+                            invisible="facility_type not in ('guarantee_line','lc_line') or state in ('fully_paid','cancelled','draft','sent_to_bank')"
+                            confirm="Xác nhận giải tỏa Bảo lãnh / L-C? KW sẽ đóng và hạn mức được khôi phục."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,sent_to_bank,active,partial_paid,fully_paid"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Quá hạn" bg_color="text-bg-danger"
+                            invisible="not is_overdue"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Số khế ước..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="loan_type"/>
+                            <field name="facility_id"
+                                   invisible="loan_type != 'external'"
+                                   required="loan_type == 'external'"/>
+                            <field name="source_note_id"
+                                   invisible="loan_type != 'onlending'"
+                                   required="loan_type == 'onlending'"/>
+                            <field name="counterparty_id"
+                                   invisible="loan_type != 'onlending'"
+                                   required="loan_type == 'onlending'"/>
+                            <field name="credit_contract_id"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="date_note"/>
+                            <field name="tenor_months"/>
+                            <field name="date_maturity"/>
+                            <field name="is_overdue" invisible="1"/>
+                            <field name="days_overdue"
+                                   invisible="not is_overdue"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Lãi suất">
+                            <field name="interest_rate"
+                                   readonly="state != 'draft'"/>
+                            <field name="interest_method"/>
+                            <field name="day_count"/>
+                            <field name="repayment_plan"/>
+                        </group>
+                        <group string="Dư nợ">
+                            <field name="amount_disbursed"/>
+                            <field name="amount_repaid_principal"/>
+                            <field name="amount_repaid_interest"/>
+                            <field name="principal_outstanding"/>
+                            <field name="interest_total_planned"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Giải ngân" name="disbursement">
+                            <div class="alert alert-info small" role="alert">
+                                <i class="fa fa-info-circle"
+                                   title="Hướng dẫn"/>
+                                Click vào dòng để mở chi tiết giải ngân
+                                (workflow Nháp → Gửi NH → NH duyệt → Đã
+                                giải ngân) — cần đính kèm hồ sơ và TK
+                                nhà thầu nhận tiền.
+                            </div>
+                            <field name="disbursement_ids">
+                                <list decoration-info="state == 'draft'"
+                                      decoration-warning="state == 'submitted'"
+                                      decoration-success="state == 'disbursed'"
+                                      decoration-muted="state == 'cancelled'">
+                                    <field name="name" optional="hide"/>
+                                    <field name="date" optional="hide"/>
+                                    <field name="beneficiary_partner_id"
+                                           string="Nhà thầu nhận"
+                                           optional="show"/>
+                                    <field name="beneficiary_bank_account_id"
+                                           string="TK NH"
+                                           optional="show"/>
+                                    <field name="amount" sum="Tổng giải ngân"/>
+                                    <field name="project_id"/>
+                                    <field name="description"/>
+                                    <field name="reference"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-warning="state == 'submitted'"
+                                           decoration-success="state == 'disbursed'"
+                                           decoration-muted="state == 'cancelled'"/>
+                                    <field name="allowed_project_ids"
+                                           column_invisible="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Trả nợ" name="repayment">
+                            <field name="repayment_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="amount_principal" sum="Tổng gốc"/>
+                                    <field name="amount_interest" sum="Tổng lãi"/>
+                                    <field name="amount_total" sum="Tổng trả"/>
+                                    <field name="reference"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Lịch lãi" name="interest">
+                            <field name="interest_line_ids">
+                                <list decoration-success="state == 'paid'"
+                                      decoration-info="state == 'planned'"
+                                      decoration-warning="state == 'accrued'">
+                                    <field name="period_no"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="days" optional="hide"/>
+                                    <field name="principal_base"
+                                           optional="show"/>
+                                    <field name="interest_rate"
+                                           string="Lãi suất (%/năm)"/>
+                                    <field name="principal_due"
+                                           sum="Tổng gốc"/>
+                                    <field name="interest_amount"
+                                           sum="Tổng lãi"/>
+                                    <field name="total_due"
+                                           sum="Tổng phải trả"/>
+                                    <field name="is_overridden"
+                                           widget="boolean_toggle"
+                                           string="Sửa tay"
+                                           optional="hide"/>
+                                    <field name="state" widget="badge"/>
+                                    <button name="action_create_repayment"
+                                            type="object"
+                                            string="Thanh toán"
+                                            icon="fa-money"
+                                            class="btn-primary"
+                                            invisible="state == 'paid'"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Phụ lục" name="amendments">
+                            <field name="amendment_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date_effective"/>
+                                    <field name="amendment_type"/>
+                                    <field name="value_old"/>
+                                    <field name="value_new"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'applied'"
+                                           decoration-info="state == 'draft'"/>
+                                    <button name="action_apply" type="object"
+                                            string="Áp dụng" icon="fa-check"
+                                            invisible="state != 'draft'"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="amendment_type"/>
+                                            <field name="date_effective"/>
+                                            <field name="state"/>
+                                        </group>
+                                        <group>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="new_date_maturity"
+                                                   invisible="amendment_type != 'extension'"
+                                                   required="amendment_type == 'extension'"/>
+                                            <field name="new_amount"
+                                                   invisible="amendment_type != 'amount'"
+                                                   required="amendment_type == 'amount'"/>
+                                            <field name="new_interest_rate"
+                                                   invisible="amendment_type != 'rate'"
+                                                   required="amendment_type == 'rate'"/>
+                                            <field name="new_repayment_plan"
+                                                   invisible="amendment_type != 'schedule'"
+                                                   required="amendment_type == 'schedule'"/>
+                                        </group>
+                                    </group>
+                                    <field name="new_purpose"
+                                           invisible="amendment_type != 'purpose'"
+                                           placeholder="Mục đích sử dụng vốn mới..."/>
+                                    <field name="description"
+                                           placeholder="Diễn giải / lý do phụ lục..."/>
+                                    <group invisible="state != 'applied'"
+                                           string="Audit">
+                                        <field name="value_old"/>
+                                        <field name="value_new"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Cho vay lại" name="onlending"
+                              invisible="loan_type != 'external'">
+                            <group>
+                                <field name="amount_onlent"/>
+                            </group>
+                            <field name="onlending_ids"
+                                   context="{'default_loan_type': 'onlending', 'default_source_note_id': id}">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="counterparty_id"/>
+                                    <field name="amount" sum="Tổng cho vay lại"/>
+                                    <field name="interest_rate"/>
+                                    <field name="date_maturity"/>
+                                    <field name="principal_outstanding"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mục đích / Ghi chú" name="purpose">
+                            <field name="purpose" placeholder="Mục đích sử dụng vốn..."/>
+                            <field name="note" placeholder="Ghi chú..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_search" model="ir.ui.view">
+        <field name="name">re.loan.note.search</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="facility_id"/>
+                <field name="credit_contract_id"/>
+                <filter name="f_active" string="Hiệu lực"
+                        domain="[('state','=','active')]"/>
+                <filter name="f_partial" string="Trả một phần"
+                        domain="[('state','=','partial_paid')]"/>
+                <filter name="f_outstanding" string="Còn dư nợ"
+                        domain="[('principal_outstanding','>',0)]"/>
+                <filter name="f_overdue" string="Quá hạn"
+                        domain="[('aging_bucket','in',('b1_30','b31_60','b61_90','b91_180','b181_365','b365'))]"/>
+                <separator/>
+                <filter name="f_due_30" string="Đáo hạn ≤ 30 ngày"
+                        domain="[('principal_outstanding','>',0),('date_maturity','&gt;=',context_today().strftime('%Y-%m-%d')),('date_maturity','&lt;=',(context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="f_due_90" string="Đáo hạn ≤ 90 ngày"
+                        domain="[('principal_outstanding','>',0),('date_maturity','&gt;=',context_today().strftime('%Y-%m-%d')),('date_maturity','&lt;=',(context_today() + datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="f_external" string="Vay ngân hàng"
+                        domain="[('loan_type','=','external')]"/>
+                <filter name="f_onlending" string="Cho vay lại"
+                        domain="[('loan_type','=','onlending')]"/>
+                <filter name="g_partner" string="Ngân hàng"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_facility" string="Hạn mức"
+                        context="{'group_by': 'facility_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_aging" string="Nhóm tuổi nợ"
+                        context="{'group_by': 'aging_bucket'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_note" model="ir.actions.act_window">
+        <field name="name">Khế ước nhận nợ</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+        <field name="context">{'search_default_f_external': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo khế ước nhận nợ đầu tiên
+            </p>
+            <p>
+                Mỗi lần rút vốn trong một hạn mức tạo một khế ước nhận nợ (KW),
+                với số tiền, lãi suất, kỳ hạn và lịch trả riêng.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_note"
+              name="Khế ước nhận nợ"
+              parent="menu_re_loan_root"
+              action="action_re_loan_note"
+              sequence="15"/>
+
+    <record id="action_re_loan_onlending" model="ir.actions.act_window">
+        <field name="name">Vay nội bộ</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('loan_type','=','onlending')]</field>
+        <field name="context">{'default_loan_type': 'onlending'}</field>
+        <field name="search_view_id" ref="view_re_loan_note_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo khoản cho vay lại đầu tiên
+            </p>
+            <p>
+                Công ty mẹ vay ngân hàng (KW nguồn) rồi cho công ty con vay
+                lại. Chọn KW nguồn và công ty con vay.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_onlending"
+              name="Vay nội bộ"
+              parent="menu_re_loan_root"
+              action="action_re_loan_onlending"
+              sequence="18"/>
+
+</odoo>

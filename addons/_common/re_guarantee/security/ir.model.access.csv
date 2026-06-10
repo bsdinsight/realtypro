@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_bank_guarantee_user,re.bank.guarantee user,model_re_bank_guarantee,group_guarantee_user,1,1,1,0
+access_re_bank_guarantee_manager,re.bank.guarantee manager,model_re_bank_guarantee,group_guarantee_manager,1,1,1,1
+access_re_bank_guarantee_amendment_user,re.bank.guarantee.amendment user,model_re_bank_guarantee_amendment,group_guarantee_user,1,1,1,1
+access_re_bank_guarantee_amendment_manager,re.bank.guarantee.amendment manager,model_re_bank_guarantee_amendment,group_guarantee_manager,1,1,1,1
+access_re_guarantee_request_user,re.guarantee.request user,model_re_guarantee_request,group_guarantee_user,1,1,1,0
+access_re_guarantee_request_manager,re.guarantee.request manager,model_re_guarantee_request,group_guarantee_manager,1,1,1,1
+access_re_guarantee_request_payment_user,re.guarantee.request.payment user,model_re_guarantee_request_payment,group_guarantee_user,1,1,1,1
+access_re_guarantee_request_payment_manager,re.guarantee.request.payment manager,model_re_guarantee_request_payment,group_guarantee_manager,1,1,1,1
+access_re_bank_guarantee_payment_user,re.bank.guarantee.payment user,model_re_bank_guarantee_payment,group_guarantee_user,1,1,1,1
+access_re_bank_guarantee_payment_manager,re.bank.guarantee.payment manager,model_re_bank_guarantee_payment,group_guarantee_manager,1,1,1,1

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search -->
+    <record id="view_rp_structure_search" model="ir.ui.view">
+        <field name="name">rp.structure.search</field>
+        <field name="model">rp.structure</field>
+        <field name="arch" type="xml">
+            <search string="Hạng mục dự án">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <field name="subzone_id"/>
+                <field name="parent_id"/>
+                <separator/>
+                <filter name="items" string="Hạng mục (Items)"
+                        domain="[('structure_level', '=', 'item')]"/>
+                <filter name="sub_items" string="Sub-hạng mục"
+                        domain="[('structure_level', '=', 'sub_item')]"/>
+                <separator/>
+                <filter name="draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <separator/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Project" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="Subzone" name="group_subzone"
+                        context="{'group_by': 'subzone_id'}"/>
+                <filter string="Level" name="group_level"
+                        context="{'group_by': 'structure_level'}"/>
+                <filter string="Type" name="group_type"
+                        context="{'group_by': 'structure_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_rp_structure_list" model="ir.ui.view">
+        <field name="name">rp.structure.list</field>
+        <field name="model">rp.structure</field>
+        <field name="arch" type="xml">
+            <list string="Hạng mục dự án" sample="1"
+                  decoration-muted="state == 'archived' or not active">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="subzone_id"/>
+                <field name="parent_id" optional="show"/>
+                <field name="structure_level"/>
+                <field name="structure_type" optional="show"/>
+                <field name="estimate_total" widget="monetary" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="planned_gfa" optional="hide"/>
+                <field name="planned_units" optional="hide"/>
+                <field name="state" widget="badge"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_rp_structure_form" model="ir.ui.view">
+        <field name="name">rp.structure.form</field>
+        <field name="model">rp.structure</field>
+        <field name="arch" type="xml">
+            <form string="Hạng mục dự án">
+                <header>
+                    <button name="action_confirm" string="Confirm"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft"
+                            type="object"
+                            invisible="state == 'draft'"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_archive_structure" string="Archive"
+                            type="object"
+                            invisible="state == 'archived'"
+                            groups="re_base.group_re_manager"
+                            confirm="Archive this structure? Existing
+                                     estimate lines remain but cannot be
+                                     edited."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Tower S1.01 / Hotel H1 / Tầng hầm Toà A"/>
+                        </h1>
+                        <div>
+                            <label for="code" class="oe_edit_only"/>
+                            <field name="code" placeholder="e.g. S1.01"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Location &amp; Level">
+                            <field name="project_id"
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="subzone_id"
+                                   domain="[('project_id', '=', project_id)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="structure_level"/>
+                            <field name="parent_id"
+                                   domain="[('project_id', '=', project_id),
+                                            ('subzone_id', '=', subzone_id),
+                                            ('structure_level', '=', 'item'),
+                                            ('id', '!=', id)]"
+                                   options="{'no_create': True}"
+                                   invisible="structure_level != 'sub_item'"
+                                   required="structure_level == 'sub_item'"/>
+                        </group>
+                        <group string="Type &amp; Identity">
+                            <field name="structure_type"/>
+                            <field name="sequence"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <group string="Planning Figures">
+                        <group>
+                            <field name="planned_gfa"/>
+                            <field name="planned_area_sqm"/>
+                            <field name="planned_units"/>
+                        </group>
+                        <group>
+                            <field name="planned_floors"/>
+                            <field name="planned_basement_levels"/>
+                            <field name="planned_road_length_m"
+                                   invisible="structure_type not in ['road', 'bridge', 'infrastructure']"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Khái toán" name="estimate">
+                            <field name="estimate_line_ids"
+                                   context="{'default_structure_id': id,
+                                             'default_currency_id': currency_id}">
+                                <list editable="bottom">
+                                    <field name="project_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="category_id"
+                                           domain="[('project_id', '=', parent.project_id)]"
+                                           options="{'no_create': True}"/>
+                                    <field name="description"/>
+                                    <field name="amount" widget="monetary" sum="Tổng"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="estimate_total"
+                                       widget="monetary"
+                                       readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Sub-items" name="children"
+                              invisible="structure_level != 'item'">
+                            <field name="child_ids"
+                                   context="{'default_project_id': project_id,
+                                             'default_subzone_id': subzone_id,
+                                             'default_parent_id': id,
+                                             'default_structure_level': 'sub_item'}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="structure_type"/>
+                                    <field name="estimate_total"
+                                           widget="monetary" optional="show"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="desc">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: Hạng mục dự án -->
+    <record id="action_rp_structure" model="ir.actions.act_window">
+        <field name="name">Hạng mục dự án</field>
+        <field name="res_model">rp.structure</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_structure_search"/>
+        <field name="context">{'search_default_items': 1,
+                               'search_default_group_subzone': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo Hạng mục dự án đầu tiên.
+            </p>
+            <p>
+                Hạng mục = work item within a subzone (Tower, Hotel,
+                Golf Course, Marina, Infrastructure...). Each item can
+                have sub-items (Tầng hầm, Phần thân, TTTM, Tầng penhouse...)
+                for finer cost tracking.
+            </p>
+            <p>
+                Nhập chi phí Khái toán trực tiếp trên form mỗi hạng mục
+                — tab "Khái toán" với danh sách (Cost Category × Số tiền).
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_contract_user,rp.contract user,model_rp_contract,re_base.group_re_user,1,1,1,0
+access_rp_contract_manager,rp.contract manager,model_rp_contract,re_base.group_re_manager,1,1,1,1
+access_rp_contract_line_user,rp.contract.line user,model_rp_contract_line,re_base.group_re_user,1,1,1,1
+access_rp_contract_line_manager,rp.contract.line manager,model_rp_contract_line,re_base.group_re_manager,1,1,1,1
+access_rp_contract_payment_milestone_user,rp.contract.payment.milestone user,model_rp_contract_payment_milestone,re_base.group_re_user,1,1,1,1
+access_rp_contract_payment_milestone_manager,rp.contract.payment.milestone manager,model_rp_contract_payment_milestone,re_base.group_re_manager,1,1,1,1
+access_rp_contract_amendment_user,rp.contract.amendment user,model_rp_contract_amendment,re_base.group_re_user,1,1,1,0
+access_rp_contract_amendment_manager,rp.contract.amendment manager,model_rp_contract_amendment,re_base.group_re_manager,1,1,1,1

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Demo: một số ngân hàng VN lớn.
+        - res.partner (is_bank=True, is_company=True) → dùng cho field
+          "Ngân hàng / Bên cho vay" trên HĐTD (domain is_bank).
+        - res.bank → dùng cho field "Chi nhánh / Mã NH" (bank_id).
+        Chỉ là demo; bản master đầy đủ 20+ NH sẽ ở module re_bank sau.
+    -->
+
+    <!-- ===== res.partner (lenders) ===== -->
+    <record id="demo_bank_partner_bidv" model="res.partner">
+        <field name="name">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="demo_bank_partner_vcb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="demo_bank_partner_ctg" model="res.partner">
+        <field name="name">Ngân hàng TMCP Công thương Việt Nam (VietinBank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="demo_bank_partner_agribank" model="res.partner">
+        <field name="name">Ngân hàng Nông nghiệp và PTNT Việt Nam (Agribank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="demo_bank_partner_tcb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Kỹ thương Việt Nam (Techcombank)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+    <record id="demo_bank_partner_shb" model="res.partner">
+        <field name="name">Ngân hàng TMCP Sài Gòn - Hà Nội (SHB)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_bank" eval="True"/>
+    </record>
+
+    <!-- ===== res.bank (mã NH / chi nhánh) — liên kết qua partner_id ===== -->
+    <record id="demo_bank_bidv" model="res.bank">
+        <field name="name">BIDV</field>
+        <field name="bic">BIDVVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_bidv"/>
+    </record>
+    <record id="demo_bank_vcb" model="res.bank">
+        <field name="name">Vietcombank</field>
+        <field name="bic">BFTVVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_vcb"/>
+    </record>
+    <record id="demo_bank_ctg" model="res.bank">
+        <field name="name">VietinBank</field>
+        <field name="bic">ICBVVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_ctg"/>
+    </record>
+    <record id="demo_bank_agribank" model="res.bank">
+        <field name="name">Agribank</field>
+        <field name="bic">VBAAVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_agribank"/>
+    </record>
+    <record id="demo_bank_tcb" model="res.bank">
+        <field name="name">Techcombank</field>
+        <field name="bic">VTCBVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_tcb"/>
+    </record>
+    <record id="demo_bank_shb" model="res.bank">
+        <field name="name">SHB</field>
+        <field name="bic">SHBAVNVX</field>
+        <field name="partner_id" ref="demo_bank_partner_shb"/>
+    </record>
+</odoo>

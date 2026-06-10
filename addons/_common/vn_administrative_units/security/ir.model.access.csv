@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vau_ward_user,vau.ward.user,model_vau_ward,base.group_user,1,0,0,0
+access_vau_ward_admin,vau.ward.admin,model_vau_ward,base.group_system,1,1,1,1
+access_vau_ward_portal,vau.ward.portal,model_vau_ward,base.group_portal,1,0,0,0
+access_vau_ward_public,vau.ward.public,model_vau_ward,base.group_public,1,0,0,0

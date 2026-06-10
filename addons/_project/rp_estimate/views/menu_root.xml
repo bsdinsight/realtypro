@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Realty Project suite root menu + Phase 2 v1.4.1 submenu containers.
+
+        IMPORTANT: this file reuses `menu_realty_project_root` xmlid
+        from the iter5 placeholder so Odoo treats it as an update of
+        the existing record rather than creating a duplicate. This is
+        the v1.4.1 fix for the "two Realty Project menus" bug seen on
+        the dev DB.
+
+        Phase 2 submenu containers:
+        - menu_project_master   (master data, sequence 5)
+        - menu_estimate_workflows  (cost plans, sequence 10)
+
+        Iter5 placeholder modules (rp_construction, rp_boq, rp_handover)
+        are uninstalled before this deploys; their submenus are removed
+        from the DB by Odoo's standard uninstall behavior.
+    -->
+
+    <!-- Suite root — reuses iter5 xmlid to REPLACE not duplicate -->
+    <menuitem id="menu_realty_project_root"
+              name="Realty Project"
+              web_icon="rp_estimate,static/description/icon.png"
+              sequence="20"
+              groups="re_base.group_re_user"/>
+
+    <!-- Project Master submenu (master data — sequence 5) -->
+    <menuitem id="menu_project_master"
+              name="Project Master"
+              parent="menu_realty_project_root"
+              sequence="5"/>
+
+    <!-- Estimate submenu (cost plan workflows — sequence 10) -->
+    <menuitem id="menu_estimate_workflows"
+              name="Estimate"
+              parent="menu_realty_project_root"
+              sequence="10"/>
+
+</odoo>

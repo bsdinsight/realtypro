@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit rp.contract form: thêm tab "Vay tài trợ" -->
+    <record id="view_rp_contract_form_inherit_bridge" model="ir.ui.view">
+        <field name="name">rp.contract.form.bridge</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='guarantees']" position="after">
+                <page string="Vay tài trợ" name="loan_allocation">
+                    <group>
+                        <group>
+                            <field name="loan_allocated_amount"/>
+                            <field name="loan_allocation_count"/>
+                        </group>
+                    </group>
+                    <field name="loan_allocation_ids" readonly="1">
+                        <list>
+                            <field name="note_id"/>
+                            <field name="base"/>
+                            <field name="method"/>
+                            <field name="percent"/>
+                            <field name="amount_allocated" sum="Σ"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

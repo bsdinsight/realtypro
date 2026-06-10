@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit form KW: thêm tab "Phân bổ công trình" -->
+    <record id="view_re_loan_note_form_inherit_bridge" model="ir.ui.view">
+        <field name="name">re.loan.note.form.bridge</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <!-- Disbursement list: thêm cost_category, contract, structure -->
+            <xpath expr="//page[@name='disbursement']//field[@name='description']"
+                   position="after">
+                <field name="cost_category_id" optional="show"/>
+                <field name="contract_id" optional="show"/>
+                <field name="structure_id" optional="hide"/>
+            </xpath>
+            <xpath expr="//page[@name='purpose']" position="before">
+                <page string="Phân bổ công trình" name="allocation">
+                    <group>
+                        <group>
+                            <field name="allocation_total_principal"/>
+                            <field name="allocation_total_interest"/>
+                        </group>
+                    </group>
+                    <field name="allocation_ids"
+                           context="{'default_note_id': id}">
+                        <list editable="bottom">
+                            <field name="project_id"/>
+                            <field name="structure_id"/>
+                            <field name="cost_category_id" optional="show"/>
+                            <field name="contract_id" optional="show"/>
+                            <field name="tender_package_id" optional="hide"/>
+                            <field name="base"/>
+                            <field name="method"/>
+                            <field name="percent"/>
+                            <field name="amount"/>
+                            <field name="amount_allocated" sum="Σ"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

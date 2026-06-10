@@ -1,0 +1,71 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Install all Community modules + run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # Realty Pro Community Edition test matrix.
+      # Installs all open-source modules (re_*, rp_*) to verify clean
+      # bootstrap + run unit tests. Enterprise modules (bsd_*) live in
+      # bsdinsight/realtypro-enterprise (private).
+      # ------------------------------------------------------------------
+      - name: Install + test Realty Pro Community modules
+        run: |
+          docker run --rm \
+            --network host \
+            -e HOST=localhost \
+            -e PORT=5432 \
+            -e USER=odoo \
+            -e PASSWORD=odoo \
+            -v $GITHUB_WORKSPACE/addons:/mnt/extra-addons:ro \
+            odoo:19 \
+            -d ci_test \
+            --db_host=localhost \
+            --db_port=5432 \
+            --db_user=odoo \
+            --db_password=odoo \
+            --addons-path=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons/_common,/mnt/extra-addons/_project \
+            -i re_base,re_core,re_party,re_master_data,re_document,re_vendor,re_integration_hub,rp_contractor,vn_administrative_units,rp_cost_base,rp_estimate,rp_contract,rp_progress,re_loan,re_loan_account,re_guarantee,rp_loan_bridge,rp_guarantee_bridge \
+            --test-enable \
+            --test-tags=re_party,re_loan,re_loan_account,re_guarantee,rp_contract,rp_loan_bridge,rp_progress \
+            --without-demo=true \
+            --stop-after-init \
+            --log-level=info
+
+      - name: Report installed module versions
+        if: always()
+        run: |
+          PGPASSWORD=odoo psql -h localhost -U odoo -d ci_test -c "
+            SELECT name, latest_version, state
+              FROM ir_module_module
+             WHERE name LIKE 're\\_%' OR name LIKE 'rp\\_%' OR name LIKE 'vn\\_%'
+             ORDER BY name;
+          " || echo "(psql unavailable or DB not initialised)"

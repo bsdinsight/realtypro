@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu cha "Bảo lãnh NH" (không có action — chứa 2 submenu) -->
+    <menuitem id="menu_re_guarantee_root"
+              name="Bảo lãnh NH"
+              parent="re_loan.menu_re_loan_root"
+              sequence="40"/>
+
+    <menuitem id="menu_re_guarantee_request"
+              name="Đề nghị phát hành"
+              parent="menu_re_guarantee_root"
+              action="action_re_guarantee_request"
+              sequence="10"/>
+
+    <menuitem id="menu_re_bank_guarantee"
+              name="Chứng thư BL"
+              parent="menu_re_guarantee_root"
+              action="action_re_bank_guarantee"
+              sequence="20"/>
+</odoo>

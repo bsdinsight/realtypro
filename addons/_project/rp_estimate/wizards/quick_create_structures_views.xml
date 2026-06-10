@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_wizard_quick_create_structures_form" model="ir.ui.view">
+        <field name="name">rp.wizard.quick.create.structures.form</field>
+        <field name="model">rp.wizard.quick.create.structures</field>
+        <field name="arch" type="xml">
+            <form string="Quick Create Hạng mục dự án">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="subzone_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="default_structure_type"/>
+                        </group>
+                    </group>
+
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="structure_type"/>
+                            <field name="planned_gfa"/>
+                            <field name="planned_units"/>
+                            <field name="planned_floors"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_create" string="Create"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_wizard_quick_create_structures" model="ir.actions.act_window">
+        <field name="name">Quick Create Hạng mục</field>
+        <field name="res_model">rp.wizard.quick.create.structures</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

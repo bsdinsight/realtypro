@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_structure_form_inherit_progress" model="ir.ui.view">
+        <field name="name">rp.structure.form.progress</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_structure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Tiến độ thi công">
+                    <group string="Kế hoạch">
+                        <field name="date_planned_start"/>
+                        <field name="date_planned_end"/>
+                    </group>
+                    <group string="Thực tế (từ BBN approved)">
+                        <field name="date_actual_start"/>
+                        <field name="date_actual_end"/>
+                        <field name="progress_value"/>
+                        <field name="estimate_value"/>
+                        <field name="progress_percent"
+                               widget="percentage"/>
+                        <field name="status" widget="badge"
+                               decoration-info="status == 'not_started'"
+                               decoration-warning="status == 'in_progress'"
+                               decoration-success="status == 'completed'"
+                               decoration-danger="status == 'delayed'"
+                               decoration-muted="status == 'paused'"/>
+                        <field name="days_delayed"
+                               invisible="not is_delayed"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_structure_kanban_progress" model="ir.ui.view">
+        <field name="name">rp.structure.kanban.progress</field>
+        <field name="model">rp.structure</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <field name="name"/>
+                <field name="progress_percent"/>
+                <field name="project_id"/>
+                <field name="status"/>
+                <field name="is_delayed"/>
+                <field name="days_delayed"/>
+                <field name="date_planned_end"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card">
+                            <strong><field name="name"/></strong>
+                            <div>Dự án: <field name="project_id"/></div>
+                            <field name="progress_percent"
+                                   widget="progressbar"/>
+                            <div t-if="record.is_delayed.raw_value"
+                                 class="text-danger">
+                                <i class="fa fa-exclamation-triangle"/>
+                                Trễ <field name="days_delayed"/> ngày
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

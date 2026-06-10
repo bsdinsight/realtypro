@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== List ===== -->
+    <record id="view_re_guarantee_request_list" model="ir.ui.view">
+        <field name="name">re.guarantee.request.list</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'"
+                  decoration-success="state == 'active'"
+                  decoration-muted="state in ('settled','cancelled')"
+                  decoration-danger="state == 'active' and penalty_days &gt; 0">
+                <field name="name"/>
+                <field name="guarantee_type"/>
+                <field name="facility_id"/>
+                <field name="credit_contract_id"/>
+                <field name="beneficiary_partner_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="date_request"/>
+                <field name="date_expiry"/>
+                <field name="amount" sum="Σ"/>
+                <field name="guarantee_fee_amount" optional="show"
+                       sum="Σ phí"/>
+                <field name="guarantee_fee_remaining" optional="show"/>
+                <field name="penalty_amount" optional="hide"/>
+                <field name="total_paid" optional="hide" sum="Σ đã trả"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state in ('settled','cancelled')"/>
+                <field name="penalty_days" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===== Kanban ===== -->
+    <record id="view_re_guarantee_request_kanban" model="ir.ui.view">
+        <field name="name">re.guarantee.request.kanban</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="facility_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div>
+                                <field name="guarantee_type"/>
+                            </div>
+                            <div>
+                                <field name="facility_id"/>
+                            </div>
+                            <div>
+                                <field name="amount" widget="monetary"/>
+                                / <field name="date_expiry"/>
+                            </div>
+                            <div>
+                                <field name="beneficiary_partner_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ===== Form ===== -->
+    <record id="view_re_guarantee_request_form" model="ir.ui.view">
+        <field name="name">re.guarantee.request.form</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Kích hoạt" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Xác nhận kích hoạt BL? Sẽ chiếm hạn mức facility và bắt đầu tính phí BL."/>
+                    <button name="action_issue" type="object"
+                            string="Phát hành" class="btn-primary"
+                            invisible="state != 'active'"
+                            confirm="Xác nhận phát hành chứng thư BL? Hệ thống sẽ tạo chứng thư BL chi tiết và đề nghị chuyển trạng thái Đã phát hành."/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state in ('issued','settled','cancelled')"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,issued"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_payments" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="payment_count" widget="statinfo"
+                                   string="Thanh toán"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Tự sinh khi save..."/></h1>
+                    </div>
+
+                    <!-- Cảnh báo quá hạn -->
+                    <div class="alert alert-danger" role="alert"
+                         invisible="penalty_days &lt;= 0 or state != 'active'">
+                        <i class="fa fa-exclamation-triangle"
+                           title="Quá hạn"/>
+                        <b>BL đã quá hạn</b>
+                        <field name="penalty_days" class="oe_inline"/>
+                        ngày. Phí phạt phải trả:
+                        <field name="penalty_amount" class="oe_inline"
+                               widget="monetary"/>.
+                    </div>
+
+                    <!-- Cảnh báo đã phát hành -->
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'issued'">
+                        <i class="fa fa-info-circle" title="Đã phát hành"/>
+                        <b>Đã phát hành</b> chứng thư BL — xem theo dõi
+                        thanh toán, tất toán trên chứng thư:
+                        <field name="bank_guarantee_id" readonly="1"
+                               class="oe_inline" nolabel="1"/>
+                        (ngày phát hành
+                        <field name="date_issued" class="oe_inline"
+                               readonly="1" nolabel="1"/>).
+                    </div>
+
+                    <group>
+                        <group string="Hạn mức + HĐTD">
+                            <field name="facility_id"
+                                   options="{'no_create': True}"/>
+                            <field name="credit_contract_id" readonly="1"/>
+                            <field name="issuing_bank_partner_id"
+                                   readonly="1"/>
+                            <field name="guarantee_type"/>
+                        </group>
+                        <group string="Các bên + Áp dụng">
+                            <field name="applicant_partner_id"/>
+                            <field name="beneficiary_partner_id"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="bank_guarantee_id"
+                                   options="{'no_create': True}"
+                                   invisible="not bank_guarantee_id and state == 'draft'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Giá trị + Thời gian">
+                            <field name="amount"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                            <field name="date_request"/>
+                            <field name="date_expected_issue"/>
+                            <field name="date_issue"/>
+                            <field name="date_expiry"/>
+                            <field name="date_settled"
+                                   invisible="state != 'settled'"
+                                   readonly="1"/>
+                        </group>
+                        <group string="Phí + Ký quỹ + Phạt">
+                            <field name="guarantee_fee_rate"/>
+                            <field name="guarantee_fee_amount"/>
+                            <field name="deposit_rate"/>
+                            <field name="deposit_amount"/>
+                            <field name="penalty_rate"/>
+                            <field name="penalty_days"
+                                   invisible="penalty_days &lt;= 0"
+                                   readonly="1"/>
+                            <field name="penalty_amount"
+                                   invisible="penalty_amount &lt;= 0"/>
+                        </group>
+                    </group>
+                    <separator string="Theo dõi thanh toán"/>
+                    <group>
+                        <group string="Phí BL">
+                            <field name="guarantee_fee_paid" readonly="1"/>
+                            <field name="guarantee_fee_remaining"
+                                   readonly="1"
+                                   decoration-danger="guarantee_fee_remaining &gt; 0"/>
+                        </group>
+                        <group string="Ký quỹ">
+                            <field name="deposit_paid" readonly="1"/>
+                            <field name="deposit_remaining" readonly="1"
+                                   decoration-danger="deposit_remaining &gt; 0"/>
+                        </group>
+                        <group string="Phạt">
+                            <field name="penalty_paid" readonly="1"/>
+                            <field name="penalty_remaining" readonly="1"
+                                   decoration-danger="penalty_remaining &gt; 0"/>
+                        </group>
+                        <group string="Tổng">
+                            <field name="total_due" readonly="1"/>
+                            <field name="total_paid" readonly="1"/>
+                            <field name="is_fully_paid" readonly="1"
+                                   widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Các đợt thanh toán" name="payments">
+                            <field name="payment_ids"
+                                   readonly="state in ('settled','cancelled')">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="payment_kind"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="reference"/>
+                                    <field name="name"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Diễn giải / Điều khoản"
+                              name="description">
+                            <field name="description"
+                                   placeholder="Điều khoản đặc biệt, mô tả mục đích BL..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== Search ===== -->
+    <record id="view_re_guarantee_request_search" model="ir.ui.view">
+        <field name="name">re.guarantee.request.search</field>
+        <field name="model">re.guarantee.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="facility_id"/>
+                <field name="credit_contract_id"/>
+                <field name="beneficiary_partner_id"/>
+                <field name="project_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_active" string="Đã kích hoạt"
+                        domain="[('state','=','active')]"/>
+                <filter name="f_settled" string="Đã tất toán"
+                        domain="[('state','=','settled')]"/>
+                <separator/>
+                <filter name="f_overdue" string="Đang quá hạn"
+                        domain="[('state','=','active'),
+                                 ('penalty_days','&gt;',0)]"/>
+                <filter name="f_unpaid" string="Còn nợ phí"
+                        domain="[('state','=','active'),
+                                 ('guarantee_fee_remaining','&gt;',0)]"/>
+                <separator/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_facility" string="Hạn mức"
+                        context="{'group_by': 'facility_id'}"/>
+                <filter name="g_credit_contract" string="HĐTD"
+                        context="{'group_by': 'credit_contract_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_type" string="Loại BL"
+                        context="{'group_by': 'guarantee_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===== Action ===== -->
+    <record id="action_re_guarantee_request"
+            model="ir.actions.act_window">
+        <field name="name">Đề nghị phát hành Bảo lãnh</field>
+        <field name="res_model">re.guarantee.request</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id"
+               ref="view_re_guarantee_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo đề nghị phát hành BL mới
+            </p>
+            <p>
+                Đề nghị phát hành BL chiếm hạn mức facility loại
+                "Hạn mức bảo lãnh" trong HĐTD. Khi tất toán đủ
+                (phí + ký quỹ + phạt) → tự khôi phục hạn mức.
+            </p>
+        </field>
+    </record>
+
+</odoo>

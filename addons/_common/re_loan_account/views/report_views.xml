@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Smart button "Chứng từ" trên form KW -->
+    <record id="view_re_loan_note_form_inherit_moves" model="ir.ui.view">
+        <field name="name">re.loan.note.form.moves</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_moves" type="object"
+                            class="oe_stat_button" icon="fa-book">
+                        <field name="move_count" widget="statinfo"
+                               string="Chứng từ"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Báo cáo (1): Bảng kê chứng từ theo KW ===== -->
+    <record id="view_account_move_loan_list" model="ir.ui.view">
+        <field name="name">account.move.loan.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="loan_note_id"/>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="ref"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="amount_total" sum="Σ"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_move_loan_search" model="ir.ui.view">
+        <field name="name">account.move.loan.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="loan_note_id"/>
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <filter name="g_note" string="Khế ước"
+                        context="{'group_by': 'loan_note_id'}"/>
+                <filter name="g_journal" string="Sổ Nhật ký"
+                        context="{'group_by': 'journal_id'}"/>
+                <filter name="g_date" string="Ngày"
+                        context="{'group_by': 'date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_loan_voucher_list" model="ir.actions.act_window">
+        <field name="name">Bảng kê chứng từ theo KW</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('loan_note_id', '!=', False)]</field>
+        <field name="context">{'search_default_g_note': 1}</field>
+        <field name="search_view_id" ref="view_account_move_loan_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có chứng từ</p>
+            <p>Liệt kê tất cả bút toán kế toán (giải ngân / lãi / trả nợ)
+            có gắn KW. Group mặc định theo Khế ước.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_loan_voucher_list"
+              name="Bảng kê chứng từ theo KW"
+              parent="re_loan.menu_re_loan_report"
+              action="action_loan_voucher_list"
+              sequence="50"/>
+
+    <!-- ===== Báo cáo (3): Tổng hợp phát sinh theo KW ===== -->
+    <record id="view_account_move_line_loan_pivot" model="ir.ui.view">
+        <field name="name">account.move.line.loan.pivot</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Tổng hợp phát sinh theo KW">
+                <field name="loan_note_id" type="row"/>
+                <field name="account_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="debit" type="measure"/>
+                <field name="credit" type="measure"/>
+                <field name="balance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_loan_list" model="ir.ui.view">
+        <field name="name">account.move.line.loan.list</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="loan_note_id"/>
+                <field name="move_id"/>
+                <field name="date"/>
+                <field name="account_id"/>
+                <field name="name"/>
+                <field name="debit" sum="Σ Nợ"/>
+                <field name="credit" sum="Σ Có"/>
+                <field name="balance" sum="Σ Số dư"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_move_line_loan_search" model="ir.ui.view">
+        <field name="name">account.move.line.loan.search</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="loan_note_id"/>
+                <field name="account_id"/>
+                <field name="date"/>
+                <filter name="g_note" string="Khế ước"
+                        context="{'group_by': 'loan_note_id'}"/>
+                <filter name="g_account" string="Tài khoản"
+                        context="{'group_by': 'account_id'}"/>
+                <filter name="g_month" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_loan_move_line_summary" model="ir.actions.act_window">
+        <field name="name">Tổng hợp phát sinh theo KW</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="domain">[('loan_note_id', '!=', False), ('parent_state', '=', 'posted')]</field>
+        <field name="context">{'search_default_g_note': 1}</field>
+        <field name="search_view_id" ref="view_account_move_line_loan_search"/>
+    </record>
+
+    <menuitem id="menu_loan_move_line_summary"
+              name="Tổng hợp phát sinh theo KW"
+              parent="re_loan.menu_re_loan_report"
+              action="action_loan_move_line_summary"
+              sequence="60"/>
+
+    <!-- ===== Báo cáo (2): Bảng kê đối chiếu các KW vay ===== -->
+    <record id="view_re_loan_note_reconciliation_list" model="ir.ui.view">
+        <field name="name">re.loan.note.reconciliation.list</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="outstanding_variance != 0"
+                  decoration-muted="state in ('fully_paid','cancelled','draft')">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="facility_id"/>
+                <field name="amount"/>
+                <field name="amount_disbursed"/>
+                <field name="amount_repaid_principal"/>
+                <field name="principal_outstanding" string="Dư nợ (loan)"/>
+                <field name="accounting_outstanding"/>
+                <field name="outstanding_variance" sum="Σ chênh lệch"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_loan_reconciliation" model="ir.actions.act_window">
+        <field name="name">Bảng kê đối chiếu KW vay</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_re_loan_note_reconciliation_list"/>
+        <field name="domain">[('loan_type','=','external'),('state','not in',('draft','cancelled'))]</field>
+        <field name="help" type="html">
+            <p>Đối chiếu dư nợ loan-side vs accounting-side (TK Vay).</p>
+            <p>Dòng tô đỏ = có chênh lệch (bút toán chưa post đủ hoặc lệch).</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_loan_reconciliation"
+              name="Đối chiếu KW vay"
+              parent="re_loan.menu_re_loan_report"
+              action="action_loan_reconciliation"
+              sequence="70"/>
+
+</odoo>

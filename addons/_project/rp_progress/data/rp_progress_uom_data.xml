@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Seed UOM phổ biến trong xây dựng VN. User có thể thêm. -->
+    <record id="uom_m2" model="rp.progress.uom">
+        <field name="name">Mét vuông</field>
+        <field name="code">m2</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="uom_m3" model="rp.progress.uom">
+        <field name="name">Mét khối</field>
+        <field name="code">m3</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="uom_m" model="rp.progress.uom">
+        <field name="name">Mét dài</field>
+        <field name="code">m</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="uom_kg" model="rp.progress.uom">
+        <field name="name">Kilôgam</field>
+        <field name="code">kg</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="uom_ton" model="rp.progress.uom">
+        <field name="name">Tấn</field>
+        <field name="code">ton</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="uom_pc" model="rp.progress.uom">
+        <field name="name">Cái</field>
+        <field name="code">pc</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="uom_set" model="rp.progress.uom">
+        <field name="name">Bộ</field>
+        <field name="code">set</field>
+        <field name="sequence">70</field>
+    </record>
+    <record id="uom_lot" model="rp.progress.uom">
+        <field name="name">Trọn gói</field>
+        <field name="code">lot</field>
+        <field name="sequence">80</field>
+    </record>
+</odoo>

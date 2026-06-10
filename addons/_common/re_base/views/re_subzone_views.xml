@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_subzone_list" model="ir.ui.view">
+        <field name="name">re.subzone.list</field>
+        <field name="model">re.subzone</field>
+        <field name="arch" type="xml">
+            <list string="Subzones">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="subzone_type" optional="show"/>
+                <field name="area_ha"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'operation'"
+                       decoration-info="state == 'selling'"
+                       decoration-warning="state == 'construction'"
+                       decoration-muted="state in ('planning', 'closed')"/>
+                <field name="is_lifecycle_owner" optional="hide"/>
+                <field name="building_count"/>
+                <field name="unit_count"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_subzone_form" model="ir.ui.view">
+        <field name="name">re.subzone.form</field>
+        <field name="model">re.subzone</field>
+        <field name="arch" type="xml">
+            <form string="Subzone">
+                <header>
+                    <!-- Lifecycle transition buttons.
+                         Only visible when this subzone is the project's
+                         lifecycle owner (i.e. low-rise project).
+                         For high-rise projects the buttons hide and a
+                         notice tells the user to manage state on
+                         buildings instead. -->
+                    <button name="action_pre_launch" type="object"
+                            string="Open Pre-Launch" class="btn-primary"
+                            invisible="not is_lifecycle_owner or state != 'planning'"
+                            groups="re_base.group_re_user"/>
+                    <button name="action_open_for_sale" type="object"
+                            string="🚀 Open for Sale" class="btn-primary"
+                            invisible="not is_lifecycle_owner or state != 'pre_launch'"
+                            groups="re_base.group_re_admin"
+                            confirm="Mở bán chính thức? Việc này cho phép tạo booking và HĐMB."/>
+                    <button name="action_start_construction" type="object"
+                            string="Start Construction"
+                            invisible="not is_lifecycle_owner or state != 'selling'"
+                            groups="re_base.group_re_admin"/>
+                    <button name="action_start_product_handover" type="object"
+                            string="Start Product Handover" class="btn-primary"
+                            invisible="not is_lifecycle_owner or state not in ('selling', 'construction')"
+                            groups="re_base.group_re_admin"/>
+                    <button name="action_start_certificate_handover" type="object"
+                            string="Start Certificate Handover"
+                            invisible="not is_lifecycle_owner or state != 'product_handover'"
+                            groups="re_base.group_re_admin"/>
+                    <button name="action_to_operation" type="object"
+                            string="Move to Operation" class="btn-primary"
+                            invisible="not is_lifecycle_owner or state not in ('product_handover', 'certificate_handover')"
+                            groups="re_base.group_re_admin"/>
+                    <button name="action_close" type="object"
+                            string="Close"
+                            invisible="not is_lifecycle_owner or state != 'operation'"
+                            groups="re_base.group_re_admin"
+                            confirm="Archive subzone vĩnh viễn?"/>
+                    <button name="action_reset_to_planning" type="object"
+                            string="Reset to Planning" class="text-danger"
+                            invisible="not is_lifecycle_owner or state == 'planning'"
+                            groups="re_base.group_re_admin"
+                            confirm="Reset state về Planning? Action này dành cho admin sửa lỗi."/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="planning,pre_launch,selling,construction,product_handover,certificate_handover,operation"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="status"
+                         invisible="is_lifecycle_owner">
+                        <strong>Lifecycle managed at building level.</strong>
+                        This project tracks its phase per building, not per subzone.
+                        Open individual buildings to see their lifecycle controls.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_buildings" type="object"
+                                class="oe_stat_button" icon="fa-building">
+                            <field name="building_count" widget="statinfo" string="Buildings"/>
+                        </button>
+                        <button name="action_view_units" type="object"
+                                class="oe_stat_button" icon="fa-home">
+                            <field name="unit_count" widget="statinfo" string="Units"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g., The Green Bay - Vịnh Ngọc"/></h1>
+                        <field name="tagline" placeholder="Tagline..."/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="project_id"/>
+                            <field name="subzone_type"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="theme"/>
+                            <field name="expected_handover_date" options="{'format': 'dd/MM/yyyy'}"/>
+                            <field name="sequence"/>
+                            <field name="is_open_for_sale" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Overview" name="overview">
+                            <group>
+                                <group>
+                                    <field name="area_ha"/>
+                                    <field name="built_area_ha"/>
+                                </group>
+                                <group>
+                                    <field name="green_area_percent"/>
+                                    <field name="total_units_planned"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_subzone_search" model="ir.ui.view">
+        <field name="name">re.subzone.search</field>
+        <field name="model">re.subzone</field>
+        <field name="arch" type="xml">
+            <search string="Subzones">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <separator/>
+                <filter string="Pre-Launch" name="pre_launch"
+                        domain="[('state', '=', 'pre_launch')]"/>
+                <filter string="Selling" name="selling"
+                        domain="[('state', '=', 'selling')]"/>
+                <filter string="Construction" name="construction"
+                        domain="[('state', '=', 'construction')]"/>
+                <filter string="Product Handover" name="product_handover"
+                        domain="[('state', '=', 'product_handover')]"/>
+                <filter string="Operation" name="operation"
+                        domain="[('state', '=', 'operation')]"/>
+                <separator/>
+                <filter string="Lifecycle Owners" name="lifecycle_owner"
+                        domain="[('is_lifecycle_owner', '=', True)]"
+                        help="Only subzones whose project tracks lifecycle at subzone level."/>
+                <separator/>
+                <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                <filter string="Type" name="group_type" context="{'group_by': 'subzone_type'}"/>
+                <filter string="Phase" name="group_state" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_subzone" model="ir.actions.act_window">
+        <field name="name">Subzones</field>
+        <field name="res_model">re.subzone</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_subzone_search"/>
+    </record>
+
+</odoo>

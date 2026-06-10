@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Khái toán summary views at Estimate menu.
+
+        Source: rp.structure.estimate.line
+        Default view: pivot (rows=structure, columns=category, cells=amount)
+        Backup view: list (group by structure with totals)
+
+        Read-only for entry; for editing, user opens the structure
+        form and uses the inline tab "Khái toán".
+    -->
+
+    <!-- Search -->
+    <record id="view_rp_structure_estimate_line_search" model="ir.ui.view">
+        <field name="name">rp.structure.estimate.line.search</field>
+        <field name="model">rp.structure.estimate.line</field>
+        <field name="arch" type="xml">
+            <search string="Khái toán">
+                <field name="structure_id"/>
+                <field name="category_id"/>
+                <field name="project_id"/>
+                <field name="subzone_id"/>
+                <field name="parent_structure_id" string="Hạng mục cha"/>
+                <field name="description"/>
+                <separator/>
+                <filter name="items_only" string="Hạng mục cha"
+                        domain="[('structure_level', '=', 'item')]"/>
+                <filter name="sub_items_only" string="Sub-hạng mục"
+                        domain="[('structure_level', '=', 'sub_item')]"/>
+                <separator/>
+                <filter string="Project" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="Subzone" name="group_subzone"
+                        context="{'group_by': 'subzone_id'}"/>
+                <filter string="Hạng mục cha" name="group_parent"
+                        context="{'group_by': 'parent_structure_id'}"/>
+                <filter string="Hạng mục" name="group_structure"
+                        context="{'group_by': 'structure_id'}"/>
+                <filter string="Cost Category" name="group_category"
+                        context="{'group_by': 'category_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pivot view: rows=structure, cols=category, cells=amount -->
+    <record id="view_rp_structure_estimate_line_pivot" model="ir.ui.view">
+        <field name="name">rp.structure.estimate.line.pivot</field>
+        <field name="model">rp.structure.estimate.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Khái toán Summary" sample="1">
+                <field name="structure_id" type="row"/>
+                <field name="category_id" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph (bar) view -->
+    <record id="view_rp_structure_estimate_line_graph" model="ir.ui.view">
+        <field name="name">rp.structure.estimate.line.graph</field>
+        <field name="model">rp.structure.estimate.line</field>
+        <field name="arch" type="xml">
+            <graph string="Khái toán by Category" type="bar" sample="1">
+                <field name="category_id"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- List view (read-only style) -->
+    <record id="view_rp_structure_estimate_line_list" model="ir.ui.view">
+        <field name="name">rp.structure.estimate.line.list</field>
+        <field name="model">rp.structure.estimate.line</field>
+        <field name="arch" type="xml">
+            <list string="Khái toán Lines" sample="1" create="false" edit="false">
+                <field name="project_id" optional="show"/>
+                <field name="subzone_id" optional="show"/>
+                <field name="parent_structure_id" optional="show"
+                       string="Hạng mục cha"/>
+                <field name="structure_id"/>
+                <field name="structure_level" optional="show"/>
+                <field name="category_id"/>
+                <field name="description" optional="show"/>
+                <field name="amount" widget="monetary" sum="Tổng"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action: Khái toán summary at Estimate menu -->
+    <record id="action_rp_structure_estimate_summary" model="ir.actions.act_window">
+        <field name="name">Khái toán</field>
+        <field name="res_model">rp.structure.estimate.line</field>
+        <field name="view_mode">pivot,list,graph</field>
+        <field name="search_view_id"
+               ref="view_rp_structure_estimate_line_search"/>
+        <field name="context">{'search_default_group_structure': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tổng hợp Khái toán toàn dự án.
+            </p>
+            <p>
+                Default view: pivot (rows=Hạng mục, columns=Cost Category,
+                cells=Số tiền). Có thể toggle sang list hoặc graph view.
+            </p>
+            <p>
+                Nhập Khái toán mới: vào Project Master → Hạng mục dự án,
+                mở form từng hạng mục/sub-hạng mục, dùng tab "Khái toán".
+            </p>
+        </field>
+    </record>
+
+</odoo>

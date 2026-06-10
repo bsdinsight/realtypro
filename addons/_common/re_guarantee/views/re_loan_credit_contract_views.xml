@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit HĐTD form: thêm smart button "Bảo lãnh NH" -->
+    <record id="view_re_loan_credit_contract_form_inherit_guarantee"
+            model="ir.ui.view">
+        <field name="name">
+            re.loan.credit.contract.form.inherit.guarantee
+        </field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_guarantee_requests"
+                            type="object" class="oe_stat_button"
+                            icon="fa-file-text-o">
+                        <field name="guarantee_request_count"
+                               widget="statinfo" string="Đề nghị BL"/>
+                    </button>
+                    <button name="action_view_guarantees" type="object"
+                            class="oe_stat_button" icon="fa-shield">
+                        <field name="guarantee_count" widget="statinfo"
+                               string="Chứng thư BL"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

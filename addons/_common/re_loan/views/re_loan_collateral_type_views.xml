@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_collateral_type_list" model="ir.ui.view">
+        <field name="name">re.loan.collateral.type.list</field>
+        <field name="model">re.loan.collateral.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_collateral_type" model="ir.actions.act_window">
+        <field name="name">Loại tài sản thế chấp</field>
+        <field name="res_model">re.loan.collateral.type</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo loại tài sản thế chấp đầu tiên
+            </p>
+            <p>
+                Phân loại tài sản đảm bảo khoản vay: BĐS, phương tiện, hàng
+                tồn kho, quyền tài sản, cổ phần, bảo lãnh bên thứ ba…
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_collateral_type"
+              name="Loại tài sản thế chấp"
+              parent="menu_re_loan_config"
+              action="action_re_loan_collateral_type"
+              sequence="10"/>
+
+</odoo>

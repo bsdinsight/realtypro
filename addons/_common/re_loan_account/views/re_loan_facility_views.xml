@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_loan_facility_form_inherit_account" model="ir.ui.view">
+        <field name="name">re.loan.facility.form.account</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='note']" position="before">
+                <group string="Tài khoản kế toán (override company default)">
+                    <group>
+                        <field name="loan_account_principal_id"/>
+                        <field name="loan_account_bank_id"/>
+                        <field name="loan_account_interest_payable_id"/>
+                    </group>
+                    <group>
+                        <field name="loan_account_interest_expense_id"/>
+                        <field name="loan_account_interest_capitalized_id"/>
+                        <field name="loan_journal_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

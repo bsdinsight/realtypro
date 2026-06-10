@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Multi-company record rules for the loan-to-project bridge.
+
+    `rp.loan.allocation` and `rp.loan.disbursement.dossier` both carry
+    `company_id` so they participate in standard Odoo multi-company
+    isolation. Rules are global (apply to every group below
+    base.group_system, including loan_manager and re_manager). See
+    re_loan/security/re_loan_rules.xml for the full rationale.
+-->
+<odoo>
+
+    <record id="rule_rp_loan_allocation_company" model="ir.rule">
+        <field name="name">rp.loan.allocation: multi-company</field>
+        <field name="model_id" ref="model_rp_loan_allocation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_rp_loan_disbursement_dossier_company" model="ir.rule">
+        <field name="name">rp.loan.disbursement.dossier: multi-company</field>
+        <field name="model_id" ref="model_rp_loan_disbursement_dossier"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

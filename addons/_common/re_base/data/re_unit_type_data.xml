@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="unit_type_studio" model="re.unit.type">
+        <field name="code">STUDIO</field>
+        <field name="name">Studio</field>
+        <field name="category">studio</field>
+        <field name="default_bedroom_count">0</field>
+        <field name="default_bathroom_count">1</field>
+        <field name="default_balcony_count">1</field>
+        <field name="default_area_min">25</field>
+        <field name="default_area_max">40</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">single</field>
+        <field name="sequence">10</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="unit_type_1br" model="re.unit.type">
+        <field name="code">1BR</field>
+        <field name="name">1 Bedroom</field>
+        <field name="category">apartment</field>
+        <field name="default_bedroom_count">1</field>
+        <field name="default_bathroom_count">1</field>
+        <field name="default_balcony_count">1</field>
+        <field name="default_area_min">40</field>
+        <field name="default_area_max">55</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">couple</field>
+        <field name="sequence">20</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="unit_type_1br_plus" model="re.unit.type">
+        <field name="code">1BR_PLUS</field>
+        <field name="name">1 Bedroom Plus</field>
+        <field name="category">apartment</field>
+        <field name="default_bedroom_count">1</field>
+        <field name="default_bathroom_count">1</field>
+        <field name="default_balcony_count">1</field>
+        <field name="default_area_min">50</field>
+        <field name="default_area_max">65</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">couple</field>
+        <field name="sequence">25</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="unit_type_2br" model="re.unit.type">
+        <field name="code">2BR</field>
+        <field name="name">2 Bedroom</field>
+        <field name="category">apartment</field>
+        <field name="default_bedroom_count">2</field>
+        <field name="default_bathroom_count">2</field>
+        <field name="default_balcony_count">1</field>
+        <field name="default_area_min">65</field>
+        <field name="default_area_max">85</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">small_family</field>
+        <field name="sequence">30</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="unit_type_3br" model="re.unit.type">
+        <field name="code">3BR</field>
+        <field name="name">3 Bedroom</field>
+        <field name="category">apartment</field>
+        <field name="default_bedroom_count">3</field>
+        <field name="default_bathroom_count">2</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">85</field>
+        <field name="default_area_max">120</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">small_family</field>
+        <field name="sequence">40</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="unit_type_4br" model="re.unit.type">
+        <field name="code">4BR</field>
+        <field name="name">4 Bedroom</field>
+        <field name="category">apartment</field>
+        <field name="default_bedroom_count">4</field>
+        <field name="default_bathroom_count">3</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">120</field>
+        <field name="default_area_max">180</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">large_family</field>
+        <field name="sequence">50</field>
+        <field name="color">5</field>
+    </record>
+
+    <record id="unit_type_duplex" model="re.unit.type">
+        <field name="code">DUPLEX</field>
+        <field name="name">Duplex</field>
+        <field name="category">duplex</field>
+        <field name="default_bedroom_count">3</field>
+        <field name="default_bathroom_count">3</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">120</field>
+        <field name="default_area_max">200</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">large_family</field>
+        <field name="sequence">60</field>
+        <field name="color">6</field>
+    </record>
+
+    <record id="unit_type_penthouse" model="re.unit.type">
+        <field name="code">PH</field>
+        <field name="name">Penthouse</field>
+        <field name="category">penthouse</field>
+        <field name="default_bedroom_count">3</field>
+        <field name="default_bathroom_count">3</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">150</field>
+        <field name="default_area_max">400</field>
+        <field name="is_residential" eval="True"/>
+        <field name="is_corner" eval="True"/>
+        <field name="target_segment">investor</field>
+        <field name="sequence">70</field>
+        <field name="color">7</field>
+    </record>
+
+    <record id="unit_type_shophouse" model="re.unit.type">
+        <field name="code">SH</field>
+        <field name="name">Shophouse</field>
+        <field name="category">shophouse</field>
+        <field name="default_bedroom_count">3</field>
+        <field name="default_bathroom_count">3</field>
+        <field name="default_area_min">100</field>
+        <field name="default_area_max">300</field>
+        <field name="is_residential" eval="False"/>
+        <field name="target_segment">investor</field>
+        <field name="sequence">80</field>
+        <field name="color">8</field>
+    </record>
+
+    <record id="unit_type_villa" model="re.unit.type">
+        <field name="code">VILLA</field>
+        <field name="name">Villa</field>
+        <field name="category">villa</field>
+        <field name="default_bedroom_count">4</field>
+        <field name="default_bathroom_count">4</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">200</field>
+        <field name="default_area_max">600</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">large_family</field>
+        <field name="sequence">90</field>
+        <field name="color">9</field>
+    </record>
+
+    <record id="unit_type_officetel" model="re.unit.type">
+        <field name="code">OFC</field>
+        <field name="name">Officetel</field>
+        <field name="category">officetel</field>
+        <field name="default_bedroom_count">0</field>
+        <field name="default_bathroom_count">1</field>
+        <field name="default_balcony_count">1</field>
+        <field name="default_area_min">30</field>
+        <field name="default_area_max">60</field>
+        <field name="is_residential" eval="False"/>
+        <field name="target_segment">investor</field>
+        <field name="sequence">100</field>
+        <field name="color">10</field>
+    </record>
+
+    <record id="unit_type_townhouse" model="re.unit.type">
+        <field name="code">TH</field>
+        <field name="name">Townhouse</field>
+        <field name="category">townhouse</field>
+        <field name="default_bedroom_count">4</field>
+        <field name="default_bathroom_count">4</field>
+        <field name="default_balcony_count">2</field>
+        <field name="default_area_min">100</field>
+        <field name="default_area_max">300</field>
+        <field name="is_residential" eval="True"/>
+        <field name="target_segment">large_family</field>
+        <field name="sequence">110</field>
+        <field name="color">11</field>
+    </record>
+
+</odoo>

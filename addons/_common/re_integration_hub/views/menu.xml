@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_integration_root"
+              name="Integration"
+              sequence="200"
+              groups="re_integration_hub.group_integration_user"/>
+
+    <menuitem id="menu_integration_outbound"
+              name="Outbound Webhooks"
+              parent="menu_integration_root"
+              action="action_re_webhook_outbound"
+              sequence="10"/>
+
+    <menuitem id="menu_integration_inbound"
+              name="Inbound Webhook Log"
+              parent="menu_integration_root"
+              action="action_re_webhook_log"
+              sequence="20"/>
+
+    <menuitem id="menu_integration_keys"
+              name="API Keys"
+              parent="menu_integration_root"
+              action="action_re_api_key"
+              sequence="30"
+              groups="re_integration_hub.group_integration_admin"/>
+
+</odoo>

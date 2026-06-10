@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Top-level menus only (loaded EARLY, after security).
+        Submenus that reference actions live in their entity view files
+        (loaded later). See docs/development.md "menu file split pattern".
+    -->
+
+    <menuitem id="menu_re_loan_root"
+              name="Quản lý Vay"
+              sequence="55"/>
+
+    <!-- Configuration submenu shell -->
+    <menuitem id="menu_re_loan_config"
+              name="Cấu hình"
+              parent="menu_re_loan_root"
+              sequence="90"/>
+
+</odoo>

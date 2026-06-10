@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+        Default Vietnamese construction specialties.
+        noupdate="1": after initial install, user edits are preserved.
+
+        Codes follow ASCII convention for stable references.
+    -->
+
+    <record id="specialty_mong" model="rp.contractor.specialty">
+        <field name="code">MONG</field>
+        <field name="name">Móng - Cọc</field>
+        <field name="sequence">10</field>
+        <field name="description">Cọc khoan nhồi, cọc ép, móng bê tông cốt thép.</field>
+    </record>
+
+    <record id="specialty_kct" model="rp.contractor.specialty">
+        <field name="code">KCT</field>
+        <field name="name">Kết cấu</field>
+        <field name="sequence">20</field>
+        <field name="description">Bê tông cốt thép, kết cấu thép, kết cấu thân.</field>
+    </record>
+
+    <record id="specialty_hoan_thien" model="rp.contractor.specialty">
+        <field name="code">HOAN_THIEN</field>
+        <field name="name">Hoàn thiện kiến trúc</field>
+        <field name="sequence">30</field>
+        <field name="description">Trát, sơn, ốp lát, hoàn thiện bề mặt.</field>
+    </record>
+
+    <record id="specialty_mep" model="rp.contractor.specialty">
+        <field name="code">MEP</field>
+        <field name="name">Cơ điện (MEP)</field>
+        <field name="sequence">40</field>
+        <field name="description">Mechanical, Electrical, Plumbing.</field>
+    </record>
+
+    <record id="specialty_facade" model="rp.contractor.specialty">
+        <field name="code">FACADE</field>
+        <field name="name">Mặt dựng / Facade</field>
+        <field name="sequence">50</field>
+        <field name="description">Curtain wall, cladding, kính, nhôm.</field>
+    </record>
+
+    <record id="specialty_pccc" model="rp.contractor.specialty">
+        <field name="code">PCCC</field>
+        <field name="name">PCCC</field>
+        <field name="sequence">60</field>
+        <field name="description">Hệ thống phòng cháy chữa cháy.</field>
+    </record>
+
+    <record id="specialty_noi_that" model="rp.contractor.specialty">
+        <field name="code">NOI_THAT</field>
+        <field name="name">Nội thất</field>
+        <field name="sequence">70</field>
+        <field name="description">Đồ gỗ, đồ rời, FF&amp;E.</field>
+    </record>
+
+    <record id="specialty_canh_quan" model="rp.contractor.specialty">
+        <field name="code">CANH_QUAN</field>
+        <field name="name">Cảnh quan</field>
+        <field name="sequence">80</field>
+        <field name="description">Cây xanh, công viên, mặt nước, tiểu cảnh.</field>
+    </record>
+
+    <record id="specialty_duong" model="rp.contractor.specialty">
+        <field name="code">DUONG</field>
+        <field name="name">Đường giao thông</field>
+        <field name="sequence">90</field>
+        <field name="description">Đường nội khu, vỉa hè, bãi đậu xe.</field>
+    </record>
+
+    <record id="specialty_cau" model="rp.contractor.specialty">
+        <field name="code">CAU</field>
+        <field name="name">Cầu - Kè</field>
+        <field name="sequence">100</field>
+        <field name="description">Cầu giao thông, kè biển, kè sông.</field>
+    </record>
+
+    <record id="specialty_cap_nuoc" model="rp.contractor.specialty">
+        <field name="code">CAP_NUOC</field>
+        <field name="name">Cấp nước</field>
+        <field name="sequence">110</field>
+        <field name="description">Hệ thống cấp nước sạch, bể chứa, trạm bơm.</field>
+    </record>
+
+    <record id="specialty_thoat_nuoc" model="rp.contractor.specialty">
+        <field name="code">THOAT_NUOC</field>
+        <field name="name">Thoát nước</field>
+        <field name="sequence">120</field>
+        <field name="description">Thoát nước mưa, thoát nước thải, xử lý nước thải.</field>
+    </record>
+
+    <record id="specialty_dien" model="rp.contractor.specialty">
+        <field name="code">DIEN</field>
+        <field name="name">Điện - Trạm biến áp</field>
+        <field name="sequence">130</field>
+        <field name="description">Cấp điện trung thế, hạ thế, trạm biến áp, máy phát.</field>
+    </record>
+
+    <record id="specialty_vien_thong" model="rp.contractor.specialty">
+        <field name="code">VIEN_THONG</field>
+        <field name="name">Viễn thông - ICT</field>
+        <field name="sequence">140</field>
+        <field name="description">Hệ thống ICT, mạng nội bộ, hạ tầng viễn thông.</field>
+    </record>
+
+    <record id="specialty_san_golf" model="rp.contractor.specialty">
+        <field name="code">SAN_GOLF</field>
+        <field name="name">Sân golf</field>
+        <field name="sequence">150</field>
+        <field name="description">Thiết kế, thi công sân golf, hệ thống tưới, cỏ.</field>
+    </record>
+
+    <record id="specialty_ben_du_thuyen" model="rp.contractor.specialty">
+        <field name="code">BEN_DU_THUYEN</field>
+        <field name="name">Bến du thuyền - Cảng</field>
+        <field name="sequence">160</field>
+        <field name="description">Marina, bến tàu, cảng nội bộ, kết cấu nổi.</field>
+    </record>
+
+    <record id="specialty_tu_van_tk" model="rp.contractor.specialty">
+        <field name="code">TU_VAN_TK</field>
+        <field name="name">Tư vấn thiết kế</field>
+        <field name="sequence">170</field>
+        <field name="description">Concept, thiết kế cơ sở, bản vẽ thi công.</field>
+    </record>
+
+    <record id="specialty_tu_van_gs" model="rp.contractor.specialty">
+        <field name="code">TU_VAN_GS</field>
+        <field name="name">Tư vấn giám sát</field>
+        <field name="sequence">180</field>
+        <field name="description">Giám sát thi công, thẩm tra.</field>
+    </record>
+
+    <record id="specialty_khao_sat" model="rp.contractor.specialty">
+        <field name="code">KHAO_SAT</field>
+        <field name="name">Khảo sát</field>
+        <field name="sequence">190</field>
+        <field name="description">Khảo sát địa hình, địa chất, thủy văn.</field>
+    </record>
+
+    <record id="specialty_thi_nghiem" model="rp.contractor.specialty">
+        <field name="code">THI_NGHIEM</field>
+        <field name="name">Thí nghiệm kiểm định</field>
+        <field name="sequence">200</field>
+        <field name="description">Thí nghiệm vật liệu, kiểm định chất lượng.</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,27 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_loan_allocation_loan_user,rp.loan.allocation loan user,model_rp_loan_allocation,re_loan.group_loan_user,1,1,1,1
+access_rp_loan_allocation_loan_manager,rp.loan.allocation loan manager,model_rp_loan_allocation,re_loan.group_loan_manager,1,1,1,1
+access_rp_loan_allocation_re_user,rp.loan.allocation re user,model_rp_loan_allocation,re_base.group_re_user,1,1,1,1
+access_rp_loan_allocation_re_manager,rp.loan.allocation re manager,model_rp_loan_allocation,re_base.group_re_manager,1,1,1,1
+access_rp_loan_dossier_loan_user,rp.loan.disbursement.dossier loan user,model_rp_loan_disbursement_dossier,re_loan.group_loan_user,1,1,1,1
+access_rp_loan_dossier_loan_manager,rp.loan.disbursement.dossier loan manager,model_rp_loan_disbursement_dossier,re_loan.group_loan_manager,1,1,1,1
+access_re_subzone_loan_user,re.subzone loan read,re_base.model_re_subzone,re_loan.group_loan_user,1,0,0,0
+access_re_subzone_loan_manager,re.subzone loan read,re_base.model_re_subzone,re_loan.group_loan_manager,1,0,0,0
+access_re_building_loan_user,re.building loan read,re_base.model_re_building,re_loan.group_loan_user,1,0,0,0
+access_re_building_loan_manager,re.building loan read,re_base.model_re_building,re_loan.group_loan_manager,1,0,0,0
+access_rp_structure_loan_user,rp.structure loan read,rp_cost_base.model_rp_structure,re_loan.group_loan_user,1,0,0,0
+access_rp_structure_loan_manager,rp.structure loan read,rp_cost_base.model_rp_structure,re_loan.group_loan_manager,1,0,0,0
+access_rp_cost_category_loan_user,rp.cost.category loan read,rp_cost_base.model_rp_cost_category,re_loan.group_loan_user,1,0,0,0
+access_rp_cost_category_loan_manager,rp.cost.category loan read,rp_cost_base.model_rp_cost_category,re_loan.group_loan_manager,1,0,0,0
+access_rp_tender_package_loan_user,rp.tender.package loan read,rp_estimate.model_rp_tender_package,re_loan.group_loan_user,1,0,0,0
+access_rp_tender_package_loan_manager,rp.tender.package loan read,rp_estimate.model_rp_tender_package,re_loan.group_loan_manager,1,0,0,0
+access_rp_contract_loan_user,rp.contract loan read,rp_contract.model_rp_contract,re_loan.group_loan_user,1,0,0,0
+access_rp_contract_loan_manager,rp.contract loan read,rp_contract.model_rp_contract,re_loan.group_loan_manager,1,0,0,0
+access_rp_progress_acceptance_loan_user,rp.progress.acceptance loan read,rp_progress.model_rp_progress_acceptance,re_loan.group_loan_user,1,0,0,0
+access_rp_progress_acceptance_loan_manager,rp.progress.acceptance loan read,rp_progress.model_rp_progress_acceptance,re_loan.group_loan_manager,1,0,0,0
+access_rp_progress_acceptance_line_loan_user,rp.progress.acceptance.line loan read,rp_progress.model_rp_progress_acceptance_line,re_loan.group_loan_user,1,0,0,0
+access_rp_progress_acceptance_line_loan_manager,rp.progress.acceptance.line loan read,rp_progress.model_rp_progress_acceptance_line,re_loan.group_loan_manager,1,0,0,0
+access_rp_progress_uom_loan_user,rp.progress.uom loan read,rp_progress.model_rp_progress_uom,re_loan.group_loan_user,1,0,0,0
+access_rp_progress_uom_loan_manager,rp.progress.uom loan read,rp_progress.model_rp_progress_uom,re_loan.group_loan_manager,1,0,0,0
+access_account_move_loan_user,account.move loan read,account.model_account_move,re_loan.group_loan_user,1,0,0,0
+access_account_move_loan_manager,account.move loan read,account.model_account_move,re_loan.group_loan_manager,1,0,0,0

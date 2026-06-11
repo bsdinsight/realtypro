@@ -173,7 +173,10 @@ class ReLoanBankAdviceLine(models.Model):
     note_id = fields.Many2one(
         're.loan.note', string='Khế ước nhận nợ',
         required=True,
-        help='KW được trích thu.')
+        domain="[('state', 'in', ['active', 'partial_paid', 'overdue'])]",
+        help='KW được trích thu. Chỉ hiện KW ở trạng thái Hiệu lực / '
+             'Trả một phần / Quá hạn (KW Nháp/Đã gửi NH/Đã tất toán/'
+             'Huỷ không trích thu được).')
     credit_contract_id = fields.Many2one(
         're.loan.credit.contract', string='HĐTD',
         related='note_id.credit_contract_id',

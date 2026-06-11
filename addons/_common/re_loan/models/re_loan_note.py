@@ -378,11 +378,19 @@ class ReLoanNote(models.Model):
     # ------------------------------------------------------------------
     # Constraints
     # ------------------------------------------------------------------
-    @api.constrains('amount')
+    @api.constrains('amount', 'state')
     def _check_amount(self):
+        """KW state='draft' cho phép amount=0 (user mới tạo, chưa
+        nhập giải ngân). State khác (sent_to_bank, active, ...)
+        bắt buộc amount > 0.
+        """
         for rec in self:
+            if rec.state == 'draft':
+                continue
             if rec.amount <= 0:
-                raise ValidationError(_("Số tiền KW phải lớn hơn 0."))
+                raise ValidationError(_(
+                    "Số tiền KW phải lớn hơn 0 trước khi gửi NH / "
+                    "kích hoạt."))
 
     def _facility_contribution(self):
         """Phần KW này hiện đang chiếm 'amount_used' của facility.
@@ -467,6 +475,9 @@ class ReLoanNote(models.Model):
             if rec.state != 'draft':
                 raise UserError(_(
                     "Chỉ gửi NH được khi KW đang ở trạng thái Nháp."))
+            if rec.amount <= 0:
+                raise UserError(_(
+                    "Số tiền KW phải > 0 trước khi gửi NH."))
             rec.state = 'sent_to_bank'
             rec.message_post(body=_(
                 "Đã gửi hồ sơ KW '%(n)s' lên NH chờ duyệt.",

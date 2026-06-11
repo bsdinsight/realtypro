@@ -17,6 +17,26 @@ class ReLoanNoteInterestLine(models.Model):
     note_id = fields.Many2one(
         're.loan.note', string='Khế ước', required=True, ondelete='cascade')
     period_no = fields.Integer(string='Kỳ')
+    display_name = fields.Char(
+        compute='_compute_display_name', store=True)
+
+    @api.depends('period_no', 'date_from', 'date_to', 'note_id.name')
+    def _compute_display_name(self):
+        """Tên hiển thị: 'Kỳ N — KW XXX (DD/MM/YYYY → DD/MM/YYYY)'.
+        Dùng cho M2O lookup field 'interest_line_id'.
+        """
+        for line in self:
+            parts = []
+            if line.period_no:
+                parts.append(_('Kỳ %s') % line.period_no)
+            if line.note_id and line.note_id.name:
+                parts.append(line.note_id.name)
+            label = ' — '.join(parts) if parts else ''
+            if line.date_from and line.date_to:
+                label += ' (%s → %s)' % (
+                    line.date_from.strftime('%d/%m/%Y'),
+                    line.date_to.strftime('%d/%m/%Y'))
+            line.display_name = label or _('Kỳ ?')
     date_from = fields.Date(string='Từ ngày', required=True)
     date_to = fields.Date(string='Đến ngày', required=True)
     days = fields.Integer(string='Số ngày', compute='_compute_days', store=True)

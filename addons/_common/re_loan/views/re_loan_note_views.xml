@@ -293,26 +293,49 @@
                             <field name="interest_line_ids">
                                 <list decoration-success="state == 'paid'"
                                       decoration-info="state == 'planned'"
-                                      decoration-warning="state == 'accrued'">
+                                      decoration-warning="state in ('accrued','partial_paid')">
                                     <field name="period_no"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="days" optional="hide"/>
                                     <field name="principal_base"
-                                           optional="show"/>
+                                           optional="hide"/>
                                     <field name="interest_rate"
-                                           string="Lãi suất (%/năm)"/>
+                                           string="Lãi suất (%/năm)"
+                                           optional="hide"/>
                                     <field name="principal_due"
-                                           sum="Tổng gốc"/>
+                                           string="Gốc kỳ" sum="Σ gốc"/>
+                                    <field name="amount_principal_paid"
+                                           string="Gốc đã trả"
+                                           sum="Σ trả gốc"
+                                           optional="show"/>
                                     <field name="interest_amount"
-                                           sum="Tổng lãi"/>
+                                           string="Lãi kỳ" sum="Σ lãi"/>
+                                    <field name="amount_interest_paid"
+                                           string="Lãi đã trả"
+                                           sum="Σ trả lãi"
+                                           optional="show"/>
                                     <field name="total_due"
-                                           sum="Tổng phải trả"/>
+                                           sum="Σ phải trả"
+                                           optional="hide"/>
+                                    <field name="amount_paid_total"
+                                           string="Tổng đã trả"
+                                           sum="Σ đã trả"
+                                           optional="show"/>
                                     <field name="is_overridden"
                                            widget="boolean_toggle"
                                            string="Sửa tay"
                                            optional="hide"/>
-                                    <field name="state" widget="badge"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'planned'"
+                                           decoration-warning="state == 'partial_paid'"
+                                           decoration-success="state == 'paid'"
+                                           decoration-muted="state == 'accrued'"/>
+                                    <button name="action_view_repayments"
+                                            type="object"
+                                            string="Xem chứng từ"
+                                            icon="fa-search-plus"
+                                            invisible="state == 'planned'"/>
                                     <button name="action_create_repayment"
                                             type="object"
                                             string="Thanh toán"

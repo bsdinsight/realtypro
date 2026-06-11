@@ -8,4 +8,11 @@
         <field name="padding">5</field>
         <field name="company_id" eval="False"/>
     </record>
+    <record id="seq_re_loan_bank_advice" model="ir.sequence">
+        <field name="name">Giấy báo có NH</field>
+        <field name="code">re.loan.bank.advice</field>
+        <field name="prefix">GBC/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

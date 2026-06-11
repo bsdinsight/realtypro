@@ -46,15 +46,75 @@ class ReLoanNoteInterestLine(models.Model):
         help='= Tiền gốc phải trả + Tiền lãi.')
 
     state = fields.Selection(
-        [('planned', 'Dự kiến'),
-         ('accrued', 'Đã ghi nhận'),
-         ('paid', 'Đã trả')],
-        string='Trạng thái', default='planned', required=True)
+        [('planned',      'Dự kiến'),
+         ('accrued',      'Đã ghi nhận'),
+         ('partial_paid', 'Trả một phần'),
+         ('paid',         'Đã trả')],
+        string='Trạng thái', default='planned', required=True,
+        compute='_compute_paid_amounts', store=True, readonly=False)
+
+    # ------------------------------------------------------------------
+    # Paid tracking — link với repayments allocated vào kỳ này
+    # ------------------------------------------------------------------
+    repayment_ids = fields.One2many(
+        're.loan.note.repayment', 'interest_line_id',
+        string='Các đợt trả nợ allocate vào kỳ này',
+        help='Repayments có interest_line_id = self. Tự tạo bởi '
+             'advice.action_post hoặc nhập tay từ UI.')
+    amount_principal_paid = fields.Monetary(
+        string='Gốc đã trả',
+        compute='_compute_paid_amounts', store=True)
+    amount_interest_paid = fields.Monetary(
+        string='Lãi đã trả',
+        compute='_compute_paid_amounts', store=True)
+    amount_principal_remaining = fields.Monetary(
+        string='Gốc còn phải trả',
+        compute='_compute_paid_amounts', store=True)
+    amount_interest_remaining = fields.Monetary(
+        string='Lãi còn phải trả',
+        compute='_compute_paid_amounts', store=True)
+    amount_paid_total = fields.Monetary(
+        string='Tổng đã trả',
+        compute='_compute_paid_amounts', store=True)
 
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
         related='note_id.company_id', store=True, readonly=True)
+
+    @api.depends('repayment_ids.amount_principal',
+                 'repayment_ids.amount_interest',
+                 'principal_due', 'interest_amount')
+    def _compute_paid_amounts(self):
+        """Tổng từ repayment_ids → paid/remaining + auto-state.
+
+        State auto:
+          - paid: đủ cả gốc + lãi
+          - partial_paid: có trả nhưng chưa đủ
+          - planned: chưa trả
+        """
+        for line in self:
+            paid_p = sum(line.repayment_ids.mapped('amount_principal'))
+            paid_i = sum(line.repayment_ids.mapped('amount_interest'))
+            line.amount_principal_paid = paid_p
+            line.amount_interest_paid = paid_i
+            line.amount_paid_total = paid_p + paid_i
+            line.amount_principal_remaining = max(
+                0, line.principal_due - paid_p)
+            line.amount_interest_remaining = max(
+                0, line.interest_amount - paid_i)
+            # State auto: chỉ override planned/partial/paid;
+            # nếu state đang 'accrued' (manual), giữ nguyên.
+            if line.state == 'accrued':
+                continue
+            if (line.amount_principal_remaining <= 0.01
+                    and line.amount_interest_remaining <= 0.01
+                    and (paid_p + paid_i) > 0):
+                line.state = 'paid'
+            elif paid_p + paid_i > 0:
+                line.state = 'partial_paid'
+            else:
+                line.state = 'planned'
 
     @api.depends('date_from', 'date_to')
     def _compute_days(self):
@@ -142,14 +202,16 @@ class ReLoanNoteInterestLine(models.Model):
         repayment = self.env['re.loan.note.repayment'].create({
             'note_id': self.note_id.id,
             'date': fields.Date.context_today(self),
-            'amount_principal': self.principal_due,
-            'amount_interest': self.interest_amount,
+            'amount_principal': max(
+                0, self.principal_due - self.amount_principal_paid),
+            'amount_interest': max(
+                0, self.interest_amount - self.amount_interest_paid),
             'reference': _("Trả kỳ %(p)s của KW %(n)s",
                            p=self.period_no,
                            n=self.note_id.name or ''),
+            'interest_line_id': self.id,
         })
-        # Đánh dấu dòng lịch lãi đã thanh toán
-        self.state = 'paid'
+        # State sẽ auto = 'paid' qua _compute_paid_amounts
         self.note_id.message_post(body=_(
             "Tạo thanh toán từ Lịch lãi kỳ %(p)s: gốc %(g)s, lãi %(l)s.",
             p=self.period_no,
@@ -163,4 +225,17 @@ class ReLoanNoteInterestLine(models.Model):
             'res_id': repayment.id,
             'view_mode': 'form',
             'target': 'new',  # Dialog mode
+        }
+
+    def action_view_repayments(self):
+        """Mở list các repayments đã allocate vào kỳ này (manual + auto-debit)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Repayments — Kỳ %s") % (self.period_no or '?'),
+            'res_model': 're.loan.note.repayment',
+            'view_mode': 'list,form',
+            'domain': [('interest_line_id', '=', self.id)],
+            'context': {'default_interest_line_id': self.id,
+                        'default_note_id': self.note_id.id},
         }

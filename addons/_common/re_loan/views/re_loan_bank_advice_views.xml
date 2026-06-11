@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Advice List ===== -->
+    <record id="view_re_loan_bank_advice_list" model="ir.ui.view">
+        <field name="name">re.loan.bank.advice.list</field>
+        <field name="model">re.loan.bank.advice</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'"
+                  decoration-success="state == 'posted'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="date_advice"/>
+                <field name="partner_id"/>
+                <field name="reference"/>
+                <field name="line_count"/>
+                <field name="amount_total" sum="Σ"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===== Advice Form ===== -->
+    <record id="view_re_loan_bank_advice_form" model="ir.ui.view">
+        <field name="name">re.loan.bank.advice.form</field>
+        <field name="model">re.loan.bank.advice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_post" type="object"
+                            string="Xác nhận + Allocate"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Xác nhận giấy báo? Hệ thống sẽ tự allocate số tiền vào các kỳ lãi của KW theo thuật toán (lãi → gốc, cũ → mới)."/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state == 'cancelled'"
+                            confirm="Huỷ giấy báo? Toàn bộ repayments đã tạo từ giấy báo này sẽ bị xoá."/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_repayments"
+                                type="object" class="oe_stat_button"
+                                icon="fa-money"
+                                invisible="state != 'posted'">
+                            <field name="repayment_count"
+                                   widget="statinfo"
+                                   string="Repayments"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Tự sinh khi save..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"
+                                   options="{'no_create': True}"/>
+                            <field name="bank_account_id"
+                                   options="{'no_create': True}"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="date_advice"/>
+                            <field name="amount_total" readonly="1"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chi tiết KW trích thu"
+                              name="lines">
+                            <field name="line_ids"
+                                   readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="note_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="credit_contract_id"
+                                           readonly="1" optional="show"/>
+                                    <field name="interest_line_id"
+                                           options="{'no_create': True}"
+                                           optional="show"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="description"/>
+                                    <field name="repayment_count"
+                                           readonly="1"
+                                           optional="show"/>
+                                    <field name="amount_allocated"
+                                           readonly="1"
+                                           optional="show"/>
+                                    <field name="amount_unallocated"
+                                           readonly="1" optional="hide"
+                                           decoration-warning="amount_unallocated > 0"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="note_id"/>
+                                            <field name="credit_contract_id"
+                                                   readonly="1"/>
+                                            <field name="interest_line_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="amount"/>
+                                            <field name="description"/>
+                                        </group>
+                                    </group>
+                                    <separator string="Repayments đã allocate"/>
+                                    <field name="repayment_ids" readonly="1">
+                                        <list>
+                                            <field name="date"/>
+                                            <field name="interest_line_id"/>
+                                            <field name="amount_principal" sum="Σ gốc"/>
+                                            <field name="amount_interest" sum="Σ lãi"/>
+                                            <field name="amount_total" sum="Σ"/>
+                                            <field name="currency_id"
+                                                   column_invisible="1"/>
+                                        </list>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Diễn giải" name="description">
+                            <field name="description"
+                                   placeholder="Ghi chú..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== Search ===== -->
+    <record id="view_re_loan_bank_advice_search" model="ir.ui.view">
+        <field name="name">re.loan.bank.advice.search</field>
+        <field name="model">re.loan.bank.advice</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="partner_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_posted" string="Đã xác nhận"
+                        domain="[('state','=','posted')]"/>
+                <separator/>
+                <filter name="g_partner" string="NH"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_month" string="Tháng"
+                        context="{'group_by': 'date_advice:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===== Action + Menu ===== -->
+    <record id="action_re_loan_bank_advice" model="ir.actions.act_window">
+        <field name="name">Giấy báo có (Trích thu tự động)</field>
+        <field name="res_model">re.loan.bank.advice</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_re_loan_bank_advice_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo giấy báo có NH đầu tiên
+            </p>
+            <p>
+                Khi NH trích thu tự động các KW đến hạn, import giấy
+                báo (credit advice) tại đây để hệ thống auto-allocate
+                vào lịch lãi/gốc của từng KW.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_bank_advice"
+              name="Trích thu tự động (NH)"
+              parent="re_loan.menu_re_loan_root"
+              action="action_re_loan_bank_advice"
+              sequence="35"/>
+
+    <!-- ===== Interest line: thêm tab/nút xem các chứng từ đã trả ===== -->
+    <record id="view_re_loan_note_interest_line_paid_list"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.interest.line.paid.list</field>
+        <field name="model">re.loan.note.interest.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="period_no"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="principal_due" sum="Σ gốc"/>
+                <field name="amount_principal_paid" sum="Σ trả gốc"/>
+                <field name="amount_principal_remaining"
+                       sum="Σ gốc còn"/>
+                <field name="interest_amount" sum="Σ lãi"/>
+                <field name="amount_interest_paid" sum="Σ trả lãi"/>
+                <field name="amount_interest_remaining"
+                       sum="Σ lãi còn"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'planned'"
+                       decoration-warning="state == 'partial_paid'"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

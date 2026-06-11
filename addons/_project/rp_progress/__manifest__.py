@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.9.0',
+    'version': '19.0.1.10.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
@@ -53,6 +53,18 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/re_project_views.xml',
         'views/menu.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            ('include', 'web._assets_helpers'),
+            'rp_progress/static/lib/frappe-gantt/frappe-gantt.css',
+            'rp_progress/static/lib/frappe-gantt/frappe-gantt.js',
+            'rp_progress/static/src/scss/bsd_gantt.scss',
+            'rp_progress/static/src/js/bsd_gantt/bsd_gantt_adapter.js',
+            'rp_progress/static/src/js/bsd_gantt/bsd_frappe_gantt_adapter.js',
+            'rp_progress/static/src/js/bsd_gantt/bsd_gantt_view.js',
+            'rp_progress/static/src/js/bsd_gantt/bsd_gantt_view.xml',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

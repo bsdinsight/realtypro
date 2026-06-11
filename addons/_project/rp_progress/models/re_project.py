@@ -91,6 +91,22 @@ class ReProject(models.Model):
             'context': {'search_default_g_contract': 1},
         }
 
+    def action_open_gantt(self):
+        """Mở client action BSDGanttView với context dự án này.
+
+        Community: dùng FrappeGanttAdapter (cap 500 hạng mục).
+        Enterprise: override service 'bsd_gantt_adapter' để inject
+        BryntumGanttAdapter (unlimited + critical path + baseline).
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'bsd_gantt_view',
+            'name': 'Gantt — %s' % self.name,
+            'context': {'default_project_id': self.id,
+                        'active_id': self.id},
+        }
+
     def action_view_structures(self):
         self.ensure_one()
         return {

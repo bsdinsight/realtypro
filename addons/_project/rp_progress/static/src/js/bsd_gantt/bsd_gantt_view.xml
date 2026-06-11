@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="rp_progress.BSDGanttView">
+        <div class="o_action_manager bsd_gantt_root">
+            <div class="bsd_gantt_toolbar p-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0">
+                        <i class="fa fa-bar-chart me-2"/>
+                        Gantt — <t t-esc="state.projectName"/>
+                    </h4>
+                    <small class="text-muted" t-if="!state.error">
+                        <t t-esc="state.taskCount"/> hạng mục
+                    </small>
+                </div>
+                <div class="btn-group" t-if="!state.loading and !state.error">
+                    <button t-foreach="['Day','Week','Month','Year']"
+                            t-as="mode" t-key="mode"
+                            t-on-click="() => this.setViewMode(mode)"
+                            class="btn btn-sm"
+                            t-att-class="state.viewMode === mode ? 'btn-primary' : 'btn-light'">
+                        <t t-esc="mode"/>
+                    </button>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="d-flex justify-content-center p-5">
+                <div class="spinner-border text-primary"/>
+                <span class="ms-3">Đang tải...</span>
+            </div>
+
+            <div t-if="state.error" class="alert alert-warning m-3" role="alert">
+                <i class="fa fa-exclamation-triangle me-2"/>
+                <span t-esc="state.error"/>
+            </div>
+
+            <div class="bsd_gantt_container" t-ref="gantt" t-att-style="state.error or state.loading ? 'display:none' : ''"/>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,55 @@
+.bsd_gantt_root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+    .bsd_gantt_toolbar {
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        flex: 0 0 auto;
+    }
+
+    .bsd_gantt_container {
+        flex: 1 1 auto;
+        overflow: auto;
+        background: #fff;
+        padding: 1rem;
+    }
+}
+
+// Custom bar colors theo status
+.bsd_gantt_bar_not_started {
+    .bar { fill: #9ca3af; }
+}
+.bsd_gantt_bar_in_progress {
+    .bar { fill: #3b82f6; }
+    .bar-progress { fill: #1d4ed8; }
+}
+.bsd_gantt_bar_completed {
+    .bar { fill: #10b981; }
+    .bar-progress { fill: #059669; }
+}
+.bsd_gantt_bar_paused {
+    .bar { fill: #f59e0b; }
+    .bar-progress { fill: #d97706; }
+}
+.bsd_gantt_bar_delayed {
+    .bar { fill: #ef4444; }
+    .bar-progress { fill: #dc2626; }
+}
+
+// Popup styling
+.bsd_gantt_popup {
+    padding: 8px 12px;
+    min-width: 200px;
+    h5 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    div {
+        font-size: 12px;
+        margin: 2px 0;
+    }
+}

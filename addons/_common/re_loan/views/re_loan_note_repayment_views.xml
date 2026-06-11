@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== List view ===== -->
+    <record id="view_re_loan_note_repayment_list" model="ir.ui.view">
+        <field name="name">re.loan.note.repayment.list</field>
+        <field name="model">re.loan.note.repayment</field>
+        <field name="arch" type="xml">
+            <list decoration-info="is_auto_debit"
+                  default_order="date desc, id desc">
+                <field name="date"/>
+                <field name="note_id"
+                       string="Khế ước"
+                       optional="show"/>
+                <field name="interest_line_id" string="Kỳ"
+                       optional="show"/>
+                <field name="amount_principal" sum="Σ gốc"/>
+                <field name="amount_interest" sum="Σ lãi"/>
+                <field name="amount_total" sum="Σ"/>
+                <field name="reference" string="Số chứng từ"
+                       optional="show"/>
+                <field name="bank_advice_line_id"
+                       string="Giấy báo NH"
+                       optional="show"/>
+                <field name="is_auto_debit" widget="boolean_toggle"
+                       string="Trích thu tự động"
+                       optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===== Form view ===== -->
+    <record id="view_re_loan_note_repayment_form" model="ir.ui.view">
+        <field name="name">re.loan.note.repayment.form</field>
+        <field name="model">re.loan.note.repayment</field>
+        <field name="arch" type="xml">
+            <form string="Trả nợ khế ước">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="note_id"
+                                   options="{'no_create': True}"/>
+                            <field name="interest_line_id"
+                                   options="{'no_create': True}"/>
+                            <field name="date"/>
+                            <field name="reference"/>
+                        </group>
+                        <group>
+                            <field name="amount_principal"/>
+                            <field name="amount_interest"/>
+                            <field name="amount_total" readonly="1"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <group invisible="not is_auto_debit"
+                           string="Trích thu tự động từ NH">
+                        <field name="is_auto_debit" readonly="1"
+                               widget="boolean_toggle"/>
+                        <field name="bank_advice_line_id" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== Search view ===== -->
+    <record id="view_re_loan_note_repayment_search" model="ir.ui.view">
+        <field name="name">re.loan.note.repayment.search</field>
+        <field name="model">re.loan.note.repayment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="note_id"/>
+                <field name="reference"/>
+                <field name="interest_line_id"/>
+                <filter name="f_auto_debit" string="Trích thu tự động"
+                        domain="[('is_auto_debit', '=', True)]"/>
+                <filter name="f_manual" string="Trả tay"
+                        domain="[('is_auto_debit', '=', False)]"/>
+                <separator/>
+                <filter name="g_note" string="Khế ước"
+                        context="{'group_by': 'note_id'}"/>
+                <filter name="g_period" string="Kỳ"
+                        context="{'group_by': 'interest_line_id'}"/>
+                <filter name="g_month" string="Tháng trả"
+                        context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

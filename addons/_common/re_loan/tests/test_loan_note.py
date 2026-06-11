@@ -42,8 +42,18 @@ class TestLoanNote(TransactionCase):
         self.assertEqual(str(note.date_maturity), '2026-07-01')
 
     def test_amount_must_be_positive(self):
+        """Draft cho phép amount=0 (user mới tạo, chưa có giải ngân).
+        Nhưng khi gửi NH phải > 0.
+        """
+        # Draft + amount=0 → save OK
+        note = self._make_note(self.fac_rev, 0.0)
+        self.assertEqual(note.state, 'draft')
+        # Gửi NH chặn amount=0
+        with self.assertRaises(UserError):
+            note.action_send_to_bank()
+        # Amount âm — mọi state đều bị chặn (kể cả draft)
         with self.assertRaises(ValidationError):
-            self._make_note(self.fac_rev, 0.0)
+            note.amount = -1.0
 
     def test_activate_requires_maturity(self):
         note = self.env['re.loan.note'].create({

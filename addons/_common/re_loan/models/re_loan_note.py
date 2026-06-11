@@ -381,13 +381,13 @@ class ReLoanNote(models.Model):
     @api.constrains('amount', 'state')
     def _check_amount(self):
         """KW state='draft' cho phép amount=0 (user mới tạo, chưa
-        nhập giải ngân). State khác (sent_to_bank, active, ...)
-        bắt buộc amount > 0.
+        nhập giải ngân). State khác bắt buộc amount > 0.
+        Mọi state không cho phép amount âm.
         """
         for rec in self:
-            if rec.state == 'draft':
-                continue
-            if rec.amount <= 0:
+            if rec.amount < 0:
+                raise ValidationError(_("Số tiền KW không được âm."))
+            if rec.state != 'draft' and rec.amount == 0:
                 raise ValidationError(_(
                     "Số tiền KW phải lớn hơn 0 trước khi gửi NH / "
                     "kích hoạt."))

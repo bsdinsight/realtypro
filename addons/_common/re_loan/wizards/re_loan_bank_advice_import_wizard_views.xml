@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_bank_advice_import_wizard_form"
+            model="ir.ui.view">
+        <field name="name">re.loan.bank.advice.import.wizard.form</field>
+        <field name="model">re.loan.bank.advice.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import giấy báo có NH">
+                <field name="state" invisible="1"/>
+
+                <!-- ===== STEP 1: Upload ===== -->
+                <group invisible="state != 'upload'">
+                    <div class="alert alert-info" colspan="2"
+                         role="alert">
+                        <i class="fa fa-info-circle"/>
+                        Upload file Excel hoặc CSV theo template chuẩn.
+                        Cột bắt buộc: <b>Số HĐTD</b>, <b>Số khế ước</b>,
+                        <b>Số tiền trích thu</b>. Optional:
+                        <b>Số kỳ</b> (chỉ định kỳ cụ thể) và
+                        <b>Diễn giải</b>.
+                    </div>
+                    <group>
+                        <field name="file_data"
+                               filename="file_name"
+                               widget="binary"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="partner_id"
+                               options="{'no_create': True}"/>
+                        <field name="bank_account_id"
+                               options="{'no_create': True}"
+                               domain="[('partner_id', '=', partner_id)]"/>
+                        <field name="date_advice"/>
+                        <field name="reference"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </group>
+
+                <!-- ===== STEP 2: Preview ===== -->
+                <group invisible="state != 'preview'">
+                    <div class="alert alert-warning" colspan="2"
+                         role="alert">
+                        <i class="fa fa-exclamation-triangle"/>
+                        Kiểm tra danh sách dưới đây. Chỉ các dòng
+                        <b>Trạng thái = OK</b> sẽ được tạo. Dòng lỗi
+                        có thể sửa tay (cột "Khế ước", "Kỳ") hoặc bỏ
+                        qua.
+                    </div>
+                </group>
+                <field name="preview_line_ids"
+                       invisible="state != 'preview'"
+                       readonly="state == 'done'">
+                    <list editable="bottom"
+                          decoration-success="status == 'ok'"
+                          decoration-danger="status in ('no_match','ambiguous','invalid_amount')"
+                          decoration-warning="status in ('contract_mismatch','period_not_found','period_invalid')">
+                        <field name="row_no" readonly="1"/>
+                        <field name="credit_contract_code"
+                               readonly="1" optional="show"/>
+                        <field name="note_code" readonly="1"/>
+                        <field name="note_id"
+                               string="KW match"
+                               options="{'no_create': True}"/>
+                        <field name="period_no_raw" readonly="1"
+                               optional="show"/>
+                        <field name="interest_line_id"
+                               string="Kỳ match"
+                               options="{'no_create': True}"
+                               optional="show"/>
+                        <field name="amount" sum="Σ"/>
+                        <field name="description" optional="show"/>
+                        <field name="status" widget="badge"
+                               decoration-success="status == 'ok'"
+                               decoration-danger="status in ('no_match','ambiguous','invalid_amount')"
+                               decoration-warning="status in ('contract_mismatch','period_not_found','period_invalid')"/>
+                        <field name="error_message" optional="show"
+                               readonly="1"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+
+                <!-- ===== STEP 3: Done ===== -->
+                <group invisible="state != 'done'">
+                    <div class="alert alert-success" colspan="2"
+                         role="alert">
+                        <i class="fa fa-check-circle"/>
+                        Đã tạo giấy báo có NH. Mở form review +
+                        bấm "Xác nhận + Allocate" để allocate vào
+                        các kỳ lãi.
+                    </div>
+                </group>
+
+                <footer>
+                    <button name="action_parse" type="object"
+                            string="Preview"
+                            class="btn-primary"
+                            invisible="state != 'upload'"/>
+                    <button name="action_create_advice" type="object"
+                            string="Tạo giấy báo"
+                            class="btn-primary"
+                            invisible="state != 'preview'"/>
+                    <button name="action_download_template"
+                            type="object"
+                            string="Tải template Excel"
+                            class="btn-secondary"
+                            invisible="state != 'upload'"/>
+                    <button special="cancel"
+                            string="Đóng"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_bank_advice_import"
+            model="ir.actions.act_window">
+        <field name="name">Import giấy báo có NH</field>
+        <field name="res_model">re.loan.bank.advice.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

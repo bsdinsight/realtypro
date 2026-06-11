@@ -189,6 +189,12 @@
               action="action_re_loan_bank_advice"
               sequence="35"/>
 
+    <menuitem id="menu_re_loan_bank_advice_import"
+              name="Import giấy báo có (Excel/CSV)"
+              parent="re_loan.menu_re_loan_root"
+              action="action_re_loan_bank_advice_import"
+              sequence="36"/>
+
     <!-- ===== Interest line: thêm tab/nút xem các chứng từ đã trả ===== -->
     <record id="view_re_loan_note_interest_line_paid_list"
             model="ir.ui.view">

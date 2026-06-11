@@ -29,9 +29,9 @@
                     <group>
                         <field name="partner_id"
                                options="{'no_create': True}"/>
+                        <field name="company_partner_id" invisible="1"/>
                         <field name="bank_account_id"
-                               options="{'no_create': True}"
-                               domain="[('partner_id', '=', partner_id)]"/>
+                               options="{'no_create': True}"/>
                         <field name="date_advice"/>
                         <field name="reference"/>
                     </group>

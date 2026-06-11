@@ -56,7 +56,37 @@ class ReLoanBankAdviceImportWizard(models.TransientModel):
         'res.partner', string='Ngân hàng', required=True,
         domain="[('is_bank', '=', True)]")
     bank_account_id = fields.Many2one(
-        'res.partner.bank', string='TK trích thu')
+        'res.partner.bank', string='TK trích thu',
+        domain="[('partner_id', '=', company_partner_id),"
+               " ('bank_id.partner_id', '=', partner_id)]",
+        help='TK của công ty tại NH đã chọn — auto fill nếu chỉ có 1.')
+    company_partner_id = fields.Many2one(
+        'res.partner', readonly=True,
+        compute='_compute_company_partner',
+        help='Partner_id của company hiện tại — dùng để filter '
+             'bank_account_id qua domain.')
+
+    @api.depends_context('company')
+    def _compute_company_partner(self):
+        for rec in self:
+            rec.company_partner_id = self.env.company.partner_id
+
+    @api.onchange('partner_id')
+    def _onchange_partner_autofill_bank_account(self):
+        """Khi chọn NH, auto-pick TK của my company tại NH đó.
+
+        - Nếu có đúng 1 TK → set sẵn
+        - Nếu nhiều TK → để user chọn (dropdown filter sẽ rút gọn)
+        - Nếu không có → clear field
+        """
+        self.bank_account_id = False
+        if self.partner_id:
+            accounts = self.env['res.partner.bank'].search([
+                ('partner_id', '=', self.env.company.partner_id.id),
+                ('bank_id.partner_id', '=', self.partner_id.id),
+            ])
+            if len(accounts) == 1:
+                self.bank_account_id = accounts
     date_advice = fields.Date(
         string='Ngày NH trích thu', required=True,
         default=fields.Date.context_today)

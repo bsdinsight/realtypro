@@ -227,6 +227,25 @@ class ReLoanBankAdviceLine(models.Model):
                 raise ValidationError(_(
                     "Số tiền trích thu phải > 0."))
 
+    @api.onchange('interest_line_id')
+    def _onchange_interest_line_suggest_amount(self):
+        """Khi pick 1 kỳ, gợi ý 'Số tiền trích thu' = gốc còn + lãi còn
+        của kỳ đó. User vẫn sửa được sau đó nếu NH trích ít hơn.
+        """
+        if self.interest_line_id:
+            # Refresh paid amounts trước khi đọc remaining
+            self.interest_line_id._compute_paid_amounts()
+            self.amount = (
+                self.interest_line_id.amount_principal_remaining
+                + self.interest_line_id.amount_interest_remaining)
+
+    @api.onchange('note_id')
+    def _onchange_note_reset_interest_line(self):
+        """Đổi KW → clear interest_line_id (vì kỳ thuộc KW khác)."""
+        if self.interest_line_id and (
+                self.interest_line_id.note_id != self.note_id):
+            self.interest_line_id = False
+
     # ------------------------------------------------------------------
     # Allocation algorithm
     # ------------------------------------------------------------------

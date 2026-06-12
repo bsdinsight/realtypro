@@ -25,3 +25,9 @@ access_rp_progress_uom_loan_user,rp.progress.uom loan read,rp_progress.model_rp_
 access_rp_progress_uom_loan_manager,rp.progress.uom loan read,rp_progress.model_rp_progress_uom,re_loan.group_loan_manager,1,0,0,0
 access_account_move_loan_user,account.move loan read,account.model_account_move,re_loan.group_loan_user,1,0,0,0
 access_account_move_loan_manager,account.move loan read,account.model_account_move,re_loan.group_loan_manager,1,0,0,0
+access_account_tax_loan_user,account.tax loan user,account.model_account_tax,re_loan.group_loan_user,1,1,1,0
+access_account_tax_loan_manager,account.tax loan manager,account.model_account_tax,re_loan.group_loan_manager,1,1,1,1
+access_account_tax_group_loan_user,account.tax.group loan user,account.model_account_tax_group,re_loan.group_loan_user,1,0,1,0
+access_account_tax_group_loan_manager,account.tax.group loan manager,account.model_account_tax_group,re_loan.group_loan_manager,1,1,1,1
+access_account_tax_repartition_line_loan_user,account.tax.repartition.line loan user,account.model_account_tax_repartition_line,re_loan.group_loan_user,1,1,1,1
+access_account_tax_repartition_line_loan_manager,account.tax.repartition.line loan manager,account.model_account_tax_repartition_line,re_loan.group_loan_manager,1,1,1,1

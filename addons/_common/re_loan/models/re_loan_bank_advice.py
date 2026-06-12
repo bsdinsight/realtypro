@@ -183,9 +183,12 @@ class ReLoanBankAdviceLine(models.Model):
         store=True, readonly=True)
     interest_line_id = fields.Many2one(
         're.loan.note.interest.line', string='Kỳ thanh toán (chỉ định)',
-        domain="[('note_id', '=', note_id)]",
+        domain="[('note_id', '=', note_id),"
+               " ('state', '!=', 'paid')]",
         help='Optional. Nếu giấy báo chỉ đích danh kỳ → allocate '
-             'vào kỳ đó. Bỏ trống → algorithm tự loop kỳ cũ→mới.')
+             'vào kỳ đó. Bỏ trống → algorithm tự loop kỳ cũ→mới. '
+             'Chỉ hiện các kỳ chưa thanh toán đủ (state ∈ Dự kiến / '
+             'Đã ghi nhận / Trả một phần).')
     amount = fields.Monetary(
         string='Số tiền trích thu', required=True,
         help='Số tiền NH đã trích từ TK doanh nghiệp cho KW này.')

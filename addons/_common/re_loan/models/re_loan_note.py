@@ -677,15 +677,30 @@ class ReLoanNote(models.Model):
     # Auto state from payments (gọi bởi disbursement/repayment)
     # ------------------------------------------------------------------
     def _update_payment_state(self):
+        """Auto cập nhật state KW theo repayments.
+
+        - fully_paid: gốc trả hết (principal_outstanding <= 0). Chỉ
+          quan tâm gốc — vì khi gốc về 0, lãi cũng không phát sinh tiếp.
+        - partial_paid: ĐÃ CÓ phát sinh trả (gốc HOẶC lãi) > 0 — phản
+          ánh nghiệp vụ trích thu tự động: NH có thể chỉ trích lãi
+          trước, gốc trả cuối kỳ → KW phải hiện 'Trả 1 phần' chứ
+          không giữ 'Hiệu lực'.
+        - active: chưa có phát sinh trả nào.
+
+        Skip states: draft, cancelled, restructured.
+        """
         for rec in self:
             if rec.state in ('draft', 'cancelled', 'restructured'):
                 continue
+            has_repayment = (rec.amount_repaid_principal > 0
+                             or rec.amount_repaid_interest > 0)
             if rec.amount_disbursed > 0 and rec.principal_outstanding <= 0:
                 rec.state = 'fully_paid'
-            elif rec.amount_repaid_principal > 0:
+            elif has_repayment:
                 rec.state = 'partial_paid'
             else:
-                # quay lại active nếu đang overdue nhưng đã trả hết? handled above
+                # Không có phát sinh trả → quay về active nếu đang
+                # ở partial_paid/overdue (vd vừa unlink repayments).
                 if rec.state in ('partial_paid', 'overdue'):
                     rec.state = 'active'
 

@@ -33,3 +33,9 @@ access_account_tax_repartition_line_loan_user,account.tax.repartition.line loan 
 access_account_tax_repartition_line_loan_manager,account.tax.repartition.line loan manager,account.model_account_tax_repartition_line,re_loan.group_loan_manager,1,1,1,1
 access_res_partner_bank_loan_user,res.partner.bank loan user,base.model_res_partner_bank,re_loan.group_loan_user,1,1,1,0
 access_res_partner_bank_loan_manager,res.partner.bank loan manager,base.model_res_partner_bank,re_loan.group_loan_manager,1,1,1,1
+access_account_payment_loan_user,account.payment loan user,account.model_account_payment,re_loan.group_loan_user,1,1,1,0
+access_account_payment_loan_manager,account.payment loan manager,account.model_account_payment,re_loan.group_loan_manager,1,1,1,1
+access_account_payment_register_loan_user,account.payment.register loan user,account.model_account_payment_register,re_loan.group_loan_user,1,1,1,1
+access_account_payment_register_loan_manager,account.payment.register loan manager,account.model_account_payment_register,re_loan.group_loan_manager,1,1,1,1
+access_account_journal_loan_user,account.journal loan user,account.model_account_journal,re_loan.group_loan_user,1,0,0,0
+access_account_journal_loan_manager,account.journal loan manager,account.model_account_journal,re_loan.group_loan_manager,1,0,0,0

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit form: add stat button HĐ + readonly mini-view trên header -->
+    <record id="view_rp_tender_package_form_contract"
+            model="ir.ui.view">
+        <field name="name">rp.tender.package.form.contract</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id"
+               ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="action_open_contracts"
+                        icon="fa-file-text-o"
+                        invisible="contract_count == 0">
+                    <field name="contract_count" widget="statinfo"
+                           string="HĐ"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//field[@name='contract_amount']"
+                   position="after">
+                <field name="primary_contract_id"
+                       invisible="not primary_contract_id"
+                       readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

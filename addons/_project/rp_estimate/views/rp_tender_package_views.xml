@@ -146,6 +146,14 @@
                             </div>
                         </button>
                         <field name="awarded_bidder_id" invisible="1"/>
+                        <button class="oe_stat_button" type="object"
+                                name="action_open_eval_criteria"
+                                icon="fa-list-alt"
+                                invisible="eval_criterion_count == 0">
+                            <field name="eval_criterion_count"
+                                   widget="statinfo"
+                                   string="Tiêu chí"/>
+                        </button>
                     </div>
 
                     <div class="oe_title">
@@ -221,6 +229,55 @@
                                 → phê duyệt + ký HĐ. Ngày ký HĐ phải &lt;= hạn
                                 PTDA giao.
                             </div>
+                        </page>
+                        <page string="Yêu cầu kỹ thuật" name="tech_req">
+                            <group>
+                                <field name="technical_requirements_html"
+                                       nolabel="1"
+                                       placeholder="Mô tả phạm vi công việc, khối lượng, bản vẽ thiết kế, yêu cầu chất lượng vật liệu, tiến độ thi công, v.v..."/>
+                            </group>
+                            <separator string="Chỉ dẫn nhà thầu"/>
+                            <field name="instructions_html" nolabel="1"
+                                   placeholder="Hướng dẫn chung về thủ tục, điều kiện tham gia, tư cách hợp lệ của nhà thầu..."/>
+                        </page>
+                        <page string="Tiêu chuẩn đánh giá HSDT"
+                              name="eval_criteria">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">
+                                    <i class="fa fa-info-circle me-2"/>
+                                    3 nhóm theo Luật Đấu thầu VN: Năng lực &amp;
+                                    kinh nghiệm / Kỹ thuật / Giá.
+                                </span>
+                                <button name="action_seed_default_criteria"
+                                        type="object"
+                                        string="Tạo bộ tiêu chí mẫu"
+                                        class="btn btn-sm btn-secondary"
+                                        invisible="eval_criterion_count != 0"
+                                        confirm="Tạo bộ tiêu chí mẫu theo Luật Đấu thầu VN? Bạn có thể chỉnh sửa sau."/>
+                            </div>
+                            <field name="eval_criterion_ids"
+                                   context="{'default_package_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="kind" widget="badge"/>
+                                    <field name="name"/>
+                                    <field name="weight" sum="Tổng trọng số"/>
+                                    <field name="is_mandatory"
+                                           widget="boolean_toggle"/>
+                                    <field name="description"
+                                           optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tài liệu HSMT" name="hsmt_docs">
+                            <div class="text-muted mb-2">
+                                <i class="fa fa-info-circle me-2"/>
+                                Upload bản vẽ thiết kế, biểu mẫu HSDT, HSMT
+                                document, etc. Nhà thầu sẽ download các tài
+                                liệu này khi mua/nhận HSMT.
+                            </div>
+                            <field name="hsmt_attachment_ids"
+                                   widget="many2many_binary"/>
                         </page>
                         <page string="Danh sách nhà thầu" name="bidders"
                               invisible="state == 'draft'">

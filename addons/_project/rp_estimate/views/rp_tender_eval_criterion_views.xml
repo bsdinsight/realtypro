@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search -->
+    <record id="view_rp_tender_eval_criterion_search" model="ir.ui.view">
+        <field name="name">rp.tender.eval.criterion.search</field>
+        <field name="model">rp.tender.eval.criterion</field>
+        <field name="arch" type="xml">
+            <search string="Tiêu chuẩn đánh giá HSDT">
+                <field name="name"/>
+                <field name="package_id"/>
+                <separator/>
+                <filter name="capacity" string="Năng lực"
+                        domain="[('kind', '=', 'capacity')]"/>
+                <filter name="technical" string="Kỹ thuật"
+                        domain="[('kind', '=', 'technical')]"/>
+                <filter name="price" string="Giá"
+                        domain="[('kind', '=', 'price')]"/>
+                <separator/>
+                <filter name="mandatory" string="Bắt buộc đạt"
+                        domain="[('is_mandatory', '=', True)]"/>
+                <separator/>
+                <filter string="Nhóm" name="group_kind"
+                        context="{'group_by': 'kind'}"/>
+                <filter string="Gói thầu" name="group_package"
+                        context="{'group_by': 'package_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_rp_tender_eval_criterion_list" model="ir.ui.view">
+        <field name="name">rp.tender.eval.criterion.list</field>
+        <field name="model">rp.tender.eval.criterion</field>
+        <field name="arch" type="xml">
+            <list string="Tiêu chuẩn đánh giá HSDT" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="package_id" optional="show"/>
+                <field name="kind" widget="badge"/>
+                <field name="name"/>
+                <field name="weight" sum="Tổng trọng số"/>
+                <field name="is_mandatory" widget="boolean_toggle"/>
+                <field name="description" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_rp_tender_eval_criterion_form" model="ir.ui.view">
+        <field name="name">rp.tender.eval.criterion.form</field>
+        <field name="model">rp.tender.eval.criterion</field>
+        <field name="arch" type="xml">
+            <form string="Tiêu chuẩn đánh giá">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="vd: Số năm hoạt động trong lĩnh vực"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="package_id"
+                                   options="{'no_create': True}"/>
+                            <field name="kind"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="weight"/>
+                            <field name="is_mandatory"/>
+                        </group>
+                    </group>
+                    <group string="Chi tiết tiêu chí + cách chấm">
+                        <field name="description" nolabel="1"
+                               placeholder="Vd: Tối thiểu 10 năm; 5-10 năm: 50%; >10 năm: 100% điểm. Yêu cầu hồ sơ chứng minh."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_rp_tender_eval_criterion"
+            model="ir.actions.act_window">
+        <field name="name">Tiêu chuẩn đánh giá HSDT</field>
+        <field name="res_model">rp.tender.eval.criterion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_rp_tender_eval_criterion_search"/>
+    </record>
+
+</odoo>

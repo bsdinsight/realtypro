@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project - Estimate & Tender",
-    "version": "19.0.1.7.0",
+    "version": "19.0.1.8.0",
     "category": "Realty/Project",
-    "summary": "Gói thầu (P5.1+P5.2: KH lựa chọn NT + bidder list "
-               "+ chấm điểm + auto-rank) + suite root + Khái toán",
+    "summary": "Gói thầu (P5.1+P5.2+P5.3: KH lựa chọn NT + bidder "
+               "+ tiêu chuẩn đánh giá + HSMT) + Khái toán",
     "description": """
 Realty Project - Estimate & Tender (v1.4.3-r4)
 ===============================================
@@ -38,6 +38,7 @@ Phase 2 deliverable (v1.4.3-r4). Owns:
         "security/ir.model.access.csv",
         "views/rp_tender_package_views.xml",
         "views/rp_tender_bidder_views.xml",
+        "views/rp_tender_eval_criterion_views.xml",
         "wizards/quick_create_structures_views.xml",
         "views/menu_root.xml",
         "views/menus.xml",

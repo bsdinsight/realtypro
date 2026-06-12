@@ -85,6 +85,38 @@ class RpTenderPackage(models.Model):
         help='Mô tả phạm vi dùng cho HSMT / RFP.',
     )
 
+    # ===== Phase 5.3: HSMT content =====
+
+    instructions_html = fields.Html(
+        string='Chỉ dẫn nhà thầu',
+        sanitize=True,
+        help='Hướng dẫn chung về thủ tục, điều kiện tham gia, tư cách '
+             'hợp lệ của nhà thầu (theo HSMT mẫu Luật Đấu thầu VN).',
+    )
+    technical_requirements_html = fields.Html(
+        string='Phạm vi & yêu cầu kỹ thuật',
+        sanitize=True,
+        help='Phạm vi công việc, khối lượng, các bản vẽ thiết kế, yêu '
+             'cầu chất lượng vật liệu, tiến độ thi công.',
+    )
+    eval_criterion_ids = fields.One2many(
+        'rp.tender.eval.criterion', 'package_id',
+        string='Tiêu chuẩn đánh giá HSDT', copy=True,
+    )
+    eval_criterion_count = fields.Integer(
+        compute='_compute_eval_criterion_count', store=True,
+    )
+    hsmt_attachment_ids = fields.Many2many(
+        'ir.attachment',
+        'rp_tender_package_hsmt_attachment_rel',
+        'package_id', 'attachment_id',
+        string='Tài liệu HSMT',
+        help='Bản vẽ thiết kế, HSMT document, biểu mẫu HSDT, etc.',
+    )
+    hsmt_attachment_count = fields.Integer(
+        compute='_compute_hsmt_attachment_count', store=False,
+    )
+
     # ===== Phase 5.1: Kế hoạch lựa chọn nhà thầu =====
 
     selection_method = fields.Selection(
@@ -237,6 +269,16 @@ class RpTenderPackage(models.Model):
             awarded = pkg.bidder_ids.filtered(
                 lambda b: b.status == 'awarded')
             pkg.awarded_bidder_id = awarded[:1]
+
+    @api.depends('eval_criterion_ids')
+    def _compute_eval_criterion_count(self):
+        for pkg in self:
+            pkg.eval_criterion_count = len(pkg.eval_criterion_ids)
+
+    @api.depends('hsmt_attachment_ids')
+    def _compute_hsmt_attachment_count(self):
+        for pkg in self:
+            pkg.hsmt_attachment_count = len(pkg.hsmt_attachment_ids)
 
     @api.depends('line_ids.subzone_id')
     def _compute_subzone_coverage(self):
@@ -458,6 +500,48 @@ class RpTenderPackage(models.Model):
         for pkg in self:
             pkg.state = 'draft'
 
+    def action_seed_default_criteria(self):
+        """Tạo bộ tiêu chuẩn đánh giá mẫu theo Luật Đấu thầu VN.
+
+        User có thể chỉnh sửa / xóa sau. Idempotent: chỉ tạo khi
+        chưa có criterion nào — tránh duplicate.
+        """
+        Criterion = self.env['rp.tender.eval.criterion']
+        defaults = [
+            # Năng lực & kinh nghiệm
+            ('capacity', 10, 'Số năm hoạt động trong lĩnh vực', 25.0,
+             True, 'Tối thiểu 5 năm. Dưới ngưỡng → loại.'),
+            ('capacity', 20, 'Số HĐ tương tự đã thực hiện', 25.0,
+             True, 'Tối thiểu 3 HĐ trong 5 năm gần nhất.'),
+            ('capacity', 30, 'Năng lực tài chính (doanh thu 3 năm)', 25.0,
+             False, 'Doanh thu 3 năm gần nhất.'),
+            ('capacity', 40, 'Nhân sự chủ chốt & thiết bị', 25.0,
+             False, 'Đội ngũ kỹ sư + thiết bị thi công đảm bảo.'),
+            # Kỹ thuật
+            ('technical', 10, 'Biện pháp thi công', 40.0,
+             False, 'Phương án kỹ thuật, an toàn lao động.'),
+            ('technical', 20, 'Tiến độ thi công', 30.0,
+             False, 'Cam kết tiến độ hợp lý.'),
+            ('technical', 30, 'Chất lượng vật liệu', 30.0,
+             False, 'Nguồn gốc, chứng nhận chất lượng.'),
+            # Giá
+            ('price', 10, 'Phương pháp đánh giá: giá thấp nhất',
+             100.0, False,
+             'Xét trúng theo giá dự thầu thấp nhất sau hiệu chỉnh.'),
+        ]
+        for pkg in self:
+            if pkg.eval_criterion_ids:
+                continue
+            Criterion.create([
+                {
+                    'package_id': pkg.id,
+                    'kind': k, 'sequence': seq, 'name': name,
+                    'weight': w, 'is_mandatory': mand,
+                    'description': desc,
+                }
+                for (k, seq, name, w, mand, desc) in defaults
+            ])
+
     def action_open_bidders(self):
         """Mở danh sách bidder của gói thầu (cho stat button)."""
         self.ensure_one()
@@ -470,6 +554,21 @@ class RpTenderPackage(models.Model):
             'context': {
                 'default_package_id': self.id,
                 'search_default_group_status': 1,
+            },
+        }
+
+    def action_open_eval_criteria(self):
+        """Mở danh sách tiêu chuẩn đánh giá HSDT của gói thầu."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f'Tiêu chuẩn đánh giá — {self.name}',
+            'res_model': 'rp.tender.eval.criterion',
+            'view_mode': 'list,form',
+            'domain': [('package_id', '=', self.id)],
+            'context': {
+                'default_package_id': self.id,
+                'search_default_group_kind': 1,
             },
         }
 

@@ -8,11 +8,13 @@ class AccountMove(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id_set_bank(self):
-        """Khi pick nhà cung cấp, auto-fill TK nhận tiền (partner_bank_id):
+        """Khi pick nhà cung cấp, auto-fill TK nhận tiền:
 
-        - Nếu nhà cung cấp có đúng 1 TK NH → set sẵn
-        - Nếu >1 TK → giữ rỗng (user pick từ dropdown chuẩn Odoo)
-        - Nếu 0 TK → giữ rỗng (user có thể tạo mới qua widget M2O)
+        - Có >=1 TK NH → set sẵn TK đầu tiên (user vẫn đổi được qua
+          dropdown nếu có nhiều TK)
+        - 0 TK → giữ rỗng, user click vào field 'Ngân hàng người nhận'
+          → 'Tạo và sửa' để mở form res.partner.bank với
+          default_partner_id đã set sẵn
 
         Chỉ áp dụng cho vendor bill (in_invoice, in_refund). Customer
         invoice không cần TK NH bên đối tác.
@@ -23,5 +25,9 @@ class AccountMove(models.Model):
             self.partner_bank_id = False
             return
         accounts = self.partner_id.bank_ids
-        if len(accounts) == 1:
-            self.partner_bank_id = accounts
+        if accounts:
+            # Pick first — chuẩn Odoo sort theo sequence, default thường
+            # là TK chính.
+            self.partner_bank_id = accounts[:1]
+        else:
+            self.partner_bank_id = False

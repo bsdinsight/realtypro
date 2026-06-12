@@ -31,3 +31,5 @@ access_account_tax_group_loan_user,account.tax.group loan user,account.model_acc
 access_account_tax_group_loan_manager,account.tax.group loan manager,account.model_account_tax_group,re_loan.group_loan_manager,1,1,1,1
 access_account_tax_repartition_line_loan_user,account.tax.repartition.line loan user,account.model_account_tax_repartition_line,re_loan.group_loan_user,1,1,1,1
 access_account_tax_repartition_line_loan_manager,account.tax.repartition.line loan manager,account.model_account_tax_repartition_line,re_loan.group_loan_manager,1,1,1,1
+access_res_partner_bank_loan_user,res.partner.bank loan user,base.model_res_partner_bank,re_loan.group_loan_user,1,1,1,0
+access_res_partner_bank_loan_manager,res.partner.bank loan manager,base.model_res_partner_bank,re_loan.group_loan_manager,1,1,1,1

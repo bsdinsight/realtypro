@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ===== Form inherit: partner_bank_id auto-fill + create flow ===== -->
+    <record id="view_account_move_form_partner_bank"
+            model="ir.ui.view">
+        <field name="name">account.move.form.partner.bank</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_bank_id']"
+                   position="attributes">
+                <attribute name="options">
+                    {'no_quick_create': True, 'no_create_edit': False}
+                </attribute>
+                <attribute name="context">
+                    {'default_partner_id': partner_id}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
     <!-- ===== List view: Hóa đơn HĐ nhà thầu (vendor bills có milestone) ===== -->
     <record id="view_account_move_contractor_invoice_list"
             model="ir.ui.view">

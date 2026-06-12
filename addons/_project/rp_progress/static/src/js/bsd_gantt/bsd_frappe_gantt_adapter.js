@@ -20,9 +20,16 @@ export class BSDFrappeGanttAdapter extends BSDGanttAdapter {
             );
         }
         this.opts = opts;
+        // Note: frappe-gantt v0.6 supports: en, es, fr, ptBr, ru, zh, ko,
+        // tr — KHÔNG có 'vi'. Pass locale không support → crash khi đọc
+        // month_names[locale][0]. Default sang 'en'; UI vẫn show ngày
+        // Vietnamese qua custom popup.
+        const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'ptBr', 'ru', 'zh', 'ko', 'tr'];
+        const locale = SUPPORTED_LOCALES.includes(opts.locale)
+            ? opts.locale : 'en';
         this.gantt = new Gantt(container, tasks, {
             view_mode: opts.viewMode || "Month",
-            language: opts.locale || "vi",
+            language: locale,
             popup_trigger: "mouseover",
             bar_height: 28,
             bar_corner_radius: 4,

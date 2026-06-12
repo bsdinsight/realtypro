@@ -34,6 +34,7 @@ export class BSDFrappeGanttAdapter extends BSDGanttAdapter {
             bar_height: 28,
             bar_corner_radius: 4,
             padding: 18,
+            header_height: 50,
             on_click: (task) => opts.onClick && opts.onClick(task),
             on_date_change: (task, start, end) =>
                 opts.onDateChange && opts.onDateChange(task, start, end),

@@ -7,20 +7,9 @@ import { _t } from "@web/core/l10n/translation";
 import { BSDFrappeGanttAdapter } from "./bsd_frappe_gantt_adapter";
 
 const COMMUNITY_TASK_CAP = 500;
+const ROW_HEIGHT = 46; // bar_height (28) + padding (18) — phải khớp frappe-gantt
+const HEADER_HEIGHT = 60; // frappe-gantt header_height (50) + padding/2 (9) ≈ 60
 
-/**
- * BSDGanttView — client action OWL component
- *
- * Render Gantt cho tất cả rp.structure của 1 dự án.
- * Source: context.default_project_id (set bởi action_open_gantt
- * trên re.project model).
- *
- * Adapter selection:
- *   - Default: BSDFrappeGanttAdapter (Community)
- *   - Enterprise có thể override bằng registry "bsd_gantt_adapter"
- *
- * Cap 500 tasks Community. Nếu vượt → cảnh báo upgrade Enterprise.
- */
 export class BSDGanttView extends Component {
     static template = "rp_progress.BSDGanttView";
     static props = ["*"];
@@ -30,20 +19,24 @@ export class BSDGanttView extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
         this.ganttRef = useRef("gantt");
+        this.panelRef = useRef("panel");
         this.state = useState({
             loading: true,
             error: null,
             taskCount: 0,
             viewMode: "Month",
             projectName: "",
+            rows: [],
         });
         this.adapter = null;
+        this._syncScroll = null;
 
         onMounted(async () => {
             await this._load();
         });
         onWillUnmount(() => {
             if (this.adapter) this.adapter.destroy();
+            this._teardownSyncScroll();
         });
     }
 
@@ -65,6 +58,7 @@ export class BSDGanttView extends Component {
         ]);
         this.state.projectName = project?.name || "";
 
+        // Fetch ALL hạng mục (mọi cấp) — không filter level
         const structures = await this.orm.searchRead(
             "rp.structure",
             [["project_id", "=", projectId]],
@@ -72,13 +66,17 @@ export class BSDGanttView extends Component {
                 "id",
                 "name",
                 "code",
+                "structure_level",
+                "subzone_id",
+                "parent_id",
                 "date_planned_start",
                 "date_planned_end",
                 "progress_percent",
                 "status",
                 "is_delayed",
+                "sequence",
             ],
-            { order: "date_planned_start asc, id asc" },
+            { order: "sequence asc, id asc" },
         );
 
         this.state.taskCount = structures.length;
@@ -86,9 +84,7 @@ export class BSDGanttView extends Component {
             this.state.error = _t(
                 "Dự án có %s hạng mục — vượt giới hạn Community Edition " +
                     "(%s tasks). Liên hệ sales@bsdinsight.com nâng cấp " +
-                    "Realty Pro Enterprise để xem Gantt không giới hạn + " +
-                    "tính năng nâng cao (critical path, baseline, " +
-                    "resource leveling).",
+                    "Realty Pro Enterprise.",
                 structures.length,
                 COMMUNITY_TASK_CAP,
             );
@@ -96,19 +92,36 @@ export class BSDGanttView extends Component {
             return;
         }
 
-        // Filter structures có dates
-        const valid = structures.filter(
+        // Sắp xếp theo phân cấp: subzone → item → sub_item
+        const ordered = this._buildHierarchy(structures);
+
+        // Filter chỉ những hạng mục có ngày
+        const valid = ordered.filter(
             (s) => s.date_planned_start && s.date_planned_end,
         );
         if (valid.length === 0) {
             this.state.error = _t(
-                "Chưa có hạng mục nào có ngày kế hoạch (Ngày BĐ KH + " +
-                    "Ngày KT KH). Vào Hạng mục → set 'date_planned_start' " +
-                    "+ 'date_planned_end' để hiện trên Gantt.",
+                "Chưa có hạng mục nào có ngày kế hoạch. Vào Hạng mục " +
+                    "→ set 'Ngày BĐ KH' + 'Ngày KT KH' để hiện trên Gantt.",
             );
             this.state.loading = false;
             return;
         }
+
+        // Build rows cho panel bên trái
+        this.state.rows = valid.map((s, i) => ({
+            id: s.id,
+            seq: i + 1,
+            code: s.code || "",
+            name: s.name,
+            depth: s._depth,
+            level: s.structure_level,
+            startStr: this._fmtDate(s.date_planned_start),
+            endStr: this._fmtDate(s.date_planned_end),
+            progress: Math.round(s.progress_percent || 0),
+            is_delayed: s.is_delayed,
+            statusClass: this._statusClass(s.status, s.is_delayed),
+        }));
 
         const tasks = valid.map((s) => ({
             id: String(s.id),
@@ -117,38 +130,138 @@ export class BSDGanttView extends Component {
             end: s.date_planned_end,
             progress: Math.min(100, Math.max(0, s.progress_percent || 0)),
             dependencies: "",
-            custom_class: this._statusClass(s.status, s.is_delayed),
+            custom_class: "bsd_gantt_bar_" + this._statusClass(
+                s.status, s.is_delayed),
         }));
 
-        // Load adapter
         this.adapter = new BSDFrappeGanttAdapter(this.env);
         try {
             await this.adapter.render(this.ganttRef.el, tasks, {
                 viewMode: this.state.viewMode,
                 locale: "vi",
+                rowHeight: ROW_HEIGHT,
+                headerHeight: HEADER_HEIGHT,
                 onClick: (task) => this._openStructure(task.id),
                 onDateChange: (task, start, end) =>
                     this._onDateChange(task, start, end),
                 onProgressChange: (task, progress) =>
                     this._onProgressChange(task, progress),
             });
+            this._setupSyncScroll();
         } catch (err) {
             this.state.error = err.message || String(err);
         }
         this.state.loading = false;
     }
 
+    /**
+     * Tổ chức flat list → cây phân cấp:
+     *   subzone (depth 0) → item (depth 1) → sub_item (depth 2)
+     * Trả về flat list đã sắp xếp DFS với property _depth.
+     */
+    _buildHierarchy(structures) {
+        const byId = new Map();
+        structures.forEach((s) => byId.set(s.id, { ...s, _children: [] }));
+
+        // Group items theo subzone, sub_items theo parent
+        const subzoneItems = new Map(); // subzone_id → [items]
+        const orphans = [];
+
+        structures.forEach((s) => {
+            const node = byId.get(s.id);
+            if (s.structure_level === "sub_item" && s.parent_id) {
+                const parent = byId.get(s.parent_id[0]);
+                if (parent) {
+                    parent._children.push(node);
+                    return;
+                }
+            }
+            if (s.structure_level === "item" && s.subzone_id) {
+                const k = s.subzone_id[0];
+                if (!subzoneItems.has(k)) subzoneItems.set(k, []);
+                subzoneItems.get(k).push(node);
+                return;
+            }
+            orphans.push(node);
+        });
+
+        // Tạo virtual subzone row chỉ trong panel (nhưng không có dates →
+        // không lên gantt). Thay vào đó: items dưới cùng subzone được group
+        // bằng cách đánh dấu depth=0 cho item đầu tiên của subzone? Không —
+        // đơn giản: items = depth 0, sub_items = depth 1. Subzone hiển thị
+        // qua subzone_id name trong tooltip future.
+        const result = [];
+        for (const [subzoneId, items] of subzoneItems) {
+            items.sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+            for (const item of items) {
+                item._depth = 0;
+                result.push(item);
+                item._children.sort((a, b) =>
+                    (a.sequence || 0) - (b.sequence || 0));
+                for (const child of item._children) {
+                    child._depth = 1;
+                    result.push(child);
+                }
+            }
+        }
+        for (const o of orphans) {
+            o._depth = 0;
+            result.push(o);
+        }
+        return result;
+    }
+
+    _fmtDate(d) {
+        if (!d) return "—";
+        const [y, m, day] = d.split("-");
+        return `${day}/${m}/${y}`;
+    }
+
     _statusClass(status, isDelayed) {
-        if (isDelayed) return "bsd_gantt_bar_delayed";
+        if (isDelayed) return "delayed";
         switch (status) {
-            case "completed":
-                return "bsd_gantt_bar_completed";
-            case "in_progress":
-                return "bsd_gantt_bar_in_progress";
-            case "paused":
-                return "bsd_gantt_bar_paused";
-            default:
-                return "bsd_gantt_bar_not_started";
+            case "completed": return "completed";
+            case "in_progress": return "in_progress";
+            case "paused": return "paused";
+            default: return "not_started";
+        }
+    }
+
+    /**
+     * Sync vertical scroll: panel body ↔ gantt container.
+     * Khi user scroll bên này, bên kia follow.
+     */
+    _setupSyncScroll() {
+        const panelBody = this.panelRef.el?.querySelector(
+            ".bsd_gantt_panel_body");
+        const ganttEl = this.ganttRef.el;
+        if (!panelBody || !ganttEl) return;
+
+        let lock = false;
+        const onPanelScroll = () => {
+            if (lock) return;
+            lock = true;
+            ganttEl.scrollTop = panelBody.scrollTop;
+            requestAnimationFrame(() => { lock = false; });
+        };
+        const onGanttScroll = () => {
+            if (lock) return;
+            lock = true;
+            panelBody.scrollTop = ganttEl.scrollTop;
+            requestAnimationFrame(() => { lock = false; });
+        };
+        panelBody.addEventListener("scroll", onPanelScroll);
+        ganttEl.addEventListener("scroll", onGanttScroll);
+        this._syncScroll = () => {
+            panelBody.removeEventListener("scroll", onPanelScroll);
+            ganttEl.removeEventListener("scroll", onGanttScroll);
+        };
+    }
+
+    _teardownSyncScroll() {
+        if (this._syncScroll) {
+            this._syncScroll();
+            this._syncScroll = null;
         }
     }
 
@@ -173,17 +286,16 @@ export class BSDGanttView extends Component {
                 _t("Đã cập nhật ngày kế hoạch."),
                 { type: "success" },
             );
+            await this._reload();
         } catch (err) {
             this.notification.add(_t("Lỗi cập nhật: ") + err.message, {
                 type: "danger",
             });
-            // Reload to revert
-            await this._load();
+            await this._reload();
         }
     }
 
     async _onProgressChange(task, progress) {
-        // rp.structure.progress_percent là computed → không write trực tiếp.
         this.notification.add(
             _t(
                 "% tiến độ được tính từ BBNT — không sửa tay trên Gantt. " +
@@ -191,7 +303,17 @@ export class BSDGanttView extends Component {
             ),
             { type: "warning" },
         );
-        // Reload để revert lại từ DB
+        await this._reload();
+    }
+
+    async _reload() {
+        this._teardownSyncScroll();
+        if (this.adapter) {
+            this.adapter.destroy();
+            this.adapter = null;
+        }
+        this.state.loading = true;
+        this.state.error = null;
         await this._load();
     }
 

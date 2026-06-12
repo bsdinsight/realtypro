@@ -10,32 +10,155 @@
         flex: 0 0 auto;
     }
 
+    .bsd_gantt_split {
+        flex: 1 1 auto;
+        display: flex;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .bsd_gantt_panel {
+        flex: 0 0 480px;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #e5e7eb;
+        background: #fafafa;
+        font-size: 12px;
+        overflow: hidden;
+
+        .bsd_gantt_panel_header,
+        .bsd_gantt_panel_row {
+            display: grid;
+            grid-template-columns: 32px 1fr 78px 78px 90px;
+            align-items: center;
+        }
+
+        .bsd_gantt_panel_header {
+            flex: 0 0 60px; // match HEADER_HEIGHT from JS
+            background: #f3f4f6;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+            > div {
+                padding: 4px 6px;
+                border-right: 1px solid #e5e7eb;
+                &:last-child { border-right: 0; }
+            }
+            .col_seq,
+            .col_date,
+            .col_pct { text-align: center; }
+        }
+
+        .bsd_gantt_panel_body {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+            // hide scrollbar — let gantt container be the visible one,
+            // sync handles vertical position
+            &::-webkit-scrollbar { width: 0; height: 0; }
+            scrollbar-width: none;
+        }
+
+        .bsd_gantt_panel_row {
+            height: 46px; // match ROW_HEIGHT from JS
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.1s;
+            &:hover { background: #e8f0fe; }
+            > div {
+                padding: 0 6px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .col_seq {
+                text-align: center;
+                color: #6b7280;
+                font-variant-numeric: tabular-nums;
+            }
+            .col_name {
+                .code {
+                    color: #6b7280;
+                    margin-right: 4px;
+                    font-size: 11px;
+                }
+                .lvl_dot {
+                    display: inline-block;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    margin-right: 6px;
+                    vertical-align: middle;
+                    &.dot_not_started { background: #9ca3af; }
+                    &.dot_in_progress { background: #3b82f6; }
+                    &.dot_completed { background: #10b981; }
+                    &.dot_paused { background: #f59e0b; }
+                    &.dot_delayed { background: #ef4444; }
+                }
+            }
+            .col_date {
+                text-align: center;
+                color: #4b5563;
+                font-variant-numeric: tabular-nums;
+                font-size: 11px;
+            }
+            .col_pct {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                .pct_bar {
+                    flex: 1 1 auto;
+                    height: 6px;
+                    background: #e5e7eb;
+                    border-radius: 3px;
+                    overflow: hidden;
+                    .pct_fill {
+                        height: 100%;
+                        background: #3b82f6;
+                        transition: width 0.2s;
+                    }
+                }
+                .pct_text {
+                    flex: 0 0 32px;
+                    text-align: right;
+                    font-size: 11px;
+                    color: #374151;
+                }
+            }
+            &.lvl_sub_item .col_name {
+                color: #6b7280;
+                font-size: 11px;
+            }
+            &.is_delayed .col_name { color: #b91c1c; }
+        }
+    }
+
     .bsd_gantt_container {
         flex: 1 1 auto;
         overflow: auto;
         background: #fff;
-        padding: 1rem;
     }
 }
 
 // Custom bar colors theo status
 .bsd_gantt_bar_not_started {
     .bar { fill: #9ca3af; }
+    .bar-progress { fill: #6b7280; }
 }
 .bsd_gantt_bar_in_progress {
-    .bar { fill: #3b82f6; }
-    .bar-progress { fill: #1d4ed8; }
+    .bar { fill: #93c5fd; }
+    .bar-progress { fill: #2563eb; }
 }
 .bsd_gantt_bar_completed {
-    .bar { fill: #10b981; }
+    .bar { fill: #86efac; }
     .bar-progress { fill: #059669; }
 }
 .bsd_gantt_bar_paused {
-    .bar { fill: #f59e0b; }
+    .bar { fill: #fcd34d; }
     .bar-progress { fill: #d97706; }
 }
 .bsd_gantt_bar_delayed {
-    .bar { fill: #ef4444; }
+    .bar { fill: #fca5a5; }
     .bar-progress { fill: #dc2626; }
 }
 

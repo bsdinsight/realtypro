@@ -34,7 +34,45 @@
                 <span t-esc="state.error"/>
             </div>
 
-            <div class="bsd_gantt_container" t-ref="gantt" t-att-style="state.error or state.loading ? 'display:none' : ''"/>
+            <div class="bsd_gantt_split"
+                 t-att-style="state.error or state.loading ? 'display:none' : ''">
+
+                <div class="bsd_gantt_panel" t-ref="panel">
+                    <div class="bsd_gantt_panel_header">
+                        <div class="col_seq">#</div>
+                        <div class="col_name">Hạng mục</div>
+                        <div class="col_date">BĐ KH</div>
+                        <div class="col_date">KT KH</div>
+                        <div class="col_pct">%</div>
+                    </div>
+                    <div class="bsd_gantt_panel_body">
+                        <div t-foreach="state.rows" t-as="row" t-key="row.id"
+                             class="bsd_gantt_panel_row"
+                             t-att-class="'lvl_' + row.level + (row.is_delayed ? ' is_delayed' : '')"
+                             t-on-click="() => this._openStructure(row.id)">
+                            <div class="col_seq" t-esc="row.seq"/>
+                            <div class="col_name"
+                                 t-att-style="'padding-left:' + (8 + row.depth * 16) + 'px'">
+                                <span class="lvl_dot"
+                                      t-att-class="'dot_' + row.statusClass"/>
+                                <span t-if="row.code" class="code">[<t t-esc="row.code"/>]</span>
+                                <span t-esc="row.name"/>
+                            </div>
+                            <div class="col_date" t-esc="row.startStr"/>
+                            <div class="col_date" t-esc="row.endStr"/>
+                            <div class="col_pct">
+                                <div class="pct_bar">
+                                    <div class="pct_fill"
+                                         t-att-style="'width:' + row.progress + '%'"/>
+                                </div>
+                                <span class="pct_text" t-esc="row.progress + '%'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bsd_gantt_container" t-ref="gantt"/>
+            </div>
         </div>
     </t>
 

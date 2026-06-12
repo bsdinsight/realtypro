@@ -141,6 +141,8 @@
                         margin-right: 2px;
                     }
                 }
+                // Progress bar HĐ — dùng màu xanh dương khác hạng mục
+                .col_pct .pct_fill { background: #2563eb; }
                 &:hover { background: #dbeafe; }
             }
             &.is_delayed .col_name { color: #b91c1c; }
@@ -209,21 +211,37 @@
     pointer-events: none;
 }
 
-// HĐ nhà thầu — bar slim hơn, màu xanh đậm
+// HĐ nhà thầu — bar (track) màu nhạt, bar-progress đậm hơn
+// để hiện % nghiệm thu lũy kế
 .bsd_gantt_bar_contract {
-    .bar { fill: #2563eb; opacity: 0.75; }
-    .bar-progress { display: none; }
+    .bar { opacity: 0.45; }
+    .bar-progress { opacity: 1; }
     .bar-label {
         fill: #fff;
         font-style: italic;
         font-size: 10px;
     }
 }
-.bsd_gantt_bar_contract_draft .bar { fill: #94a3b8; }
-.bsd_gantt_bar_contract_signed .bar { fill: #2563eb; }
-.bsd_gantt_bar_contract_executing .bar { fill: #059669; }
-.bsd_gantt_bar_contract_completed .bar { fill: #14532d; }
-.bsd_gantt_bar_contract_terminated .bar { fill: #dc2626; }
+.bsd_gantt_bar_contract_draft {
+    .bar { fill: #cbd5e1; }
+    .bar-progress { fill: #64748b; }
+}
+.bsd_gantt_bar_contract_signed {
+    .bar { fill: #93c5fd; }
+    .bar-progress { fill: #2563eb; }
+}
+.bsd_gantt_bar_contract_executing {
+    .bar { fill: #86efac; }
+    .bar-progress { fill: #059669; }
+}
+.bsd_gantt_bar_contract_completed {
+    .bar { fill: #4ade80; }
+    .bar-progress { fill: #14532d; }
+}
+.bsd_gantt_bar_contract_terminated {
+    .bar { fill: #fca5a5; }
+    .bar-progress { fill: #dc2626; }
+}
 
 // Popup styling
 .bsd_gantt_popup {

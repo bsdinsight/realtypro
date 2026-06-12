@@ -111,6 +111,7 @@ export class BSDGanttView extends Component {
                     "id", "name", "contractor_id", "structure_ids",
                     "date_start", "date_end", "state",
                     "contract_value_total",
+                    "acceptance_progress_percent",
                 ],
                 { order: "date_start asc, id asc" },
             );
@@ -146,7 +147,7 @@ export class BSDGanttView extends Component {
                     code: c.name,
                     date_planned_start: c.date_start,
                     date_planned_end: c.date_end,
-                    progress_percent: 0,
+                    progress_percent: c.acceptance_progress_percent || 0,
                     status: c.state,
                     is_delayed: false,
                     structure_level: 'contract',
@@ -209,7 +210,7 @@ export class BSDGanttView extends Component {
                 name: s.code ? `[${s.code}] ${s.name}` : s.name,
                 start: s.date_planned_start || refDate,
                 end: s.date_planned_end || refDate,
-                progress: s._isContract ? 0 : Math.min(
+                progress: Math.min(
                     100, Math.max(0, s.progress_percent || 0)),
                 dependencies: "",
                 custom_class: cls,

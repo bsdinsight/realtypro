@@ -52,11 +52,13 @@ export class BSDFrappeGanttAdapter extends BSDGanttAdapter {
             return dt.toLocaleDateString("vi-VN");
         };
         if (task._isContract) {
+            const cprogress = Math.round(task.progress || 0);
             return `
               <div class="bsd_gantt_popup">
                 <h5>📄 ${task.name}</h5>
                 <div><b>Khởi công:</b> ${fmtDate(task.start)}</div>
                 <div><b>Hoàn thành DK:</b> ${fmtDate(task.end)}</div>
+                <div><b>% nghiệm thu:</b> ${cprogress}%</div>
               </div>
             `;
         }

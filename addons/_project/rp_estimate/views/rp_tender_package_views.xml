@@ -127,6 +127,27 @@
                             bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
 
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_open_bidders"
+                                icon="fa-users"
+                                invisible="bidder_count == 0">
+                            <field name="bidder_count" widget="statinfo"
+                                   string="Nhà thầu"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="action_open_bidders"
+                                icon="fa-trophy"
+                                invisible="not awarded_bidder_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Trúng thầu</span>
+                                <field name="awarded_bidder_id"
+                                       readonly="1"/>
+                            </div>
+                        </button>
+                        <field name="awarded_bidder_id" invisible="1"/>
+                    </div>
+
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -199,6 +220,88 @@
                                 → đóng thầu → mở thầu → đánh giá → thương thảo
                                 → phê duyệt + ký HĐ. Ngày ký HĐ phải &lt;= hạn
                                 PTDA giao.
+                            </div>
+                        </page>
+                        <page string="Danh sách nhà thầu" name="bidders"
+                              invisible="state == 'draft'">
+                            <div class="alert alert-info" role="alert"
+                                 invisible="bidder_count != 0">
+                                <i class="fa fa-info-circle me-2"/>
+                                Chưa có nhà thầu nào nộp HSDT. Khi nhà thầu
+                                nộp hồ sơ, click "Thêm" để ghi nhận.
+                            </div>
+                            <field name="bidder_ids"
+                                   context="{'default_package_id': id}">
+                                <list editable="bottom"
+                                      decoration-success="status == 'awarded'"
+                                      decoration-danger="status == 'disqualified'"
+                                      decoration-info="status == 'qualified'"
+                                      decoration-muted="status == 'submitted'">
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="ranking" string="#"
+                                           readonly="1" width="40"/>
+                                    <field name="contractor_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="submitted_date"/>
+                                    <field name="technical_score"
+                                           widget="float"/>
+                                    <field name="technical_pass"
+                                           widget="boolean_toggle" readonly="1"
+                                           optional="show"/>
+                                    <field name="price_offered"
+                                           widget="monetary" sum="Tổng giá dự thầu"/>
+                                    <field name="status" widget="badge"/>
+                                    <field name="disqualification_reason"
+                                           optional="hide"/>
+                                    <button name="action_qualify" type="object"
+                                            string="Đạt KT" icon="fa-check"
+                                            invisible="status in ('qualified','awarded','disqualified')"/>
+                                    <button name="action_select_as_winner"
+                                            type="object" string="Chọn trúng"
+                                            class="btn-link"
+                                            icon="fa-trophy"
+                                            invisible="status in ('disqualified','awarded')"
+                                            confirm="Chọn nhà thầu này trúng thầu? Hành động này sẽ cập nhật Nhà thầu trúng + Giá trúng trên gói thầu."/>
+                                    <button name="action_disqualify"
+                                            type="object" string="Loại"
+                                            icon="fa-ban"
+                                            invisible="status in ('disqualified','awarded')"
+                                            confirm="Loại bidder này? Cần nhập lý do trước."/>
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <field name="currency_id" invisible="1"/>
+                                        <group>
+                                            <group string="Nhà thầu">
+                                                <field name="contractor_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="partner_id" readonly="1"/>
+                                                <field name="submitted_date"/>
+                                            </group>
+                                            <group string="Đánh giá &amp; giá">
+                                                <field name="technical_score"/>
+                                                <field name="technical_pass" readonly="1"/>
+                                                <field name="price_offered" widget="monetary"/>
+                                                <field name="ranking" readonly="1"/>
+                                                <field name="status" widget="badge"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <field name="disqualification_reason"
+                                                   placeholder="Lý do loại — bắt buộc nếu status = Bị loại"/>
+                                            <field name="notes"/>
+                                        </group>
+                                    </sheet>
+                                    <chatter/>
+                                </form>
+                            </field>
+                            <div class="text-muted mt-2"
+                                 invisible="bidder_count == 0">
+                                <i class="fa fa-info-circle me-2"/>
+                                <b>Hạng giá</b>: tự động xếp hạng theo giá thấp
+                                nhất trong nhóm chưa bị loại. <b>Điểm KT pass</b>:
+                                ngưỡng 70/100. <b>Chọn trúng</b>: đồng bộ ngay
+                                Nhà thầu trúng + Giá trúng lên header gói thầu.
                             </div>
                         </page>
                         <page string="Hạng mục" name="lines">

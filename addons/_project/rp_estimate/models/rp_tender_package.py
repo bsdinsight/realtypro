@@ -160,12 +160,30 @@ class RpTenderPackage(models.Model):
         required=True, default=lambda self: self.env.company.currency_id,
     )
 
-    # ----- Lines
+    # ----- Lines (Hạng mục)
     line_ids = fields.One2many(
         'rp.tender.package.line', 'package_id',
         string='Hạng mục in Package', copy=True,
     )
     line_count = fields.Integer(compute='_compute_line_count', store=True)
+
+    # ----- Bidders (Phase 5.2)
+    bidder_ids = fields.One2many(
+        'rp.tender.bidder', 'package_id',
+        string='Nhà thầu nộp HSDT', copy=False,
+    )
+    bidder_count = fields.Integer(
+        compute='_compute_bidder_stats', store=True,
+    )
+    bidder_qualified_count = fields.Integer(
+        compute='_compute_bidder_stats', store=True,
+        help='Số bidder đạt vòng KT.',
+    )
+    awarded_bidder_id = fields.Many2one(
+        'rp.tender.bidder',
+        string='Bidder trúng thầu',
+        compute='_compute_awarded_bidder', store=True,
+    )
     subzone_coverage = fields.Char(
         compute='_compute_subzone_coverage', store=True,
         help='Subzones covered by package lines.',
@@ -205,6 +223,20 @@ class RpTenderPackage(models.Model):
     def _compute_line_count(self):
         for pkg in self:
             pkg.line_count = len(pkg.line_ids)
+
+    @api.depends('bidder_ids', 'bidder_ids.status')
+    def _compute_bidder_stats(self):
+        for pkg in self:
+            pkg.bidder_count = len(pkg.bidder_ids)
+            pkg.bidder_qualified_count = len(pkg.bidder_ids.filtered(
+                lambda b: b.status in ('qualified', 'awarded')))
+
+    @api.depends('bidder_ids.status')
+    def _compute_awarded_bidder(self):
+        for pkg in self:
+            awarded = pkg.bidder_ids.filtered(
+                lambda b: b.status == 'awarded')
+            pkg.awarded_bidder_id = awarded[:1]
 
     @api.depends('line_ids.subzone_id')
     def _compute_subzone_coverage(self):
@@ -349,11 +381,24 @@ class RpTenderPackage(models.Model):
             pkg.state = 'negotiating'
 
     def action_award(self):
-        """negotiating → awarded: chốt nhà thầu trúng + giá trúng."""
+        """negotiating → awarded: chốt nhà thầu trúng + giá trúng.
+
+        2 flow chấp nhận:
+        - User đã click "Chọn trúng" trên 1 bidder → awarded_bidder_id
+          đã set → contractor_id + award_amount đã sync tự động
+        - Hoặc user nhập tay contractor_id + award_amount (vd chỉ định
+          thầu không có bidder list)
+        """
         today = fields.Date.context_today(self)
         for pkg in self:
             if pkg.state != 'negotiating':
                 continue
+
+            if pkg.bidder_ids and not pkg.awarded_bidder_id:
+                raise UserError(
+                    'Có bidder trong gói thầu — phải chọn "Trúng" trên '
+                    '1 bidder ở tab Danh sách nhà thầu trước khi award.')
+
             pkg._require_fields({
                 'contractor_id': 'Nhà thầu trúng',
                 'award_amount': 'Giá trúng thầu',
@@ -362,6 +407,16 @@ class RpTenderPackage(models.Model):
                 raise UserError(
                     f'Giá trúng ({pkg.award_amount}) vượt giá trần duyệt '
                     f'({pkg.max_approved_price}).')
+
+            # Sync project relationship trên contractor master (cho cả
+            # trường hợp pick contractor tay không qua bidder)
+            if pkg.contractor_id:
+                contractor = self.env['rp.contractor'].search(
+                    [('partner_id', '=', pkg.contractor_id.id)], limit=1)
+                if (contractor
+                        and pkg.project_id not in contractor.project_ids):
+                    contractor.project_ids = [(4, pkg.project_id.id)]
+
             if not pkg.date_negotiation_done:
                 pkg.date_negotiation_done = today
             pkg.state = 'awarded'
@@ -402,6 +457,21 @@ class RpTenderPackage(models.Model):
             raise UserError('Chỉ manager mới được reset state.')
         for pkg in self:
             pkg.state = 'draft'
+
+    def action_open_bidders(self):
+        """Mở danh sách bidder của gói thầu (cho stat button)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': f'Nhà thầu nộp HSDT — {self.name}',
+            'res_model': 'rp.tender.bidder',
+            'view_mode': 'list,form',
+            'domain': [('package_id', '=', self.id)],
+            'context': {
+                'default_package_id': self.id,
+                'search_default_group_status': 1,
+            },
+        }
 
 
 class RpTenderPackageLine(models.Model):

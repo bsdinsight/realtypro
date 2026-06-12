@@ -5,5 +5,8 @@ access_rp_tender_package_admin,rp.tender.package.admin,model_rp_tender_package,r
 access_rp_tender_package_line_user,rp.tender.package.line.user,model_rp_tender_package_line,re_base.group_re_user,1,0,0,0
 access_rp_tender_package_line_manager,rp.tender.package.line.manager,model_rp_tender_package_line,re_base.group_re_manager,1,1,1,1
 access_rp_tender_package_line_admin,rp.tender.package.line.admin,model_rp_tender_package_line,re_base.group_re_admin,1,1,1,1
+access_rp_tender_bidder_user,rp.tender.bidder.user,model_rp_tender_bidder,re_base.group_re_user,1,0,0,0
+access_rp_tender_bidder_manager,rp.tender.bidder.manager,model_rp_tender_bidder,re_base.group_re_manager,1,1,1,1
+access_rp_tender_bidder_admin,rp.tender.bidder.admin,model_rp_tender_bidder,re_base.group_re_admin,1,1,1,1
 access_rp_wiz_quick_structure_manager,rp.wizard.quick.create.structures.manager,model_rp_wizard_quick_create_structures,re_base.group_re_manager,1,1,1,1
 access_rp_wiz_quick_structure_line_manager,rp.wizard.quick.create.structures.line.manager,model_rp_wizard_quick_create_structures_line,re_base.group_re_manager,1,1,1,1

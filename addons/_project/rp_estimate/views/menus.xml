@@ -92,6 +92,12 @@
               action="rp_estimate.action_rp_tender_package"
               sequence="90"/>
 
+    <menuitem id="menu_pm_rp_tender_bidder"
+              name="Nhà thầu nộp HSDT"
+              parent="menu_project_master"
+              action="rp_estimate.action_rp_tender_bidder"
+              sequence="95"/>
+
     <menuitem id="menu_pm_rp_contractor"
               name="Nhà thầu"
               parent="menu_project_master"

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search -->
+    <record id="view_rp_tender_bidder_search" model="ir.ui.view">
+        <field name="name">rp.tender.bidder.search</field>
+        <field name="model">rp.tender.bidder</field>
+        <field name="arch" type="xml">
+            <search string="Nhà thầu nộp HSDT">
+                <field name="contractor_id"/>
+                <field name="package_id"/>
+                <field name="project_id"/>
+                <separator/>
+                <filter name="submitted" string="Đã nộp"
+                        domain="[('status', '=', 'submitted')]"/>
+                <filter name="qualified" string="Đạt KT"
+                        domain="[('status', '=', 'qualified')]"/>
+                <filter name="awarded" string="Trúng"
+                        domain="[('status', '=', 'awarded')]"/>
+                <filter name="disqualified" string="Bị loại"
+                        domain="[('status', '=', 'disqualified')]"/>
+                <separator/>
+                <filter name="technical_pass" string="Đạt KT (≥70)"
+                        domain="[('technical_pass', '=', True)]"/>
+                <separator/>
+                <filter string="Gói thầu" name="group_package"
+                        context="{'group_by': 'package_id'}"/>
+                <filter string="Nhà thầu" name="group_contractor"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter string="Status" name="group_status"
+                        context="{'group_by': 'status'}"/>
+                <filter string="Dự án" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="view_rp_tender_bidder_list" model="ir.ui.view">
+        <field name="name">rp.tender.bidder.list</field>
+        <field name="model">rp.tender.bidder</field>
+        <field name="arch" type="xml">
+            <list string="Nhà thầu nộp HSDT"
+                  decoration-success="status == 'awarded'"
+                  decoration-danger="status == 'disqualified'"
+                  decoration-info="status == 'qualified'"
+                  decoration-muted="status == 'submitted'">
+                <field name="currency_id" column_invisible="1"/>
+                <field name="ranking" string="#" readonly="1"/>
+                <field name="package_id"/>
+                <field name="contractor_id"/>
+                <field name="project_id" optional="hide"/>
+                <field name="submitted_date"/>
+                <field name="technical_score"/>
+                <field name="technical_pass" widget="boolean_toggle" readonly="1"/>
+                <field name="price_offered" widget="monetary"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_rp_tender_bidder_form" model="ir.ui.view">
+        <field name="name">rp.tender.bidder.form</field>
+        <field name="model">rp.tender.bidder</field>
+        <field name="arch" type="xml">
+            <form string="Nhà thầu nộp HSDT">
+                <header>
+                    <button name="action_qualify" string="Đạt KT"
+                            type="object" class="btn-primary"
+                            invisible="status in ('qualified','awarded','disqualified')"/>
+                    <button name="action_select_as_winner" string="Chọn trúng"
+                            type="object" class="btn-success"
+                            invisible="status in ('disqualified','awarded')"
+                            confirm="Chọn nhà thầu này trúng thầu?"/>
+                    <button name="action_disqualify" string="Loại"
+                            type="object" class="btn-danger"
+                            invisible="status in ('disqualified','awarded')"
+                            confirm="Loại bidder?"/>
+                    <button name="action_reset_submitted" string="Reset Submitted"
+                            type="object" invisible="status == 'submitted'"
+                            groups="re_base.group_re_manager"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="submitted,qualified,awarded"/>
+                </header>
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="contractor_id"/>
+                        <h1>
+                            <field name="contractor_id"
+                                   options="{'no_create': True}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Gói thầu">
+                            <field name="package_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="submitted_date"/>
+                        </group>
+                        <group string="Đánh giá">
+                            <field name="technical_score"/>
+                            <field name="technical_pass" readonly="1"/>
+                            <field name="price_offered" widget="monetary"/>
+                            <field name="ranking" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lý do loại / Ghi chú" name="notes">
+                            <field name="disqualification_reason"
+                                   placeholder="Bắt buộc khi status = Bị loại"/>
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_rp_tender_bidder" model="ir.actions.act_window">
+        <field name="name">Nhà thầu nộp HSDT</field>
+        <field name="res_model">rp.tender.bidder</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_tender_bidder_search"/>
+    </record>
+
+</odoo>

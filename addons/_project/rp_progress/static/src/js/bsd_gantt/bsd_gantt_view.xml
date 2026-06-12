@@ -48,7 +48,7 @@
                     <div class="bsd_gantt_panel_body">
                         <div t-foreach="state.rows" t-as="row" t-key="row.id"
                              class="bsd_gantt_panel_row"
-                             t-att-class="'lvl_' + row.level + (row.is_delayed ? ' is_delayed' : '')"
+                             t-att-class="'lvl_' + row.level + (row.is_delayed ? ' is_delayed' : '') + (row.hasDates ? '' : ' no_dates')"
                              t-on-click="() => this._openStructure(row.id)">
                             <div class="col_seq" t-esc="row.seq"/>
                             <div class="col_name"
@@ -71,7 +71,17 @@
                     </div>
                 </div>
 
-                <div class="bsd_gantt_container" t-ref="gantt"/>
+                <div t-if="state.noDates" class="bsd_gantt_empty">
+                    <div class="bsd_gantt_empty_inner">
+                        <i class="fa fa-calendar-o fa-3x text-muted mb-3"/>
+                        <h5>Chưa có hạng mục nào có ngày kế hoạch</h5>
+                        <p class="text-muted">
+                            Click vào tên hạng mục bên trái để mở form
+                            và nhập <b>Ngày BĐ KH</b> + <b>Ngày KT KH</b>.
+                        </p>
+                    </div>
+                </div>
+                <div t-else="" class="bsd_gantt_container" t-ref="gantt"/>
             </div>
         </div>
     </t>

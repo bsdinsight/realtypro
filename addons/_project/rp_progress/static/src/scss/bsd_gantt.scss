@@ -130,6 +130,21 @@
                 font-size: 11px;
             }
             &.is_delayed .col_name { color: #b91c1c; }
+            &.no_dates {
+                background: repeating-linear-gradient(
+                    45deg,
+                    #fafafa,
+                    #fafafa 6px,
+                    #f3f4f6 6px,
+                    #f3f4f6 12px
+                );
+                .col_date {
+                    color: #d97706;
+                    font-style: italic;
+                }
+                .col_pct .pct_bar { opacity: 0.4; }
+                &:hover { background: #fef3c7; }
+            }
         }
     }
 
@@ -137,6 +152,21 @@
         flex: 1 1 auto;
         overflow: auto;
         background: #fff;
+    }
+
+    .bsd_gantt_empty {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fafafa;
+        .bsd_gantt_empty_inner {
+            text-align: center;
+            max-width: 360px;
+            padding: 2rem;
+            h5 { color: #374151; margin-bottom: 8px; }
+            p { font-size: 13px; margin: 0; }
+        }
     }
 }
 
@@ -160,6 +190,13 @@
 .bsd_gantt_bar_delayed {
     .bar { fill: #fca5a5; }
     .bar-progress { fill: #dc2626; }
+}
+
+// Row chưa có ngày kế hoạch — ẩn bar/label/handle, chỉ giữ grid-row
+// stripe để giữ alignment với panel bên trái
+.bsd_gantt_bar_empty {
+    .bar, .bar-progress, .bar-label, .handle { display: none; }
+    pointer-events: none;
 }
 
 // Popup styling

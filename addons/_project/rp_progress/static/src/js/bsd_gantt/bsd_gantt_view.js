@@ -23,6 +23,7 @@ export class BSDGanttView extends Component {
         this.state = useState({
             loading: true,
             error: null,
+            noDates: false,
             taskCount: 0,
             viewMode: "Month",
             projectName: "",
@@ -95,21 +96,10 @@ export class BSDGanttView extends Component {
         // Sắp xếp theo phân cấp: subzone → item → sub_item
         const ordered = this._buildHierarchy(structures);
 
-        // Filter chỉ những hạng mục có ngày
-        const valid = ordered.filter(
-            (s) => s.date_planned_start && s.date_planned_end,
-        );
-        if (valid.length === 0) {
-            this.state.error = _t(
-                "Chưa có hạng mục nào có ngày kế hoạch. Vào Hạng mục " +
-                    "→ set 'Ngày BĐ KH' + 'Ngày KT KH' để hiện trên Gantt.",
-            );
-            this.state.loading = false;
-            return;
-        }
-
-        // Build rows cho panel bên trái
-        this.state.rows = valid.map((s, i) => ({
+        // Build rows cho panel bên trái — LUÔN list hết, kể cả chưa có
+        // ngày. User nhìn panel thấy hạng mục nào còn trống → click vào
+        // form điền ngày.
+        this.state.rows = ordered.map((s, i) => ({
             id: s.id,
             seq: i + 1,
             code: s.code || "",
@@ -121,18 +111,46 @@ export class BSDGanttView extends Component {
             progress: Math.round(s.progress_percent || 0),
             is_delayed: s.is_delayed,
             statusClass: this._statusClass(s.status, s.is_delayed),
+            hasDates: !!(s.date_planned_start && s.date_planned_end),
         }));
 
-        const tasks = valid.map((s) => ({
-            id: String(s.id),
-            name: s.code ? `[${s.code}] ${s.name}` : s.name,
-            start: s.date_planned_start,
-            end: s.date_planned_end,
-            progress: Math.min(100, Math.max(0, s.progress_percent || 0)),
-            dependencies: "",
-            custom_class: "bsd_gantt_bar_" + this._statusClass(
-                s.status, s.is_delayed),
-        }));
+        // Reference date: earliest valid start để placeholder cho row
+        // không có ngày (tránh frappe-gantt tự gán = today làm trồi
+        // gantt_start ra khỏi project range)
+        const validStarts = ordered
+            .filter((s) => s.date_planned_start)
+            .map((s) => s.date_planned_start)
+            .sort();
+        const refDate = validStarts[0];
+
+        if (!refDate) {
+            // Không có hạng mục nào có ngày — hide gantt SVG, panel vẫn
+            // hiện để user click vào form điền
+            this.state.noDates = true;
+            this.state.loading = false;
+            return;
+        }
+
+        // Pass HẾT structures cho frappe-gantt → giữ index alignment với
+        // panel. Row không có ngày → start/end = refDate (bar width 0)
+        // + class "bsd_gantt_bar_empty" ẩn bar/label qua CSS.
+        const tasks = ordered.map((s) => {
+            const hasDates = s.date_planned_start && s.date_planned_end;
+            const cls = hasDates
+                ? "bsd_gantt_bar_" + this._statusClass(
+                    s.status, s.is_delayed)
+                : "bsd_gantt_bar_empty";
+            return {
+                id: String(s.id),
+                name: s.code ? `[${s.code}] ${s.name}` : s.name,
+                start: s.date_planned_start || refDate,
+                end: s.date_planned_end || refDate,
+                progress: Math.min(
+                    100, Math.max(0, s.progress_percent || 0)),
+                dependencies: "",
+                custom_class: cls,
+            };
+        });
 
         this.adapter = new BSDFrappeGanttAdapter(this.env);
         try {
@@ -314,6 +332,7 @@ export class BSDGanttView extends Component {
         }
         this.state.loading = true;
         this.state.error = null;
+        this.state.noDates = false;
         await this._load();
     }
 

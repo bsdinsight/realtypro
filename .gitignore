@@ -21,7 +21,19 @@ filestore/
 # Logs
 *.log
 
-# Local dev
+# Local dev / per-host config
 docker-compose.local.yml
+compose.override.yml
 .env
 .env.local
+
+# Runtime data (Postgres + Odoo filestore)
+postgres-data/
+data/
+
+# Backups
+backups/
+
+# nginx live config — only .example committed
+nginx/sites-available/*.conf
+!nginx/sites-available/*.conf.example

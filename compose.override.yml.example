@@ -1,0 +1,29 @@
+# Laptop dev override — TEMPLATE.
+#
+# Copy this to compose.override.yml on a laptop to enable:
+#   - Host ports exposed (DB 5432, Odoo 8169/8072)
+#   - --dev=reload for hot-reload
+#   - workers=0 for easier debugging
+#
+# Usage:
+#   cp compose.override.yml.example compose.override.yml
+#
+# compose.override.yml itself is gitignored so it never gets pulled
+# onto the VPS, where host port exposure is NOT wanted (reverse proxy
+# handles public access).
+
+services:
+  db:
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+  odoo:
+    ports:
+      - "${HTTP_PORT:-8169}:8069"
+      - "${LONGPOLLING_PORT:-8072}:8072"
+    command: >
+      odoo
+      --config=/etc/odoo/odoo.conf
+      --dev=reload,qweb,xml
+      --workers=0
+      --log-level=info

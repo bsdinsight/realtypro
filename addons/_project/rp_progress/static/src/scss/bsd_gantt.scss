@@ -131,19 +131,15 @@
             }
             &.is_delayed .col_name { color: #b91c1c; }
             &.no_dates {
-                background: repeating-linear-gradient(
-                    45deg,
-                    #fafafa,
-                    #fafafa 6px,
-                    #f3f4f6 6px,
-                    #f3f4f6 12px
-                );
+                background: #fff;
+                box-shadow: inset 3px 0 0 #f59e0b;
+                .col_name { color: #1f2937; }
                 .col_date {
-                    color: #d97706;
-                    font-style: italic;
+                    color: #b45309;
+                    font-weight: 600;
                 }
-                .col_pct .pct_bar { opacity: 0.4; }
-                &:hover { background: #fef3c7; }
+                .col_pct .pct_bar { opacity: 0.35; }
+                &:hover { background: #fffbeb; }
             }
         }
     }

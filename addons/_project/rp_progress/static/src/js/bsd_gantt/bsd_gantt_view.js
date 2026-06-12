@@ -96,11 +96,72 @@ export class BSDGanttView extends Component {
         // Sắp xếp theo phân cấp: subzone → item → sub_item
         const ordered = this._buildHierarchy(structures);
 
+        // Fetch HĐ nhà thầu của dự án (date_start/end populated)
+        // → render dưới mỗi hạng mục mà HĐ cover
+        let contracts = [];
+        try {
+            contracts = await this.orm.searchRead(
+                "rp.contract",
+                [
+                    ["project_id", "=", projectId],
+                    ["date_start", "!=", false],
+                    ["date_end", "!=", false],
+                ],
+                [
+                    "id", "name", "contractor_id", "structure_ids",
+                    "date_start", "date_end", "state",
+                    "contract_value_total",
+                ],
+                { order: "date_start asc, id asc" },
+            );
+        } catch (err) {
+            // rp.contract chưa cài hoặc structure_ids field chưa có
+            // → bỏ qua, Gantt chỉ render hạng mục
+            contracts = [];
+        }
+        // Index: structureId → [contracts]
+        const contractsByStructure = new Map();
+        for (const c of contracts) {
+            for (const sid of (c.structure_ids || [])) {
+                if (!contractsByStructure.has(sid)) {
+                    contractsByStructure.set(sid, []);
+                }
+                contractsByStructure.get(sid).push(c);
+            }
+        }
+        // Insert contract sau mỗi structure
+        const orderedWithContracts = [];
+        for (const s of ordered) {
+            orderedWithContracts.push(s);
+            const cs = contractsByStructure.get(s.id) || [];
+            for (const c of cs) {
+                orderedWithContracts.push({
+                    _isContract: true,
+                    _depth: (s._depth || 0) + 1,
+                    id: `c${c.id}`,
+                    contract_id: c.id,
+                    name: c.contractor_id
+                        ? `${c.name} — ${c.contractor_id[1]}`
+                        : c.name,
+                    code: c.name,
+                    date_planned_start: c.date_start,
+                    date_planned_end: c.date_end,
+                    progress_percent: 0,
+                    status: c.state,
+                    is_delayed: false,
+                    structure_level: 'contract',
+                    _contract_value: c.contract_value_total,
+                });
+            }
+        }
+
         // Build rows cho panel bên trái — LUÔN list hết, kể cả chưa có
         // ngày. User nhìn panel thấy hạng mục nào còn trống → click vào
         // form điền ngày.
-        this.state.rows = ordered.map((s, i) => ({
+        this.state.rows = orderedWithContracts.map((s, i) => ({
             id: s.id,
+            isContract: !!s._isContract,
+            contractId: s.contract_id || null,
             seq: i + 1,
             code: s.code || "",
             name: s.name,
@@ -110,45 +171,50 @@ export class BSDGanttView extends Component {
             endStr: this._fmtDate(s.date_planned_end),
             progress: Math.round(s.progress_percent || 0),
             is_delayed: s.is_delayed,
-            statusClass: this._statusClass(s.status, s.is_delayed),
+            statusClass: s._isContract
+                ? this._contractStatusClass(s.status)
+                : this._statusClass(s.status, s.is_delayed),
             hasDates: !!(s.date_planned_start && s.date_planned_end),
         }));
 
         // Reference date: earliest valid start để placeholder cho row
-        // không có ngày (tránh frappe-gantt tự gán = today làm trồi
-        // gantt_start ra khỏi project range)
-        const validStarts = ordered
+        // không có ngày
+        const validStarts = orderedWithContracts
             .filter((s) => s.date_planned_start)
             .map((s) => s.date_planned_start)
             .sort();
         const refDate = validStarts[0];
 
         if (!refDate) {
-            // Không có hạng mục nào có ngày — hide gantt SVG, panel vẫn
-            // hiện để user click vào form điền
             this.state.noDates = true;
             this.state.loading = false;
             return;
         }
 
-        // Pass HẾT structures cho frappe-gantt → giữ index alignment với
-        // panel. Row không có ngày → start/end = refDate (bar width 0)
-        // + class "bsd_gantt_bar_empty" ẩn bar/label qua CSS.
-        const tasks = ordered.map((s) => {
+        // Pass HẾT rows (structures + contracts) cho frappe-gantt
+        const tasks = orderedWithContracts.map((s) => {
             const hasDates = s.date_planned_start && s.date_planned_end;
-            const cls = hasDates
-                ? "bsd_gantt_bar_" + this._statusClass(
-                    s.status, s.is_delayed)
-                : "bsd_gantt_bar_empty";
+            let cls;
+            if (!hasDates) {
+                cls = "bsd_gantt_bar_empty";
+            } else if (s._isContract) {
+                cls = "bsd_gantt_bar_contract bsd_gantt_bar_contract_"
+                    + this._contractStatusClass(s.status);
+            } else {
+                cls = "bsd_gantt_bar_" + this._statusClass(
+                    s.status, s.is_delayed);
+            }
             return {
-                id: String(s.id),
+                id: s._isContract ? `c${s.contract_id}` : String(s.id),
                 name: s.code ? `[${s.code}] ${s.name}` : s.name,
                 start: s.date_planned_start || refDate,
                 end: s.date_planned_end || refDate,
-                progress: Math.min(
+                progress: s._isContract ? 0 : Math.min(
                     100, Math.max(0, s.progress_percent || 0)),
                 dependencies: "",
                 custom_class: cls,
+                _isContract: s._isContract,
+                _contractId: s.contract_id,
             };
         });
 
@@ -159,7 +225,7 @@ export class BSDGanttView extends Component {
                 locale: "vi",
                 rowHeight: ROW_HEIGHT,
                 headerHeight: HEADER_HEIGHT,
-                onClick: (task) => this._openStructure(task.id),
+                onClick: (task) => this._openRow(task),
                 onDateChange: (task, start, end) =>
                     this._onDateChange(task, start, end),
                 onProgressChange: (task, progress) =>
@@ -245,6 +311,16 @@ export class BSDGanttView extends Component {
         }
     }
 
+    _contractStatusClass(state) {
+        switch (state) {
+            case "signed": return "signed";
+            case "executing": return "executing";
+            case "completed": return "completed";
+            case "terminated": return "terminated";
+            default: return "draft";
+        }
+    }
+
     /**
      * Sync vertical scroll: panel body ↔ gantt container.
      * Khi user scroll bên này, bên kia follow.
@@ -294,16 +370,55 @@ export class BSDGanttView extends Component {
         });
     }
 
+    _openContract(contractId) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "rp.contract",
+            res_id: contractId,
+            views: [[false, "form"]],
+            target: "current",
+        });
+    }
+
+    /**
+     * Click bar SVG (frappe-gantt): task có _isContract → open contract,
+     * else → open structure.
+     */
+    _openRow(task) {
+        if (task._isContract) {
+            this._openContract(task._contractId);
+        } else {
+            this._openStructure(task.id);
+        }
+    }
+
     async _onDateChange(task, start, end) {
+        const isoStart = start.toISOString().slice(0, 10);
+        const isoEnd = end.toISOString().slice(0, 10);
         try {
-            await this.orm.write("rp.structure", [parseInt(task.id, 10)], {
-                date_planned_start: start.toISOString().slice(0, 10),
-                date_planned_end: end.toISOString().slice(0, 10),
-            });
-            this.notification.add(
-                _t("Đã cập nhật ngày kế hoạch."),
-                { type: "success" },
-            );
+            if (task._isContract) {
+                await this.orm.write("rp.contract",
+                    [task._contractId],
+                    {
+                        date_start: isoStart,
+                        date_end: isoEnd,
+                    });
+                this.notification.add(
+                    _t("Đã cập nhật ngày HĐ."),
+                    { type: "success" },
+                );
+            } else {
+                await this.orm.write("rp.structure",
+                    [parseInt(task.id, 10)],
+                    {
+                        date_planned_start: isoStart,
+                        date_planned_end: isoEnd,
+                    });
+                this.notification.add(
+                    _t("Đã cập nhật ngày kế hoạch."),
+                    { type: "success" },
+                );
+            }
             await this._reload();
         } catch (err) {
             this.notification.add(_t("Lỗi cập nhật: ") + err.message, {

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.14.0',
+    'version': '19.0.1.15.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',

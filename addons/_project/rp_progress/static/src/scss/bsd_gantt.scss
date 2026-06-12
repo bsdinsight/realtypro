@@ -129,6 +129,20 @@
                 color: #6b7280;
                 font-size: 11px;
             }
+            &.is_contract {
+                background: #f0f9ff;
+                box-shadow: inset 3px 0 0 #2563eb;
+                .col_name {
+                    color: #1e40af;
+                    font-style: italic;
+                    font-size: 11px;
+                    &::before {
+                        content: "📄 ";
+                        margin-right: 2px;
+                    }
+                }
+                &:hover { background: #dbeafe; }
+            }
             &.is_delayed .col_name { color: #b91c1c; }
             &.no_dates {
                 background: #fff;
@@ -194,6 +208,22 @@
     .bar, .bar-progress, .bar-label, .handle { display: none; }
     pointer-events: none;
 }
+
+// HĐ nhà thầu — bar slim hơn, màu xanh đậm
+.bsd_gantt_bar_contract {
+    .bar { fill: #2563eb; opacity: 0.75; }
+    .bar-progress { display: none; }
+    .bar-label {
+        fill: #fff;
+        font-style: italic;
+        font-size: 10px;
+    }
+}
+.bsd_gantt_bar_contract_draft .bar { fill: #94a3b8; }
+.bsd_gantt_bar_contract_signed .bar { fill: #2563eb; }
+.bsd_gantt_bar_contract_executing .bar { fill: #059669; }
+.bsd_gantt_bar_contract_completed .bar { fill: #14532d; }
+.bsd_gantt_bar_contract_terminated .bar { fill: #dc2626; }
 
 // Popup styling
 .bsd_gantt_popup {

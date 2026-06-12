@@ -67,6 +67,13 @@ class RpContract(models.Model):
         're.subzone', string='Khu vực',
         compute='_compute_subzone_ids', store=True,
         help='Các khu vực được cover (suy từ Hạng mục trong Gói thầu).')
+    structure_ids = fields.Many2many(
+        'rp.structure',
+        'rp_contract_structure_rel', 'contract_id', 'structure_id',
+        string='Hạng mục cover',
+        compute='_compute_structure_ids', store=True,
+        help='Hạng mục được HĐ này thực hiện — suy từ Hạng mục trong '
+             'Gói thầu. Dùng để render HĐ trên Gantt dưới mỗi hạng mục.')
 
     # ----- Money ---------------------------------------------------------
     currency_id = fields.Many2one(
@@ -162,6 +169,12 @@ class RpContract(models.Model):
         for rec in self:
             rec.subzone_ids = rec.tender_package_id.line_ids.mapped(
                 'subzone_id')
+
+    @api.depends('tender_package_id.line_ids.structure_id')
+    def _compute_structure_ids(self):
+        for rec in self:
+            rec.structure_ids = rec.tender_package_id.line_ids.mapped(
+                'structure_id')
 
     @api.depends('contract_value_pretax', 'vat_rate', 'advance_percent',
                  'retention_percent', 'line_ids.amount')

@@ -137,32 +137,90 @@ class TestRpTenderPackage(TransactionCase):
                 'structure_id': other_struct.id,
             })
 
-    def test_activate_requires_lines(self):
+    def test_approve_requires_lines(self):
         pkg = self.Package.create({
-            'name': 'Empty Activate',
+            'name': 'Empty Approve',
             'project_id': self.project.id,
         })
         with self.assertRaises(UserError):
-            pkg.action_activate()
+            pkg.action_approve_plan()
 
-    def test_activate_with_lines(self):
+    def test_approve_requires_plan_fields(self):
+        """Duyệt KH: cần selection_method + deadline + giá trần."""
         pkg = self.Package.create({
-            'name': 'Activate OK',
+            'name': 'Missing Plan',
             'project_id': self.project.id,
             'line_ids': [(0, 0, {'structure_id': self.struct_a1.id})],
         })
-        pkg.action_activate()
-        self.assertEqual(pkg.state, 'active')
+        with self.assertRaises(UserError):
+            pkg.action_approve_plan()
 
-    def test_close_from_active(self):
+    def test_full_workflow(self):
+        """draft → approved → inviting → bid_closed → evaluating →
+        negotiating → awarded → contracted → closed."""
         pkg = self.Package.create({
-            'name': 'Close Test',
+            'name': 'Full Workflow',
             'project_id': self.project.id,
+            'selection_method': 'open',
+            'deadline_contract': '2026-12-31',
+            'max_approved_price': 1000000000.0,
             'line_ids': [(0, 0, {'structure_id': self.struct_a1.id})],
         })
-        pkg.action_activate()
+        pkg.action_approve_plan()
+        self.assertEqual(pkg.state, 'approved')
+
+        pkg.action_invite()
+        self.assertEqual(pkg.state, 'inviting')
+        self.assertTrue(pkg.date_rfp_issue)
+
+        pkg.action_close_bid()
+        self.assertEqual(pkg.state, 'bid_closed')
+
+        pkg.action_evaluate()
+        self.assertEqual(pkg.state, 'evaluating')
+
+        pkg.action_negotiate()
+        self.assertEqual(pkg.state, 'negotiating')
+
+        # Award cần contractor + giá trúng <= giá trần
+        pkg.contractor_id = self.contractor
+        pkg.award_amount = 900000000.0
+        pkg.action_award()
+        self.assertEqual(pkg.state, 'awarded')
+
+        # Contract cần contract_amount
+        pkg.contract_amount = 900000000.0
+        pkg.action_contract()
+        self.assertEqual(pkg.state, 'contracted')
+
         pkg.action_close()
         self.assertEqual(pkg.state, 'closed')
+
+    def test_award_blocks_above_max(self):
+        """Giá trúng vượt giá trần → UserError."""
+        pkg = self.Package.create({
+            'name': 'Over Budget',
+            'project_id': self.project.id,
+            'selection_method': 'open',
+            'deadline_contract': '2026-12-31',
+            'max_approved_price': 1000000000.0,
+            'contractor_id': self.contractor.id,
+            'award_amount': 1500000000.0,
+            'state': 'negotiating',
+            'line_ids': [(0, 0, {'structure_id': self.struct_a1.id})],
+        })
+        with self.assertRaises(UserError):
+            pkg.action_award()
+
+    def test_timeline_order_validation(self):
+        """Ngày ký HĐ > deadline → ValidationError."""
+        with self.assertRaises(ValidationError):
+            self.Package.create({
+                'name': 'Bad Timeline',
+                'project_id': self.project.id,
+                'deadline_contract': '2026-01-01',
+                'date_award_signed': '2026-06-01',
+            })
 
     def test_contractor_link_optional(self):
         """Phase 2: contractor_id is optional."""

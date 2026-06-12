@@ -13,21 +13,33 @@
                 <field name="contractor_id"/>
                 <field name="scope_summary" string="Phạm vi"/>
                 <separator/>
-                <filter name="draft" string="Draft"
+                <filter name="draft" string="Nháp"
                         domain="[('state', '=', 'draft')]"/>
-                <filter name="active" string="Active"
-                        domain="[('state', '=', 'active')]"/>
-                <filter name="closed" string="Closed"
+                <filter name="approved" string="Đã duyệt KH"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="inviting" string="Đang mời thầu"
+                        domain="[('state', '=', 'inviting')]"/>
+                <filter name="evaluating" string="Đang đánh giá"
+                        domain="[('state', 'in', ['bid_closed','evaluating','negotiating'])]"/>
+                <filter name="awarded" string="Đã có KQ / đang ký HĐ"
+                        domain="[('state', 'in', ['awarded','contracted'])]"/>
+                <filter name="closed" string="Đã đóng"
                         domain="[('state', '=', 'closed')]"/>
+                <filter name="cancelled" string="Đã hủy"
+                        domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
+                <filter name="overdue" string="Quá hạn ký HĐ"
+                        domain="[('is_deadline_overdue', '=', True)]"/>
                 <filter name="archived" string="Archived"
                         domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter string="Dự án" name="group_project"
                         context="{'group_by': 'project_id'}"/>
+                <filter string="Hình thức" name="group_method"
+                        context="{'group_by': 'selection_method'}"/>
                 <filter string="Nhà thầu" name="group_contractor"
                         context="{'group_by': 'contractor_id'}"/>
-                <filter string="State" name="group_state"
+                <filter string="Trạng thái" name="group_state"
                         context="{'group_by': 'state'}"/>
             </search>
         </field>
@@ -39,16 +51,25 @@
         <field name="model">rp.tender.package</field>
         <field name="arch" type="xml">
             <list string="Gói thầu" sample="1"
-                  decoration-muted="state == 'closed' or not active"
-                  decoration-success="state == 'active'">
+                  decoration-muted="state in ('closed','cancelled') or not active"
+                  decoration-success="state == 'contracted'"
+                  decoration-warning="state in ('inviting','bid_closed','evaluating','negotiating')"
+                  decoration-info="state == 'awarded'"
+                  decoration-danger="is_deadline_overdue and state not in ('contracted','closed','cancelled')">
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
                 <field name="project_id"/>
-                <field name="subzone_coverage" string="Khu vực"/>
+                <field name="selection_method" optional="show"/>
+                <field name="deadline_contract" optional="show"/>
+                <field name="days_to_deadline" optional="hide"/>
+                <field name="is_deadline_overdue" column_invisible="1"/>
+                <field name="subzone_coverage" string="Khu vực" optional="hide"/>
                 <field name="contractor_id" optional="show"/>
-                <field name="line_count" string="Hạng mục"/>
-                <field name="estimated_amount" widget="monetary"/>
+                <field name="line_count" string="Hạng mục" optional="hide"/>
+                <field name="max_approved_price" widget="monetary" optional="show"/>
+                <field name="award_amount" widget="monetary" optional="show"/>
+                <field name="contract_amount" widget="monetary" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="state" widget="badge"/>
                 <field name="active" column_invisible="1"/>
@@ -63,19 +84,43 @@
         <field name="arch" type="xml">
             <form string="Gói thầu">
                 <header>
-                    <button name="action_activate" string="Activate"
+                    <button name="action_approve_plan" string="Duyệt KH"
                             type="object" class="btn-primary"
                             invisible="state != 'draft'"/>
-                    <button name="action_close" string="Close"
+                    <button name="action_invite" string="Phát hành HSMT"
+                            type="object" class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    <button name="action_close_bid" string="Đóng thầu"
+                            type="object" class="btn-primary"
+                            invisible="state != 'inviting'"
+                            confirm="Đóng thầu? Sau bước này không nhận thêm HSDT."/>
+                    <button name="action_evaluate" string="Mở thầu + Đánh giá"
+                            type="object" class="btn-primary"
+                            invisible="state != 'bid_closed'"/>
+                    <button name="action_negotiate" string="Thương thảo"
+                            type="object" class="btn-primary"
+                            invisible="state != 'evaluating'"/>
+                    <button name="action_award" string="Có KQ trúng thầu"
+                            type="object" class="btn-primary"
+                            invisible="state != 'negotiating'"
+                            confirm="Chốt nhà thầu trúng?"/>
+                    <button name="action_contract" string="Ký HĐ"
+                            type="object" class="btn-primary"
+                            invisible="state != 'awarded'"/>
+                    <button name="action_close" string="Đóng gói thầu"
                             type="object" class="btn-warning"
-                            invisible="state != 'active'"
-                            confirm="Close this tender package?"/>
-                    <button name="action_reset_to_draft" string="Reset to Draft"
+                            invisible="state != 'contracted'"
+                            confirm="Đóng gói thầu — đã hoàn tất?"/>
+                    <button name="action_cancel" string="Hủy gói thầu"
+                            type="object" class="btn-danger"
+                            invisible="state in ('closed','cancelled')"
+                            confirm="Hủy gói thầu? Hành động này phải có lý do trong audit log."/>
+                    <button name="action_reset_to_draft" string="Reset → Draft"
                             type="object"
                             invisible="state == 'draft'"
                             groups="re_base.group_re_manager"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,active,closed"/>
+                           statusbar_visible="draft,approved,inviting,bid_closed,evaluating,negotiating,awarded,contracted,closed"/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived"
@@ -94,27 +139,68 @@
                         </div>
                     </div>
 
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_deadline_overdue or state in ('contracted','closed','cancelled')">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <b>Quá hạn ký HĐ</b> — PTDA giao deadline <field name="deadline_contract" readonly="1" class="d-inline"/>, đã trễ <field name="days_to_deadline" readonly="1" class="d-inline"/> ngày.
+                    </div>
+
                     <group>
-                        <group>
+                        <group string="Thông tin chung">
                             <field name="project_id"
                                    options="{'no_create': True, 'no_quick_create': True}"/>
                             <field name="subzone_filter_id"
                                    options="{'no_create': True}"
                                    help="UX filter cho việc add lines - không restrict gói thầu."/>
-                            <field name="contractor_id"
-                                   options="{'no_create_edit': True}"/>
+                            <field name="selection_method"
+                                   required="state != 'draft'"/>
+                            <field name="deadline_contract"
+                                   required="state != 'draft'"/>
                             <field name="sequence"/>
                         </group>
-                        <group>
+                        <group string="Tài chính">
                             <field name="currency_id"
                                    options="{'no_create': True}"/>
                             <field name="estimated_amount" widget="monetary"/>
+                            <field name="max_approved_price" widget="monetary"
+                                   required="state != 'draft'"/>
+                            <field name="award_amount" widget="monetary"
+                                   invisible="state in ('draft','approved','inviting','bid_closed')"/>
+                            <field name="contract_amount" widget="monetary"
+                                   invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"/>
+                            <field name="contractor_id"
+                                   options="{'no_create_edit': True}"
+                                   invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"
+                                   required="state in ('awarded','contracted','closed')"/>
                             <field name="line_count" readonly="1"/>
                             <field name="subzone_coverage" readonly="1"/>
+                            <field name="days_to_deadline" invisible="1"/>
+                            <field name="is_deadline_overdue" invisible="1"/>
                         </group>
                     </group>
 
                     <notebook>
+                        <page string="Kế hoạch lựa chọn NT" name="plan">
+                            <group>
+                                <group string="Mốc thời gian KH">
+                                    <field name="date_rfp_issue"/>
+                                    <field name="date_bid_close"/>
+                                    <field name="date_bid_open"/>
+                                </group>
+                                <group string="Đánh giá &amp; ký HĐ">
+                                    <field name="date_eval_done"/>
+                                    <field name="date_negotiation_done"/>
+                                    <field name="date_award_signed"/>
+                                </group>
+                            </group>
+                            <div class="text-muted mt-2">
+                                <i class="fa fa-info-circle me-2"/>
+                                Các mốc thời gian theo thứ tự: phát hành HSMT
+                                → đóng thầu → mở thầu → đánh giá → thương thảo
+                                → phê duyệt + ký HĐ. Ngày ký HĐ phải &lt;= hạn
+                                PTDA giao.
+                            </div>
+                        </page>
                         <page string="Hạng mục" name="lines">
                             <field name="line_ids"
                                    context="{'default_package_id': id,

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project - Estimate & Tender",
-    "version": "19.0.1.5.0",
+    "version": "19.0.1.6.0",
     "category": "Realty/Project",
-    "summary": "Gói thầu + suite root menu + Khái toán summary",
+    "summary": "Gói thầu (P5.1: KH lựa chọn NT + state 8-step) "
+               "+ suite root menu + Khái toán summary",
     "description": """
 Realty Project - Estimate & Tender (v1.4.3-r4)
 ===============================================

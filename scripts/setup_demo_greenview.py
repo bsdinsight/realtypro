@@ -201,49 +201,43 @@ print("\n=== Step 4: Estimate lines ===")
 EstLine = env['rp.structure.estimate.line']
 CostCat = env['rp.cost.category']
 
-# Tìm 3 cost categories phổ biến
-cost_cat_xd = CostCat.search([
+# Pick 3 L2 cost categories (parent_id set) — search by name ilike
+# trên JSONB translated không reliable, dùng parent_id structural.
+l2_cats = CostCat.search([
     ('project_id', '=', project.id),
-    ('name', 'ilike', 'Xây dựng phần thô'),
-], limit=1)
-cost_cat_ht = CostCat.search([
-    ('project_id', '=', project.id),
-    ('name', 'ilike', 'Hoàn thiện'),
-], limit=1)
-cost_cat_tb = CostCat.search([
-    ('project_id', '=', project.id),
-    ('name', 'ilike', 'Thiết bị cố định'),
-], limit=1)
+    ('parent_id', '!=', False),
+], limit=3, order='sequence, id')
 
-if cost_cat_xd:
+if l2_cats and len(l2_cats) >= 3:
+    cat1, cat2, cat3 = l2_cats[0], l2_cats[1], l2_cats[2]
     for code in ['S1', 'S2', 'OF1']:
         s = items[code]
         existing = EstLine.search([('structure_id', '=', s.id)])
         if existing:
-            continue  # đã có data, skip
+            continue
         EstLine.create({
             'structure_id': s.id,
-            'cost_category_id': cost_cat_xd.id,
-            'description': f'Móng + tầng hầm + phần thân {code}',
+            'cost_category_id': cat1.id,
+            'description': f'Chi phí xây dựng phần thô {code}',
             'amount': 25_000_000_000 if code != 'OF1' else 35_000_000_000,
         })
-        if cost_cat_ht:
-            EstLine.create({
-                'structure_id': s.id,
-                'cost_category_id': cost_cat_ht.id,
-                'description': f'Hoàn thiện căn hộ + công năng {code}',
-                'amount': 15_000_000_000 if code != 'OF1' else 18_000_000_000,
-            })
-        if cost_cat_tb:
-            EstLine.create({
-                'structure_id': s.id,
-                'cost_category_id': cost_cat_tb.id,
-                'description': f'Hệ thống MEP + thang máy {code}',
-                'amount': 10_000_000_000 if code != 'OF1' else 12_000_000_000,
-            })
-    print(f"  Created estimate lines cho 3 items (S1, S2, OF1)")
+        EstLine.create({
+            'structure_id': s.id,
+            'cost_category_id': cat2.id,
+            'description': f'Chi phí hoàn thiện {code}',
+            'amount': 15_000_000_000 if code != 'OF1' else 18_000_000_000,
+        })
+        EstLine.create({
+            'structure_id': s.id,
+            'cost_category_id': cat3.id,
+            'description': f'Chi phí thiết bị + MEP {code}',
+            'amount': 10_000_000_000 if code != 'OF1' else 12_000_000_000,
+        })
+    print(f"  Created estimate lines cho 3 items (S1, S2, OF1) "
+          f"với 3 cost categories: {cat1.name}, {cat2.name}, {cat3.name}")
 else:
-    print("  ⚠ Cost categories chưa seed — skip estimate lines")
+    print(f"  ⚠ L2 cost categories không đủ "
+          f"(found {len(l2_cats)}) — skip estimate lines")
 
 # ============================================================
 # 5. Contractors (master nhà thầu)

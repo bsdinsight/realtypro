@@ -217,19 +217,19 @@ if l2_cats and len(l2_cats) >= 3:
             continue
         EstLine.create({
             'structure_id': s.id,
-            'cost_category_id': cat1.id,
+            'category_id': cat1.id,
             'description': f'Chi phí xây dựng phần thô {code}',
             'amount': 25_000_000_000 if code != 'OF1' else 35_000_000_000,
         })
         EstLine.create({
             'structure_id': s.id,
-            'cost_category_id': cat2.id,
+            'category_id': cat2.id,
             'description': f'Chi phí hoàn thiện {code}',
             'amount': 15_000_000_000 if code != 'OF1' else 18_000_000_000,
         })
         EstLine.create({
             'structure_id': s.id,
-            'cost_category_id': cat3.id,
+            'category_id': cat3.id,
             'description': f'Chi phí thiết bị + MEP {code}',
             'amount': 10_000_000_000 if code != 'OF1' else 12_000_000_000,
         })

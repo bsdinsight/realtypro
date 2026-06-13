@@ -81,6 +81,13 @@ else:
     })
     print(f"  Created project ID={project.id}")
 
+# Explicit seed cost categories — hook @api.model_create_multi đôi khi
+# không trigger do inherit chain. Force call seeder, idempotent.
+env['rp.cost.category']._seed_defaults_for_project(project)
+cc_count = env['rp.cost.category'].search_count(
+    [('project_id', '=', project.id)])
+print(f"  Cost categories seeded: {cc_count}")
+
 # ============================================================
 # 2. Subzones
 # ============================================================

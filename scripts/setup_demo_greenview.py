@@ -271,6 +271,13 @@ for code, name, ctype, lic_class, state in contractors_data:
     contractors[code] = c
     print(f"  Contractor {code} ({name}) → ID={c.id}")
 
+# Force tất cả contractor partners cùng company với current company —
+# pre-emptive trước khi tạo packages
+for code, c in contractors.items():
+    c.partner_id.sudo().write({'company_id': company.id})
+env.cr.commit()
+print(f"  Aligned {len(contractors)} contractor partners → company {company.id}")
+
 # ============================================================
 # 6. Tender package "PKG-MEP-001" — state = contracted
 # ============================================================

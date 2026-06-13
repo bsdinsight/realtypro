@@ -484,22 +484,16 @@ if not hd.payment_milestone_ids:
     Milestone.create([
         {'contract_id': hd.id, 'sequence': 10,
          'name': 'Tạm ứng 20%',
-         'milestone_type': 'advance',
-         'percentage': 20.0,
-         'amount': 19_440_000_000,
-         'date_planned': today + timedelta(days=10)},
+         'percent': 20.0,
+         'due_date': today + timedelta(days=10)},
         {'contract_id': hd.id, 'sequence': 20,
          'name': 'Nghiệm thu 75%',
-         'milestone_type': 'milestone',
-         'percentage': 75.0,
-         'amount': 72_900_000_000,
-         'date_planned': today + timedelta(days=240)},
+         'percent': 75.0,
+         'due_date': today + timedelta(days=240)},
         {'contract_id': hd.id, 'sequence': 30,
          'name': 'Bảo hành 5%',
-         'milestone_type': 'retention',
-         'percentage': 5.0,
-         'amount': 4_860_000_000,
-         'date_planned': today + timedelta(days=420)},
+         'percent': 5.0,
+         'due_date': today + timedelta(days=420)},
     ])
     print("  Created 3 payment milestones")
 
@@ -509,29 +503,29 @@ if not hd.line_ids:
     ContractLine.create([
         {'contract_id': hd.id, 'sequence': 10,
          'structure_id': items['S1'].id,
-         'description': 'Lắp đặt hệ điện chính Tower S1', 'uom': 'set',
-         'quantity': 1, 'unit_price': 18_000_000_000,
-         'amount': 18_000_000_000},
+         'description': 'Lắp đặt hệ điện chính Tower S1',
+         'unit_of_measure': 'gói',
+         'quantity': 1, 'unit_price': 18_000_000_000},
         {'contract_id': hd.id, 'sequence': 20,
          'structure_id': items['S1'].id,
-         'description': 'Lắp đặt hệ nước + xử lý nước thải S1', 'uom': 'set',
-         'quantity': 1, 'unit_price': 12_000_000_000,
-         'amount': 12_000_000_000},
+         'description': 'Lắp đặt hệ nước + xử lý nước thải S1',
+         'unit_of_measure': 'gói',
+         'quantity': 1, 'unit_price': 12_000_000_000},
         {'contract_id': hd.id, 'sequence': 30,
          'structure_id': items['S1'].id,
-         'description': 'Lắp đặt ĐHKK + thông gió S1', 'uom': 'set',
-         'quantity': 1, 'unit_price': 15_000_000_000,
-         'amount': 15_000_000_000},
+         'description': 'Lắp đặt ĐHKK + thông gió S1',
+         'unit_of_measure': 'gói',
+         'quantity': 1, 'unit_price': 15_000_000_000},
         {'contract_id': hd.id, 'sequence': 40,
          'structure_id': items['S2'].id,
-         'description': 'Lắp đặt MEP toàn bộ Tower S2', 'uom': 'set',
-         'quantity': 1, 'unit_price': 42_000_000_000,
-         'amount': 42_000_000_000},
+         'description': 'Lắp đặt MEP toàn bộ Tower S2',
+         'unit_of_measure': 'gói',
+         'quantity': 1, 'unit_price': 42_000_000_000},
         {'contract_id': hd.id, 'sequence': 50,
          'structure_id': items['S2'].id,
-         'description': 'Hệ thống PCCC + báo cháy 2 tower', 'uom': 'set',
-         'quantity': 1, 'unit_price': 3_000_000_000,
-         'amount': 3_000_000_000},
+         'description': 'Hệ thống PCCC + báo cháy 2 tower',
+         'unit_of_measure': 'gói',
+         'quantity': 1, 'unit_price': 3_000_000_000},
     ])
     print("  Created 5 BOQ lines")
 
@@ -541,10 +535,10 @@ if not hd.amendment_ids:
     Amendment.create({
         'contract_id': hd.id,
         'name': 'PL-01',
-        'amendment_date': today - timedelta(days=1),
-        'reason': 'Bổ sung khối lượng PCCC tầng hầm phát sinh do thay đổi thiết kế',
-        'amount_impact': 500_000_000,
-        'days_impact': 15,
+        'amendment_type': 'scope',
+        'date_effective': today - timedelta(days=1),
+        'description': 'Bổ sung khối lượng PCCC tầng hầm phát sinh do '
+                       'thay đổi thiết kế',
     })
     print("  Created 1 amendment")
 
@@ -576,23 +570,25 @@ else:
     bbn = BBN.create(bbn_vals)
     print(f"  Created BBN ID={bbn.id}")
 
-# BBN lines
+# BBN lines — uom_id M2O, fallback nếu chưa có UoM
 BBNLine = env['rp.progress.acceptance.line']
+ProgressUom = env['rp.progress.uom']
+uom_set = ProgressUom.search([('name', 'ilike', 'gói')], limit=1) \
+          or ProgressUom.search([], limit=1)
 if not bbn.line_ids:
+    common_vals = {'acceptance_id': bbn.id}
+    if uom_set:
+        common_vals['uom_id'] = uom_set.id
     BBNLine.create([
-        {'acceptance_id': bbn.id, 'sequence': 10,
+        {**common_vals, 'sequence': 10,
          'structure_id': items['S1'].id,
          'description': 'Lắp đặt hệ điện chính Tower S1 — giai đoạn 1',
-         'uom': 'set',
          'quantity_this_period': 0.4,
-         'quantity_to_date': 0.4,
          'unit_price': 18_000_000_000},
-        {'acceptance_id': bbn.id, 'sequence': 20,
+        {**common_vals, 'sequence': 20,
          'structure_id': items['S2'].id,
          'description': 'Lắp đặt MEP Tower S2 — giai đoạn 1',
-         'uom': 'set',
          'quantity_this_period': 0.3,
-         'quantity_to_date': 0.3,
          'unit_price': 42_000_000_000},
     ])
     print("  Created 2 BBN lines")

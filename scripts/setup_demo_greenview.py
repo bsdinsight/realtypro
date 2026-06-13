@@ -251,6 +251,7 @@ contractors_data = [
     ('NT-D', 'Công ty CP Mới D', 'subcontractor', 'hang_3', 'approved'),
 ]
 contractors = {}
+company = env.user.company_id
 for code, name, ctype, lic_class, state in contractors_data:
     c = Contractor.search([('code', '=', code)], limit=1)
     vals = {
@@ -263,6 +264,10 @@ for code, name, ctype, lic_class, state in contractors_data:
         c.write(vals)
     else:
         c = Contractor.create(vals)
+    # Ensure partner shared company (cross-company partners) — tránh
+    # constraint _check_contractor_company trên rp.tender.package
+    if c.partner_id and c.partner_id.company_id:
+        c.partner_id.company_id = False
     contractors[code] = c
     print(f"  Contractor {code} ({name}) → ID={c.id}")
 

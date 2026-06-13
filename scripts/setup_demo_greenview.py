@@ -171,6 +171,9 @@ for name, code, parent_code, stype, start_off, end_off in subitems_data:
     vals = {
         'project_id': project.id,
         'parent_id': parent.id,
+        # Subzone explicit từ parent — inherit qua onchange chỉ chạy ở
+        # UI form, không qua create() ORM call
+        'subzone_id': parent.subzone_id.id,
         'structure_level': 'sub_item',
         'structure_type': stype,
         'name': name, 'code': code,

@@ -39,3 +39,7 @@ access_account_payment_register_loan_user,account.payment.register loan user,acc
 access_account_payment_register_loan_manager,account.payment.register loan manager,account.model_account_payment_register,re_loan.group_loan_manager,1,1,1,1
 access_account_journal_loan_user,account.journal loan user,account.model_account_journal,re_loan.group_loan_user,1,0,0,0
 access_account_journal_loan_manager,account.journal loan manager,account.model_account_journal,re_loan.group_loan_manager,1,0,0,0
+access_account_account_loan_user,account.account loan user,account.model_account_account,re_loan.group_loan_user,1,0,0,0
+access_account_account_loan_manager,account.account loan manager,account.model_account_account,re_loan.group_loan_manager,1,0,0,0
+access_account_account_tag_loan_user,account.account.tag loan user,account.model_account_account_tag,re_loan.group_loan_user,1,0,1,0
+access_account_account_tag_loan_manager,account.account.tag loan manager,account.model_account_account_tag,re_loan.group_loan_manager,1,1,1,1

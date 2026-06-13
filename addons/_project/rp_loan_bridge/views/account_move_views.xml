@@ -17,6 +17,17 @@
                     {'default_partner_id': partner_id}
                 </attribute>
             </xpath>
+
+            <!-- Issue #10: cho phép tạo Thuế mới từ cột Thuế trong
+                 tab "Chi tiết hóa đơn". Widget many2many_tax_tags của
+                 Odoo chuẩn hardcode no_create=True → ẩn nút "Tạo mới".
+                 Override options để hiện nút này. -->
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='tax_ids']"
+                   position="attributes">
+                <attribute name="options">
+                    {'no_create': False, 'no_create_edit': False, 'no_quick_create': True}
+                </attribute>
+            </xpath>
         </field>
     </record>
 

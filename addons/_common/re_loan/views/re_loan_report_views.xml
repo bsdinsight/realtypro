@@ -317,14 +317,38 @@
                    sample="1">
                 <field name="credit_contract_id" type="row"/>
                 <field name="note_id" type="row"/>
+                <field name="pg_kind" type="row"/>
                 <field name="period_month" interval="month" type="col"/>
                 <field name="kind" type="col"/>
                 <field name="amount" type="measure"/>
-                <field name="amount_principal"
-                       type="measure" invisible="1"/>
-                <field name="amount_interest"
-                       type="measure" invisible="1"/>
             </pivot>
+        </field>
+    </record>
+
+    <record id="view_re_loan_payment_plan_report_list"
+            model="ir.ui.view">
+        <field name="name">re.loan.payment.plan.report.list</field>
+        <field name="model">re.loan.payment.plan.report</field>
+        <field name="arch" type="xml">
+            <list string="Chi tiết kỳ thanh toán"
+                  decoration-success="period_state == 'paid'"
+                  decoration-warning="period_state == 'partial_paid'"
+                  decoration-muted="period_state == 'planned'"
+                  decoration-info="period_state == 'accrued'">
+                <field name="credit_contract_id"/>
+                <field name="note_id"/>
+                <field name="period_month" widget="date"/>
+                <field name="kind" widget="badge"/>
+                <field name="pg_kind" widget="badge"
+                       decoration-info="pg_kind == 'principal'"
+                       decoration-warning="pg_kind == 'interest'"/>
+                <field name="amount" sum="Σ"/>
+                <field name="period_state" widget="badge"
+                       optional="show"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="facility_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
         </field>
     </record>
 
@@ -363,16 +387,31 @@
                 <filter name="f_paid" string="Đã trả"
                         domain="[('kind','=','paid')]"/>
                 <separator/>
+                <filter name="f_principal" string="Tiền gốc"
+                        domain="[('pg_kind','=','principal')]"/>
+                <filter name="f_interest" string="Tiền lãi"
+                        domain="[('pg_kind','=','interest')]"/>
+                <separator/>
+                <filter name="f_unpaid_periods" string="Kỳ chưa trả đủ"
+                        domain="[('period_state','in',
+                                   ('planned','partial_paid'))]"/>
+                <filter name="f_paid_periods" string="Kỳ đã trả đủ"
+                        domain="[('period_state','=','paid')]"/>
+                <separator/>
                 <filter name="g_contract" string="HĐTD"
                         context="{'group_by': 'credit_contract_id'}"/>
                 <filter name="g_note" string="Khế ước"
                         context="{'group_by': 'note_id'}"/>
+                <filter name="g_pg_kind" string="Gốc/Lãi"
+                        context="{'group_by': 'pg_kind'}"/>
                 <filter name="g_partner" string="NH"
                         context="{'group_by': 'partner_id'}"/>
                 <filter name="g_month" string="Tháng"
                         context="{'group_by': 'period_month:month'}"/>
                 <filter name="g_kind" string="Loại"
                         context="{'group_by': 'kind'}"/>
+                <filter name="g_state" string="Trạng thái kỳ"
+                        context="{'group_by': 'period_state'}"/>
             </search>
         </field>
     </record>
@@ -381,12 +420,13 @@
             model="ir.actions.act_window">
         <field name="name">Kế hoạch thanh toán KW theo năm</field>
         <field name="res_model">re.loan.payment.plan.report</field>
-        <field name="view_mode">pivot,graph</field>
+        <field name="view_mode">pivot,list,graph</field>
         <field name="search_view_id"
                ref="view_re_loan_payment_plan_report_search"/>
         <field name="context">{
             'search_default_f_this_year': 1,
-            'pivot_row_groupby': ['credit_contract_id', 'note_id'],
+            'pivot_row_groupby': ['credit_contract_id', 'note_id',
+                                  'pg_kind'],
             'pivot_column_groupby': ['period_month:month', 'kind'],
             'pivot_measures': ['amount'],
         }</field>
@@ -395,10 +435,15 @@
                 Báo cáo kế hoạch thanh toán KW theo năm
             </p>
             <p>
-                Pivot 2 chiều: <b>Hàng</b> = HĐTD → Khế ước, <b>Cột</b> =
-                Tháng × {Kế hoạch / Đã trả}. <b>Kế hoạch</b> lấy từ
-                lịch lãi (gốc + lãi), <b>Đã trả</b> lấy từ trả nợ
-                thực tế. Mặc định: năm hiện tại.
+                Pivot 3 cấp: <b>HĐTD → Khế ước → Gốc/Lãi</b> (hàng) ×
+                <b>Tháng × {Kế hoạch / Đã trả}</b> (cột).
+            </p>
+            <p>
+                <b>Kế hoạch</b> lấy từ lịch lãi (mỗi kỳ tách thành 2
+                dòng tiền gốc + tiền lãi). <b>Đã trả</b> lấy từ trả
+                nợ thực tế (cũng tách gốc/lãi). <b>Trạng thái kỳ</b>
+                (Dự kiến / Đã ghi nhận / Trả một phần / Đã trả đủ) →
+                view List để xem chi tiết từng kỳ + filter quick.
             </p>
         </field>
     </record>

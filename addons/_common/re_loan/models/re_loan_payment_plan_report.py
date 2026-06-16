@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 """Báo cáo: Kế hoạch thanh toán khế ước theo năm.
 
-UNION của 2 nguồn:
-  - re.loan.note.interest.line: kế hoạch trả (gốc + lãi) — kind='plan'
-  - re.loan.note.repayment:     đã trả thực tế (gốc + lãi) — kind='paid'
+UNION của 4 nguồn (mỗi kỳ tách thành 2 dòng gốc + lãi):
+  - re.loan.note.interest.line × {principal, interest}: kế hoạch
+    trả → kind='plan', pg_kind='principal' / 'interest'
+  - re.loan.note.repayment × {principal, interest}: đã trả thực tế
+    → kind='paid', pg_kind='principal' / 'interest'
 
-Pivot: row=HĐTD/KW, col=tháng × {kế hoạch, đã trả}, measure=amount.
+Pivot: row = HĐTD → KW → pg_kind (gốc/lãi), col = tháng × {kế hoạch,
+đã trả}, measure = amount.
+
+Status (period_state) lấy từ interest_line.state — cho phép filter
+kỳ chưa thanh toán / quá hạn / một phần / đủ.
 """
 from odoo import fields, models, tools
 
@@ -14,7 +20,7 @@ class ReLoanPaymentPlanReport(models.Model):
     _name = 're.loan.payment.plan.report'
     _description = 'Báo cáo kế hoạch thanh toán KW theo năm'
     _auto = False
-    _order = 'credit_contract_id, note_id, period_month, kind'
+    _order = 'credit_contract_id, note_id, period_month, kind, pg_kind'
 
     note_id = fields.Many2one(
         're.loan.note', string='Khế ước', readonly=True)
@@ -33,12 +39,29 @@ class ReLoanPaymentPlanReport(models.Model):
         [('plan', 'Kế hoạch'),
          ('paid', 'Đã trả')],
         string='Loại', readonly=True)
+    pg_kind = fields.Selection(
+        [('principal', 'Tiền gốc'),
+         ('interest',  'Tiền lãi')],
+        string='Gốc/Lãi', readonly=True,
+        help='Tách dòng gốc/lãi → pivot xem riêng từng cấu phần.')
+    period_state = fields.Selection(
+        [('planned',      'Dự kiến'),
+         ('accrued',      'Đã ghi nhận'),
+         ('partial_paid', 'Trả một phần'),
+         ('paid',         'Đã trả đủ')],
+        string='Trạng thái kỳ', readonly=True,
+        help='Trạng thái kỳ lãi/gốc (chỉ cho dòng kế hoạch). '
+             'Dòng đã trả → trống.')
     amount = fields.Monetary(
         string='Số tiền', readonly=True)
     amount_principal = fields.Monetary(
-        string='Gốc', readonly=True)
+        string='Gốc', readonly=True,
+        help='Backward compat — số tiền gốc của row này. = amount '
+             'khi pg_kind=principal, = 0 khi pg_kind=interest.')
     amount_interest = fields.Monetary(
-        string='Lãi', readonly=True)
+        string='Lãi', readonly=True,
+        help='Backward compat — số tiền lãi của row này. = amount '
+             'khi pg_kind=interest, = 0 khi pg_kind=principal.')
     currency_id = fields.Many2one(
         'res.currency', readonly=True)
     company_id = fields.Many2one(
@@ -51,9 +74,9 @@ class ReLoanPaymentPlanReport(models.Model):
               SELECT ROW_NUMBER() OVER
                        (ORDER BY src, src_id) AS id, *
               FROM (
-                -- Kế hoạch: từ lịch lãi/gốc
+                -- Kế hoạch - Tiền gốc (từ lịch lãi)
                 SELECT
-                  'il'::varchar AS src,
+                  'il_p'::varchar AS src,
                   il.id AS src_id,
                   il.note_id,
                   n.credit_contract_id,
@@ -63,20 +86,49 @@ class ReLoanPaymentPlanReport(models.Model):
                     AS period_month,
                   to_char(il.date_to, 'YYYY') AS period_year,
                   'plan'::varchar AS kind,
-                  il.total_due AS amount,
+                  'principal'::varchar AS pg_kind,
+                  il.state::varchar AS period_state,
+                  il.principal_due AS amount,
                   il.principal_due AS amount_principal,
+                  0.0 AS amount_interest,
+                  n.currency_id,
+                  n.company_id
+                FROM re_loan_note_interest_line il
+                JOIN re_loan_note n ON n.id = il.note_id
+                WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.principal_due > 0
+
+                UNION ALL
+
+                -- Kế hoạch - Tiền lãi (từ lịch lãi)
+                SELECT
+                  'il_i'::varchar AS src,
+                  il.id AS src_id,
+                  il.note_id,
+                  n.credit_contract_id,
+                  n.facility_id,
+                  n.partner_id,
+                  date_trunc('month', il.date_to)::date
+                    AS period_month,
+                  to_char(il.date_to, 'YYYY') AS period_year,
+                  'plan'::varchar AS kind,
+                  'interest'::varchar AS pg_kind,
+                  il.state::varchar AS period_state,
+                  il.interest_amount AS amount,
+                  0.0 AS amount_principal,
                   il.interest_amount AS amount_interest,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
                 JOIN re_loan_note n ON n.id = il.note_id
                 WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.interest_amount > 0
 
                 UNION ALL
 
-                -- Đã trả: từ trả nợ thực tế
+                -- Đã trả - Tiền gốc (từ trả nợ thực tế)
                 SELECT
-                  'rp'::varchar AS src,
+                  'rp_p'::varchar AS src,
                   r.id AS src_id,
                   r.note_id,
                   n.credit_contract_id,
@@ -85,13 +137,40 @@ class ReLoanPaymentPlanReport(models.Model):
                   date_trunc('month', r.date)::date AS period_month,
                   to_char(r.date, 'YYYY') AS period_year,
                   'paid'::varchar AS kind,
-                  r.amount_total AS amount,
+                  'principal'::varchar AS pg_kind,
+                  NULL::varchar AS period_state,
+                  r.amount_principal AS amount,
                   r.amount_principal,
+                  0.0 AS amount_interest,
+                  n.currency_id,
+                  n.company_id
+                FROM re_loan_note_repayment r
+                JOIN re_loan_note n ON n.id = r.note_id
+                WHERE r.amount_principal > 0
+
+                UNION ALL
+
+                -- Đã trả - Tiền lãi (từ trả nợ thực tế)
+                SELECT
+                  'rp_i'::varchar AS src,
+                  r.id AS src_id,
+                  r.note_id,
+                  n.credit_contract_id,
+                  n.facility_id,
+                  n.partner_id,
+                  date_trunc('month', r.date)::date AS period_month,
+                  to_char(r.date, 'YYYY') AS period_year,
+                  'paid'::varchar AS kind,
+                  'interest'::varchar AS pg_kind,
+                  NULL::varchar AS period_state,
+                  r.amount_interest AS amount,
+                  0.0 AS amount_principal,
                   r.amount_interest,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_repayment r
                 JOIN re_loan_note n ON n.id = r.note_id
+                WHERE r.amount_interest > 0
               ) u
             )
         """)

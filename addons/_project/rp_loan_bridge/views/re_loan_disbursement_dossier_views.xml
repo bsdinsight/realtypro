@@ -19,6 +19,13 @@
                         <group>
                             <field name="invoice_id"
                                    options="{'no_quick_create': True}"/>
+                            <field name="invoice_amount_total"
+                                   readonly="1"
+                                   invisible="not invoice_id"/>
+                            <field name="invoice_amount_remaining"
+                                   readonly="1"
+                                   invisible="not invoice_id"
+                                   decoration-danger="invoice_amount_remaining &lt;= 0"/>
                             <field name="amount"/>
                             <field name="description"/>
                             <field name="currency_id"
@@ -63,7 +70,15 @@
                                 <field name="contract_id" readonly="1"/>
                                 <field name="invoice_id"
                                        string="Hóa đơn"/>
-                                <field name="amount" sum="Σ"/>
+                                <field name="invoice_amount_total"
+                                       string="Giá trị HĐ"
+                                       optional="show" readonly="1"/>
+                                <field name="invoice_amount_remaining"
+                                       string="Còn lại HĐ"
+                                       optional="show" readonly="1"
+                                       decoration-danger="invoice_amount_remaining &lt;= 0"/>
+                                <field name="amount"
+                                       string="Thanh toán kỳ này" sum="Σ"/>
                                 <field name="description"/>
                                 <field name="attachment_count"
                                        string="📎 File"

@@ -47,6 +47,21 @@ class RpLoanDisbursementDossier(models.Model):
              '(Bên nhận tiền trên giải ngân). Tất cả state hiển thị '
              '— draft/posted đều pick được.')
 
+    # Hiển thị giá trị + số tiền còn lại của hóa đơn (auto-load khi pick)
+    invoice_amount_total = fields.Monetary(
+        string='Giá trị hóa đơn',
+        related='invoice_id.amount_total',
+        store=False, readonly=True,
+        help='Tổng giá trị hóa đơn vendor bill — auto từ hóa đơn.')
+    invoice_amount_remaining = fields.Monetary(
+        string='Số tiền còn lại',
+        compute='_compute_invoice_remaining',
+        store=False, readonly=True,
+        help='Số tiền chưa giải ngân của hóa đơn = giá trị hóa đơn − '
+             'Σ giá trị hồ sơ giải ngân khác đang link cùng hóa đơn này '
+             '(không tính dossier đã cancel). Constraint: số tiền sẽ '
+             'thanh toán kỳ này ≤ số tiền còn lại.')
+
     # Auto từ BBN hoặc Hóa đơn
     contract_id = fields.Many2one(
         'rp.contract', string='HĐ nhà thầu',
@@ -56,10 +71,11 @@ class RpLoanDisbursementDossier(models.Model):
         compute='_compute_from_acceptance', store=True)
 
     amount = fields.Monetary(
-        string='Giá trị hóa đơn', required=True,
-        help='Giá trị giải ngân của hồ sơ này. Auto-fill = '
-             'invoice.amount_total khi pick hóa đơn (user vẫn sửa được). '
-             'Σ các hồ sơ = tổng số tiền giải ngân.')
+        string='Số tiền sẽ thanh toán kỳ này', required=True,
+        help='Số tiền sẽ thanh toán cho hóa đơn này trong kỳ giải ngân '
+             'hiện tại (KW này). Auto-fill = số tiền còn lại của hóa '
+             'đơn khi pick hóa đơn — user vẫn sửa được. Σ các hồ sơ = '
+             'tổng số tiền giải ngân của KW.')
     description = fields.Char(string='Diễn giải')
 
     attachment_ids = fields.Many2many(
@@ -104,13 +120,44 @@ class RpLoanDisbursementDossier(models.Model):
             rec.contract_id = contract or False
             rec.contractor_id = contractor or False
 
+    @api.depends('invoice_id', 'invoice_id.amount_total', 'amount')
+    def _compute_invoice_remaining(self):
+        """Số tiền còn lại = giá trị hóa đơn - Σ giá trị các dossier
+        khác đang link tới cùng hóa đơn này (không tính dossier đã
+        cancel). KHÔNG trừ chính bản thân record này — để user thấy
+        đúng còn lại có thể phân bổ.
+        """
+        for rec in self:
+            if not rec.invoice_id:
+                rec.invoice_amount_remaining = 0.0
+                continue
+            origin_id = rec._origin.id if rec._origin else rec.id
+            other_dossiers = self.env['rp.loan.disbursement.dossier'].search([
+                ('invoice_id', '=', rec.invoice_id.id),
+                ('id', '!=', origin_id or 0),
+                ('state', '!=', 'cancelled'),
+            ])
+            other_total = sum(other_dossiers.mapped('amount'))
+            rec.invoice_amount_remaining = max(
+                0.0, rec.invoice_id.amount_total - other_total)
+
     @api.onchange('invoice_id')
     def _onchange_invoice_fill_amount(self):
-        """Auto-fill amount = invoice.amount_total mỗi khi pick hóa đơn.
-        User vẫn sửa tay được sau đó nếu cần override.
+        """Auto-fill amount = số tiền còn lại của hóa đơn khi pick.
+        User sửa được, nhưng KHÔNG vượt remaining (constraint).
         """
         if self.invoice_id:
-            self.amount = self.invoice_id.amount_total
+            # Tính lại remaining tại thời điểm onchange
+            origin_id = self._origin.id if self._origin else 0
+            other_dossiers = self.env['rp.loan.disbursement.dossier'].search([
+                ('invoice_id', '=', self.invoice_id.id),
+                ('id', '!=', origin_id),
+                ('state', '!=', 'cancelled'),
+            ])
+            other_total = sum(other_dossiers.mapped('amount'))
+            remaining = max(
+                0.0, self.invoice_id.amount_total - other_total)
+            self.amount = remaining
         else:
             self.amount = 0.0
 
@@ -119,4 +166,25 @@ class RpLoanDisbursementDossier(models.Model):
         for rec in self:
             if rec.amount <= 0:
                 raise ValidationError(_(
-                    "Giá trị hồ sơ giải ngân phải > 0."))
+                    "Số tiền sẽ thanh toán phải > 0."))
+            # Validate: amount <= remaining của hóa đơn
+            if rec.invoice_id:
+                origin_id = rec.id
+                other_dossiers = self.env[
+                    'rp.loan.disbursement.dossier'].search([
+                        ('invoice_id', '=', rec.invoice_id.id),
+                        ('id', '!=', origin_id),
+                        ('state', '!=', 'cancelled'),
+                    ])
+                other_total = sum(other_dossiers.mapped('amount'))
+                remaining = rec.invoice_id.amount_total - other_total
+                if rec.amount > remaining + 0.01:
+                    raise ValidationError(_(
+                        "Số tiền sẽ thanh toán kỳ này (%(amount)s) "
+                        "vượt quá số tiền còn lại của hóa đơn "
+                        "(%(remaining)s). Hóa đơn %(invoice)s đã được "
+                        "phân bổ ở các hồ sơ giải ngân khác.") % {
+                            'amount': '{:,.0f}'.format(rec.amount),
+                            'remaining': '{:,.0f}'.format(remaining),
+                            'invoice': rec.invoice_id.name or '/',
+                        })

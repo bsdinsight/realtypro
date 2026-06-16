@@ -205,6 +205,23 @@ class ReLoanBankAdviceLine(models.Model):
         string='Chưa allocate',
         compute='_compute_stats', store=True)
 
+    # Net-off chênh lệch giữa số NH trích (amount) và số allocate
+    # vào các kỳ. Signed: + = NH dư (write off, ghi credit), - = NH
+    # thiếu (ghi debit, kỳ sau bù).
+    amount_net_off = fields.Monetary(
+        string='Net-off',
+        default=0.0,
+        help='Số tiền net-off chênh lệch giữa số NH trích thực tế '
+             'và số phải trả các kỳ. Positive: NH trả dư (write off / '
+             'làm tròn). Negative: NH trích thiếu (ghi nợ, bù kỳ sau). '
+             'Sau net-off: chưa allocate = amount - đã allocate - '
+             'net-off → nên về 0.')
+    net_off_reason = fields.Char(
+        string='Lý do net-off',
+        help='Diễn giải lý do bù trừ chênh lệch — vd: "Chênh lệch '
+             'làm tròn lẻ", "Phí giao dịch NH", "Trích thiếu chuyển '
+             'kỳ sau".')
+
     state = fields.Selection(
         related='advice_id.state', store=True, readonly=True)
     currency_id = fields.Many2one(
@@ -212,13 +229,16 @@ class ReLoanBankAdviceLine(models.Model):
     company_id = fields.Many2one(
         related='advice_id.company_id', store=True, readonly=True)
 
-    @api.depends('repayment_ids.amount_total', 'amount')
+    @api.depends('repayment_ids.amount_total', 'amount', 'amount_net_off')
     def _compute_stats(self):
         for rec in self:
             rec.repayment_count = len(rec.repayment_ids)
             allocated = sum(rec.repayment_ids.mapped('amount_total'))
             rec.amount_allocated = allocated
-            rec.amount_unallocated = max(0, rec.amount - allocated)
+            # Sau net-off: unallocated = amount - allocated - net_off
+            # Có thể âm nếu user net-off quá lớn → clamp 0
+            rec.amount_unallocated = max(
+                0, rec.amount - allocated - rec.amount_net_off)
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -339,3 +359,40 @@ class ReLoanBankAdviceLine(models.Model):
             'view_mode': 'list,form',
             'domain': [('id', 'in', lines.ids)],
         }
+
+    def action_auto_net_off(self):
+        """Tự net-off phần chênh lệch giữa số NH trích (amount) và số
+        đã allocate vào các kỳ. Threshold mặc định 100,000 ₫:
+          - |unallocated| ≤ threshold → auto write off, set net_off
+            = unallocated, reason = 'Chênh lệch lẻ làm tròn'
+          - > threshold → raise UserError yêu cầu user nhập thủ công
+            (amount_net_off + net_off_reason) để có audit trail.
+
+        Net-off chỉ làm sense KHI đã allocate xong. Nếu chưa allocate
+        gì hoặc allocate < threshold → để user post advice trước.
+        """
+        from odoo.exceptions import UserError
+        THRESHOLD = 100_000.0
+        for rec in self:
+            if rec.amount_allocated <= 0:
+                raise UserError(_(
+                    "Chưa allocate vào kỳ nào — post phiếu trích thu "
+                    "trước rồi mới net-off chênh lệch."))
+            diff = rec.amount - rec.amount_allocated - rec.amount_net_off
+            if abs(diff) <= 0.01:
+                raise UserError(_(
+                    "Không có chênh lệch — đã khớp 100%%."))
+            if abs(diff) > THRESHOLD:
+                raise UserError(_(
+                    "Chênh lệch %(diff)s ₫ vượt ngưỡng %(thr)s ₫. "
+                    "Phải nhập tay 'Net-off' + 'Lý do net-off' (audit "
+                    "trail). Common reasons: NH trừ phí, làm tròn, "
+                    "trích thiếu chuyển kỳ sau.") % {
+                        'diff': '{:,.0f}'.format(diff),
+                        'thr': '{:,.0f}'.format(THRESHOLD),
+                    })
+            rec.amount_net_off = (rec.amount_net_off or 0.0) + diff
+            rec.net_off_reason = (
+                rec.net_off_reason
+                or _('Chênh lệch lẻ làm tròn (auto net-off ≤ '
+                     '%s ₫)') % '{:,.0f}'.format(THRESHOLD))

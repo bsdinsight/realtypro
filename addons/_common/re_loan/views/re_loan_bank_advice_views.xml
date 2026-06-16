@@ -96,9 +96,17 @@
                                     <field name="amount_allocated"
                                            readonly="1"
                                            optional="show"/>
+                                    <field name="amount_net_off"
+                                           optional="show"
+                                           decoration-info="amount_net_off != 0"/>
                                     <field name="amount_unallocated"
                                            readonly="1" optional="hide"
                                            decoration-warning="amount_unallocated > 0"/>
+                                    <button name="action_auto_net_off"
+                                            type="object"
+                                            string="Net-off"
+                                            icon="fa-balance-scale"
+                                            invisible="amount_unallocated == 0"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>
@@ -113,6 +121,20 @@
                                         <group>
                                             <field name="amount"/>
                                             <field name="description"/>
+                                            <field name="amount_allocated"
+                                                   readonly="1"/>
+                                            <field name="amount_unallocated"
+                                                   readonly="1"
+                                                   decoration-warning="amount_unallocated > 0"/>
+                                            <field name="amount_net_off"/>
+                                            <field name="net_off_reason"
+                                                   invisible="amount_net_off == 0"/>
+                                            <button name="action_auto_net_off"
+                                                    type="object"
+                                                    string="Tự net-off chênh lệch lẻ"
+                                                    icon="fa-balance-scale"
+                                                    class="btn-secondary"
+                                                    invisible="amount_unallocated == 0"/>
                                         </group>
                                     </group>
                                     <separator string="Repayments đã allocate"/>

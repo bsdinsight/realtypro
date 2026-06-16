@@ -454,4 +454,100 @@
               action="action_re_loan_payment_plan_report"
               sequence="50"/>
 
+    <!-- ===== Báo cáo HĐTD: cho vay vs bảo lãnh ===== -->
+    <record id="view_re_loan_credit_contract_summary_list"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.summary.list</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="arch" type="xml">
+            <list string="Báo cáo HĐTD — cho vay vs bảo lãnh"
+                  create="false" edit="false" delete="false"
+                  decoration-info="state == 'active'"
+                  decoration-success="state == 'completed'"
+                  decoration-muted="state in ('draft','cancelled')"
+                  decoration-warning="state == 'expired'">
+                <field name="name" string="HĐTD"/>
+                <field name="partner_id" string="Ngân hàng / Bên cho vay"/>
+                <field name="date_start" string="Ngày ký"/>
+                <field name="date_end" string="Ngày hết hạn"/>
+                <field name="amount_total" string="Hạn mức tín dụng"
+                       sum="Σ"/>
+                <field name="amount_loan_used"
+                       string="Tổng số tiền đã cho vay" sum="Σ"/>
+                <field name="amount_loan_available"
+                       string="Hạn mức cho vay còn lại" sum="Σ"
+                       decoration-warning="amount_loan_available &lt;= 0"/>
+                <field name="amount_bg_used"
+                       string="Tổng số tiền đã bảo lãnh" sum="Σ"/>
+                <field name="amount_bg_available"
+                       string="Hạn mức bảo lãnh còn lại" sum="Σ"
+                       decoration-warning="amount_bg_available &lt;= 0"/>
+                <field name="amount_pool_available"
+                       string="Tổng hạn mức còn lại" sum="Σ"
+                       decoration-warning="amount_pool_available &lt;= 0"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_credit_contract_summary_search"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.summary.search</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="f_active" string="Đang hiệu lực"
+                        domain="[('state','=','active')]"/>
+                <filter name="f_expired" string="Hết hạn"
+                        domain="[('state','=','expired')]"/>
+                <separator/>
+                <filter name="f_overlimit_loan"
+                        string="Cạn hạn mức cho vay"
+                        domain="[('amount_loan_available','&lt;=', 0),
+                                 ('amount_loan_limit','>',0)]"/>
+                <filter name="f_overlimit_bg"
+                        string="Cạn hạn mức bảo lãnh"
+                        domain="[('amount_bg_available','&lt;=', 0),
+                                 ('amount_bg_limit','>',0)]"/>
+                <separator/>
+                <filter name="g_partner" string="Ngân hàng"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_credit_contract_summary"
+            model="ir.actions.act_window">
+        <field name="name">Tổng hợp HĐTD (cho vay + bảo lãnh)</field>
+        <field name="res_model">re.loan.credit.contract</field>
+        <field name="view_mode">list</field>
+        <field name="view_id"
+               ref="view_re_loan_credit_contract_summary_list"/>
+        <field name="search_view_id"
+               ref="view_re_loan_credit_contract_summary_search"/>
+        <field name="context">{'search_default_f_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Báo cáo tổng hợp HĐTD
+            </p>
+            <p>
+                Mỗi HĐTD show: hạn mức tổng + đã cho vay + còn cho vay +
+                đã bảo lãnh + còn bảo lãnh + tổng còn lại. Tính dựa trên
+                Mục đích của các facility con (Bảo lãnh ↔ các mục đích
+                khác).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_report_credit_contract_summary"
+              name="Tổng hợp HĐTD (cho vay + BL)"
+              parent="menu_re_loan_report"
+              action="action_re_loan_credit_contract_summary"
+              sequence="55"/>
+
 </odoo>

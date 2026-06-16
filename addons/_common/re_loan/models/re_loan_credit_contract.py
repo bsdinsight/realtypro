@@ -87,6 +87,34 @@ class ReLoanCreditContract(models.Model):
         help='= Tổng HĐTD − Tổng đã dùng. Là số tiền tối đa toàn HĐTD '
              'còn có thể rút thêm (gộp mọi mục đích).')
 
+    # Split cho vay vs bảo lãnh
+    amount_loan_limit = fields.Monetary(
+        string='Hạn mức cho vay',
+        compute='_compute_split_stats', store=True,
+        help='Σ hạn mức của facility có mục đích KHÁC bảo lãnh '
+             '(vốn lưu động + đầu tư + L/C + thấu chi + tài trợ + tái '
+             'cấp vốn + khác).')
+    amount_loan_used = fields.Monetary(
+        string='Tổng đã cho vay',
+        compute='_compute_split_stats', store=True,
+        help='Σ "đã dùng" của facility cho vay = Σ dư nợ gốc các KW '
+             'chưa tất toán + KW chưa kích hoạt.')
+    amount_loan_available = fields.Monetary(
+        string='Hạn mức cho vay còn lại',
+        compute='_compute_split_stats', store=True)
+    amount_bg_limit = fields.Monetary(
+        string='Hạn mức bảo lãnh',
+        compute='_compute_split_stats', store=True,
+        help='Σ hạn mức của facility có mục đích = Bảo lãnh.')
+    amount_bg_used = fields.Monetary(
+        string='Tổng đã bảo lãnh',
+        compute='_compute_split_stats', store=True,
+        help='Σ "đã dùng" của facility bảo lãnh = Σ giá trị BL '
+             'outstanding (issued + extended, chưa settled).')
+    amount_bg_available = fields.Monetary(
+        string='Hạn mức bảo lãnh còn lại',
+        compute='_compute_split_stats', store=True)
+
     has_flexible_facility = fields.Boolean(
         string='Có facility liên thông',
         compute='_compute_has_flexible_facility',
@@ -115,6 +143,26 @@ class ReLoanCreditContract(models.Model):
                 rec.facility_ids.mapped('amount_used'))
             rec.amount_pool_available = (
                 rec.amount_total - rec.amount_pool_used)
+
+    @api.depends('facility_ids.amount_limit', 'facility_ids.amount_used',
+                 'facility_ids.purpose')
+    def _compute_split_stats(self):
+        """Tách hạn mức + đã dùng theo 2 nhóm:
+           - bảo lãnh: facility.purpose = 'bank_guarantee'
+           - cho vay: facility.purpose != 'bank_guarantee'
+        """
+        for rec in self:
+            bg = rec.facility_ids.filtered(
+                lambda f: f.purpose == 'bank_guarantee')
+            loan = rec.facility_ids - bg
+            rec.amount_loan_limit = sum(loan.mapped('amount_limit'))
+            rec.amount_loan_used = sum(loan.mapped('amount_used'))
+            rec.amount_loan_available = (
+                rec.amount_loan_limit - rec.amount_loan_used)
+            rec.amount_bg_limit = sum(bg.mapped('amount_limit'))
+            rec.amount_bg_used = sum(bg.mapped('amount_used'))
+            rec.amount_bg_available = (
+                rec.amount_bg_limit - rec.amount_bg_used)
 
     @api.depends('facility_ids.flexible_limits')
     def _compute_has_flexible_facility(self):

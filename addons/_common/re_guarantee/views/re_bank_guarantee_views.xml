@@ -234,11 +234,80 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Các đợt thanh toán" name="payments">
-                            <field name="payment_ids"
+                        <page string="Các đợt thanh toán" name="schedules">
+                            <field name="schedule_ids"
                                    readonly="state in ('settled','cancelled','released','forfeited')">
-                                <list editable="bottom">
+                                <list>
+                                    <button name="action_open_pay"
+                                            type="object" string="Thanh toán"
+                                            icon="fa-money"
+                                            class="btn-primary"
+                                            invisible="amount_remaining &lt;= 0"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="payment_kind"/>
+                                    <field name="due_date"/>
+                                    <field name="amount_due" sum="Σ"/>
+                                    <field name="amount_paid" sum="Σ"
+                                           readonly="1"/>
+                                    <field name="amount_remaining" sum="Σ"
+                                           readonly="1"/>
+                                    <field name="state" widget="badge"
+                                           decoration-muted="state == 'not_paid'"
+                                           decoration-danger="state == 'overdue'"
+                                           decoration-warning="state == 'partial_paid'"
+                                           decoration-success="state == 'fully_paid'"/>
+                                    <field name="transaction_count"
+                                           string="Số lần TT"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                                <form string="Đợt thanh toán">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="payment_kind"/>
+                                                <field name="due_date"/>
+                                            </group>
+                                            <group>
+                                                <field name="amount_due"/>
+                                                <field name="amount_paid"
+                                                       readonly="1"/>
+                                                <field name="amount_remaining"
+                                                       readonly="1"/>
+                                                <field name="state"
+                                                       widget="badge"
+                                                       readonly="1"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                            <page string="Các lần thanh toán"
+                                                  name="transactions">
+                                                <field name="transaction_ids"
+                                                       context="{'default_guarantee_id': parent.guarantee_id, 'default_payment_kind': payment_kind}">
+                                                    <list editable="bottom">
+                                                        <field name="date"/>
+                                                        <field name="amount" sum="Σ"/>
+                                                        <field name="reference"/>
+                                                        <field name="name"/>
+                                                        <field name="state"
+                                                               widget="badge"/>
+                                                        <field name="currency_id"
+                                                               column_invisible="1"/>
+                                                    </list>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Lịch sử thanh toán" name="payments">
+                            <field name="payment_ids" readonly="1">
+                                <list>
                                     <field name="date"/>
+                                    <field name="schedule_id"/>
                                     <field name="payment_kind"/>
                                     <field name="amount" sum="Σ"/>
                                     <field name="reference"/>

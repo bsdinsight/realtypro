@@ -162,10 +162,16 @@ class ReBankGuarantee(models.Model):
              'amount. Auto chuyển settled khi True + state ∈ (issued, '
              'extended).')
 
-    # Payment lines
+    # Đợt thanh toán (kế hoạch) — header
+    schedule_ids = fields.One2many(
+        're.bank.guarantee.payment.schedule', 'guarantee_id',
+        string='Các đợt thanh toán')
+    schedule_count = fields.Integer(compute='_compute_schedule_count')
+
+    # Payment transactions (lần thanh toán thực tế) — ledger
     payment_ids = fields.One2many(
         're.bank.guarantee.payment', 'guarantee_id',
-        string='Các đợt thanh toán')
+        string='Lịch sử thanh toán')
     payment_count = fields.Integer(compute='_compute_payment_count')
 
     # --- Back-link tới đề nghị BL ---
@@ -343,6 +349,11 @@ class ReBankGuarantee(models.Model):
         for rec in self:
             rec.payment_count = len(rec.payment_ids)
 
+    @api.depends('schedule_ids')
+    def _compute_schedule_count(self):
+        for rec in self:
+            rec.schedule_count = len(rec.schedule_ids)
+
     # ==================================================================
     # Onchange — clear chi nhánh khi đổi NH
     # ==================================================================
@@ -518,14 +529,150 @@ class ReBankGuarantee(models.Model):
                     n=rec.days_remaining))
 
 
+class ReBankGuaranteePaymentSchedule(models.Model):
+    _name = 're.bank.guarantee.payment.schedule'
+    _description = 'Đợt thanh toán Chứng thư BL (kế hoạch)'
+    _order = 'guarantee_id, sequence, due_date, id'
+
+    guarantee_id = fields.Many2one(
+        're.bank.guarantee', string='Chứng thư BL',
+        required=True, ondelete='cascade')
+    sequence = fields.Integer(default=10)
+    name = fields.Char(
+        string='Diễn giải', compute='_compute_name',
+        store=True, readonly=False)
+    payment_kind = fields.Selection(
+        [('fee',       'Phí BL'),
+         ('deposit',   'Ký quỹ'),
+         ('penalty',   'Phạt quá hạn'),
+         ('principal', 'Tiền gốc')],
+        string='Loại thanh toán', required=True, default='fee',
+        help='Loại nghĩa vụ phải trả cho NH theo đợt này.')
+    due_date = fields.Date(string='Hạn thanh toán', required=True)
+    amount_due = fields.Monetary(
+        string='Số tiền phải trả', required=True,
+        help='Số tiền dự kiến phải trả NH cho đợt này.')
+
+    # Transactions liên kết — lần thanh toán thực tế (1 đợt N lần)
+    transaction_ids = fields.One2many(
+        're.bank.guarantee.payment', 'schedule_id',
+        string='Các lần thanh toán')
+    transaction_count = fields.Integer(compute='_compute_transaction_count')
+
+    # Computed paid + remaining + state
+    amount_paid = fields.Monetary(
+        string='Số tiền đã thanh toán',
+        compute='_compute_paid', store=True)
+    amount_remaining = fields.Monetary(
+        string='Số tiền còn lại',
+        compute='_compute_paid', store=True)
+    state = fields.Selection(
+        [('not_paid',     'Chưa thanh toán'),
+         ('overdue',      'Quá hạn'),
+         ('partial_paid', 'Thanh toán một phần'),
+         ('fully_paid',   'Đã hoàn tất')],
+        string='Trạng thái', compute='_compute_state', store=True)
+
+    currency_id = fields.Many2one(
+        related='guarantee_id.currency_id', store=True, readonly=True)
+    company_id = fields.Many2one(
+        related='guarantee_id.company_id', store=True, readonly=True)
+
+    @api.depends('payment_kind', 'sequence')
+    def _compute_name(self):
+        kind_label = dict(self._fields['payment_kind'].selection)
+        for rec in self:
+            if not rec.name:
+                seq = rec.sequence or 10
+                rec.name = _("Đợt %s - %s") % (
+                    seq // 10, kind_label.get(rec.payment_kind, ''))
+
+    @api.depends('transaction_ids.amount', 'transaction_ids.state',
+                 'amount_due')
+    def _compute_paid(self):
+        for rec in self:
+            paid = sum(
+                rec.transaction_ids.filtered(lambda t: t.state == 'posted')
+                .mapped('amount'))
+            rec.amount_paid = paid
+            rec.amount_remaining = max(0.0, rec.amount_due - paid)
+
+    @api.depends('amount_paid', 'amount_remaining', 'due_date', 'amount_due')
+    def _compute_state(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.amount_remaining <= 0.01 and rec.amount_paid > 0:
+                rec.state = 'fully_paid'
+            elif rec.amount_paid > 0:
+                rec.state = 'partial_paid'
+            elif rec.due_date and rec.due_date < today:
+                rec.state = 'overdue'
+            else:
+                rec.state = 'not_paid'
+
+    @api.depends('transaction_ids')
+    def _compute_transaction_count(self):
+        for rec in self:
+            rec.transaction_count = len(rec.transaction_ids)
+
+    @api.constrains('amount_due')
+    def _check_amount_due(self):
+        for rec in self:
+            if rec.amount_due <= 0:
+                raise ValidationError(_(
+                    "Số tiền phải trả của đợt phải > 0."))
+
+    # Action button "Thanh toán" — mở wizard tạo transaction mới
+    def action_open_pay(self):
+        self.ensure_one()
+        if self.amount_remaining <= 0.01:
+            raise UserError(_(
+                "Đợt này đã thanh toán đủ. Không cần tạo lần thanh "
+                "toán mới."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Ghi nhận thanh toán'),
+            'res_model': 're.bank.guarantee.payment',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_guarantee_id': self.guarantee_id.id,
+                'default_schedule_id': self.id,
+                'default_payment_kind': self.payment_kind,
+                'default_amount': self.amount_remaining,
+                'default_name': _("TT %s") % (self.name or ''),
+            },
+        }
+
+    def action_view_transactions(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Các lần thanh toán — %s') % self.name,
+            'res_model': 're.bank.guarantee.payment',
+            'view_mode': 'list,form',
+            'domain': [('schedule_id', '=', self.id)],
+            'context': {
+                'default_guarantee_id': self.guarantee_id.id,
+                'default_schedule_id': self.id,
+                'default_payment_kind': self.payment_kind,
+            },
+        }
+
+
 class ReBankGuaranteePayment(models.Model):
     _name = 're.bank.guarantee.payment'
-    _description = 'Đợt thanh toán Chứng thư BL'
+    _description = 'Lần thanh toán Chứng thư BL (transaction)'
     _order = 'date desc, id desc'
 
     guarantee_id = fields.Many2one(
         're.bank.guarantee', string='Chứng thư BL',
         required=True, ondelete='cascade')
+    schedule_id = fields.Many2one(
+        're.bank.guarantee.payment.schedule',
+        string='Đợt thanh toán', ondelete='set null',
+        help='Đợt thanh toán mà lần này thuộc về. '
+             'Có thể để trống nếu là thanh toán ngoài kế hoạch.')
     name = fields.Char(string='Diễn giải')
     date = fields.Date(
         string='Ngày thanh toán', required=True,
@@ -556,6 +703,17 @@ class ReBankGuaranteePayment(models.Model):
             if rec.amount <= 0:
                 raise ValidationError(_(
                     "Số tiền thanh toán phải > 0."))
+
+    @api.constrains('schedule_id', 'guarantee_id', 'payment_kind')
+    def _check_schedule_consistency(self):
+        for rec in self:
+            if rec.schedule_id:
+                if rec.schedule_id.guarantee_id != rec.guarantee_id:
+                    raise ValidationError(_(
+                        "Đợt thanh toán phải thuộc cùng chứng thư BL."))
+                if rec.schedule_id.payment_kind != rec.payment_kind:
+                    raise ValidationError(_(
+                        "Loại thanh toán phải khớp với loại của đợt."))
 
     @api.model_create_multi
     def create(self, vals_list):

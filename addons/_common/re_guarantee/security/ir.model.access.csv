@@ -9,3 +9,5 @@ access_re_guarantee_request_payment_user,re.guarantee.request.payment user,model
 access_re_guarantee_request_payment_manager,re.guarantee.request.payment manager,model_re_guarantee_request_payment,group_guarantee_manager,1,1,1,1
 access_re_bank_guarantee_payment_user,re.bank.guarantee.payment user,model_re_bank_guarantee_payment,group_guarantee_user,1,1,1,1
 access_re_bank_guarantee_payment_manager,re.bank.guarantee.payment manager,model_re_bank_guarantee_payment,group_guarantee_manager,1,1,1,1
+access_re_bank_guarantee_payment_schedule_user,re.bank.guarantee.payment.schedule user,model_re_bank_guarantee_payment_schedule,group_guarantee_user,1,1,1,1
+access_re_bank_guarantee_payment_schedule_manager,re.bank.guarantee.payment.schedule manager,model_re_bank_guarantee_payment_schedule,group_guarantee_manager,1,1,1,1

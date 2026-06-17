@@ -4,6 +4,9 @@
 UNION của 4 nguồn (mỗi kỳ tách thành 2 dòng gốc + lãi):
   - re.loan.note.interest.line × {principal, interest}: kế hoạch
     trả → kind='plan', pg_kind='principal' / 'interest'
+    *** SEMANTIC: "Kế hoạch" = số CÒN PHẢI TRẢ (= due - đã trả),
+        KHÔNG phải tổng due full. Lấy từ field
+        amount_principal_remaining + amount_interest_remaining. ***
   - re.loan.note.repayment × {principal, interest}: đã trả thực tế
     → kind='paid', pg_kind='principal' / 'interest'
 
@@ -38,7 +41,10 @@ class ReLoanPaymentPlanReport(models.Model):
     kind = fields.Selection(
         [('plan', 'Kế hoạch'),
          ('paid', 'Đã trả')],
-        string='Loại', readonly=True)
+        string='Loại', readonly=True,
+        help='Kế hoạch = số CÒN phải trả tháng đó (= due - đã trả). '
+             'Khi đã trả đủ kỳ → kế hoạch = 0 (row không xuất hiện). '
+             'Đã trả = số thực tế đã trả từ trả nợ thực tế.')
     pg_kind = fields.Selection(
         [('principal', 'Tiền gốc'),
          ('interest',  'Tiền lãi')],
@@ -74,7 +80,7 @@ class ReLoanPaymentPlanReport(models.Model):
               SELECT ROW_NUMBER() OVER
                        (ORDER BY src, src_id) AS id, *
               FROM (
-                -- Kế hoạch - Tiền gốc (từ lịch lãi)
+                -- Kế hoạch - Tiền gốc CÒN PHẢI TRẢ (= due - đã trả)
                 SELECT
                   'il_p'::varchar AS src,
                   il.id AS src_id,
@@ -88,19 +94,19 @@ class ReLoanPaymentPlanReport(models.Model):
                   'plan'::varchar AS kind,
                   'principal'::varchar AS pg_kind,
                   il.state::varchar AS period_state,
-                  il.principal_due AS amount,
-                  il.principal_due AS amount_principal,
+                  il.amount_principal_remaining AS amount,
+                  il.amount_principal_remaining AS amount_principal,
                   0.0 AS amount_interest,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
                 JOIN re_loan_note n ON n.id = il.note_id
                 WHERE n.state NOT IN ('draft', 'cancelled')
-                  AND il.principal_due > 0
+                  AND il.amount_principal_remaining > 0
 
                 UNION ALL
 
-                -- Kế hoạch - Tiền lãi (từ lịch lãi)
+                -- Kế hoạch - Tiền lãi CÒN PHẢI TRẢ (= due - đã trả)
                 SELECT
                   'il_i'::varchar AS src,
                   il.id AS src_id,
@@ -114,15 +120,15 @@ class ReLoanPaymentPlanReport(models.Model):
                   'plan'::varchar AS kind,
                   'interest'::varchar AS pg_kind,
                   il.state::varchar AS period_state,
-                  il.interest_amount AS amount,
+                  il.amount_interest_remaining AS amount,
                   0.0 AS amount_principal,
-                  il.interest_amount AS amount_interest,
+                  il.amount_interest_remaining AS amount_interest,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
                 JOIN re_loan_note n ON n.id = il.note_id
                 WHERE n.state NOT IN ('draft', 'cancelled')
-                  AND il.interest_amount > 0
+                  AND il.amount_interest_remaining > 0
 
                 UNION ALL
 

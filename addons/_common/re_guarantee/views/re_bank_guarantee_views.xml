@@ -285,7 +285,7 @@
                                             <page string="Các lần thanh toán"
                                                   name="transactions">
                                                 <field name="transaction_ids"
-                                                       context="{'default_guarantee_id': parent.guarantee_id, 'default_payment_kind': payment_kind}">
+                                                       context="{'default_guarantee_id': guarantee_id, 'default_payment_kind': payment_kind}">
                                                     <list editable="bottom">
                                                         <field name="date"/>
                                                         <field name="amount" sum="Σ"/>

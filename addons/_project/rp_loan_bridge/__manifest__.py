@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Loan Bridge',
-    'version': '19.0.1.23.0',
+    'version': '19.0.1.24.0',
     'category': 'Realty/Project',
     'summary': 'Phân bổ vay/lãi vay theo công trình: Project / Khu vực / '
                'Hạng mục / Gói thầu / HĐ nhà thầu',

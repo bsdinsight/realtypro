@@ -42,10 +42,14 @@ class RpLoanDisbursementDossier(models.Model):
         'account.move',
         string='Hóa đơn',
         domain="[('move_type','in',['in_invoice','in_refund']),"
-               " ('partner_id', '=', disbursement_beneficiary_id)]",
+               " ('partner_id', '=', disbursement_beneficiary_id),"
+               " ('payment_state', 'in',"
+               "  ['not_paid', 'partial', 'in_payment'])]",
         help='Hóa đơn từ nhà thầu (vendor bill). Filter theo nhà thầu '
-             '(Bên nhận tiền trên giải ngân). Tất cả state hiển thị '
-             '— draft/posted đều pick được.')
+             '(Bên nhận tiền trên giải ngân). Pick được hóa đơn '
+             'CHƯA thanh toán + ĐÃ thanh toán MỘT PHẦN (cần giải '
+             'ngân thêm). Loại trừ hóa đơn đã trả đủ (paid) hoặc '
+             'reversed. Draft/posted đều pick được.')
 
     # Hiển thị giá trị + số tiền còn lại của hóa đơn (auto-load khi pick)
     invoice_amount_total = fields.Monetary(

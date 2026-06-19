@@ -201,6 +201,16 @@ class ReLoanBankAdviceLine(models.Model):
     amount_allocated = fields.Monetary(
         string='Đã allocate',
         compute='_compute_stats', store=True)
+    amount_allocated_principal = fields.Monetary(
+        string='Đã trả gốc',
+        compute='_compute_stats', store=True,
+        help='Σ amount_principal của các repayment đã tạo từ dòng '
+             'trích thu này — gốc đã trả vào các kỳ sau khi post.')
+    amount_allocated_interest = fields.Monetary(
+        string='Đã trả lãi',
+        compute='_compute_stats', store=True,
+        help='Σ amount_interest của các repayment đã tạo từ dòng '
+             'trích thu này — lãi đã trả vào các kỳ sau khi post.')
     amount_unallocated = fields.Monetary(
         string='Chưa allocate',
         compute='_compute_stats', store=True)
@@ -229,12 +239,19 @@ class ReLoanBankAdviceLine(models.Model):
     company_id = fields.Many2one(
         related='advice_id.company_id', store=True, readonly=True)
 
-    @api.depends('repayment_ids.amount_total', 'amount', 'amount_net_off')
+    @api.depends('repayment_ids.amount_total',
+                 'repayment_ids.amount_principal',
+                 'repayment_ids.amount_interest',
+                 'amount', 'amount_net_off')
     def _compute_stats(self):
         for rec in self:
             rec.repayment_count = len(rec.repayment_ids)
             allocated = sum(rec.repayment_ids.mapped('amount_total'))
             rec.amount_allocated = allocated
+            rec.amount_allocated_principal = sum(
+                rec.repayment_ids.mapped('amount_principal'))
+            rec.amount_allocated_interest = sum(
+                rec.repayment_ids.mapped('amount_interest'))
             # Sau net-off: unallocated = amount - allocated - net_off
             # Có thể âm nếu user net-off quá lớn → clamp 0
             rec.amount_unallocated = max(

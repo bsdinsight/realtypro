@@ -96,6 +96,14 @@
                                     <field name="amount_allocated"
                                            readonly="1"
                                            optional="show"/>
+                                    <field name="amount_allocated_principal"
+                                           readonly="1"
+                                           sum="Σ gốc"
+                                           optional="show"/>
+                                    <field name="amount_allocated_interest"
+                                           readonly="1"
+                                           sum="Σ lãi"
+                                           optional="show"/>
                                     <field name="amount_net_off"
                                            optional="show"
                                            decoration-info="amount_net_off != 0"/>
@@ -122,6 +130,10 @@
                                             <field name="amount"/>
                                             <field name="description"/>
                                             <field name="amount_allocated"
+                                                   readonly="1"/>
+                                            <field name="amount_allocated_principal"
+                                                   readonly="1"/>
+                                            <field name="amount_allocated_interest"
                                                    readonly="1"/>
                                             <field name="amount_unallocated"
                                                    readonly="1"

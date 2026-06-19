@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 """Báo cáo: Kế hoạch thanh toán khế ước theo năm.
 
-UNION của 4 nguồn (mỗi kỳ tách thành 2 dòng gốc + lãi):
-  - re.loan.note.interest.line × {principal, interest}: kế hoạch
-    trả → kind='plan', pg_kind='principal' / 'interest'
-    *** SEMANTIC: "Kế hoạch" = số CÒN PHẢI TRẢ (= due - đã trả),
-        KHÔNG phải tổng due full. Lấy từ field
-        amount_principal_remaining + amount_interest_remaining. ***
-  - re.loan.note.repayment × {principal, interest}: đã trả thực tế
-    → kind='paid', pg_kind='principal' / 'interest'
+UNION của 4 nguồn — TẤT CẢ đều lấy từ re.loan.note.interest.line
+(tab "Lịch lãi"), KHÔNG dùng re.loan.note.repayment trực tiếp:
+  - interest_line × principal × kế hoạch (kind='plan', pg='principal')
+    = amount_principal_remaining (số gốc CÒN PHẢI TRẢ kỳ đó)
+  - interest_line × interest × kế hoạch (kind='plan', pg='interest')
+    = amount_interest_remaining (số lãi CÒN PHẢI TRẢ kỳ đó)
+  - interest_line × principal × đã trả (kind='paid', pg='principal')
+    = amount_principal_paid (gốc thực trả allocate vào kỳ đó)
+  - interest_line × interest × đã trả (kind='paid', pg='interest')
+    = amount_interest_paid (lãi thực trả allocate vào kỳ đó)
+
+*** Tại sao dùng interest_line cho cả 4 nguồn ***
+Các field paid trên interest_line đã được compute từ
+`repayment_ids` allocate vào kỳ đó (xem
+re_loan_note_interest_line._compute_paid_amounts). Dùng cùng nguồn
+→ kế hoạch + đã trả nhất quán theo TỪNG KỲ, không bị lệch khi
+repayment chưa allocate hoặc allocate cross-period.
 
 Pivot: row = HĐTD → KW → pg_kind (gốc/lãi), col = tháng × {kế hoạch,
 đã trả}, measure = amount.
@@ -132,51 +141,57 @@ class ReLoanPaymentPlanReport(models.Model):
 
                 UNION ALL
 
-                -- Đã trả - Tiền gốc (từ trả nợ thực tế)
+                -- Đã trả - Tiền gốc (từ interest_line.amount_principal_paid)
+                -- = Σ repayment.amount_principal allocate vào kỳ này
                 SELECT
-                  'rp_p'::varchar AS src,
-                  r.id AS src_id,
-                  r.note_id,
+                  'il_p_paid'::varchar AS src,
+                  il.id AS src_id,
+                  il.note_id,
                   n.credit_contract_id,
                   n.facility_id,
                   n.partner_id,
-                  date_trunc('month', r.date)::date AS period_month,
-                  to_char(r.date, 'YYYY') AS period_year,
+                  date_trunc('month', il.date_to)::date
+                    AS period_month,
+                  to_char(il.date_to, 'YYYY') AS period_year,
                   'paid'::varchar AS kind,
                   'principal'::varchar AS pg_kind,
                   NULL::varchar AS period_state,
-                  r.amount_principal AS amount,
-                  r.amount_principal,
+                  il.amount_principal_paid AS amount,
+                  il.amount_principal_paid AS amount_principal,
                   0.0 AS amount_interest,
                   n.currency_id,
                   n.company_id
-                FROM re_loan_note_repayment r
-                JOIN re_loan_note n ON n.id = r.note_id
-                WHERE r.amount_principal > 0
+                FROM re_loan_note_interest_line il
+                JOIN re_loan_note n ON n.id = il.note_id
+                WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.amount_principal_paid > 0
 
                 UNION ALL
 
-                -- Đã trả - Tiền lãi (từ trả nợ thực tế)
+                -- Đã trả - Tiền lãi (từ interest_line.amount_interest_paid)
+                -- = Σ repayment.amount_interest allocate vào kỳ này
                 SELECT
-                  'rp_i'::varchar AS src,
-                  r.id AS src_id,
-                  r.note_id,
+                  'il_i_paid'::varchar AS src,
+                  il.id AS src_id,
+                  il.note_id,
                   n.credit_contract_id,
                   n.facility_id,
                   n.partner_id,
-                  date_trunc('month', r.date)::date AS period_month,
-                  to_char(r.date, 'YYYY') AS period_year,
+                  date_trunc('month', il.date_to)::date
+                    AS period_month,
+                  to_char(il.date_to, 'YYYY') AS period_year,
                   'paid'::varchar AS kind,
                   'interest'::varchar AS pg_kind,
                   NULL::varchar AS period_state,
-                  r.amount_interest AS amount,
+                  il.amount_interest_paid AS amount,
                   0.0 AS amount_principal,
-                  r.amount_interest,
+                  il.amount_interest_paid AS amount_interest,
                   n.currency_id,
                   n.company_id
-                FROM re_loan_note_repayment r
-                JOIN re_loan_note n ON n.id = r.note_id
-                WHERE r.amount_interest > 0
+                FROM re_loan_note_interest_line il
+                JOIN re_loan_note n ON n.id = il.note_id
+                WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.amount_interest_paid > 0
               ) u
             )
         """)

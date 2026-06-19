@@ -203,21 +203,6 @@
                     </group>
 
                     <notebook>
-                        <page string="Các đợt thanh toán" name="payments">
-                            <field name="payment_ids"
-                                   readonly="state in ('settled','cancelled')">
-                                <list editable="bottom">
-                                    <field name="date"/>
-                                    <field name="payment_kind"/>
-                                    <field name="amount" sum="Σ"/>
-                                    <field name="reference"/>
-                                    <field name="name"/>
-                                    <field name="state" widget="badge"/>
-                                    <field name="currency_id"
-                                           column_invisible="1"/>
-                                </list>
-                            </field>
-                        </page>
                         <page string="Diễn giải / Điều khoản"
                               name="description">
                             <field name="description"

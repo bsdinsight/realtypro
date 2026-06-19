@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bank Guarantee Management',
-    'version': '19.0.1.12.0',
+    'version': '19.0.1.13.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý chứng thư bảo lãnh ngân hàng: dự thầu, thực hiện HĐ, '
                'tạm ứng, bảo hành, thanh toán — phí + ký quỹ + lifecycle.',

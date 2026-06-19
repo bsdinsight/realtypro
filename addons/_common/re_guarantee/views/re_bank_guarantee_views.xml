@@ -328,7 +328,7 @@
                         </page>
                         <page string="Phụ lục" name="amendments">
                             <field name="amendment_ids">
-                                <list editable="bottom">
+                                <list>
                                     <field name="name"/>
                                     <field name="amendment_type"/>
                                     <field name="date_effective"/>
@@ -342,6 +342,45 @@
                                             invisible="state != 'draft'"
                                             class="btn-primary" icon="fa-check"/>
                                 </list>
+                                <form string="Phụ lục chứng thư BL">
+                                    <sheet>
+                                        <group>
+                                            <group string="Thông tin phụ lục">
+                                                <field name="name"
+                                                       placeholder="Số phụ lục NH cấp..."/>
+                                                <field name="amendment_type"/>
+                                                <field name="date_effective"/>
+                                                <field name="state"
+                                                       widget="badge"
+                                                       readonly="1"/>
+                                            </group>
+                                            <group string="Giá trị mới"
+                                                   invisible="amendment_type in (False, 'other', 'cancel')">
+                                                <field name="new_date_expiry"
+                                                       invisible="amendment_type != 'extension'"
+                                                       required="amendment_type == 'extension'"/>
+                                                <field name="new_amount"
+                                                       invisible="amendment_type != 'amount'"
+                                                       required="amendment_type == 'amount'"/>
+                                                <field name="new_beneficiary_partner_id"
+                                                       invisible="amendment_type != 'beneficiary'"
+                                                       required="amendment_type == 'beneficiary'"
+                                                       options="{'no_quick_create': True}"/>
+                                            </group>
+                                        </group>
+                                        <separator string="Diễn giải"/>
+                                        <field name="description"
+                                               placeholder="Lý do, ghi chú, văn bản tham chiếu..."/>
+                                        <group invisible="state != 'applied'">
+                                            <group>
+                                                <field name="value_old"
+                                                       readonly="1"/>
+                                                <field name="value_new"
+                                                       readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
                             </field>
                         </page>
                         <page string="Giải tỏa / Bị thu" name="closing"

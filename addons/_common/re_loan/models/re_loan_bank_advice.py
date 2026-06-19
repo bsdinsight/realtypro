@@ -213,7 +213,22 @@ class ReLoanBankAdviceLine(models.Model):
              'trích thu này — lãi đã trả vào các kỳ sau khi post.')
     amount_unallocated = fields.Monetary(
         string='Chưa allocate',
-        compute='_compute_stats', store=True)
+        compute='_compute_stats', store=True,
+        help='Số tiền NH trích chưa allocate vào kỳ nào '
+             '(= amount - allocated - net_off). DIFFER với chênh '
+             'lệch kỳ — xem amount_diff_period.')
+
+    # Chênh lệch CỦA KỲ — sau khi post: số kỳ còn phải trả
+    # (= principal_remaining + interest_remaining)
+    # Đây là số chênh lệch cần net-off theo CC1.
+    amount_diff_period = fields.Monetary(
+        string='Chênh lệch cần net-off',
+        compute='_compute_diff_period',
+        help='Số tiền của KỲ này CÒN PHẢI TRẢ sau khi NH đã trích '
+             '(= gốc còn + lãi còn của kỳ). > 0 = kỳ thiếu, NH '
+             'trích bớt vài đồng do làm tròn. Click "Net-off" để '
+             'tự absorb nếu ≤ 100,000 ₫. Chỉ tính khi phiếu đã '
+             'được đăng (state=posted) + dòng có chỉ định kỳ.')
 
     # Net-off chênh lệch giữa số NH trích (amount) và số allocate
     # vào các kỳ. Signed: + = NH dư (write off, ghi credit), - = NH
@@ -256,6 +271,22 @@ class ReLoanBankAdviceLine(models.Model):
             # Có thể âm nếu user net-off quá lớn → clamp 0
             rec.amount_unallocated = max(
                 0, rec.amount - allocated - rec.amount_net_off)
+
+    @api.depends('interest_line_id.amount_principal_remaining',
+                 'interest_line_id.amount_interest_remaining',
+                 'state')
+    def _compute_diff_period(self):
+        """Chênh lệch = số kỳ còn phải trả (sau khi NH đã trích allocate
+        vào kỳ). Chỉ tính khi phiếu posted + dòng có chỉ định kỳ.
+        """
+        for rec in self:
+            if rec.state != 'posted' or not rec.interest_line_id:
+                rec.amount_diff_period = 0.0
+                continue
+            rec.amount_diff_period = (
+                rec.interest_line_id.amount_principal_remaining
+                + rec.interest_line_id.amount_interest_remaining
+            )
 
     @api.constrains('amount')
     def _check_amount(self):
@@ -378,38 +409,26 @@ class ReLoanBankAdviceLine(models.Model):
         }
 
     def action_auto_net_off(self):
-        """Tự net-off phần chênh lệch giữa số NH trích (amount) và số
-        đã allocate vào các kỳ. Threshold mặc định 100,000 ₫:
-          - |unallocated| ≤ threshold → auto write off, set net_off
-            = unallocated, reason = 'Chênh lệch lẻ làm tròn'
-          - > threshold → raise UserError yêu cầu user nhập thủ công
-            (amount_net_off + net_off_reason) để có audit trail.
+        """Net-off chênh lệch CỦA KỲ chỉ định sau khi phiếu posted.
 
-        Net-off chỉ làm sense KHI đã allocate xong. Nếu chưa allocate
-        gì hoặc allocate < threshold → để user post advice trước.
+        Delegate sang interest_line.action_auto_net_off_period — tạo
+        1 repayment write-off cho kỳ với amount = remaining → kỳ về
+        'paid'. Threshold 100,000 ₫.
+
+        Conditions (CC1 #3 thêm):
+          - state phải = 'posted' (phiếu đã đăng)
+          - dòng phải chỉ định kỳ (interest_line_id)
+          - chênh lệch > 0 và ≤ 100,000 ₫
         """
         from odoo.exceptions import UserError
-        THRESHOLD = 100_000.0
         for rec in self:
-            if rec.amount_allocated <= 0:
+            if rec.state != 'posted':
                 raise UserError(_(
-                    "Chưa allocate vào kỳ nào — post phiếu trích thu "
-                    "trước rồi mới net-off chênh lệch."))
-            diff = rec.amount - rec.amount_allocated - rec.amount_net_off
-            if abs(diff) <= 0.01:
+                    "Phiếu trích thu chưa được đăng. Net-off chỉ "
+                    "khả dụng sau khi đăng phiếu."))
+            if not rec.interest_line_id:
                 raise UserError(_(
-                    "Không có chênh lệch — đã khớp 100%%."))
-            if abs(diff) > THRESHOLD:
-                raise UserError(_(
-                    "Chênh lệch %(diff)s ₫ vượt ngưỡng %(thr)s ₫. "
-                    "Phải nhập tay 'Net-off' + 'Lý do net-off' (audit "
-                    "trail). Common reasons: NH trừ phí, làm tròn, "
-                    "trích thiếu chuyển kỳ sau.") % {
-                        'diff': '{:,.0f}'.format(diff),
-                        'thr': '{:,.0f}'.format(THRESHOLD),
-                    })
-            rec.amount_net_off = (rec.amount_net_off or 0.0) + diff
-            rec.net_off_reason = (
-                rec.net_off_reason
-                or _('Chênh lệch lẻ làm tròn (auto net-off ≤ '
-                     '%s ₫)') % '{:,.0f}'.format(THRESHOLD))
+                    "Dòng không chỉ định kỳ thanh toán — không "
+                    "net-off theo kỳ được. Tạo trả nợ riêng cho "
+                    "chênh lệch nếu cần."))
+            rec.interest_line_id.action_auto_net_off_period()

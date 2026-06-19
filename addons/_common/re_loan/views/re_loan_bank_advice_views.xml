@@ -107,16 +107,19 @@
                                     <field name="amount_net_off"
                                            optional="show"
                                            decoration-info="amount_net_off != 0"/>
-                                    <field name="amount_unallocated"
+                                    <field name="amount_diff_period"
                                            string="Chênh lệch cần net-off"
                                            readonly="1" optional="show"
-                                           decoration-warning="amount_unallocated > 0"/>
+                                           decoration-warning="amount_diff_period > 0"/>
+                                    <field name="amount_unallocated"
+                                           string="Chưa allocate"
+                                           readonly="1" optional="hide"/>
                                     <button name="action_auto_net_off"
                                             type="object"
                                             string="Net-off"
                                             icon="fa-balance-scale"
                                             class="btn-link"
-                                            invisible="amount_unallocated == 0"/>
+                                            invisible="state != 'posted' or amount_diff_period &lt;= 0 or amount_diff_period &gt; 100000"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>
@@ -137,6 +140,10 @@
                                                    readonly="1"/>
                                             <field name="amount_allocated_interest"
                                                    readonly="1"/>
+                                            <field name="amount_diff_period"
+                                                   string="Chênh lệch cần net-off"
+                                                   readonly="1"
+                                                   decoration-warning="amount_diff_period > 0"/>
                                             <field name="amount_unallocated"
                                                    readonly="1"
                                                    decoration-warning="amount_unallocated > 0"/>
@@ -148,7 +155,7 @@
                                                     string="Tự net-off chênh lệch lẻ"
                                                     icon="fa-balance-scale"
                                                     class="btn-secondary"
-                                                    invisible="amount_unallocated == 0"/>
+                                                    invisible="state != 'posted' or amount_diff_period &lt;= 0 or amount_diff_period &gt; 100000"/>
                                         </group>
                                     </group>
                                     <separator string="Repayments đã allocate"/>

@@ -466,26 +466,32 @@
                   decoration-success="state == 'completed'"
                   decoration-muted="state in ('draft','cancelled')"
                   decoration-warning="state == 'expired'">
-                <field name="name" string="HĐTD"/>
-                <field name="partner_id" string="Ngân hàng / Bên cho vay"/>
-                <field name="date_start" string="Ngày ký"/>
-                <field name="date_end" string="Ngày hết hạn"/>
+                <field name="name" string="HĐTD" width="130px"/>
+                <field name="partner_id"
+                       string="Ngân hàng / Bên cho vay" width="180px"/>
+                <field name="date_start" string="Ngày ký" width="100px"/>
+                <field name="date_end" string="Ngày hết hạn" width="100px"/>
                 <field name="amount_total" string="Hạn mức tín dụng"
-                       sum="Σ"/>
+                       sum="Σ" width="180px"/>
                 <field name="amount_loan_used"
-                       string="Tổng số tiền đã cho vay" sum="Σ"/>
+                       string="Tổng số tiền đã cho vay" sum="Σ"
+                       width="180px"/>
                 <field name="amount_loan_available"
                        string="Hạn mức cho vay còn lại" sum="Σ"
+                       width="180px"
                        decoration-warning="amount_loan_available &lt;= 0"/>
                 <field name="amount_bg_used"
-                       string="Tổng số tiền đã bảo lãnh" sum="Σ"/>
+                       string="Tổng số tiền đã bảo lãnh" sum="Σ"
+                       width="180px"/>
                 <field name="amount_bg_available"
                        string="Hạn mức bảo lãnh còn lại" sum="Σ"
+                       width="180px"
                        decoration-warning="amount_bg_available &lt;= 0"/>
                 <field name="amount_pool_available"
                        string="Tổng hạn mức còn lại" sum="Σ"
+                       width="180px"
                        decoration-warning="amount_pool_available &lt;= 0"/>
-                <field name="state" widget="badge"/>
+                <field name="state" widget="badge" width="110px"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>

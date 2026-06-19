@@ -53,32 +53,39 @@ class ReLoanNote(models.Model):
             rec._mark_dossier_invoices_paid()
         return res
 
-    def _collect_dossier_invoices(self):
-        """Gom tất cả account.move qua chuỗi:
+    def _collect_dossier_invoice_amounts(self):
+        """Map {invoice: Σ dossier.amount} qua chuỗi:
         re.loan.note → disbursement_ids → dossier_line_ids → invoice_id.
+
+        Cùng 1 hóa đơn xuất hiện ở nhiều dossier → cộng dồn. Đây là
+        SỐ TIỀN NH thực chuyển kỳ này, KHÔNG phải full residual.
         """
         self.ensure_one()
-        invoices = self.env['account.move']
+        inv_amounts = {}
         for disb in self.disbursement_ids:
             for dossier in disb.dossier_line_ids:
-                if dossier.invoice_id:
-                    invoices |= dossier.invoice_id
-        return invoices
+                if dossier.invoice_id and dossier.amount > 0:
+                    inv_amounts.setdefault(dossier.invoice_id, 0.0)
+                    inv_amounts[dossier.invoice_id] += dossier.amount
+        return inv_amounts
 
     def _mark_dossier_invoices_paid(self):
-        """Auto-post draft + register payment posted invoices.
+        """Auto-post draft + register payment theo SỐ TIỀN DOSSIER.
 
         Workflow:
-          1. Gom tất cả invoice trong hồ sơ giải ngân
+          1. Gom {invoice: Σ dossier.amount} trong hồ sơ giải ngân
           2. Invoice draft → action_post() (skip nếu lỗi)
-          3. Invoice posted + (not_paid/partial) → register payment
-             qua wizard account.payment.register
+          3. Invoice posted + (not_paid/partial) → register payment với
+             amount = MIN(Σ dossier.amount, amount_residual)
+             → partial nếu Σ < residual, paid nếu Σ ≥ residual
           4. Log message_post lên KW + lên từng invoice
         """
         self.ensure_one()
-        invoices = self._collect_dossier_invoices()
-        if not invoices:
+        inv_amounts = self._collect_dossier_invoice_amounts()
+        if not inv_amounts:
             return
+        invoices = self.env['account.move'].browse(
+            [inv.id for inv in inv_amounts])
 
         # Auto-post draft trước
         draft = invoices.filtered(lambda m: m.state == 'draft')
@@ -94,36 +101,49 @@ class ReLoanNote(models.Model):
                     "Cần điền đủ thông tin rồi thanh toán tay sau.",
                     n=inv.display_name, err=str(e)))
 
-        # Register payment trên invoice đã posted + chưa thanh toán đủ
-        payable = invoices.filtered(
-            lambda m: m.state == 'posted'
-                      and m.payment_state in ('not_paid', 'partial'))
-        if not payable:
-            return
+        # Register payment riêng từng invoice với amount đúng số dossier
         today = fields.Date.context_today(self)
-        try:
-            wizard = self.env['account.payment.register'].with_context(
-                active_model='account.move',
-                active_ids=payable.ids,
-            ).create({
-                'payment_date': today,
-                'group_payment': False,  # 1 payment / invoice
-            })
-            wizard.action_create_payments()
-            self.message_post(body=_(
-                "Đã thanh toán %(n)s hóa đơn HĐ nhà thầu qua KW "
-                "kích hoạt (NH chuyển tiền trực tiếp về nhà thầu).",
-                n=len(payable)))
-            for inv in payable:
+        paid_count = 0
+        for inv, dossier_amount in inv_amounts.items():
+            if inv.state != 'posted':
+                continue
+            if inv.payment_state not in ('not_paid', 'partial'):
+                continue
+            # Clamp về residual để không over-pay
+            pay_amount = min(dossier_amount, inv.amount_residual)
+            if pay_amount <= 0:
+                continue
+            try:
+                wizard = self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=[inv.id],
+                ).create({
+                    'payment_date': today,
+                    'amount': pay_amount,
+                    'group_payment': True,
+                })
+                wizard.action_create_payments()
+                paid_count += 1
                 inv.message_post(body=_(
-                    "Tự động thanh toán khi KW <b>%(n)s</b> kích hoạt.",
+                    "Tự động thanh toán %(amt)s khi KW <b>%(n)s</b> "
+                    "kích hoạt (số tiền NH chuyển kỳ này theo hồ sơ "
+                    "giải ngân, KHÔNG phải full hóa đơn).",
+                    amt='{:,.0f}'.format(pay_amount),
                     n=self.name or ''))
-        except Exception as e:
-            _logger.warning(
-                "Register payment fail cho %s invoice khi KW %s "
-                "kích hoạt: %s", len(payable), self.name, e)
+            except Exception as e:
+                _logger.warning(
+                    "Register payment fail cho invoice %s (amount=%s) "
+                    "khi KW %s kích hoạt: %s",
+                    inv.display_name, pay_amount, self.name, e)
+                self.message_post(body=_(
+                    "Cảnh báo: không thanh toán tự động được hóa đơn "
+                    "<b>%(inv)s</b> (số tiền %(amt)s). Lỗi: %(err)s. "
+                    "Kiểm tra journal NH hoặc thanh toán tay.",
+                    inv=inv.display_name,
+                    amt='{:,.0f}'.format(pay_amount),
+                    err=str(e)))
+        if paid_count:
             self.message_post(body=_(
-                "Cảnh báo: không thanh toán tự động được "
-                "(%(n)s hóa đơn). Lỗi: %(err)s. "
-                "Kiểm tra journal NH hoặc thanh toán tay.",
-                n=len(payable), err=str(e)))
+                "Đã thanh toán %(n)s hóa đơn HĐ nhà thầu theo số tiền "
+                "dossier khi KW kích hoạt.",
+                n=paid_count))

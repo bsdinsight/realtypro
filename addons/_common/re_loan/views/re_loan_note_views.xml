@@ -322,6 +322,16 @@
                                            string="Tổng đã trả"
                                            sum="Σ đã trả"
                                            optional="show"/>
+                                    <field name="amount_principal_remaining"
+                                           string="Gốc còn"
+                                           sum="Σ gốc còn"
+                                           optional="show"
+                                           decoration-warning="amount_principal_remaining > 0"/>
+                                    <field name="amount_interest_remaining"
+                                           string="Lãi còn"
+                                           sum="Σ lãi còn"
+                                           optional="show"
+                                           decoration-warning="amount_interest_remaining > 0"/>
                                     <field name="is_overridden"
                                            widget="boolean_toggle"
                                            string="Sửa tay"
@@ -336,6 +346,12 @@
                                             string="Xem chứng từ"
                                             icon="fa-search-plus"
                                             invisible="state == 'planned'"/>
+                                    <button name="action_auto_net_off_period"
+                                            type="object"
+                                            string="Net-off lẻ"
+                                            icon="fa-balance-scale"
+                                            class="btn-link"
+                                            invisible="state == 'paid' or (amount_principal_remaining + amount_interest_remaining) == 0 or (amount_principal_remaining + amount_interest_remaining) > 100000"/>
                                     <button name="action_create_repayment"
                                             type="object"
                                             string="Thanh toán"

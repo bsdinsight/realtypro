@@ -247,6 +247,59 @@ class ReLoanNoteInterestLine(models.Model):
             'target': 'new',  # Dialog mode
         }
 
+    def action_auto_net_off_period(self):
+        """Auto net-off chênh lệch lẻ trên kỳ — tạo 1 repayment
+        write-off với amount = số còn phải trả (gốc + lãi) để
+        paid_total = due_total và state → 'paid'.
+
+        Use case: NH trích đủ rồi nhưng còn lệch vài đồng/vài trăm ₫
+        do làm tròn. KTT click button trên kỳ → kỳ về 'paid' không
+        cần tạo trích thu khác cho con số bé.
+
+        Threshold mặc định 100,000 ₫. Vượt → UserError, KTT phải
+        tạo repayment chính thức.
+        """
+        from odoo.exceptions import UserError
+        THRESHOLD = 100_000.0
+        Repayment = self.env['re.loan.note.repayment']
+        for line in self:
+            if line.state == 'paid':
+                raise UserError(_(
+                    "Kỳ %s đã trả đủ — không có gì net-off.",
+                    line.period_no))
+            diff_p = line.amount_principal_remaining
+            diff_i = line.amount_interest_remaining
+            total_diff = diff_p + diff_i
+            if total_diff <= 0.01:
+                raise UserError(_(
+                    "Kỳ %s không có chênh lệch — đã khớp 100%%.",
+                    line.period_no))
+            if total_diff > THRESHOLD:
+                raise UserError(_(
+                    "Chênh lệch kỳ %(p)s = %(d)s ₫ vượt ngưỡng "
+                    "%(t)s ₫. Phải tạo trả nợ chính thức cho con số "
+                    "này (audit trail), không net-off được.",
+                    p=line.period_no,
+                    d='{:,.0f}'.format(total_diff),
+                    t='{:,.0f}'.format(THRESHOLD)))
+            Repayment.create({
+                'note_id': line.note_id.id,
+                'date': fields.Date.context_today(line),
+                'amount_principal': diff_p,
+                'amount_interest': diff_i,
+                'reference': _(
+                    "Net-off chênh lệch lẻ kỳ %s") % line.period_no,
+                'interest_line_id': line.id,
+            })
+            line.note_id.message_post(body=_(
+                "Auto net-off chênh lệch lẻ kỳ %(p)s: gốc %(g)s ₫, "
+                "lãi %(l)s ₫ (tổng %(t)s ₫ ≤ ngưỡng %(thr)s ₫).",
+                p=line.period_no,
+                g='{:,.0f}'.format(diff_p),
+                l='{:,.0f}'.format(diff_i),
+                t='{:,.0f}'.format(total_diff),
+                thr='{:,.0f}'.format(THRESHOLD)))
+
     def action_view_repayments(self):
         """Mở list các repayments đã allocate vào kỳ này (manual + auto-debit)."""
         self.ensure_one()

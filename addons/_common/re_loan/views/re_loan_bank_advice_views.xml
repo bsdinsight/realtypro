@@ -108,12 +108,14 @@
                                            optional="show"
                                            decoration-info="amount_net_off != 0"/>
                                     <field name="amount_unallocated"
-                                           readonly="1" optional="hide"
+                                           string="Chênh lệch cần net-off"
+                                           readonly="1" optional="show"
                                            decoration-warning="amount_unallocated > 0"/>
                                     <button name="action_auto_net_off"
                                             type="object"
                                             string="Net-off"
                                             icon="fa-balance-scale"
+                                            class="btn-link"
                                             invisible="amount_unallocated == 0"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>

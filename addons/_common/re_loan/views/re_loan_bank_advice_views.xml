@@ -104,9 +104,6 @@
                                            readonly="1"
                                            sum="Σ lãi"
                                            optional="show"/>
-                                    <field name="amount_net_off"
-                                           optional="show"
-                                           decoration-info="amount_net_off != 0"/>
                                     <field name="amount_diff_period"
                                            string="Chênh lệch cần net-off"
                                            readonly="1" optional="show"
@@ -120,6 +117,7 @@
                                             icon="fa-balance-scale"
                                             class="btn-link"
                                             invisible="state != 'posted' or amount_diff_period &lt;= 0 or amount_diff_period &gt; 100000"/>
+                                    <field name="state" column_invisible="1"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>
@@ -147,9 +145,6 @@
                                             <field name="amount_unallocated"
                                                    readonly="1"
                                                    decoration-warning="amount_unallocated > 0"/>
-                                            <field name="amount_net_off"/>
-                                            <field name="net_off_reason"
-                                                   invisible="amount_net_off == 0"/>
                                             <button name="action_auto_net_off"
                                                     type="object"
                                                     string="Tự net-off chênh lệch lẻ"

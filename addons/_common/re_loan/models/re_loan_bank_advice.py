@@ -274,19 +274,33 @@ class ReLoanBankAdviceLine(models.Model):
 
     @api.depends('interest_line_id.amount_principal_remaining',
                  'interest_line_id.amount_interest_remaining',
-                 'state')
+                 'amount', 'state')
     def _compute_diff_period(self):
-        """Chênh lệch = số kỳ còn phải trả (sau khi NH đã trích allocate
-        vào kỳ). Chỉ tính khi phiếu posted + dòng có chỉ định kỳ.
+        """Chênh lệch tính NGAY khi user nhập 'Số tiền trích thu' (#13).
+
+        Draft (preview):
+            diff = max(0, kỳ_còn_phải_trả - số_NH_sẽ_trích)
+            = ước tính chênh lệch SAU khi post.
+
+        Posted:
+            diff = kỳ_còn_phải_trả (kỳ.remaining hiện tại — đã reflect
+                allocate vào kỳ rồi → chính là chênh lệch còn).
+
+        Cần interest_line_id chỉ định để biết tính theo kỳ nào.
         """
         for rec in self:
-            if rec.state != 'posted' or not rec.interest_line_id:
+            if not rec.interest_line_id:
                 rec.amount_diff_period = 0.0
                 continue
-            rec.amount_diff_period = (
+            kỳ_remaining = (
                 rec.interest_line_id.amount_principal_remaining
                 + rec.interest_line_id.amount_interest_remaining
             )
+            if rec.state == 'posted':
+                rec.amount_diff_period = kỳ_remaining
+            else:
+                rec.amount_diff_period = max(
+                    0.0, kỳ_remaining - rec.amount)
 
     @api.constrains('amount')
     def _check_amount(self):

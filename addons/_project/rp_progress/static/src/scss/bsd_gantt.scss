@@ -22,6 +22,98 @@
         .e-gantt {
             height: 100% !important;
             width: 100% !important;
+
+            // ============ TASK BAR (HĐ con) ============
+            // Light blue background + dark blue progress, match demo
+            .e-gantt-child-taskbar {
+                background-color: #c9d6f0 !important;
+                border-color: #c9d6f0 !important;
+            }
+            .e-gantt-child-progressbar {
+                background-color: #2c5bbd !important;
+                border-color: #2c5bbd !important;
+            }
+            .e-task-label,
+            .e-gantt-child-taskbar-inner-div,
+            .e-gantt-child-progressbar-inner-div {
+                color: #1f2937;
+            }
+
+            // ============ PARENT BAR (Hạng mục mẹ — summary) ============
+            // Gray flat bar với inner darker fill, match demo
+            .e-gantt-parent-taskbar {
+                background-color: #d1d5db !important;
+                border-color: #d1d5db !important;
+                border-radius: 2px !important;
+            }
+            .e-gantt-parent-progressbar {
+                background-color: #6b7280 !important;
+                border-color: #6b7280 !important;
+            }
+            // Triangle marker đầu/cuối parent bar
+            .e-gantt-parent-taskbar-inner-div::before,
+            .e-gantt-parent-taskbar-inner-div::after {
+                border-top-color: #6b7280 !important;
+            }
+
+            // ============ MILESTONE ============
+            .e-gantt-milestone {
+                background-color: #2c5bbd !important;
+            }
+
+            // ============ GRIDLINES + ROW HOVER ============
+            .e-gridcontent .e-row {
+                &:hover { background-color: #f3f4f6 !important; }
+            }
+            .e-chart-row-cell {
+                border-bottom-color: #e5e7eb !important;
+            }
+            .e-line-container-inner-div .e-line {
+                stroke: #e5e7eb !important;
+            }
+
+            // ============ HEADER ============
+            .e-timeline-header-container,
+            .e-gridheader {
+                background-color: #f9fafb !important;
+            }
+            .e-timeline-top-header-cell,
+            .e-timeline-single-header-cell,
+            .e-gridheader .e-headercell {
+                color: #374151 !important;
+                font-weight: 600 !important;
+            }
+
+            // ============ SPLITTER ============
+            .e-split-bar,
+            .e-split-bar-horizontal {
+                background-color: #e5e7eb !important;
+            }
+
+            // ============ TOOLBAR ============
+            .e-toolbar {
+                background-color: #fff !important;
+                border-bottom: 1px solid #e5e7eb !important;
+            }
+            .e-toolbar .e-tbar-btn {
+                color: #374151 !important;
+            }
+            .e-toolbar .e-tbar-btn:hover {
+                background-color: #f3f4f6 !important;
+            }
+
+            // ============ TODAY LINE ============
+            .e-event-markers,
+            .e-line-container-inner-div .e-event-marker {
+                background-color: #ef4444 !important;
+                opacity: 0.7;
+            }
+
+            // ============ SELECTED ROW ============
+            .e-gridcontent .e-row.e-active,
+            .e-gridcontent .e-row.e-active:hover {
+                background-color: #dbeafe !important;
+            }
         }
 
         .bsd_gantt_loading_overlay {

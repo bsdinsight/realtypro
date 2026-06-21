@@ -32,6 +32,13 @@
             <div t-if="state.error" class="alert alert-warning m-3" role="alert">
                 <i class="fa fa-exclamation-triangle me-2"/>
                 <span t-esc="state.error"/>
+                <div t-if="state.licenseError" class="mt-2">
+                    <button class="btn btn-sm btn-warning"
+                            t-on-click="() => this.retry()">
+                        <i class="fa fa-refresh me-1"/>
+                        Thử lại
+                    </button>
+                </div>
             </div>
 
             <div class="bsd_gantt_split"

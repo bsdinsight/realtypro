@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.16.0',
+    'version': '19.0.1.17.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
@@ -45,6 +45,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'data/rp_progress_uom_data.xml',
+        'data/syncfusion_license_param.xml',
         'views/rp_progress_uom_views.xml',
         'views/rp_progress_acceptance_views.xml',
         'views/rp_structure_views.xml',
@@ -56,11 +57,17 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
     'assets': {
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
+            # Syncfusion EJ2 Gantt (v33.1.44, self-contained UMD global)
+            'rp_progress/static/lib/syncfusion/material.css',
+            'rp_progress/static/lib/syncfusion/ej2-gantt.min.js',
+            # Frappe-Gantt giữ lại làm fallback nếu Syncfusion fail
+            # (KHÔNG auto fallback — yêu cầu admin retry, theo CC1 decision)
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.css',
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.js',
             'rp_progress/static/src/scss/bsd_gantt.scss',
             'rp_progress/static/src/js/bsd_gantt/bsd_gantt_adapter.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_frappe_gantt_adapter.js',
+            'rp_progress/static/src/js/bsd_gantt/bsd_syncfusion_gantt_adapter.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_gantt_view.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_gantt_view.xml',
         ],

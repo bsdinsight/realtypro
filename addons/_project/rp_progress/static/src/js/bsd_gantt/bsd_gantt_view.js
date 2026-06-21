@@ -4,7 +4,8 @@ import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { BSDFrappeGanttAdapter } from "./bsd_frappe_gantt_adapter";
+import { rpc } from "@web/core/network/rpc";
+import { BSDSyncfusionGanttAdapter } from "./bsd_syncfusion_gantt_adapter";
 
 const COMMUNITY_TASK_CAP = 500;
 const ROW_HEIGHT = 46; // bar_height (28) + padding (18) — phải khớp frappe-gantt
@@ -23,6 +24,7 @@ export class BSDGanttView extends Component {
         this.state = useState({
             loading: true,
             error: null,
+            licenseError: false,
             noDates: false,
             taskCount: 0,
             viewMode: "Month",
@@ -30,6 +32,7 @@ export class BSDGanttView extends Component {
             rows: [],
         });
         this.adapter = null;
+        this._licenseKey = null;
         this._syncScroll = null;
 
         onMounted(async () => {
@@ -219,10 +222,35 @@ export class BSDGanttView extends Component {
             };
         });
 
-        this.adapter = new BSDFrappeGanttAdapter(this.env);
+        // Fetch Syncfusion license key 1 lần / view session
+        if (!this._licenseKey) {
+            try {
+                const resp = await rpc(
+                    "/rp_progress/syncfusion/license_key", {});
+                if (!resp.configured) {
+                    this.state.licenseError = true;
+                    this.state.error = _t(
+                        "Syncfusion license key chưa được cấu hình. " +
+                        "Admin vào Settings → Technical → Parameters → " +
+                        "System Parameters → set key 'syncfusion.license_key'.");
+                    this.state.loading = false;
+                    return;
+                }
+                this._licenseKey = resp.key;
+            } catch (err) {
+                this.state.licenseError = true;
+                this.state.error = _t(
+                    "Lỗi tải license key: ") + (err.message || String(err));
+                this.state.loading = false;
+                return;
+            }
+        }
+
+        this.adapter = new BSDSyncfusionGanttAdapter(this.env);
         try {
             await this.adapter.render(this.ganttRef.el, tasks, {
                 viewMode: this.state.viewMode,
+                licenseKey: this._licenseKey,
                 locale: "vi",
                 rowHeight: ROW_HEIGHT,
                 headerHeight: HEADER_HEIGHT,
@@ -237,6 +265,16 @@ export class BSDGanttView extends Component {
             this.state.error = err.message || String(err);
         }
         this.state.loading = false;
+    }
+
+    /**
+     * Retry button handler — clear error, force re-fetch license.
+     */
+    async retry() {
+        this._licenseKey = null;
+        this.state.error = null;
+        this.state.licenseError = false;
+        await this._reload();
     }
 
     /**

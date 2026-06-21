@@ -182,34 +182,39 @@ export class BSDGanttView extends Component {
         //     structure id (s.parent_id[0])
         //   - contract: parentID = structure id mà HĐ đang insert dưới
         //     (_parent_structure_id) → HĐ thành child của hạng mục
-        // Lọc rows không có ngày — Syncfusion treegrid panel chính.
-        const tasks = orderedWithContracts
-            .filter((s) => s.date_planned_start && s.date_planned_end)
-            .map((s) => {
-                let parentId = null;
-                if (s._isContract) {
-                    parentId = String(s._parent_structure_id);
-                } else if (s.parent_id && s.parent_id[0]) {
-                    parentId = String(s.parent_id[0]);
-                }
-                return {
-                    id: s._isContract
-                        ? `c${s.contract_id}_${s._row_seq}`
-                        : String(s.id),
-                    parent: parentId,
-                    name: s.code ? `[${s.code}] ${s.name}` : s.name,
-                    start: s.date_planned_start,
-                    end: s.date_planned_end,
-                    progress: Math.min(
-                        100, Math.max(0, s.progress_percent || 0)),
-                    dependencies: "",
-                    custom_class: s._isContract
-                        ? "bsd_gantt_bar_contract"
-                        : "bsd_gantt_bar_structure",
-                    _isContract: s._isContract,
-                    _contractId: s.contract_id,
-                };
-            });
+        // GIỮ TẤT CẢ rows kể cả không có ngày — nếu filter sẽ làm
+        // children orphan parent → Syncfusion auto-hide. Cho parent
+        // không có ngày: Syncfusion tự aggregate từ children.
+        const tasks = orderedWithContracts.map((s) => {
+            let parentId = null;
+            if (s._isContract) {
+                parentId = String(s._parent_structure_id);
+            } else if (s.parent_id && s.parent_id[0]) {
+                parentId = String(s.parent_id[0]);
+            }
+            const hasDates = s.date_planned_start
+                && s.date_planned_end;
+            return {
+                id: s._isContract
+                    ? `c${s.contract_id}_${s._row_seq}`
+                    : String(s.id),
+                parent: parentId,
+                name: s.code ? `[${s.code}] ${s.name}` : s.name,
+                // Pass null nếu không có ngày — Syncfusion sẽ tự
+                // compute từ children (summary task) hoặc render
+                // placeholder không bar.
+                start: hasDates ? s.date_planned_start : null,
+                end: hasDates ? s.date_planned_end : null,
+                progress: Math.min(
+                    100, Math.max(0, s.progress_percent || 0)),
+                dependencies: "",
+                custom_class: s._isContract
+                    ? "bsd_gantt_bar_contract"
+                    : "bsd_gantt_bar_structure",
+                _isContract: s._isContract,
+                _contractId: s.contract_id,
+            };
+        });
 
         // Fetch Syncfusion license key 1 lần / view session
         if (!this._licenseKey) {

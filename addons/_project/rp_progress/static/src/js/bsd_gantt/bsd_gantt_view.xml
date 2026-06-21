@@ -53,7 +53,7 @@
                         <div class="col_pct">%</div>
                     </div>
                     <div class="bsd_gantt_panel_body">
-                        <div t-foreach="state.rows" t-as="row" t-key="row.id"
+                        <div t-foreach="state.rows" t-as="row" t-key="row.rowKey"
                              class="bsd_gantt_panel_row"
                              t-att-class="'lvl_' + row.level + (row.is_delayed ? ' is_delayed' : '') + (row.hasDates ? '' : ' no_dates') + (row.isContract ? ' is_contract' : '')"
                              t-on-click="() => row.isContract ? this._openContract(row.contractId) : this._openStructure(row.id)">

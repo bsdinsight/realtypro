@@ -164,6 +164,10 @@ export class BSDGanttView extends Component {
         // form điền ngày.
         this.state.rows = orderedWithContracts.map((s, i) => ({
             id: s.id,
+            // rowKey: unique per row position — contract có thể appear
+            // under nhiều structure (multi-structure HĐ), id trùng →
+            // Owl t-foreach raise duplicate key.
+            rowKey: `${s._isContract ? 'c' : 's'}-${s.id}-${i}`,
             isContract: !!s._isContract,
             contractId: s.contract_id || null,
             seq: i + 1,

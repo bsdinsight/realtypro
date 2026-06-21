@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+    background: #fff;
 
     .bsd_gantt_toolbar {
         background: #fff;
@@ -10,176 +11,17 @@
         flex: 0 0 auto;
     }
 
-    .bsd_gantt_split {
-        flex: 1 1 auto;
-        display: flex;
-        overflow: hidden;
-        background: #fff;
-    }
-
-    .bsd_gantt_panel {
-        flex: 0 0 480px;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid #e5e7eb;
-        background: #fafafa;
-        font-size: 12px;
-        overflow: hidden;
-
-        .bsd_gantt_panel_header,
-        .bsd_gantt_panel_row {
-            display: grid;
-            grid-template-columns: 32px 1fr 78px 78px 90px;
-            align-items: center;
-        }
-
-        .bsd_gantt_panel_header {
-            flex: 0 0 60px; // match HEADER_HEIGHT from JS
-            background: #f3f4f6;
-            border-bottom: 1px solid #e5e7eb;
-            font-weight: 600;
-            color: #374151;
-            > div {
-                padding: 4px 6px;
-                border-right: 1px solid #e5e7eb;
-                &:last-child { border-right: 0; }
-            }
-            .col_seq,
-            .col_date,
-            .col_pct { text-align: center; }
-        }
-
-        .bsd_gantt_panel_body {
-            flex: 1 1 auto;
-            overflow-y: auto;
-            overflow-x: hidden;
-            // hide scrollbar — let gantt container be the visible one,
-            // sync handles vertical position
-            &::-webkit-scrollbar { width: 0; height: 0; }
-            scrollbar-width: none;
-        }
-
-        .bsd_gantt_panel_row {
-            height: 46px; // match ROW_HEIGHT from JS
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.1s;
-            &:hover { background: #e8f0fe; }
-            > div {
-                padding: 0 6px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .col_seq {
-                text-align: center;
-                color: #6b7280;
-                font-variant-numeric: tabular-nums;
-            }
-            .col_name {
-                .code {
-                    color: #6b7280;
-                    margin-right: 4px;
-                    font-size: 11px;
-                }
-                .lvl_dot {
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    margin-right: 6px;
-                    vertical-align: middle;
-                    &.dot_not_started { background: #9ca3af; }
-                    &.dot_in_progress { background: #3b82f6; }
-                    &.dot_completed { background: #10b981; }
-                    &.dot_paused { background: #f59e0b; }
-                    &.dot_delayed { background: #ef4444; }
-                }
-            }
-            .col_date {
-                text-align: center;
-                color: #4b5563;
-                font-variant-numeric: tabular-nums;
-                font-size: 11px;
-            }
-            .col_pct {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                .pct_bar {
-                    flex: 1 1 auto;
-                    height: 6px;
-                    background: #e5e7eb;
-                    border-radius: 3px;
-                    overflow: hidden;
-                    .pct_fill {
-                        height: 100%;
-                        background: #3b82f6;
-                        transition: width 0.2s;
-                    }
-                }
-                .pct_text {
-                    flex: 0 0 32px;
-                    text-align: right;
-                    font-size: 11px;
-                    color: #374151;
-                }
-            }
-            &.lvl_sub_item .col_name {
-                color: #6b7280;
-                font-size: 11px;
-            }
-            &.is_contract {
-                background: #f0f9ff;
-                box-shadow: inset 3px 0 0 #2563eb;
-                .col_name {
-                    color: #1e40af;
-                    font-style: italic;
-                    font-size: 11px;
-                    &::before {
-                        content: "📄 ";
-                        margin-right: 2px;
-                    }
-                }
-                // Progress bar HĐ — dùng màu xanh dương khác hạng mục
-                .col_pct .pct_fill { background: #2563eb; }
-                &:hover { background: #dbeafe; }
-            }
-            &.is_delayed .col_name { color: #b91c1c; }
-            &.no_dates {
-                background: #fff;
-                box-shadow: inset 3px 0 0 #f59e0b;
-                .col_name { color: #1f2937; }
-                .col_date {
-                    color: #b45309;
-                    font-weight: 600;
-                }
-                .col_pct .pct_bar { opacity: 0.35; }
-                &:hover { background: #fffbeb; }
-            }
-        }
-    }
-
+    // Syncfusion Gantt mount point — chiếm full flex remaining
     .bsd_gantt_container {
         flex: 1 1 auto;
-        min-height: 500px;
+        min-height: 0;
         overflow: hidden;
-        background: #fff;
         position: relative;
+        background: #fff;
 
-        // Syncfusion EJ2 Gantt cần parent có height cố định để render
-        // chart bars. KHÔNG override quá nhiều → để theme Material lo
-        // styling, chỉ ép height.
         .e-gantt {
             height: 100% !important;
             width: 100% !important;
-        }
-
-        // Force icon font visibility — ej2-icons font bundled trong
-        // material.css đã download không bao gồm @font-face glyphs.
-        // Tạm thời ẩn icon, button hiện text mode.
-        .e-gantt .e-toolbar .e-icons {
-            display: none;
         }
     }
 
@@ -189,88 +31,14 @@
         align-items: center;
         justify-content: center;
         background: #fafafa;
+
         .bsd_gantt_empty_inner {
             text-align: center;
             max-width: 360px;
             padding: 2rem;
+
             h5 { color: #374151; margin-bottom: 8px; }
             p { font-size: 13px; margin: 0; }
         }
-    }
-}
-
-// Custom bar colors theo status
-.bsd_gantt_bar_not_started {
-    .bar { fill: #9ca3af; }
-    .bar-progress { fill: #6b7280; }
-}
-.bsd_gantt_bar_in_progress {
-    .bar { fill: #93c5fd; }
-    .bar-progress { fill: #2563eb; }
-}
-.bsd_gantt_bar_completed {
-    .bar { fill: #86efac; }
-    .bar-progress { fill: #059669; }
-}
-.bsd_gantt_bar_paused {
-    .bar { fill: #fcd34d; }
-    .bar-progress { fill: #d97706; }
-}
-.bsd_gantt_bar_delayed {
-    .bar { fill: #fca5a5; }
-    .bar-progress { fill: #dc2626; }
-}
-
-// Row chưa có ngày kế hoạch — ẩn bar/label/handle, chỉ giữ grid-row
-// stripe để giữ alignment với panel bên trái
-.bsd_gantt_bar_empty {
-    .bar, .bar-progress, .bar-label, .handle { display: none; }
-    pointer-events: none;
-}
-
-// HĐ nhà thầu — bar (track) màu nhạt, bar-progress đậm hơn
-// để hiện % nghiệm thu lũy kế
-.bsd_gantt_bar_contract {
-    .bar { opacity: 0.45; }
-    .bar-progress { opacity: 1; }
-    .bar-label {
-        fill: #fff;
-        font-style: italic;
-        font-size: 10px;
-    }
-}
-.bsd_gantt_bar_contract_draft {
-    .bar { fill: #cbd5e1; }
-    .bar-progress { fill: #64748b; }
-}
-.bsd_gantt_bar_contract_signed {
-    .bar { fill: #93c5fd; }
-    .bar-progress { fill: #2563eb; }
-}
-.bsd_gantt_bar_contract_executing {
-    .bar { fill: #86efac; }
-    .bar-progress { fill: #059669; }
-}
-.bsd_gantt_bar_contract_completed {
-    .bar { fill: #4ade80; }
-    .bar-progress { fill: #14532d; }
-}
-.bsd_gantt_bar_contract_terminated {
-    .bar { fill: #fca5a5; }
-    .bar-progress { fill: #dc2626; }
-}
-
-// Popup styling
-.bsd_gantt_popup {
-    padding: 8px 12px;
-    min-width: 200px;
-    h5 {
-        margin: 0 0 8px;
-        font-size: 14px;
-        font-weight: 600;
-    }
-    div {
-        font-size: 12px;
-        margin: 2px 0;
     }
 }

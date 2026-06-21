@@ -20,7 +20,6 @@ export class BSDGanttView extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
         this.ganttRef = useRef("gantt");
-        this.panelRef = useRef("panel");
         this.state = useState({
             loading: true,
             error: null,
@@ -29,18 +28,15 @@ export class BSDGanttView extends Component {
             taskCount: 0,
             viewMode: "Month",
             projectName: "",
-            rows: [],
         });
         this.adapter = null;
         this._licenseKey = null;
-        this._syncScroll = null;
 
         onMounted(async () => {
             await this._load();
         });
         onWillUnmount(() => {
             if (this.adapter) this.adapter.destroy();
-            this._teardownSyncScroll();
         });
     }
 
@@ -159,34 +155,8 @@ export class BSDGanttView extends Component {
             }
         }
 
-        // Build rows cho panel bên trái — LUÔN list hết, kể cả chưa có
-        // ngày. User nhìn panel thấy hạng mục nào còn trống → click vào
-        // form điền ngày.
-        this.state.rows = orderedWithContracts.map((s, i) => ({
-            id: s.id,
-            // rowKey: unique per row position — contract có thể appear
-            // under nhiều structure (multi-structure HĐ), id trùng →
-            // Owl t-foreach raise duplicate key.
-            rowKey: `${s._isContract ? 'c' : 's'}-${s.id}-${i}`,
-            isContract: !!s._isContract,
-            contractId: s.contract_id || null,
-            seq: i + 1,
-            code: s.code || "",
-            name: s.name,
-            depth: s._depth,
-            level: s.structure_level,
-            startStr: this._fmtDate(s.date_planned_start),
-            endStr: this._fmtDate(s.date_planned_end),
-            progress: Math.round(s.progress_percent || 0),
-            is_delayed: s.is_delayed,
-            statusClass: s._isContract
-                ? this._contractStatusClass(s.status)
-                : this._statusClass(s.status, s.is_delayed),
-            hasDates: !!(s.date_planned_start && s.date_planned_end),
-        }));
-
-        // Reference date: earliest valid start để placeholder cho row
-        // không có ngày
+        // Reference date: earliest valid start. Syncfusion bỏ qua
+        // rows không có ngày — chỉ pass rows hasDates.
         const validStarts = orderedWithContracts
             .filter((s) => s.date_planned_start)
             .map((s) => s.date_planned_start)
@@ -199,32 +169,26 @@ export class BSDGanttView extends Component {
             return;
         }
 
-        // Pass HẾT rows (structures + contracts) cho frappe-gantt
-        const tasks = orderedWithContracts.map((s) => {
-            const hasDates = s.date_planned_start && s.date_planned_end;
-            let cls;
-            if (!hasDates) {
-                cls = "bsd_gantt_bar_empty";
-            } else if (s._isContract) {
-                cls = "bsd_gantt_bar_contract bsd_gantt_bar_contract_"
-                    + this._contractStatusClass(s.status);
-            } else {
-                cls = "bsd_gantt_bar_" + this._statusClass(
-                    s.status, s.is_delayed);
-            }
-            return {
-                id: s._isContract ? `c${s.contract_id}` : String(s.id),
-                name: s.code ? `[${s.code}] ${s.name}` : s.name,
-                start: s.date_planned_start || refDate,
-                end: s.date_planned_end || refDate,
-                progress: Math.min(
-                    100, Math.max(0, s.progress_percent || 0)),
-                dependencies: "",
-                custom_class: cls,
-                _isContract: s._isContract,
-                _contractId: s.contract_id,
-            };
-        });
+        // Build tasks cho Syncfusion. Bỏ rows không có ngày — Syncfusion
+        // treegrid sẽ là panel chính (không cần BSD custom panel).
+        const tasks = orderedWithContracts
+            .filter((s) => s.date_planned_start && s.date_planned_end)
+            .map((s) => {
+                return {
+                    id: s._isContract ? `c${s.contract_id}` : String(s.id),
+                    name: s.code ? `[${s.code}] ${s.name}` : s.name,
+                    start: s.date_planned_start,
+                    end: s.date_planned_end,
+                    progress: Math.min(
+                        100, Math.max(0, s.progress_percent || 0)),
+                    dependencies: "",
+                    custom_class: s._isContract
+                        ? "bsd_gantt_bar_contract"
+                        : "bsd_gantt_bar_structure",
+                    _isContract: s._isContract,
+                    _contractId: s.contract_id,
+                };
+            });
 
         // Fetch Syncfusion license key 1 lần / view session
         if (!this._licenseKey) {
@@ -264,7 +228,6 @@ export class BSDGanttView extends Component {
                 onProgressChange: (task, progress) =>
                     this._onProgressChange(task, progress),
             });
-            this._setupSyncScroll();
         } catch (err) {
             this.state.error = err.message || String(err);
         }
@@ -364,44 +327,6 @@ export class BSDGanttView extends Component {
         }
     }
 
-    /**
-     * Sync vertical scroll: panel body ↔ gantt container.
-     * Khi user scroll bên này, bên kia follow.
-     */
-    _setupSyncScroll() {
-        const panelBody = this.panelRef.el?.querySelector(
-            ".bsd_gantt_panel_body");
-        const ganttEl = this.ganttRef.el;
-        if (!panelBody || !ganttEl) return;
-
-        let lock = false;
-        const onPanelScroll = () => {
-            if (lock) return;
-            lock = true;
-            ganttEl.scrollTop = panelBody.scrollTop;
-            requestAnimationFrame(() => { lock = false; });
-        };
-        const onGanttScroll = () => {
-            if (lock) return;
-            lock = true;
-            panelBody.scrollTop = ganttEl.scrollTop;
-            requestAnimationFrame(() => { lock = false; });
-        };
-        panelBody.addEventListener("scroll", onPanelScroll);
-        ganttEl.addEventListener("scroll", onGanttScroll);
-        this._syncScroll = () => {
-            panelBody.removeEventListener("scroll", onPanelScroll);
-            ganttEl.removeEventListener("scroll", onGanttScroll);
-        };
-    }
-
-    _teardownSyncScroll() {
-        if (this._syncScroll) {
-            this._syncScroll();
-            this._syncScroll = null;
-        }
-    }
-
     _openStructure(taskId) {
         const id = parseInt(taskId, 10);
         this.action.doAction({
@@ -483,7 +408,6 @@ export class BSDGanttView extends Component {
     }
 
     async _reload() {
-        this._teardownSyncScroll();
         if (this.adapter) {
             this.adapter.destroy();
             this.adapter = null;

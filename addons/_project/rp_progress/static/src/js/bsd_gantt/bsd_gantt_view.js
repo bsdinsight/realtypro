@@ -129,16 +129,23 @@ export class BSDGanttView extends Component {
                 contractsByStructure.get(sid).push(c);
             }
         }
-        // Insert contract sau mỗi structure
+        // Insert contract sau mỗi structure. Track parent_structure_id
+        // cho contract row → Syncfusion hierarchy (HĐ là con của hạng mục).
         const orderedWithContracts = [];
+        // Counter để contract xuất hiện nhiều lần (cover multi-structure)
+        // có ID unique mỗi instance.
+        let contractRowSeq = 0;
         for (const s of ordered) {
             orderedWithContracts.push(s);
             const cs = contractsByStructure.get(s.id) || [];
             for (const c of cs) {
+                contractRowSeq++;
                 orderedWithContracts.push({
                     _isContract: true,
                     _depth: (s._depth || 0) + 1,
-                    id: `c${c.id}`,
+                    _parent_structure_id: s.id,
+                    _row_seq: contractRowSeq,
+                    id: `c${c.id}_${contractRowSeq}`,
                     contract_id: c.id,
                     name: c.contractor_id
                         ? `${c.name} — ${c.contractor_id[1]}`
@@ -169,13 +176,27 @@ export class BSDGanttView extends Component {
             return;
         }
 
-        // Build tasks cho Syncfusion. Bỏ rows không có ngày — Syncfusion
-        // treegrid sẽ là panel chính (không cần BSD custom panel).
+        // Build tasks cho Syncfusion với hierarchy parentID:
+        //   - structure level 'item' (depth 0): parentID = null
+        //   - structure level 'sub_item' (depth 1): parentID = parent
+        //     structure id (s.parent_id[0])
+        //   - contract: parentID = structure id mà HĐ đang insert dưới
+        //     (_parent_structure_id) → HĐ thành child của hạng mục
+        // Lọc rows không có ngày — Syncfusion treegrid panel chính.
         const tasks = orderedWithContracts
             .filter((s) => s.date_planned_start && s.date_planned_end)
             .map((s) => {
+                let parentId = null;
+                if (s._isContract) {
+                    parentId = String(s._parent_structure_id);
+                } else if (s.parent_id && s.parent_id[0]) {
+                    parentId = String(s.parent_id[0]);
+                }
                 return {
-                    id: s._isContract ? `c${s.contract_id}` : String(s.id),
+                    id: s._isContract
+                        ? `c${s.contract_id}_${s._row_seq}`
+                        : String(s.id),
+                    parent: parentId,
                     name: s.code ? `[${s.code}] ${s.name}` : s.name,
                     start: s.date_planned_start,
                     end: s.date_planned_end,

@@ -75,6 +75,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             EndDate: this._parseDate(t.end),
             Progress: Math.round(t.progress || 0),
             Predecessor: t.dependencies || "",
+            ParentID: t.parent || null,
             // Preserve custom fields cho callbacks
             _cssClass: t.custom_class || "",
             _isContract: !!t._isContract,
@@ -90,6 +91,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 endDate: "EndDate",
                 progress: "Progress",
                 dependency: "Predecessor",
+                parentID: "ParentID",
             },
             // View mode
             viewType: "ProjectView",
@@ -236,6 +238,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 EndDate: this._parseDate(t.end),
                 Progress: Math.round(t.progress || 0),
                 Predecessor: t.dependencies || "",
+                ParentID: t.parent || null,
                 _cssClass: t.custom_class || "",
                 _isContract: !!t._isContract,
                 _contractId: t._contractId || null,

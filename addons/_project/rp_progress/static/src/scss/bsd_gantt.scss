@@ -162,8 +162,25 @@
 
     .bsd_gantt_container {
         flex: 1 1 auto;
-        overflow: auto;
+        min-height: 500px;
+        overflow: hidden;
         background: #fff;
+        position: relative;
+
+        // Syncfusion EJ2 Gantt cần parent có height cố định để render
+        // chart bars. KHÔNG override quá nhiều → để theme Material lo
+        // styling, chỉ ép height.
+        .e-gantt {
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        // Force icon font visibility — ej2-icons font bundled trong
+        // material.css đã download không bao gồm @font-face glyphs.
+        // Tạm thời ẩn icon, button hiện text mode.
+        .e-gantt .e-toolbar .e-icons {
+            display: none;
+        }
     }
 
     .bsd_gantt_empty {

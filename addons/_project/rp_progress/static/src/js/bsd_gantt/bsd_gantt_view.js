@@ -355,7 +355,7 @@ export class BSDGanttView extends Component {
             res_model: "rp.structure",
             res_id: id,
             views: [[false, "form"]],
-            target: "current",
+            target: "new",  // dialog modal — đỡ click back
         });
     }
 
@@ -365,7 +365,7 @@ export class BSDGanttView extends Component {
             res_model: "rp.contract",
             res_id: contractId,
             views: [[false, "form"]],
-            target: "current",
+            target: "new",  // dialog modal — đỡ click back
         });
     }
 

@@ -129,10 +129,12 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             },
             allowResizing: true,
             allowSorting: true,
-            // Tooltip custom
+            // Tooltip custom — KHÔNG dùng custom template, để Syncfusion
+            // tự render default tooltip với TaskName/StartDate/EndDate
+            // /Progress. Custom template trigger SyntaxError ở compile
+            // engine (new Function) khi có optional chaining.
             tooltipSettings: {
                 showTooltip: true,
-                taskbar: this._tooltipTemplate(opts.formatCurrency),
             },
             // Events
             actionComplete: (args) => this._handleActionComplete(args, opts),
@@ -172,16 +174,6 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
         if (d instanceof Date) return d;
         // ISO "YYYY-MM-DD" or "YYYY-MM-DD HH:MM:SS"
         return new Date(d);
-    }
-
-    _tooltipTemplate(formatCurrency) {
-        // ej2 tooltip template — return HTML string, dùng ${TaskName} etc.
-        return `<div class="bsd_gantt_popup">
-            <h5>\${TaskName}</h5>
-            <div><b>Bắt đầu:</b> \${StartDate?.toLocaleDateString?.("vi-VN") || "—"}</div>
-            <div><b>Kết thúc:</b> \${EndDate?.toLocaleDateString?.("vi-VN") || "—"}</div>
-            <div><b>Tiến độ:</b> \${Progress}%</div>
-        </div>`;
     }
 
     _handleActionComplete(args, opts) {

@@ -121,14 +121,24 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             taskbarHeight: 28,
             // Locale: ej2 hỗ trợ nhiều locale, mặc định en. Để vi-VN
             // mặc định format date qua column format.
-            // Editing: cho phép drag bar + resize
+            // Editing:
+            //  - allowEditing=false → KHÔNG cho sửa inline cell trong
+            //    treegrid (double click không trigger edit)
+            //  - allowTaskbarEditing=true → vẫn cho drag/resize bar
+            //    để update ngày
             editSettings: {
-                allowEditing: true,
+                allowEditing: false,
                 allowTaskbarEditing: true,
                 showDeleteConfirmDialog: false,
             },
             allowResizing: true,
             allowSorting: true,
+            // Splitter mặc định show 4 cột (TaskName + StartDate +
+            //   EndDate + Progress). Set columnIndex để Syncfusion
+            //   tính position theo số cột muốn hiện.
+            splitterSettings: {
+                columnIndex: 4,
+            },
             // Tooltip custom — KHÔNG dùng custom template, để Syncfusion
             // tự render default tooltip với TaskName/StartDate/EndDate
             // /Progress. Custom template trigger SyntaxError ở compile
@@ -138,12 +148,26 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             },
             // Events
             actionComplete: (args) => this._handleActionComplete(args, opts),
+            // Click trên bar (chart bên phải) → mở form
             taskbarClick: (args) => {
                 if (args.data && opts.onClick) {
                     opts.onClick({
                         id: args.data.TaskID,
                         _isContract: args.data._isContract,
                         _contractId: args.data._contractId,
+                    });
+                }
+            },
+            // Double click row trong treegrid (panel trái) → mở form.
+            // Single click chỉ select row, double click trigger open
+            // (UX nhất quán với Odoo list view, tránh accidental open).
+            recordDoubleClick: (args) => {
+                const data = args.rowData || args.data;
+                if (data && opts.onClick) {
+                    opts.onClick({
+                        id: data.TaskID,
+                        _isContract: data._isContract,
+                        _contractId: data._contractId,
                     });
                 }
             },

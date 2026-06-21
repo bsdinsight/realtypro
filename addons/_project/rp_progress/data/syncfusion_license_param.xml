@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Syncfusion license key — admin config qua Settings hoặc
+         System Parameters. Default rỗng → frontend hiện error UI
+         yêu cầu admin set key trước khi dùng Gantt. -->
+    <record id="syncfusion_license_key_param" model="ir.config_parameter">
+        <field name="key">syncfusion.license_key</field>
+        <field name="value"></field>
+    </record>
+
+</odoo>

@@ -16,7 +16,7 @@ class SyncfusionLicenseController(http.Controller):
 
     @http.route(
         '/rp_progress/syncfusion/license_key',
-        type='json',
+        type='jsonrpc',
         auth='user',
         methods=['POST'],
     )

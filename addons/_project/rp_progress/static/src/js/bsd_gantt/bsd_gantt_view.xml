@@ -24,11 +24,6 @@
                 </div>
             </div>
 
-            <div t-if="state.loading" class="d-flex justify-content-center p-5">
-                <div class="spinner-border text-primary"/>
-                <span class="ms-3">Đang tải...</span>
-            </div>
-
             <div t-if="state.error" class="alert alert-warning m-3" role="alert">
                 <i class="fa fa-exclamation-triangle me-2"/>
                 <span t-esc="state.error"/>
@@ -51,10 +46,17 @@
                 </div>
             </div>
 
-            <!-- Syncfusion Gantt mount point — fullscreen. Treegrid +
-                 chart đều render trong đây bởi Syncfusion. -->
-            <div t-if="!state.loading and !state.error and !state.noDates"
-                 class="bsd_gantt_container" t-ref="gantt"/>
+            <!-- Syncfusion Gantt mount point — LUÔN render để ganttRef.el
+                 available cho adapter.render(). Loading state show
+                 overlay spinner trên cùng (z-index). -->
+            <div t-if="!state.error and !state.noDates"
+                 class="bsd_gantt_container" t-ref="gantt">
+                <div t-if="state.loading"
+                     class="bsd_gantt_loading_overlay d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-primary"/>
+                    <span class="ms-3">Đang tải...</span>
+                </div>
+            </div>
         </div>
     </t>
 

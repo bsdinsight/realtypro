@@ -57,8 +57,12 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
     'assets': {
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
-            # Syncfusion EJ2 Gantt (v33.1.44, self-contained UMD global)
+            # Syncfusion EJ2 v33.1.44 — load order strict:
+            #   1. material.css — theme
+            #   2. ej2.min.js — base + tất cả deps (29 MB, lớn nhưng cần)
+            #   3. ej2-gantt.min.js — Gantt component, expect ej.base ready
             'rp_progress/static/lib/syncfusion/material.css',
+            'rp_progress/static/lib/syncfusion/ej2.min.js',
             'rp_progress/static/lib/syncfusion/ej2-gantt.min.js',
             # Frappe-Gantt giữ lại làm fallback nếu Syncfusion fail
             # (KHÔNG auto fallback — yêu cầu admin retry, theo CC1 decision)

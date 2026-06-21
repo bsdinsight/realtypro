@@ -408,8 +408,12 @@ export class BSDGanttView extends Component {
                     { type: "success" },
                 );
             }
-            await this._reload();
+            // KHÔNG reload — Syncfusion đã update UI bar position
+            // ngay khi drag/resize. Backend save chỉ persist data, UI
+            // không cần rebuild.
         } catch (err) {
+            // Chỉ reload khi LỖI để rollback bar về vị trí cũ
+            // (data backend không thay đổi).
             this.notification.add(_t("Lỗi cập nhật: ") + err.message, {
                 type: "danger",
             });

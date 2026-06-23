@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Giấy báo có / chứng từ NH trích thu tự động (Auto-debit advice).
+"""Giấy báo nợ / chứng từ NH trích thu tự động (Auto-debit advice).
 
 Workflow chuẩn NH VN:
   1. Doanh nghiệp nạp tiền vào TK thanh toán
   2. NH tự trích thu khế ước đến hạn
-  3. NH gửi giấy báo có (credit advice) liệt kê:
+  3. NH gửi giấy báo nợ (debit advice) liệt kê:
      - Mỗi KW đã được trích thu
      - Số tiền trích thu
      - Tùy chọn: chỉ đích danh kỳ thanh toán nào
@@ -22,7 +22,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class ReLoanBankAdvice(models.Model):
     _name = 're.loan.bank.advice'
-    _description = 'Giấy báo có NH (trích thu tự động KW)'
+    _description = 'Giấy báo nợ NH (trích thu tự động KW)'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_advice desc, id desc'
 

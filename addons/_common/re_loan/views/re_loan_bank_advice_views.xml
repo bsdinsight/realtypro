@@ -205,14 +205,14 @@
 
     <!-- ===== Action + Menu ===== -->
     <record id="action_re_loan_bank_advice" model="ir.actions.act_window">
-        <field name="name">Giấy báo có (Trích thu tự động)</field>
+        <field name="name">Giấy báo nợ (Trích thu tự động)</field>
         <field name="res_model">re.loan.bank.advice</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id"
                ref="view_re_loan_bank_advice_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Tạo giấy báo có NH đầu tiên
+                Tạo giấy báo nợ NH đầu tiên
             </p>
             <p>
                 Khi NH trích thu tự động các KW đến hạn, import giấy
@@ -229,7 +229,7 @@
               sequence="35"/>
 
     <menuitem id="menu_re_loan_bank_advice_import"
-              name="Import giấy báo có (Excel/CSV)"
+              name="Import giấy báo nợ (Excel/CSV)"
               parent="re_loan.menu_re_loan_root"
               action="action_re_loan_bank_advice_import"
               sequence="36"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Wizard import Excel/CSV → tạo Giấy báo có NH trích thu tự động.
+"""Wizard import Excel/CSV → tạo Giấy báo nợ NH trích thu tự động.
 
 Workflow:
   1. User upload file xlsx/csv
@@ -42,7 +42,7 @@ COLUMNS = [
 
 class ReLoanBankAdviceImportWizard(models.TransientModel):
     _name = 're.loan.bank.advice.import.wizard'
-    _description = 'Import Giấy báo có NH'
+    _description = 'Import Giấy báo nợ NH'
 
     # --- Upload step ---
     file_data = fields.Binary(
@@ -165,7 +165,7 @@ class ReLoanBankAdviceImportWizard(models.TransientModel):
         self.state = 'done'
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Giấy báo có NH'),
+            'name': _('Giấy báo nợ NH'),
             'res_model': 're.loan.bank.advice',
             'res_id': advice.id,
             'view_mode': 'form',

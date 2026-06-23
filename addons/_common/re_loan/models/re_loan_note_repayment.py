@@ -26,9 +26,9 @@ class ReLoanNoteRepayment(models.Model):
         help='Kỳ lãi mà repayment này thanh toán. NULL = repayment '
              'cũ chưa allocate vào kỳ cụ thể (chỉ track ở note level).')
     bank_advice_line_id = fields.Many2one(
-        're.loan.bank.advice.line', string='Dòng giấy báo có NH',
+        're.loan.bank.advice.line', string='Dòng giấy báo nợ NH',
         ondelete='set null', readonly=True,
-        help='Repayment auto-tạo từ giấy báo có ngân hàng trích thu '
+        help='Repayment auto-tạo từ giấy báo nợ ngân hàng trích thu '
              'tự động (re.loan.bank.advice).')
     is_auto_debit = fields.Boolean(
         string='Trích thu tự động', readonly=True,

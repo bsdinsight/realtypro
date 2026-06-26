@@ -1,10 +1,28 @@
 # -*- coding: utf-8 -*-
-"""Inherit account.move: auto-fill bank account của nhà cung cấp."""
-from odoo import api, models
+"""Inherit account.move: auto-fill bank account của nhà cung cấp +
+related project_id để group hóa đơn HĐ nhà thầu theo Dự án → Nhà thầu."""
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    # Related project_id từ HĐ nhà thầu (via payment milestone) — dùng
+    # để group hóa đơn HĐ nhà thầu theo Dự án (CC1 #5):
+    #   Dự án → Nhà thầu → Hóa đơn
+    project_id = fields.Many2one(
+        're.project',
+        string='Dự án',
+        related='payment_milestone_id.contract_id.project_id',
+        store=True, readonly=True,
+        help='Dự án (re.project) của HĐ nhà thầu mà hóa đơn này thuộc. '
+             'Tự lấy qua: payment_milestone_id → contract_id → project_id.')
+    contract_id = fields.Many2one(
+        'rp.contract',
+        string='HĐ nhà thầu',
+        related='payment_milestone_id.contract_id',
+        store=True, readonly=True,
+        help='HĐ nhà thầu của hóa đơn này.')
 
     @api.onchange('partner_id')
     def _onchange_partner_id_set_bank(self):

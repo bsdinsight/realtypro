@@ -44,8 +44,12 @@
                   decoration-danger="state == 'posted' and payment_state == 'not_paid' and invoice_date_due and invoice_date_due &lt; current_date">
                 <field name="invoice_date" string="Ngày HĐ"/>
                 <field name="name" string="Số hóa đơn"/>
+                <field name="project_id" string="Dự án"
+                       optional="show"/>
                 <field name="partner_id" string="Nhà thầu"
                        optional="show"/>
+                <field name="contract_id" string="HĐ nhà thầu"
+                       optional="hide"/>
                 <field name="payment_milestone_id"
                        string="Mốc thanh toán"
                        optional="show"/>
@@ -82,7 +86,9 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name" string="Số HĐ"/>
+                <field name="project_id" string="Dự án"/>
                 <field name="partner_id" string="Nhà thầu"/>
+                <field name="contract_id" string="HĐ nhà thầu"/>
                 <field name="payment_milestone_id"
                        string="Mốc thanh toán"/>
                 <field name="invoice_date" string="Ngày HĐ"/>
@@ -103,8 +109,12 @@
                         domain="[('invoice_date','&gt;=',
                                    (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
                 <filter name="g_partner" string="Nhà thầu"
                         context="{'group_by': 'partner_id'}"/>
+                <filter name="g_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'contract_id'}"/>
                 <filter name="g_milestone" string="Mốc thanh toán"
                         context="{'group_by': 'payment_milestone_id'}"/>
                 <filter name="g_payment_state" string="Tình trạng TT"
@@ -130,6 +140,8 @@
         ]</field>
         <field name="context">{
             'default_move_type': 'in_invoice',
+            'search_default_g_project': 1,
+            'search_default_g_partner': 1,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

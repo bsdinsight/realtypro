@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_rp_advance_payment" model="ir.sequence">
+        <field name="name">Tạm ứng (Advance Payment)</field>
+        <field name="code">rp.advance.payment</field>
+        <field name="prefix">TU/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>

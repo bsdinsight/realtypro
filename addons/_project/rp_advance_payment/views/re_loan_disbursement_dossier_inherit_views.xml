@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Hồ sơ giải ngân form: thêm Tạm ứng field
+         (alternative cho Hóa đơn) -->
+    <record id="view_rp_loan_dossier_form_inherit_advance"
+            model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.form.inherit.advance</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="inherit_id"
+               ref="rp_loan_bridge.view_rp_loan_disbursement_dossier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_id']" position="after">
+                <field name="advance_payment_id"
+                       options="{'no_create': True}"
+                       invisible="invoice_id"/>
+                <field name="advance_amount_total"
+                       readonly="1"
+                       invisible="not advance_payment_id"/>
+                <field name="is_advance_payment" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit nested list của disbursement → thêm cột Tạm ứng -->
+    <record id="view_re_loan_note_disbursement_form_inherit_advance"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.disbursement.form.inherit.advance</field>
+        <field name="model">re.loan.note.disbursement</field>
+        <field name="inherit_id"
+               ref="rp_loan_bridge.view_re_loan_note_disbursement_form_inherit_dossier"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_id'][1]" position="after">
+                <field name="advance_payment_id"
+                       string="Tạm ứng"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu Tạm ứng: đặt trong Realty Project root -->
+    <menuitem id="menu_rp_advance_root"
+              name="Tạm ứng"
+              parent="rp_estimate.menu_realty_project_root"
+              action="action_rp_advance_payment"
+              sequence="60"/>
+
+</odoo>

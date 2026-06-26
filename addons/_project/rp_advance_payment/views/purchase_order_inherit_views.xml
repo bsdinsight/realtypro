@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit form Purchase Order: thêm stat button + tab Tạm ứng -->
+    <record id="view_purchase_order_form_inherit_advance"
+            model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.advance</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_advances" type="object"
+                        class="oe_stat_button" icon="fa-money">
+                    <field name="advance_count" widget="statinfo"
+                           string="Tạm ứng"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Tạm ứng" name="advances">
+                    <group>
+                        <group>
+                            <field name="advance_amount_total" readonly="1"/>
+                            <field name="advance_amount_remaining"
+                                   readonly="1"
+                                   decoration-warning="advance_amount_remaining > 0"/>
+                        </group>
+                    </group>
+                    <field name="advance_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="date_request"/>
+                            <field name="purpose"/>
+                            <field name="amount" sum="Σ"/>
+                            <field name="amount_settled" sum="Σ cấn trừ"/>
+                            <field name="amount_remaining" sum="Σ còn"/>
+                            <field name="state" widget="badge"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

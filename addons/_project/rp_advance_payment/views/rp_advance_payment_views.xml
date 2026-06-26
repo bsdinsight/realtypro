@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ TẠM ỨNG — LIST ============ -->
+    <record id="view_rp_advance_payment_list" model="ir.ui.view">
+        <field name="name">rp.advance.payment.list</field>
+        <field name="model">rp.advance.payment</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'"
+                  decoration-warning="state == 'to_approve'"
+                  decoration-primary="state == 'approved'"
+                  decoration-success="state in ('paid', 'settled')"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="date_request"/>
+                <field name="contract_id" optional="show"/>
+                <field name="purchase_order_id" optional="hide"/>
+                <field name="partner_id"/>
+                <field name="purpose" optional="show"/>
+                <field name="amount" sum="Σ"/>
+                <field name="amount_settled" sum="Σ cấn trừ"
+                       optional="show"/>
+                <field name="amount_remaining" sum="Σ còn"
+                       optional="show"
+                       decoration-warning="amount_remaining > 0 and state == 'paid'"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ TẠM ỨNG — FORM ============ -->
+    <record id="view_rp_advance_payment_form" model="ir.ui.view">
+        <field name="name">rp.advance.payment.form</field>
+        <field name="model">rp.advance.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Gửi duyệt"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object"
+                            string="Phê duyệt"
+                            class="btn-primary"
+                            invisible="state != 'to_approve'"
+                            groups="rp_advance_payment.group_advance_manager"/>
+                    <button name="action_reject" type="object"
+                            string="Từ chối"
+                            invisible="state != 'to_approve'"
+                            groups="rp_advance_payment.group_advance_manager"
+                            confirm="Từ chối Tạm ứng? Sẽ về trạng thái Nháp."/>
+                    <button name="action_mark_paid" type="object"
+                            string="Đánh dấu Đã thanh toán"
+                            invisible="state != 'approved'"
+                            help="Dùng nếu Tạm ứng thanh toán bằng tiền mặt,
+                                  KHÔNG qua KW. Nếu qua KW thì hệ thống auto."/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state in ('settled', 'cancelled')"
+                            confirm="Huỷ Tạm ứng?"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved,paid,settled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_settlements" type="object"
+                                class="oe_stat_button" icon="fa-balance-scale"
+                                invisible="state not in ('paid', 'settled')">
+                            <field name="settlement_count" widget="statinfo"
+                                   string="Cấn trừ"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Tự sinh khi save..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Đối tượng tạm ứng">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"
+                                   invisible="purchase_order_id"/>
+                            <field name="purchase_order_id"
+                                   options="{'no_create': True}"
+                                   invisible="contract_id"/>
+                            <field name="partner_id"
+                                   options="{'no_create': True}"/>
+                            <field name="purpose"
+                                   placeholder="Tạm ứng vật tư đợt 1, ..."/>
+                        </group>
+                        <group string="Giá trị + Ngày">
+                            <field name="amount"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                            <field name="date_request"/>
+                            <field name="user_id_request" readonly="1"/>
+                        </group>
+                    </group>
+                    <group invisible="state == 'draft'">
+                        <group string="Phê duyệt"
+                               invisible="state in ('draft', 'to_approve')">
+                            <field name="user_id_approval" readonly="1"/>
+                            <field name="date_approval" readonly="1"/>
+                        </group>
+                        <group string="Giải ngân KW"
+                               invisible="state in ('draft', 'to_approve', 'approved')">
+                            <field name="disbursement_dossier_id"
+                                   readonly="1"/>
+                            <field name="note_id" readonly="1"/>
+                            <field name="date_paid" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Cấn trừ"
+                           invisible="state in ('draft', 'to_approve', 'approved')">
+                        <group>
+                            <field name="amount_settled" readonly="1"/>
+                            <field name="amount_remaining" readonly="1"
+                                   decoration-warning="amount_remaining > 0"/>
+                            <field name="date_settled" readonly="1"
+                                   invisible="state != 'settled'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Cấn trừ vào hóa đơn"
+                              name="settlements"
+                              invisible="state not in ('paid', 'settled')">
+                            <field name="settlement_ids"
+                                   readonly="state == 'settled'">
+                                <list editable="bottom">
+                                    <field name="invoice_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="advance_partner_id"
+                                           column_invisible="1"/>
+                                    <field name="invoice_amount_total"
+                                           readonly="1" optional="show"/>
+                                    <field name="invoice_amount_residual"
+                                           readonly="1" optional="show"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="date"/>
+                                    <field name="note"/>
+                                    <field name="user_id" readonly="1"
+                                           optional="hide"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Diễn giải" name="description">
+                            <field name="description"
+                                   placeholder="Mô tả chi tiết tạm ứng..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ SEARCH ============ -->
+    <record id="view_rp_advance_payment_search" model="ir.ui.view">
+        <field name="name">rp.advance.payment.search</field>
+        <field name="model">rp.advance.payment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="contract_id"/>
+                <field name="purchase_order_id"/>
+                <filter name="f_pending" string="Chờ duyệt"
+                        domain="[('state', '=', 'to_approve')]"/>
+                <filter name="f_approved" string="Đã duyệt — chờ thanh toán"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="f_paid" string="Đã thanh toán — chưa cấn trừ đủ"
+                        domain="[('state', '=', 'paid'),
+                                 ('amount_remaining', '>', 0)]"/>
+                <filter name="f_settled" string="Đã cấn trừ đủ"
+                        domain="[('state', '=', 'settled')]"/>
+                <separator/>
+                <filter name="f_my_request" string="Tôi đề nghị"
+                        domain="[('user_id_request', '=', uid)]"/>
+                <separator/>
+                <filter name="g_partner" string="Bên nhận"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_month" string="Tháng đề nghị"
+                        context="{'group_by': 'date_request:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ ACTION ============ -->
+    <record id="action_rp_advance_payment" model="ir.actions.act_window">
+        <field name="name">Tạm ứng</field>
+        <field name="res_model">rp.advance.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_advance_payment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo Tạm ứng đầu tiên!
+            </p>
+            <p>
+                Tạm ứng là khoản chi trước cho nhà thầu / NCC, sẽ được
+                cấn trừ thủ công vào hóa đơn khi nhà thầu xuất hóa đơn.
+                Workflow: Nháp → Chờ duyệt → Đã duyệt → Đã thanh toán
+                (qua KW) → Đã cấn trừ đủ.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============ SETTLEMENT — LIST ============ -->
+    <record id="view_rp_advance_settlement_list" model="ir.ui.view">
+        <field name="name">rp.advance.settlement.list</field>
+        <field name="model">rp.advance.settlement</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="advance_id"
+                       options="{'no_create': True}"/>
+                <field name="invoice_id"
+                       options="{'no_create': True}"/>
+                <field name="advance_partner_id" optional="show"/>
+                <field name="amount" sum="Σ"/>
+                <field name="date"/>
+                <field name="note"/>
+                <field name="user_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ SETTLEMENT — FORM ============ -->
+    <record id="view_rp_advance_settlement_form" model="ir.ui.view">
+        <field name="name">rp.advance.settlement.form</field>
+        <field name="model">rp.advance.settlement</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="advance_id"/>
+                            <field name="advance_partner_id" readonly="1"/>
+                            <field name="advance_amount_remaining"
+                                   readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="invoice_id"/>
+                            <field name="invoice_amount_total" readonly="1"/>
+                            <field name="invoice_amount_residual"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="date"/>
+                            <field name="user_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Ghi chú cấn trừ..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

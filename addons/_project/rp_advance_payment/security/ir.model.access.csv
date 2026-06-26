@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_advance_payment_user,rp.advance.payment user,model_rp_advance_payment,group_advance_user,1,1,1,1
+access_rp_advance_payment_manager,rp.advance.payment manager,model_rp_advance_payment,group_advance_manager,1,1,1,1
+access_rp_advance_settlement_user,rp.advance.settlement user,model_rp_advance_settlement,group_advance_user,1,1,1,1
+access_rp_advance_settlement_manager,rp.advance.settlement manager,model_rp_advance_settlement,group_advance_manager,1,1,1,1

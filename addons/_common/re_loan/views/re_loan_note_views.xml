@@ -215,6 +215,7 @@
                             <field name="amount"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="date_note"/>
+                            <field name="date_activation"/>
                             <field name="tenor_months"/>
                             <field name="date_maturity"/>
                             <field name="is_overdue" invisible="1"/>

@@ -67,6 +67,11 @@ class ReBankGuarantee(models.Model):
     date_issue = fields.Date(
         string='Ngày phát hành', required=True, tracking=True,
         default=fields.Date.context_today)
+    date_activation = fields.Date(
+        string='Ngày kích hoạt', tracking=True, copy=False,
+        help='Ngày BL chính thức bắt đầu có hiệu lực (NH ký + người '
+             'thụ hưởng nhận). Nếu trống → fallback date_issue. Phí '
+             'BL tính từ ngày này đến date_expiry.')
     date_expiry = fields.Date(
         string='Ngày hết hạn', required=True, tracking=True)
     days_remaining = fields.Integer(
@@ -243,16 +248,19 @@ class ReBankGuarantee(models.Model):
                 rec.is_expired = False
 
     @api.depends('amount', 'guarantee_fee_rate',
-                 'date_issue', 'date_expiry')
+                 'date_issue', 'date_activation', 'date_expiry')
     def _compute_fee_amount(self):
         """Phí BL = giá trị × tỷ lệ × số ngày hiệu lực / 365.
-        Robust: nếu date_issue > date_expiry, fee = 0 (data invalid).
+
+        Ngày bắt đầu hiệu lực: ưu tiên date_activation, fallback
+        date_issue. Robust: nếu start > expiry, fee = 0 (data invalid).
         """
         for rec in self:
+            start = rec.date_activation or rec.date_issue
             if (rec.amount and rec.guarantee_fee_rate
-                    and rec.date_issue and rec.date_expiry
-                    and rec.date_expiry > rec.date_issue):
-                days = (rec.date_expiry - rec.date_issue).days
+                    and start and rec.date_expiry
+                    and rec.date_expiry > start):
+                days = (rec.date_expiry - start).days
                 rec.guarantee_fee_amount = (
                     rec.amount * rec.guarantee_fee_rate / 100.0
                     * days / 365.0)

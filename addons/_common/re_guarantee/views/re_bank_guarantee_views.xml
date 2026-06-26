@@ -163,6 +163,7 @@
                                    options="{'no_create': True}"
                                    placeholder="Chọn NH ở trên trước..."/>
                             <field name="date_issue"/>
+                            <field name="date_activation"/>
                             <field name="date_expiry"/>
                             <field name="days_remaining" readonly="1"/>
                             <field name="currency_id"

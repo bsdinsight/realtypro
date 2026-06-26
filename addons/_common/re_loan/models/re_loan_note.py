@@ -70,6 +70,12 @@ class ReLoanNote(models.Model):
     date_note = fields.Date(
         string='Ngày nhận nợ', required=True,
         default=fields.Date.context_today, tracking=True)
+    date_activation = fields.Date(
+        string='Ngày kích hoạt', tracking=True, copy=False,
+        help='Ngày NH chính thức kích hoạt KW — gốc tính lãi. User '
+             'nhập tay khi NH thông báo kích hoạt. Nếu trống → fallback '
+             'date_note. Tất cả lịch lãi + ngày đáo hạn tự re-compute '
+             'khi field này thay đổi.')
     amount = fields.Monetary(
         string='Số tiền KW', required=True, tracking=True,
         help='Số tiền cam kết của KW. Khi user thêm/sửa giải ngân, '
@@ -223,11 +229,22 @@ class ReLoanNote(models.Model):
     # ------------------------------------------------------------------
     # Compute
     # ------------------------------------------------------------------
-    @api.depends('date_note', 'tenor_months')
+    def _get_interest_start_date(self):
+        """Ngày gốc tính lãi: ưu tiên date_activation, fallback date_note.
+
+        User có thể nhập date_activation khi NH chính thức kích hoạt KW
+        (vd KW signed 15/03 nhưng NH activate 20/03 → lãi tính từ 20/03).
+        Lịch lãi + đáo hạn tự re-compute khi field thay đổi.
+        """
+        self.ensure_one()
+        return self.date_activation or self.date_note
+
+    @api.depends('date_note', 'date_activation', 'tenor_months')
     def _compute_date_maturity(self):
         for rec in self:
-            if rec.date_note and rec.tenor_months:
-                rec.date_maturity = rec.date_note + relativedelta(
+            start = rec.date_activation or rec.date_note
+            if start and rec.tenor_months:
+                rec.date_maturity = start + relativedelta(
                     months=rec.tenor_months)
             elif not rec.date_maturity:
                 rec.date_maturity = False
@@ -587,6 +604,19 @@ class ReLoanNote(models.Model):
     # ------------------------------------------------------------------
     # Lịch lãi (pluggable theo interest_method)
     # ------------------------------------------------------------------
+    def write(self, vals):
+        """Khi đổi date_activation hoặc date_note ở KW active → tự
+        re-generate lịch lãi (chỉ replace dòng 'planned')."""
+        res = super().write(vals)
+        if 'date_activation' in vals or 'date_note' in vals:
+            for rec in self:
+                if rec.state == 'active' and rec.interest_line_ids:
+                    rec.action_generate_interest_schedule()
+                    rec.message_post(body=_(
+                        "Đã regen lịch lãi do thay đổi ngày gốc "
+                        "(activation/note)."))
+        return res
+
     def action_generate_interest_schedule(self):
         """(Re)sinh lịch lãi dự kiến. Giữ lại dòng đã ghi nhận/đã trả,
         chỉ thay thế các dòng còn 'planned'."""
@@ -636,8 +666,12 @@ class ReLoanNote(models.Model):
         phụ lục đầu tiên giữ rate gốc, kỳ sau dùng rate phụ lục.
         """
         self.ensure_one()
-        if not self.date_note:
-            raise UserError(_("Cần Ngày nhận nợ để sinh lịch lãi."))
+        # Gốc tính lãi: ưu tiên date_activation (NH chính thức kích hoạt),
+        # fallback date_note (ngày nhận nợ).
+        start_date = self._get_interest_start_date()
+        if not start_date:
+            raise UserError(_(
+                "Cần Ngày nhận nợ hoặc Ngày kích hoạt để sinh lịch lãi."))
         principal = self.amount
         n = self.tenor_months or 0
         vals = []
@@ -646,9 +680,9 @@ class ReLoanNote(models.Model):
                 principal / n if self.repayment_plan == 'equal_principal'
                 else 0.0)
             opening = principal
-            date_cursor = self.date_note
+            date_cursor = start_date
             for i in range(1, n + 1):
-                date_to = self.date_note + relativedelta(months=i)
+                date_to = start_date + relativedelta(months=i)
                 base = (principal if self.interest_method == 'flat'
                         else opening)
                 vals.append({
@@ -663,10 +697,10 @@ class ReLoanNote(models.Model):
         elif self.date_maturity:
             vals.append({
                 'period_no': 1,
-                'date_from': self.date_note,
+                'date_from': start_date,
                 'date_to': self.date_maturity,
                 'principal_base': principal,
-                'interest_rate': self._effective_rate_at(self.date_note),
+                'interest_rate': self._effective_rate_at(start_date),
             })
         else:
             raise UserError(_(

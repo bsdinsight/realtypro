@@ -82,14 +82,16 @@ class ReLoanNoteDisbursement(models.Model):
     allowed_project_ids = fields.Many2many(
         're.project', string='Dự án cho phép',
         compute='_compute_allowed_project_ids',
-        help='Dự án có phân bổ hạn mức trong FACILITY của KW '
-             '(không phải toàn HĐTD).')
+        help='Dự án cho phép chọn (CC1 #6):\n'
+             '- Nếu facility CÓ phân bổ dự án → chỉ các dự án trong '
+             'phân bổ đó.\n'
+             '- Nếu facility KHÔNG có phân bổ → TẤT CẢ dự án.')
     project_id = fields.Many2one(
         're.project', string='Dự án',
         domain="[('id', 'in', allowed_project_ids)]",
-        help='Dự án thực chi từ khoản giải ngân này. Lọc theo phân bổ '
-             'dự án của facility KW này thuộc về — không cho chọn dự án '
-             'thuộc facility khác trong cùng HĐTD.')
+        help='Dự án thực chi từ khoản giải ngân này. Filter theo CC1 '
+             '#6: chỉ dự án phân bổ trên facility, hoặc tất cả nếu '
+             'facility chưa phân bổ.')
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
@@ -97,13 +99,17 @@ class ReLoanNoteDisbursement(models.Model):
 
     @api.depends('note_id.facility_id.project_allocation_ids.project_id')
     def _compute_allowed_project_ids(self):
+        Project = self.env['re.project']
+        all_projects = Project.search([])
         for rec in self:
             facility = rec.note_id.facility_id
-            if facility:
+            if facility and facility.project_allocation_ids:
+                # CÓ phân bổ → chỉ các dự án trong phân bổ
                 rec.allowed_project_ids = facility.project_allocation_ids \
                     .mapped('project_id')
             else:
-                rec.allowed_project_ids = False
+                # KHÔNG phân bổ (hoặc chưa pick facility) → tất cả dự án
+                rec.allowed_project_ids = all_projects
 
     @api.constrains('amount', 'note_id')
     def _check_amount(self):

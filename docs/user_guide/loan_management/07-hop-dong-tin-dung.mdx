@@ -1,0 +1,356 @@
+---
+title: "Hợp đồng tín dụng (HĐTD)"
+description: "Hướng dẫn tạo, kích hoạt, quản lý Hợp đồng tín dụng khung với ngân hàng — gốc cấp hạn mức cho toàn bộ chu kỳ vay của doanh nghiệp."
+order: 7
+---
+
+# 7. Hợp đồng tín dụng (HĐTD)
+
+## 7.1. Mục đích
+
+**Hợp đồng tín dụng (HĐTD)** — tiếng Anh là **Master Credit Agreement**
+hoặc **Credit Facility Agreement** — là **hợp đồng khung** doanh nghiệp
+ký với ngân hàng, **cấp tổng hạn mức tín dụng** cho doanh nghiệp sử
+dụng trong 1 chu kỳ (thường 12 tháng).
+
+HĐTD là **gốc của mọi nghiệp vụ vay**:
+
+```
+HĐTD (tổng hạn mức 100 tỷ, Vietcombank)
+  ├── Hạn mức 1 (Vốn lưu động — 50 tỷ, lãi 9.5%/năm)
+  │    ├── KW001 (rút 10 tỷ — 04/01/2026 — đáo hạn 04/01/2027)
+  │    └── KW002 (rút 8 tỷ — 15/02/2026 — đáo hạn 15/02/2027)
+  ├── Hạn mức 2 (Đầu tư dự án — 30 tỷ, lãi 10.0%/năm)
+  │    └── KW003 (rút 20 tỷ — 01/03/2026 — đáo hạn 01/03/2028)
+  └── Hạn mức 3 (Bảo lãnh — 20 tỷ, phí 1.5%/năm)
+       ├── BL001 (BL thực hiện HĐ — 5 tỷ — issued 01/04/2026)
+       └── BL002 (BL bảo hành — 2 tỷ — issued 15/05/2026)
+```
+
+### Khi nào dùng HĐTD?
+
+- ✅ Doanh nghiệp vừa ký HĐTD mới với NH → **Tạo HĐTD trong hệ thống**
+- ✅ HĐTD hiện tại sắp hết hạn → **Tạo HĐTD gia hạn**
+- ✅ Mở thêm 1 hạn mức con (vd thêm hạn mức bảo lãnh) → **Tạo Hạn mức**
+  thuộc HĐTD này (xem §8)
+- ❌ KHÔNG dùng HĐTD để track 1 lần rút vốn cụ thể → đó là việc của **KW**
+
+### Lợi ích quản lý qua hệ thống
+
+| Vấn đề thủ công | Giải pháp hệ thống |
+|---|---|
+| KTT không biết hạn mức còn lại bao nhiêu | Auto-compute `Hạn mức còn lại = Tổng HĐTD − Σ đã dùng` |
+| Vô tình rút vượt hạn mức cho vay vì lẫn với bảo lãnh | Tách rõ "Cho vay" vs "Bảo lãnh" — chặn ở Validation |
+| Sắp hết hạn không ai biết → mất chu kỳ | Cron tự ping KTT trước đáo hạn 30/60/90 ngày |
+| Không kiểm soát được tài sản thế chấp HĐTD vs từng KW | Tab "Tài sản thế chấp" tại HĐTD (xem §11) |
+
+---
+
+## 7.2. Vòng đời (Workflow) của HĐTD
+
+HĐTD có **5 trạng thái**:
+
+| Trạng thái | Ý nghĩa | Hành động chuyển tiếp |
+|---|---|---|
+| **Nháp** | KTT vừa tạo, đang điền | Click "Kích hoạt" → Hiệu lực |
+| **Hiệu lực** | Có thể tạo hạn mức + KW dưới HĐTD này | Tới `date_end` → tự "Hết hạn"; hoặc thủ công "Tất toán" |
+| **Hết hạn** | Qua `date_end` nhưng còn KW dư nợ | Trả nợ hết → "Tất toán" |
+| **Đã tất toán** | Đã tất toán hết KW, đóng HĐTD | (kết thúc) |
+| **Đã huỷ** | Huỷ trước khi kích hoạt | Có thể "Reset Nháp" |
+
+> 🔒 **HĐTD trạng thái Nháp/Huỷ KHÔNG cho phép tạo KW dưới hạn mức của
+> nó** — phải kích hoạt HĐTD trước.
+
+> 🚫 **Không xoá được HĐTD có hạn mức** — phải huỷ hoặc xoá hạn mức trước.
+> Mục đích: giữ audit trail (HĐTD đã ký với NH thì không nên xoá vĩnh viễn).
+
+---
+
+## 7.3. Các bước tạo HĐTD
+
+### Bước 1 — Vào menu
+
+Vào **Quản lý Vay → Hợp đồng tín dụng**.
+
+import HdtdMenu from './images/07-hdtd-menu.png'
+
+<img src={HdtdMenu} alt="Menu Hợp đồng tín dụng" />
+
+Click nút **"Tạo mới"** (góc trên trái).
+
+### Bước 2 — Điền thông tin cơ bản
+
+**Section "Thông tin HĐTD":**
+
+| Trường | Mô tả | Ví dụ |
+|---|---|---|
+| Số HĐTD | Số HĐ do NH cấp (nhập tay) | `HĐTD/2026/001-VCB` |
+| Ngân hàng | Chọn Đối tác có `is_bank=True` | `Ngân hàng TMCP Ngoại thương VN` |
+| Chi nhánh / Mã NH | Tự lọc theo Ngân hàng đã chọn | `VCB — Hội sở Hà Nội` |
+| Công ty (bên vay) | Mặc định = công ty hiện tại | `Cty CP BĐS Đà Lạt` |
+| Loại tiền | Mặc định = VND | `VND` |
+| Người đại diện ký | Tên người ký HĐ | `Ông Nguyễn Văn A — TGĐ` |
+
+**Section "Hiệu lực":**
+
+| Trường | Mô tả | Ví dụ |
+|---|---|---|
+| Ngày ký | Ngày 2 bên ký HĐTD | `01/01/2026` |
+| Ngày hiệu lực | Bắt đầu được rút vốn | `01/01/2026` |
+| Ngày hết hạn | Hết chu kỳ HĐTD | `31/12/2026` |
+| Tổng hạn mức | Số tiền NH cấp cho toàn HĐTD | `100,000,000,000 đ` |
+
+> 💡 **Mẹo nhập NH lần đầu**: Vào Liên hệ → tạo mới → tick **"Là ngân
+> hàng"** + chọn Mã ngân hàng VN từ dropdown. Sau đó mới quay lại HĐTD,
+> field "Ngân hàng" mới hiện đối tác này.
+
+### Bước 3 — Save + Kích hoạt
+
+Click **Save** (Ctrl+S). HĐTD ở trạng thái **Nháp**.
+
+Khi xác nhận thông tin đúng → click button **"Kích hoạt"** → trạng thái
+chuyển sang **Hiệu lực**, sẵn sàng tạo hạn mức cho vay (§8).
+
+import HdtdForm from './images/07-hdtd-form.png'
+
+<img src={HdtdForm} alt="Form HĐTD chi tiết" />
+
+---
+
+## 7.4. Quản lý hạn mức cho vay (Facility)
+
+Trong form HĐTD, **tab "Hạn mức cho vay"** liệt kê các sub-limit thuộc
+HĐTD đó. Mỗi hạn mức có:
+
+- **Mục đích sử dụng**: Vốn lưu động / Đầu tư dự án / Thấu chi / Tài
+  trợ thương mại / L/C / Tái cấp vốn / **Bảo lãnh** / Khác
+- **Số tiền hạn mức**: Cap rút từ HĐTD vào hạn mức này
+- **Lãi suất khung** (cho vay) hoặc **Phí bảo lãnh** (BG)
+- **Phương pháp tính lãi**: Dư nợ giảm dần / Cố định
+- **Liên thông**: Tick để chia sẻ phần thừa hạn mức (xem §8.5)
+
+### Quy tắc tối quan trọng (HARD constraint)
+
+```
+Σ (Hạn mức của tất cả facility) ≤ Tổng hạn mức HĐTD
+```
+
+Hệ thống **chặn** nếu cộng tổng các hạn mức con vượt tổng HĐTD — kể cả
+khi tick "Liên thông". Liên thông chỉ chia sẻ **phần thừa** giữa các
+facility, KHÔNG bypass total HĐTD.
+
+**Ví dụ:**
+- HĐTD 100 tỷ
+- Tạo facility 1: 50 tỷ Vốn lưu động ✅
+- Tạo facility 2: 30 tỷ Đầu tư ✅ (cộng = 80 ≤ 100)
+- Tạo facility 3: 30 tỷ Bảo lãnh ❌ → BLOCK (cộng = 110 > 100)
+- Fix: giảm facility 3 còn 20 tỷ ✅
+
+Click **"Thêm dòng"** trong tab Hạn mức để tạo. Chi tiết tạo hạn mức ở §8.
+
+---
+
+## 7.5. Thống kê hạn mức (auto-compute)
+
+Sau khi tạo các facility + có KW rút vốn, HĐTD hiển thị **3 nhóm số
+liệu** auto-compute:
+
+### Nhóm 1 — Tổng hạn mức / Hạn mức đã cấp
+
+| Trường | Công thức |
+|---|---|
+| Tổng hạn mức HĐTD | (User nhập) |
+| Tổng hạn mức đã cấp | Σ `amount_limit` của các facility |
+| Hạn mức HĐTD còn lại | Tổng HĐTD − Tổng đã cấp |
+
+Trường "Hạn mức HĐTD còn lại" = phần KTT có thể tạo thêm facility mới.
+
+### Nhóm 2 — Pool stats (tổng đã sử dụng thực tế)
+
+| Trường | Công thức |
+|---|---|
+| Tổng đã dùng (Σ facility) | Σ `amount_used` của các facility |
+| HĐTD còn lại (Σ) | Tổng HĐTD − Tổng đã dùng |
+
+Trường "HĐTD còn lại (Σ)" = phần còn rút thêm được trong toàn HĐTD (gộp
+mọi mục đích).
+
+### Nhóm 3 — Tách Cho vay vs Bảo lãnh
+
+| Cho vay | Bảo lãnh |
+|---|---|
+| Hạn mức cho vay = Σ limit facility (mục đích ≠ Bảo lãnh) | Hạn mức bảo lãnh = Σ limit facility (mục đích = Bảo lãnh) |
+| Tổng đã cho vay = Σ dư nợ gốc KW chưa tất toán + KW chưa kích hoạt | Tổng đã bảo lãnh = Σ giá trị BL outstanding (issued + extended, chưa settled) |
+| Hạn mức cho vay còn lại = limit − used | Hạn mức bảo lãnh còn lại = limit − used |
+
+import HdtdStats from './images/07-hdtd-stats.png'
+
+<img src={HdtdStats} alt="Thống kê hạn mức HĐTD" />
+
+**Vì sao tách 2 nhóm?** Bảo lãnh và Cho vay ảnh hưởng dòng tiền + audit
+khác nhau. Tách rõ giúp KTT báo cáo BLĐ chính xác "đang vay bao nhiêu /
+đang nợ bảo lãnh bao nhiêu" mà không lẫn lộn.
+
+---
+
+## 7.6. Tài sản thế chấp ở mức HĐTD
+
+Tab **"Tài sản thế chấp"** trong form HĐTD cho phép gắn TS thế chấp cho
+**toàn HĐTD** (không phải từng KW). Thường dùng khi:
+
+- TS cố định (BĐS, tài sản hình thành tương lai...) dùng làm gốc cấp
+  toàn bộ hạn mức 100 tỷ
+- HĐTD có nhiều hạn mức con dùng chung TS thế chấp
+
+Click button **"Thế chấp"** (smart-button) hoặc tab → thêm TS từ kho
+`Tài sản thế chấp` (xem §11 chi tiết về quản lý TS).
+
+> 💡 **Phân biệt mức gắn TS**: TS có thể gắn tại HĐTD (chung) **hoặc**
+> tại từng KW cụ thể. Tại HĐTD: TS bao trùm toàn chu kỳ. Tại KW: TS gắn
+> riêng cho đợt rút đó (vd L/C có TS riêng).
+
+---
+
+## 7.7. Phụ lục HĐTD (Amendment)
+
+Trong chu kỳ hiệu lực, HĐTD có thể bị **sửa đổi** bằng phụ lục — vd:
+- Tăng tổng hạn mức từ 100 → 150 tỷ (NH cấp thêm)
+- Gia hạn ngày hết hạn từ 31/12/2026 → 30/06/2027
+- Đổi lãi suất khung của 1 hạn mức (sẽ ảnh hưởng KW mới, không hồi tố)
+
+Khi có phụ lục **ký với NH**: KTT mở form HĐTD → cập nhật trường tương
+ứng + thêm note trong tab Ghi chú (audit trail tự track qua `mail.thread`).
+
+**Phụ lục KW** (sửa KW cụ thể, vd gia hạn, đổi lịch trả) — XEM §16, dùng
+model `re.loan.note.amendment` riêng.
+
+---
+
+## 7.8. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+**Tình huống**: Cty CP BĐS Đà Lạt ký HĐTD với Vietcombank năm 2026 để
+tài trợ dự án KĐT nghỉ dưỡng Đà Lạt (3 năm).
+
+### Bước 1 — Tạo HĐTD
+
+- Số HĐTD: `HĐTD/2026/001-VCB`
+- Ngân hàng: Vietcombank — CN Hội sở
+- Tổng hạn mức: **100 tỷ VND**
+- Ngày ký: 01/01/2026
+- Ngày hiệu lực: 01/01/2026
+- Ngày hết hạn: 31/12/2026
+
+### Bước 2 — Kích hoạt + tạo 3 hạn mức con
+
+Click "Kích hoạt" → trạng thái Hiệu lực. Vào tab Hạn mức → thêm 3 dòng:
+
+| Hạn mức | Mục đích | Số tiền | Lãi/Phí |
+|---|---|---|---|
+| F1 — Vốn lưu động | Vốn lưu động | 50 tỷ | 9.5%/năm |
+| F2 — Đầu tư dự án | Đầu tư dự án | 30 tỷ | 10.0%/năm |
+| F3 — Bảo lãnh | Bảo lãnh ngân hàng | 20 tỷ | 1.5%/năm (phí BG) |
+| **Σ** | | **100 tỷ** | (đúng = Tổng HĐTD) |
+
+### Bước 3 — Thế chấp + Theo dõi
+
+- TS thế chấp HĐTD: lô đất KĐT Đà Lạt (định giá 180 tỷ — gắn ở tab "Tài
+  sản thế chấp" của HĐTD)
+- Cả 3 hạn mức dùng chung TS này
+
+### Bước 4 — Vận hành (qua các tháng)
+
+Tháng 3/2026 — sau khi tạo 2 KW (KW001 rút 10 tỷ, KW002 rút 8 tỷ từ F1):
+
+| Field | Giá trị |
+|---|---|
+| Tổng hạn mức HĐTD | 100,000,000,000 đ |
+| Tổng hạn mức đã cấp | 100,000,000,000 đ (= F1+F2+F3) |
+| Hạn mức HĐTD còn lại | 0 đ (đã cấp hết) |
+| Tổng đã dùng (Σ facility) | 18,000,000,000 đ |
+| HĐTD còn lại (Σ) | 82,000,000,000 đ |
+| Hạn mức cho vay | 80,000,000,000 đ |
+| Tổng đã cho vay | 18,000,000,000 đ |
+| Hạn mức cho vay còn lại | 62,000,000,000 đ |
+| Hạn mức bảo lãnh | 20,000,000,000 đ |
+| Tổng đã bảo lãnh | 0 đ |
+| Hạn mức bảo lãnh còn lại | 20,000,000,000 đ |
+
+### Bước 5 — Hết chu kỳ
+
+- 31/12/2026 (date_end): cron `_cron_set_expired` tự chuyển trạng thái
+  từ "Hiệu lực" → "Hết hạn"
+- Các KW vẫn chạy đến đáo hạn riêng (KW001 → 04/01/2027, không phụ
+  thuộc HĐTD)
+- Khi tất cả KW dưới HĐTD tất toán → KTT click "Tất toán" → HĐTD đóng
+
+---
+
+## 7.9. Lưu ý quan trọng
+
+### Liên thông hạn mức
+
+Khi tick **"Liên thông"** trên 1 facility → các facility cùng tick
+"Liên thông" trong cùng HĐTD **share phần thừa**. Vd:
+
+- F1 (Vốn lưu động, liên thông) limit = 50 tỷ, dùng 20 tỷ → thừa 30 tỷ
+- F2 (Đầu tư, liên thông) limit = 30 tỷ, dùng 25 tỷ → còn 5 tỷ trong limit
+- F2 có thể rút thêm: 5 tỷ (own limit còn) + 30 tỷ (lấy từ F1 thừa) = 35 tỷ
+
+⚠ Liên thông KHÔNG bypass total HĐTD. Σ (used của mọi facility) phải ≤
+Total HĐTD. Chi tiết logic ở §8.5.
+
+### Cảnh báo sắp hết hạn
+
+Cron tự gửi activity nhắc KTT trước `date_end`:
+- 90 ngày trước: nhắc xin gia hạn / chuẩn bị HĐTD mới
+- 30 ngày trước: nhắc khẩn — nếu chưa có HĐTD mới sẽ block tạo KW mới
+- Quá hạn (`date_end < today` mà còn KW dư nợ): cảnh báo ĐỎ
+
+### Không xoá được HĐTD có facility
+
+System chặn `unlink()` nếu HĐTD còn facility — phải xoá hết facility
+trước (mà facility lại không xoá được nếu còn KW). Lý do: HĐTD là chứng
+từ pháp lý đã ký với NH, **giữ vết** là yêu cầu audit.
+
+→ Cách "xoá" đúng: **action_cancel** (chuyển trạng thái Huỷ) — vẫn giữ
+record trong DB nhưng không hiển thị mặc định.
+
+### Nhiều HĐTD song song với cùng 1 NH
+
+Doanh nghiệp có thể có nhiều HĐTD song song cùng 1 NH (vd 1 HĐTD vay,
+1 HĐTD bảo lãnh, 1 HĐTD L/C). Mỗi HĐTD là 1 record riêng, không gộp.
+
+---
+
+## 7.10. Phím tắt & mẹo
+
+| Phím | Tác dụng |
+|---|---|
+| `Ctrl+S` | Save HĐTD |
+| `Alt+Shift+I` | Kích hoạt (Activate) |
+| `Alt+Shift+J` | Reset về Nháp (chỉ từ Huỷ) |
+| `Alt+Shift+W` | Huỷ |
+| `Alt+Shift+X` | Tất toán |
+
+### Mẹo Pivot view
+
+Trong list view HĐTD, switch sang **Pivot view** để xem tổng hạn mức
+nhóm theo Ngân hàng + Năm — báo cáo BLĐ nhanh nhất là dạng này.
+
+### Mẹo Smart-button "Hạn mức"
+
+Trong form HĐTD, smart-button **"Hạn mức (n)"** ở góc trên — click để
+mở list các facility thuộc HĐTD đó. Tương tự smart-button "Thế chấp" và
+"KW" (nếu có).
+
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+<Aside type="tip" title="Workflow chuẩn">
+1. Ký HĐTD với NH → tạo HĐTD nháp + nhập đủ thông tin → **Kích hoạt**
+2. Tạo các Hạn mức con (Facility) → cấu hình lãi suất + mục đích → xem §8
+3. Khi cần rút vốn → tạo KW từ hạn mức → xem §9
+4. Theo dõi qua section "Thống kê hạn mức" — luôn biết còn rút được bao nhiêu
+5. Hết chu kỳ → tất toán hết KW → đóng HĐTD
+</Aside>

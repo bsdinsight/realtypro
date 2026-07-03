@@ -98,6 +98,15 @@ class ReBankGuarantee(models.Model):
         compute='_compute_fee_amount', store=True, readonly=False,
         help='Auto = giá trị × tỷ lệ × số ngày / 365. User có thể '
              'sửa tay nếu NH tính khác.')
+    fee_schedule_freq = fields.Selection(
+        [('monthly',    'Hàng tháng'),
+         ('quarterly',  'Hàng quý'),
+         ('semiannual', '6 tháng'),
+         ('annual',     'Hàng năm')],
+        string='Tần suất trả phí BL', default='quarterly',
+        help='Chu kỳ thanh toán Phí BL — dùng cho nút "Tạo lịch phí '
+             'BL" (CC1 #11): chia phí theo đợt, số tiền mỗi đợt '
+             'pro-rata theo SỐ NGÀY của đợt.')
     guarantee_fee_paid = fields.Boolean(
         string='Đã trả phí BL (legacy)', tracking=True,
         help='Flag legacy. Workflow mới: theo dõi qua payment_ids '
@@ -535,6 +544,86 @@ class ReBankGuarantee(models.Model):
                     'Cân nhắc gia hạn hoặc giải tỏa.',
                     name=rec.name, d=rec.date_expiry,
                     n=rec.days_remaining))
+
+
+    # ------------------------------------------------------------------
+    # CC1 #11 — Gen lịch thanh toán Phí BL theo tần suất
+    # ------------------------------------------------------------------
+    def action_generate_fee_schedule(self):
+        """Tự động tạo các đợt thanh toán Phí BL (payment_kind='fee').
+
+        - Chia khoảng [ngày kích hoạt (fallback ngày phát hành) →
+          ngày hết hạn] theo tần suất user chọn (tháng/quý/6T/năm)
+        - Số tiền mỗi đợt = Tổng phí BL × số ngày của đợt / tổng số
+          ngày (đợt cuối nhận phần dư làm tròn)
+        - Hạn thanh toán = ngày ĐẦU mỗi đợt (NH thu phí đầu kỳ)
+        - Replace các dòng Phí BL CHƯA thanh toán; block nếu có dòng
+          phí đã thanh toán (một phần) — tránh phá lịch sử.
+        """
+        from dateutil.relativedelta import relativedelta
+        step_map = {'monthly': 1, 'quarterly': 3, 'semiannual': 6,
+                    'annual': 12}
+        for rec in self:
+            start = rec.date_activation or rec.date_issue
+            if not (start and rec.date_expiry
+                    and rec.date_expiry > start):
+                raise UserError(_(
+                    "Cần Ngày kích hoạt/phát hành + Ngày hết hạn hợp "
+                    "lệ trước khi tạo lịch phí."))
+            if rec.guarantee_fee_amount <= 0:
+                raise UserError(_(
+                    "Tổng Phí BL = 0 — nhập Tỷ lệ phí hoặc số tiền "
+                    "phí trước."))
+            fee_lines = rec.schedule_ids.filtered(
+                lambda l: l.payment_kind == 'fee')
+            if any(l.amount_paid > 0 for l in fee_lines):
+                raise UserError(_(
+                    "Đã có đợt Phí BL thanh toán (một phần) — không "
+                    "regen tự động được. Xoá/điều chỉnh tay các đợt "
+                    "chưa trả nếu cần."))
+            fee_lines.unlink()
+
+            months = step_map[rec.fee_schedule_freq or 'quarterly']
+            total_days = (rec.date_expiry - start).days
+            total_fee = rec.guarantee_fee_amount
+            periods = []
+            cursor = start
+            while cursor < rec.date_expiry:
+                period_end = min(
+                    cursor + relativedelta(months=months),
+                    rec.date_expiry)
+                periods.append((cursor, period_end))
+                cursor = period_end
+            vals_list, allocated = [], 0.0
+            for idx, (p_start, p_end) in enumerate(periods):
+                is_last = idx == len(periods) - 1
+                days = (p_end - p_start).days
+                amt = (total_fee - allocated if is_last
+                       else round(total_fee * days / total_days))
+                allocated += amt
+                vals_list.append({
+                    'guarantee_id': rec.id,
+                    'payment_kind': 'fee',
+                    'sequence': (idx + 1) * 10,
+                    'due_date': p_start,
+                    'amount_due': amt,
+                    'name': _("Đợt %(n)s - Phí BL (%(f)s → %(t)s, %(d)s ngày)",
+                              n=idx + 1,
+                              f=p_start.strftime('%d/%m/%Y'),
+                              t=p_end.strftime('%d/%m/%Y'),
+                              d=days),
+                })
+            self.env['re.bank.guarantee.payment.schedule'].create(
+                vals_list)
+            rec.message_post(body=_(
+                "Đã tạo lịch Phí BL: %(n)s đợt (%(freq)s), tổng "
+                "%(amt)s ₫, pro-rata theo số ngày từng đợt.",
+                n=len(vals_list),
+                freq=dict(rec._fields['fee_schedule_freq'].selection)[
+                    rec.fee_schedule_freq or 'quarterly'],
+                amt='{:,.0f}'.format(total_fee)))
+        return True
+
 
 
 class ReBankGuaranteePaymentSchedule(models.Model):

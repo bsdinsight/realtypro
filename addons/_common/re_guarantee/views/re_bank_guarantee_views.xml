@@ -236,6 +236,17 @@
                     </group>
                     <notebook>
                         <page string="Các đợt thanh toán" name="schedules">
+                            <div class="mb-2 d-flex align-items-center gap-2">
+                                <field name="fee_schedule_freq"
+                                       class="w-auto"
+                                       readonly="state in ('settled','cancelled','released','forfeited')"/>
+                                <button name="action_generate_fee_schedule"
+                                        type="object"
+                                        string="⚙ Tạo lịch phí BL"
+                                        class="btn-secondary"
+                                        invisible="state in ('settled','cancelled','released','forfeited')"
+                                        confirm="Tạo lịch Phí BL theo tần suất đã chọn? Các đợt Phí BL CHƯA thanh toán sẽ bị thay thế."/>
+                            </div>
                             <field name="schedule_ids"
                                    readonly="state in ('settled','cancelled','released','forfeited')">
                                 <list>

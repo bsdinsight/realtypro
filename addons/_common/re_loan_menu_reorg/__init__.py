@@ -35,7 +35,9 @@ def _reorg_menus(env):
         # Trích thu & Thanh toán group
         ('re_loan.menu_re_loan_bank_advice',         grp_payment, 10),
         ('re_loan.menu_re_loan_bank_advice_import',  grp_payment, 20),
-        ('re_loan.menu_re_loan_adjustment_note',     grp_payment, 30),
+        # menu_re_loan_adjustment_note KHÔNG move vào group payment —
+        # Giấy báo Nợ/Có là chức năng ghi nhận chứng từ độc lập, đứng
+        # riêng top-level dưới Quản lý Vay (anh Đại chốt 2026-07-03).
     ]
     for xmlid, parent, seq in moves:
         if not parent:

@@ -87,10 +87,14 @@
         </field>
     </record>
 
+    <!-- Menu ĐỨNG RIÊNG dưới Quản lý Vay (sequence 30 — giữa Khế ước
+         và Trích thu & Thanh toán). KHÔNG thuộc nhóm Trích thu tự
+         động — đây là chức năng ghi nhận chứng từ Giấy báo Nợ/Có
+         độc lập (anh Đại chốt 2026-07-03). -->
     <menuitem id="menu_re_loan_adjustment_note"
-              name="Giấy báo Nợ/Có (điều chỉnh)"
+              name="Giấy báo Nợ/Có"
               parent="menu_re_loan_root"
               action="action_re_loan_adjustment_note"
-              sequence="45"/>
+              sequence="30"/>
 
 </odoo>

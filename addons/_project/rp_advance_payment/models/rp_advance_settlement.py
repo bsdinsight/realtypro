@@ -26,9 +26,11 @@ class RpAdvanceSettlement(models.Model):
         required=True, ondelete='restrict',
         domain="[('move_type', 'in', ['in_invoice', 'in_refund']),"
                " ('state', '=', 'posted'),"
+               " ('payment_state', 'in', ('not_paid', 'partial')),"
                " ('partner_id', '=', advance_partner_id)]",
         help='Hóa đơn vendor bill cần cấn trừ. Chỉ hiện hóa đơn '
-             'cùng Bên nhận tạm ứng + đã posted.')
+             'cùng Bên nhận tạm ứng + đã posted + CHƯA thanh toán '
+             'hết (bug #22 CC1 — hóa đơn Paid không còn gì để cấn).')
 
     amount = fields.Monetary(
         string='Số tiền cấn trừ', required=True,

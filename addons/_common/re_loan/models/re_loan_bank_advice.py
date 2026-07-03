@@ -362,15 +362,16 @@ class ReLoanBankAdviceLine(models.Model):
         Repayment = self.env['re.loan.note.repayment']
         remaining = self.amount
 
-        def _create_repayment(il, pay_interest, pay_principal):
+        def _create_repayment(il, pay_interest, pay_principal, pay_fee=0):
             """Tạo 1 repayment record cho 1 kỳ."""
-            if pay_interest <= 0 and pay_principal <= 0:
+            if pay_interest <= 0 and pay_principal <= 0 and pay_fee <= 0:
                 return self.env['re.loan.note.repayment']
             vals = {
                 'note_id': self.note_id.id,
                 'date': self.advice_id.date_advice,
                 'amount_principal': pay_principal,
                 'amount_interest': pay_interest,
+                'amount_fee': pay_fee,
                 'reference': self.advice_id.reference or self.advice_id.name,
                 'interest_line_id': il.id,
                 'bank_advice_line_id': self.id,
@@ -378,22 +379,26 @@ class ReLoanBankAdviceLine(models.Model):
             return Repayment.create(vals)
 
         if self.interest_line_id:
-            # Case A: chỉ đích danh kỳ
+            # Case A: chỉ đích danh kỳ.
+            # Thứ tự allocation (CC1 #9): lãi → phí → gốc.
             il = self.interest_line_id
             il._compute_paid_amounts()
             ir = max(0, il.interest_amount - il.amount_interest_paid)
+            fr = max(0, il.fee_amount - il.amount_fee_paid)
             pr = max(0, il.principal_due - il.amount_principal_paid)
             pay_interest = min(remaining, ir)
             remaining -= pay_interest
+            pay_fee = min(remaining, fr)
+            remaining -= pay_fee
             pay_principal = min(remaining, pr)
             remaining -= pay_principal
-            _create_repayment(il, pay_interest, pay_principal)
+            _create_repayment(il, pay_interest, pay_principal, pay_fee)
             # Số dư còn lại (nếu kỳ chỉ định đã đủ) — KHÔNG auto
             # spill sang kỳ khác trong case A; nằm lại unallocated
             # cho user check.
             return
 
-        # Case B: loop kỳ cũ → mới
+        # Case B: loop kỳ cũ → mới. Thứ tự trong kỳ: lãi → phí → gốc.
         lines = self.note_id.interest_line_ids.sorted(
             key=lambda l: (l.period_no or 0, l.date_to or fields.Date.today()))
         for il in lines:
@@ -401,14 +406,17 @@ class ReLoanBankAdviceLine(models.Model):
                 break
             il._compute_paid_amounts()
             ir = max(0, il.interest_amount - il.amount_interest_paid)
+            fr = max(0, il.fee_amount - il.amount_fee_paid)
             pr = max(0, il.principal_due - il.amount_principal_paid)
-            if ir <= 0 and pr <= 0:
+            if ir <= 0 and fr <= 0 and pr <= 0:
                 continue  # kỳ này đã trả đủ
             pay_interest = min(remaining, ir)
             remaining -= pay_interest
+            pay_fee = min(remaining, fr)
+            remaining -= pay_fee
             pay_principal = min(remaining, pr)
             remaining -= pay_principal
-            _create_repayment(il, pay_interest, pay_principal)
+            _create_repayment(il, pay_interest, pay_principal, pay_fee)
 
     def action_view_interest_lines(self):
         """Show các kỳ lãi mà line này đã thanh toán (qua repayments)."""

@@ -16,6 +16,7 @@
                        optional="show"/>
                 <field name="amount_principal" sum="Σ gốc"/>
                 <field name="amount_interest" sum="Σ lãi"/>
+                <field name="amount_fee" sum="Σ phí" optional="show"/>
                 <field name="amount_total" sum="Σ"/>
                 <field name="reference" string="Số chứng từ"
                        optional="show"/>
@@ -49,6 +50,7 @@
                         <group>
                             <field name="amount_principal"/>
                             <field name="amount_interest"/>
+                            <field name="amount_fee"/>
                             <field name="amount_total" readonly="1"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>

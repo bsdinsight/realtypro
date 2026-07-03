@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- % phí KW theo NH (CC1 #9) — thêm vào page Realty Identity
+         của re_party, chỉ hiện khi partner là ngân hàng. -->
+    <record id="view_partner_form_re_loan_fee" model="ir.ui.view">
+        <field name="name">res.partner.form.re.loan.fee</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="re_party.view_partner_form_re_party"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='realty_identity']/group" position="inside">
+                <group string="Phí Khế ước (NH)" invisible="not is_bank">
+                    <field name="kw_fee_rate"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

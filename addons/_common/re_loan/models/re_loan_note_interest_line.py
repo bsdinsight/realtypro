@@ -71,10 +71,18 @@ class ReLoanNoteInterestLine(models.Model):
              '• Trả gốc cuối kỳ (Bullet): các kỳ 0đ, kỳ cuối = full gốc\n'
              '• Trả gốc đều: mỗi kỳ = số tiền KW / số kỳ\n'
              '• Tuỳ chỉnh: user nhập tay từng dòng')
+    fee_amount = fields.Monetary(
+        string='Phí kỳ',
+        compute='_compute_fee_amount', store=True, readonly=False,
+        help='Phí KW phân bổ kỳ này (CC1 #9):\n'
+             '• Mode "% trên lãi": = % phí × lãi kỳ\n'
+             '• Mode "Cố định": = Tổng phí / số kỳ (kỳ cuối nhận dư '
+             'làm tròn)\n'
+             'Sửa tay được — kỳ đã trả không bị recompute.')
     total_due = fields.Monetary(
         string='Tổng phải trả',
         compute='_compute_total_due', store=True,
-        help='= Tiền gốc phải trả + Tiền lãi.')
+        help='= Tiền gốc phải trả + Tiền lãi + Phí kỳ.')
 
     state = fields.Selection(
         [('planned',      'Dự kiến'),
@@ -104,6 +112,12 @@ class ReLoanNoteInterestLine(models.Model):
     amount_interest_remaining = fields.Monetary(
         string='Lãi còn phải trả',
         compute='_compute_paid_amounts', store=True)
+    amount_fee_paid = fields.Monetary(
+        string='Phí đã trả',
+        compute='_compute_paid_amounts', store=True)
+    amount_fee_remaining = fields.Monetary(
+        string='Phí còn phải trả',
+        compute='_compute_paid_amounts', store=True)
     amount_paid_total = fields.Monetary(
         string='Tổng đã trả',
         compute='_compute_paid_amounts', store=True)
@@ -115,37 +129,98 @@ class ReLoanNoteInterestLine(models.Model):
 
     @api.depends('repayment_ids.amount_principal',
                  'repayment_ids.amount_interest',
-                 'principal_due', 'interest_amount')
+                 'repayment_ids.amount_fee',
+                 'principal_due', 'interest_amount', 'fee_amount')
     def _compute_paid_amounts(self):
         """Tổng từ repayment_ids → paid/remaining + auto-state.
 
         State auto:
-          - paid: đủ cả gốc + lãi
+          - paid: đủ cả gốc + lãi + phí
           - partial_paid: có trả nhưng chưa đủ
           - planned: chưa trả
         """
         for line in self:
             paid_p = sum(line.repayment_ids.mapped('amount_principal'))
             paid_i = sum(line.repayment_ids.mapped('amount_interest'))
+            paid_f = sum(line.repayment_ids.mapped('amount_fee'))
             line.amount_principal_paid = paid_p
             line.amount_interest_paid = paid_i
-            line.amount_paid_total = paid_p + paid_i
+            line.amount_fee_paid = paid_f
+            line.amount_paid_total = paid_p + paid_i + paid_f
             line.amount_principal_remaining = max(
                 0, line.principal_due - paid_p)
             line.amount_interest_remaining = max(
                 0, line.interest_amount - paid_i)
+            line.amount_fee_remaining = max(
+                0, line.fee_amount - paid_f)
             # State auto: chỉ override planned/partial/paid;
             # nếu state đang 'accrued' (manual), giữ nguyên.
             if line.state == 'accrued':
                 continue
             if (line.amount_principal_remaining <= 0.01
                     and line.amount_interest_remaining <= 0.01
-                    and (paid_p + paid_i) > 0):
+                    and line.amount_fee_remaining <= 0.01
+                    and (paid_p + paid_i + paid_f) > 0):
                 line.state = 'paid'
-            elif paid_p + paid_i > 0:
+            elif paid_p + paid_i + paid_f > 0:
                 line.state = 'partial_paid'
             else:
                 line.state = 'planned'
+
+    @api.depends('note_id.fee_mode', 'note_id.fee_rate',
+                 'note_id.fee_amount_total', 'interest_amount',
+                 'line_type')
+    def _compute_fee_amount(self):
+        """Phân bổ phí KW vào kỳ (CC1 #9).
+
+        - pct_interest: phí kỳ = fee_rate% × lãi kỳ (phí theo lãi,
+          giảm dần tự nhiên)
+        - fixed: chia ĐỀU các kỳ period; kỳ CUỐI nhận phần dư làm tròn
+        - Dòng adjustment / KW không phí → 0
+        - Kỳ ĐÃ TRẢ (paid/partial_paid) giữ nguyên — không recompute
+          đè số đã chốt với NH.
+        """
+        for note in self.mapped('note_id'):
+            note_lines = self.filtered(lambda l: l.note_id == note)
+            mode = note.fee_mode
+            if mode == 'pct_interest':
+                for line in note_lines:
+                    if line.state in ('paid', 'partial_paid'):
+                        line.fee_amount = line.fee_amount
+                    elif line.line_type != 'period':
+                        line.fee_amount = 0
+                    else:
+                        line.fee_amount = (
+                            note.fee_rate / 100.0) * line.interest_amount
+            elif mode == 'fixed':
+                # Chia đều trên TẤT CẢ period lines của note (kể cả
+                # line ngoài recordset self — dùng full list để chia
+                # đúng), nhưng chỉ ASSIGN cho lines trong self.
+                all_period = note.interest_line_ids.filtered(
+                    lambda l: l.line_type == 'period').sorted(
+                    key=lambda l: (l.period_no or 0, l.id))
+                n = len(all_period)
+                each = round(note.fee_amount_total / n) if n else 0
+                last_id = all_period[-1].id if n else False
+                for line in note_lines:
+                    if line.state in ('paid', 'partial_paid'):
+                        line.fee_amount = line.fee_amount
+                    elif line.line_type != 'period':
+                        line.fee_amount = 0
+                    elif line.id == last_id:
+                        line.fee_amount = (
+                            note.fee_amount_total - each * (n - 1))
+                    else:
+                        line.fee_amount = each
+            else:  # none
+                for line in note_lines:
+                    if line.state in ('paid', 'partial_paid'):
+                        line.fee_amount = line.fee_amount
+                    else:
+                        line.fee_amount = 0
+        # Lines không có note (edge — new records)
+        for line in self.filtered(lambda l: not l.note_id):
+            line.fee_amount = 0
 
     @api.depends('date_from', 'date_to')
     def _compute_days(self):
@@ -204,10 +279,11 @@ class ReLoanNoteInterestLine(models.Model):
                 # On create, Odoo sẽ set 0 mặc định.
                 line.principal_due = line.principal_due or 0.0
 
-    @api.depends('principal_due', 'interest_amount')
+    @api.depends('principal_due', 'interest_amount', 'fee_amount')
     def _compute_total_due(self):
         for line in self:
-            line.total_due = line.principal_due + line.interest_amount
+            line.total_due = (line.principal_due + line.interest_amount
+                              + line.fee_amount)
 
     # ------------------------------------------------------------------
     # Action: Thanh toán kỳ này → tạo Repayment tương ứng

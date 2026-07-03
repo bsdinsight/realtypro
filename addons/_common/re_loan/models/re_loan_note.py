@@ -98,6 +98,30 @@ class ReLoanNote(models.Model):
          ('30_360', '30 / 360')],
         string='Quy ước ngày tính lãi', default='act_360', required=True)
 
+    # --- Phí KW (CC1 #9) ---------------------------------------------
+    fee_mode = fields.Selection(
+        [('none',         'Không có phí'),
+         ('fixed',        'Số tiền cố định'),
+         ('pct_interest', '% trên lãi')],
+        string='Cách tính phí KW', default='none', required=True,
+        tracking=True,
+        help='Phí khế ước nhận nợ:\n'
+             '• Cố định: nhập tổng phí, chia ĐỀU các kỳ\n'
+             '• % trên lãi: % thiết lập theo NH (tab NH trên Liên hệ), '
+             'phí kỳ = % × lãi kỳ\n'
+             'Số tính ra đều sửa tay được (tổng + từng kỳ).')
+    fee_rate = fields.Float(
+        string='% phí trên lãi', digits=(5, 2), tracking=True,
+        aggregator=None,
+        help='Auto-load từ "% phí KW trên lãi" của NH khi chọn cách '
+             'tính "% trên lãi". Sửa được per-KW.')
+    fee_amount_total = fields.Monetary(
+        string='Tổng phí KW',
+        compute='_compute_fee_amount_total', store=True, readonly=False,
+        tracking=True,
+        help='Mode "Cố định": nhập tay. Mode "% trên lãi": tự tính '
+             '= % phí × Σ lãi dự kiến — sửa lại được theo số NH báo.')
+
     tenor_months = fields.Integer(string='Kỳ hạn (tháng)', aggregator=None)
     date_maturity = fields.Date(
         string='Ngày đáo hạn', compute='_compute_date_maturity',
@@ -616,6 +640,37 @@ class ReLoanNote(models.Model):
                         "Đã regen lịch lãi do thay đổi ngày gốc "
                         "(activation/note)."))
         return res
+
+    @api.depends('fee_mode', 'fee_rate',
+                 'interest_line_ids.interest_amount',
+                 'interest_line_ids.line_type')
+    def _compute_fee_amount_total(self):
+        """Tổng phí KW (CC1 #9).
+
+        - pct_interest: = fee_rate% × Σ lãi dự kiến (period lines).
+          store readonly=False → user override được theo số NH báo.
+        - fixed: giữ nguyên giá trị user nhập.
+        - none: 0.
+        """
+        for note in self:
+            if note.fee_mode == 'pct_interest':
+                total_interest = sum(note.interest_line_ids.filtered(
+                    lambda l: l.line_type == 'period'
+                ).mapped('interest_amount'))
+                note.fee_amount_total = (
+                    note.fee_rate / 100.0) * total_interest
+            elif note.fee_mode == 'fixed':
+                note.fee_amount_total = note.fee_amount_total or 0.0
+            else:
+                note.fee_amount_total = 0.0
+
+    @api.onchange('fee_mode', 'partner_id')
+    def _onchange_fee_mode_load_rate(self):
+        """Chọn '% trên lãi' → load % phí từ NH (res.partner)."""
+        for note in self:
+            if note.fee_mode == 'pct_interest' and not note.fee_rate \
+                    and note.partner_id:
+                note.fee_rate = note.partner_id.kw_fee_rate
 
     def action_generate_interest_schedule(self):
         """(Re)sinh lịch lãi dự kiến. Giữ lại dòng đã ghi nhận/đã trả,

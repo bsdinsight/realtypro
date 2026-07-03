@@ -230,6 +230,11 @@
                             <field name="interest_method"/>
                             <field name="day_count"/>
                             <field name="repayment_plan"/>
+                            <field name="fee_mode"/>
+                            <field name="fee_rate"
+                                   invisible="fee_mode != 'pct_interest'"/>
+                            <field name="fee_amount_total"
+                                   invisible="fee_mode == 'none'"/>
                         </group>
                         <group string="Dư nợ">
                             <field name="amount_disbursed"/>
@@ -323,6 +328,13 @@
                                            string="Lãi đã trả"
                                            sum="Σ trả lãi"
                                            optional="show"/>
+                                    <field name="fee_amount"
+                                           string="Phí kỳ" sum="Σ phí"
+                                           optional="show"/>
+                                    <field name="amount_fee_paid"
+                                           string="Phí đã trả"
+                                           sum="Σ trả phí"
+                                           optional="hide"/>
                                     <field name="total_due"
                                            sum="Σ phải trả"
                                            optional="hide"/>

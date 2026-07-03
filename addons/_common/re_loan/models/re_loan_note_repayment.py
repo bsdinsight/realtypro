@@ -15,6 +15,9 @@ class ReLoanNoteRepayment(models.Model):
         string='Ngày trả', required=True, default=fields.Date.context_today)
     amount_principal = fields.Monetary(string='Trả gốc', default=0.0)
     amount_interest = fields.Monetary(string='Trả lãi', default=0.0)
+    amount_fee = fields.Monetary(
+        string='Trả phí', default=0.0,
+        help='Phí KW phân bổ kỳ (CC1 #9).')
     amount_total = fields.Monetary(
         string='Tổng trả', compute='_compute_total', store=True)
     reference = fields.Char(string='Chứng từ')
@@ -43,19 +46,23 @@ class ReLoanNoteRepayment(models.Model):
         for rec in self:
             rec.is_auto_debit = bool(rec.bank_advice_line_id)
 
-    @api.depends('amount_principal', 'amount_interest')
+    @api.depends('amount_principal', 'amount_interest', 'amount_fee')
     def _compute_total(self):
         for rec in self:
-            rec.amount_total = rec.amount_principal + rec.amount_interest
+            rec.amount_total = (rec.amount_principal + rec.amount_interest
+                                + rec.amount_fee)
 
-    @api.constrains('amount_principal', 'amount_interest', 'note_id')
+    @api.constrains('amount_principal', 'amount_interest', 'amount_fee',
+                    'note_id')
     def _check_amounts(self):
         for rec in self:
-            if rec.amount_principal < 0 or rec.amount_interest < 0:
+            if rec.amount_principal < 0 or rec.amount_interest < 0 \
+                    or rec.amount_fee < 0:
                 raise ValidationError(_("Số tiền trả không được âm."))
-            if rec.amount_principal == 0 and rec.amount_interest == 0:
+            if rec.amount_principal == 0 and rec.amount_interest == 0 \
+                    and rec.amount_fee == 0:
                 raise ValidationError(_(
-                    "Phải nhập số tiền trả gốc hoặc trả lãi."))
+                    "Phải nhập số tiền trả gốc, trả lãi hoặc trả phí."))
             note = rec.note_id
             total_principal = sum(note.repayment_ids.mapped('amount_principal'))
             if total_principal > note.amount_disbursed:

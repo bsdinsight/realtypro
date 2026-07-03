@@ -313,6 +313,10 @@ class ReLoanNoteInterestLine(models.Model):
                 0, self.principal_due - self.amount_principal_paid),
             'amount_interest': max(
                 0, self.interest_amount - self.amount_interest_paid),
+            # Bug #20 CC1: gợi ý sẵn phí còn lại của kỳ (user sửa
+            # được trên form trước khi Save).
+            'amount_fee': max(
+                0, self.fee_amount - self.amount_fee_paid),
             'reference': _("Trả kỳ %(p)s của KW %(n)s",
                            p=self.period_no,
                            n=self.note_id.name or ''),
@@ -320,10 +324,12 @@ class ReLoanNoteInterestLine(models.Model):
         })
         # State sẽ auto = 'paid' qua _compute_paid_amounts
         self.note_id.message_post(body=_(
-            "Tạo thanh toán từ Lịch lãi kỳ %(p)s: gốc %(g)s, lãi %(l)s.",
+            "Tạo thanh toán từ Lịch lãi kỳ %(p)s: gốc %(g)s, lãi %(l)s, "
+            "phí %(f)s.",
             p=self.period_no,
             g=self.principal_due,
-            l=self.interest_amount))
+            l=self.interest_amount,
+            f=self.fee_amount))
         # Mở form repayment vừa tạo cho user xem/sửa
         return {
             'type': 'ir.actions.act_window',

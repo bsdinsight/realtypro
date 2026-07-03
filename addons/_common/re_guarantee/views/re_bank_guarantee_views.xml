@@ -492,6 +492,10 @@
                     <group>
                         <field name="date"/>
                         <field name="amount"/>
+                        <field name="bank_account_id"
+                               options="{'no_quick_create': True}"
+                               placeholder="TK NH của doanh nghiệp..."/>
+                        <field name="company_partner_id" invisible="1"/>
                         <field name="reference"
                                placeholder="Số UNC / chứng từ NH..."/>
                         <field name="name"/>

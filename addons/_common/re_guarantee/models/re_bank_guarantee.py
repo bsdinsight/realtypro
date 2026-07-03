@@ -815,6 +815,14 @@ class ReBankGuaranteePayment(models.Model):
         help='Tiền gốc: hoàn trả NH số tiền NH đã trả thay cho '
              'beneficiary (khi BL bị thu / forfeited).')
     amount = fields.Monetary(string='Số tiền', required=True)
+    bank_account_id = fields.Many2one(
+        'res.partner.bank', string='Tài khoản chuyển tiền',
+        domain="[('partner_id', '=', company_partner_id)]",
+        help='Tài khoản NH của doanh nghiệp dùng để thanh toán đợt '
+             'này (CC1 #16). Chỉ hiện TK của công ty hiện tại.')
+    company_partner_id = fields.Many2one(
+        'res.partner', related='company_id.partner_id',
+        string='Đối tác công ty', readonly=True)
     reference = fields.Char(string='Số chứng từ NH')
     state = fields.Selection(
         [('draft',  'Nháp'),
@@ -825,6 +833,13 @@ class ReBankGuaranteePayment(models.Model):
         related='guarantee_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
         related='guarantee_id.company_id', store=True, readonly=True)
+
+    @api.onchange('company_id')
+    def _onchange_company_default_bank(self):
+        for rec in self:
+            if not rec.bank_account_id and rec.company_id.partner_id:
+                banks = rec.company_id.partner_id.bank_ids
+                rec.bank_account_id = banks[:1] if banks else False
 
     @api.onchange('schedule_id')
     def _onchange_schedule_fill_guarantee(self):

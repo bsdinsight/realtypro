@@ -240,6 +240,10 @@
                                 <field name="fee_schedule_freq"
                                        class="w-auto"
                                        readonly="state in ('settled','cancelled','released','forfeited')"/>
+                                <label for="fee_first_payment" class="ms-3"/>
+                                <field name="fee_first_payment"
+                                       class="w-auto"
+                                       readonly="state in ('settled','cancelled','released','forfeited')"/>
                                 <button name="action_generate_fee_schedule"
                                         type="object"
                                         string="⚙ Tạo lịch phí BL"

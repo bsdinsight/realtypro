@@ -107,6 +107,12 @@ class ReBankGuarantee(models.Model):
         help='Chu kỳ thanh toán Phí BL — dùng cho nút "Tạo lịch phí '
              'BL" (CC1 #11): chia phí theo đợt, số tiền mỗi đợt '
              'pro-rata theo SỐ NGÀY của đợt.')
+    fee_first_payment = fields.Monetary(
+        string='Phí BL trả lần đầu',
+        help='CC1 #12: khoản phí NH thu NGAY khi phát hành (như ký '
+             'quỹ) — thành Đợt 1 riêng, hạn = ngày kích hoạt/phát '
+             'hành. Phần còn lại (tổng phí − lần đầu) chia vào các '
+             'kỳ theo tần suất. Để 0 nếu NH không thu trước.')
     guarantee_fee_paid = fields.Boolean(
         string='Đã trả phí BL (legacy)', tracking=True,
         help='Flag legacy. Workflow mới: theo dõi qua payment_ids '
@@ -586,6 +592,10 @@ class ReBankGuarantee(models.Model):
             months = step_map[rec.fee_schedule_freq or 'quarterly']
             total_days = (rec.date_expiry - start).days
             total_fee = rec.guarantee_fee_amount
+            # CC1 #12: phí trả lần đầu tách thành Đợt 1 riêng (thu
+            # ngay khi phát hành), phần còn lại chia kỳ pro-rata.
+            first_pay = min(rec.fee_first_payment or 0.0, total_fee)
+            remain_fee = total_fee - first_pay
             periods = []
             cursor = start
             while cursor < rec.date_expiry:
@@ -595,29 +605,47 @@ class ReBankGuarantee(models.Model):
                 periods.append((cursor, period_end))
                 cursor = period_end
             vals_list, allocated = [], 0.0
-            for idx, (p_start, p_end) in enumerate(periods):
-                is_last = idx == len(periods) - 1
-                days = (p_end - p_start).days
-                amt = (total_fee - allocated if is_last
-                       else round(total_fee * days / total_days))
-                allocated += amt
+            seq_offset = 0
+            if first_pay > 0:
+                seq_offset = 1
                 vals_list.append({
                     'guarantee_id': rec.id,
                     'payment_kind': 'fee',
-                    'sequence': (idx + 1) * 10,
-                    'due_date': p_start,
-                    'amount_due': amt,
-                    'name': _("Đợt %(n)s - Phí BL (%(f)s → %(t)s, %(d)s ngày)",
-                              n=idx + 1,
-                              f=p_start.strftime('%d/%m/%Y'),
-                              t=p_end.strftime('%d/%m/%Y'),
-                              d=days),
+                    'sequence': 10,
+                    'due_date': start,
+                    'amount_due': first_pay,
+                    'name': _("Trả lần đầu - Phí BL (%(d)s)",
+                              d=start.strftime('%d/%m/%Y')),
                 })
+            if remain_fee > 0.01:
+                for idx, (p_start, p_end) in enumerate(periods):
+                    is_last = idx == len(periods) - 1
+                    days = (p_end - p_start).days
+                    amt = (remain_fee - allocated if is_last
+                           else round(remain_fee * days / total_days))
+                    allocated += amt
+                    if amt <= 0:
+                        continue
+                    vals_list.append({
+                        'guarantee_id': rec.id,
+                        'payment_kind': 'fee',
+                        'sequence': (idx + 1 + seq_offset) * 10,
+                        'due_date': p_start,
+                        'amount_due': amt,
+                        'name': _(
+                            "Đợt %(n)s - Phí BL (%(f)s → %(t)s, %(d)s ngày)",
+                            n=idx + 1 + seq_offset,
+                            f=p_start.strftime('%d/%m/%Y'),
+                            t=p_end.strftime('%d/%m/%Y'),
+                            d=days),
+                    })
             self.env['re.bank.guarantee.payment.schedule'].create(
                 vals_list)
             rec.message_post(body=_(
                 "Đã tạo lịch Phí BL: %(n)s đợt (%(freq)s), tổng "
-                "%(amt)s ₫, pro-rata theo số ngày từng đợt.",
+                "%(amt)s ₫ — trả lần đầu %(first)s ₫, còn lại "
+                "pro-rata theo số ngày từng đợt.",
+                first='{:,.0f}'.format(first_pay),
                 n=len(vals_list),
                 freq=dict(rec._fields['fee_schedule_freq'].selection)[
                     rec.fee_schedule_freq or 'quarterly'],

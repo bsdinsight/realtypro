@@ -311,22 +311,26 @@ class ReLoanBankAdviceLine(models.Model):
 
     @api.onchange('interest_line_id')
     def _onchange_interest_line_suggest_amount(self):
-        """Khi pick 1 kỳ, gợi ý 'Số tiền trích thu' = (gốc còn + lãi còn)
-        của kỳ đó. User vẫn sửa được sau đó nếu NH trích ít hơn.
+        """Khi pick 1 kỳ, gợi ý 'Số tiền trích thu' = (gốc còn + lãi còn
+        + phí còn) của kỳ đó (bug #21 CC1). User vẫn sửa được sau đó
+        nếu NH trích ít hơn.
 
-        Compute trực tiếp từ stored fields (principal_due, interest_amount)
-        + sum(repayment_ids) thay vì gọi _compute_paid_amounts() — tránh
-        stale cache trong onchange context (compute store=True dùng giá
-        trị cache từ trước, không refresh kịp).
+        Compute trực tiếp từ stored fields (principal_due, interest_amount,
+        fee_amount) + sum(repayment_ids) thay vì gọi
+        _compute_paid_amounts() — tránh stale cache trong onchange
+        context (compute store=True dùng giá trị cache từ trước, không
+        refresh kịp).
         """
         if not self.interest_line_id:
             return
         line = self.interest_line_id
         paid_p = sum(line.repayment_ids.mapped('amount_principal'))
         paid_i = sum(line.repayment_ids.mapped('amount_interest'))
+        paid_f = sum(line.repayment_ids.mapped('amount_fee'))
         self.amount = (
             max(0.0, line.principal_due - paid_p)
             + max(0.0, line.interest_amount - paid_i)
+            + max(0.0, line.fee_amount - paid_f)
         )
 
     @api.onchange('note_id')

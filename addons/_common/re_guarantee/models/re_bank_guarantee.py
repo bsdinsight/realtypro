@@ -835,17 +835,6 @@ class ReBankGuaranteePayment(models.Model):
             if rec.schedule_id and not rec.guarantee_id:
                 rec.guarantee_id = rec.schedule_id.guarantee_id
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # Defensive: thiếu guarantee_id nhưng có schedule_id → fill
-        # từ schedule (mọi path: dialog, import, API).
-        Schedule = self.env['re.bank.guarantee.payment.schedule']
-        for vals in vals_list:
-            if not vals.get('guarantee_id') and vals.get('schedule_id'):
-                sched = Schedule.browse(vals['schedule_id'])
-                vals['guarantee_id'] = sched.guarantee_id.id
-        return super().create(vals_list)
-
     @api.constrains('amount')
     def _check_amount(self):
         for rec in self:
@@ -866,6 +855,14 @@ class ReBankGuaranteePayment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Defensive: thiếu guarantee_id nhưng có schedule_id → fill
+        # từ schedule (fix dialog thanh toán từ dòng lịch chưa lưu —
+        # default_guarantee_id context = False).
+        Schedule = self.env['re.bank.guarantee.payment.schedule']
+        for vals in vals_list:
+            if not vals.get('guarantee_id') and vals.get('schedule_id'):
+                vals['guarantee_id'] = Schedule.browse(
+                    vals['schedule_id']).guarantee_id.id
         recs = super().create(vals_list)
         recs.guarantee_id._check_auto_settle()
         return recs

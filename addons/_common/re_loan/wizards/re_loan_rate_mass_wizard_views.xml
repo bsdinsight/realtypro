@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_rate_mass_wizard_form" model="ir.ui.view">
+        <field name="name">re.loan.rate.mass.wizard.form</field>
+        <field name="model">re.loan.rate.mass.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Điều chỉnh lãi suất hàng loạt">
+                <group>
+                    <group string="Bộ lọc KW">
+                        <field name="partner_id"/>
+                        <field name="credit_contract_id"/>
+                        <field name="facility_id"/>
+                    </group>
+                    <group string="Điều chỉnh">
+                        <field name="adjust_mode" widget="radio"/>
+                        <field name="new_rate"
+                               invisible="adjust_mode != 'set'"
+                               required="adjust_mode == 'set'"/>
+                        <field name="delta_rate"
+                               invisible="adjust_mode != 'delta'"
+                               required="adjust_mode == 'delta'"/>
+                        <field name="date_effective"/>
+                        <field name="bank_document"
+                               placeholder="TB-1234/VCB"/>
+                    </group>
+                </group>
+                <div class="mb-2">
+                    <button name="action_load_notes" type="object"
+                            string="🔄 Tải danh sách KW theo bộ lọc"
+                            class="btn-secondary"/>
+                    <span class="text-muted ms-2">
+                        Xoá dòng KW không điều chỉnh (icon 🗑) — không phải
+                        mọi KW đều đổi LS. Sửa tay LS mới từng dòng được.
+                    </span>
+                </div>
+                <field name="line_ids">
+                    <list editable="bottom"
+                          decoration-warning="has_paid_after">
+                        <field name="note_id" readonly="1"/>
+                        <field name="partner_id" optional="hide"/>
+                        <field name="credit_contract_id" optional="show"/>
+                        <field name="principal_outstanding"
+                               sum="Σ dư nợ"/>
+                        <field name="current_rate"/>
+                        <field name="new_rate"/>
+                        <field name="future_period_count"/>
+                        <field name="has_paid_after"
+                               string="⚠ Cần giấy báo"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+                <group string="Diễn giải (ghi vào từng phụ lục)">
+                    <field name="description" nolabel="1" colspan="2"
+                           placeholder="Điều chỉnh LS định kỳ quý 3/2026 theo thông báo NH..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận — tạo phụ lục hàng loạt"
+                            class="btn-primary"
+                            confirm="Mỗi KW trong danh sách sẽ sinh 1 Phụ lục đổi LS + áp dụng ngay (kỳ chưa trả tính theo LS mới). Tiếp tục?"/>
+                    <button string="Đóng" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_rate_mass_wizard" model="ir.actions.act_window">
+        <field name="name">Điều chỉnh LS hàng loạt</field>
+        <field name="res_model">re.loan.rate.mass.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_re_loan_rate_mass"
+              name="Điều chỉnh LS hàng loạt"
+              parent="menu_re_loan_root"
+              action="action_re_loan_rate_mass_wizard"
+              sequence="46"
+              groups="re_loan.group_loan_manager"/>
+
+</odoo>

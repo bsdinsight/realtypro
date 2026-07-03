@@ -43,6 +43,7 @@ Các phase sau (L1+) bổ sung credit contract, facility, note, collateral, ...
         'views/re_loan_note_views.xml',
         'views/re_loan_note_repayment_views.xml',
         'wizards/re_loan_bank_advice_import_wizard_views.xml',
+        'wizards/re_loan_rate_mass_wizard_views.xml',
         'views/re_loan_bank_advice_views.xml',
         'views/re_loan_adjustment_note_views.xml',
         'views/res_partner_views.xml',

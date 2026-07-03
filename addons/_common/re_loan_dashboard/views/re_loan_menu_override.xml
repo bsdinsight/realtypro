@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Override menu top "Quản lý Vay" (re_loan.menu_re_loan_root)
+         set action = dashboard. Khi user click menu top → vào dashboard
+         TRƯỚC khi xem submenu (HĐTD, KW, BL, ...).
+
+         Pattern: dùng menuitem trùng id để Odoo MERGE thay vì tạo mới.
+    -->
+    <menuitem id="re_loan.menu_re_loan_root"
+              name="Quản lý Vay"
+              action="action_re_loan_dashboard"/>
+
+    <!-- Sub-menu Dashboard riêng để user truy cập trực tiếp từ submenu
+         (vd sau khi đã navigate sâu, muốn quay lại dashboard).
+    -->
+    <menuitem id="menu_re_loan_dashboard_sub"
+              name="Dashboard"
+              parent="re_loan.menu_re_loan_root"
+              action="action_re_loan_dashboard"
+              sequence="1"/>
+</odoo>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_dashboard_form" model="ir.ui.view">
+        <field name="name">re.loan.dashboard.form</field>
+        <field name="model">re.loan.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Quản lý Vay — Dashboard" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="↻ Refresh KPIs"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Quản lý Vay — Dashboard</h1>
+                        <p class="text-muted">Số liệu thời gian thực — click số để xem chi tiết</p>
+                    </div>
+
+                    <!-- ─── 0. Charts tổng quan ─── -->
+                    <group string="📊 Tổng quan trực quan">
+                        <div class="row w-100 g-3" colspan="2">
+                            <div class="col-lg-5 col-md-12">
+                                <div class="o_dash_card p-3 border rounded"
+                                     style="background:#fff">
+                                    <strong class="text-muted small">TỶ LỆ SỬ DỤNG HẠN MỨC</strong>
+                                    <field name="chart_gauges_svg" nolabel="1"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-md-12">
+                                <div class="o_dash_card p-3 border rounded"
+                                     style="background:#fff">
+                                    <strong class="text-muted small">CƠ CẤU HĐTD (đã cho vay / bảo lãnh / còn trống)</strong>
+                                    <field name="chart_facility_svg" nolabel="1"
+                                           class="mt-2 d-block"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row w-100 g-3 mt-1" colspan="2">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="o_dash_card p-3 border rounded"
+                                     style="background:#fff">
+                                    <strong class="text-muted small">DƯ NỢ GỐC THEO NGÂN HÀNG (top 6)</strong>
+                                    <field name="chart_debt_by_bank_svg" nolabel="1"
+                                           class="mt-2 d-block"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="o_dash_card p-3 border rounded"
+                                     style="background:#fff">
+                                    <strong class="text-muted small">KHẾ ƯỚC ĐÁO HẠN THEO MỐC THỜI GIAN</strong>
+                                    <field name="chart_maturity_svg" nolabel="1"
+                                           class="mt-2 d-block"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row w-100 g-3 mt-1" colspan="2">
+                            <div class="col-lg-6 col-md-12">
+                                <div class="o_dash_card p-3 border rounded"
+                                     style="background:#fff">
+                                    <strong class="text-muted small">BẢO LÃNH OUTSTANDING THEO LOẠI</strong>
+                                    <field name="chart_bg_by_type_svg" nolabel="1"
+                                           class="mt-2 d-block"/>
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+
+                    <!-- ─── 1. HĐTD ─── -->
+                    <group string="📋 Hợp đồng tín dụng (HĐTD)">
+                        <group>
+                            <field name="kpi_hdtd_active" widget="statinfo"/>
+                            <field name="kpi_hdtd_total_limit" widget="monetary"/>
+                            <field name="kpi_hdtd_facility_granted" widget="monetary"/>
+                            <field name="kpi_hdtd_remaining" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="kpi_hdtd_expiring_90d" widget="statinfo"/>
+                            <button name="action_open_hdtd_active" type="object"
+                                    string="→ HĐTD hiệu lực" class="btn-link"/>
+                            <button name="action_open_hdtd_expiring" type="object"
+                                    string="→ HĐTD sắp hết hạn ≤90d" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── 2. Facility split ─── -->
+                    <group string="💼 Hạn mức (Facility) — tách Cho vay vs Bảo lãnh">
+                        <group string="Cho vay">
+                            <field name="kpi_facility_loan_limit" widget="monetary"/>
+                            <field name="kpi_facility_loan_used" widget="monetary"/>
+                            <field name="kpi_facility_loan_avail" widget="monetary"/>
+                            <field name="kpi_facility_loan_used_pct" widget="percentage"/>
+                            <button name="action_open_facilities_loan" type="object"
+                                    string="→ Hạn mức cho vay" class="btn-link"/>
+                        </group>
+                        <group string="Bảo lãnh">
+                            <field name="kpi_facility_bg_limit" widget="monetary"/>
+                            <field name="kpi_facility_bg_used" widget="monetary"/>
+                            <field name="kpi_facility_bg_avail" widget="monetary"/>
+                            <field name="kpi_facility_bg_used_pct" widget="percentage"/>
+                            <button name="action_open_facilities_bg" type="object"
+                                    string="→ Hạn mức bảo lãnh" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── 3. KW ─── -->
+                    <group string="📝 Khế ước nhận nợ (KW)">
+                        <group>
+                            <field name="kpi_kw_active" widget="statinfo"/>
+                            <field name="kpi_kw_principal_outstanding" widget="monetary"/>
+                            <field name="kpi_kw_interest_paid_ytd" widget="monetary"/>
+                            <button name="action_open_kw_active" type="object"
+                                    string="→ KW còn dư nợ" class="btn-link"/>
+                        </group>
+                        <group>
+                            <field name="kpi_kw_maturing_30d" widget="statinfo"/>
+                            <field name="kpi_kw_maturing_90d" widget="statinfo"/>
+                            <button name="action_open_kw_maturing_30d" type="object"
+                                    string="→ KW sắp đáo hạn ≤30d" class="btn-link"/>
+                            <button name="action_open_kw_maturing_90d" type="object"
+                                    string="→ KW sắp đáo hạn ≤90d" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── 4. Bảo lãnh ─── -->
+                    <group string="🏦 Bảo lãnh">
+                        <group>
+                            <field name="kpi_bg_count_active" widget="statinfo"/>
+                            <field name="kpi_bg_outstanding" widget="monetary"/>
+                            <field name="kpi_bg_expiring_30d" widget="statinfo"/>
+                        </group>
+                        <group>
+                            <button name="action_open_bg_active" type="object"
+                                    string="→ BL outstanding" class="btn-link"/>
+                            <button name="action_open_bg_expiring" type="object"
+                                    string="→ BL sắp hết hạn ≤30d" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── 5. Pending workflow ─── -->
+                    <group string="⏳ Workflow đang chờ xử lý">
+                        <group>
+                            <field name="kpi_pending_disbursement" widget="statinfo"
+                                   class="text-warning"/>
+                            <field name="kpi_pending_bank_advice" widget="statinfo"
+                                   class="text-warning"/>
+                            <field name="kpi_pending_bg_request" widget="statinfo"
+                                   class="text-warning"/>
+                        </group>
+                        <group>
+                            <button name="action_open_pending_disbursement" type="object"
+                                    string="→ Hồ sơ giải ngân chờ duyệt" class="btn-link"/>
+                            <button name="action_open_pending_bank_advice" type="object"
+                                    string="→ Giấy báo nợ chờ áp dụng" class="btn-link"/>
+                            <button name="action_open_pending_bg_request" type="object"
+                                    string="→ Đề nghị BL chờ phát hành" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── 6. Cảnh báo ─── -->
+                    <group string="⚠ Cảnh báo (cần xử lý ngay)">
+                        <group>
+                            <field name="kpi_alert_kw_overdue" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <field name="kpi_alert_kw_overdue_amount" widget="monetary"
+                                   class="text-danger"/>
+                            <button name="action_open_kw_overdue" type="object"
+                                    string="→ Xử lý KW quá hạn" class="btn-danger"/>
+                        </group>
+                        <group>
+                            <field name="kpi_alert_bg_expired" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <field name="kpi_alert_interest_overdue" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_bg_expired" type="object"
+                                    string="→ Xử lý BL hết hạn" class="btn-danger"/>
+                            <button name="action_open_interest_overdue" type="object"
+                                    string="→ Xử lý kỳ lãi quá hạn" class="btn-danger"/>
+                        </group>
+                    </group>
+
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_dashboard" model="ir.actions.act_window">
+        <field name="name">Quản lý Vay — Dashboard</field>
+        <field name="res_model">re.loan.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_re_loan_dashboard_form"/>
+        <field name="target">main</field>
+    </record>
+
+</odoo>

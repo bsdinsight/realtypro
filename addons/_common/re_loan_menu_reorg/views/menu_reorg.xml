@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        CHỈ tạo 3 group container. Việc re-parent existing menu sang
+        các group này là job của post_init_hook `_reorg_menus`
+        (xem __init__.py) — vì cross-module override qua XML
+        <menuitem id="re_loan.menu_..."> tạo MỚI menu rỗng thay vì
+        update (name field bị overwrite về null).
+    -->
+
+    <menuitem id="menu_grp_credit_contract"
+              name="HĐ tín dụng"
+              parent="re_loan.menu_re_loan_root"
+              sequence="10"/>
+
+    <menuitem id="menu_grp_note"
+              name="Khế ước"
+              parent="re_loan.menu_re_loan_root"
+              sequence="20"/>
+
+    <menuitem id="menu_grp_payment"
+              name="Trích thu &amp; Thanh toán"
+              parent="re_loan.menu_re_loan_root"
+              sequence="40"/>
+
+</odoo>

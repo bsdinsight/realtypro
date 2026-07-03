@@ -12,8 +12,10 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="sign_date"/>
                 <field name="date_end"/>
-                <field name="amount_total" sum="Tổng hạn mức"/>
-                <field name="amount_facility_total" sum="Đã cấp"/>
+                <field name="amount_total" sum="Tổng hạn mức"
+                       string="Tổng HM HĐTD" width="220"/>
+                <field name="amount_facility_total" sum="Đã cấp"
+                       string="HM đã cấp" width="220"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'active'"
                        decoration-info="state == 'draft'"

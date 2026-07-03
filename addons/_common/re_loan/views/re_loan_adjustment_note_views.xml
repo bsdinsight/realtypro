@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_adjustment_note_list" model="ir.ui.view">
+        <field name="name">re.loan.adjustment.note.list</field>
+        <field name="model">re.loan.adjustment.note</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'"
+                  decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="kind"/>
+                <field name="note_id"/>
+                <field name="partner_id"/>
+                <field name="date_issue"/>
+                <field name="amount" sum="Tổng"/>
+                <field name="target_interest_line_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'applied'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_adjustment_note_form" model="ir.ui.view">
+        <field name="name">re.loan.adjustment.note.form</field>
+        <field name="model">re.loan.adjustment.note</field>
+        <field name="arch" type="xml">
+            <form string="Giấy báo Nợ/Có">
+                <header>
+                    <button name="action_apply" type="object"
+                            string="Áp dụng vào kỳ" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            confirm="Huỷ giấy báo? Dòng điều chỉnh trong lịch lãi (nếu có) sẽ bị gỡ."
+                            invisible="state == 'cancelled'"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,applied"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group string="Thông tin giấy báo">
+                            <field name="kind" readonly="state != 'draft'"/>
+                            <field name="note_id" readonly="state != 'draft'"/>
+                            <field name="partner_id"/>
+                            <field name="date_issue" readonly="state != 'draft'"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Áp dụng">
+                            <field name="target_interest_line_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="adjustment_line_id"
+                                   invisible="not adjustment_line_id"/>
+                        </group>
+                    </group>
+                    <group string="Lý do / diễn giải">
+                        <field name="reason" nolabel="1" colspan="2"
+                               readonly="state != 'draft'"
+                               placeholder="VD: Điều chỉnh lãi kỳ 2-3 do thay đổi lãi suất 12.5% → 13% hiệu lực hồi tố 01/03/2026 theo Phụ lục 03..."/>
+                    </group>
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_adjustment_note" model="ir.actions.act_window">
+        <field name="name">Giấy báo Nợ/Có (điều chỉnh lãi)</field>
+        <field name="res_model">re.loan.adjustment.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo giấy báo Nợ/Có đầu tiên</p>
+            <p>Khi NH đổi lãi suất hồi tố sau khi doanh nghiệp đã thanh
+            toán kỳ lãi, NH phát hành giấy báo Nợ (truy thu) hoặc Có
+            (truy hoàn). Ghi nhận tại đây và áp dụng vào kỳ chưa
+            thanh toán — hệ thống tạo dòng "Điều chỉnh" trong lịch lãi,
+            không sửa kỳ đã trả.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_adjustment_note"
+              name="Giấy báo Nợ/Có (điều chỉnh)"
+              parent="menu_re_loan_root"
+              action="action_re_loan_adjustment_note"
+              sequence="45"/>
+
+</odoo>

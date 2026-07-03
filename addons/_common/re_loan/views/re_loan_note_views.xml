@@ -294,8 +294,15 @@
                             <field name="interest_line_ids">
                                 <list decoration-success="state == 'paid'"
                                       decoration-info="state == 'planned'"
-                                      decoration-warning="state in ('accrued','partial_paid')">
+                                      decoration-warning="state in ('accrued','partial_paid')"
+                                      decoration-danger="line_type == 'adjustment'">
                                     <field name="period_no"/>
+                                    <field name="line_type"
+                                           string="Loại"
+                                           optional="show"/>
+                                    <field name="adjustment_note_id"
+                                           string="Giấy báo"
+                                           optional="show"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="days" optional="hide"/>

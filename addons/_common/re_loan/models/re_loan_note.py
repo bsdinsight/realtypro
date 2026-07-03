@@ -624,8 +624,12 @@ class ReLoanNote(models.Model):
             if note.state == 'cancelled':
                 raise UserError(_(
                     "Không sinh lịch lãi cho KW đã huỷ."))
+            # Dòng 'adjustment' (Giấy báo Nợ/Có truy thu/truy hoàn)
+            # KHÔNG bị regen xoá — chúng là chứng từ NH, độc lập với
+            # lịch dự kiến.
             note.interest_line_ids.filtered(
-                lambda l: l.state == 'planned').unlink()
+                lambda l: l.state == 'planned'
+                and l.line_type == 'period').unlink()
             vals = note._build_interest_schedule_lines()
             note.interest_line_ids = [(0, 0, v) for v in vals]
         return True

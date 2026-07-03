@@ -12,3 +12,4 @@ from . import re_loan_collateral_valuation
 from . import re_loan_collateral_pledge
 from . import re_loan_payment_plan_report
 from . import re_loan_bank_advice
+from . import re_loan_adjustment_note

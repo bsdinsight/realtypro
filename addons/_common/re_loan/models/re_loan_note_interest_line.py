@@ -17,6 +17,17 @@ class ReLoanNoteInterestLine(models.Model):
     note_id = fields.Many2one(
         're.loan.note', string='Khế ước', required=True, ondelete='cascade')
     period_no = fields.Integer(string='Kỳ')
+    line_type = fields.Selection(
+        [('period',     'Kỳ lãi'),
+         ('adjustment', 'Điều chỉnh')],
+        string='Loại dòng', default='period', required=True,
+        help='Điều chỉnh = dòng truy thu/truy hoàn sinh từ Giấy báo '
+             'Nợ/Có của NH (đổi lãi suất hồi tố). KHÔNG bị xoá khi '
+             'regen lịch lãi.')
+    adjustment_note_id = fields.Many2one(
+        're.loan.adjustment.note', string='Giấy báo Nợ/Có',
+        readonly=True, ondelete='restrict',
+        help='Giấy báo NH sinh ra dòng điều chỉnh này.')
     display_name = fields.Char(
         compute='_compute_display_name', store=True)
 

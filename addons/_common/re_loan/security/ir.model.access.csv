@@ -35,3 +35,5 @@ access_re_loan_bank_advice_import_wizard_user,re.loan.bank.advice.import.wizard 
 access_re_loan_bank_advice_import_wizard_manager,re.loan.bank.advice.import.wizard manager,model_re_loan_bank_advice_import_wizard,group_loan_manager,1,1,1,1
 access_re_loan_bank_advice_import_line_user,re.loan.bank.advice.import.line user,model_re_loan_bank_advice_import_line,group_loan_user,1,1,1,1
 access_re_loan_bank_advice_import_line_manager,re.loan.bank.advice.import.line manager,model_re_loan_bank_advice_import_line,group_loan_manager,1,1,1,1
+access_re_loan_adjustment_note_user,re.loan.adjustment.note user,model_re_loan_adjustment_note,group_loan_user,1,1,1,0
+access_re_loan_adjustment_note_manager,re.loan.adjustment.note manager,model_re_loan_adjustment_note,group_loan_manager,1,1,1,1

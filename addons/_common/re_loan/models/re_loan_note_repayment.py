@@ -21,6 +21,12 @@ class ReLoanNoteRepayment(models.Model):
     amount_total = fields.Monetary(
         string='Tổng trả', compute='_compute_total', store=True)
     reference = fields.Char(string='Chứng từ')
+    bank_account_id = fields.Many2one(
+        'res.partner.bank', string='Tài khoản thanh toán',
+        domain="[('partner_id', '=', company_partner_id)]",
+        help='TK NH của doanh nghiệp dùng để trả nợ đợt này (CC1 #24).')
+    company_partner_id = fields.Many2one(
+        'res.partner', related='company_id.partner_id', readonly=True)
     # --- Link tới kỳ lãi cụ thể (tracking allocation) ---
     interest_line_id = fields.Many2one(
         're.loan.note.interest.line', string='Kỳ thanh toán',
@@ -45,6 +51,13 @@ class ReLoanNoteRepayment(models.Model):
     def _compute_is_auto_debit(self):
         for rec in self:
             rec.is_auto_debit = bool(rec.bank_advice_line_id)
+
+    @api.onchange('note_id')
+    def _onchange_default_bank_account(self):
+        for rec in self:
+            if not rec.bank_account_id and rec.company_id.partner_id:
+                banks = rec.company_id.partner_id.bank_ids
+                rec.bank_account_id = banks[:1] if banks else False
 
     @api.depends('amount_principal', 'amount_interest', 'amount_fee')
     def _compute_total(self):

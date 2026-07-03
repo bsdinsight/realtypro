@@ -51,6 +51,10 @@
                             <field name="amount_principal"/>
                             <field name="amount_interest"/>
                             <field name="amount_fee"/>
+                            <field name="bank_account_id"
+                                   options="{'no_quick_create': True}"
+                                   placeholder="TK NH của doanh nghiệp..."/>
+                            <field name="company_partner_id" invisible="1"/>
                             <field name="amount_total" readonly="1"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>

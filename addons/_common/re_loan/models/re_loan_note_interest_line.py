@@ -321,6 +321,9 @@ class ReLoanNoteInterestLine(models.Model):
                            p=self.period_no,
                            n=self.note_id.name or ''),
             'interest_line_id': self.id,
+            'bank_account_id': (
+                self.note_id.company_id.partner_id.bank_ids[:1].id
+                if self.note_id.company_id.partner_id.bank_ids else False),
         })
         # State sẽ auto = 'paid' qua _compute_paid_amounts
         self.note_id.message_post(body=_(

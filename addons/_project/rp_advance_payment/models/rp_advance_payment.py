@@ -199,11 +199,11 @@ class RpAdvancePayment(models.Model):
 
     def action_approve(self):
         """Chờ duyệt → Đã duyệt. Cần group rp_advance_payment.group_manager."""
-        manager_group = self.env.ref(
-            'rp_advance_payment.group_advance_manager',
-            raise_if_not_found=False)
-        is_manager = manager_group and (
-            self.env.user.id in manager_group.users.ids)
+        # Odoo 19: check quyền qua has_group (res.groups.users renamed
+        # → user_ids; has_group cover cả implied groups — chuẩn hơn
+        # so sánh ids trực tiếp).
+        is_manager = self.env.user.has_group(
+            'rp_advance_payment.group_advance_manager')
         for rec in self:
             if rec.state != 'to_approve':
                 raise UserError(_(

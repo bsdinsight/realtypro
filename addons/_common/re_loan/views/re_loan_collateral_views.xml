@@ -89,14 +89,43 @@
                     <notebook>
                         <page string="Định giá" name="valuation">
                             <field name="valuation_ids">
-                                <list editable="bottom">
+                                <list editable="bottom"
+                                      decoration-danger="is_expired">
                                     <field name="date"/>
                                     <field name="amount"/>
                                     <field name="method"/>
                                     <field name="appraiser"/>
+                                    <field name="date_valid_until"/>
+                                    <field name="is_expired"
+                                           string="⚠ Hết hạn"
+                                           optional="show"/>
+                                    <field name="attachment_ids"
+                                           widget="many2many_binary"
+                                           string="Chứng thư"/>
                                     <field name="note"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>
+                                <form string="Định giá">
+                                    <group>
+                                        <group>
+                                            <field name="date"/>
+                                            <field name="amount"/>
+                                            <field name="method"/>
+                                            <field name="appraiser"/>
+                                        </group>
+                                        <group>
+                                            <field name="date_valid_until"/>
+                                            <field name="is_expired"/>
+                                            <field name="note"/>
+                                        </group>
+                                    </group>
+                                    <group string="Tài liệu đính kèm (chứng thư định giá)">
+                                        <field name="attachment_ids"
+                                               widget="many2many_binary"
+                                               nolabel="1" colspan="2"/>
+                                    </group>
+                                    <field name="currency_id" invisible="1"/>
+                                </form>
                             </field>
                         </page>
                         <page string="Thế chấp (multi-bank)" name="pledge">

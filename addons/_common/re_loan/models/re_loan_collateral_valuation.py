@@ -23,7 +23,25 @@ class ReLoanCollateralValuation(models.Model):
          ('appraisal', 'Tổ chức thẩm định giá')],
         string='Phương pháp', default='appraisal', required=True)
     appraiser = fields.Char(string='Tổ chức / Người định giá')
+    date_valid_until = fields.Date(
+        string='Ngày hết hạn định giá',
+        help='Chứng thư định giá thường có hiệu lực 6-12 tháng — NH '
+             'yêu cầu định giá lại khi hết hạn (CC1 #15).')
+    is_expired = fields.Boolean(
+        string='Hết hạn', compute='_compute_is_expired',
+        help='True khi quá Ngày hết hạn định giá.')
+    attachment_ids = fields.Many2many(
+        'ir.attachment', 're_loan_collateral_valuation_att_rel',
+        'valuation_id', 'attachment_id',
+        string='Tài liệu đính kèm',
+        help='Upload file chứng thư định giá (PDF/scan) — CC1 #15.')
     note = fields.Char(string='Ghi chú')
+
+    def _compute_is_expired(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            rec.is_expired = bool(
+                rec.date_valid_until and rec.date_valid_until < today)
     currency_id = fields.Many2one(
         related='collateral_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(

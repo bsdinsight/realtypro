@@ -7,7 +7,7 @@
         <field name="model">rp.advance.payment</field>
         <field name="arch" type="xml">
             <list decoration-info="state == 'draft'"
-                  decoration-warning="state == 'to_approve'"
+                  decoration-warning="state in ('to_approve', 'partial_paid')"
                   decoration-primary="state == 'approved'"
                   decoration-success="state in ('paid', 'settled')"
                   decoration-muted="state == 'cancelled'">
@@ -18,6 +18,8 @@
                 <field name="partner_id"/>
                 <field name="purpose" optional="show"/>
                 <field name="amount" sum="Σ"/>
+                <field name="amount_paid" sum="Σ đã thanh toán"
+                       optional="show"/>
                 <field name="amount_settled" sum="Σ cấn trừ"
                        optional="show"/>
                 <field name="amount_remaining" sum="Σ còn"
@@ -63,7 +65,7 @@
                             string="Về Nháp"
                             invisible="state != 'cancelled'"/>
                     <field name="state" widget="statusbar"
-                           statusbar_visible="draft,to_approve,approved,paid,settled"/>
+                           statusbar_visible="draft,to_approve,approved,partial_paid,paid,settled"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -117,6 +119,9 @@
                     <group string="Cấn trừ"
                            invisible="state in ('draft', 'to_approve', 'approved')">
                         <group>
+                            <field name="amount_paid" readonly="1"/>
+                            <field name="amount_unpaid" readonly="1"
+                                   decoration-warning="amount_unpaid &gt; 0"/>
                             <field name="amount_settled" readonly="1"/>
                             <field name="amount_remaining" readonly="1"
                                    decoration-warning="amount_remaining > 0"/>

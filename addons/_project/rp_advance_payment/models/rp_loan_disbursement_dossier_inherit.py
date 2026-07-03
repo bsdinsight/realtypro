@@ -22,7 +22,7 @@ class RpLoanDisbursementDossier(models.Model):
 
     advance_payment_id = fields.Many2one(
         'rp.advance.payment', string='Tạm ứng',
-        domain="[('state', '=', 'approved'),"
+        domain="[('state', 'in', ('approved', 'partial_paid')),"
                " ('partner_id', '=', disbursement_beneficiary_id)]",
         help='Tạm ứng cần giải ngân (chưa có hóa đơn). Pick cái này '
              'THAY VÌ "Hóa đơn" — chỉ chọn 1 trong 2. Chỉ hiện Tạm '
@@ -47,9 +47,10 @@ class RpLoanDisbursementDossier(models.Model):
 
     @api.onchange('advance_payment_id')
     def _onchange_advance_fill_amount(self):
-        """Pick Tạm ứng → auto-fill amount = giá trị tạm ứng."""
+        """Pick Tạm ứng → auto-fill = phần CHƯA thanh toán (bug #19:
+        thanh toán từng phần qua nhiều dossier — không fill full)."""
         if self.advance_payment_id:
-            self.amount = self.advance_payment_id.amount
+            self.amount = self.advance_payment_id.amount_unpaid
             # Clear invoice nếu đang pick (mutual exclusive)
             self.invoice_id = False
 

@@ -23,6 +23,7 @@ ADVANCE_STATES = [
     ('draft',      'Nháp'),
     ('to_approve', 'Chờ duyệt'),
     ('approved',   'Đã duyệt'),
+    ('partial_paid', 'Thanh toán một phần'),
     ('paid',       'Đã thanh toán'),
     ('settled',    'Đã cấn trừ đủ'),
     ('cancelled',  'Đã huỷ'),
@@ -115,6 +116,63 @@ class RpAdvancePayment(models.Model):
         help='= Giá trị tạm ứng - Đã cấn trừ. Khi = 0 → state settled.')
     settlement_count = fields.Integer(
         compute='_compute_settled', store=True)
+
+    # Thanh toán từng phần qua nhiều hồ sơ giải ngân (bug #19 CC1):
+    # 1 Tạm ứng có thể được thanh toán qua NHIỀU dossier — mỗi dossier
+    # 1 phần. State 'paid' CHỈ khi Σ đã thanh toán đủ giá trị tạm ứng.
+    dossier_ids = fields.One2many(
+        'rp.loan.disbursement.dossier', 'advance_payment_id',
+        string='Các hồ sơ giải ngân')
+    amount_paid = fields.Monetary(
+        string='Đã thanh toán',
+        compute='_compute_amount_paid', store=True,
+        help='Σ số tiền các hồ sơ giải ngân ĐÃ GIẢI NGÂN của Tạm ứng '
+             'này (dossier.amount, disbursement state = disbursed).')
+    amount_unpaid = fields.Monetary(
+        string='Chưa thanh toán',
+        compute='_compute_amount_paid', store=True,
+        help='= Giá trị tạm ứng − Đã thanh toán.')
+
+    @api.depends('dossier_ids.amount',
+                 'dossier_ids.disbursement_id.state', 'amount')
+    def _compute_amount_paid(self):
+        for rec in self:
+            paid = sum(rec.dossier_ids.filtered(
+                lambda d: d.disbursement_id.state == 'disbursed'
+            ).mapped('amount'))
+            rec.amount_paid = paid
+            rec.amount_unpaid = max(0.0, rec.amount - paid)
+
+    def _update_paid_state(self):
+        """Recompute state theo tiền đã thanh toán thực tế (bug #19).
+
+        Chỉ chuyển giữa approved ↔ partial_paid ↔ paid — không đụng
+        draft/to_approve/settled/cancelled.
+        """
+        for rec in self:
+            if rec.state not in ('approved', 'partial_paid', 'paid'):
+                continue
+            if rec.amount_paid >= rec.amount - 0.01:
+                if rec.state != 'paid':
+                    rec.state = 'paid'
+                    rec.date_paid = fields.Date.context_today(rec)
+                    rec.message_post(body=_(
+                        "Đã thanh toán ĐỦ Tạm ứng (%(p)s/%(t)s ₫) — "
+                        "sẵn sàng cấn trừ vào hóa đơn.",
+                        p='{:,.0f}'.format(rec.amount_paid),
+                        t='{:,.0f}'.format(rec.amount)))
+            elif rec.amount_paid > 0.01:
+                if rec.state != 'partial_paid':
+                    rec.state = 'partial_paid'
+                    rec.message_post(body=_(
+                        "Thanh toán MỘT PHẦN Tạm ứng: %(p)s/%(t)s ₫ — "
+                        "còn %(r)s ₫ chờ hồ sơ giải ngân tiếp.",
+                        p='{:,.0f}'.format(rec.amount_paid),
+                        t='{:,.0f}'.format(rec.amount),
+                        r='{:,.0f}'.format(rec.amount_unpaid)))
+            else:
+                if rec.state != 'approved':
+                    rec.state = 'approved'
 
     currency_id = fields.Many2one(
         'res.currency', required=True,
@@ -254,7 +312,8 @@ class RpAdvancePayment(models.Model):
                 raise UserError(_(
                     "Tạm ứng đã cấn trừ đủ, KHÔNG huỷ được. Tạo "
                     "phiếu điều chỉnh kế toán nếu cần."))
-            if rec.state == 'paid' and rec.amount_settled > 0:
+            if rec.state in ('paid', 'partial_paid') \
+                    and rec.amount_settled > 0:
                 raise UserError(_(
                     "Tạm ứng đã thanh toán và có cấn trừ. Phải xoá "
                     "các dòng cấn trừ trước khi huỷ."))
@@ -286,7 +345,7 @@ class RpAdvancePayment(models.Model):
     def _check_fully_settled(self):
         """Sau khi settlement thay đổi → check nếu cấn trừ đủ → settled."""
         for rec in self:
-            if rec.state != 'paid':
+            if rec.state not in ('paid', 'partial_paid'):
                 continue
             if rec.amount_remaining <= 0.01:
                 rec.state = 'settled'

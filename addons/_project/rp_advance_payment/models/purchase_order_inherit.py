@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
             rec.advance_count = len(relevant)
             rec.advance_amount_total = sum(relevant.mapped('amount'))
             paid_or_settled = rec.advance_ids.filtered(
-                lambda a: a.state in ('paid', 'settled'))
+                lambda a: a.state in ('partial_paid', 'paid', 'settled'))
             rec.advance_amount_remaining = sum(
                 paid_or_settled.mapped('amount_remaining'))
 

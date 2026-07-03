@@ -57,21 +57,27 @@ class ReLoanNote(models.Model):
         # Logic mới: xử lý advance dossiers
         self.ensure_one()
         advances = self._collect_dossier_advances()
-        marked_count = 0
-        for advance in advances:
-            if advance.state != 'approved':
-                _logger.warning(
-                    "Tạm ứng %s state=%s, KHÔNG mark paid (cần 'approved').",
-                    advance.name, advance.state)
-                self.message_post(body=_(
-                    "Cảnh báo: Tạm ứng <b>%(n)s</b> đang ở trạng thái "
-                    "%(s)s — không thể auto mark 'Đã thanh toán'. "
-                    "Cần phê duyệt Tạm ứng trước.",
-                    n=advance.name, s=advance.state))
-                continue
-            advance.action_mark_paid()
-            marked_count += 1
-        if marked_count:
+        # Bug #19 CC1: KHÔNG mark 'paid' vô điều kiện — 1 Tạm ứng có
+        # thể thanh toán qua NHIỀU dossier, mỗi dossier 1 phần. Dùng
+        # _update_paid_state(): so Σ tiền dossier đã giải ngân với giá
+        # trị tạm ứng → paid (đủ) / partial_paid (một phần).
+        eligible = advances.filtered(
+            lambda a: a.state in ('approved', 'partial_paid', 'paid'))
+        for advance in advances - eligible:
+            _logger.warning(
+                "Tạm ứng %s state=%s, bỏ qua (cần approved/partial).",
+                advance.name, advance.state)
             self.message_post(body=_(
-                "Đã đánh dấu %(n)s Tạm ứng 'Đã thanh toán' từ KW giải ngân.",
-                n=marked_count))
+                "Cảnh báo: Tạm ứng <b>%(n)s</b> đang ở trạng thái "
+                "%(s)s — không thể cập nhật thanh toán. Cần phê "
+                "duyệt Tạm ứng trước.",
+                n=advance.name, s=advance.state))
+        if eligible:
+            eligible._update_paid_state()
+            full = eligible.filtered(lambda a: a.state == 'paid')
+            partial = eligible.filtered(
+                lambda a: a.state == 'partial_paid')
+            self.message_post(body=_(
+                "Cập nhật thanh toán Tạm ứng từ KW giải ngân: "
+                "%(f)s đủ, %(p)s một phần.",
+                f=len(full), p=len(partial)))

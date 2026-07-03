@@ -59,7 +59,7 @@
     <menuitem id="menu_re_loan_report"
               name="Báo cáo"
               parent="menu_re_loan_root"
-              sequence="50"/>
+              sequence="70"/>
     <menuitem id="menu_re_loan_report_outstanding"
               name="Dư nợ vay"
               parent="menu_re_loan_report"

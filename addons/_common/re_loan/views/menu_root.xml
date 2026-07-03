@@ -10,6 +10,33 @@
               name="Quản lý Vay"
               sequence="55"/>
 
+    <!-- 3 group containers — cấu trúc menu gom nhóm sống TRONG XML
+         nguồn (không SQL/hook — SQL move bị revert mỗi lần -u re_loan).
+         Thứ tự top-level:
+           1  Dashboard (re_loan_dashboard)
+          10  HĐ tín dụng
+          20  Khế ước
+          30  Giấy báo Nợ/Có (đứng riêng — chứng từ độc lập)
+          40  Trích thu & Thanh toán
+          50  Bảo lãnh NH (re_guarantee)
+          70  Báo cáo
+          90  Cấu hình
+    -->
+    <menuitem id="menu_grp_credit_contract"
+              name="HĐ tín dụng"
+              parent="menu_re_loan_root"
+              sequence="10"/>
+
+    <menuitem id="menu_grp_note"
+              name="Khế ước"
+              parent="menu_re_loan_root"
+              sequence="20"/>
+
+    <menuitem id="menu_grp_payment"
+              name="Trích thu &amp; Thanh toán"
+              parent="menu_re_loan_root"
+              sequence="40"/>
+
     <!-- Configuration submenu shell -->
     <menuitem id="menu_re_loan_config"
               name="Cấu hình"

@@ -523,9 +523,9 @@
 
     <menuitem id="menu_re_loan_note"
               name="Khế ước nhận nợ"
-              parent="menu_re_loan_root"
+              parent="menu_grp_note"
               action="action_re_loan_note"
-              sequence="15"/>
+              sequence="10"/>
 
     <record id="action_re_loan_onlending" model="ir.actions.act_window">
         <field name="name">Vay nội bộ</field>
@@ -547,8 +547,8 @@
 
     <menuitem id="menu_re_loan_onlending"
               name="Vay nội bộ"
-              parent="menu_re_loan_root"
+              parent="menu_grp_note"
               action="action_re_loan_onlending"
-              sequence="18"/>
+              sequence="20"/>
 
 </odoo>

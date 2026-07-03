@@ -204,13 +204,13 @@
 
     <menuitem id="menu_re_loan_credit_contract"
               name="Hợp đồng tín dụng"
-              parent="menu_re_loan_root"
+              parent="menu_grp_credit_contract"
               action="action_re_loan_credit_contract"
               sequence="10"/>
 
     <menuitem id="menu_re_loan_facility"
               name="Hạn mức tín dụng"
-              parent="menu_re_loan_root"
+              parent="menu_grp_credit_contract"
               action="action_re_loan_facility"
               sequence="20"/>
 

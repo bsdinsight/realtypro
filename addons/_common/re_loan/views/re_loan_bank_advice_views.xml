@@ -224,15 +224,15 @@
 
     <menuitem id="menu_re_loan_bank_advice"
               name="Trích thu tự động (NH)"
-              parent="re_loan.menu_re_loan_root"
+              parent="menu_grp_payment"
               action="action_re_loan_bank_advice"
-              sequence="35"/>
+              sequence="10"/>
 
     <menuitem id="menu_re_loan_bank_advice_import"
               name="Import giấy báo nợ (Excel/CSV)"
-              parent="re_loan.menu_re_loan_root"
+              parent="menu_grp_payment"
               action="action_re_loan_bank_advice_import"
-              sequence="36"/>
+              sequence="20"/>
 
     <!-- ===== Interest line: thêm tab/nút xem các chứng từ đã trả ===== -->
     <record id="view_re_loan_note_interest_line_paid_list"

@@ -159,7 +159,7 @@
     <!-- ===== Menu dưới Quản lý Vay ===== -->
     <menuitem id="menu_account_move_contractor_invoice"
               name="Hóa đơn HĐ nhà thầu"
-              parent="re_loan.menu_re_loan_root"
+              parent="re_loan.menu_grp_note"
               action="action_account_move_contractor_invoice"
               sequence="38"/>
 

@@ -198,7 +198,7 @@
 
     <menuitem id="menu_re_loan_collateral"
               name="Tài sản thế chấp"
-              parent="menu_re_loan_root"
+              parent="menu_grp_credit_contract"
               action="action_re_loan_collateral"
               sequence="30"/>
 

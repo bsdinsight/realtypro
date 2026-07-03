@@ -4,7 +4,7 @@
     <menuitem id="menu_re_guarantee_root"
               name="Bảo lãnh NH"
               parent="re_loan.menu_re_loan_root"
-              sequence="40"/>
+              sequence="50"/>
 
     <menuitem id="menu_re_guarantee_request"
               name="Đề nghị phát hành"

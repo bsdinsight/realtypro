@@ -75,9 +75,9 @@
 
     <menuitem id="menu_re_loan_rate_mass"
               name="Điều chỉnh LS hàng loạt"
-              parent="menu_re_loan_root"
+              parent="menu_grp_note"
               action="action_re_loan_rate_mass_wizard"
-              sequence="46"
+              sequence="40"
               groups="re_loan.group_loan_manager"/>
 
 </odoo>

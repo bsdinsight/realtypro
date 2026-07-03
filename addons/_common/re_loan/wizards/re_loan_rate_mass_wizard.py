@@ -13,7 +13,7 @@ wizard này:
      làm tay) + apply → kỳ CHƯA trả regen theo LS mới
 
 Kỳ ĐÃ trả sau ngày hiệu lực KHÔNG bị đụng — cảnh báo user chờ NH
-phát hành Giấy báo Nợ/Có (re.loan.adjustment.note) ghi nhận riêng.
+phát hành Thông báo Nợ/Có (re.loan.adjustment.note) ghi nhận riêng.
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -141,7 +141,7 @@ class ReLoanRateMassWizard(models.TransientModel):
             })
             am.action_apply()
             amendments |= am
-            # Cảnh báo kỳ ĐÃ trả sau ngày hiệu lực → cần Giấy báo Nợ/Có
+            # Cảnh báo kỳ ĐÃ trả sau ngày hiệu lực → cần Thông báo Nợ/Có
             paid_after = note.interest_line_ids.filtered(
                 lambda l: l.line_type == 'period'
                 and l.state in ('paid', 'partial_paid')
@@ -151,9 +151,8 @@ class ReLoanRateMassWizard(models.TransientModel):
                 note.message_post(body=_(
                     "⚠ Phụ lục %(pl)s hiệu lực %(d)s nhưng %(n)s kỳ đã "
                     "thanh toán sau ngày này KHÔNG bị tính lại. Chờ NH "
-                    "phát hành Giấy báo Nợ/Có (truy thu/truy hoàn) rồi "
-                    "ghi nhận tại menu Trích thu &amp; Thanh toán → "
-                    "Giấy báo Nợ/Có (điều chỉnh).",
+                    "phát hành Thông báo Nợ/Có (truy thu/truy hoàn) rồi "
+                    "ghi nhận tại menu Quản lý Vay → Thông báo Nợ/Có.",
                     pl=pl_name, d=self.date_effective, n=len(paid_after)))
         action = {
             'type': 'ir.actions.act_window',
@@ -192,7 +191,7 @@ class ReLoanRateMassWizardLine(models.TransientModel):
     has_paid_after = fields.Boolean(
         string='⚠ Có kỳ đã trả sau hiệu lực', compute='_compute_impact',
         help='KW có kỳ đã thanh toán sau ngày hiệu lực — phần đó cần '
-             'Giấy báo Nợ/Có của NH, wizard không tính lại.')
+             'Thông báo Nợ/Có của NH, wizard không tính lại.')
 
     @api.depends('note_id', 'wizard_id.date_effective')
     def _compute_impact(self):

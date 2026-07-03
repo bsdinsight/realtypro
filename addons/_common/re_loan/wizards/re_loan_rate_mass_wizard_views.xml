@@ -46,7 +46,7 @@
                         <field name="new_rate"/>
                         <field name="future_period_count"/>
                         <field name="has_paid_after"
-                               string="⚠ Cần giấy báo"/>
+                               string="⚠ Cần thông báo"/>
                         <field name="currency_id" column_invisible="1"/>
                     </list>
                 </field>

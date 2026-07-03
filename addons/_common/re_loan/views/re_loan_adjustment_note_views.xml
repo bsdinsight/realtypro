@@ -27,14 +27,14 @@
         <field name="name">re.loan.adjustment.note.form</field>
         <field name="model">re.loan.adjustment.note</field>
         <field name="arch" type="xml">
-            <form string="Giấy báo Nợ/Có">
+            <form string="Thông báo Nợ/Có">
                 <header>
                     <button name="action_apply" type="object"
                             string="Áp dụng vào kỳ" class="btn-primary"
                             invisible="state != 'draft'"/>
                     <button name="action_cancel" type="object"
                             string="Huỷ"
-                            confirm="Huỷ giấy báo? Dòng điều chỉnh trong lịch lãi (nếu có) sẽ bị gỡ."
+                            confirm="Huỷ thông báo? Dòng điều chỉnh trong lịch lãi (nếu có) sẽ bị gỡ."
                             invisible="state == 'cancelled'"/>
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
@@ -47,7 +47,7 @@
                         <h1><field name="name" readonly="state != 'draft'"/></h1>
                     </div>
                     <group>
-                        <group string="Thông tin giấy báo">
+                        <group string="Thông tin thông báo">
                             <field name="kind" readonly="state != 'draft'"/>
                             <field name="note_id" readonly="state != 'draft'"/>
                             <field name="partner_id"/>
@@ -74,13 +74,13 @@
     </record>
 
     <record id="action_re_loan_adjustment_note" model="ir.actions.act_window">
-        <field name="name">Giấy báo Nợ/Có (điều chỉnh lãi)</field>
+        <field name="name">Thông báo Nợ/Có (điều chỉnh lãi)</field>
         <field name="res_model">re.loan.adjustment.note</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Tạo giấy báo Nợ/Có đầu tiên</p>
+            <p class="o_view_nocontent_smiling_face">Tạo thông báo Nợ/Có đầu tiên</p>
             <p>Khi NH đổi lãi suất hồi tố sau khi doanh nghiệp đã thanh
-            toán kỳ lãi, NH phát hành giấy báo Nợ (truy thu) hoặc Có
+            toán kỳ lãi, NH phát hành thông báo Nợ (truy thu) hoặc Có
             (truy hoàn). Ghi nhận tại đây và áp dụng vào kỳ chưa
             thanh toán — hệ thống tạo dòng "Điều chỉnh" trong lịch lãi,
             không sửa kỳ đã trả.</p>
@@ -89,10 +89,10 @@
 
     <!-- Menu ĐỨNG RIÊNG dưới Quản lý Vay (sequence 30 — giữa Khế ước
          và Trích thu & Thanh toán). KHÔNG thuộc nhóm Trích thu tự
-         động — đây là chức năng ghi nhận chứng từ Giấy báo Nợ/Có
+         động — đây là chức năng ghi nhận chứng từ Thông báo Nợ/Có
          độc lập (anh Đại chốt 2026-07-03). -->
     <menuitem id="menu_re_loan_adjustment_note"
-              name="Giấy báo Nợ/Có"
+              name="Thông báo Nợ/Có"
               parent="menu_re_loan_root"
               action="action_re_loan_adjustment_note"
               sequence="30"/>

@@ -65,7 +65,7 @@ thống tính:
 
 > 💡 Chênh lệch do **thay đổi lãi suất hồi tố** (khách trả trước khi
 > phụ lục có hiệu lực) KHÔNG xử lý bằng net-off — dùng chức năng
-> **Giấy báo Nợ/Có** (menu riêng dưới Quản lý Vay): ghi nhận chứng từ
+> **Thông báo Nợ/Có** (menu riêng dưới Quản lý Vay): ghi nhận chứng từ
 > truy thu/truy hoàn của NH + apply vào kỳ chưa thanh toán. Xem §9.11.
 
 ## 11.6. Huỷ giấy báo
@@ -81,15 +81,15 @@ KW 10 tỷ, lãi 9.5%, trích thu tự động hằng tháng:
    phí = 1.6 tr, gốc = 164.4 tr
 2. KTT tạo giấy báo → dòng KW → xác nhận → kỳ 1 "Đã trả"
 3. Tháng 3 NH trích lệch +12,500 đ (quy ước ngày) → Net-off → sạch
-4. Tháng 4 NH đổi lãi suất hồi tố từ 01/03 → NH gửi giấy báo Nợ truy
-   thu 5.8 tr → ghi nhận qua menu **Giấy báo Nợ/Có** → dòng "Điều
+4. Tháng 4 NH đổi lãi suất hồi tố từ 01/03 → NH gửi thông báo Nợ truy
+   thu 5.8 tr → ghi nhận qua menu **Thông báo Nợ/Có** → dòng "Điều
    chỉnh" cộng vào kỳ tháng 5
 
 ## 11.8. Lưu ý
 
 - **KHÔNG xoá repayment do giấy báo tạo** trực tiếp — huỷ giấy báo
   để revert cả cụm (giữ khớp chứng từ NH).
-- Kỳ có **dòng Điều chỉnh** (Giấy báo Nợ/Có): tổng phải trả của kỳ
+- Kỳ có **dòng Điều chỉnh** (Thông báo Nợ/Có): tổng phải trả của kỳ
   = kỳ gốc + điều chỉnh; trích thu allocate như thường.
 - Trả vượt tổng đã giải ngân → hệ thống chặn (constrain trên KW).
 

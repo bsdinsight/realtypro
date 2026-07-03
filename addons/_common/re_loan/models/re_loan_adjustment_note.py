@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Giấy báo Nợ / Có — điều chỉnh lãi hồi tố (CC1 #8).
+Thông báo Nợ / Có — điều chỉnh lãi hồi tố (CC1 #8).
 
 Nghiệp vụ: NH đổi lãi suất qua phụ lục, nhưng khách đã thanh toán kỳ
 lãi TRƯỚC khi phụ lục có hiệu lực → chênh lệch giữa số đã trả (LS cũ)
 và số đúng (LS mới hồi tố). NH tính chênh lệch và phát hành:
-  - Giấy báo NỢ  (truy thu):  khách phải trả THÊM  → tăng kỳ áp dụng
-  - Giấy báo CÓ  (truy hoàn): khách được giảm trừ  → giảm kỳ áp dụng
+  - Thông báo NỢ  (truy thu):  khách phải trả THÊM  → tăng kỳ áp dụng
+  - Thông báo CÓ  (truy hoàn): khách được giảm trừ  → giảm kỳ áp dụng
 
-App KHÔNG recompute hồi tố — số tiền là INPUT từ giấy báo NH. Kỳ đã
+App KHÔNG recompute hồi tố — số tiền là INPUT từ thông báo NH. Kỳ đã
 thanh toán không bị sửa (audit trail + khớp sổ phụ NH). Apply tạo 1
 dòng lịch lãi loại "Điều chỉnh" vào kỳ chưa thanh toán (mặc định kỳ
 hiện tại).
@@ -19,21 +19,21 @@ from odoo.exceptions import UserError
 
 class ReLoanAdjustmentNote(models.Model):
     _name = 're.loan.adjustment.note'
-    _description = 'Giấy báo Nợ/Có (điều chỉnh lãi)'
+    _description = 'Thông báo Nợ/Có (điều chỉnh lãi)'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_issue desc, id desc'
 
     name = fields.Char(
-        string='Số giấy báo', required=True, copy=False, tracking=True,
+        string='Số thông báo', required=True, copy=False, tracking=True,
         default=lambda self: _('Mới'),
-        help='Số giấy báo do NH phát hành (nhập theo chứng từ NH), '
+        help='Số thông báo do NH phát hành (nhập theo chứng từ NH), '
              'hoặc để "Mới" để hệ thống tự sinh.')
     kind = fields.Selection(
-        [('debit',  'Giấy báo Nợ (truy thu — khách trả thêm)'),
-         ('credit', 'Giấy báo Có (truy hoàn — giảm trừ)')],
+        [('debit',  'Thông báo Nợ (truy thu — khách trả thêm)'),
+         ('credit', 'Thông báo Có (truy hoàn — giảm trừ)')],
         string='Loại', required=True, default='debit', tracking=True,
-        help='Nghiệp vụ NH VN: giấy báo NỢ = NH ghi Nợ TK khách '
-             '(trừ tiền / khách phải trả thêm); giấy báo CÓ = NH ghi '
+        help='Nghiệp vụ NH VN: thông báo NỢ = NH ghi Nợ TK khách '
+             '(trừ tiền / khách phải trả thêm); thông báo CÓ = NH ghi '
              'Có TK khách (cộng tiền / giảm trừ kỳ tới).')
     note_id = fields.Many2one(
         're.loan.note', string='Khế ước', required=True, tracking=True,
@@ -47,7 +47,7 @@ class ReLoanAdjustmentNote(models.Model):
 
     amount = fields.Monetary(
         string='Số tiền', required=True, tracking=True,
-        help='Số tiền chênh lệch trên giấy báo NH (luôn nhập số dương; '
+        help='Số tiền chênh lệch trên thông báo NH (luôn nhập số dương; '
              'loại Nợ/Có quyết định tăng hay giảm).')
     date_issue = fields.Date(
         string='Ngày phát hành', required=True,
@@ -95,7 +95,7 @@ class ReLoanAdjustmentNote(models.Model):
         for rec in self:
             if rec.amount <= 0:
                 raise UserError(_(
-                    "Số tiền giấy báo phải > 0. Loại Nợ/Có quyết định "
+                    "Số tiền thông báo phải > 0. Loại Nợ/Có quyết định "
                     "tăng hay giảm — không nhập số âm."))
 
     # ------------------------------------------------------------------
@@ -112,7 +112,7 @@ class ReLoanAdjustmentNote(models.Model):
         """Tạo dòng lịch lãi 'Điều chỉnh' vào kỳ áp dụng."""
         for rec in self:
             if rec.state != 'draft':
-                raise UserError(_("Chỉ giấy báo Nháp mới áp dụng được."))
+                raise UserError(_("Chỉ thông báo Nháp mới áp dụng được."))
             line = rec.target_interest_line_id
             if not line:
                 raise UserError(_(
@@ -145,7 +145,7 @@ class ReLoanAdjustmentNote(models.Model):
         return True
 
     def action_cancel(self):
-        """Huỷ giấy báo — gỡ dòng điều chỉnh nếu kỳ chưa bị trả."""
+        """Huỷ thông báo — gỡ dòng điều chỉnh nếu kỳ chưa bị trả."""
         for rec in self:
             if rec.state == 'applied' and rec.adjustment_line_id:
                 if rec.adjustment_line_id.amount_paid_total:
@@ -158,12 +158,12 @@ class ReLoanAdjustmentNote(models.Model):
     def action_reset_draft(self):
         for rec in self:
             if rec.state != 'cancelled':
-                raise UserError(_("Chỉ giấy báo Đã huỷ mới về Nháp được."))
+                raise UserError(_("Chỉ thông báo Đã huỷ mới về Nháp được."))
             rec.state = 'draft'
 
     def unlink(self):
         if any(rec.state == 'applied' for rec in self):
             raise UserError(_(
-                "Không xoá giấy báo Đã áp dụng — huỷ trước để gỡ dòng "
+                "Không xoá thông báo Đã áp dụng — huỷ trước để gỡ dòng "
                 "điều chỉnh (giữ vết audit)."))
         return super().unlink()

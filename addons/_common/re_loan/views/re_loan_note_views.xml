@@ -306,7 +306,7 @@
                                            string="Loại"
                                            optional="show"/>
                                     <field name="adjustment_note_id"
-                                           string="Giấy báo"
+                                           string="Thông báo"
                                            optional="show"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>

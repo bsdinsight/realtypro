@@ -1,0 +1,81 @@
+---
+title: "Giải ngân"
+description: "Hướng dẫn giải ngân khế ước — workflow Nháp → Gửi NH → NH duyệt → Đã giải ngân, chuyển thẳng TK nhà thầu, hồ sơ giải ngân kèm chứng từ."
+order: 10
+---
+
+# 10. Giải ngân
+
+## 10.1. Mục đích
+
+**Giải ngân** = NH chuyển tiền của KW ra ngoài. Chuẩn NH VN cho vay
+dự án: tiền **chuyển THẲNG vào TK nhà thầu / NCC** (bên thụ hưởng),
+KHÔNG qua tài khoản doanh nghiệp vay — NH kiểm soát mục đích sử dụng
+vốn qua hồ sơ chứng minh (HĐ thi công, hóa đơn, BBNT).
+
+1 KW có thể giải ngân **nhiều đợt** (theo tiến độ), Σ giải ngân ≤ số
+tiền KW.
+
+## 10.2. Workflow 1 đợt giải ngân
+
+| Trạng thái | Ý nghĩa | Ai thao tác |
+|---|---|---|
+| **Nháp** | KTT lập đề nghị + đính hồ sơ | KTT |
+| **Đã gửi NH** | Hồ sơ đã nộp NH | KTT click "Gửi NH duyệt" |
+| **NH duyệt** | NH chấp thuận — nhập **Ngày NH duyệt** | KTT ghi nhận |
+| **Đã giải ngân** | Tiền đã về TK nhà thầu | KTT click "Đánh dấu đã giải ngân" |
+| **Huỷ** | Huỷ trước khi giải ngân | |
+
+> 💡 **Ngày NH duyệt = gốc tính lãi** của đợt giải ngân đó (không
+> phải ngày lập đề nghị). Bắt buộc nhập khi chuyển sang "NH duyệt".
+
+## 10.3. Lập đợt giải ngân
+
+Mở KW → tab **Giải ngân** → Thêm dòng (click dòng để mở form chi tiết):
+
+| Trường | Mô tả |
+|---|---|
+| Số tiền | Số tiền đợt này (Σ các đợt ≤ số tiền KW) |
+| Bên thụ hưởng (Nhà thầu) | Chọn nhà thầu/NCC nhận tiền |
+| TK NH của Nhà thầu | Auto-pick TK đầu tiên của nhà thầu — đổi được |
+| Dự án | Chỉ hiện dự án đã **phân bổ trong facility** (§8.6) |
+| Chứng từ NH | Số UNC / bút toán NH |
+| Diễn giải | VD: "Thanh toán đợt 2 HĐ thi công móng" |
+
+**Hồ sơ giải ngân** (dossier): đính kèm HĐ thi công, hóa đơn nhà thầu
+(cho chọn cả hóa đơn "đã thanh toán một phần"), đề nghị Tạm ứng
+(rp_advance_payment — thanh toán tạm ứng bằng vốn vay, xem §17),
+BBNT, import file Excel hạng mục.
+
+## 10.4. Sau khi giải ngân
+
+- KW cập nhật **Đã giải ngân** — khi đủ + KW active → lãi tính trên
+  dư nợ thực tế giải ngân
+- Bút toán kế toán tự sinh (nếu cài re_loan_account): Nợ 331 (trả
+  nhà thầu) / Có 341 (vay NH)
+- Nếu đợt giải ngân pick **đề nghị Tạm ứng** → Tạm ứng tự chuyển
+  trạng thái "Đã thanh toán"
+- Hóa đơn nhà thầu trong hồ sơ được đánh dấu thanh toán tương ứng
+
+## 10.5. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+KW 10 tỷ (VLĐ) giải ngân 2 đợt:
+
+| Đợt | Số tiền | Bên thụ hưởng | Hồ sơ | Ngày NH duyệt |
+|---|---|---|---|---|
+| 1 | 6 tỷ | Nhà thầu A (thi công móng) | HĐ + hóa đơn đợt 1 + BBNT | 05/01/2026 |
+| 2 | 4 tỷ | Nhà thầu B (bê tông) | HĐ + hóa đơn | 15/02/2026 |
+
+Lãi: đợt 1 tính từ 05/01 trên 6 tỷ; từ 15/02 tính trên 10 tỷ.
+
+## 10.6. Lưu ý
+
+- **Không sửa được số tiền sau khi NH duyệt** — cần huỷ về Nháp
+  (chỉ được khi chưa "Đã giải ngân").
+- **Giải ngân vượt số tiền KW** → hệ thống chặn. Nếu cần thêm →
+  Phụ lục KW đổi số tiền (§16) hoặc lập KW mới.
+- **Thiếu TK NH nhà thầu** → vào Liên hệ → nhà thầu → tab Bán hàng
+  & Mua hàng → thêm Tài khoản NH trước.
+
+{/* TODO screenshot: 10-disb-list.png — tab Giải ngân của KW */}
+{/* TODO screenshot: 10-disb-form.png — form đợt giải ngân + bên thụ hưởng */}

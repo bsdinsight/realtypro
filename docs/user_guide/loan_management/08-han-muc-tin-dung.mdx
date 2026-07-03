@@ -1,0 +1,118 @@
+---
+title: "Hạn mức tín dụng (Facility)"
+description: "Hướng dẫn tạo và quản lý Hạn mức cho vay dưới HĐTD — loại hạn mức, mục đích sử dụng vốn, liên thông hạn mức, phân bổ theo dự án."
+order: 8
+---
+
+# 8. Hạn mức tín dụng (Facility)
+
+## 8.1. Mục đích
+
+**Hạn mức tín dụng (Facility)** là sub-limit dưới HĐTD — NH VN thường
+chia tổng hạn mức HĐTD theo **mục đích sử dụng vốn**:
+
+```
+HĐTD 100 tỷ (Vietcombank)
+  ├── Hạn mức 1: Bổ sung vốn lưu động   — 50 tỷ, lãi 9.5%/năm
+  ├── Hạn mức 2: Đầu tư dài hạn / dự án — 30 tỷ, lãi 10.0%/năm
+  └── Hạn mức 3: Bảo lãnh               — 20 tỷ, phí 1.5%/năm
+```
+
+Mỗi lần rút vốn (KW) hoặc phát hành bảo lãnh (BL) đều **chiếm hạn mức**
+của facility tương ứng. Hệ thống tự tính "Đã sử dụng" / "Còn lại" và
+**chặn rút vượt hạn mức**.
+
+## 8.2. Loại hạn mức vs Mục đích — phân biệt
+
+2 khái niệm độc lập, dễ nhầm:
+
+| | Loại hạn mức (facility_type) | Mục đích (purpose) |
+|---|---|---|
+| Trả lời câu hỏi | "Hạn mức HOẠT ĐỘNG thế nào?" | "Tiền dùng để LÀM GÌ?" |
+| Các giá trị | Tuần hoàn (Revolving) / Có kỳ hạn (Term) / Thấu chi / HM bảo lãnh / HM L/C | Vốn lưu động / Đầu tư ngắn–trung–dài hạn / Bảo lãnh / L/C / Thấu chi / Tài trợ thương mại / Tái cấp vốn / Khác |
+| Ví dụ | Tuần hoàn = trả xong rút lại được | Đầu tư dài hạn = mua sắm TSCĐ, xây dự án |
+
+**Tổ hợp phổ biến**: Tuần hoàn × Vốn lưu động (mua vật tư quay vòng);
+Có kỳ hạn × Đầu tư dài hạn (giải ngân theo tiến độ dự án);
+HM bảo lãnh × Bảo lãnh (phát hành BL thực hiện HĐ/tạm ứng/bảo hành).
+
+## 8.3. Tạo hạn mức
+
+Vào **Quản lý Vay → HĐ tín dụng → Hạn mức tín dụng** → Tạo mới
+(hoặc thêm dòng trực tiếp trong tab "Hạn mức (Facility)" của HĐTD).
+
+| Trường | Mô tả | Ví dụ |
+|---|---|---|
+| Tên hạn mức | Đặt theo mục đích cho dễ đọc | `VLĐ 2026 — VCB` |
+| HĐTD | HĐTD cha | `HĐTD/2026/001-VCB` |
+| Loại hạn mức | Cấu trúc kỹ thuật | `Tuần hoàn (Revolving)` |
+| Mục đích sử dụng vốn | Theo HĐTD đã ký | `Bổ sung vốn lưu động` |
+| Số tiền hạn mức | Cap của facility này | `50,000,000,000 đ` |
+| Lãi suất mặc định | Auto-fill khi tạo KW từ hạn mức này | `9.5%/năm` |
+| Phương pháp tính lãi | Dư nợ giảm dần / Cố định | `Dư nợ giảm dần` |
+| Quy ước ngày | Thực tế/360 · Thực tế/365 · 30/360 | `Thực tế/360` |
+
+> 🔒 **HARD RULE**: Σ hạn mức các facility ≤ Tổng hạn mức HĐTD. Hệ
+> thống chặn khi lưu nếu vượt — kể cả khi tick Liên thông (xem 8.5).
+
+## 8.4. Đã sử dụng / Còn lại — tính thế nào
+
+| Trường | Công thức |
+|---|---|
+| Đã sử dụng | Σ dư nợ gốc các KW chưa tất toán thuộc facility (+ Σ giá trị BL outstanding nếu là hạn mức bảo lãnh) |
+| Còn lại | Số tiền hạn mức − Đã sử dụng |
+
+KW **trả gốc** → "Đã sử dụng" giảm → facility Tuần hoàn rút tiếp được
+(revolving). BL **tất toán** → giải phóng hạn mức bảo lãnh tương ứng.
+
+## 8.5. Liên thông hạn mức (flexible limits)
+
+Tick **"Hạn mức liên thông"** trên ≥2 facility cùng HĐTD → chúng
+**chia sẻ phần thừa** với nhau:
+
+```
+F1 Vốn lưu động (liên thông): limit 50 tỷ, dùng 20 tỷ → thừa 30 tỷ
+F2 Đầu tư      (liên thông): limit 30 tỷ, dùng 25 tỷ → còn 5 tỷ riêng
+→ F2 có thể rút thêm tối đa: 5 + 30 = 35 tỷ (mượn phần thừa F1)
+```
+
+⚠ Liên thông KHÔNG cho vượt tổng HĐTD: Σ đã dùng mọi facility luôn
+≤ Tổng HĐTD. Form HĐTD hiện cảnh báo xanh khi có facility liên thông.
+
+## 8.6. Phân bổ hạn mức theo dự án × mục đích
+
+Với hạn mức lớn dùng cho nhiều dự án, tab **"Phân bổ dự án"** (mở
+dialog từ dòng facility trong HĐTD) cho phép chia:
+
+```
+Hạn mức Đầu tư 30 tỷ
+  ├── KĐT nghỉ dưỡng Đà Lạt — Xây dựng:  18 tỷ
+  └── KĐT nghỉ dưỡng Đà Lạt — Thiết bị:  12 tỷ
+```
+
+Khi lập KW/giải ngân chọn dự án, hệ thống đối chiếu phân bổ này —
+field "Dự án" của Hồ sơ giải ngân **chỉ hiện các dự án đã được phân
+bổ** trong facility (tránh rút nhầm quota dự án khác). Cột "Đã phân
+bổ dự án" / "Chưa phân bổ" trên list facility giúp KTT soát nhanh.
+
+## 8.7. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+1. HĐTD 100 tỷ VCB đã Hiệu lực (xem §7)
+2. Tạo 3 facility: VLĐ 50 tỷ (9.5%) + Đầu tư 30 tỷ (10%) + BL 20 tỷ (phí 1.5%)
+3. Facility Đầu tư → Phân bổ dự án: Đà Lạt–Xây dựng 18 tỷ, Đà Lạt–Thiết bị 12 tỷ
+4. Tạo KW 10 tỷ từ VLĐ (§9) → VLĐ: dùng 10/50, còn 40
+5. Phát hành BL thực hiện HĐ 5 tỷ (§13) → BL: dùng 5/20, còn 15
+6. HĐTD tổng: đã dùng 15/100 — xem section thống kê trên form HĐTD
+
+## 8.8. Lưu ý
+
+- **Không xoá facility còn KW/BL** — hệ thống chặn để giữ vết. Hết
+  dùng thì để "Đã sử dụng" về 0 và không tạo KW mới.
+- **Lãi suất mặc định chỉ là default** — KW override được per-KW;
+  đổi lãi suất giữa chừng dùng Phụ lục KW (§16) hoặc wizard
+  "Điều chỉnh LS hàng loạt" (§9.11).
+- **Hạn mức bảo lãnh** được cả Đề nghị phát hành BL (đang xử lý)
+  lẫn Chứng thư BL (đã phát hành) chiếm chỗ — tránh over-commit.
+
+{/* TODO screenshot: 08-facility-list.png — list hạn mức với cột Đã dùng/Còn lại */}
+{/* TODO screenshot: 08-facility-alloc.png — dialog phân bổ dự án × mục đích */}

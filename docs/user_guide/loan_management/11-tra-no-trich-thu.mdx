@@ -1,0 +1,97 @@
+---
+title: "Trả nợ & Trích thu tự động"
+description: "Hướng dẫn trả nợ KW — trả tay theo kỳ, trích thu tự động từ giấy báo NH, import Excel/CSV, allocation lãi → phí → gốc, net-off chênh lệch."
+order: 11
+---
+
+# 11. Trả nợ & Trích thu tự động
+
+## 11.1. Hai cách ghi nhận trả nợ
+
+| Cách | Khi nào dùng |
+|---|---|
+| **Trả tay theo kỳ** | Doanh nghiệp chủ động chuyển tiền trả NH từng kỳ |
+| **Trích thu tự động (NH)** | NH tự trích TK doanh nghiệp theo lịch — gửi giấy báo về, KTT ghi nhận (nhập tay hoặc import Excel/CSV) |
+
+Cả 2 đều tạo record **Trả nợ (repayment)** với 3 cấu phần: **Gốc +
+Lãi + Phí** (phí KW nếu có — xem §9), allocate vào đúng kỳ lịch lãi.
+
+## 11.2. Trả tay theo kỳ
+
+Mở KW → tab **Lịch lãi** → click dòng kỳ → button **"Tạo thanh toán
+cho kỳ này"** → hệ thống tạo 1 repayment với gốc + lãi (+ phí) của kỳ.
+
+Hoặc tab **Trả nợ** → thêm dòng tự do: nhập Trả gốc / Trả lãi / Trả
+phí + Kỳ thanh toán + Chứng từ.
+
+Kỳ tự chuyển trạng thái: **Trả một phần** khi có tiền vào nhưng chưa
+đủ → **Đã trả** khi đủ cả gốc + lãi + phí.
+
+## 11.3. Trích thu tự động (NH)
+
+**Quản lý Vay → Trích thu & Thanh toán → Trích thu tự động (NH)**:
+
+1. Tạo giấy báo: NH + ngày trích + số chứng từ
+2. Thêm dòng: mỗi dòng = 1 KW bị trích + số tiền
+   - Có thể **chỉ định kỳ** (giấy báo ghi đích danh kỳ) hoặc để trống
+     (hệ thống tự allocate kỳ cũ → mới)
+3. **Xác nhận** → hệ thống allocate:
+
+```
+Thứ tự allocation TRONG mỗi kỳ:  Lãi → Phí → Gốc
+Thứ tự kỳ (khi không chỉ định):  kỳ cũ nhất chưa trả → mới
+```
+
+4. Số dư không allocate hết → nằm ở cột **"Chưa allocate"** cho KTT
+   kiểm tra đối chiếu.
+
+## 11.4. Import giấy báo Excel/CSV
+
+**Trích thu & Thanh toán → Import giấy báo nợ (Excel/CSV)** — NH gửi
+file sao kê trích thu nhiều KW: wizard đọc file, match số KW, preview
+từng dòng rồi tạo giấy báo + allocate như 11.3. Template file mẫu tải
+ngay trong wizard.
+
+## 11.5. Net-off chênh lệch
+
+NH tính lãi có thể lệch vài đồng/vài nghìn so với lịch dự kiến (quy
+ước ngày, làm tròn). Khi kỳ được chỉ định mà số NH trích ≠ số hệ
+thống tính:
+
+- Chênh **≤ 100,000 đ** → button **"Net-off"** trên dòng giấy báo:
+  tạo 1 repayment write-off cho phần chênh → kỳ về "Đã trả" sạch
+- Chênh lớn hơn → kiểm tra lại lịch lãi (sửa tay tiền lãi kỳ bằng
+  "Sửa tay" trên dòng lịch — xem §12) hoặc liên hệ NH đối chiếu
+
+> 💡 Chênh lệch do **thay đổi lãi suất hồi tố** (khách trả trước khi
+> phụ lục có hiệu lực) KHÔNG xử lý bằng net-off — dùng chức năng
+> **Giấy báo Nợ/Có** (menu riêng dưới Quản lý Vay): ghi nhận chứng từ
+> truy thu/truy hoàn của NH + apply vào kỳ chưa thanh toán. Xem §9.11.
+
+## 11.6. Huỷ giấy báo
+
+Giấy báo đã xác nhận → **Huỷ** sẽ revert toàn bộ repayments nó tạo →
+các kỳ tự tính lại trạng thái. Dùng khi nhập nhầm / NH điều chỉnh.
+
+## 11.7. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+KW 10 tỷ, lãi 9.5%, trích thu tự động hằng tháng:
+
+1. Ngày 05/02 NH trích 245 tr (giấy báo GB-0205): lãi kỳ 1 = 79 tr,
+   phí = 1.6 tr, gốc = 164.4 tr
+2. KTT tạo giấy báo → dòng KW → xác nhận → kỳ 1 "Đã trả"
+3. Tháng 3 NH trích lệch +12,500 đ (quy ước ngày) → Net-off → sạch
+4. Tháng 4 NH đổi lãi suất hồi tố từ 01/03 → NH gửi giấy báo Nợ truy
+   thu 5.8 tr → ghi nhận qua menu **Giấy báo Nợ/Có** → dòng "Điều
+   chỉnh" cộng vào kỳ tháng 5
+
+## 11.8. Lưu ý
+
+- **KHÔNG xoá repayment do giấy báo tạo** trực tiếp — huỷ giấy báo
+  để revert cả cụm (giữ khớp chứng từ NH).
+- Kỳ có **dòng Điều chỉnh** (Giấy báo Nợ/Có): tổng phải trả của kỳ
+  = kỳ gốc + điều chỉnh; trích thu allocate như thường.
+- Trả vượt tổng đã giải ngân → hệ thống chặn (constrain trên KW).
+
+{/* TODO screenshot: 11-advice-form.png — giấy báo trích thu + allocation */}
+{/* TODO screenshot: 11-import-wizard.png — wizard import Excel */}

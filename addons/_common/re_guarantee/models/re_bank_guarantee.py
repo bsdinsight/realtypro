@@ -750,6 +750,10 @@ class ReBankGuaranteePaymentSchedule(models.Model):
     # Action button "Thanh toán" — mở wizard tạo transaction mới
     def action_open_pay(self):
         self.ensure_one()
+        if not isinstance(self.id, int):
+            raise UserError(_(
+                "Đợt thanh toán chưa được lưu — bấm Lưu (Ctrl+S) "
+                "Chứng thư trước khi ghi nhận thanh toán."))
         if self.amount_remaining <= 0.01:
             raise UserError(_(
                 "Đợt này đã thanh toán đủ. Không cần tạo lần thanh "
@@ -821,6 +825,26 @@ class ReBankGuaranteePayment(models.Model):
         related='guarantee_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
         related='guarantee_id.company_id', store=True, readonly=True)
+
+    @api.onchange('schedule_id')
+    def _onchange_schedule_fill_guarantee(self):
+        """Fill Chứng thư từ Đợt — fix ValidationError 'Missing
+        guarantee_id' khi dialog thanh toán mở từ dòng lịch mới gen
+        (context default bị NewId → False)."""
+        for rec in self:
+            if rec.schedule_id and not rec.guarantee_id:
+                rec.guarantee_id = rec.schedule_id.guarantee_id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Defensive: thiếu guarantee_id nhưng có schedule_id → fill
+        # từ schedule (mọi path: dialog, import, API).
+        Schedule = self.env['re.bank.guarantee.payment.schedule']
+        for vals in vals_list:
+            if not vals.get('guarantee_id') and vals.get('schedule_id'):
+                sched = Schedule.browse(vals['schedule_id'])
+                vals['guarantee_id'] = sched.guarantee_id.id
+        return super().create(vals_list)
 
     @api.constrains('amount')
     def _check_amount(self):

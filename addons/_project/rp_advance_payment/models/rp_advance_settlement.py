@@ -60,6 +60,14 @@ class RpAdvanceSettlement(models.Model):
         related='invoice_id.amount_residual', readonly=True,
         string='Hóa đơn chưa thanh toán')
 
+    payment_id = fields.Many2one(
+        'account.payment', string='Thanh toán cấn trừ',
+        readonly=True, copy=False,
+        help='Payment ghi nhận cấn trừ trên hóa đơn (bug #23 CC1) — '
+             'tự tạo khi thêm dòng cấn trừ, tự huỷ khi xoá dòng. '
+             'Nhờ payment này Amount Due + trạng thái thanh toán '
+             'của hóa đơn cập nhật đúng.')
+
     currency_id = fields.Many2one(
         related='advance_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
@@ -97,7 +105,8 @@ class RpAdvanceSettlement(models.Model):
     @api.constrains('advance_id')
     def _check_advance_state(self):
         for rec in self:
-            if rec.advance_id.state not in ('paid', 'settled'):
+            if rec.advance_id.state not in (
+                    'partial_paid', 'paid', 'settled'):
                 raise ValidationError(_(
                     "Chỉ cấn trừ được Tạm ứng đã thanh toán. Tạm ứng "
                     "%(n)s đang ở trạng thái %(s)s.",
@@ -110,10 +119,58 @@ class RpAdvanceSettlement(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
+        records._register_invoice_payment()
         records.mapped('advance_id')._check_fully_settled()
         return records
 
+    def _register_invoice_payment(self):
+        """Ghi nhận cấn trừ lên hóa đơn qua account.payment.register
+        (bug #23 CC1) — Amount Due giảm + payment_state tự update
+        (partial khi cấn 1 phần, paid khi đủ). Cùng pattern
+        _mark_dossier_invoices_paid của rp_loan_bridge.
+        """
+        today_ctx = fields.Date.context_today
+        for rec in self:
+            inv = rec.invoice_id
+            if inv.state != 'posted' or inv.payment_state not in (
+                    'not_paid', 'partial'):
+                continue
+            pay_amount = min(rec.amount, inv.amount_residual)
+            if pay_amount <= 0:
+                continue
+            try:
+                wizard = self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=[inv.id],
+                ).create({
+                    'payment_date': rec.date or today_ctx(rec),
+                    'amount': pay_amount,
+                    'communication': _(
+                        'Cấn trừ Tạm ứng %s') % rec.advance_id.name,
+                    'group_payment': True,
+                })
+                payments = wizard._create_payments()
+                rec.payment_id = payments[:1]
+                inv.message_post(body=_(
+                    "Cấn trừ Tạm ứng <b>%(tu)s</b>: %(amt)s ₫ "
+                    "(số còn phải trả giảm tương ứng).",
+                    tu=rec.advance_id.name,
+                    amt='{:,.0f}'.format(pay_amount)))
+            except Exception as e:
+                rec.advance_id.message_post(body=_(
+                    "Cảnh báo: dòng cấn trừ vào hóa đơn <b>%(inv)s</b> "
+                    "(%(amt)s ₫) KHÔNG tạo được thanh toán trên hóa đơn "
+                    "— Amount Due của hóa đơn chưa giảm. Lỗi: %(err)s",
+                    inv=inv.display_name,
+                    amt='{:,.0f}'.format(pay_amount), err=str(e)))
+
     def write(self, vals):
+        if ('amount' in vals or 'invoice_id' in vals) and any(
+                r.payment_id for r in self):
+            raise UserError(_(
+                "Dòng cấn trừ đã có thanh toán ghi nhận trên hóa đơn — "
+                "không sửa số tiền/hóa đơn được. Xoá dòng (thanh toán "
+                "tự huỷ theo) rồi tạo lại."))
         res = super().write(vals)
         if 'amount' in vals or 'advance_id' in vals:
             self.mapped('advance_id')._check_fully_settled()
@@ -121,6 +178,19 @@ class RpAdvanceSettlement(models.Model):
 
     def unlink(self):
         advances = self.mapped('advance_id')
+        # Huỷ payment cấn trừ → hóa đơn hoàn lại Amount Due (bug #23)
+        for rec in self:
+            if rec.payment_id:
+                try:
+                    rec.payment_id.action_draft()
+                    rec.payment_id.action_cancel()
+                except Exception as e:
+                    raise UserError(_(
+                        "Không huỷ được thanh toán cấn trừ %(p)s trên "
+                        "hóa đơn %(inv)s: %(err)s. Kiểm tra sổ kế toán "
+                        "trước khi xoá dòng cấn trừ.",
+                        p=rec.payment_id.display_name,
+                        inv=rec.invoice_id.display_name, err=str(e)))
         res = super().unlink()
         # Sau khi xoá dòng cấn trừ → có thể quay về paid nếu đang settled
         for adv in advances:

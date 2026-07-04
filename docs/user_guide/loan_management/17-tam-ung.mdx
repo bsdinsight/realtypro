@@ -1,0 +1,109 @@
+---
+title: "Tạm ứng cho nhà thầu / NCC"
+description: "Hướng dẫn quản lý Tạm ứng thanh toán cho nhà thầu / nhà cung cấp bằng vốn vay — workflow phê duyệt, giải ngân từng phần qua nhiều hồ sơ, cấn trừ vào hóa đơn."
+order: 17
+---
+
+# 17. Tạm ứng cho nhà thầu / NCC
+
+## 17.1. Mục đích
+
+**Tạm ứng** — chủ đầu tư / tổng thầu ứng trước tiền cho nhà thầu / nhà
+cung cấp (NCC) **trước khi có hóa đơn**, thường bằng vốn vay ngân
+hàng. Sau khi nhà thầu xuất hóa đơn, khoản tạm ứng được **cấn trừ**
+vào hóa đơn đó.
+
+Module giải quyết trọn vòng đời: đề nghị → phê duyệt → thanh toán
+(giải ngân bằng KW) → cấn trừ vào hóa đơn khi có.
+
+## 17.2. Vòng đời (Workflow)
+
+| Trạng thái | Ý nghĩa | Chuyển tiếp |
+|---|---|---|
+| **Nháp** | KTT lập đề nghị tạm ứng | "Gửi duyệt" |
+| **Chờ duyệt** | Chờ Manager phê duyệt | Manager "Phê duyệt" / "Từ chối" |
+| **Đã duyệt** | Sẵn sàng giải ngân bằng KW | Giải ngân qua Hồ sơ giải ngân |
+| **Thanh toán một phần** | Đã giải ngân MỘT PHẦN qua ≥1 hồ sơ | Giải ngân tiếp cho đủ |
+| **Đã thanh toán** | Đã giải ngân ĐỦ giá trị tạm ứng | Cấn trừ vào hóa đơn |
+| **Đã cấn trừ đủ** | Cấn trừ hết vào hóa đơn (kết thúc) | |
+| **Đã huỷ** | Huỷ trước khi cấn trừ | Reset Nháp |
+
+> 🔒 Chỉ **Manager** (nhóm "Tạm ứng / Manager") phê duyệt được — User
+> tạo + submit nhưng KHÔNG tự duyệt.
+
+## 17.3. Tạo đề nghị tạm ứng
+
+**Realty Project → Tạm ứng** → Tạo mới:
+
+| Trường | Mô tả |
+|---|---|
+| Số tạm ứng | Tự sinh `TU/YYYY/NNNN` |
+| HĐ nhà thầu / PO mua hàng | Chọn 1 trong 2 (đối tượng cần tạm ứng) |
+| Bên nhận tạm ứng | Auto-fill từ HĐ/PO — nhà thầu/NCC |
+| Giá trị tạm ứng | Tổng số tiền cần ứng |
+| Mục đích | VD "Tạm ứng vật tư đợt 1", "Mua bê tông" |
+
+Save → **"Gửi duyệt"** → Manager mở → **"Phê duyệt"**.
+
+## 17.4. Thanh toán tạm ứng bằng KW (giải ngân)
+
+Tạm ứng đã duyệt được thanh toán bằng **vốn vay** qua Hồ sơ giải ngân
+của KW (xem §10):
+
+1. Mở KW → tab **Giải ngân** → tạo đợt giải ngân
+2. Trong **Hồ sơ giải ngân**: field **"Tạm ứng"** — pick đề nghị tạm
+   ứng (thay vì "Hóa đơn"; chỉ chọn 1 trong 2)
+3. Field **"Số tiền sẽ thanh toán kỳ này"** tự gợi ý = **phần chưa
+   thanh toán** của tạm ứng
+4. KW giải ngân xong (state = Đã giải ngân) → tạm ứng cập nhật trạng
+   thái theo số tiền thực nhận
+
+### Thanh toán TỪNG PHẦN qua nhiều hồ sơ
+
+1 tạm ứng có thể thanh toán qua **nhiều hồ sơ giải ngân** — mỗi hồ sơ
+1 phần (vd tạm ứng 400tr: hồ sơ 1 giải ngân 200tr → trạng thái
+**"Thanh toán một phần"**, hồ sơ 2 giải ngân 200tr còn lại → **"Đã
+thanh toán"**).
+
+Form tạm ứng hiển thị **Đã thanh toán / Chưa thanh toán** để KTT theo
+dõi. Trạng thái "Đã thanh toán" CHỈ khi Σ tiền các hồ sơ đã giải ngân
+= đủ giá trị tạm ứng. Hệ thống **chặn** giải ngân vượt giá trị tạm ứng.
+
+## 17.5. Cấn trừ vào hóa đơn
+
+Khi nhà thầu xuất hóa đơn (vendor bill), KTT cấn trừ tạm ứng đã thanh
+toán vào hóa đơn:
+
+1. Mở tạm ứng → tab **"Cấn trừ vào hóa đơn"** → Add a line
+2. Chọn **Hóa đơn** — chỉ hiện hóa đơn của **đúng nhà thầu**, đã
+   **posted**, và **chưa thanh toán hết** (not_paid / partial)
+3. Nhập **Số tiền cấn trừ** — không vượt số tạm ứng còn lại + không
+   vượt số hóa đơn còn phải trả
+4. Save → hóa đơn cập nhật **Amount Due giảm** + trạng thái thanh
+   toán (Partial / Paid)
+
+1 tạm ứng → cấn trừ nhiều hóa đơn (cấn từng phần). Khi Σ cấn trừ =
+giá trị tạm ứng → trạng thái **"Đã cấn trừ đủ"**.
+
+## 17.6. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+1. Tạo tạm ứng 400 tr cho Nhà thầu A (HĐ thi công móng) → gửi duyệt →
+   Manager phê duyệt
+2. KW vay giải ngân đợt 1 (200 tr) pick tạm ứng này → **Thanh toán
+   một phần** (đã 200 / chưa 200)
+3. KW giải ngân đợt 2 (200 tr) → **Đã thanh toán** (đủ 400 tr)
+4. Nhà thầu A xuất hóa đơn 250 tr → KTT cấn trừ 250 tr → hóa đơn
+   Amount Due = 0 (Paid), tạm ứng còn lại 150 tr
+5. Hóa đơn tiếp 150 tr → cấn trừ nốt → tạm ứng **"Đã cấn trừ đủ"**
+
+## 17.7. Lưu ý
+
+- **Không huỷ** tạm ứng đã cấn trừ đủ — tạo bút toán điều chỉnh kế
+  toán nếu cần
+- Tạm ứng đã thanh toán + có cấn trừ → phải **xoá dòng cấn trừ trước**
+  khi huỷ
+- Giải ngân tạm ứng chuyển thẳng TK nhà thầu (chuẩn NH VN — như mọi
+  giải ngân, §10)
+
+{/* TODO screenshot: 17-advance-form.png — form tạm ứng + workflow */}
+{/* TODO screenshot: 17-advance-settle.png — tab cấn trừ vào hóa đơn */}

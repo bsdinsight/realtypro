@@ -1,0 +1,89 @@
+---
+title: "Phụ lục Khế ước"
+description: "Hướng dẫn tạo phụ lục sửa đổi KW — gia hạn, đổi số tiền, đổi lãi suất, đổi lịch trả gốc; audit trail giá trị cũ/mới; điều chỉnh lãi suất hàng loạt."
+order: 16
+---
+
+# 16. Phụ lục Khế ước (Amendment)
+
+## 16.1. Mục đích
+
+Sau khi KW **Hiệu lực**, mọi thay đổi giá trị (số tiền, lãi suất,
+tenor, lịch trả) **KHÔNG sửa trực tiếp** trên KW — phải qua **Phụ
+lục** để giữ audit trail (ghi giá trị cũ → mới, số văn bản NH ký).
+
+Xem tại KW → tab **Phụ lục**.
+
+## 16.2. Các loại phụ lục
+
+| Loại | Thay đổi | Ảnh hưởng |
+|---|---|---|
+| **Gia hạn** | Ngày đáo hạn mới | Regen lịch lãi các kỳ chưa trả |
+| **Đổi số tiền** | Số tiền KW mới | Regen lịch lãi |
+| **Đổi lãi suất** | Lãi suất mới + ngày hiệu lực | Các kỳ chưa trả (từ ngày hiệu lực) tính LS mới |
+| **Đổi mục đích** | Mục đích sử dụng vốn | Ghi nhận, không đụng lịch |
+| **Đổi lịch trả gốc** | Bullet ↔ Trả gốc đều ↔ Tuỳ chỉnh | Regen phần gốc các kỳ chưa trả |
+| **Đổi tài sản thế chấp** | TS bảo đảm | Ghi nhận |
+
+## 16.3. Tạo phụ lục
+
+Tab **Phụ lục** → Thêm dòng:
+
+| Trường | Mô tả |
+|---|---|
+| Số phụ lục | Số văn bản NH cấp (nhập tay) |
+| Loại phụ lục | Chọn 1 trong 6 loại trên |
+| Ngày hiệu lực | Ngày phụ lục có giá trị |
+| Giá trị mới | Hiện field tương ứng theo loại (LS mới / số tiền mới / ...) |
+| Diễn giải | Ghi chú |
+
+Click **"Áp dụng"** → hệ thống ghi **Giá trị cũ → Giá trị mới**
+(audit) + cập nhật KW + regen lịch lãi nếu là thay đổi trọng yếu.
+
+## 16.4. Đổi lãi suất — nguyên tắc quan trọng
+
+Phụ lục đổi lãi suất **KHÔNG overwrite** trường "Lãi suất" gốc của KW
+(đó là LS ký ban đầu, immutable). Thay vào đó:
+
+- Các kỳ lịch lãi **chưa trả** có ngày ≥ ngày hiệu lực → nhận LS mới
+- Lịch sử LS xem qua danh sách phụ lục (mỗi lần đổi = 1 dòng)
+- LS hiệu lực hiện tại = phụ lục mới nhất đã áp dụng
+
+> ⚠ Kỳ **đã thanh toán** trước khi phụ lục hiệu lực KHÔNG bị tính
+> lại — nếu có chênh lệch, chờ NH phát hành **Thông báo Nợ/Có**
+> (§9.8c) để ghi nhận truy thu/truy hoàn.
+
+## 16.5. Điều chỉnh lãi suất hàng loạt
+
+NH gửi 1 thông báo điều chỉnh LS áp cho **nhiều KW**: dùng **Quản lý
+Vay → Khế ước → Điều chỉnh LS hàng loạt** (quyền Loan Manager) — thay
+vì tạo phụ lục từng KW tay (chi tiết §9.8d):
+
+1. Lọc KW theo NH / HĐTD / hạn mức → "Tải danh sách KW"
+2. **Xoá dòng KW không điều chỉnh**
+3. Mode **Delta ±%** (NH đổi lãi tham chiếu) hoặc **Đặt đồng loạt**;
+   sửa tay LS mới từng dòng
+4. Xác nhận → mỗi KW sinh 1 phụ lục riêng (audit như làm tay) + áp
+   dụng
+
+## 16.6. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+KW 10 tỷ ban đầu lãi 9.5%, tenor 24 tháng:
+
+1. Tháng 6/2026 NH điều chỉnh LS → tạo phụ lục "Đổi lãi suất", LS mới
+   10.5%, hiệu lực 01/07 → các kỳ từ 07/2026 tính 10.5%
+2. Tháng 12/2026 dự án chậm → phụ lục "Gia hạn", đáo hạn mới
+   +6 tháng → lịch lãi kéo dài thêm 6 kỳ
+3. Mỗi phụ lục lưu giá trị cũ→mới + số văn bản NH → tra cứu lịch sử
+   đầy đủ
+
+## 16.7. Lưu ý
+
+- **Phụ lục đã áp dụng KHÔNG sửa/xoá** — tạo phụ lục mới nếu cần điều
+  chỉnh tiếp (giữ chuỗi audit)
+- Phụ lục chỉ áp dụng cho KW **Hiệu lực** (không áp cho Nháp/Huỷ)
+- Phân biệt **Phụ lục KW** (sửa 1 KW) vs **Phụ lục HĐTD** (sửa hợp
+  đồng khung — §7.7)
+
+{/* TODO screenshot: 16-amendment-tab.png — tab Phụ lục + loại + giá trị cũ/mới */}
+{/* TODO screenshot: 16-mass-rate.png — wizard điều chỉnh LS hàng loạt */}

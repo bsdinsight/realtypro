@@ -1,0 +1,100 @@
+---
+title: "Lịch lãi & cách tính lãi"
+description: "Chi tiết lịch lãi khế ước — phương pháp tính lãi, quy ước ngày, kế hoạch trả gốc, sửa tay khi NH tính lệch, dòng điều chỉnh."
+order: 12
+---
+
+# 12. Lịch lãi & cách tính lãi
+
+## 12.1. Lịch lãi là gì
+
+**Lịch lãi** = bảng dự kiến tiền phải trả NH theo từng kỳ (thường
+hằng tháng), sinh **tự động** khi KW kích hoạt (Hiệu lực). Mỗi dòng
+= 1 kỳ, gồm: Gốc kỳ + Lãi kỳ + Phí kỳ (nếu có) = **Tổng phải trả**.
+
+Xem tại KW → tab **Lịch lãi**. Đây là căn cứ để trả nợ (§11) và đối
+chiếu với giấy báo NH.
+
+## 12.2. Ba tham số quyết định số lãi
+
+### Phương pháp tính lãi
+
+| Phương pháp | Cách tính |
+|---|---|
+| **Dư nợ giảm dần** (declining) | Lãi kỳ = dư nợ đầu kỳ × lãi suất × ngày/quy ước. Dư nợ giảm dần theo trả gốc → lãi giảm dần. **Phổ biến nhất NH VN.** |
+| **Cố định trên gốc ban đầu** (flat) | Lãi kỳ = gốc ban đầu × lãi suất × ngày/quy ước. Lãi bằng nhau mọi kỳ. |
+
+### Quy ước ngày tính lãi
+
+| Quy ước | Hệ số 1 kỳ |
+|---|---|
+| **Thực tế / 360** | số ngày thực tế / 360 — **chuẩn NH VN** |
+| **Thực tế / 365** | số ngày thực tế / 365 |
+| **30 / 360** | 30 / 360 (mỗi tháng tính tròn 30 ngày) |
+
+### Kế hoạch trả gốc
+
+| Kế hoạch | Gốc từng kỳ |
+|---|---|
+| **Trả gốc cuối kỳ (Bullet)** | Các kỳ = 0đ gốc, kỳ cuối = toàn bộ gốc |
+| **Trả gốc đều** | Mỗi kỳ = số tiền KW / số kỳ |
+| **Tuỳ chỉnh** | KTT nhập tay gốc từng dòng |
+
+## 12.3. Công thức lãi 1 kỳ
+
+```
+Lãi kỳ = Dư nợ tính lãi × Lãi suất(%/năm) × (số ngày kỳ / quy ước)
+```
+
+**Ví dụ** (KW 10 tỷ, lãi 12.5%/năm, Thực tế/360, dư nợ giảm dần, kỳ
+30 ngày):
+```
+Lãi kỳ 1 = 10.000.000.000 × 12.5% × 30/360 = 104.166.667 đ
+```
+Kỳ sau dư nợ giảm (đã trả gốc) → lãi kỳ 2 nhỏ hơn.
+
+## 12.4. Sửa tay khi NH tính lệch
+
+NH có thể tính lãi lệch vài đồng do quy ước ngày / làm tròn nội bộ.
+Trên dòng lịch lãi:
+
+1. Bật **"Sửa tay"** (toggle) → nhập **"Tiền lãi (sửa tay)"** = số
+   NH tính
+2. Dòng dùng số sửa tay thay công thức tự động
+
+Chênh nhỏ khi trích thu → dùng **Net-off** (§11.5). Chênh do đổi lãi
+suất hồi tố → **Thông báo Nợ/Có** (§9.8c).
+
+## 12.5. Phí kỳ
+
+Nếu KW có phí (§9.8b), cột **"Phí kỳ"** hiện số phí phân bổ mỗi kỳ.
+Tổng phải trả kỳ = Gốc + Lãi + Phí. Sửa tay được từng dòng.
+
+## 12.6. Dòng điều chỉnh (Thông báo Nợ/Có)
+
+Khi NH phát hành Thông báo Nợ/Có (đổi lãi suất hồi tố — §9.8c), hệ
+thống chèn **dòng "Điều chỉnh"** (tô đỏ) vào kỳ chưa thanh toán, cộng
+/trừ số tiền truy thu/truy hoàn. Dòng này KHÔNG bị xoá khi "Tạo lại
+lịch lãi".
+
+## 12.7. Tạo lại lịch lãi
+
+Button **"Tạo lại lịch lãi"** trên KW — regen các kỳ **chưa thanh
+toán** theo tham số hiện tại (khi đổi lãi suất qua phụ lục, đổi kế
+hoạch trả gốc...). **Giữ nguyên**: kỳ đã trả/trả một phần + dòng điều
+chỉnh.
+
+> ⚠ Ngày bắt đầu tính lãi = **Ngày kích hoạt** KW (NH ký hiệu lực),
+> không phải ngày lập KW. Xem trường "Ngày kích hoạt" trên KW.
+
+## 12.8. Trạng thái từng kỳ
+
+| Trạng thái | Ý nghĩa |
+|---|---|
+| **Dự kiến** | Chưa tới hạn / chưa trả |
+| **Đã ghi nhận** | Đã dồn tích lãi (ghi sổ) nhưng chưa trả |
+| **Trả một phần** | Có tiền vào chưa đủ gốc+lãi+phí |
+| **Đã trả** | Đủ cả gốc + lãi + phí |
+
+{/* TODO screenshot: 12-schedule-tab.png — tab Lịch lãi đầy đủ cột */}
+{/* TODO screenshot: 12-manual-override.png — dòng sửa tay tiền lãi */}

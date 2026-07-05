@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level menu Dashboard.
+         sequence=1 → đứng đầu thanh menu, vị trí dễ thấy nhất.
+         action mở luôn dashboard form (target=main fullscreen).
+    -->
+    <menuitem id="menu_rp_dashboard_root"
+              name="Dashboard"
+              action="action_rp_project_dashboard"
+              sequence="1"/>
+</odoo>

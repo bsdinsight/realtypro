@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form view: dashboard layout với 6 nhóm KPI + smart buttons -->
+    <record id="view_rp_project_dashboard_form" model="ir.ui.view">
+        <field name="name">rp.project.dashboard.form</field>
+        <field name="model">rp.project.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Realty Project Dashboard" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="↻ Refresh KPIs"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Realty Project — Dashboard</h1>
+                        <p class="text-muted">Số liệu thời gian thực — click vào số để xem chi tiết</p>
+                    </div>
+
+                    <!-- ─── Row 1: Dự án + HĐ thầu + Tạm ứng ─── -->
+                    <group string="📊 Dự án &amp; HĐ thầu &amp; Tạm ứng">
+                        <group string="Dự án">
+                            <field name="kpi_project_active"
+                                   widget="statinfo"/>
+                            <field name="kpi_project_selling"
+                                   widget="statinfo"/>
+                            <button name="action_open_projects" type="object"
+                                    string="→ Mở danh sách dự án"
+                                    class="btn-link"/>
+                        </group>
+
+                        <group string="HĐ thầu">
+                            <field name="kpi_contract_executing"
+                                   widget="statinfo"/>
+                            <field name="kpi_contract_total_value"
+                                   widget="monetary"/>
+                            <field name="kpi_contract_paid_pct"
+                                   widget="percentage"/>
+                            <button name="action_open_contracts_executing"
+                                    type="object"
+                                    string="→ HĐ đang thi công"
+                                    class="btn-link"/>
+                        </group>
+
+                        <group string="Tạm ứng">
+                            <field name="kpi_advance_to_approve"
+                                   widget="statinfo"
+                                   class="text-danger"/>
+                            <field name="kpi_advance_paid_total"
+                                   widget="monetary"/>
+                            <field name="kpi_advance_pending_settle"
+                                   widget="statinfo"/>
+                            <button name="action_open_advances_to_approve"
+                                    type="object"
+                                    string="→ TƯ chờ duyệt"
+                                    class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 2: Vay + Bảo lãnh ─── -->
+                    <group string="💰 Vay vốn &amp; Bảo lãnh">
+                        <group string="Vay HĐTD / KW">
+                            <field name="kpi_loan_outstanding"
+                                   widget="monetary"/>
+                            <field name="kpi_loan_maturing_30d"
+                                   widget="statinfo"/>
+                            <field name="kpi_loan_facility_used_pct"
+                                   widget="percentage"/>
+                            <button name="action_open_loans_outstanding"
+                                    type="object"
+                                    string="→ KW còn dư nợ"
+                                    class="btn-link"/>
+                            <button name="action_open_loans_maturing"
+                                    type="object"
+                                    string="→ KW sắp đáo hạn ≤30d"
+                                    class="btn-link"/>
+                        </group>
+
+                        <group string="Bảo lãnh">
+                            <field name="kpi_bg_outstanding"
+                                   widget="monetary"/>
+                            <field name="kpi_bg_expiring_30d"
+                                   widget="statinfo"/>
+                            <button name="action_open_bg_outstanding"
+                                    type="object"
+                                    string="→ BL outstanding"
+                                    class="btn-link"/>
+                            <button name="action_open_bg_expiring"
+                                    type="object"
+                                    string="→ BL sắp hết hạn ≤30d"
+                                    class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 3: Cảnh báo ─── -->
+                    <group string="⚠ Cảnh báo (cần xử lý ngay)">
+                        <group>
+                            <field name="kpi_alert_loan_overdue"
+                                   widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_loans_overdue"
+                                    type="object"
+                                    string="→ Xử lý KW quá hạn"
+                                    class="btn-danger"/>
+                        </group>
+                        <group>
+                            <field name="kpi_alert_bg_expired"
+                                   widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_bg_expired"
+                                    type="object"
+                                    string="→ Xử lý BL hết hạn"
+                                    class="btn-danger"/>
+                        </group>
+                        <group>
+                            <field name="kpi_alert_contract_no_progress"
+                                   widget="statinfo"
+                                   invisible="kpi_alert_contract_no_progress == 0"/>
+                        </group>
+                    </group>
+
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: tạo record mới mỗi lần mở (recompute KPIs) -->
+    <record id="action_rp_project_dashboard" model="ir.actions.act_window">
+        <field name="name">Realty Project Dashboard</field>
+        <field name="res_model">rp.project.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_rp_project_dashboard_form"/>
+        <field name="target">main</field>
+        <!-- target=main: full screen, không pop-up -->
+    </record>
+
+</odoo>

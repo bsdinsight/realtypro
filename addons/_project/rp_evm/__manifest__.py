@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — EVM (Kiểm soát chi phí)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Earned Value Management: CPI/CV/EAC/VAC + cảnh báo vượt chi '
                'theo hạng mục, rollup dự án.',
@@ -40,8 +40,10 @@ Ban QLDA → Phase 3b.
         'rp_cost_actual',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/rp_structure_views.xml',
         'views/re_project_views.xml',
+        'views/rp_evm_dashboard_views.xml',
     ],
     'application': False,
     'installable': True,

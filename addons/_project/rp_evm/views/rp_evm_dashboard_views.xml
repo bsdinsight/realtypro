@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_evm_dashboard_form" model="ir.ui.view">
+        <field name="name">rp.evm.dashboard.form</field>
+        <field name="model">rp.evm.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="EVM — Kiểm soát chi phí">
+                <sheet>
+                    <div class="oe_title" style="width:100%;">
+                        <label for="project_id" string="Dự án"/>
+                        <h2>
+                            <field name="project_id" options="{'no_create': True}"
+                                   style="max-width:520px;"/>
+                        </h2>
+                        <field name="currency_id" invisible="1"/>
+                    </div>
+                    <div class="oe_button_box" name="button_box"/>
+
+                    <group>
+                        <group string="Trạng thái">
+                            <field name="cost_status" widget="badge"
+                                   decoration-muted="cost_status == 'no_data'"
+                                   decoration-success="cost_status == 'on_budget'"
+                                   decoration-warning="cost_status == 'watch'"
+                                   decoration-danger="cost_status == 'over'"/>
+                            <field name="kpi_cpi" string="CPI dự án"
+                                   decoration-danger="kpi_cpi &lt; 0.9 and kpi_cpi &gt; 0"
+                                   decoration-warning="kpi_cpi &gt;= 0.9 and kpi_cpi &lt; 1"
+                                   decoration-success="kpi_cpi &gt;= 1"/>
+                            <field name="kpi_progress" widget="percentage"
+                                   string="% hoàn thành"/>
+                            <field name="kpi_over_count"
+                                   decoration-danger="kpi_over_count &gt; 0"/>
+                            <button name="action_open_structures" type="object"
+                                    string="Xem hạng mục vượt chi »"
+                                    class="btn-link"
+                                    invisible="kpi_over_count == 0"/>
+                        </group>
+                        <group string="Chi phí">
+                            <field name="kpi_bac"/>
+                            <field name="kpi_ev"/>
+                            <field name="kpi_ac"/>
+                            <field name="kpi_cv"
+                                   decoration-danger="kpi_cv &lt; 0"
+                                   decoration-success="kpi_cv &gt; 0"/>
+                            <field name="kpi_eac"/>
+                            <field name="kpi_vac"
+                                   decoration-danger="kpi_vac &lt; 0"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="CPI theo hạng mục (đèn: xanh=đạt · vàng=theo dõi · đỏ=vượt)">
+                            <field name="chart_cpi_html" nolabel="1"/>
+                        </group>
+                        <group string="So sánh ngân sách · làm ra · đã chi · dự báo">
+                            <field name="chart_cost_html" nolabel="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_evm_dashboard" model="ir.actions.act_window">
+        <field name="name">Kiểm soát chi phí (EVM)</field>
+        <field name="res_model">rp.evm.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_rp_evm_dashboard"
+              name="Kiểm soát chi phí (EVM)"
+              parent="rp_estimate.menu_realty_project_root"
+              action="action_rp_evm_dashboard"
+              sequence="55"/>
+
+</odoo>

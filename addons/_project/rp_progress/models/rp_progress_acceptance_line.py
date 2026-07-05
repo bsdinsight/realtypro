@@ -25,11 +25,17 @@ class RpProgressAcceptanceLine(models.Model):
         required=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
 
-    # --- Tham chiếu BOQ ---
+    # --- Tham chiếu Dự toán ---
+    boq_line_id = fields.Many2one(
+        'rp.boq.line', string='Dòng dự toán (BOQ)',
+        domain="[('structure_id', 'in', contract_structure_ids)]",
+        help='Chọn đầu việc từ Dự toán chi tiết (BOQ) → tự fill nhóm chi '
+             'phí, hạng mục, ĐVT, đơn giá, KL dự toán. Nguồn baseline '
+             'chuẩn để tính EV theo đầu việc.')
     estimate_line_id = fields.Many2one(
-        'rp.structure.estimate.line', string='Dòng dự toán',
-        help='Nếu chọn → tự fill cost_category, structure, uom, '
-             'unit_price, quantity_estimated.')
+        'rp.structure.estimate.line', string='Dòng Khái toán',
+        help='Legacy — Khái toán chỉ có nhóm chi phí + số tiền (không có '
+             'KL/đơn giá). Ưu tiên dùng "Dòng dự toán (BOQ)" ở trên.')
     cost_category_id = fields.Many2one(
         'rp.cost.category', string='Nhóm chi phí',
         help='Optional — BBNT đơn giản không track theo nhóm chi phí '
@@ -115,8 +121,19 @@ class RpProgressAcceptanceLine(models.Model):
         related='acceptance_id.state', store=True, readonly=True)
 
     # ------------------------------------------------------------------
-    # Onchange: pre-fill từ estimate_line
+    # Onchange: pre-fill từ BOQ line (nguồn chính) / estimate_line (legacy)
     # ------------------------------------------------------------------
+    @api.onchange('boq_line_id')
+    def _onchange_boq_line(self):
+        if self.boq_line_id:
+            boq = self.boq_line_id
+            self.cost_category_id = boq.category_id
+            self.structure_id = boq.structure_id
+            self.description = boq.description or ''
+            self.uom_id = boq.uom_id
+            self.unit_price = boq.unit_price
+            self.quantity_estimated = boq.quantity
+
     @api.onchange('estimate_line_id')
     def _onchange_estimate_line(self):
         if self.estimate_line_id:

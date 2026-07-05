@@ -160,6 +160,10 @@
                                            column_invisible="1"/>
                                     <field name="contract_structure_ids"
                                            column_invisible="1"/>
+                                    <field name="boq_line_id"
+                                           string="Dòng dự toán (BOQ)"
+                                           options="{'no_create': True, 'no_quick_create': True}"
+                                           optional="show"/>
                                     <field name="cost_category_id"
                                            string="Nhóm chi phí"
                                            optional="hide"/>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Gắn Hạng mục (AC) + Nhóm chi phí trên dòng vendor bill -->
+    <record id="view_move_form_cost_actual" model="ir.ui.view">
+        <field name="name">account.move.form.cost.actual</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']"
+                   position="after">
+                <field name="structure_id"
+                       string="Hạng mục (AC)"
+                       column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       optional="show"/>
+                <field name="cost_category_id"
+                       string="Nhóm chi phí"
+                       column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
+                       options="{'no_create': True, 'no_quick_create': True}"
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

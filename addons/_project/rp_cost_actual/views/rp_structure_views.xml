@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tab Chi phí thực (AC) trên form Hạng mục -->
+    <record id="view_rp_structure_form_cost_actual" model="ir.ui.view">
+        <field name="name">rp.structure.form.cost.actual</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id" ref="rp_cost_base.view_rp_structure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Chi phí thực (AC)" name="actual_cost">
+                    <group class="oe_subtotal_footer">
+                        <field name="actual_cost" widget="monetary"/>
+                    </group>
+                    <field name="actual_move_line_ids" readonly="1">
+                        <list>
+                            <field name="move_id"/>
+                            <field name="parent_state"/>
+                            <field name="cost_category_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="price_subtotal" sum="Σ chi phí"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <p class="text-muted">
+                        Chi phí thực gắn hạng mục này, từ dòng hóa đơn nhà
+                        thầu. AC = Σ dòng đã posted (in_invoice cộng,
+                        in_refund trừ). Phục vụ CPI = EV / AC (Phase 3).
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

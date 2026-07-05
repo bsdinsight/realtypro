@@ -65,6 +65,10 @@ Vào **Quản lý Vay → HĐ tín dụng → Hạn mức tín dụng** → Tạ
 KW **trả gốc** → "Đã sử dụng" giảm → facility Tuần hoàn rút tiếp được
 (revolving). BL **tất toán** → giải phóng hạn mức bảo lãnh tương ứng.
 
+import FacilityList from './images/08-facility-list.png'
+
+<img src={FacilityList} alt="Danh sách hạn mức với cột Đã sử dụng / Còn lại" />
+
 ## 8.5. Liên thông hạn mức (flexible limits)
 
 Tick **"Hạn mức liên thông"** trên ≥2 facility cùng HĐTD → chúng
@@ -95,6 +99,10 @@ field "Dự án" của Hồ sơ giải ngân **chỉ hiện các dự án đã �
 bổ** trong facility (tránh rút nhầm quota dự án khác). Cột "Đã phân
 bổ dự án" / "Chưa phân bổ" trên list facility giúp KTT soát nhanh.
 
+import FacilityAlloc from './images/08-facility-alloc.png'
+
+<img src={FacilityAlloc} alt="Dialog phân bổ hạn mức theo dự án × mục đích" />
+
 ## 8.7. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
 
 1. HĐTD 100 tỷ VCB đã Hiệu lực (xem §7)
@@ -113,6 +121,3 @@ bổ dự án" / "Chưa phân bổ" trên list facility giúp KTT soát nhanh.
   "Điều chỉnh LS hàng loạt" (§9.11).
 - **Hạn mức bảo lãnh** được cả Đề nghị phát hành BL (đang xử lý)
   lẫn Chứng thư BL (đã phát hành) chiếm chỗ — tránh over-commit.
-
-{/* TODO screenshot: 08-facility-list.png — list hạn mức với cột Đã dùng/Còn lại */}
-{/* TODO screenshot: 08-facility-alloc.png — dialog phân bổ dự án × mục đích */}

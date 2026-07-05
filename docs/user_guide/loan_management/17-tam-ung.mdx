@@ -45,6 +45,10 @@ Module giải quyết trọn vòng đời: đề nghị → phê duyệt → tha
 
 Save → **"Gửi duyệt"** → Manager mở → **"Phê duyệt"**.
 
+import AdvanceForm from './images/17-advance-form.png'
+
+<img src={AdvanceForm} alt="Form Tạm ứng — đối tượng, giá trị, workflow 6 bước, cấn trừ" />
+
 ## 17.4. Thanh toán tạm ứng bằng KW (giải ngân)
 
 Tạm ứng đã duyệt được thanh toán bằng **vốn vay** qua Hồ sơ giải ngân
@@ -82,6 +86,10 @@ toán vào hóa đơn:
 4. Save → hóa đơn cập nhật **Amount Due giảm** + trạng thái thanh
    toán (Partial / Paid)
 
+import AdvanceSettle from './images/17-advance-settle.png'
+
+<img src={AdvanceSettle} alt="Tab Cấn trừ vào hóa đơn — hóa đơn, số tiền cấn trừ, hóa đơn còn lại giảm" />
+
 1 tạm ứng → cấn trừ nhiều hóa đơn (cấn từng phần). Khi Σ cấn trừ =
 giá trị tạm ứng → trạng thái **"Đã cấn trừ đủ"**.
 
@@ -104,6 +112,3 @@ giá trị tạm ứng → trạng thái **"Đã cấn trừ đủ"**.
   khi huỷ
 - Giải ngân tạm ứng chuyển thẳng TK nhà thầu (chuẩn NH VN — như mọi
   giải ngân, §10)
-
-{/* TODO screenshot: 17-advance-form.png — form tạm ứng + workflow */}
-{/* TODO screenshot: 17-advance-settle.png — tab cấn trừ vào hóa đơn */}

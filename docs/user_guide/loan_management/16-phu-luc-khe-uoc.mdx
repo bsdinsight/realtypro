@@ -40,6 +40,10 @@ Tab **Phụ lục** → Thêm dòng:
 Click **"Áp dụng"** → hệ thống ghi **Giá trị cũ → Giá trị mới**
 (audit) + cập nhật KW + regen lịch lãi nếu là thay đổi trọng yếu.
 
+import AmendmentTab from './images/16-amendment-tab.png'
+
+<img src={AmendmentTab} alt="Tab Phụ lục — loại phụ lục, giá trị cũ → mới, trạng thái Đã áp dụng" />
+
 ## 16.4. Đổi lãi suất — nguyên tắc quan trọng
 
 Phụ lục đổi lãi suất **KHÔNG overwrite** trường "Lãi suất" gốc của KW
@@ -66,6 +70,10 @@ vì tạo phụ lục từng KW tay (chi tiết §9.8d):
 4. Xác nhận → mỗi KW sinh 1 phụ lục riêng (audit như làm tay) + áp
    dụng
 
+import MassRate from './images/16-mass-rate.png'
+
+<img src={MassRate} alt="Wizard điều chỉnh lãi suất hàng loạt — Delta ±%, LS hiện tại → LS mới" />
+
 ## 16.6. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
 
 KW 10 tỷ ban đầu lãi 9.5%, tenor 24 tháng:
@@ -84,6 +92,3 @@ KW 10 tỷ ban đầu lãi 9.5%, tenor 24 tháng:
 - Phụ lục chỉ áp dụng cho KW **Hiệu lực** (không áp cho Nháp/Huỷ)
 - Phân biệt **Phụ lục KW** (sửa 1 KW) vs **Phụ lục HĐTD** (sửa hợp
   đồng khung — §7.7)
-
-{/* TODO screenshot: 16-amendment-tab.png — tab Phụ lục + loại + giá trị cũ/mới */}
-{/* TODO screenshot: 16-mass-rate.png — wizard điều chỉnh LS hàng loạt */}

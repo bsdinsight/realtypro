@@ -45,12 +45,20 @@ Thứ tự kỳ (khi không chỉ định):  kỳ cũ nhất chưa trả → m�
 4. Số dư không allocate hết → nằm ở cột **"Chưa allocate"** cho KTT
    kiểm tra đối chiếu.
 
+import AdviceForm from './images/11-advice-form.png'
+
+<img src={AdviceForm} alt="Giấy báo trích thu tự động — allocation nhiều KW × kỳ" />
+
 ## 11.4. Import giấy báo Excel/CSV
 
 **Trích thu & Thanh toán → Import giấy báo nợ (Excel/CSV)** — NH gửi
 file sao kê trích thu nhiều KW: wizard đọc file, match số KW, preview
 từng dòng rồi tạo giấy báo + allocate như 11.3. Template file mẫu tải
 ngay trong wizard.
+
+import ImportWizard from './images/11-import-wizard.png'
+
+<img src={ImportWizard} alt="Wizard import giấy báo nợ từ Excel/CSV" />
 
 ## 11.5. Net-off chênh lệch
 
@@ -92,6 +100,3 @@ KW 10 tỷ, lãi 9.5%, trích thu tự động hằng tháng:
 - Kỳ có **dòng Điều chỉnh** (Thông báo Nợ/Có): tổng phải trả của kỳ
   = kỳ gốc + điều chỉnh; trích thu allocate như thường.
 - Trả vượt tổng đã giải ngân → hệ thống chặn (constrain trên KW).
-
-{/* TODO screenshot: 11-advice-form.png — giấy báo trích thu + allocation */}
-{/* TODO screenshot: 11-import-wizard.png — wizard import Excel */}

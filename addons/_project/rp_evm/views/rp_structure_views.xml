@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Nhóm EVM — Kiểm soát chi phí trên form Hạng mục -->
+    <record id="view_rp_structure_form_evm" model="ir.ui.view">
+        <field name="name">rp.structure.form.evm</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id" ref="rp_cost_base.view_rp_structure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="EVM — Kiểm soát chi phí">
+                    <group string="Nền tảng">
+                        <field name="estimate_value" string="Ngân sách (BAC)"/>
+                        <field name="progress_value" string="Giá trị làm ra (EV)"/>
+                        <field name="actual_cost" string="Chi phí thực (AC)"/>
+                        <field name="cost_variance"
+                               decoration-danger="cost_variance &lt; 0"
+                               decoration-success="cost_variance &gt; 0"/>
+                    </group>
+                    <group string="Hiệu suất &amp; dự báo">
+                        <field name="cpi"
+                               decoration-danger="cpi &lt; 0.9 and cpi &gt; 0"
+                               decoration-warning="cpi &gt;= 0.9 and cpi &lt; 1"
+                               decoration-success="cpi &gt;= 1"/>
+                        <field name="estimate_at_completion"/>
+                        <field name="variance_at_completion"
+                               decoration-danger="variance_at_completion &lt; 0"/>
+                        <field name="cost_status" widget="badge"
+                               decoration-muted="cost_status == 'no_data'"
+                               decoration-success="cost_status == 'on_budget'"
+                               decoration-warning="cost_status == 'watch'"
+                               decoration-danger="cost_status == 'over'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Filter: hạng mục vượt chi -->
+    <record id="view_rp_structure_search_evm" model="ir.ui.view">
+        <field name="name">rp.structure.search.evm</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id" ref="rp_cost_base.view_rp_structure_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="cost_alert" string="Cảnh báo vượt chi"
+                        domain="[('cost_alert', '=', True)]"/>
+                <filter name="cost_over" string="Vượt chi"
+                        domain="[('cost_status', '=', 'over')]"/>
+                <filter name="group_cost_status" string="Trạng thái chi phí"
+                        context="{'group_by': 'cost_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

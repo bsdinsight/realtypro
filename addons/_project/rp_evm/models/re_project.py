@@ -1,0 +1,79 @@
+# -*- coding: utf-8 -*-
+"""EVM rollup cấp dự án — tổng BAC/EV/AC + CPI/EAC/VAC + đếm hạng mục vượt chi."""
+from odoo import api, fields, models
+
+CPI_OVER = 0.90
+
+
+class ReProject(models.Model):
+    _inherit = 're.project'
+
+    currency_id = fields.Many2one(
+        'res.currency', string='Loại tiền',
+        compute='_compute_currency_id', store=True, readonly=True)
+    total_bac = fields.Monetary(
+        string='Tổng ngân sách (BAC)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    total_ev = fields.Monetary(
+        string='Tổng giá trị làm ra (EV)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    total_ac = fields.Monetary(
+        string='Tổng chi phí thực (AC)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    total_cv = fields.Monetary(
+        string='Chênh chi phí (CV)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    project_cpi = fields.Float(
+        string='CPI dự án', compute='_compute_project_evm', store=True,
+        digits=(16, 2))
+    project_eac = fields.Monetary(
+        string='Dự báo chi cuối (EAC)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    project_vac = fields.Monetary(
+        string='Chênh khi hoàn thành (VAC)', compute='_compute_project_evm',
+        store=True, currency_field='currency_id')
+    over_budget_count = fields.Integer(
+        string='Số hạng mục vượt chi', compute='_compute_project_evm',
+        store=True)
+    cost_status = fields.Selection(
+        [('no_data', 'Chưa đủ dữ liệu'),
+         ('on_budget', 'Trong ngân sách'),
+         ('watch', 'Cần theo dõi'),
+         ('over', 'Vượt chi')],
+        string='Trạng thái chi phí dự án',
+        compute='_compute_project_evm', store=True, default='no_data')
+
+    def _compute_currency_id(self):
+        default = self.env.company.currency_id
+        for proj in self:
+            proj.currency_id = proj.currency_id or default
+
+    @api.depends('structure_ids.estimate_value',
+                 'structure_ids.progress_value',
+                 'structure_ids.actual_cost',
+                 'structure_ids.cost_status')
+    def _compute_project_evm(self):
+        for proj in self:
+            structs = proj.structure_ids
+            bac = sum(structs.mapped('estimate_value'))
+            ev = sum(structs.mapped('progress_value'))
+            ac = sum(structs.mapped('actual_cost'))
+            cpi = (ev / ac) if ac else 0.0
+            eac = (bac / cpi) if cpi else bac
+            proj.total_bac = bac
+            proj.total_ev = ev
+            proj.total_ac = ac
+            proj.total_cv = ev - ac
+            proj.project_cpi = cpi
+            proj.project_eac = eac
+            proj.project_vac = bac - eac
+            proj.over_budget_count = len(
+                structs.filtered(lambda s: s.cost_status == 'over'))
+            if not ac or not ev:
+                proj.cost_status = 'no_data'
+            elif cpi >= 1.0:
+                proj.cost_status = 'on_budget'
+            elif cpi >= CPI_OVER:
+                proj.cost_status = 'watch'
+            else:
+                proj.cost_status = 'over'

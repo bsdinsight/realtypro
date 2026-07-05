@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tổng quan EVM trên form Dự án -->
+    <record id="view_re_project_form_evm" model="ir.ui.view">
+        <field name="name">re.project.form.evm</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="EVM — Kiểm soát chi phí dự án">
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="total_bac" string="Tổng ngân sách (BAC)"/>
+                        <field name="total_ev" string="Giá trị làm ra (EV)"/>
+                        <field name="total_ac" string="Chi phí thực (AC)"/>
+                        <field name="total_cv" string="Chênh chi phí (CV)"
+                               decoration-danger="total_cv &lt; 0"
+                               decoration-success="total_cv &gt; 0"/>
+                    </group>
+                    <group>
+                        <field name="project_cpi" string="CPI dự án"
+                               decoration-danger="project_cpi &lt; 0.9 and project_cpi &gt; 0"
+                               decoration-warning="project_cpi &gt;= 0.9 and project_cpi &lt; 1"
+                               decoration-success="project_cpi &gt;= 1"/>
+                        <field name="project_eac" string="Dự báo chi cuối (EAC)"/>
+                        <field name="project_vac" string="Chênh khi hoàn thành (VAC)"
+                               decoration-danger="project_vac &lt; 0"/>
+                        <field name="over_budget_count"
+                               string="Số hạng mục vượt chi"
+                               decoration-danger="over_budget_count &gt; 0"/>
+                        <field name="cost_status" widget="badge"
+                               decoration-muted="cost_status == 'no_data'"
+                               decoration-success="cost_status == 'on_budget'"
+                               decoration-warning="cost_status == 'watch'"
+                               decoration-danger="cost_status == 'over'"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

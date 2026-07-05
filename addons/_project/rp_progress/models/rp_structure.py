@@ -14,6 +14,15 @@ class RpStructure(models.Model):
     date_planned_end = fields.Date(
         string='Ngày kết thúc KH', tracking=True)
 
+    # --- Dự toán chi tiết (BOQ) — Phase 1 EVM ---
+    boq_line_ids = fields.One2many(
+        'rp.boq.line', 'structure_id',
+        string='Dự toán chi tiết (BOQ)')
+    boq_total = fields.Monetary(
+        string='Tổng dự toán BOQ',
+        compute='_compute_boq_total', store=True,
+        help='Σ thành tiền các dòng BOQ (khối lượng × đơn giá).')
+
     # --- Tiến độ thực tế (rolled-up từ BBN approved) ---
     acceptance_line_ids = fields.One2many(
         'rp.progress.acceptance.line', 'structure_id',
@@ -23,8 +32,10 @@ class RpStructure(models.Model):
         compute='_compute_progress', store=True,
         help='Σ amount_to_date của các dòng BBN approved trên hạng mục.')
     estimate_value = fields.Monetary(
-        string='Giá trị dự toán',
-        compute='_compute_estimate_value', store=True)
+        string='Giá trị dự toán (BAC)',
+        compute='_compute_estimate_value', store=True,
+        help='Budget At Completion. Ưu tiên Σ BOQ chi tiết nếu đã nhập, '
+             'else Σ Khái toán (estimate_total).')
     progress_percent = fields.Float(
         string='% hoàn thành',
         compute='_compute_progress', store=True,
@@ -62,7 +73,8 @@ class RpStructure(models.Model):
     @api.depends('acceptance_line_ids',
                  'acceptance_line_ids.amount_to_date',
                  'acceptance_line_ids.state',
-                 'acceptance_line_ids.acceptance_id.date_approved')
+                 'acceptance_line_ids.acceptance_id.date_approved',
+                 'estimate_value')
     def _compute_progress(self):
         for rec in self:
             approved_lines = rec.acceptance_line_ids.filtered(
@@ -86,20 +98,18 @@ class RpStructure(models.Model):
             else:
                 rec.date_actual_end = False
 
-    @api.depends()
-    def _compute_estimate_value(self):
-        # Tính tổng giá trị dự toán của hạng mục từ rp.structure.estimate.line
-        EstLine = self.env['rp.structure.estimate.line']
+    @api.depends('boq_line_ids', 'boq_line_ids.amount')
+    def _compute_boq_total(self):
         for rec in self:
-            lines = EstLine.search([('structure_id', '=', rec.id)])
-            total = 0.0
-            for el in lines:
-                # estimate line có thể tên field khác — fallback
-                if hasattr(el, 'amount'):
-                    total += el.amount or 0.0
-                elif hasattr(el, 'subtotal'):
-                    total += el.subtotal or 0.0
-            rec.estimate_value = total
+            rec.boq_total = sum(rec.boq_line_ids.mapped('amount'))
+
+    @api.depends('boq_total', 'estimate_total')
+    def _compute_estimate_value(self):
+        # BAC = Σ BOQ chi tiết nếu đã nhập, else Σ Khái toán.
+        # estimate_total (rp_cost_base) là stored-computed reactive theo
+        # estimate_line_ids → BAC tự cập nhật cả 2 nguồn.
+        for rec in self:
+            rec.estimate_value = rec.boq_total or rec.estimate_total
 
     @api.depends('progress_percent', 'date_planned_end',
                  'date_planned_start', 'date_actual_start')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Chi phí thực (AC)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Gắn chi phí thực từ hóa đơn nhà thầu vào WBS (hạng mục × '
                'nhóm chi phí) → roll-up AC cho EVM (CPI = EV/AC).',
@@ -43,6 +43,7 @@ vòng; AC độc lập với tiến độ).
         'account',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/rp_structure_views.xml',
     ],

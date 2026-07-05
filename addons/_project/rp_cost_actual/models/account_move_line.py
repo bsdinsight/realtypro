@@ -19,3 +19,14 @@ class AccountMoveLine(models.Model):
         'rp.cost.category', string='Nhóm chi phí', index=True,
         help='Nhóm chi phí của dòng chi phí thực (chiều phân loại AC, '
              'đối chiếu với dự toán cùng nhóm).')
+    cost_allocation_ids = fields.One2many(
+        'rp.cost.allocation', 'move_line_id',
+        string='Phân bổ nhiều đầu việc',
+        help='Chia dòng chi phí này cho NHIỀU hạng mục. Khi có phân bổ '
+             '→ AC tính theo phân bổ, bỏ qua "Hạng mục (AC)" trên dòng.')
+    cost_allocation_count = fields.Integer(
+        compute='_compute_cost_allocation_count')
+
+    def _compute_cost_allocation_count(self):
+        for line in self:
+            line.cost_allocation_count = len(line.cost_allocation_ids)

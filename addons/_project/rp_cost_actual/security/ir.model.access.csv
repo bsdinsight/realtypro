@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_cost_allocation_user,rp.cost.allocation user,model_rp_cost_allocation,re_base.group_re_user,1,1,1,1
+access_rp_cost_allocation_manager,rp.cost.allocation manager,model_rp_cost_allocation,re_base.group_re_manager,1,1,1,1
+access_rp_cost_allocation_account,rp.cost.allocation accountant,model_rp_cost_allocation,account.group_account_invoice,1,1,1,1

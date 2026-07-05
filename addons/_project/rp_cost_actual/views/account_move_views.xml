@@ -19,6 +19,36 @@
                        column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
                        options="{'no_create': True, 'no_quick_create': True}"
                        optional="hide"/>
+                <field name="cost_allocation_count"
+                       string="Split"
+                       column_invisible="parent.move_type not in ('in_invoice', 'in_refund')"
+                       optional="hide"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Phân bổ chi phí (AC)" name="cost_allocations"
+                      invisible="move_type not in ('in_invoice', 'in_refund')">
+                    <field name="cost_allocation_ids">
+                        <list editable="bottom">
+                            <field name="move_line_id"
+                                   options="{'no_create': True}"
+                                   domain="[('move_id', '=', parent.id), ('display_type', '=', 'product')]"/>
+                            <field name="structure_id"
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="cost_category_id"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   optional="show"/>
+                            <field name="amount" sum="Σ phân bổ"/>
+                            <field name="note" optional="show"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <p class="text-muted">
+                        Chia 1 dòng chi phí cho NHIỀU hạng mục (vd thuê cẩu
+                        tháp dùng chung). Dòng hóa đơn CÓ phân bổ → AC tính
+                        theo phân bổ; KHÔNG có → theo "Hạng mục (AC)" trên
+                        dòng. Tổng phân bổ không vượt giá trị dòng.
+                    </p>
+                </page>
             </xpath>
         </field>
     </record>

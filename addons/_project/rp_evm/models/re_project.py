@@ -43,6 +43,25 @@ class ReProject(models.Model):
         string='Trạng thái chi phí dự án',
         compute='_compute_project_evm', store=True, default='no_data')
 
+    # --- Phase 4: schedule performance (non-stored, đổi theo ngày) ---
+    total_pv_today = fields.Monetary(
+        string='Giá trị kế hoạch đến nay — PV(t)',
+        compute='_compute_project_schedule', currency_field='currency_id')
+    total_sv = fields.Monetary(
+        string='Chênh tiến độ (SV)',
+        compute='_compute_project_schedule', currency_field='currency_id')
+    project_spi = fields.Float(
+        string='SPI dự án', compute='_compute_project_schedule',
+        digits=(16, 2))
+
+    def _compute_project_schedule(self):
+        for proj in self:
+            pv = sum(proj.structure_ids.mapped('planned_value_today'))
+            ev = sum(proj.structure_ids.mapped('progress_value'))
+            proj.total_pv_today = pv
+            proj.total_sv = ev - pv
+            proj.project_spi = (ev / pv) if pv else 0.0
+
     def _compute_currency_id(self):
         default = self.env.company.currency_id
         for proj in self:

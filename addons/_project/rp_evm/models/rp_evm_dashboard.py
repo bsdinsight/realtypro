@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 """Dashboard EVM cấp dự án cho Ban QLDA — KPI + CPI theo hạng mục (đèn
-giao thông) + so sánh BAC/EV/AC/EAC, render SVG server-side.
+giao thông) + so sánh BAC/EV/AC/EAC + S-curve PV/EV/AC, render SVG
+server-side.
 """
+from datetime import timedelta
+
 from odoo import api, fields, models
 
 from . import evm_svg
+from .rp_structure import planned_fraction
 
 
 class RpEvmDashboard(models.TransientModel):
@@ -34,6 +38,12 @@ class RpEvmDashboard(models.TransientModel):
                               compute='_compute_dashboard')
     kpi_progress = fields.Float(string='% hoàn thành (EV/BAC)',
                                 compute='_compute_dashboard')
+    kpi_pv_today = fields.Monetary(string='Kế hoạch đến nay — PV(t)',
+                                   compute='_compute_dashboard')
+    kpi_spi = fields.Float(string='SPI dự án', digits=(16, 2),
+                           compute='_compute_dashboard')
+    kpi_sv = fields.Monetary(string='Chênh tiến độ (SV)',
+                             compute='_compute_dashboard')
     kpi_over_count = fields.Integer(string='Hạng mục vượt chi',
                                     compute='_compute_dashboard')
     cost_status = fields.Selection(
@@ -49,6 +59,9 @@ class RpEvmDashboard(models.TransientModel):
         sanitize=False)
     chart_cost_html = fields.Html(
         string='So sánh BAC / EV / AC / EAC', compute='_compute_dashboard',
+        sanitize=False)
+    chart_scurve_html = fields.Html(
+        string='S-curve PV / EV / AC', compute='_compute_dashboard',
         sanitize=False)
 
     def _compute_display_name(self):
@@ -80,6 +93,35 @@ class RpEvmDashboard(models.TransientModel):
             d.chart_cpi_html = evm_svg.cpi_bars(rows)
             d.chart_cost_html = evm_svg.cost_compare(
                 p.total_bac, p.total_ev, p.total_ac, p.project_eac)
+            # Schedule (Phase 4)
+            d.kpi_pv_today = p.total_pv_today
+            d.kpi_spi = p.project_spi
+            d.kpi_sv = p.total_sv
+            d.chart_scurve_html = self._build_scurve(p)
+
+    def _build_scurve(self, p, samples=40):
+        """S-curve PV tích lũy toàn dự án (Σ BAC×f(t) mọi hạng mục) +
+        điểm EV/AC hôm nay."""
+        today = fields.Date.context_today(self)
+        planned = p.structure_ids.filtered(
+            lambda s: s.date_planned_start and s.date_planned_end
+            and s.estimate_value)
+        if not planned:
+            return evm_svg.s_curve([], 0, 0, 0)
+        start = min(planned.mapped('date_planned_start'))
+        end = max(planned.mapped('date_planned_end'))
+        span = max((end - start).days, 1)
+        pts = []
+        for i in range(samples + 1):
+            x = i / samples
+            t = start + timedelta(days=round(span * x))
+            pv = sum(s.estimate_value * planned_fraction(
+                t, s.date_planned_start, s.date_planned_end,
+                s.planned_curve) for s in planned)
+            pts.append((x, pv))
+        today_x = (today - start).days / span
+        return evm_svg.s_curve(
+            pts, p.total_ev, p.total_ac, today_x)
 
     def action_open_structures(self):
         """Drill-down: mở list hạng mục vượt chi của dự án."""

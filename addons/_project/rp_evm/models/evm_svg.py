@@ -74,6 +74,66 @@ def cpi_bars(rows, width=560, bar_h=24, gap=13):
     return ''.join(parts)
 
 
+def s_curve(points, ev, ac, today_x, width=560, height=230):
+    """S-curve PV kế hoạch + điểm EV/AC hôm nay.
+
+    points = [(x_frac 0..1, pv_value), ...] — đường PV tích lũy.
+    ev, ac = giá trị hôm nay; today_x = vị trí hôm nay (0..1).
+    """
+    points = [(float(x), float(v or 0)) for x, v in points]
+    if not points or not any(v for _, v in points):
+        return ('<svg viewBox="0 0 %d 44" xmlns="http://www.w3.org/2000/svg">'
+                '<text x="12" y="26" font-size="13" fill="#9AA7B2">Chưa có '
+                'ngày kế hoạch trên hạng mục — nhập Ngày bắt đầu/kết thúc '
+                'KH để vẽ S-curve</text></svg>') % width
+    maxv = max(max(v for _, v in points), float(ev or 0),
+               float(ac or 0)) or 1
+    pad_l, pad_r, pad_t, pad_b = 56, 16, 16, 30
+    pw, ph = width - pad_l - pad_r, height - pad_t - pad_b
+    def X(x):
+        return pad_l + pw * x
+    def Y(v):
+        return pad_t + ph * (1 - v / maxv)
+    parts = ['<svg viewBox="0 0 %d %d" width="%d" height="%d" '
+             'xmlns="http://www.w3.org/2000/svg">' % (
+                 width, height, width, height)]
+    # trục + lưới ngang
+    for k in (0.0, 0.5, 1.0):
+        yv = Y(maxv * k)
+        parts.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" '
+                     'stroke="#E3EAEF"/>' % (pad_l, yv, width - pad_r, yv))
+        parts.append('<text x="%d" y="%.1f" font-size="10" fill="#8A98A5" '
+                     'text-anchor="end">%s</text>' % (
+                         pad_l - 6, yv + 3, _fmt_money(maxv * k)))
+    # đường PV
+    path = 'M ' + ' L '.join('%.1f,%.1f' % (X(x), Y(v)) for x, v in points)
+    parts.append('<path d="%s" fill="none" stroke="#3D5A80" '
+                 'stroke-width="2.2"/>' % path)
+    # vạch hôm nay + điểm EV/AC
+    tx = X(max(0.0, min(1.0, float(today_x or 0))))
+    parts.append('<line x1="%.1f" y1="%d" x2="%.1f" y2="%d" '
+                 'stroke="#9AB4C6" stroke-dasharray="4 3"/>' % (
+                     tx, pad_t, tx, height - pad_b))
+    parts.append('<text x="%.1f" y="%d" font-size="10" fill="#6B7B8A" '
+                 'text-anchor="middle">hôm nay</text>' % (
+                     tx, height - pad_b + 14))
+    for val, color, label in ((ev, '#2C7A57', 'EV'), (ac, '#C1782E', 'AC')):
+        if val:
+            parts.append('<circle cx="%.1f" cy="%.1f" r="4.5" fill="%s"/>' % (
+                tx, Y(float(val)), color))
+            parts.append('<text x="%.1f" y="%.1f" font-size="10.5" '
+                         'font-weight="700" fill="%s">%s %s</text>' % (
+                             tx + 8, Y(float(val)) + 3, color, label,
+                             _fmt_money(val)))
+    # legend PV
+    parts.append('<rect x="%d" y="%d" width="14" height="3" fill="#3D5A80"/>'
+                 % (pad_l, height - pad_b + 10))
+    parts.append('<text x="%d" y="%d" font-size="10.5" fill="#3A4A57">'
+                 'PV kế hoạch</text>' % (pad_l + 19, height - pad_b + 14))
+    parts.append('</svg>')
+    return ''.join(parts)
+
+
 def cost_compare(bac, ev, ac, eac, width=460, height=210):
     """4 cột: BAC · EV · AC · EAC. EAC đỏ nếu > BAC (dự báo vượt)."""
     bars = [

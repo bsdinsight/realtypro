@@ -1,13 +1,37 @@
 # -*- coding: utf-8 -*-
-"""EVM engine — chỉ số kiểm soát chi phí theo hạng mục.
+"""EVM engine — chỉ số kiểm soát chi phí + tiến độ theo hạng mục.
 
 CV/CPI/EAC/ETC/VAC từ BAC (estimate_value) · EV (progress_value) ·
 AC (actual_cost). Ngưỡng cảnh báo CPI: <1 cần theo dõi, <0.90 vượt chi.
+
+PV time-phased (Phase 4): PV(t) = BAC × f(t) với f theo đường cong
+kế hoạch (linear / S-curve) giữa date_planned_start → date_planned_end.
+SPI = EV / PV(t), SV = EV − PV(t) — non-stored (phụ thuộc ngày hôm nay).
 """
+import math
+
 from odoo import api, fields, models
 
 # Ngưỡng phân loại theo CPI (Cost Performance Index)
 CPI_OVER = 0.90   # CPI dưới mức này = vượt chi nghiêm trọng (>~11% overrun)
+
+
+def planned_fraction(t, start, end, curve='linear'):
+    """f(t) ∈ [0,1] — tỷ lệ giá trị kế hoạch tích lũy tại ngày t.
+
+    linear : tuyến tính theo thời gian.
+    s_curve: 0.5 − cos(π·x)/2 — chậm đầu/cuối, nhanh giữa (chuẩn thi công).
+    """
+    if not start or not end or end <= start:
+        return 0.0
+    if t <= start:
+        return 0.0
+    if t >= end:
+        return 1.0
+    x = (t - start).days / (end - start).days
+    if curve == 's_curve':
+        return 0.5 - math.cos(math.pi * x) / 2.0
+    return x
 
 
 class RpStructure(models.Model):
@@ -46,6 +70,37 @@ class RpStructure(models.Model):
         string='Cảnh báo vượt chi',
         compute='_compute_evm', store=True,
         help='True khi CPI dưới ngưỡng (cần theo dõi hoặc vượt chi).')
+
+    # --- Phase 4: PV time-phased + SPI/SV ---
+    planned_curve = fields.Selection(
+        [('linear', 'Tuyến tính'),
+         ('s_curve', 'S-curve (thi công)')],
+        string='Đường cong kế hoạch', default='s_curve', required=True,
+        help='Cách phân bổ giá trị kế hoạch theo thời gian giữa ngày bắt '
+             'đầu/kết thúc KH. S-curve: chậm giai đoạn đầu/cuối, nhanh '
+             'giữa — chuẩn thi công.')
+    planned_value_today = fields.Monetary(
+        string='Giá trị kế hoạch đến nay — PV(t)',
+        compute='_compute_schedule_evm', currency_field='currency_id',
+        help='PV(t) = BAC × f(hôm nay) theo đường cong kế hoạch. '
+             'Không lưu DB (đổi theo ngày).')
+    schedule_variance = fields.Monetary(
+        string='Chênh tiến độ (SV)',
+        compute='_compute_schedule_evm', currency_field='currency_id',
+        help='SV = EV − PV(t). Âm = chậm so kế hoạch.')
+    spi = fields.Float(
+        string='SPI', compute='_compute_schedule_evm', digits=(16, 2),
+        help='Schedule Performance Index = EV / PV(t). <1 = chậm tiến độ.')
+
+    def _compute_schedule_evm(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            pv = rec.estimate_value * planned_fraction(
+                today, rec.date_planned_start, rec.date_planned_end,
+                rec.planned_curve)
+            rec.planned_value_today = pv
+            rec.schedule_variance = rec.progress_value - pv
+            rec.spi = (rec.progress_value / pv) if pv else 0.0
 
     @api.depends('estimate_value', 'progress_value', 'actual_cost')
     def _compute_evm(self):

@@ -17,6 +17,16 @@
                                decoration-danger="cost_variance &lt; 0"
                                decoration-success="cost_variance &gt; 0"/>
                     </group>
+                    <group string="Tiến độ (schedule)">
+                        <field name="planned_curve"/>
+                        <field name="planned_value_today"/>
+                        <field name="schedule_variance"
+                               decoration-danger="schedule_variance &lt; 0"/>
+                        <field name="spi"
+                               decoration-danger="spi &lt; 0.9 and spi &gt; 0"
+                               decoration-warning="spi &gt;= 0.9 and spi &lt; 1"
+                               decoration-success="spi &gt;= 1"/>
+                    </group>
                     <group string="Hiệu suất &amp; dự báo">
                         <field name="cpi"
                                decoration-danger="cpi &lt; 0.9 and cpi &gt; 0"

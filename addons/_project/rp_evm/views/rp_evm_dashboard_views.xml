@@ -48,6 +48,19 @@
                             <field name="kpi_vac"
                                    decoration-danger="kpi_vac &lt; 0"/>
                         </group>
+                        <group string="Tiến độ (schedule)">
+                            <field name="kpi_pv_today"/>
+                            <field name="kpi_sv"
+                                   decoration-danger="kpi_sv &lt; 0"/>
+                            <field name="kpi_spi" string="SPI dự án"
+                                   decoration-danger="kpi_spi &lt; 0.9 and kpi_spi &gt; 0"
+                                   decoration-warning="kpi_spi &gt;= 0.9 and kpi_spi &lt; 1"
+                                   decoration-success="kpi_spi &gt;= 1"/>
+                        </group>
+                    </group>
+
+                    <group string="S-curve — PV kế hoạch vs EV/AC hôm nay">
+                        <field name="chart_scurve_html" nolabel="1"/>
                     </group>
 
                     <group>

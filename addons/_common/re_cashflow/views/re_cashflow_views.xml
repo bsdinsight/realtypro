@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_cashflow_forecast_form" model="ir.ui.view">
+        <field name="name">re.cashflow.forecast.form</field>
+        <field name="model">re.cashflow.forecast</field>
+        <field name="arch" type="xml">
+            <form string="Dự báo dòng tiền">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Ngân quỹ — Dự báo dòng tiền</h1>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not first_negative_week">
+                        ⚠ <b>Số dư dự kiến ÂM từ <field name="first_negative_week"
+                        readonly="1" class="oe_inline"/></b> — cần thu xếp
+                        nguồn trước thời điểm này: rút KW (xem Khả dụng
+                        thực tế), đòi nợ CĐT, giãn thanh toán NCC.
+                    </div>
+                    <group>
+                        <group string="Số dư &amp; tổng quan">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="horizon" widget="radio"
+                                   options="{'horizontal': True}"/>
+                            <field name="kpi_opening_cash"/>
+                            <field name="kpi_total_in"/>
+                            <field name="kpi_total_out"/>
+                            <field name="kpi_closing"
+                                   decoration-danger="kpi_closing &lt; 0"
+                                   decoration-success="kpi_closing &gt; 0"/>
+                        </group>
+                        <group string="Cần chú ý">
+                            <field name="kpi_overdue_out"
+                                   decoration-danger="kpi_overdue_out &gt; 0"/>
+                            <field name="kpi_overdue_in"
+                                   decoration-warning="kpi_overdue_in &gt; 0"/>
+                            <field name="kpi_receivable_undated"/>
+                            <button name="action_open_loan_lines"
+                                    type="object" class="btn-link"
+                                    string="Kỳ trả nợ KW »"/>
+                            <button name="action_open_vendor_bills"
+                                    type="object" class="btn-link"
+                                    string="Hóa đơn NCC chưa trả »"/>
+                            <button name="action_open_customer_invoices"
+                                    type="object" class="btn-link"
+                                    string="Hóa đơn bán chờ thu »"/>
+                        </group>
+                    </group>
+                    <group string="Số dư lũy kế dự kiến">
+                        <field name="chart_html" nolabel="1"/>
+                    </group>
+                    <group string="Lịch dòng tiền theo tuần (nguồn × tuần)">
+                        <field name="table_html" nolabel="1"/>
+                    </group>
+                    <p class="text-muted">
+                        Nguyên tắc: chứng từ đã thành hóa đơn tính theo hóa
+                        đơn; lịch (kỳ vay/thuê/milestone) chỉ tính phần chưa
+                        lên hóa đơn — không đếm trùng. Cột "Quá hạn" gộp
+                        nghĩa vụ trễ hạn, được trừ vào số dư ngay từ tuần 1
+                        (thận trọng). Đổi Tầm nhìn xong bấm làm mới trang
+                        để tính lại.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_cashflow_forecast" model="ir.actions.act_window">
+        <field name="name">Dự báo dòng tiền</field>
+        <field name="res_model">re.cashflow.forecast</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_re_cashflow_root" name="Ngân quỹ" sequence="27"
+              action="action_re_cashflow_forecast"/>
+    <menuitem id="menu_re_cashflow_forecast" name="Dự báo dòng tiền"
+              parent="menu_re_cashflow_root"
+              action="action_re_cashflow_forecast" sequence="10"/>
+
+</odoo>

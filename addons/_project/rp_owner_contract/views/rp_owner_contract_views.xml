@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ HĐ với CĐT ============ -->
+    <record id="view_rp_owner_contract_list" model="ir.ui.view">
+        <field name="name">rp.owner.contract.list</field>
+        <field name="model">rp.owner.contract</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('completed', 'terminated')">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="owner_id"/>
+                <field name="contract_value_pretax" sum="Σ"/>
+                <field name="accepted_to_date" sum="Σ"/>
+                <field name="paid_to_date" sum="Σ"/>
+                <field name="receivable" sum="Σ"
+                       decoration-bf="receivable &gt; 0"/>
+                <field name="progress_percent" widget="percentage"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'signed'"
+                       decoration-warning="state == 'executing'"
+                       decoration-success="state == 'completed'"
+                       decoration-danger="state == 'terminated'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_contract_form" model="ir.ui.view">
+        <field name="name">rp.owner.contract.form</field>
+        <field name="model">rp.owner.contract</field>
+        <field name="arch" type="xml">
+            <form string="HĐ với Chủ đầu tư">
+                <header>
+                    <button name="action_sign" type="object" string="Ký HĐ"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_execute" type="object"
+                            string="Bắt đầu thi công" class="btn-primary"
+                            invisible="state != 'signed'"/>
+                    <button name="action_complete" type="object"
+                            string="Hoàn thành"
+                            invisible="state not in ('signed', 'executing')"/>
+                    <button name="action_terminate" type="object"
+                            string="Chấm dứt"
+                            confirm="Chấm dứt HĐ với CĐT này?"
+                            invisible="state in ('completed', 'terminated')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,signed,executing,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_acceptances" type="object"
+                                class="oe_stat_button" icon="fa-check-square-o">
+                            <field name="acceptance_count" widget="statinfo"
+                                   string="BBNT"/>
+                        </button>
+                        <button name="action_view_payments" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="payment_count" widget="statinfo"
+                                   string="Thanh toán"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="HĐ/2026/..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Đối tượng">
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="owner_id"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="date_contract"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Giá trị">
+                            <field name="contract_value_pretax"/>
+                            <field name="vat_rate"/>
+                            <field name="contract_value_total"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Sản lượng &amp; phải thu">
+                        <group>
+                            <field name="accepted_to_date"/>
+                            <field name="paid_to_date"/>
+                        </group>
+                        <group>
+                            <field name="receivable"
+                                   decoration-bf="receivable &gt; 0"
+                                   decoration-info="receivable &lt; 0"/>
+                            <field name="progress_percent"
+                                   widget="percentage"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="BBNT với CĐT" name="acceptances">
+                            <field name="acceptance_ids"
+                                   context="{'default_contract_id': id}">
+                                <list decoration-muted="state == 'cancelled'"
+                                      decoration-info="state == 'draft'">
+                                    <field name="name"/>
+                                    <field name="date_submitted"/>
+                                    <field name="date_approved"/>
+                                    <field name="amount_this_period"
+                                           sum="Σ"/>
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-warning="state == 'proposed'"
+                                           decoration-success="state == 'approved'"
+                                           decoration-danger="state == 'cancelled'"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Thanh toán của CĐT" name="payments">
+                            <field name="payment_ids"
+                                   context="{'default_contract_id': id}">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="payment_type"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="reference"/>
+                                    <field name="note"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ BBNT với CĐT (standalone) ============ -->
+    <record id="view_rp_owner_acceptance_form" model="ir.ui.view">
+        <field name="name">rp.owner.acceptance.form</field>
+        <field name="model">rp.owner.acceptance</field>
+        <field name="arch" type="xml">
+            <form string="BBNT với Chủ đầu tư">
+                <header>
+                    <button name="action_propose" type="object"
+                            string="Đề xuất" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object"
+                            string="CĐT duyệt" class="btn-primary"
+                            invisible="state != 'proposed'"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về nháp"
+                            invisible="state not in ('proposed', 'cancelled')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state not in ('draft', 'proposed')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,proposed,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id"/>
+                            <field name="owner_id"/>
+                        </group>
+                        <group>
+                            <field name="date_submitted"/>
+                            <field name="date_approved"/>
+                            <field name="amount_this_period"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Ghi chú..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_acceptance_list" model="ir.ui.view">
+        <field name="name">rp.owner.acceptance.list</field>
+        <field name="model">rp.owner.acceptance</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="owner_id"/>
+                <field name="date_submitted"/>
+                <field name="amount_this_period" sum="Σ"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'proposed'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ Actions + Menu ============ -->
+    <record id="action_rp_owner_contract" model="ir.actions.act_window">
+        <field name="name">HĐ với Chủ đầu tư</field>
+        <field name="res_model">rp.owner.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo HĐ thi công đầu ra đầu tiên với Chủ đầu tư
+            </p>
+            <p>Ghi nhận BBNT sản lượng với CĐT + thanh toán của CĐT →
+               theo dõi khoản phải thu (quyền đòi nợ) làm TSBĐ vay vốn.</p>
+        </field>
+    </record>
+
+    <record id="action_rp_owner_acceptance" model="ir.actions.act_window">
+        <field name="name">BBNT với CĐT</field>
+        <field name="res_model">rp.owner.acceptance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_rp_owner_contract_root"
+              name="HĐ với CĐT"
+              parent="rp_estimate.menu_realty_project_root"
+              sequence="45"/>
+    <menuitem id="menu_rp_owner_contract"
+              name="HĐ với Chủ đầu tư"
+              parent="menu_rp_owner_contract_root"
+              action="action_rp_owner_contract"
+              sequence="10"/>
+    <menuitem id="menu_rp_owner_acceptance"
+              name="BBNT với CĐT"
+              parent="menu_rp_owner_contract_root"
+              action="action_rp_owner_acceptance"
+              sequence="20"/>
+
+</odoo>

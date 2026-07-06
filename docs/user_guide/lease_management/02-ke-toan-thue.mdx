@@ -1,0 +1,81 @@
+---
+title: "Kế toán thuê tài sản"
+description: "Bút toán ghi nhận tài sản thuê TC, hóa đơn từng kỳ (gốc + lãi), khấu hao tự động, chuyển giao tài sản khi cho thuê lại tài chính."
+order: 2
+---
+
+# 2. Kế toán thuê tài sản
+
+## 2.1. Cấu hình tài khoản (tab Kế toán)
+
+Khai 1 lần trên mỗi HĐ — hệ thống chỉ hiện các TK liên quan đến
+chiều × loại của HĐ đó:
+
+| Trường | Dùng cho | Gợi ý TK |
+|---|---|---|
+| Sổ nhật ký (bút toán) | Ghi nhận TS, khấu hao, chuyển giao | Sổ tổng hợp |
+| TK tài sản thuê TC | Đi thuê TC (Nợ khi nhận) / Cho thuê lại TC (Có khi chuyển giao) | 212 |
+| TK nợ gốc thuê TC | Đi thuê TC — dòng GỐC hóa đơn ghi vào đây | 341x |
+| TK phải thu thuê TC | Cho thuê lại TC — dòng GỐC hóa đơn bán | 1283/131x |
+| TK lãi thuê | Chi phí lãi (635) / doanh thu tài chính (515) | 635 / 515 |
+| TK tiền thuê | Thuê hoạt động: chi phí (627/641/642) hoặc doanh thu (511x) | theo mục đích |
+| TK chi phí khấu hao + TK hao mòn lũy kế | Khấu hao TS thuê TC | 627… / 2142 |
+| Thuế VAT | Áp lên dòng tiền thuê / lãi (dòng gốc KHÔNG chịu VAT) | |
+
+## 2.2. Đi thuê tài chính — vòng đời kế toán
+
+1. **Ghi nhận tài sản** (bấm "Ghi nhận TS thuê TC" sau khi kích hoạt):
+   `Nợ TK tài sản thuê TC / Có TK nợ gốc thuê TC` = giá trị tài trợ
+2. **Mỗi kỳ** — bấm "Tạo hóa đơn" trên dòng lịch → **1 hóa đơn NCC
+   2 dòng**:
+   - Dòng **Gốc** → TK nợ gốc thuê TC (nợ giảm dần theo kỳ)
+   - Dòng **Lãi** → TK lãi thuê (chi phí 635, chịu VAT nếu khai thuế)
+   - Thanh toán hóa đơn như mọi hóa đơn NCC → kỳ tự chuyển "Đã thanh toán"
+3. **Khấu hao** (xem 2.3)
+
+Trạng thái kỳ tự động theo hóa đơn: *Chưa lên hóa đơn → Đã lên hóa
+đơn → Đã thanh toán*.
+
+## 2.3. Khấu hao tài sản thuê TC
+
+Tab **Khấu hao** (chỉ HĐ đi thuê tài chính, sau khi đã ghi nhận TS):
+
+1. Nhập **Số tháng khấu hao** (0 = lấy bằng thời hạn thuê) → bấm
+   **"Tạo lịch khấu hao"** — đường thẳng theo tháng, ngày cuối tháng,
+   kỳ cuối vét làm tròn
+2. Ghi sổ: bấm **"Ghi sổ khấu hao đến hạn"** hoặc để **cron hằng
+   tháng** tự chạy (chỉ ghi HĐ đã khai đủ TK — thiếu thì bỏ qua)
+3. Mỗi kỳ: `Nợ TK chi phí khấu hao / Có TK hao mòn lũy kế`
+
+Form hiện **Đã khấu hao / Giá trị còn lại** cập nhật theo kỳ đã ghi sổ.
+
+## 2.4. Các tình huống còn lại
+
+| Tình huống | Chứng từ mỗi kỳ |
+|---|---|
+| Đi thuê hoạt động | Hóa đơn NCC 1 dòng tiền thuê → TK chi phí |
+| Cho thuê lại hoạt động | Hóa đơn bán 1 dòng tiền thuê → TK doanh thu |
+| Cho thuê lại tài chính | Hóa đơn bán 2 dòng: gốc → TK phải thu thuê TC, lãi → doanh thu tài chính. Khi bàn giao: bấm **"Ghi nhận chuyển giao TS"** — `Nợ TK phải thu thuê TC / Có TK tài sản` |
+
+## 2.5. Ví dụ số (tiếp §1.5)
+
+Cẩu tháp 2,4 tỷ, khấu hao 24 tháng:
+
+- Ghi nhận: Nợ 212 / Có 341x = 2,4 tỷ
+- Kỳ 1: hóa đơn NCC 224 tr (gốc 200 → 341x · lãi 24 → 635)
+- Khấu hao mỗi tháng: Nợ 627 / Có 2142 = **100 tr** — sau 6 tháng:
+  đã khấu hao 600 tr, còn lại 1,8 tỷ
+- Dư nợ gốc sau kỳ 1: **2,2 tỷ** (hiện trên form + dashboard)
+
+## 2.6. Lưu ý
+
+- Hóa đơn đi qua `Kế toán → Hóa đơn` chuẩn — kế toán thao tác quen
+  thuộc, và dòng chi phí thuê **gắn được Hạng mục (AC)** → chảy vào
+  Kiểm soát chi phí (EVM) nếu dùng bộ đó.
+- Dòng GỐC không chịu VAT (đúng quy định — VAT chỉ trên lãi/phí
+  và tiền thuê).
+- Số liệu bút toán mẫu (212/341x/635/2142…) là gợi ý theo TT200 —
+  chọn TK thực tế theo hệ thống TK của doanh nghiệp.
+
+{/* TODO screenshot: lm-02-invoice.png — hóa đơn NCC 2 dòng gốc+lãi */}
+{/* TODO screenshot: lm-02-depreciation.png — tab Khấu hao */}

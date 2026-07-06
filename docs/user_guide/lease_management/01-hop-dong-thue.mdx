@@ -1,0 +1,82 @@
+---
+title: "Hợp đồng thuê tài sản"
+description: "Quản lý thuê tài sản 2 chiều × 2 loại — Đi thuê / Cho thuê lại × Hoạt động / Tài chính; tài sản thuê, lịch thanh toán gốc+lãi, workflow."
+order: 1
+---
+
+# 1. Hợp đồng thuê tài sản
+
+## 1.1. Ma trận 2×2
+
+App **Thuê tài sản** quản lý đủ 4 tình huống của tổng thầu:
+
+| | **Thuê HOẠT ĐỘNG** | **Thuê TÀI CHÍNH** |
+|---|---|---|
+| **ĐI THUÊ** | Thuê cẩu/giàn giáo theo kỳ — trả tiền thuê đều, hết hạn trả máy | Thuê mua thiết bị qua công ty cho thuê TC — trả **gốc + lãi** theo lịch, cuối kỳ mua lại giá tượng trưng |
+| **CHO THUÊ LẠI** | Cho nhà thầu phụ thuê máy theo kỳ — thu tiền thuê đều | Chuyển giao thiết bị kiểu thuê mua (thường nội bộ) — thu gốc + lãi, ghi phải thu dài hạn |
+
+Phân biệt nhanh: **Tài chính** = chuyển giao phần lớn rủi ro/lợi ích
+(có quyền mua lại giá ưu đãi, thời hạn chiếm phần lớn đời tài sản…);
+còn lại là **Hoạt động**.
+
+## 1.2. Tạo hợp đồng
+
+**Thuê tài sản → Hợp đồng thuê** → Tạo mới:
+
+| Trường | Mô tả |
+|---|---|
+| Chiều | Đi thuê / Cho thuê lại |
+| Loại thuê | Hoạt động / Tài chính |
+| Đối tác | Đi thuê: bên cho thuê (công ty leasing, chủ máy). Cho thuê lại: bên thuê (nhà thầu phụ…) |
+| Dự án | Dự án thiết bị phục vụ (tham khảo) |
+| HĐ đi thuê gốc | Chỉ khi Cho thuê lại — link back-to-back (xem §3) |
+| Ngày bắt đầu · Số kỳ · Chu kỳ | Chu kỳ tháng / quý / 6 tháng / năm — ngày kết thúc tự tính |
+| Ký cược / đặt cọc | Theo dõi (chưa sinh bút toán) |
+
+**Điều kiện theo loại:**
+
+- *Tài chính*: Giá trị tài trợ + Lãi suất (%/năm) + Cách trả gốc
+  (**Gốc đều** hoặc **Niên kim** — tổng kỳ bằng nhau) + Giá mua lại cuối kỳ
+- *Hoạt động*: Tiền thuê / kỳ (trước thuế)
+
+Tab **Tài sản thuê**: liệt kê thiết bị (tên, serial, số lượng, giá trị).
+
+## 1.3. Lịch thanh toán
+
+Bấm **"Tạo lịch thanh toán"**:
+
+- **Tài chính** — mỗi kỳ tách **Gốc + Lãi** (lãi tính trên dư nợ giảm
+  dần, kỳ cuối tự vét sạch làm tròn), cột "Dư nợ gốc sau kỳ" theo dõi
+- **Hoạt động** — mỗi kỳ = tiền thuê đều
+
+Đã có kỳ lên hóa đơn thì **không tạo lại lịch** được (huỷ hóa đơn trước)
+— bảo vệ số liệu đã ghi sổ.
+
+## 1.4. Workflow
+
+**Nháp → Hiệu lực → Kết thúc** (hoặc **Chấm dứt sớm** — các kỳ chưa lên
+hóa đơn sẽ không thu/trả nữa). Phải có lịch thanh toán mới kích hoạt
+được; HĐ phải Hiệu lực mới lên được hóa đơn kỳ.
+
+## 1.5. Ví dụ — thuê mua cẩu tháp
+
+HĐ đi thuê tài chính: cẩu tháp QTZ63, giá trị tài trợ **2,4 tỷ**,
+12 kỳ tháng, lãi 12%/năm, gốc đều:
+
+| Kỳ | Gốc | Lãi | Tổng | Dư nợ sau |
+|---|---|---|---|---|
+| 1 | 200 tr | 24,0 tr | 224,0 tr | 2,2 tỷ |
+| 2 | 200 tr | 22,0 tr | 222,0 tr | 2,0 tỷ |
+| … | … | … | … | … |
+| 12 | 200 tr | 2,0 tr | 202,0 tr | 0 |
+
+Lãi giảm dần theo dư nợ — đúng bảng tính công ty leasing gửi.
+
+## 1.6. Theo dõi
+
+Form HĐ hiện: **Dư nợ gốc còn lại** (tài chính), **Đã lên hóa đơn / Đã
+thanh toán**, **Kỳ đến hạn kế tiếp**. Menu **Kỳ thanh toán** xem mọi kỳ
+toàn công ty, lọc "Đến hạn ≤30 ngày".
+
+{/* TODO screenshot: lm-01-contract-form.png — form HĐ thuê tài chính */}
+{/* TODO screenshot: lm-01-schedule.png — lịch gốc+lãi */}

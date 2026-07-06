@@ -1,0 +1,73 @@
+---
+title: "Cho thuê lại & Dashboard"
+description: "Back-to-back cho thuê lại — link HĐ đi thuê gốc, chênh lệch doanh thu vs chi phí; dashboard Thuê tài sản và liên kết dashboard Quản lý Vay."
+order: 3
+---
+
+# 3. Cho thuê lại & Dashboard
+
+## 3.1. Back-to-back — cho thuê lại máy đang đi thuê
+
+Tình huống phổ biến của tổng thầu: đi thuê cẩu tháp từ công ty
+leasing, rồi **cho nhà thầu phụ thuê lại** trong thời gian máy rảnh.
+Hệ thống nối 2 HĐ:
+
+1. Tạo HĐ **Cho thuê lại** → chọn **"HĐ đi thuê gốc"**
+2. HĐ gốc hiện nút **"Cho thuê lại"** (đếm số HĐ con) + nhóm
+   **Back-to-back**:
+
+| Chỉ số | Ý nghĩa |
+|---|---|
+| Doanh thu cho thuê lại | Σ hóa đơn bán các HĐ con (đã lên hóa đơn) |
+| Chi phí đi thuê | Σ hóa đơn NCC của chính HĐ gốc |
+| **Chênh lệch** | Doanh thu − chi phí — xanh = có lãi, đỏ = đang bù lỗ |
+
+**Ví dụ**: đi thuê tài chính 224 tr/kỳ (gốc+lãi), cho nhà thầu phụ
+thuê lại 260 tr/kỳ → chênh lệch **+36 tr/kỳ** hiện ngay trên HĐ gốc.
+
+1 HĐ đi thuê có thể có **nhiều HĐ cho thuê lại** (chia máy cho nhiều
+nhà thầu phụ, hoặc nối tiếp thời gian).
+
+## 3.2. Dashboard Thuê tài sản
+
+Click app **Thuê tài sản** → vào thẳng dashboard:
+
+- **KPI**: số HĐ hiệu lực, dư nợ gốc thuê TC (đi thuê), phải thu thuê
+  TC (cho thuê lại), tổng ký cược, **phải trả / phải thu 30 ngày
+  tới**, chênh lệch cho thuê lại lũy kế
+- **Ma trận 2×2** — số HĐ hiệu lực từng ô (Đi thuê/Cho thuê lại ×
+  Hoạt động/Tài chính)
+- **Dư nợ thuê TC theo đối tác** — biết đang nợ công ty leasing nào
+  bao nhiêu
+- **Kỳ đến hạn 6 tháng tới** — chuẩn bị dòng tiền
+- Nút drill-down: HĐ hiệu lực, kỳ đến hạn
+
+## 3.3. Liên kết dashboard Quản lý Vay
+
+Thuê tài chính là **nghĩa vụ tín dụng** (CIC ghi nhận) dù không phải
+vay NH. Khi dùng cả 2 app, dashboard **Quản lý Vay** tự hiện thêm nhóm
+**"Thuê tài chính (tham khảo)"**: dư nợ gốc thuê TC + kỳ thuê đến hạn
+30 ngày + link xem HĐ — bức tranh **tổng nghĩa vụ tín dụng** (vay NH +
+thuê TC) một chỗ.
+
+Hai app vẫn độc lập — không dùng Quản lý Vay thì app Thuê tài sản
+chạy đầy đủ một mình.
+
+## 3.4. Quy trình khuyến nghị
+
+1. **Hằng tuần**: mở dashboard → nhìn "phải trả 30 ngày tới" chuẩn bị
+   tiền; kỳ nào tới hạn thì lên hóa đơn (menu Kỳ thanh toán lọc sẵn)
+2. **Hằng tháng**: cron tự ghi sổ khấu hao; KTT đối chiếu tab Khấu hao
+3. **Khi máy rảnh**: cân nhắc cho thuê lại — theo dõi chênh lệch trên
+   HĐ gốc để biết máy đang "tự nuôi" được bao nhiêu phần tiền thuê
+
+## 3.5. Lưu ý
+
+- Chênh lệch back-to-back so **giá trị đã lên hóa đơn** 2 phía —
+  đầu kỳ cho thuê lại ít hơn kỳ đi thuê thì số âm là bình thường.
+- Chấm dứt sớm HĐ gốc khi còn HĐ cho thuê lại hiệu lực → kiểm tra
+  nghĩa vụ với nhà thầu phụ trước (hệ thống không tự chấm dứt HĐ con).
+- Ký cược hiện chỉ theo dõi số — bút toán ký cược lập tay.
+
+{/* TODO screenshot: lm-03-backtoback.png — nhóm back-to-back trên HĐ gốc */}
+{/* TODO screenshot: lm-03-dashboard.png — dashboard Thuê tài sản */}

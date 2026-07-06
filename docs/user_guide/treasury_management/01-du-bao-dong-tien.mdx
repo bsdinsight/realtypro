@@ -1,0 +1,72 @@
+---
+title: "Dự báo dòng tiền"
+description: "Lịch dòng tiền 13/26 tuần — tổng hợp mọi nghĩa vụ thu/chi từ vay, thuê, bảo lãnh, hóa đơn, milestone; số dư dự kiến và cảnh báo tuần âm."
+order: 1
+---
+
+# 1. Dự báo dòng tiền
+
+## 1.1. Mục đích
+
+Tổng thầu ít khi "chết" vì lỗ — mà vì **hụt thanh khoản đúng một tuần
+xấu**. Dự báo dòng tiền gom **mọi nghĩa vụ thu/chi tương lai đã nằm
+sẵn trong hệ thống** thành một lịch tuần duy nhất, chiếu ra **số dư
+dự kiến** và chỉ đích danh **tuần đầu tiên bị âm** để thu xếp nguồn
+trước.
+
+Menu: app **Ngân quỹ → Dự báo dòng tiền**. Không phải nhập gì thêm —
+số liệu tự chảy từ các phân hệ đang dùng.
+
+## 1.2. Nguồn số liệu (tự phát hiện)
+
+| Chiều | Nguồn | Lấy từ |
+|---|---|---|
+| CHI | Kỳ trả nợ KW chưa trả (gốc + lãi + phí còn lại) | Quản lý Vay |
+| CHI | Đợt phí bảo lãnh chưa trả | Quản lý Vay |
+| CHI | Kỳ thuê phải trả *chưa lên hóa đơn* | Thuê tài sản |
+| CHI | Hóa đơn NCC đã vào sổ, chưa trả | Kế toán |
+| CHI | Milestone HĐ nhà thầu trạng thái *kế hoạch* | Realty Project |
+| THU | Hóa đơn bán đã vào sổ, chờ thu | Kế toán |
+| THU | Kỳ cho thuê lại *chưa lên hóa đơn* | Thuê tài sản |
+| THU* | Phải thu CĐT (chưa có ngày thu) | HĐ với CĐT — hiện KPI riêng, KHÔNG vào bảng tuần |
+
+Phân hệ nào chưa cài thì nguồn đó tự bỏ qua — không lỗi.
+
+> 💡 **Chống đếm trùng**: chứng từ đã thành hóa đơn thì tính theo hóa
+> đơn; lịch (kỳ vay/thuê/milestone) chỉ tính phần **chưa** lên hóa
+> đơn. Một đồng chỉ xuất hiện một lần.
+
+## 1.3. Đọc màn hình
+
+- **Số dư đầu kỳ** = Σ số dư các TK ngân hàng + tiền mặt (bút toán đã
+  vào sổ)
+- **Bảng nguồn × tuần**: cột đầu là **"Quá hạn"** — nghĩa vụ trễ hạn
+  còn treo, được trừ vào số dư ngay từ tuần 1 (giả định thận trọng:
+  phải xử lý ngay); tiếp theo là 13 (hoặc 26) tuần
+- **Số dư lũy kế** từng tuần + biểu đồ đường (điểm đỏ = tuần âm)
+- **Cảnh báo đỏ** trên đầu trang: *"Số dư dự kiến ÂM từ Tuần N"* —
+  kèm gợi ý: rút KW (đối chiếu **Khả dụng thực tế** — borrowing base),
+  đòi nợ CĐT, giãn thanh toán NCC
+- **Cần chú ý**: chi/thu quá hạn, phải thu CĐT chưa có ngày, nút
+  drill-down (kỳ KW, hóa đơn NCC, hóa đơn bán)
+
+## 1.4. Ví dụ đọc nhanh — KĐT nghỉ dưỡng Đà Lạt
+
+Tuần 3 có kỳ trả KW 5 tỷ + hóa đơn NCC 3 tỷ đến hạn, trong khi thu chỉ
+có 2 tỷ hóa đơn bán → số dư lũy kế xuống −1,2 tỷ → cảnh báo "ÂM từ
+Tuần 3". KTT có 2 tuần để: nghiệm thu thêm sản lượng với CĐT (tăng
+khả dụng borrowing base) rồi rút KW, hoặc đàm phán giãn NCC sang
+tuần 5 — quyết định dựa trên số, không dựa trên cảm giác.
+
+## 1.5. Lưu ý
+
+- Muốn đổi **Tầm nhìn** (13 ↔ 26 tuần): chọn rồi tải lại trang —
+  bảng tính lại theo tầm nhìn mới.
+- Phải thu CĐT không có ngày thu dự kiến nên để ngoài bảng tuần —
+  khi CĐT xác nhận lịch trả, ghi thành kỳ thanh toán/hóa đơn là nó
+  tự vào bảng.
+- Dự báo = **nghĩa vụ đã ghi nhận**; chi phí chưa có chứng từ (lương,
+  chi vặt…) chưa nằm trong này — dùng kèm ngân sách chi thường xuyên.
+
+{/* TODO screenshot: tm-01-forecast.png — màn hình dự báo dòng tiền */}
+{/* TODO screenshot: tm-01-table.png — bảng nguồn × tuần */}

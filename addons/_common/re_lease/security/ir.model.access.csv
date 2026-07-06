@@ -5,3 +5,7 @@ access_re_lease_asset_user,re.lease.asset user,model_re_lease_asset,re_base.grou
 access_re_lease_asset_manager,re.lease.asset manager,model_re_lease_asset,re_base.group_re_manager,1,1,1,1
 access_re_lease_payment_line_user,re.lease.payment.line user,model_re_lease_payment_line,re_base.group_re_user,1,1,1,1
 access_re_lease_payment_line_manager,re.lease.payment.line manager,model_re_lease_payment_line,re_base.group_re_manager,1,1,1,1
+access_re_lease_depreciation_line_user,re.lease.depreciation.line user,model_re_lease_depreciation_line,re_base.group_re_user,1,1,1,1
+access_re_lease_depreciation_line_manager,re.lease.depreciation.line manager,model_re_lease_depreciation_line,re_base.group_re_manager,1,1,1,1
+access_re_lease_dashboard_user,re.lease.dashboard user,model_re_lease_dashboard,re_base.group_re_user,1,1,1,1
+access_re_lease_dashboard_manager,re.lease.dashboard manager,model_re_lease_dashboard,re_base.group_re_manager,1,1,1,1

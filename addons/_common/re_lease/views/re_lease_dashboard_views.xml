@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_lease_dashboard_form" model="ir.ui.view">
+        <field name="name">re.lease.dashboard.form</field>
+        <field name="model">re.lease.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Thuê tài sản — Dashboard">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Thuê tài sản — Dashboard</h1>
+                    </div>
+                    <group>
+                        <group string="Tổng quan">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="kpi_active_total"/>
+                            <field name="kpi_debt_finance_in"/>
+                            <field name="kpi_receivable_finance_out"/>
+                            <field name="kpi_deposit_total"/>
+                        </group>
+                        <group string="30 ngày tới &amp; back-to-back">
+                            <field name="kpi_due_30d_in"/>
+                            <field name="kpi_due_30d_out"/>
+                            <field name="kpi_sublease_margin"
+                                   decoration-danger="kpi_sublease_margin &lt; 0"
+                                   decoration-success="kpi_sublease_margin &gt; 0"/>
+                            <button name="action_open_contracts" type="object"
+                                    string="Xem HĐ hiệu lực »" class="btn-link"/>
+                            <button name="action_open_due_lines" type="object"
+                                    string="Xem kỳ đến hạn »" class="btn-link"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="HĐ hiệu lực theo ma trận 2×2">
+                            <field name="chart_matrix_html" nolabel="1"/>
+                        </group>
+                        <group string="Dư nợ thuê TC theo đối tác">
+                            <field name="chart_debt_by_partner_html"
+                                   nolabel="1"/>
+                        </group>
+                    </group>
+                    <group string="Kỳ đến hạn 6 tháng tới (chưa thanh toán)">
+                        <field name="chart_due_html" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_lease_dashboard" model="ir.actions.act_window">
+        <field name="name">Thuê tài sản — Dashboard</field>
+        <field name="res_model">re.lease.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_re_lease_dashboard" name="Dashboard"
+              parent="menu_re_lease_root"
+              action="action_re_lease_dashboard" sequence="5"/>
+
+    <!-- Click app root → mở dashboard trước -->
+    <record id="menu_re_lease_root" model="ir.ui.menu">
+        <field name="action" ref="action_re_lease_dashboard"/>
+    </record>
+
+</odoo>

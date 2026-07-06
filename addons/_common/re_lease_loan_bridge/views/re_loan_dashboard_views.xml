@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_loan_dashboard_form_lease" model="ir.ui.view">
+        <field name="name">re.loan.dashboard.form.lease</field>
+        <field name="model">re.loan.dashboard</field>
+        <field name="inherit_id"
+               ref="re_loan_dashboard.view_re_loan_dashboard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kpi_facility_bg_used_pct']/parent::group/parent::group"
+                   position="after">
+                <group string="🏗 Thuê tài chính (tham khảo — app Thuê tài sản)">
+                    <group>
+                        <field name="kpi_lease_debt" widget="monetary"/>
+                        <field name="kpi_lease_due_30d" widget="monetary"/>
+                    </group>
+                    <group>
+                        <button name="action_open_lease_contracts"
+                                type="object" class="btn-link"
+                                string="Xem HĐ đi thuê tài chính »"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

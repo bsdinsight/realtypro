@@ -128,6 +128,28 @@ class ReLeaseContract(models.Model):
     recognition_move_id = fields.Many2one(
         'account.move', string='Bút toán ghi nhận TS thuê TC',
         readonly=True, copy=False)
+    derecognition_move_id = fields.Many2one(
+        'account.move', string='Bút toán chuyển giao TS (cho thuê lại TC)',
+        readonly=True, copy=False)
+
+    # --- Khấu hao tài sản thuê TC (đi thuê tài chính) — Phase 2 ---
+    account_depreciation_expense_id = fields.Many2one(
+        'account.account', string='TK chi phí khấu hao (627/641/642)',
+        help='Nợ chi phí khấu hao mỗi kỳ.')
+    account_depreciation_id = fields.Many2one(
+        'account.account', string='TK hao mòn lũy kế (2142)',
+        help='Có hao mòn TSCĐ thuê tài chính mỗi kỳ.')
+    depreciation_months = fields.Integer(
+        string='Số tháng khấu hao',
+        help='Đường thẳng theo tháng. 0 = lấy bằng thời hạn thuê '
+             '(số kỳ × chu kỳ).')
+    depreciation_line_ids = fields.One2many(
+        're.lease.depreciation.line', 'contract_id',
+        string='Lịch khấu hao')
+    depreciated_total = fields.Monetary(
+        string='Đã khấu hao', compute='_compute_depreciation_totals')
+    depreciation_remaining = fields.Monetary(
+        string='Giá trị còn lại', compute='_compute_depreciation_totals')
 
     # --- Tổng hợp ---
     amount_asset_total = fields.Monetary(
@@ -379,6 +401,129 @@ class ReLeaseContract(models.Model):
                 'Đã ghi nhận tài sản thuê TC: %(a)s (bút toán %(m)s).',
                 a='{:,.0f}'.format(rec.amount_financed), m=move.name))
         return True
+
+    def action_post_derecognition(self):
+        """Cho thuê lại TÀI CHÍNH: Nợ Phải thu thuê TC / Có TK tài sản
+        (chuyển giao tài sản sang khoản phải thu khi bàn giao)."""
+        for rec in self:
+            if rec.direction != 'out' or rec.lease_type != 'finance':
+                raise UserError(_(
+                    'Bút toán chuyển giao chỉ áp dụng HĐ CHO THUÊ LẠI '
+                    'TÀI CHÍNH.'))
+            if rec.derecognition_move_id:
+                raise UserError(_(
+                    'Đã có bút toán chuyển giao (%(m)s).',
+                    m=rec.derecognition_move_id.name))
+            if not (rec.journal_id and rec.account_receivable_finance_id
+                    and rec.account_asset_id):
+                raise UserError(_(
+                    'Khai đủ Sổ nhật ký + TK phải thu thuê TC + TK tài '
+                    'sản (tab Kế toán) trước.'))
+            move = self.env['account.move'].create({
+                'move_type': 'entry',
+                'journal_id': rec.journal_id.id,
+                'date': rec.date_start,
+                'ref': _('Chuyển giao TS cho thuê TC — %(n)s', n=rec.name),
+                'line_ids': [
+                    (0, 0, {'account_id':
+                            rec.account_receivable_finance_id.id,
+                            'partner_id': rec.partner_id.id,
+                            'name': _('Phải thu thuê TC %(n)s', n=rec.name),
+                            'debit': rec.amount_financed, 'credit': 0.0}),
+                    (0, 0, {'account_id': rec.account_asset_id.id,
+                            'partner_id': rec.partner_id.id,
+                            'name': _('Chuyển giao TS %(n)s', n=rec.name),
+                            'debit': 0.0, 'credit': rec.amount_financed}),
+                ],
+            })
+            move.action_post()
+            rec.derecognition_move_id = move
+            rec.message_post(body=_(
+                'Đã chuyển giao tài sản sang phải thu thuê TC: %(a)s '
+                '(bút toán %(m)s).',
+                a='{:,.0f}'.format(rec.amount_financed), m=move.name))
+        return True
+
+    # ------------------------------------------------------------------
+    # Khấu hao (đi thuê tài chính) — Phase 2
+    # ------------------------------------------------------------------
+    @api.depends('depreciation_line_ids.amount',
+                 'depreciation_line_ids.move_id', 'amount_financed')
+    def _compute_depreciation_totals(self):
+        for rec in self:
+            posted = rec.depreciation_line_ids.filtered('move_id')
+            rec.depreciated_total = sum(posted.mapped('amount'))
+            rec.depreciation_remaining = (
+                rec.amount_financed - rec.depreciated_total
+                if rec.lease_type == 'finance' and rec.direction == 'in'
+                else 0.0)
+
+    def action_generate_depreciation(self):
+        """Sinh lịch khấu hao đường thẳng theo tháng (chưa ghi sổ)."""
+        for rec in self:
+            if rec.direction != 'in' or rec.lease_type != 'finance':
+                raise UserError(_(
+                    'Khấu hao chỉ áp dụng HĐ ĐI THUÊ TÀI CHÍNH.'))
+            if not rec.recognition_move_id:
+                raise UserError(_(
+                    'Ghi nhận tài sản thuê TC trước khi lập lịch '
+                    'khấu hao.'))
+            posted = rec.depreciation_line_ids.filtered('move_id')
+            if posted:
+                raise UserError(_(
+                    'Đã có %(n)s kỳ khấu hao ghi sổ — không tạo lại '
+                    'lịch được.', n=len(posted)))
+            rec.depreciation_line_ids.unlink()
+            months = rec.depreciation_months or (
+                rec.n_periods * int(rec.period_months))
+            if months <= 0:
+                raise UserError(_('Số tháng khấu hao phải lớn hơn 0.'))
+            per = rec.amount_financed / months
+            vals, total = [], 0.0
+            for i in range(1, months + 1):
+                amount = (rec.amount_financed - total
+                          if i == months else per)
+                total += amount
+                # cuối tháng thứ i kể từ ngày bắt đầu
+                d = (rec.date_start + relativedelta(months=i, day=1)
+                     - relativedelta(days=1))
+                vals.append({'contract_id': rec.id, 'sequence': i,
+                             'date': d, 'amount': amount})
+            self.env['re.lease.depreciation.line'].create(vals)
+            rec.message_post(body=_(
+                'Đã tạo lịch khấu hao %(m)s tháng × %(a)s.',
+                m=months, a='{:,.0f}'.format(per)))
+        return True
+
+    def action_post_depreciation_due(self):
+        """Ghi sổ các kỳ khấu hao đã đến hạn (date ≤ hôm nay)."""
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if not (rec.account_depreciation_expense_id
+                    and rec.account_depreciation_id and rec.journal_id):
+                raise UserError(_(
+                    'Khai đủ Sổ nhật ký + TK chi phí khấu hao + TK hao '
+                    'mòn lũy kế trước.'))
+            due = rec.depreciation_line_ids.filtered(
+                lambda l: not l.move_id and l.date <= today)
+            for line in due:
+                line._post_move()
+            if due:
+                rec.message_post(body=_(
+                    'Đã ghi sổ %(n)s kỳ khấu hao đến hạn.', n=len(due)))
+        return True
+
+    @api.model
+    def _cron_post_depreciation(self):
+        """Cron hằng tháng: ghi sổ khấu hao đến hạn cho HĐ hiệu lực
+        (chỉ HĐ đã khai đủ tài khoản — thiếu thì bỏ qua, không lỗi)."""
+        contracts = self.search([
+            ('state', '=', 'active'), ('direction', '=', 'in'),
+            ('lease_type', '=', 'finance')])
+        for rec in contracts:
+            if (rec.account_depreciation_expense_id
+                    and rec.account_depreciation_id and rec.journal_id):
+                rec.action_post_depreciation_due()
 
     def action_view_child_leases(self):
         self.ensure_one()

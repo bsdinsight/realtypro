@@ -45,6 +45,15 @@
                     <button name="action_post_recognition" type="object"
                             string="Ghi nhận TS thuê TC"
                             invisible="direction != 'in' or lease_type != 'finance' or recognition_move_id or state == 'draft'"/>
+                    <button name="action_post_derecognition" type="object"
+                            string="Ghi nhận chuyển giao TS"
+                            invisible="direction != 'out' or lease_type != 'finance' or derecognition_move_id or state == 'draft'"/>
+                    <button name="action_generate_depreciation" type="object"
+                            string="Tạo lịch khấu hao"
+                            invisible="direction != 'in' or lease_type != 'finance' or not recognition_move_id"/>
+                    <button name="action_post_depreciation_due" type="object"
+                            string="Ghi sổ khấu hao đến hạn"
+                            invisible="direction != 'in' or lease_type != 'finance' or not depreciation_line_ids"/>
                     <button name="action_end" type="object" string="Kết thúc"
                             invisible="state != 'active'"/>
                     <button name="action_terminate" type="object"
@@ -179,13 +188,46 @@
                                 </list>
                             </field>
                         </page>
+                        <page string="Khấu hao" name="depreciation"
+                              invisible="direction != 'in' or lease_type != 'finance'">
+                            <group>
+                                <group>
+                                    <field name="depreciation_months"/>
+                                    <field name="depreciated_total"/>
+                                    <field name="depreciation_remaining"/>
+                                </group>
+                            </group>
+                            <field name="depreciation_line_ids" readonly="1">
+                                <list decoration-success="state == 'posted'">
+                                    <field name="sequence" string="Kỳ"/>
+                                    <field name="date"/>
+                                    <field name="amount" sum="Σ"/>
+                                    <field name="state" widget="badge"
+                                           decoration-muted="state == 'draft'"
+                                           decoration-success="state == 'posted'"/>
+                                    <field name="move_id"/>
+                                    <button name="action_post_move"
+                                            type="object" string="Ghi sổ"
+                                            icon="fa-check"
+                                            invisible="move_id"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <p class="text-muted">
+                                Khấu hao đường thẳng theo tháng (Nợ CP khấu
+                                hao / Có hao mòn lũy kế). Cron hằng tháng tự
+                                ghi sổ kỳ đến hạn; hoặc bấm "Ghi sổ khấu hao
+                                đến hạn".
+                            </p>
+                        </page>
                         <page string="Kế toán" name="accounting">
                             <group>
                                 <group string="Cấu hình tài khoản">
                                     <field name="journal_id"
-                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                           invisible="lease_type != 'finance'"/>
                                     <field name="account_asset_id"
-                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                           invisible="lease_type != 'finance'"/>
                                     <field name="account_liability_id"
                                            invisible="not (direction == 'in' and lease_type == 'finance')"/>
                                     <field name="account_receivable_finance_id"
@@ -194,11 +236,17 @@
                                            invisible="lease_type != 'finance'"/>
                                     <field name="account_rent_id"
                                            invisible="lease_type != 'operating'"/>
+                                    <field name="account_depreciation_expense_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                    <field name="account_depreciation_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
                                     <field name="tax_id"/>
                                 </group>
                                 <group string="Chứng từ">
                                     <field name="recognition_move_id"
                                            invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                    <field name="derecognition_move_id"
+                                           invisible="not (direction == 'out' and lease_type == 'finance')"/>
                                 </group>
                             </group>
                         </page>

@@ -89,7 +89,10 @@ class ReLoanCollateral(models.Model):
     @api.depends('valuation_ids.date', 'valuation_ids.amount')
     def _compute_value_current(self):
         for rec in self:
-            latest = rec.valuation_ids.sorted('date', reverse=True)[:1]
+            # Tie-break theo id khi 2 định giá cùng ngày (vd định giá
+            # tay + auto theo phải thu cùng ngày) — lấy bản mới nhất.
+            latest = rec.valuation_ids.sorted(
+                key=lambda v: (v.date, v.id), reverse=True)[:1]
             rec.value_current = latest.amount if latest else 0.0
 
     @api.depends('pledge_ids.state', 'pledge_ids.secured_amount',

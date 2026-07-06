@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Loại TSBĐ: tỷ lệ cho vay -->
+    <record id="view_re_loan_collateral_type_list_bb" model="ir.ui.view">
+        <field name="name">re.loan.collateral.type.list.bb</field>
+        <field name="model">re.loan.collateral.type</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_collateral_type_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="advance_rate"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TSBĐ: gắn HĐ với CĐT (quyền đòi nợ) -->
+    <record id="view_re_loan_collateral_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.collateral.form.bb</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_collateral_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type_id']" position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- HĐTD: pledge list + tỷ lệ/đóng góp; group borrowing base -->
+    <record id="view_re_loan_credit_contract_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.bb</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pledge_ids']/list/field[@name='secured_amount']"
+                   position="after">
+                <field name="advance_rate"/>
+                <field name="base_contribution" sum="Σ base"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Borrowing base — khả dụng theo TSBĐ">
+                    <group>
+                        <field name="borrowing_base_total"/>
+                        <field name="amount_used_total"/>
+                    </group>
+                    <group>
+                        <field name="amount_available_effective"
+                               decoration-danger="amount_available_effective == 0"/>
+                        <field name="margin_call" widget="boolean"
+                               decoration-danger="margin_call"/>
+                    </group>
+                </group>
+                <div class="alert alert-danger" role="alert"
+                     invisible="not margin_call">
+                    ⚠ <b>Thiếu bảo đảm (margin call):</b> tổng dư nợ đã
+                    vượt cơ sở bảo đảm toàn HĐTD — NH sẽ yêu cầu bổ sung
+                    TSBĐ hoặc trả bớt nợ. Tăng base bằng nghiệm thu thêm
+                    sản lượng với CĐT (quyền đòi nợ) hoặc thế chấp thêm
+                    tài sản.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Facility: base riêng + khả dụng thực tế -->
+    <record id="view_re_loan_facility_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.facility.form.bb</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Borrowing base — khả dụng thực tế">
+                    <group>
+                        <field name="has_own_pledges" invisible="1"/>
+                        <field name="borrowing_base_own"
+                               invisible="not has_own_pledges"/>
+                        <field name="amount_available_effective"/>
+                    </group>
+                    <group>
+                        <field name="margin_call" widget="boolean"
+                               invisible="not has_own_pledges"/>
+                    </group>
+                </group>
+                <div class="alert alert-danger" role="alert"
+                     invisible="not margin_call">
+                    ⚠ <b>Margin call:</b> dư nợ facility vượt base riêng
+                    (TSBĐ ring-fence của facility). Nghiệm thu thêm sản
+                    lượng với CĐT hoặc bổ sung TSBĐ.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_re_loan_facility_list_bb" model="ir.ui.view">
+        <field name="name">re.loan.facility.list.bb</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_available']" position="after">
+                <field name="amount_available_effective" optional="show"/>
+                <field name="margin_call" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- KW: cảnh báo vượt khả dụng -->
+    <record id="view_re_loan_note_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.note.form.bb</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="exceeds_available" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not exceeds_available">
+                    ⚠ Số tiền KW <b>vượt Khả dụng thực tế</b> của hạn mức
+                    (theo borrowing base — TSBĐ hiện hữu chưa gánh đủ).
+                    NH nhiều khả năng chưa duyệt rút phần vượt. Tăng khả
+                    dụng: nghiệm thu thêm sản lượng với CĐT / bổ sung
+                    TSBĐ / trả bớt dư nợ.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

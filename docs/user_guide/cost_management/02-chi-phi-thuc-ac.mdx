@@ -1,0 +1,73 @@
+---
+title: "Chi phí thực (AC)"
+description: "Hướng dẫn gắn chi phí thực từ hóa đơn nhà thầu vào hạng mục — cột Hạng mục (AC) trên dòng hóa đơn, split 1 hóa đơn cho nhiều đầu việc, roll-up AC."
+order: 2
+---
+
+# 2. Chi phí thực (AC)
+
+## 2.1. Mục đích
+
+**AC (Actual Cost)** = tiền đã thực chi cho từng hạng mục, lấy từ
+**hóa đơn nhà thầu** (vendor bill). Trước đây hóa đơn chỉ biết thuộc
+dự án/HĐ nào — không biết chi cho **đầu việc nào** → không so được
+với dự toán từng hạng mục.
+
+Gắn AC vào hạng mục là mắt xích để tính **CPI = EV / AC** (§3): mỗi
+đồng chi ra tạo được bao nhiêu đồng giá trị nghiệm thu.
+
+## 2.2. Gắn hạng mục trên dòng hóa đơn
+
+Trên hóa đơn nhà thầu (Hóa đơn NCC), mỗi dòng chi phí có 2 cột:
+
+| Cột | Mô tả |
+|---|---|
+| **Hạng mục (AC)** | Đầu việc/hạng mục mà dòng chi phí này thuộc về |
+| Nhóm chi phí | Chiều phân loại (đối chiếu dự toán cùng nhóm) — tuỳ chọn |
+
+Nguyên tắc ghi nhận:
+
+- Chỉ hóa đơn **đã vào sổ (posted)** mới tính vào AC
+- Hóa đơn mua vào **cộng**, hóa đơn điều chỉnh giảm (refund) **trừ**
+- Giá trị tính = số **trước thuế** của dòng
+
+## 2.3. Split — 1 dòng hóa đơn chia nhiều đầu việc
+
+Có chi phí dùng chung nhiều hạng mục (vd thuê cẩu tháp tháng 6 phục
+vụ cả Tầng hầm lẫn Phần thân). Dùng tab **"Phân bổ chi phí (AC)"**
+trên hóa đơn:
+
+1. Chọn dòng hóa đơn cần chia
+2. Thêm từng dòng phân bổ: hạng mục + (nhóm chi phí) + số tiền
+3. Tổng phân bổ **không vượt** giá trị dòng — hệ thống chặn
+
+Dòng hóa đơn **có phân bổ** → AC tính theo phân bổ (bỏ qua cột
+"Hạng mục (AC)" trên dòng). **Không có** → tính theo cột trên dòng
+như thường.
+
+## 2.4. Xem AC theo hạng mục
+
+Mở Hạng mục dự án → tab **"Chi phí thực (AC)"**: tổng AC + danh sách
+từng dòng hóa đơn đã gắn (số hóa đơn, trạng thái, nhóm chi phí, thành
+tiền) — truy ngược được từng đồng chi phí về chứng từ gốc.
+
+## 2.5. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+1. Hóa đơn bê tông 500 triệu, dòng gắn "Phần móng — Tháp A" → posted
+   → AC hạng mục +500 tr
+2. Hóa đơn thuê cẩu 300 triệu dùng chung → tab Phân bổ: Tầng hầm
+   200 tr + Phần thân 100 tr → AC mỗi hạng mục nhận đúng phần mình
+3. Refund điều chỉnh bê tông −50 tr (gắn cùng hạng mục) → AC còn
+   450 tr
+
+## 2.6. Lưu ý
+
+- Dòng không gắn hạng mục (và không split) → **không vào AC** hạng
+  mục nào — nên rà "hóa đơn chưa gắn" định kỳ để AC không thiếu.
+- Chi phí ngoài hóa đơn (lương kỹ sư nội bộ, phân bổ chung...) chưa
+  nằm trong AC — phạm vi hiện tại là chi phí qua hóa đơn nhà thầu.
+- Kế toán vẫn hạch toán tài khoản như thường — cột hạng mục là chiều
+  quản trị bổ sung, không ảnh hưởng bút toán.
+
+{/* TODO screenshot: cm-02-invoice-ac.png — dòng hóa đơn với cột Hạng mục (AC) */}
+{/* TODO screenshot: cm-02-split-tab.png — tab Phân bổ chi phí (AC) */}

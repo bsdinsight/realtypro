@@ -1,0 +1,74 @@
+---
+title: "Dự toán chi tiết (BOQ)"
+description: "Hướng dẫn lập Dự toán chi tiết theo đầu việc — khối lượng × đơn giá, quan hệ với Khái toán, BAC (ngân sách hạng mục), liên kết BBN nghiệm thu."
+order: 1
+---
+
+# 1. Dự toán chi tiết (BOQ)
+
+## 1.1. Khái toán vs Dự toán chi tiết
+
+Hệ thống có **2 lớp dự toán** cùng tồn tại, dùng cho 2 giai đoạn:
+
+| | Khái toán | Dự toán chi tiết (BOQ) |
+|---|---|---|
+| Khi nào | Giai đoạn đầu, chưa đủ số liệu | Khi đã bóc tách khối lượng |
+| Nhập gì | Nhóm chi phí + **số tiền tổng** | Từng đầu việc: **khối lượng × ĐVT × đơn giá** |
+| Nằm ở | Tab "Khái toán" của Hạng mục | Tab "Dự toán (BOQ)" của Hạng mục |
+| Số dòng / nhóm chi phí | 1 dòng duy nhất | Nhiều dòng (mỗi đầu việc 1 dòng) |
+
+**BAC (Budget At Completion — ngân sách hạng mục)** = Σ BOQ nếu đã
+nhập BOQ; chưa có BOQ thì lấy Σ Khái toán. Nhập BOQ đến đâu, BAC tự
+chuyển sang căn cứ chi tiết đến đó — không phải xoá Khái toán.
+
+## 1.2. Nhập BOQ
+
+Mở **Project Master → Hạng mục dự án** → chọn hạng mục → tab
+**Dự toán (BOQ)** → thêm dòng:
+
+| Cột | Mô tả |
+|---|---|
+| Nhóm chi phí | Từ cây nhóm chi phí của dự án (cùng dự án với hạng mục) |
+| Đầu việc | Diễn giải (vd "Đào đất móng", "Đổ bê tông cột") |
+| ĐVT | m³, m², tấn, bộ... (danh mục ĐVT xây dựng dùng chung với BBN) |
+| Khối lượng | Khối lượng dự toán |
+| Đơn giá | Đơn giá trước thuế |
+| Thành tiền | Tự tính = Khối lượng × Đơn giá |
+
+Cuối tab hiện **Tổng dự toán BOQ**. Trường "Giá trị dự toán (BAC)"
+trong nhóm Tiến độ thi công của hạng mục tự cập nhật theo.
+
+## 1.3. Liên kết với BBN nghiệm thu
+
+Khi lập **BBN Nghiệm thu Khối lượng** (module Tiến độ), mỗi dòng có
+cột **"Dòng dự toán (BOQ)"** — chọn đầu việc từ BOQ → tự điền: nhóm
+chi phí, hạng mục, diễn giải, ĐVT, đơn giá, KL dự toán. KTT chỉ nhập
+KL kỳ này.
+
+Lợi ích: giá trị nghiệm thu (EV) khớp đúng baseline từng đầu việc —
+nền tảng của Kiểm soát chi phí (§3). Hệ thống chặn KL nghiệm thu lũy
+kế vượt KL dự toán (cần phụ lục HĐ trước).
+
+## 1.4. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+Hạng mục "Phần móng — Tháp A", Khái toán ban đầu 12 tỷ (1 dòng
+"Chi phí xây dựng"). Khi có hồ sơ thiết kế, QS bóc tách BOQ:
+
+| Đầu việc | ĐVT | KL | Đơn giá | Thành tiền |
+|---|---|---|---|---|
+| Đào đất móng | m³ | 8.000 | 150.000 | 1,2 tỷ |
+| Cọc khoan nhồi D800 | m | 3.500 | 1.800.000 | 6,3 tỷ |
+| Bê tông đài móng | m³ | 1.600 | 2.500.000 | 4,0 tỷ |
+
+→ BAC tự chuyển từ 12 tỷ (Khái toán) sang **11,5 tỷ** (Σ BOQ) — con
+số chi tiết thay con số ước.
+
+## 1.5. Lưu ý
+
+- BOQ cho phép **nhiều dòng cùng nhóm chi phí** trên 1 hạng mục (khác
+  Khái toán mỗi nhóm 1 dòng).
+- Nhóm chi phí phải **cùng dự án** với hạng mục — hệ thống chặn.
+- Khối lượng/đơn giá không âm; sửa BOQ sau khi đã có BBN trỏ vào →
+  cân nhắc ảnh hưởng % hoàn thành của các dòng nghiệm thu.
+
+{/* TODO screenshot: cm-01-boq-tab.png — tab Dự toán (BOQ) với các dòng KL×đơn giá */}

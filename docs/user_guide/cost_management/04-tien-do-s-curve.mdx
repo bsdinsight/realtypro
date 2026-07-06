@@ -1,0 +1,80 @@
+---
+title: "Tiến độ & S-curve (SPI)"
+description: "PV theo thời gian — đường cong kế hoạch linear/S-curve, chỉ số SPI/SV đo nhanh-chậm tiến độ, biểu đồ S-curve trên dashboard."
+order: 4
+---
+
+# 4. Tiến độ & S-curve (SPI)
+
+## 4.1. PV(t) — kế hoạch "lẽ ra đến hôm nay"
+
+§3 đo **chi phí** (CPI). Chiều thứ hai của EVM đo **tiến độ**: đến
+hôm nay, theo kế hoạch **lẽ ra phải làm ra bao nhiêu giá trị**?
+
+```
+PV(t) = BAC × f(t)
+```
+
+`f(t)` = tỷ lệ kế hoạch tích lũy tại ngày t, chạy từ 0 (ngày bắt đầu
+KH) đến 1 (ngày kết thúc KH) — chọn trên hạng mục, trường
+**"Đường cong kế hoạch"**:
+
+| Đường cong | Đặc điểm | Dùng khi |
+|---|---|---|
+| **S-curve** (mặc định) | Chậm giai đoạn đầu/cuối, nhanh ở giữa | Chuẩn thi công xây dựng |
+| **Tuyến tính** | Đều theo thời gian | Công việc dàn đều (vd thuê thiết bị) |
+
+Cần nhập **Ngày bắt đầu KH + Ngày kết thúc KH** trên hạng mục —
+không có ngày thì không tính được PV(t).
+
+## 4.2. SPI & SV
+
+| Chỉ số | Công thức | Đọc |
+|---|---|---|
+| **SV** — Chênh tiến độ | EV − PV(t) | Âm = làm ra ít hơn kế hoạch đến nay |
+| **SPI** — Hiệu suất tiến độ | EV / PV(t) | Dưới 1 = chậm; 0,80 = mới đạt 80% nhịp kế hoạch |
+
+Khác CPI: SPI **thay đổi theo ngày** (mỗi ngày trôi qua PV tăng theo
+đường cong) — mở form là hệ thống tính theo hôm nay.
+
+Xem tại: form Hạng mục — nhóm **"Tiến độ (schedule)"** (PV(t), SV,
+SPI); form Dự án + dashboard — nhóm Tiến độ (PV(t)/SV/SPI toàn dự án).
+
+## 4.3. Biểu đồ S-curve trên dashboard
+
+Dashboard **Kiểm soát chi phí (EVM)** vẽ S-curve toàn dự án:
+
+- **Đường PV kế hoạch** — tổng giá trị kế hoạch tích lũy (cộng đường
+  cong của mọi hạng mục có ngày KH)
+- **Vạch "hôm nay"** + 2 điểm: **EV** (xanh) và **AC** (cam)
+
+Đọc trong 3 giây:
+
+| Hình ảnh | Nghĩa |
+|---|---|
+| EV nằm **dưới** đường PV | Chậm tiến độ (SPI dưới 1) |
+| AC nằm **trên** EV | Vượt chi (CPI dưới 1) |
+| AC trên PV, EV dưới PV | Vừa chậm vừa vượt chi — xấu nhất |
+
+## 4.4. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+Hạng mục Phần thân: BAC 60 tỷ, kế hoạch 01/03 → 31/12 (10 tháng),
+S-curve. Hôm nay 01/07 (40% thời gian):
+
+- f(0,4) theo S-curve ≈ 0,345 → PV(t) = 60 × 0,345 ≈ **20,7 tỷ**
+- Đã nghiệm thu EV = 15 tỷ → SV = **−5,7 tỷ**, SPI = **0,72** → chậm rõ
+- Nếu dùng tuyến tính: PV = 24 tỷ, SPI = 0,63 — chọn đúng đường cong
+  giúp đánh giá công bằng hơn với đặc thù thi công
+
+## 4.5. Lưu ý
+
+- SPI hết ý nghĩa khi hạng mục gần xong (EV → BAC, SPI → 1 dù từng
+  chậm) — bản chất phương pháp; giai đoạn cuối theo dõi bằng ngày
+  hoàn thành thực tế và cảnh báo trễ hạn của module Tiến độ.
+- SPI thấp có thể do **nghiệm thu chậm** (BBN chưa ký) chứ không phải
+  thi công chậm — đối chiếu hiện trường trước khi kết luận.
+- PV/SPI là **ước tính quản trị** dựa trên đường cong khai báo — chuẩn
+  hoá dần bằng cách so đường cong với thực tế các dự án đã xong.
+
+{/* TODO screenshot: cm-04-schedule-group.png — nhóm Tiến độ (schedule) trên hạng mục */}
+{/* TODO screenshot: cm-04-scurve.png — biểu đồ S-curve trên dashboard */}

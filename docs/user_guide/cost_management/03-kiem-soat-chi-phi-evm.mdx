@@ -1,0 +1,86 @@
+---
+title: "Kiểm soát chi phí (EVM)"
+description: "Đọc chỉ số EVM — CPI, CV, EAC, VAC; trạng thái đèn cảnh báo vượt chi theo hạng mục; dashboard Kiểm soát chi phí cho Ban QLDA."
+order: 3
+---
+
+# 3. Kiểm soát chi phí (EVM)
+
+## 3.1. Ba con số gốc
+
+Phương pháp **Earned Value Management** so 3 con số trên từng hạng mục:
+
+| Ký hiệu | Tên | Lấy từ đâu |
+|---|---|---|
+| **BAC** | Ngân sách | Dự toán BOQ (else Khái toán) — §1 |
+| **EV** | Giá trị làm ra | BBN nghiệm thu đã duyệt (giá trị lũy kế) |
+| **AC** | Chi phí thực | Hóa đơn nhà thầu gắn hạng mục — §2 |
+
+Trực giác: **EV là "được bao nhiêu", AC là "tốn bao nhiêu"** — so 2
+số đó là biết hạng mục đang lãi hay lỗ chi phí, không cần chờ quyết
+toán.
+
+## 3.2. Chỉ số & cách đọc
+
+| Chỉ số | Công thức | Đọc |
+|---|---|---|
+| **CV** — Chênh chi phí | EV − AC | Âm = đã chi nhiều hơn giá trị làm ra |
+| **CPI** — Hiệu suất chi phí | EV / AC | 1,0 = chuẩn; dưới 1 = vượt chi (0,90 = mỗi 1đ giá trị tốn 1,11đ) |
+| **EAC** — Dự báo chi cuối | BAC / CPI | Giữ hiệu suất hiện tại thì hoàn thành tốn bao nhiêu |
+| **ETC** — Còn phải chi | EAC − AC | Dự báo phần còn lại |
+| **VAC** — Chênh khi hoàn thành | BAC − EAC | Âm = dự báo vượt ngân sách |
+
+**Trạng thái đèn** (tự tính từ CPI):
+
+| Đèn | Điều kiện | Ý nghĩa |
+|---|---|---|
+| 🟢 Trong ngân sách | CPI ≥ 1,0 | Ổn |
+| 🟡 Cần theo dõi | CPI từ 0,90 đến dưới 1,0 | Bắt đầu lệch |
+| 🔴 Vượt chi | CPI dưới 0,90 | Vượt trên ~11% — cần hành động |
+| ⚪ Chưa đủ dữ liệu | Thiếu EV hoặc AC | Chưa đánh giá được |
+
+## 3.3. Xem ở đâu
+
+- **Form Hạng mục** — nhóm "EVM — Kiểm soát chi phí": đủ BAC/EV/AC/
+  CV/CPI/EAC/VAC + badge trạng thái
+- **List Hạng mục** — filter **"Cảnh báo vượt chi"** / **"Vượt chi"**,
+  group theo "Trạng thái chi phí"
+- **Form Dự án** — nhóm "EVM — Kiểm soát chi phí dự án": tổng hợp
+  toàn dự án + **số hạng mục vượt chi**
+- **Dashboard**: menu **Realty Project → Kiểm soát chi phí (EVM)** —
+  chọn dự án → KPI + 3 biểu đồ:
+  - **CPI theo hạng mục** (đèn giao thông, xếp vượt chi nặng lên đầu,
+    vạch mốc CPI 1,0)
+  - **So sánh** Ngân sách / Làm ra / Đã chi / Dự báo
+  - **S-curve** (xem §4)
+  - Nút "Xem hạng mục vượt chi »" — drill-down danh sách lọc sẵn
+
+## 3.4. Quy trình khuyến nghị cho Ban QLDA
+
+1. **Hằng tuần**: mở dashboard → nhìn hàng đỏ (CPI thấp nhất trên cùng)
+2. Hạng mục đỏ → mở form → tab **Chi phí thực (AC)** truy hóa đơn
+   nào đẩy chi phí lên (vật tư đội giá? khối lượng phát sinh?)
+3. Đối chiếu tab BBN: EV thấp do **nghiệm thu chậm** (đã làm nhưng
+   chưa ký BBN) hay do **thực sự chưa làm** — 2 nguyên nhân, 2 cách xử lý
+4. VAC âm lớn → báo cáo sớm để điều chỉnh ngân sách/biện pháp thi công
+
+## 3.5. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+Hạng mục Tầng hầm: BAC 20 tỷ, đã nghiệm thu EV 8 tỷ, đã chi AC 9,8 tỷ:
+
+- CV = 8 − 9,8 = **−1,8 tỷ** · CPI = 8 / 9,8 = **0,82** → 🔴 Vượt chi
+- EAC = 20 / 0,82 = **24,4 tỷ** · VAC = 20 − 24,4 = **−4,4 tỷ**
+
+Đọc: giữ đà này, Tầng hầm sẽ vượt ngân sách 4,4 tỷ khi xong — xử lý
+ngay từ lúc mới chi 9,8 tỷ, không đợi quyết toán.
+
+## 3.6. Lưu ý
+
+- EVM chỉ đúng khi **3 nguồn được nhập đủ**: BOQ (§1) + BBN duyệt +
+  hóa đơn gắn hạng mục (§2). Thiếu nguồn nào đèn hiện ⚪.
+- CPI cao bất thường (trên 1,3) thường do **AC thiếu** (hóa đơn chưa
+  gắn hạng mục) chứ không phải làm quá giỏi — rà lại §2.6.
+- Số liệu là **công cụ quản trị nội bộ**, không thay báo cáo tài chính.
+
+{/* TODO screenshot: cm-03-evm-group.png — nhóm EVM trên form hạng mục */}
+{/* TODO screenshot: cm-03-dashboard.png — dashboard Kiểm soát chi phí */}

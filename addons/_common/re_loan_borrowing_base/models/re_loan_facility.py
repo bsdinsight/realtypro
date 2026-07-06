@@ -34,9 +34,13 @@ class ReLoanFacility(models.Model):
                  'facility_pledge_ids.pledge_target')
     def _compute_borrowing_base(self):
         for rec in self:
+            # Chỉ pledge ĐÃ KHAI tỷ lệ cho vay — pledge cũ chưa khai
+            # (rate=0) không kích hoạt ràng buộc base (tránh margin
+            # call giả trên dữ liệu có sẵn).
             pledges = rec.facility_pledge_ids.filtered(
                 lambda p: p.state == 'active'
-                and p.pledge_target == 'facility')
+                and p.pledge_target == 'facility'
+                and p.advance_rate)
             rec.borrowing_base_own = sum(
                 pledges.mapped('base_contribution'))
             rec.has_own_pledges = bool(pledges)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_dashboard_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.dashboard.form.bb</field>
+        <field name="model">re.loan.dashboard</field>
+        <field name="inherit_id"
+               ref="re_loan_dashboard.view_re_loan_dashboard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kpi_facility_bg_used_pct']/parent::group/parent::group"
+                   position="after">
+                <group string="🏗 Borrowing base — khả dụng theo TSBĐ">
+                    <group>
+                        <field name="kpi_bb_base_total" widget="monetary"/>
+                        <field name="kpi_bb_available_effective"
+                               widget="monetary"/>
+                    </group>
+                    <group>
+                        <field name="kpi_bb_margin_call"
+                               decoration-danger="kpi_bb_margin_call &gt; 0"/>
+                        <button name="action_open_margin_call" type="object"
+                                string="Xem facility thiếu bảo đảm »"
+                                class="btn-link"
+                                invisible="kpi_bb_margin_call == 0"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

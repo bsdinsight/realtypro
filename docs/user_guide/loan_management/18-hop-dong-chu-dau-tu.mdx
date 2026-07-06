@@ -1,0 +1,97 @@
+---
+title: "HĐ với Chủ đầu tư & sản lượng"
+description: "Hướng dẫn quản lý hợp đồng thi công đầu ra với Chủ đầu tư — BBNT sản lượng, thanh toán của CĐT, khoản phải thu (quyền đòi nợ)."
+order: 18
+---
+
+# 18. HĐ với Chủ đầu tư & sản lượng
+
+## 18.1. Mục đích
+
+Với **tổng thầu**, ngoài các HĐ ĐẦU VÀO (thuê nhà thầu phụ — module
+HĐ nhà thầu), còn có **HĐ ĐẦU RA**: hợp đồng thi công ký với **Chủ
+đầu tư (CĐT)**. Module này quản lý chiều đầu ra:
+
+- **BBNT sản lượng với CĐT** — từng kỳ CĐT xác nhận giá trị đã thi công
+- **Thanh toán của CĐT** — tạm ứng, theo sản lượng, quyết toán
+- → **Khoản phải thu** = Sản lượng CĐT đã duyệt − CĐT đã trả
+
+Khoản phải thu chính là **quyền đòi nợ** — loại tài sản bảo đảm quan
+trọng nhất của tổng thầu khi vay vốn NH (xem §19 Borrowing base).
+
+Menu: **Realty Project → HĐ với CĐT**.
+
+## 18.2. Tạo HĐ với CĐT
+
+| Trường | Mô tả |
+|---|---|
+| Số HĐ | Số hợp đồng ký với CĐT |
+| Dự án | Dự án đang thi công |
+| Chủ đầu tư | Bên A (công ty) |
+| Giá trị HĐ (trước thuế) | Căn cứ tính % sản lượng + trần nghiệm thu |
+| Thuế suất VAT | Mặc định 8% — giá trị sau thuế tự tính |
+
+Workflow: **Nháp → Đã ký → Đang thi công → Hoàn thành** (hoặc Chấm dứt).
+
+## 18.3. BBNT sản lượng với CĐT
+
+Tab **BBNT với CĐT** (hoặc menu BBNT với CĐT) — mỗi biên bản = 1 kỳ
+sản lượng, số tự sinh `OBBNT/YYYY/NNNN` (sửa được theo số văn bản thật):
+
+| Trường | Mô tả |
+|---|---|
+| Ngày đề xuất | Ngày tổng thầu trình CĐT |
+| Giá trị sản lượng kỳ này | Trước thuế, theo biên bản. Cho phép ÂM khi CĐT điều chỉnh giảm (cắt khối lượng sau kiểm toán) |
+| Ngày CĐT duyệt | Tự ghi khi bấm "CĐT duyệt" |
+
+Workflow 2 bên: **Nháp → Đã đề xuất → CĐT duyệt** (hoặc Huỷ). Chỉ BBNT
+**CĐT duyệt** mới được cộng vào sản lượng lũy kế / khoản phải thu.
+
+> 🔒 Hai ràng buộc:
+> - Sản lượng lũy kế **không vượt giá trị HĐ** — vượt thì điều chỉnh
+>   giá trị HĐ (phụ lục với CĐT) trước khi duyệt BBNT.
+> - BBNT **đã duyệt không huỷ được** (ảnh hưởng phải thu/TSBĐ) — cần
+>   điều chỉnh thì lập BBNT âm kỳ sau theo biên bản với CĐT.
+
+## 18.4. Thanh toán của CĐT
+
+Tab **Thanh toán của CĐT** — KTT ghi nhận từng lần tiền về (thường qua
+TK phong tỏa tại NH cho vay):
+
+| Loại | Ý nghĩa |
+|---|---|
+| CĐT tạm ứng | Ứng trước khi có sản lượng (đầu dự án) |
+| Theo sản lượng | Trả theo BBNT từng kỳ |
+| Quyết toán | Đợt cuối sau quyết toán |
+| Khác | Các khoản khác (âm = hoàn trả CĐT) |
+
+## 18.5. Khoản phải thu — đọc thế nào
+
+```
+Khoản phải thu = Sản lượng nghiệm thu lũy kế − CĐT đã thanh toán
+```
+
+- **Dương** — CĐT đang nợ tổng thầu → đây là giá trị quyền đòi nợ
+  đem thế chấp NH được (§19)
+- **Âm** — CĐT đang tạm ứng TRƯỚC sản lượng (bình thường đầu dự án);
+  giá trị TSBĐ quyền đòi nợ khi đó = 0
+
+## 18.6. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+Tổng thầu ký HĐ thi công 500 tỷ với CĐT:
+
+1. CĐT tạm ứng 50 tỷ → phải thu = 0 − 50 = **−50 tỷ** (đang ứng trước)
+2. Kỳ 1 nghiệm thu 120 tỷ (OBBNT/2026/0001, CĐT duyệt) → phải thu =
+   120 − 50 = **70 tỷ**
+3. CĐT trả tiếp 40 tỷ theo sản lượng → phải thu = **30 tỷ**
+4. Kỳ 2 nghiệm thu 80 tỷ → phải thu = **110 tỷ** — giá trị quyền đòi
+   nợ tăng theo, hạn mức khả dụng tại NH tăng theo (§19)
+
+## 18.7. Lưu ý
+
+- Giá trị sản lượng nhập theo **biên bản ký với CĐT** (trước thuế) —
+  đây là chứng từ NH căn cứ khi nhận thế chấp quyền đòi nợ.
+- 1 dự án có thể nhiều HĐ với CĐT (HĐ chính + phụ lục tách riêng) —
+  mỗi HĐ theo dõi phải thu riêng.
+- Phân biệt với **BBNT đầu vào** (nghiệm thu cho nhà thầu phụ — module
+  Tiến độ): chiều ngược lại, không liên quan phải thu.

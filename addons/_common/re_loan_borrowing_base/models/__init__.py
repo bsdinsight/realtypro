@@ -5,3 +5,4 @@ from . import re_loan_facility
 from . import re_loan_credit_contract
 from . import re_loan_note
 from . import rp_owner_bridge
+from . import re_loan_dashboard

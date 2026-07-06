@@ -34,8 +34,9 @@ class ReLoanCreditContract(models.Model):
                  'all_pledge_ids.state')
     def _compute_borrowing_base_total(self):
         for rec in self:
+            # Chỉ pledge đã khai tỷ lệ (xem ghi chú ở facility).
             pledges = rec.all_pledge_ids.filtered(
-                lambda p: p.state == 'active')
+                lambda p: p.state == 'active' and p.advance_rate)
             rec.borrowing_base_total = sum(
                 pledges.mapped('base_contribution'))
             rec.has_any_pledges = bool(pledges)

@@ -1,0 +1,103 @@
+---
+title: "Borrowing base — hạn mức khả dụng"
+description: "Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định giá theo sản lượng, tỷ lệ cho vay, khả dụng thực tế, cảnh báo margin call."
+order: 19
+---
+
+# 19. Borrowing base — hạn mức khả dụng
+
+## 19.1. Ba con số cần phân biệt
+
+NH cấp hạn mức khung không có nghĩa rút được ngay từng đó — chỉ rút
+được phần **tài sản bảo đảm gánh nổi** tại thời điểm đó:
+
+| Khái niệm | Công thức | Bản chất |
+|---|---|---|
+| **Hạn mức còn lại** (cam kết) | Tổng hạn mức − Dư nợ | Trần pháp lý trong HĐTD |
+| **Cơ sở bảo đảm** (Borrowing base) | Σ(giá trị TSBĐ × tỷ lệ cho vay) | Trần theo tài sản — tăng theo sản lượng + quyền đòi nợ |
+| **Khả dụng thực tế** | min(Hạn mức, Cơ sở bảo đảm) − Dư nợ | Số **rút được hôm nay** |
+
+Với tổng thầu, TSBĐ quan trọng nhất là **quyền đòi nợ** với CĐT
+(khoản phải thu — §18): nghiệm thu thêm sản lượng → phải thu tăng →
+cơ sở bảo đảm tăng → khả dụng tăng. CĐT trả tiền → phải thu giảm →
+khả dụng giảm theo. Đúng nhịp NH đánh giá lại theo kỳ.
+
+## 19.2. Mô hình 2 tầng (ring-fence + umbrella)
+
+NH cho tổng thầu vay theo nguyên tắc: *vay thi công dự án nào, nguồn
+trả nợ là tiền CĐT dự án đó* — nên quyền đòi nợ dự án X chỉ bảo đảm
+cho phần vay của dự án X (**ring-fence**). Tài sản chung (BĐS, tiền
+gửi) bảo đảm cho **cả gói** HĐTD (**umbrella**).
+
+```
+HĐTD (khung 500 tỷ)
+│   TSBĐ CHUNG (thế chấp cấp HĐTD): BĐS trụ sở ×70%, tiền gửi ×95%
+├── Facility "VLĐ thi công DA X" — HM 150 tỷ
+│      TSBĐ RIÊNG (thế chấp cấp facility): Quyền đòi nợ DA X ×60%
+└── Facility "VLĐ thi công DA Y" — HM 100 tỷ
+       TSBĐ RIÊNG: Quyền đòi nợ DA Y ×55%
+```
+
+**Khả dụng(facility) = min(** ① HM facility − dư nợ facility; ② base
+riêng − dư nợ facility *(khi có TSBĐ riêng)*; ③ base toàn HĐTD − dư
+nợ toàn HĐTD **)**, không âm.
+
+Không cần "chia" tài sản chung cho từng facility — chuỗi min tự xử lý.
+**Liên thông hạn mức** chỉ chia sẻ phần thừa cam kết (①) — không giúp
+vượt qua thiếu bảo đảm (② ③ vẫn siết).
+
+## 19.3. Thiết lập — 5 bước
+
+1. **Tỷ lệ cho vay**: Quản lý Vay → cấu hình Loại TSBĐ → nhập
+   "Tỷ lệ cho vay (%)" từng loại (BĐS ~70, quyền đòi nợ ~50–70, tiền
+   gửi ~95). Sửa được từng lần thế chấp (CĐT uy tín → tỷ lệ cao hơn).
+2. **HĐ với CĐT** (§18): tạo HĐ + nhập BBNT + thanh toán của CĐT.
+3. **TSBĐ quyền đòi nợ**: tạo Tài sản thế chấp, chọn trường **"HĐ với
+   CĐT (quyền đòi nợ)"** → giá trị hiện hành TỰ ĐỘNG = khoản phải thu
+   (không âm). Mỗi lần BBNT được duyệt / CĐT trả tiền → tự sinh bản
+   ghi định giá (audit trail như NH đánh giá lại theo kỳ).
+4. **Thế chấp đúng cấp**: quyền đòi nợ dự án X → cấp **Facility** của
+   dự án X (ring-fence); tài sản chung → cấp **HĐTD**.
+5. Xong — mở Facility / HĐTD xem nhóm **"Borrowing base — khả dụng
+   thực tế"**.
+
+## 19.4. Cảnh báo (không chặn)
+
+| Cảnh báo | Khi nào | Ở đâu |
+|---|---|---|
+| **Margin call facility** | Dư nợ facility vượt base riêng | Banner đỏ trên facility |
+| **Margin call HĐTD** | Tổng dư nợ vượt base toàn HĐTD | Banner đỏ trên HĐTD |
+| **KW vượt khả dụng** | Số tiền KW mới lớn hơn Khả dụng thực tế | Banner vàng trên KW (Nháp/Đã gửi NH) |
+
+Hệ thống **chỉ cảnh báo, không chặn** — NH mới là bên quyết định cuối.
+Xử lý margin call: nghiệm thu thêm sản lượng với CĐT / bổ sung TSBĐ /
+trả bớt dư nợ.
+
+Dashboard Quản lý Vay có nhóm **"Borrowing base"**: tổng cơ sở bảo
+đảm, khả dụng thực tế, số facility đang margin call (click xem danh
+sách).
+
+## 19.5. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+
+Facility DA X: HM 150 tỷ, dư nợ 40 tỷ. Quyền đòi nợ DA X = 70 tỷ ×
+60% = **42 tỷ base riêng**. TSBĐ chung base 80 tỷ; tổng dư nợ HĐTD
+90 tỷ; base tổng 152 tỷ.
+
+- ① 150 − 40 = 110 tỷ ② 42 − 40 = **2 tỷ** ③ 152 − 90 = 62 tỷ
+- → **Khả dụng thực tế = 2 tỷ** (dù "còn lại theo cam kết" là 110 tỷ)
+
+Muốn rút thêm → nghiệm thu thêm sản lượng. Ngược lại, CĐT trả 40 tỷ →
+phải thu còn 30 × 60% = 18 tỷ base, thấp hơn dư nợ 40 tỷ → **margin
+call** bật trên facility.
+
+## 19.6. Lưu ý
+
+- Tỷ lệ cho vay = 0 (chưa khai) → tài sản **không được tính** vào
+  borrowing base và không kích hoạt cảnh báo — dữ liệu thế chấp cũ
+  chưa khai tỷ lệ không bị ảnh hưởng.
+- Facility/HĐTD **không có** TSBĐ nào đã khai tỷ lệ → bỏ ràng buộc
+  base tương ứng (hệ thống không quản bảo đảm phần đó).
+- Giá trị đảm bảo (secured_amount) khai trên lần thế chấp → base tính
+  theo số đó; bỏ trống → theo giá trị hiện hành của tài sản.
+- Số liệu khả dụng là **ước tính quản trị** — tỷ lệ và cách tính thực
+  tế theo thỏa thuận từng NH.

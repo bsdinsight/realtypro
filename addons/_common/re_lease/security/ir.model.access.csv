@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_lease_contract_user,re.lease.contract user,model_re_lease_contract,re_base.group_re_user,1,1,1,0
+access_re_lease_contract_manager,re.lease.contract manager,model_re_lease_contract,re_base.group_re_manager,1,1,1,1
+access_re_lease_asset_user,re.lease.asset user,model_re_lease_asset,re_base.group_re_user,1,1,1,1
+access_re_lease_asset_manager,re.lease.asset manager,model_re_lease_asset,re_base.group_re_manager,1,1,1,1
+access_re_lease_payment_line_user,re.lease.payment.line user,model_re_lease_payment_line,re_base.group_re_user,1,1,1,1
+access_re_lease_payment_line_manager,re.lease.payment.line manager,model_re_lease_payment_line,re_base.group_re_manager,1,1,1,1

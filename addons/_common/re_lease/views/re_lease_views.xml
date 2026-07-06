@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ HĐ thuê — list ============ -->
+    <record id="view_re_lease_contract_list" model="ir.ui.view">
+        <field name="name">re.lease.contract.list</field>
+        <field name="model">re.lease.contract</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('ended', 'terminated')">
+                <field name="name"/>
+                <field name="direction" widget="badge"
+                       decoration-info="direction == 'in'"
+                       decoration-success="direction == 'out'"/>
+                <field name="lease_type"/>
+                <field name="partner_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="date_start"/>
+                <field name="date_end" optional="show"/>
+                <field name="amount_financed" sum="Σ" optional="show"/>
+                <field name="outstanding_principal" sum="Σ" optional="show"/>
+                <field name="rent_per_period" optional="hide"/>
+                <field name="next_due_date" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state in ('ended', 'terminated')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ HĐ thuê — form ============ -->
+    <record id="view_re_lease_contract_form" model="ir.ui.view">
+        <field name="name">re.lease.contract.form</field>
+        <field name="model">re.lease.contract</field>
+        <field name="arch" type="xml">
+            <form string="Hợp đồng thuê tài sản">
+                <header>
+                    <button name="action_generate_schedule" type="object"
+                            string="Tạo lịch thanh toán" class="btn-primary"
+                            invisible="state not in ('draft', 'active')"/>
+                    <button name="action_activate" type="object"
+                            string="Kích hoạt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_post_recognition" type="object"
+                            string="Ghi nhận TS thuê TC"
+                            invisible="direction != 'in' or lease_type != 'finance' or recognition_move_id or state == 'draft'"/>
+                    <button name="action_end" type="object" string="Kết thúc"
+                            invisible="state != 'active'"/>
+                    <button name="action_terminate" type="object"
+                            string="Chấm dứt sớm"
+                            confirm="Chấm dứt sớm HĐ thuê này?"
+                            invisible="state not in ('draft', 'active')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,ended"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_child_leases" type="object"
+                                class="oe_stat_button" icon="fa-exchange"
+                                invisible="direction != 'in'">
+                            <field name="child_lease_count" widget="statinfo"
+                                   string="Cho thuê lại"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="HĐ thuê..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="direction" widget="radio"
+                                   options="{'horizontal': True}"/>
+                            <field name="lease_type" widget="radio"
+                                   options="{'horizontal': True}"/>
+                            <field name="partner_id"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="parent_lease_id"
+                                   invisible="direction != 'out'"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Thời hạn">
+                            <field name="date_sign"/>
+                            <field name="date_start"/>
+                            <field name="n_periods"/>
+                            <field name="period_months"/>
+                            <field name="date_end"/>
+                            <field name="deposit"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Điều kiện tài chính"
+                               invisible="lease_type != 'finance'">
+                            <field name="amount_financed"/>
+                            <field name="interest_rate"/>
+                            <field name="principal_plan"/>
+                            <field name="buyout_price"/>
+                            <field name="outstanding_principal"/>
+                        </group>
+                        <group string="Điều kiện thuê"
+                               invisible="lease_type != 'operating'">
+                            <field name="rent_per_period"/>
+                        </group>
+                        <group string="Theo dõi">
+                            <field name="invoiced_to_date"/>
+                            <field name="paid_to_date"/>
+                            <field name="next_due_date"/>
+                        </group>
+                    </group>
+                    <group string="Back-to-back (cho thuê lại từ HĐ này)"
+                           invisible="direction != 'in' or child_lease_count == 0">
+                        <group>
+                            <field name="sublease_revenue"/>
+                            <field name="own_lease_cost"/>
+                        </group>
+                        <group>
+                            <field name="sublease_margin"
+                                   decoration-danger="sublease_margin &lt; 0"
+                                   decoration-success="sublease_margin &gt; 0"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert"
+                         invisible="direction != 'out' or lease_type != 'finance'">
+                        Cho thuê lại TÀI CHÍNH: hóa đơn kỳ tách gốc (giảm
+                        Phải thu thuê TC) + lãi (doanh thu tài chính). Bút
+                        toán chuyển tài sản sang phải thu khi bàn giao —
+                        Phase này lập tay theo hướng dẫn kế toán.
+                    </div>
+                    <notebook>
+                        <page string="Tài sản thuê" name="assets">
+                            <field name="asset_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="serial"/>
+                                    <field name="quantity"/>
+                                    <field name="value" sum="Σ"/>
+                                    <field name="note"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Lịch thanh toán" name="schedule">
+                            <field name="payment_line_ids">
+                                <list editable="bottom"
+                                      decoration-success="state == 'paid'"
+                                      decoration-info="state == 'invoiced'">
+                                    <field name="sequence" string="Kỳ"/>
+                                    <field name="date_due"/>
+                                    <field name="principal_amount" sum="Σ"
+                                           column_invisible="parent.lease_type != 'finance'"/>
+                                    <field name="interest_amount" sum="Σ"
+                                           column_invisible="parent.lease_type != 'finance'"/>
+                                    <field name="balance_after"
+                                           column_invisible="parent.lease_type != 'finance'"/>
+                                    <field name="rent_amount" sum="Σ"
+                                           column_invisible="parent.lease_type != 'operating'"/>
+                                    <field name="amount_total" sum="Σ"/>
+                                    <field name="state" widget="badge"
+                                           decoration-muted="state == 'draft'"
+                                           decoration-info="state == 'invoiced'"
+                                           decoration-success="state == 'paid'"/>
+                                    <button name="action_create_invoice"
+                                            type="object" string="Tạo hóa đơn"
+                                            icon="fa-file-text-o"
+                                            invisible="invoice_id"/>
+                                    <button name="action_view_invoice"
+                                            type="object" string="Xem HĐơn"
+                                            icon="fa-external-link"
+                                            invisible="not invoice_id"/>
+                                    <field name="invoice_id"
+                                           column_invisible="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Kế toán" name="accounting">
+                            <group>
+                                <group string="Cấu hình tài khoản">
+                                    <field name="journal_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                    <field name="account_asset_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                    <field name="account_liability_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                    <field name="account_receivable_finance_id"
+                                           invisible="not (direction == 'out' and lease_type == 'finance')"/>
+                                    <field name="account_interest_id"
+                                           invisible="lease_type != 'finance'"/>
+                                    <field name="account_rent_id"
+                                           invisible="lease_type != 'operating'"/>
+                                    <field name="tax_id"/>
+                                </group>
+                                <group string="Chứng từ">
+                                    <field name="recognition_move_id"
+                                           invisible="not (direction == 'in' and lease_type == 'finance')"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_lease_contract_search" model="ir.ui.view">
+        <field name="name">re.lease.contract.search</field>
+        <field name="model">re.lease.contract</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <filter name="f_in" string="Đi thuê"
+                        domain="[('direction', '=', 'in')]"/>
+                <filter name="f_out" string="Cho thuê lại"
+                        domain="[('direction', '=', 'out')]"/>
+                <separator/>
+                <filter name="f_finance" string="Tài chính"
+                        domain="[('lease_type', '=', 'finance')]"/>
+                <filter name="f_operating" string="Hoạt động"
+                        domain="[('lease_type', '=', 'operating')]"/>
+                <separator/>
+                <filter name="f_active" string="Hiệu lực"
+                        domain="[('state', '=', 'active')]"/>
+                <filter name="group_direction" string="Chiều"
+                        context="{'group_by': 'direction'}"/>
+                <filter name="group_type" string="Loại thuê"
+                        context="{'group_by': 'lease_type'}"/>
+                <filter name="group_partner" string="Đối tác"
+                        context="{'group_by': 'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ Kỳ đến hạn ============ -->
+    <record id="view_re_lease_payment_line_list" model="ir.ui.view">
+        <field name="name">re.lease.payment.line.list</field>
+        <field name="model">re.lease.payment.line</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'paid'"
+                  decoration-info="state == 'invoiced'"
+                  create="false">
+                <field name="contract_id"/>
+                <field name="direction"/>
+                <field name="lease_type"/>
+                <field name="partner_id"/>
+                <field name="sequence" string="Kỳ"/>
+                <field name="date_due"/>
+                <field name="amount_total" sum="Σ"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state == 'draft'"
+                       decoration-info="state == 'invoiced'"
+                       decoration-success="state == 'paid'"/>
+                <button name="action_create_invoice" type="object"
+                        string="Tạo hóa đơn" icon="fa-file-text-o"
+                        invisible="invoice_id"/>
+                <field name="invoice_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_lease_payment_line_search" model="ir.ui.view">
+        <field name="name">re.lease.payment.line.search</field>
+        <field name="model">re.lease.payment.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="partner_id"/>
+                <filter name="f_open" string="Chưa thanh toán"
+                        domain="[('state', '!=', 'paid')]"/>
+                <filter name="f_due_30" string="Đến hạn ≤30 ngày"
+                        domain="[('state', '!=', 'paid'),
+                                 ('date_due', '&lt;=',
+                                  (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="group_contract" string="HĐ thuê"
+                        context="{'group_by': 'contract_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ Actions + Menu ============ -->
+    <record id="action_re_lease_contract" model="ir.actions.act_window">
+        <field name="name">Hợp đồng thuê</field>
+        <field name="res_model">re.lease.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo hợp đồng thuê tài sản đầu tiên
+            </p>
+            <p>Đi thuê / Cho thuê lại × Hoạt động / Tài chính. Lịch
+               gốc+lãi, hóa đơn từng kỳ, back-to-back cho thuê lại.</p>
+        </field>
+    </record>
+
+    <record id="action_re_lease_payment_line" model="ir.actions.act_window">
+        <field name="name">Kỳ thanh toán</field>
+        <field name="res_model">re.lease.payment.line</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_f_open': 1}</field>
+    </record>
+
+    <menuitem id="menu_re_lease_root" name="Thuê tài sản" sequence="26"/>
+    <menuitem id="menu_re_lease_contract" name="Hợp đồng thuê"
+              parent="menu_re_lease_root"
+              action="action_re_lease_contract" sequence="10"/>
+    <menuitem id="menu_re_lease_payment_line" name="Kỳ thanh toán"
+              parent="menu_re_lease_root"
+              action="action_re_lease_payment_line" sequence="20"/>
+
+</odoo>

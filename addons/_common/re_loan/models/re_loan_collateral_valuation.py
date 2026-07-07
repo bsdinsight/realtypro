@@ -22,7 +22,16 @@ class ReLoanCollateralValuation(models.Model):
          ('income', 'Thu nhập'),
          ('appraisal', 'Tổ chức thẩm định giá')],
         string='Phương pháp', default='appraisal', required=True)
-    appraiser = fields.Char(string='Tổ chức / Người định giá')
+    appraiser_id = fields.Many2one(
+        'res.partner', string='Tổ chức thẩm định giá',
+        domain="[('is_appraiser', '=', True)]",
+        context={'default_is_appraiser': True, 'default_is_company': True},
+        help='Chọn từ danh mục đối tác có cờ "Tổ chức thẩm định giá" — '
+             'gõ tên mới rồi Create để thêm nhanh.')
+    appraiser = fields.Char(
+        string='Người định giá (text)',
+        help='Trường text cũ — giữ để xem dữ liệu lịch sử; bản ghi mới '
+             'dùng dropdown Tổ chức thẩm định giá.')
     date_valid_until = fields.Date(
         string='Ngày hết hạn định giá',
         help='Chứng thư định giá thường có hiệu lực 6-12 tháng — NH '

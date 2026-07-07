@@ -12,6 +12,9 @@
                 <group string="Phí Khế ước (NH)" invisible="not is_bank">
                     <field name="kw_fee_rate"/>
                 </group>
+                <group string="Thẩm định giá">
+                    <field name="is_appraiser"/>
+                </group>
             </xpath>
         </field>
     </record>

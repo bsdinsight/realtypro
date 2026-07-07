@@ -42,7 +42,12 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
          ('income', 'Thu nhập'),
          ('appraisal', 'Tổ chức thẩm định giá')],
         string='Phương pháp', default='appraisal', required=True)
-    appraiser = fields.Char(string='Tổ chức / Người định giá')
+    appraiser_id = fields.Many2one(
+        'res.partner', string='Tổ chức thẩm định giá',
+        domain="[('is_appraiser', '=', True)]",
+        context={'default_is_appraiser': True, 'default_is_company': True},
+        help='Gõ tên mới rồi Create để thêm nhanh tổ chức TĐG vào '
+             'danh mục.')
     date_valid_until = fields.Date(
         string='Hiệu lực đến',
         help='Ngày hết hiệu lực chứng thư định giá (nếu có).')
@@ -95,7 +100,7 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
             'date': self.date,
             'amount': self.amount_new,
             'method': self.method,
-            'appraiser': self.appraiser or '',
+            'appraiser_id': self.appraiser_id.id or False,
             'date_valid_until': self.date_valid_until or False,
             'note': self.note or _('Định giá lại từ HĐTD %s')
                 % (pledge.credit_contract_id.name or ''),
@@ -117,7 +122,8 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
                 os=f"{old_secured:,.0f}",
                 ns=f"{self.secured_amount_new:,.0f}",
                 m=dict(self._fields['method'].selection).get(self.method),
-                ap=(" — %s" % self.appraiser) if self.appraiser else ''))
+                ap=(" — %s" % self.appraiser_id.name)
+                if self.appraiser_id else ''))
 
         # Reload để form HĐTD hiện ngay khả dụng mới
         return {'type': 'ir.actions.client', 'tag': 'reload'}

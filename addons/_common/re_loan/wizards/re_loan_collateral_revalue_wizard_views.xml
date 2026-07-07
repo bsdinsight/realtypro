@@ -19,8 +19,8 @@
                         <field name="date"/>
                         <field name="amount_new"/>
                         <field name="method"/>
-                        <field name="appraiser"
-                               placeholder="VD: Cty Thẩm định giá ABC"/>
+                        <field name="appraiser_id"
+                               placeholder="Chọn hoặc gõ tên mới → Create"/>
                         <field name="date_valid_until"/>
                     </group>
                 </group>

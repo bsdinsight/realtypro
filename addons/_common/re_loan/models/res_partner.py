@@ -11,3 +11,7 @@ class ResPartner(models.Model):
         help='Phí khế ước nhận nợ mặc định của NH này, tính bằng % '
              'trên tiền lãi. Auto-load khi tạo KW chọn cách tính phí '
              '"% trên lãi" — sửa được per-KW.')
+    is_appraiser = fields.Boolean(
+        string='Tổ chức thẩm định giá',
+        help='Đánh dấu đối tác là tổ chức/công ty thẩm định giá — '
+             'hiện trong dropdown chọn khi định giá TSBĐ.')

@@ -94,7 +94,9 @@
                                     <field name="date"/>
                                     <field name="amount"/>
                                     <field name="method"/>
-                                    <field name="appraiser"/>
+                                    <field name="appraiser_id"/>
+                                    <field name="appraiser"
+                                           optional="hide"/>
                                     <field name="date_valid_until"/>
                                     <field name="is_expired"
                                            string="⚠ Hết hạn"
@@ -111,7 +113,10 @@
                                             <field name="date"/>
                                             <field name="amount"/>
                                             <field name="method"/>
-                                            <field name="appraiser"/>
+                                            <field name="appraiser_id"/>
+                                            <field name="appraiser"
+                                                   invisible="not appraiser"
+                                                   readonly="1"/>
                                         </group>
                                         <group>
                                             <field name="date_valid_until"/>

@@ -29,6 +29,18 @@ class ReLoanCreditContract(models.Model):
         string='Cảnh báo thiếu bảo đảm (HĐTD)',
         compute='_compute_available_effective',
         help='Tổng dư nợ vượt cơ sở bảo đảm toàn HĐTD.')
+    unrated_pledge_count = fields.Integer(
+        string='Pledge chưa khai tỷ lệ',
+        compute='_compute_unrated_pledges',
+        help='Số TSBĐ đang thế chấp nhưng CHƯA khai Tỷ lệ cho vay (%) '
+             '— chưa tham gia cơ sở bảo đảm, định giá lại các TS này '
+             'không ảnh hưởng khả dụng.')
+
+    @api.depends('all_pledge_ids.state', 'all_pledge_ids.advance_rate')
+    def _compute_unrated_pledges(self):
+        for rec in self:
+            rec.unrated_pledge_count = len(rec.all_pledge_ids.filtered(
+                lambda p: p.state == 'active' and not p.advance_rate))
 
     @api.depends('all_pledge_ids.base_contribution',
                  'all_pledge_ids.state')

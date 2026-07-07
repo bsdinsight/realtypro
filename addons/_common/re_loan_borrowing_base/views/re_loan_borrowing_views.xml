@@ -39,6 +39,20 @@
                 <field name="advance_rate"/>
                 <field name="base_contribution" sum="Σ base"/>
             </xpath>
+            <!-- Bảng facility NHÚNG trong form HĐTD (tab Hạn mức) là
+                 list inline — KHÔNG ăn theo inherit của facility list
+                 độc lập → phải thêm cột trực tiếp ở đây. -->
+            <xpath expr="//field[@name='facility_ids']/list/field[@name='amount_available']"
+                   position="attributes">
+                <attribute name="string">Còn lại (theo HM)</attribute>
+            </xpath>
+            <xpath expr="//field[@name='facility_ids']/list/field[@name='amount_available']"
+                   position="after">
+                <field name="amount_available_effective"
+                       string="Khả dụng thực tế"
+                       decoration-danger="margin_call"/>
+                <field name="margin_call" optional="hide"/>
+            </xpath>
             <xpath expr="//sheet" position="inside">
                 <group string="Borrowing base — khả dụng theo TSBĐ">
                     <group>
@@ -52,6 +66,17 @@
                                decoration-danger="margin_call"/>
                     </group>
                 </group>
+                <field name="unrated_pledge_count" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not unrated_pledge_count">
+                    ⚠ Có <b><field name="unrated_pledge_count"
+                    class="oe_inline" readonly="1"/> TSBĐ đang thế chấp
+                    chưa khai "Tỷ lệ cho vay (%)"</b> — các TS này CHƯA
+                    tham gia cơ sở bảo đảm, định giá lại chúng sẽ không
+                    làm đổi Khả dụng thực tế. Khai tỷ lệ ở tab
+                    <b>Tài sản thế chấp</b> (cột "Tỷ lệ cho vay") hoặc
+                    cấu hình mặc định theo <b>Loại TSBĐ</b>.
+                </div>
                 <div class="alert alert-danger" role="alert"
                      invisible="not margin_call">
                     ⚠ <b>Thiếu bảo đảm (margin call):</b> tổng dư nợ đã

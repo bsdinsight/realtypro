@@ -19,4 +19,45 @@
         </field>
     </record>
 
+    <!-- Danh mục Tổ chức / Người định giá (Cấu hình) -->
+    <record id="view_re_loan_appraiser_list" model="ir.ui.view">
+        <field name="name">res.partner.list.appraiser</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Tổ chức / Người định giá">
+                <field name="name"/>
+                <field name="vat" string="MST" optional="show"/>
+                <field name="phone" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="city" optional="hide"/>
+                <field name="is_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_appraiser" model="ir.actions.act_window">
+        <field name="name">Tổ chức / Người định giá</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_appraiser', '=', True)]</field>
+        <field name="context">{'default_is_appraiser': True,
+                               'default_is_company': True}</field>
+        <field name="view_id" ref="view_re_loan_appraiser_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Thêm tổ chức / người định giá đầu tiên
+            </p>
+            <p>
+                Danh mục tổ chức thẩm định giá dùng khi định giá tài sản
+                thế chấp (chứng thư định giá, định giá lại TSBĐ).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_appraiser"
+              name="Tổ chức / Người định giá"
+              parent="menu_re_loan_config"
+              action="action_re_loan_appraiser"
+              sequence="20"/>
+
 </odoo>

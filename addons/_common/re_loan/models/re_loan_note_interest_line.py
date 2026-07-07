@@ -198,7 +198,9 @@ class ReLoanNoteInterestLine(models.Model):
                 # đúng), nhưng chỉ ASSIGN cho lines trong self.
                 all_period = note.interest_line_ids.filtered(
                     lambda l: l.line_type == 'period').sorted(
-                    key=lambda l: (l.period_no or 0, l.id))
+                    key=lambda l: (l.period_no or 0,
+                                   l.id if isinstance(l.id, int)
+                                   else float('inf')))
                 n = len(all_period)
                 each = round(note.fee_amount_total / n) if n else 0
                 last_id = all_period[-1].id if n else False

@@ -88,11 +88,19 @@ class ReLoanCollateral(models.Model):
 
     @api.depends('valuation_ids.date', 'valuation_ids.amount')
     def _compute_value_current(self):
+        # Tie-break theo id khi 2 định giá cùng ngày (vd định giá tay +
+        # auto theo phải thu cùng ngày) — lấy bản mới nhất. Trong
+        # onchange, dòng vừa thêm chưa lưu mang NewId (không so được với
+        # id int) và date có thể trống → key phải quy đổi: dòng chưa lưu
+        # xếp mới nhất (inf), date trống xếp cũ nhất.
+        date_min = fields.Date.to_date('1900-01-01')
+
+        def _key(v):
+            vid = v.id if isinstance(v.id, int) else float('inf')
+            return (v.date or date_min, vid)
+
         for rec in self:
-            # Tie-break theo id khi 2 định giá cùng ngày (vd định giá
-            # tay + auto theo phải thu cùng ngày) — lấy bản mới nhất.
-            latest = rec.valuation_ids.sorted(
-                key=lambda v: (v.date, v.id), reverse=True)[:1]
+            latest = rec.valuation_ids.sorted(key=_key, reverse=True)[:1]
             rec.value_current = latest.amount if latest else 0.0
 
     @api.depends('pledge_ids.state', 'pledge_ids.secured_amount',

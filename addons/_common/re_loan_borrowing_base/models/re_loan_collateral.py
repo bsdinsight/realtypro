@@ -54,8 +54,14 @@ class ReLoanCollateral(models.Model):
             if not col.owner_contract_id:
                 continue
             value = max(0.0, col.owner_contract_id.receivable)
+            # Key an toàn với record chưa lưu (NewId) + date trống —
+            # cùng convention với _compute_value_current (re_loan).
+            date_min = fields.Date.to_date('1900-01-01')
             latest = col.valuation_ids.sorted(
-                key=lambda v: (v.date, v.id), reverse=True)[:1]
+                key=lambda v: (v.date or date_min,
+                               v.id if isinstance(v.id, int)
+                               else float('inf')),
+                reverse=True)[:1]
             if latest and abs(latest.amount - value) < 0.01:
                 continue
             Valuation.create({

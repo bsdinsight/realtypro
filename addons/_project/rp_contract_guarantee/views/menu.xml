@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sổ tập trung Bảo lãnh HĐ nhà thầu — trong Project Master,
+         ngay sau Hợp đồng nhà thầu (seq 95) -->
+    <menuitem id="menu_pm_rp_contract_guarantee"
+              name="Bảo lãnh HĐ nhà thầu"
+              parent="rp_estimate.menu_project_master"
+              action="action_rp_contract_guarantee"
+              sequence="96"/>
+
+    <!-- Cảnh báo hết hạn trong nhóm Báo cáo HĐ -->
+    <menuitem id="menu_rp_contract_guarantee_expiring"
+              name="Bảo lãnh sắp / đã hết hạn"
+              parent="rp_contract.menu_rp_contract_report"
+              action="action_rp_contract_guarantee_expiring"
+              sequence="30"/>
+</odoo>

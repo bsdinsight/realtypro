@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_contract_guarantee_user,rp.contract.guarantee user,model_rp_contract_guarantee,re_base.group_re_user,1,1,1,0
+access_rp_contract_guarantee_manager,rp.contract.guarantee manager,model_rp_contract_guarantee,re_base.group_re_manager,1,1,1,1
+access_rp_contract_guarantee_amendment_user,rp.contract.guarantee.amendment user,model_rp_contract_guarantee_amendment,re_base.group_re_user,1,1,1,0
+access_rp_contract_guarantee_amendment_manager,rp.contract.guarantee.amendment manager,model_rp_contract_guarantee_amendment,re_base.group_re_manager,1,1,1,1
+access_rp_contract_guarantee_claim_wizard,rp.contract.guarantee.claim.wizard,model_rp_contract_guarantee_claim_wizard,re_base.group_re_user,1,1,1,1

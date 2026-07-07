@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== LIST ==================== -->
+    <record id="view_rp_contract_guarantee_list" model="ir.ui.view">
+        <field name="name">rp.contract.guarantee.list</field>
+        <field name="model">rp.contract.guarantee</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="expiry_status == 'expired'"
+                  decoration-warning="expiry_status == 'expiring'"
+                  decoration-muted="state in ('released','cancelled')">
+                <field name="name"/>
+                <field name="guarantee_type"/>
+                <field name="contract_id" optional="show"/>
+                <field name="contractor_id" optional="show"/>
+                <field name="project_id" optional="hide"/>
+                <field name="issuer_partner_id" optional="show"/>
+                <field name="amount" sum="Σ"/>
+                <field name="amount_percent" optional="hide"
+                       decoration-warning="percent_warning"/>
+                <field name="date_expiry"/>
+                <field name="days_to_expiry" optional="show"/>
+                <field name="expiry_status" widget="badge" optional="show"
+                       decoration-success="expiry_status == 'valid'"
+                       decoration-warning="expiry_status == 'expiring'"
+                       decoration-danger="expiry_status == 'expired'"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'active'"
+                       decoration-success="state == 'released'"
+                       decoration-danger="state == 'claimed'"
+                       decoration-muted="state in ('draft','cancelled')"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="percent_warning" column_invisible="1"/>
+                <field name="expiry_status" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== FORM ==================== -->
+    <record id="view_rp_contract_guarantee_form" model="ir.ui.view">
+        <field name="name">rp.contract.guarantee.form</field>
+        <field name="model">rp.contract.guarantee</field>
+        <field name="arch" type="xml">
+            <form string="Bảo lãnh HĐ nhà thầu">
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Kích hoạt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_release" type="object"
+                            string="Hoàn trả (giải tỏa)"
+                            invisible="state != 'active'"
+                            confirm="Xác nhận hoàn trả bảo lãnh cho nhà thầu?"/>
+                    <button name="action_open_claim_wizard" type="object"
+                            string="Yêu cầu thanh toán"
+                            invisible="state != 'active'"/>
+                    <button name="action_cancel" type="object"
+                            string="Hủy"
+                            invisible="state in ('cancelled','released')"/>
+                    <button name="action_set_draft" type="object"
+                            string="Về nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,released"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_amendments" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="amendment_count == 0">
+                            <field name="amendment_count" widget="statinfo"
+                                   string="Phụ lục"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Đã hết hạn"
+                            bg_color="text-bg-danger"
+                            invisible="expiry_status != 'expired'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Số chứng thư bảo lãnh..."/></h1>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="guarantee_type"/>
+                            <field name="security_form"/>
+                        </group>
+                        <group string="Hợp đồng &amp; các bên">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="contractor_id"/>
+                            <field name="project_id"/>
+                            <field name="issuer_partner_id"
+                                   invisible="security_form in ('deposit','escrow')"
+                                   required="security_form in ('bank_guarantee','insurance')"
+                                   options="{'no_create': True}"/>
+                            <field name="beneficiary_partner_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Giá trị">
+                            <field name="amount"/>
+                            <field name="contract_value" readonly="1"/>
+                            <label for="amount_percent"/>
+                            <div>
+                                <field name="amount_percent" class="oe_inline"
+                                       readonly="1"/> %
+                                <span class="text-warning"
+                                      invisible="not percent_warning">
+                                    ⚠ ngoài 2–10% giá trị HĐ
+                                </span>
+                            </div>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="percent_warning" invisible="1"/>
+                        </group>
+                        <group string="Thời hạn">
+                            <field name="date_issue"/>
+                            <field name="date_effective"/>
+                            <field name="date_expiry"/>
+                            <label for="days_to_expiry"/>
+                            <div>
+                                <field name="days_to_expiry" class="oe_inline"
+                                       readonly="1"/> ngày
+                                <field name="expiry_status" class="oe_inline"
+                                       widget="badge"
+                                       decoration-success="expiry_status == 'valid'"
+                                       decoration-warning="expiry_status == 'expiring'"
+                                       decoration-danger="expiry_status == 'expired'"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Điều khoản" name="terms">
+                            <group>
+                                <group>
+                                    <field name="is_unconditional"/>
+                                    <field name="is_irrevocable"/>
+                                </group>
+                            </group>
+                            <field name="terms"
+                                   placeholder="Điều khoản, phạm vi bảo lãnh..."/>
+                        </page>
+                        <page string="Phụ lục gia hạn / điều chỉnh"
+                              name="amendments">
+                            <field name="amendment_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="amendment_type"/>
+                                    <field name="date_effective"/>
+                                    <field name="new_date_expiry"/>
+                                    <field name="new_amount"/>
+                                    <field name="note"/>
+                                    <field name="applied" widget="boolean"
+                                           readonly="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <p class="text-muted">
+                                Thêm dòng phụ lục → tự áp vào chứng thư
+                                (cập nhật ngày hết hạn / giá trị) và ghi
+                                chatter.
+                            </p>
+                        </page>
+                        <page string="Tài liệu" name="documents">
+                            <field name="attachment_ids"
+                                   widget="many2many_binary"
+                                   string="Thư bảo lãnh, phụ lục (PDF/scan)"/>
+                        </page>
+                        <page string="Yêu cầu thanh toán" name="claim"
+                              invisible="state != 'claimed'">
+                            <group>
+                                <field name="claim_date" readonly="1"/>
+                                <field name="claim_amount" readonly="1"/>
+                                <field name="claim_reason" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                            <field name="date_released" readonly="1"
+                                   invisible="not date_released"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== SEARCH ==================== -->
+    <record id="view_rp_contract_guarantee_search" model="ir.ui.view">
+        <field name="name">rp.contract.guarantee.search</field>
+        <field name="model">rp.contract.guarantee</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <field name="issuer_partner_id"/>
+                <field name="project_id"/>
+                <filter name="active" string="Đang hiệu lực"
+                        domain="[('state','=','active')]"/>
+                <filter name="expiring" string="Sắp hết hạn"
+                        domain="[('expiry_status','=','expiring')]"/>
+                <filter name="expired" string="Đã hết hạn"
+                        domain="[('expiry_status','=','expired')]"/>
+                <filter name="claimed" string="Đã yêu cầu TT"
+                        domain="[('state','=','claimed')]"/>
+                <separator/>
+                <filter name="performance" string="Thực hiện HĐ"
+                        domain="[('guarantee_type','=','performance')]"/>
+                <filter name="advance" string="Tạm ứng"
+                        domain="[('guarantee_type','=','advance')]"/>
+                <filter name="warranty" string="Bảo hành"
+                        domain="[('guarantee_type','=','warranty')]"/>
+                <filter name="g_type" string="Loại bảo lãnh"
+                        context="{'group_by': 'guarantee_type'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_contractor" string="Nhà thầu"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_contract_guarantee" model="ir.actions.act_window">
+        <field name="name">Bảo lãnh HĐ nhà thầu</field>
+        <field name="res_model">rp.contract.guarantee</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_rp_contract_guarantee_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ghi nhận bảo lãnh đầu tiên
+            </p>
+            <p>
+                Sổ tập trung bảo lãnh nhà thầu phụ nộp về (thực hiện HĐ,
+                tạm ứng, bảo hành). Upload thư bảo lãnh, theo dõi hạn và
+                cảnh báo sắp hết hạn.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_rp_contract_guarantee_expiring"
+            model="ir.actions.act_window">
+        <field name="name">Bảo lãnh sắp / đã hết hạn</field>
+        <field name="res_model">rp.contract.guarantee</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">
+            [('state','=','active'),
+             ('expiry_status','in',('expiring','expired'))]</field>
+        <field name="search_view_id"
+               ref="view_rp_contract_guarantee_search"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- HĐ nhà thầu: smart button + page "Bảo lãnh nhận" (page riêng,
+         KHÔNG đụng page "Bảo lãnh" cũ mà rp_guarantee_bridge trang trí) -->
+    <record id="view_rp_contract_form_received_guarantee"
+            model="ir.ui.view">
+        <field name="name">rp.contract.form.received.guarantee</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+
+            <!-- smart button: BL nhận (icon inbox — phân biệt với
+                 'Chứng thư BL' fa-shield của bridge) -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_received_guarantees"
+                        type="object" class="oe_stat_button"
+                        icon="fa-inbox">
+                    <field name="received_guarantee_count" widget="statinfo"
+                           string="BL nhận"/>
+                </button>
+            </xpath>
+
+            <!-- page mới sau page "Bảo lãnh" cũ -->
+            <xpath expr="//page[@name='guarantees']" position="after">
+                <page string="Bảo lãnh nhận (nhà thầu)"
+                      name="received_guarantees">
+                    <field name="received_guarantee_expiring_count"
+                           invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="received_guarantee_expiring_count == 0">
+                        ⚠ Có <field name="received_guarantee_expiring_count"
+                        class="oe_inline" readonly="1"/> bảo lãnh
+                        <b>sắp / đã hết hạn</b> — yêu cầu nhà thầu gia hạn.
+                    </div>
+                    <field name="received_guarantee_ids"
+                           context="{'default_contract_id': id}">
+                        <list decoration-danger="expiry_status == 'expired'"
+                              decoration-warning="expiry_status == 'expiring'"
+                              decoration-muted="state in ('released','cancelled')">
+                            <field name="name"/>
+                            <field name="guarantee_type"/>
+                            <field name="security_form" optional="hide"/>
+                            <field name="issuer_partner_id" optional="show"/>
+                            <field name="amount" sum="Σ"/>
+                            <field name="date_expiry"/>
+                            <field name="days_to_expiry" optional="show"/>
+                            <field name="expiry_status" widget="badge"
+                                   decoration-success="expiry_status == 'valid'"
+                                   decoration-warning="expiry_status == 'expiring'"
+                                   decoration-danger="expiry_status == 'expired'"/>
+                            <field name="state" widget="badge"
+                                   decoration-info="state == 'active'"
+                                   decoration-success="state == 'released'"
+                                   decoration-danger="state == 'claimed'"
+                                   decoration-muted="state in ('draft','cancelled')"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="expiry_status" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <p class="text-muted">
+                        Bảo lãnh nhà thầu phụ nộp về (thực hiện HĐ / tạm
+                        ứng / bảo hành) — mình là bên thụ hưởng. Mở từng
+                        dòng để upload thư bảo lãnh và theo dõi hạn. Khác
+                        với "Bảo lãnh" (chứng thư NH mình phát hành, thuộc
+                        Quản lý Vay).
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

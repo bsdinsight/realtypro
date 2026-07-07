@@ -39,3 +39,4 @@ access_re_loan_adjustment_note_user,re.loan.adjustment.note user,model_re_loan_a
 access_re_loan_adjustment_note_manager,re.loan.adjustment.note manager,model_re_loan_adjustment_note,group_loan_manager,1,1,1,1
 access_re_loan_rate_mass_wizard,re.loan.rate.mass.wizard,model_re_loan_rate_mass_wizard,group_loan_manager,1,1,1,1
 access_re_loan_rate_mass_wizard_line,re.loan.rate.mass.wizard.line,model_re_loan_rate_mass_wizard_line,group_loan_manager,1,1,1,1
+access_re_loan_collateral_revalue_wizard_user,re.loan.collateral.revalue.wizard user,model_re_loan_collateral_revalue_wizard,group_loan_user,1,1,1,1

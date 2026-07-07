@@ -144,6 +144,11 @@
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'active'"
                                            decoration-muted="state == 'released'"/>
+                                    <button name="action_open_revalue_wizard"
+                                            type="object"
+                                            string="Định giá lại"
+                                            icon="fa-line-chart"
+                                            invisible="state != 'active'"/>
                                     <button name="action_release" type="object"
                                             string="Giải chấp" icon="fa-unlock"
                                             invisible="state != 'active'"/>

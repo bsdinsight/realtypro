@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_collateral_revalue_wizard_form"
+            model="ir.ui.view">
+        <field name="name">re.loan.collateral.revalue.wizard.form</field>
+        <field name="model">re.loan.collateral.revalue.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Định giá lại TSBĐ">
+                <group>
+                    <group string="Tài sản">
+                        <field name="pledge_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="collateral_id"/>
+                        <field name="value_current"/>
+                        <field name="secured_amount_old"/>
+                    </group>
+                    <group string="Định giá mới">
+                        <field name="date"/>
+                        <field name="amount_new"/>
+                        <field name="method"/>
+                        <field name="appraiser"
+                               placeholder="VD: Cty Thẩm định giá ABC"/>
+                        <field name="date_valid_until"/>
+                    </group>
+                </group>
+                <group string="Khai lại giá trị đảm bảo">
+                    <field name="secured_amount_new"/>
+                    <field name="note"/>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-info-circle"/> Xác nhận sẽ: ghi bản
+                    định giá mới vào hồ sơ tài sản, cập nhật giá trị đảm
+                    bảo của bản ghi thế chấp, và <b>tính lại Khả dụng
+                    thực tế</b> của HĐTD/facility. Toàn bộ thay đổi được
+                    log vào chatter HĐTD.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận định giá lại"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Hủy"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

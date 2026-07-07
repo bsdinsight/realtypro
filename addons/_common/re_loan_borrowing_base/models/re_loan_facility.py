@@ -45,7 +45,7 @@ class ReLoanFacility(models.Model):
                 pledges.mapped('base_contribution'))
             rec.has_own_pledges = bool(pledges)
 
-    @api.depends('amount_limit', 'amount_used', 'has_own_pledges',
+    @api.depends('amount_available', 'amount_used', 'has_own_pledges',
                  'borrowing_base_own',
                  'credit_contract_id.has_any_pledges',
                  'credit_contract_id.borrowing_base_total',
@@ -53,7 +53,9 @@ class ReLoanFacility(models.Model):
     def _compute_available_effective(self):
         for rec in self:
             contract = rec.credit_contract_id
-            candidates = [rec.amount_limit - rec.amount_used]
+            # ① dùng amount_available (pool-aware): facility liên thông
+            # HM riêng có thể = 0, số đúng là phần còn lại của pool.
+            candidates = [rec.amount_available]
             if rec.has_own_pledges:
                 candidates.append(
                     rec.borrowing_base_own - rec.amount_used)

@@ -180,6 +180,24 @@ class ReLoanCollateralPledge(models.Model):
                         n=rec.note_id.name, f=rec.facility_id.name))
 
     # ------------------------------------------------------------------
+    # Actions
+    # ------------------------------------------------------------------
+    def action_open_revalue_wizard(self):
+        """Mở wizard Định giá lại từ dòng pledge (form HĐTD)."""
+        self.ensure_one()
+        if self.state != 'active':
+            raise UserError(_(
+                "Chỉ định giá lại được thế chấp đang hiệu lực."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Định giá lại TSBĐ'),
+            'res_model': 're.loan.collateral.revalue.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_pledge_id': self.id},
+        }
+
+    # ------------------------------------------------------------------
     # State machine
     # ------------------------------------------------------------------
     def action_release(self):

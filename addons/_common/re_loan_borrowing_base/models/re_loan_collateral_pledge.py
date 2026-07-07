@@ -16,8 +16,12 @@ class ReLoanCollateralPledge(models.Model):
         string='Đóng góp base',
         compute='_compute_base_contribution', store=True,
         currency_field='currency_id',
-        help='= (Giá trị đảm bảo nếu khai, else giá trị hiện hành TS) '
-             '× tỷ lệ cho vay. Chỉ tính pledge đang thế chấp.')
+        help='= min(Giá trị đảm bảo theo HĐ thế chấp, Giá trị hiện hành '
+             'TS theo định giá mới nhất) × tỷ lệ cho vay. Định giá lại '
+             'TSĐB GIẢM → base giảm theo (khả dụng HĐTD/facility giảm); '
+             'tăng thì vẫn trần ở giá trị đảm bảo đã ký (muốn tăng phải '
+             'ký phụ lục). TS chưa định giá → dùng giá trị đảm bảo. '
+             'Chỉ tính pledge đang thế chấp.')
 
     @api.depends('collateral_id.type_id.advance_rate')
     def _compute_advance_rate(self):
@@ -33,6 +37,12 @@ class ReLoanCollateralPledge(models.Model):
             if rec.state != 'active' or not rec.advance_rate:
                 rec.base_contribution = 0.0
                 continue
-            base_value = rec.secured_amount or \
-                rec.collateral_id.value_current
+            value_current = rec.collateral_id.value_current
+            base_value = rec.secured_amount or value_current
+            # Định giá lại TSĐB thấp hơn giá trị đảm bảo theo HĐ thế
+            # chấp → NH chỉ cho vay trên giá trị thực → cap theo định
+            # giá mới nhất. Chỉ cap khi TS ĐÃ có định giá (chưa định
+            # giá thì tin giá trị HĐ thế chấp).
+            if value_current:
+                base_value = min(base_value, value_current)
             rec.base_contribution = base_value * rec.advance_rate / 100.0

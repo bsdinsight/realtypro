@@ -41,11 +41,14 @@ class ReLoanCreditContract(models.Model):
                 pledges.mapped('base_contribution'))
             rec.has_any_pledges = bool(pledges)
 
+    @api.depends('facility_ids.amount_used')
     def _compute_used_total(self):
         for rec in self:
             rec.amount_used_total = sum(
                 rec.facility_ids.mapped('amount_used'))
 
+    @api.depends('amount_total', 'amount_used_total',
+                 'has_any_pledges', 'borrowing_base_total')
     def _compute_available_effective(self):
         for rec in self:
             used = rec.amount_used_total

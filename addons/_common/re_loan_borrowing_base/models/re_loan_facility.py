@@ -45,6 +45,11 @@ class ReLoanFacility(models.Model):
                 pledges.mapped('base_contribution'))
             rec.has_own_pledges = bool(pledges)
 
+    @api.depends('amount_limit', 'amount_used', 'has_own_pledges',
+                 'borrowing_base_own',
+                 'credit_contract_id.has_any_pledges',
+                 'credit_contract_id.borrowing_base_total',
+                 'credit_contract_id.amount_used_total')
     def _compute_available_effective(self):
         for rec in self:
             contract = rec.credit_contract_id

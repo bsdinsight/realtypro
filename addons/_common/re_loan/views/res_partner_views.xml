@@ -58,6 +58,46 @@
               name="Tổ chức / Người định giá"
               parent="menu_re_loan_config"
               action="action_re_loan_appraiser"
+              sequence="30"/>
+
+    <!-- Danh mục Ngân hàng (Cấu hình) — kèm % phí KW mặc định -->
+    <record id="view_re_loan_bank_list" model="ir.ui.view">
+        <field name="name">res.partner.list.bank</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Ngân hàng">
+                <field name="name"/>
+                <field name="vat" string="MST" optional="show"/>
+                <field name="kw_fee_rate" string="% phí KW trên lãi"/>
+                <field name="phone" optional="hide"/>
+                <field name="city" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_bank" model="ir.actions.act_window">
+        <field name="name">Ngân hàng</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_bank', '=', True)]</field>
+        <field name="context">{'default_is_bank': True,
+                               'default_is_company': True}</field>
+        <field name="view_id" ref="view_re_loan_bank_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Thêm ngân hàng đầu tiên
+            </p>
+            <p>
+                Danh mục ngân hàng cấp tín dụng / phát hành bảo lãnh.
+                Khai <b>% phí Khế ước trên lãi</b> để tự nạp khi tạo KW.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_bank"
+              name="Ngân hàng"
+              parent="menu_re_loan_config"
+              action="action_re_loan_bank"
               sequence="20"/>
 
 </odoo>

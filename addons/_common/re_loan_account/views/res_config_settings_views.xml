@@ -121,5 +121,5 @@
               name="Tài khoản kế toán"
               parent="re_loan.menu_re_loan_config"
               action="action_re_loan_account_config"
-              sequence="10"/>
+              sequence="90"/>
 </odoo>

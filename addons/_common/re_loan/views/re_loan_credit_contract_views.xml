@@ -140,7 +140,7 @@
                                     <field name="name"/>
                                     <field name="collateral_id"/>
                                     <field name="date_pledge"/>
-                                    <field name="secured_amount" sum="Tổng đảm bảo"/>
+                                    <field name="secured_amount" sum="Tổng đảm bảo" width="170"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'active'"
                                            decoration-muted="state == 'released'"/>

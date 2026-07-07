@@ -37,7 +37,7 @@
             <xpath expr="//field[@name='pledge_ids']/list/field[@name='secured_amount']"
                    position="after">
                 <field name="advance_rate"/>
-                <field name="base_contribution" sum="Σ base"/>
+                <field name="base_contribution" sum="Σ base" width="160"/>
             </xpath>
             <!-- Bảng facility NHÚNG trong form HĐTD (tab Hạn mức) là
                  list inline — KHÔNG ăn theo inherit của facility list

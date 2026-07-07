@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Loan Management',
-    'version': '19.0.1.76.0',
+    'version': '19.0.1.77.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý vay: HĐTD, hạn mức, khế ước nhận nợ, thế chấp, '
                'vay nội bộ (foundation dùng chung cho mọi suite Realty Pro)',

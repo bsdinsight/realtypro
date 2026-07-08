@@ -75,7 +75,9 @@
                     <group>
                         <group string="Hạn mức (cấp)">
                             <field name="amount_facility_total"/>
-                            <field name="amount_facility_available"/>
+                            <field name="amount_facility_available"
+                                   decoration-danger="amount_facility_available &lt; 0"
+                                   decoration-success="amount_facility_available &gt;= 0"/>
                         </group>
                         <group string="Sử dụng HĐTD">
                             <field name="amount_pool_used"/>
@@ -99,20 +101,22 @@
                             <button name="action_open_reallocate_wizard"
                                     type="object" class="btn-secondary"
                                     icon="fa-balance-scale"
-                                    string="Phân bổ lại hạn mức"
+                                    string="Phân bổ lại hạn mức (có gợi ý chia tỷ lệ)"
                                     style="margin-bottom:6px;"/>
                             <div class="alert alert-info small"
                                  role="alert" style="margin-bottom:6px;">
                                 <i class="fa fa-info-circle"/>
-                                Click vào dòng facility để mở dialog
-                                chi tiết — nhập <b>Phân bổ hạn mức theo
-                                dự án × mục đích</b> ở tab "Phân bổ dự án".
-                                Có hạn mức mới? Bấm <b>Phân bổ lại hạn
-                                mức</b> để khai lại tổng &amp; chia cho
-                                các facility một lần.
+                                Sửa <b>Số tiền hạn mức</b> trực tiếp trên
+                                lưới để phân bổ cho từng facility —
+                                "<b>Hạn mức HĐTD còn lại</b>" ở trên cập
+                                nhật ngay (đỏ = đã vượt tổng HĐTD). Cần
+                                khai lại tổng + chia theo tỷ lệ tự động,
+                                bấm <b>Phân bổ lại hạn mức</b>. Cấu hình
+                                sâu (lãi suất, phân bổ dự án) mở facility
+                                ở menu <b>HĐ tín dụng → Hạn mức tín dụng</b>.
                             </div>
                             <field name="facility_ids">
-                                <list>
+                                <list editable="bottom">
                                     <field name="name"/>
                                     <field name="purpose"/>
                                     <field name="facility_type"/>

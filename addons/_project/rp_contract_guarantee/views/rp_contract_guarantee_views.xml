@@ -156,36 +156,50 @@
                                     <field name="value_after"
                                            optional="show"/>
                                     <field name="note"/>
+                                    <button name="action_apply" type="object"
+                                            string="Áp dụng"
+                                            icon="fa-check"
+                                            class="btn-link"
+                                            invisible="applied"/>
                                     <field name="applied" widget="boolean"
                                            readonly="1"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>
                                 <form string="Phụ lục bảo lãnh">
+                                    <field name="applied" invisible="1"/>
                                     <group>
                                         <group>
                                             <field name="name"
-                                                   placeholder="Số phụ lục..."/>
-                                            <field name="amendment_type"/>
-                                            <field name="date_effective"/>
+                                                   placeholder="Số phụ lục..."
+                                                   readonly="applied"/>
+                                            <field name="amendment_type"
+                                                   readonly="applied"/>
+                                            <field name="date_effective"
+                                                   readonly="applied"/>
                                         </group>
                                         <group>
                                             <field name="new_date_expiry"
                                                    invisible="amendment_type != 'extend'"
-                                                   required="amendment_type == 'extend'"/>
+                                                   required="amendment_type == 'extend'"
+                                                   readonly="applied"/>
                                             <field name="amount_change"
                                                    invisible="amendment_type not in ('increase','decrease')"
-                                                   required="amendment_type in ('increase','decrease')"/>
+                                                   required="amendment_type in ('increase','decrease')"
+                                                   readonly="applied"/>
                                             <field name="currency_id"
                                                    invisible="1"/>
                                         </group>
                                     </group>
                                     <field name="note"
-                                           placeholder="Diễn giải..."/>
+                                           placeholder="Diễn giải..."
+                                           readonly="applied"/>
                                     <div class="alert alert-info"
                                          role="alert">
                                         <i class="fa fa-info-circle"/>
-                                        Lưu phụ lục → tự áp vào chứng thư.
+                                        Điền xong bấm <b>Save &amp; Close</b>,
+                                        rồi bấm <b>Áp dụng</b> ở dòng phụ
+                                        lục để thực hiện.
                                         <b>Tăng / Giảm giá trị</b> cộng /
                                         trừ số tiền vào giá trị bảo lãnh
                                         (không thay thế). <b>Gia hạn</b>
@@ -195,9 +209,10 @@
                                 </form>
                             </field>
                             <p class="text-muted">
-                                Thêm phụ lục → tự áp vào chứng thư và ghi
-                                chatter. Tăng/Giảm giá trị = cộng/trừ số
-                                tiền; Gia hạn = đặt ngày hết hạn mới.
+                                Thêm phụ lục rồi bấm <b>Áp dụng</b> trên
+                                dòng để thực hiện (không tự áp khi lưu).
+                                Tăng/Giảm giá trị = cộng/trừ số tiền; Gia
+                                hạn = đặt ngày hết hạn mới.
                             </p>
                         </page>
                         <page string="Tài liệu" name="documents">

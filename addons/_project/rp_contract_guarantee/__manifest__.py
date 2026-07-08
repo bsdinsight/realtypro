@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project - Contract Guarantees',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Project',
     'summary': 'Sổ bảo lãnh hợp đồng nhà thầu — BL nhận từ nhà thầu phụ '
                '(thực hiện HĐ / tạm ứng / bảo hành), upload tài liệu, '

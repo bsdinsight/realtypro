@@ -10,6 +10,8 @@ facility hiện có, trong một lần. Chặn:
 Áp xong: ghi lại amount_total của HĐTD + amount_limit từng facility,
 log chatter cũ→mới.
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -130,11 +132,11 @@ class ReLoanFacilityReallocateWizard(models.TransientModel):
         for line in self.line_ids:
             if self.currency_id.compare_amounts(
                     line.amount_limit_new, line.amount_limit_old) != 0:
-                changes.append(_(
-                    "• %(f)s: %(o)s → <b>%(n)s</b>",
-                    f=line.facility_id.name,
-                    o='{:,.0f}'.format(line.amount_limit_old),
-                    n='{:,.0f}'.format(line.amount_limit_new)))
+                changes.append(Markup(_(
+                    "• %(f)s: %(o)s → <b>%(n)s</b>")) % {
+                    'f': line.facility_id.name,
+                    'o': '{:,.0f}'.format(line.amount_limit_old),
+                    'n': '{:,.0f}'.format(line.amount_limit_new)})
                 line.facility_id.amount_limit = line.amount_limit_new
 
         if self.currency_id.compare_amounts(
@@ -142,16 +144,19 @@ class ReLoanFacilityReallocateWizard(models.TransientModel):
             contract.amount_total = self.amount_total_new
 
         if changes or total_changed:
-            head = ''
+            head = Markup('')
             if total_changed:
-                head = _(
+                head = Markup(_(
                     "<b>Điều chỉnh tổng hạn mức HĐTD:</b> %(o)s → "
-                    "<b>%(n)s</b><br/>",
-                    o='{:,.0f}'.format(self.amount_total_old),
-                    n='{:,.0f}'.format(self.amount_total_new))
-            contract.message_post(body=_(
-                "%(head)s<b>Phân bổ lại hạn mức facility:</b><br/>%(body)s",
-                head=head, body='<br/>'.join(changes) or _('(không đổi)')))
+                    "<b>%(n)s</b><br/>")) % {
+                    'o': '{:,.0f}'.format(self.amount_total_old),
+                    'n': '{:,.0f}'.format(self.amount_total_new)}
+            body_lines = (Markup('<br/>').join(changes) if changes
+                          else Markup(_('(không đổi)')))
+            contract.message_post(
+                body=head + Markup(_(
+                    "<b>Phân bổ lại hạn mức facility:</b><br/>"))
+                + body_lines)
 
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 

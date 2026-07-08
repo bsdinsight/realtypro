@@ -9,6 +9,8 @@ Một màn hình làm trọn chu trình định giá lại của ngân hàng:
 
 Log đầy đủ vào chatter HĐTD: giá cũ → mới, đảm bảo cũ → mới.
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -129,11 +131,11 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
         increases = changed - decreases
         notes = []
         for line in list(decreases) + list(increases):
-            notes.append(_(
-                "• %(f)s: %(o)s → <b>%(n)s</b>",
-                f=line.facility_id.name,
-                o='{:,.0f}'.format(line.facility_id.amount_limit),
-                n='{:,.0f}'.format(line.amount_limit_new)))
+            notes.append(Markup(_(
+                "• %(f)s: %(o)s → <b>%(n)s</b>")) % {
+                'f': line.facility_id.name,
+                'o': '{:,.0f}'.format(line.facility_id.amount_limit),
+                'n': '{:,.0f}'.format(line.amount_limit_new)})
             line.facility_id.amount_limit = line.amount_limit_new
         return notes
 
@@ -184,22 +186,23 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
             facility_notes = self._apply_facility_reallocation(contract)
 
         if contract:
-            body = _(
+            body = Markup(_(
                 "<b>Định giá lại TSBĐ:</b> %(asset)s<br/>"
                 "• Giá trị tài sản: %(ov)s → <b>%(nv)s</b><br/>"
                 "• Giá trị đảm bảo: %(os)s → <b>%(ns)s</b><br/>"
-                "• Phương pháp: %(m)s%(ap)s",
-                asset=pledge.collateral_id.display_name,
-                ov=f"{old_value:,.0f}",
-                nv=f"{self.amount_new:,.0f}",
-                os=f"{old_secured:,.0f}",
-                ns=f"{self.secured_amount_new:,.0f}",
-                m=dict(self._fields['method'].selection).get(self.method),
-                ap=(" — %s" % self.appraiser_id.name)
-                if self.appraiser_id else '')
+                "• Phương pháp: %(m)s%(ap)s")) % {
+                'asset': pledge.collateral_id.display_name,
+                'ov': f"{old_value:,.0f}",
+                'nv': f"{self.amount_new:,.0f}",
+                'os': f"{old_secured:,.0f}",
+                'ns': f"{self.secured_amount_new:,.0f}",
+                'm': dict(self._fields['method'].selection).get(self.method),
+                'ap': (" — %s" % self.appraiser_id.name)
+                if self.appraiser_id else ''}
             if facility_notes:
-                body += _("<br/><b>Phân bổ lại hạn mức facility:</b>"
-                          "<br/>%s") % '<br/>'.join(facility_notes)
+                body += (Markup(_("<br/><b>Phân bổ lại hạn mức "
+                                  "facility:</b><br/>"))
+                         + Markup('<br/>').join(facility_notes))
             contract.message_post(body=body)
 
         # Reload để form HĐTD hiện ngay khả dụng mới

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Wizard yêu cầu thanh toán bảo lãnh (claim) khi nhà thầu vi phạm."""
+from markupsafe import Markup
+
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
@@ -38,9 +40,9 @@ class RpContractGuaranteeClaimWizard(models.TransientModel):
             'claim_amount': self.claim_amount,
             'claim_reason': self.claim_reason,
         })
-        g.message_post(body=_(
+        g.message_post(body=Markup(_(
             "<b>Yêu cầu thanh toán bảo lãnh:</b> %(a)s ngày %(d)s.<br/>"
-            "Lý do: %(r)s",
-            a='{:,.0f}'.format(self.claim_amount),
-            d=self.claim_date, r=self.claim_reason))
+            "Lý do: %(r)s")) % {
+            'a': '{:,.0f}'.format(self.claim_amount),
+            'd': self.claim_date, 'r': self.claim_reason})
         return {'type': 'ir.actions.act_window_close'}

@@ -10,6 +10,8 @@ gốc + log chatter:
 * Giảm giá trị      → TRỪ số tiền khỏi giá trị bảo lãnh (không âm)
 * Khác             → chỉ ghi diễn giải
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -106,10 +108,10 @@ class RpContractGuaranteeAmendment(models.Model):
             rec.applied = True
             rec.value_before = before
             rec.value_after = after
-            g.message_post(body=_(
-                "<b>Phụ lục bảo lãnh %(n)s</b> (%(t)s): %(d)s",
-                n=rec.name or '',
-                t=dict(rec._fields['amendment_type'].selection).get(
+            g.message_post(body=Markup(_(
+                "<b>Phụ lục bảo lãnh %(n)s</b> (%(t)s): %(d)s")) % {
+                'n': rec.name or '',
+                't': dict(rec._fields['amendment_type'].selection).get(
                     rec.amendment_type),
-                d=desc))
+                'd': desc})
         return True

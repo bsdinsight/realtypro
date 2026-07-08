@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Loan Management',
-    'version': '19.0.1.79.0',
+    'version': '19.0.1.80.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý vay: HĐTD, hạn mức, khế ước nhận nợ, thế chấp, '
                'vay nội bộ (foundation dùng chung cho mọi suite Realty Pro)',
@@ -45,6 +45,7 @@ Các phase sau (L1+) bổ sung credit contract, facility, note, collateral, ...
         'wizards/re_loan_bank_advice_import_wizard_views.xml',
         'wizards/re_loan_rate_mass_wizard_views.xml',
         'wizards/re_loan_collateral_revalue_wizard_views.xml',
+        'wizards/re_loan_facility_reallocate_wizard_views.xml',
         'views/re_loan_bank_advice_views.xml',
         'views/re_loan_adjustment_note_views.xml',
         'views/res_partner_views.xml',

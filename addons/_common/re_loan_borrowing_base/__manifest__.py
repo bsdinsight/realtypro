@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.1.4.0',
+    'version': '19.0.1.5.0',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '
@@ -46,6 +46,7 @@ HĐTD/facility KHÔNG có pledge nào → bỏ ràng buộc base tương ứng
     ],
     'data': [
         'views/re_loan_borrowing_views.xml',
+        'views/re_loan_facility_reallocate_views.xml',
         'views/re_loan_dashboard_views.xml',
     ],
     'installable': True,

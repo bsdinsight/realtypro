@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_facility_reallocate_wizard_form"
+            model="ir.ui.view">
+        <field name="name">re.loan.facility.reallocate.wizard.form</field>
+        <field name="model">re.loan.facility.reallocate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Phân bổ lại hạn mức facility">
+                <field name="contract_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-info-circle"/> Khai lại
+                    <b>tổng hạn mức HĐTD</b> (nếu NH cấp mới) rồi phân bổ
+                    số tiền hạn mức cho từng facility. Hạn mức mới mỗi
+                    facility không được nhỏ hơn phần đã dùng; Σ phân bổ
+                    phải ≤ tổng hạn mức mới.
+                </div>
+                <group>
+                    <group>
+                        <field name="amount_total_old"/>
+                        <field name="amount_total_new"/>
+                    </group>
+                    <group>
+                        <field name="total_allocated"/>
+                        <field name="amount_remaining"
+                               decoration-danger="amount_remaining &lt; 0"
+                               decoration-success="amount_remaining &gt;= 0"/>
+                    </group>
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom" create="false" delete="false">
+                        <field name="facility_id" readonly="1"/>
+                        <field name="purpose" readonly="1" optional="show"/>
+                        <field name="amount_limit_old" readonly="1"/>
+                        <field name="amount_used" readonly="1"/>
+                        <field name="amount_limit_new"
+                               sum="Σ phân bổ"
+                               decoration-danger="amount_limit_new &lt; amount_used"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Áp dụng phân bổ" class="btn-primary"/>
+                    <button name="action_distribute_proportional"
+                            type="object"
+                            string="Chia theo tỷ lệ hiện tại"
+                            class="btn-secondary"
+                            help="Chia tổng hạn mức mới theo tỷ lệ hạn mức
+                                  hiện tại của từng facility"/>
+                    <button special="cancel" string="Hủy"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

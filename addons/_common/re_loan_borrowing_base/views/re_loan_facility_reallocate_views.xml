@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_facility_reallocate_wizard_form_bb"
+            model="ir.ui.view">
+        <field name="name">re.loan.facility.reallocate.wizard.form.bb</field>
+        <field name="model">re.loan.facility.reallocate.wizard</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_facility_reallocate_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_remaining']" position="after">
+                <field name="available_effective"
+                       decoration-warning="over_borrowing_base"/>
+                <field name="over_borrowing_base" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('alert-info')]" position="after">
+                <div class="alert alert-warning" role="alert"
+                     invisible="not over_borrowing_base">
+                    ⚠ Tổng hạn mức mới <b>vượt Khả dụng thực tế theo
+                    TSBĐ</b>. Vẫn khai được (hạn mức hợp đồng), nhưng
+                    phần vượt chỉ rút được khi bổ sung TSBĐ hoặc nghiệm
+                    thu thêm sản lượng với CĐT.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

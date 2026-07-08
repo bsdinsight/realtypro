@@ -195,6 +195,22 @@ class ReLoanCreditContract(models.Model):
                 raise ValidationError(_(
                     "Ngày hết hạn không được trước ngày hiệu lực."))
 
+    def action_open_reallocate_wizard(self):
+        """Mở wizard phân bổ lại hạn mức xuống các facility."""
+        self.ensure_one()
+        if not self.facility_ids:
+            from odoo.exceptions import UserError
+            raise UserError(_(
+                "HĐTD chưa có facility nào để phân bổ hạn mức."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phân bổ lại hạn mức'),
+            'res_model': 're.loan.facility.reallocate.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_contract_id': self.id},
+        }
+
     # ------------------------------------------------------------------
     # State machine
     # ------------------------------------------------------------------

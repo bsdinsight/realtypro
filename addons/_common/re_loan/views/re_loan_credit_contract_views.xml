@@ -96,12 +96,20 @@
                     </div>
                     <notebook>
                         <page string="Hạn mức (Facility)" name="facilities">
+                            <button name="action_open_reallocate_wizard"
+                                    type="object" class="btn-secondary"
+                                    icon="fa-balance-scale"
+                                    string="Phân bổ lại hạn mức"
+                                    style="margin-bottom:6px;"/>
                             <div class="alert alert-info small"
                                  role="alert" style="margin-bottom:6px;">
                                 <i class="fa fa-info-circle"/>
                                 Click vào dòng facility để mở dialog
                                 chi tiết — nhập <b>Phân bổ hạn mức theo
                                 dự án × mục đích</b> ở tab "Phân bổ dự án".
+                                Có hạn mức mới? Bấm <b>Phân bổ lại hạn
+                                mức</b> để khai lại tổng &amp; chia cho
+                                các facility một lần.
                             </div>
                             <field name="facility_ids">
                                 <list>

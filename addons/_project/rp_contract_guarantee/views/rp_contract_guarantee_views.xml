@@ -143,23 +143,61 @@
                         <page string="Phụ lục gia hạn / điều chỉnh"
                               name="amendments">
                             <field name="amendment_ids">
-                                <list editable="bottom">
+                                <list>
                                     <field name="name"/>
                                     <field name="amendment_type"/>
                                     <field name="date_effective"/>
-                                    <field name="new_date_expiry"/>
-                                    <field name="new_amount"/>
+                                    <field name="new_date_expiry"
+                                           optional="show"/>
+                                    <field name="amount_change"
+                                           optional="show"/>
+                                    <field name="value_before"
+                                           optional="show"/>
+                                    <field name="value_after"
+                                           optional="show"/>
                                     <field name="note"/>
                                     <field name="applied" widget="boolean"
                                            readonly="1"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>
+                                <form string="Phụ lục bảo lãnh">
+                                    <group>
+                                        <group>
+                                            <field name="name"
+                                                   placeholder="Số phụ lục..."/>
+                                            <field name="amendment_type"/>
+                                            <field name="date_effective"/>
+                                        </group>
+                                        <group>
+                                            <field name="new_date_expiry"
+                                                   invisible="amendment_type != 'extend'"
+                                                   required="amendment_type == 'extend'"/>
+                                            <field name="amount_change"
+                                                   invisible="amendment_type not in ('increase','decrease')"
+                                                   required="amendment_type in ('increase','decrease')"/>
+                                            <field name="currency_id"
+                                                   invisible="1"/>
+                                        </group>
+                                    </group>
+                                    <field name="note"
+                                           placeholder="Diễn giải..."/>
+                                    <div class="alert alert-info"
+                                         role="alert">
+                                        <i class="fa fa-info-circle"/>
+                                        Lưu phụ lục → tự áp vào chứng thư.
+                                        <b>Tăng / Giảm giá trị</b> cộng /
+                                        trừ số tiền vào giá trị bảo lãnh
+                                        (không thay thế). <b>Gia hạn</b>
+                                        đặt ngày hết hạn mới (phải muộn
+                                        hơn hiện tại).
+                                    </div>
+                                </form>
                             </field>
                             <p class="text-muted">
-                                Thêm dòng phụ lục → tự áp vào chứng thư
-                                (cập nhật ngày hết hạn / giá trị) và ghi
-                                chatter.
+                                Thêm phụ lục → tự áp vào chứng thư và ghi
+                                chatter. Tăng/Giảm giá trị = cộng/trừ số
+                                tiền; Gia hạn = đặt ngày hết hạn mới.
                             </p>
                         </page>
                         <page string="Tài liệu" name="documents">

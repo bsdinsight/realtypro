@@ -42,7 +42,7 @@
                 </group>
                 <field name="facility_line_ids">
                     <list editable="bottom" create="false" delete="false">
-                        <field name="facility_id" readonly="1"/>
+                        <field name="facility_id" readonly="1" force_save="1"/>
                         <field name="purpose" readonly="1" optional="show"/>
                         <field name="amount_limit_old" readonly="1"/>
                         <field name="amount_used" readonly="1"/>

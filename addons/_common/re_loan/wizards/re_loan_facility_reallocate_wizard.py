@@ -179,8 +179,7 @@ class ReLoanFacilityReallocateLine(models.TransientModel):
         're.loan.facility.reallocate.wizard', ondelete='cascade',
         required=True)
     facility_id = fields.Many2one(
-        're.loan.facility', string='Facility', required=True,
-        readonly=True)
+        're.loan.facility', string='Facility', required=True)
     purpose = fields.Selection(
         related='facility_id.purpose', string='Mục đích')
     amount_limit_old = fields.Monetary(

@@ -58,6 +58,26 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
              '(borrowing base) nếu dùng.')
     note = fields.Char(string='Ghi chú')
 
+    # ---- Phân bổ lại hạn mức facility (tùy chọn, cùng dialog) -------
+    contract_amount_total = fields.Monetary(
+        string='Tổng hạn mức HĐTD', readonly=True)
+    facility_line_ids = fields.One2many(
+        're.loan.collateral.revalue.facility.line', 'wizard_id',
+        string='Phân bổ hạn mức facility')
+    facility_allocated = fields.Monetary(
+        string='Σ đã phân bổ', compute='_compute_facility_totals')
+    facility_remaining = fields.Monetary(
+        string='Hạn mức HĐTD còn lại', compute='_compute_facility_totals',
+        help='= Tổng hạn mức HĐTD − Σ hạn mức các facility. Âm = vượt.')
+
+    @api.depends('contract_amount_total',
+                 'facility_line_ids.amount_limit_new')
+    def _compute_facility_totals(self):
+        for rec in self:
+            allocated = sum(rec.facility_line_ids.mapped('amount_limit_new'))
+            rec.facility_allocated = allocated
+            rec.facility_remaining = rec.contract_amount_total - allocated
+
     @api.model
     def default_get(self, fields_list):
         vals = super().default_get(fields_list)
@@ -68,7 +88,54 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
             vals.setdefault(
                 'amount_new', pledge.collateral_id.value_current)
             vals.setdefault('secured_amount_new', pledge.secured_amount)
+            contract = pledge.credit_contract_id
+            if contract:
+                vals['contract_amount_total'] = contract.amount_total
+                vals['facility_line_ids'] = [(0, 0, {
+                    'facility_id': f.id,
+                    'amount_limit_new': f.amount_limit,
+                }) for f in contract.facility_ids]
         return vals
+
+    def _apply_facility_reallocation(self, contract):
+        """Ghi lại amount_limit các facility nếu user có sửa. Trả về list
+        mô tả thay đổi cho chatter. Ghi GIẢM trước, TĂNG sau để luôn
+        thỏa Σ facility ≤ tổng HĐTD ở mọi bước."""
+        cur = contract.currency_id
+        lines = self.facility_line_ids
+        # validate: mỗi facility ≥ đã dùng; Σ ≤ tổng
+        bad = lines.filtered(
+            lambda l: l.amount_limit_new < l.amount_used)
+        if bad:
+            raise UserError(_(
+                "Hạn mức mới facility '%(f)s' (%(new)s) nhỏ hơn phần đã "
+                "dùng (%(used)s).",
+                f=bad[0].facility_id.name,
+                new='{:,.0f}'.format(bad[0].amount_limit_new),
+                used='{:,.0f}'.format(bad[0].amount_used)))
+        if cur.compare_amounts(
+                self.facility_allocated, self.contract_amount_total) > 0:
+            raise UserError(_(
+                "Σ hạn mức các facility (%(a)s) vượt tổng hạn mức HĐTD "
+                "(%(t)s).",
+                a='{:,.0f}'.format(self.facility_allocated),
+                t='{:,.0f}'.format(self.contract_amount_total)))
+        changed = lines.filtered(
+            lambda l: cur.compare_amounts(
+                l.amount_limit_new, l.facility_id.amount_limit) != 0)
+        # giảm trước, tăng sau
+        decreases = changed.filtered(
+            lambda l: l.amount_limit_new < l.facility_id.amount_limit)
+        increases = changed - decreases
+        notes = []
+        for line in list(decreases) + list(increases):
+            notes.append(_(
+                "• %(f)s: %(o)s → <b>%(n)s</b>",
+                f=line.facility_id.name,
+                o='{:,.0f}'.format(line.facility_id.amount_limit),
+                n='{:,.0f}'.format(line.amount_limit_new)))
+            line.facility_id.amount_limit = line.amount_limit_new
+        return notes
 
     @api.onchange('amount_new')
     def _onchange_amount_new(self):
@@ -110,8 +177,14 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
             pledge.secured_amount = self.secured_amount_new
 
         contract = pledge.credit_contract_id
+
+        # Phân bổ lại hạn mức facility (nếu user có sửa trong lưới)
+        facility_notes = []
+        if contract and self.facility_line_ids:
+            facility_notes = self._apply_facility_reallocation(contract)
+
         if contract:
-            contract.message_post(body=_(
+            body = _(
                 "<b>Định giá lại TSBĐ:</b> %(asset)s<br/>"
                 "• Giá trị tài sản: %(ov)s → <b>%(nv)s</b><br/>"
                 "• Giá trị đảm bảo: %(os)s → <b>%(ns)s</b><br/>"
@@ -123,7 +196,34 @@ class ReLoanCollateralRevalueWizard(models.TransientModel):
                 ns=f"{self.secured_amount_new:,.0f}",
                 m=dict(self._fields['method'].selection).get(self.method),
                 ap=(" — %s" % self.appraiser_id.name)
-                if self.appraiser_id else ''))
+                if self.appraiser_id else '')
+            if facility_notes:
+                body += _("<br/><b>Phân bổ lại hạn mức facility:</b>"
+                          "<br/>%s") % '<br/>'.join(facility_notes)
+            contract.message_post(body=body)
 
         # Reload để form HĐTD hiện ngay khả dụng mới
         return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+
+class ReLoanCollateralRevalueFacilityLine(models.TransientModel):
+    _name = 're.loan.collateral.revalue.facility.line'
+    _description = 'Dòng phân bổ hạn mức trong định giá lại'
+    _order = 'id'
+
+    wizard_id = fields.Many2one(
+        're.loan.collateral.revalue.wizard', ondelete='cascade',
+        required=True)
+    facility_id = fields.Many2one(
+        're.loan.facility', string='Facility', required=True,
+        readonly=True)
+    purpose = fields.Selection(
+        related='facility_id.purpose', string='Mục đích')
+    amount_limit_old = fields.Monetary(
+        string='Hạn mức hiện tại', related='facility_id.amount_limit',
+        readonly=True)
+    amount_used = fields.Monetary(
+        string='Đã dùng', related='facility_id.amount_used',
+        readonly=True)
+    amount_limit_new = fields.Monetary(string='Hạn mức mới')
+    currency_id = fields.Many2one(related='facility_id.currency_id')

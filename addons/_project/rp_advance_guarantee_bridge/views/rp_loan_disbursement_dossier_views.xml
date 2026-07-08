@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Hồ sơ giải ngân: thêm ô Bảo lãnh nhận từ nhà thầu sau khối
+         Tạm ứng, chỉ hiện khi đã chọn tạm ứng -->
+    <record id="view_rp_loan_dossier_form_guarantee"
+            model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.form.guarantee</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="inherit_id"
+               ref="rp_advance_payment.view_rp_loan_dossier_form_inherit_advance"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='advance_amount_total']"
+                   position="after">
+                <field name="advance_partner_id" invisible="1"/>
+                <field name="guarantee_id"
+                       invisible="not advance_payment_id"
+                       options="{'no_create': True}"/>
+                <field name="guarantee_type" readonly="1"
+                       invisible="not guarantee_id"/>
+                <field name="guarantee_amount" readonly="1"
+                       invisible="not guarantee_id"
+                       decoration-danger="guarantee_shortfall"/>
+                <field name="guarantee_date_expiry" readonly="1"
+                       invisible="not guarantee_id"/>
+                <field name="guarantee_shortfall" invisible="1"/>
+                <div class="text-warning" colspan="2"
+                     invisible="not guarantee_shortfall">
+                    ⚠ Giá trị bảo lãnh nhỏ hơn số tiền tạm ứng — yêu cầu
+                    nhà thầu bổ sung bảo lãnh.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

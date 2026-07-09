@@ -180,10 +180,11 @@ class ReLeaseAnnex(models.Model):
                 _("Số kỳ: %(o)s → %(n)s (rút %(r)s)",
                   o=old, n=new_n, r=self.remove_periods))
 
-    def _apply_add_asset(self, c):
-        if not self.new_asset_name:
-            raise UserError(_("Nhập 'Tên tài sản (mới)'."))
-        c.asset_ids = [(0, 0, {
+    def _add_asset_line_vals(self):
+        """Vals dòng re.lease.asset khi bổ sung tài sản (phụ lục add_asset).
+        Lớp Enterprise re_asset override để thêm asset_id (lý lịch)."""
+        self.ensure_one()
+        return {
             'name': self.new_asset_name,
             'serial': self.new_asset_serial or False,
             'quantity': self.new_asset_qty or 1.0,
@@ -191,11 +192,18 @@ class ReLeaseAnnex(models.Model):
             'rent_unit_price': self.new_asset_rent or 0.0,
             'date_start': self.new_asset_date_start or False,
             'date_end': self.new_asset_date_end or False,
-        })]
+        }
+
+    def _apply_add_asset(self, c):
+        vals = self._add_asset_line_vals()
+        if not vals.get('name'):
+            raise UserError(_(
+                "Nhập 'Tên tài sản (mới)' hoặc chọn/tạo lý lịch tài sản."))
+        c.asset_ids = [(0, 0, vals)]
         # Tài sản mới có đơn giá + cửa sổ thuê riêng → tạo lại lịch kỳ
         # chưa lên hóa đơn (kỳ trong cửa sổ tài sản mới sẽ cộng tiền).
         c._reschedule_future_operating_lines()
-        note = self.new_asset_name
+        note = vals['name']
         if self.new_asset_date_start:
             note += _(" (từ %s)", self.new_asset_date_start)
         return '', note, _("Bổ sung tài sản: %s", note)

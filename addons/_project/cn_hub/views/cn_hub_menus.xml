@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cn_root" name="Construction Network"
+              sequence="20"/>
+
+    <menuitem id="menu_cn_tender" name="Gói thầu"
+              parent="menu_cn_root" action="action_cn_tender" sequence="10"/>
+
+    <menuitem id="menu_cn_bid" name="Hồ sơ dự thầu"
+              parent="menu_cn_root" action="action_cn_bid" sequence="20"/>
+
+    <menuitem id="menu_cn_contractor" name="Nhà thầu"
+              parent="menu_cn_root" action="action_cn_contractor"
+              sequence="30"/>
+</odoo>

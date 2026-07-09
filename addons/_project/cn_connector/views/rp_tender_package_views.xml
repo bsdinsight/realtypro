@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_tender_package_form_cn" model="ir.ui.view">
+        <field name="name">rp.tender.package.form.cn</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id"
+               ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_publish_to_network" type="object"
+                        string="Công bố lên Network" icon="fa-cloud-upload"
+                        invisible="cn_published"/>
+                <button name="action_sync_bids" type="object"
+                        string="Đồng bộ hồ sơ dự thầu" icon="fa-download"
+                        invisible="not cn_published"/>
+                <field name="cn_published" invisible="1"/>
+                <field name="cn_ref" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

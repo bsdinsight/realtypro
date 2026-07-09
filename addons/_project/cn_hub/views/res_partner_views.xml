@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_cn" model="ir.ui.view">
+        <field name="name">res.partner.form.cn</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Nhà thầu (Network)" name="cn_contractor">
+                    <group>
+                        <group>
+                            <field name="cn_is_contractor"/>
+                            <field name="cn_specialties"/>
+                            <field name="cn_license"/>
+                        </group>
+                        <group>
+                            <field name="cn_service_areas"/>
+                            <field name="cn_rating"/>
+                            <field name="cn_verified"/>
+                            <field name="cn_bid_count"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_list_cn" model="ir.ui.view">
+        <field name="name">res.partner.list.cn</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="cn_specialties"/>
+                <field name="cn_service_areas"/>
+                <field name="cn_rating"/>
+                <field name="cn_verified" widget="boolean_toggle"/>
+                <field name="cn_bid_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_cn_contractor" model="ir.actions.act_window">
+        <field name="name">Nhà thầu</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('cn_is_contractor','=',True)]</field>
+        <field name="view_id" ref="view_partner_list_cn"/>
+        <field name="context">{'default_cn_is_contractor': True, 'default_is_company': True}</field>
+    </record>
+</odoo>

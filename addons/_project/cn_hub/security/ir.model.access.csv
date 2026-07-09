@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cn_tender_user,cn.tender user,model_cn_tender,base.group_user,1,1,1,1
+access_cn_tender_portal,cn.tender portal,model_cn_tender,base.group_portal,1,0,0,0
+access_cn_bid_user,cn.bid user,model_cn_bid,base.group_user,1,1,1,1
+access_cn_bid_portal,cn.bid portal,model_cn_bid,base.group_portal,1,1,1,0

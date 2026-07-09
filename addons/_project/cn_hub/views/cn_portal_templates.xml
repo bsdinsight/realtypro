@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Thẻ trên trang /my của nhà thầu -->
+    <template id="portal_my_home_cn" inherit_id="portal.portal_my_home"
+              name="Portal My Home: Construction Network">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Gói thầu đang mời</t>
+                <t t-set="url" t-value="'/my/tenders'"/>
+                <t t-set="text">Xem gói thầu mở &amp; nộp hồ sơ dự thầu</t>
+                <t t-set="config_card" t-value="True"/>
+                <t t-set="count" t-value="cn_tender_count"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Hồ sơ dự thầu của tôi</t>
+                <t t-set="url" t-value="'/my/bids'"/>
+                <t t-set="text">Theo dõi hồ sơ dự thầu đã nộp</t>
+                <t t-set="config_card" t-value="True"/>
+                <t t-set="count" t-value="cn_bid_count"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Danh sách gói thầu đang mở -->
+    <template id="portal_my_tenders" name="Gói thầu đang mời">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <div class="o_portal_my_doc_table">
+                <h3 class="mb-3">Gói thầu đang mời thầu</h3>
+                <t t-if="not tenders">
+                    <p class="text-muted">Hiện chưa có gói thầu nào đang mở.</p>
+                </t>
+                <table t-if="tenders" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Gói thầu</th>
+                            <th>Tổng thầu</th>
+                            <th>Chuyên môn</th>
+                            <th>Hạn nộp</th>
+                            <th class="text-end">Dự toán</th>
+                            <th/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="tenders" t-as="t">
+                            <td><a t-attf-href="/my/tenders/{{t.id}}"
+                                   t-esc="t.name"/></td>
+                            <td t-esc="t.gc_partner_id.name or '—'"/>
+                            <td t-esc="t.specialty or '—'"/>
+                            <td t-field="t.deadline"/>
+                            <td class="text-end">
+                                <span t-field="t.budget"
+                                      t-options="{'widget': 'monetary', 'display_currency': t.currency_id}"/>
+                            </td>
+                            <td class="text-end">
+                                <a t-attf-href="/my/tenders/{{t.id}}"
+                                   class="btn btn-sm btn-primary">Dự thầu</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <!-- Chi tiết gói thầu + form dự thầu -->
+    <template id="portal_tender_detail" name="Chi tiết gói thầu">
+        <t t-call="portal.portal_layout">
+            <div class="o_portal_my_doc">
+                <h3 t-esc="tender.name"/>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><b>Tổng thầu:</b>
+                           <span t-esc="tender.gc_partner_id.name or '—'"/></p>
+                        <p><b>Chuyên môn:</b>
+                           <span t-esc="tender.specialty or '—'"/></p>
+                        <p><b>Hạn nộp:</b>
+                           <span t-field="tender.deadline"/></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><b>Dự toán:</b>
+                           <span t-field="tender.budget"
+                                 t-options="{'widget': 'monetary', 'display_currency': tender.currency_id}"/></p>
+                        <p><b>Trạng thái:</b>
+                           <span t-field="tender.state"/></p>
+                    </div>
+                </div>
+                <div class="mb-3" t-if="tender.description">
+                    <b>Mô tả / phạm vi:</b>
+                    <p t-esc="tender.description"/>
+                </div>
+
+                <div class="card" t-if="tender.state == 'open'">
+                    <div class="card-body">
+                        <h5>
+                            <t t-if="existing_bid">Cập nhật hồ sơ dự thầu</t>
+                            <t t-else="">Nộp hồ sơ dự thầu</t>
+                        </h5>
+                        <form t-attf-action="/my/tenders/{{tender.id}}/bid"
+                              method="post">
+                            <input type="hidden" name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+                            <div class="mb-2">
+                                <label>Giá dự thầu</label>
+                                <input type="number" step="any" name="price"
+                                       class="form-control"
+                                       t-att-value="existing_bid.price if existing_bid else ''"/>
+                            </div>
+                            <div class="mb-2">
+                                <label>Thuyết minh</label>
+                                <textarea name="note" class="form-control"
+                                          rows="3"
+                                          t-esc="existing_bid.note if existing_bid else ''"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <t t-if="existing_bid">Cập nhật dự thầu</t>
+                                <t t-else="">Nộp dự thầu</t>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div t-else="" class="alert alert-info">
+                    Gói thầu này không còn nhận hồ sơ dự thầu.
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Hồ sơ dự thầu của tôi -->
+    <template id="portal_my_bids" name="Hồ sơ dự thầu của tôi">
+        <t t-call="portal.portal_layout">
+            <div class="o_portal_my_doc_table">
+                <h3 class="mb-3">Hồ sơ dự thầu của tôi</h3>
+                <t t-if="not bids">
+                    <p class="text-muted">Bạn chưa nộp hồ sơ dự thầu nào.</p>
+                </t>
+                <table t-if="bids" class="table">
+                    <thead>
+                        <tr>
+                            <th>Gói thầu</th>
+                            <th class="text-end">Giá dự thầu</th>
+                            <th>Ngày nộp</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="bids" t-as="b">
+                            <td><a t-attf-href="/my/tenders/{{b.tender_id.id}}"
+                                   t-esc="b.tender_id.name"/></td>
+                            <td class="text-end">
+                                <span t-field="b.price"
+                                      t-options="{'widget': 'monetary', 'display_currency': b.currency_id}"/>
+                            </td>
+                            <td t-field="b.date_submit"/>
+                            <td><span t-field="b.state"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

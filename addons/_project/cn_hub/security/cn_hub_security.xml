@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cn_tender_portal_rule" model="ir.rule">
+        <field name="name">Portal: chỉ gói thầu đã mở</field>
+        <field name="model_id" ref="model_cn_tender"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('state','in',('open','closed','awarded'))]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="cn_bid_portal_rule" model="ir.rule">
+        <field name="name">Portal: chỉ hồ sơ dự thầu của mình</field>
+        <field name="model_id" ref="model_cn_bid"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('contractor_id','=',user.partner_id.id)]</field>
+    </record>
+</odoo>

@@ -285,7 +285,7 @@ class ReLeaseContract(models.Model):
     # Constraints
     # ------------------------------------------------------------------
     @api.constrains('lease_type', 'amount_financed', 'interest_rate',
-                    'rent_per_period', 'n_periods')
+                    'n_periods')
     def _check_amounts(self):
         for rec in self:
             if rec.n_periods <= 0:
@@ -296,10 +296,9 @@ class ReLeaseContract(models.Model):
                         'Thuê tài chính: Giá trị tài trợ phải lớn hơn 0.'))
                 if rec.interest_rate < 0:
                     raise ValidationError(_('Lãi suất không được âm.'))
-            else:
-                if rec.rent_per_period <= 0:
-                    raise ValidationError(_(
-                        'Thuê hoạt động: Tiền thuê / kỳ phải lớn hơn 0.'))
+            # Thuê hoạt động: KHÔNG bắt buộc Tiền thuê/kỳ > 0 khi lưu —
+            # cho phép lưu HĐ trước, khai tài sản + đơn giá sau (tiền thuê
+            # tự tính từ tài sản).
 
     @api.constrains('payment_day')
     def _check_payment_day(self):

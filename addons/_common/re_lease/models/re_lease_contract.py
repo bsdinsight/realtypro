@@ -403,17 +403,20 @@ class ReLeaseContract(models.Model):
 
     def _period_rent(self, i):
         """Tiền thuê kỳ i = Σ 'Số tiền thuê' của các tài sản ĐANG THUÊ
-        trong kỳ (theo Ngày bắt đầu/kết thúc từng tài sản). Nếu chưa khai
-        đơn giá theo tài sản → dùng Tiền thuê/kỳ của HĐ (tương thích cũ)."""
+        trong kỳ. Tài sản được tính nếu cửa sổ thuê [bắt đầu, kết thúc]
+        GIAO với khoảng thời gian của kỳ [đầu kỳ, đầu kỳ sau) — tài sản
+        bắt đầu GIỮA kỳ vẫn tính trọn kỳ đó. Chưa khai đơn giá theo tài
+        sản → dùng Tiền thuê/kỳ của HĐ (tương thích cũ)."""
         priced = self.asset_ids.filtered('rent_subtotal')
         if not priced:
             return self.rent_per_period
-        ref = self._period_ref(i)
+        p_start = self._period_ref(i)
+        p_end = self._period_ref(i + 1)   # đầu kỳ kế = cuối kỳ này
         total = 0.0
         for a in priced:
             a_start = a.date_start or self.date_start
             a_end = a.date_end or self.date_end
-            if a_start <= ref and (not a_end or ref <= a_end):
+            if a_start < p_end and (not a_end or a_end >= p_start):
                 total += a.rent_subtotal
         return total
 

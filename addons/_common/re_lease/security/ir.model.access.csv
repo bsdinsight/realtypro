@@ -3,6 +3,8 @@ access_re_lease_contract_user,re.lease.contract user,model_re_lease_contract,re_
 access_re_lease_contract_manager,re.lease.contract manager,model_re_lease_contract,re_base.group_re_manager,1,1,1,1
 access_re_lease_asset_user,re.lease.asset user,model_re_lease_asset,re_base.group_re_user,1,1,1,1
 access_re_lease_asset_manager,re.lease.asset manager,model_re_lease_asset,re_base.group_re_manager,1,1,1,1
+access_re_lease_annex_user,re.lease.annex user,model_re_lease_annex,re_base.group_re_user,1,1,1,0
+access_re_lease_annex_manager,re.lease.annex manager,model_re_lease_annex,re_base.group_re_manager,1,1,1,1
 access_re_lease_payment_line_user,re.lease.payment.line user,model_re_lease_payment_line,re_base.group_re_user,1,1,1,1
 access_re_lease_payment_line_manager,re.lease.payment.line manager,model_re_lease_payment_line,re_base.group_re_manager,1,1,1,1
 access_re_lease_depreciation_line_user,re.lease.depreciation.line user,model_re_lease_depreciation_line,re_base.group_re_user,1,1,1,1

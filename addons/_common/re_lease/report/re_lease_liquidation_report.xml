@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_re_lease_liquidation" model="ir.actions.report">
+        <field name="name">Biên bản thanh lý</field>
+        <field name="model">re.lease.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">re_lease.report_lease_liquidation</field>
+        <field name="report_file">re_lease.report_lease_liquidation</field>
+        <field name="binding_model_id" ref="model_re_lease_contract"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Bien ban thanh ly - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_lease_liquidation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">BIÊN BẢN THANH LÝ HỢP ĐỒNG THUÊ</h2>
+                        <p class="text-center">
+                            Số HĐ: <span t-field="o.name"/>
+                        </p>
+                        <div class="row mt16">
+                            <div class="col-6">
+                                <strong>Bên cho thuê / Bên đi thuê (đối tác):</strong><br/>
+                                <span t-field="o.partner_id"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Đơn vị:</strong><br/>
+                                <span t-field="o.company_id"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm mt16">
+                            <tr>
+                                <td>Chiều / Loại thuê</td>
+                                <td>
+                                    <span t-field="o.direction"/> /
+                                    <span t-field="o.lease_type"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Thời hạn</td>
+                                <td>
+                                    <span t-field="o.date_start"/> →
+                                    <span t-field="o.date_end"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ngày chấm dứt</td>
+                                <td><span t-field="o.termination_date"/></td>
+                            </tr>
+                            <tr>
+                                <td>Ngày thanh lý</td>
+                                <td><span t-field="o.liquidation_date"/></td>
+                            </tr>
+                        </table>
+
+                        <h4 class="mt16">Quyết toán tài chính</h4>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Ký cược / đặt cọc</td>
+                                <td class="text-end"><span t-field="o.deposit"/></td>
+                            </tr>
+                            <tr>
+                                <td>Khấu trừ sửa chữa / hư hỏng</td>
+                                <td class="text-end"><span t-field="o.repair_deduction"/></td>
+                            </tr>
+                            <tr>
+                                <td>Khấu trừ khác</td>
+                                <td class="text-end"><span t-field="o.other_deduction"/></td>
+                            </tr>
+                            <tr>
+                                <td>Phạt / bồi thường</td>
+                                <td class="text-end"><span t-field="o.penalty_amount"/></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td>Hoàn ký cược</td>
+                                <td class="text-end"><span t-field="o.deposit_refund"/></td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td>Quyết toán cuối (thu/trả)</td>
+                                <td class="text-end"><span t-field="o.final_settlement"/></td>
+                            </tr>
+                        </table>
+
+                        <p class="mt16">
+                            Tình trạng tài sản: đã
+                            <span t-if="o.asset_return_ok">nhận/trả lại đầy đủ</span>
+                            <span t-else="">CHƯA hoàn tất bàn giao</span>.
+                        </p>
+                        <p>
+                            Hai bên xác nhận đã hoàn tất nghĩa vụ theo hợp đồng
+                            và các phụ lục kèm theo; biên bản này là căn cứ
+                            thanh lý hợp đồng.
+                        </p>
+
+                        <div class="row mt32">
+                            <div class="col-6 text-center">
+                                <strong>ĐẠI DIỆN BÊN A</strong>
+                                <p style="margin-top:60px;">(Ký, ghi rõ họ tên)</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <strong>ĐẠI DIỆN BÊN B</strong>
+                                <p style="margin-top:60px;">(Ký, ghi rõ họ tên)</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

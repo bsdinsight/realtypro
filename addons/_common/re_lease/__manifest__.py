@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Thuê tài sản (Lease)',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Lease',
     'summary': 'Quản lý thuê tài sản 2 chiều × 2 loại: Đi thuê / Cho thuê '
                'lại × Hoạt động / Tài chính. Lịch gốc+lãi, kế toán tích '
@@ -52,7 +52,10 @@ Phase 2 (sau): khấu hao tự động tài sản thuê TC, dashboard SVG, docs.
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
+        'report/re_lease_liquidation_report.xml',
         'views/re_lease_views.xml',
+        'views/re_lease_annex_views.xml',
+        'wizards/re_lease_wizard_views.xml',
         'views/re_lease_dashboard_views.xml',
     ],
     'application': True,

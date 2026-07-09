@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_lease_annex_list" model="ir.ui.view">
+        <field name="name">re.lease.annex.list</field>
+        <field name="model">re.lease.annex</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="applied">
+                <field name="date_effective"/>
+                <field name="name"/>
+                <field name="annex_type"/>
+                <field name="value_before" optional="show"/>
+                <field name="value_after" optional="show"/>
+                <field name="applied" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_lease_annex_form" model="ir.ui.view">
+        <field name="name">re.lease.annex.form</field>
+        <field name="model">re.lease.annex</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_apply" type="object" string="Áp dụng"
+                            class="btn-primary" invisible="applied"
+                            confirm="Áp dụng phụ lục này vào hợp đồng? Thao tác điều chỉnh HĐ và tạo lại các kỳ chưa lên hóa đơn."/>
+                    <widget name="web_ribbon" title="Đã áp dụng"
+                            invisible="not applied"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="contract_id" readonly="1"
+                                   invisible="context.get('default_contract_id')"/>
+                            <field name="name" placeholder="Số phụ lục..."/>
+                            <field name="annex_type"/>
+                        </group>
+                        <group>
+                            <field name="date_sign"/>
+                            <field name="date_effective"/>
+                            <field name="applied" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Nội dung điều chỉnh">
+                        <!-- price_adjust -->
+                        <field name="new_rent_per_period"
+                               invisible="annex_type != 'price_adjust'"
+                               required="annex_type == 'price_adjust'"/>
+                        <!-- extend -->
+                        <field name="extra_periods"
+                               invisible="annex_type != 'extend'"
+                               required="annex_type == 'extend'"/>
+                        <!-- shorten -->
+                        <field name="remove_periods"
+                               invisible="annex_type != 'shorten'"
+                               required="annex_type == 'shorten'"/>
+                        <!-- add / replace asset -->
+                        <field name="new_asset_name"
+                               invisible="annex_type not in ('add_asset','replace_asset')"
+                               required="annex_type in ('add_asset','replace_asset')"/>
+                        <field name="new_asset_serial"
+                               invisible="annex_type not in ('add_asset','replace_asset')"/>
+                        <field name="new_asset_qty"
+                               invisible="annex_type != 'add_asset'"/>
+                        <field name="new_asset_value"
+                               invisible="annex_type not in ('add_asset','replace_asset')"/>
+                        <!-- remove / replace / maintenance target -->
+                        <field name="target_asset_line_id"
+                               invisible="annex_type not in ('remove_asset','replace_asset','maintenance_terms')"
+                               required="annex_type in ('remove_asset','replace_asset')"/>
+                        <!-- payment terms -->
+                        <field name="new_period_months"
+                               invisible="annex_type != 'payment_terms'"/>
+                        <field name="new_deposit"
+                               invisible="annex_type != 'payment_terms'"/>
+                        <!-- relocation -->
+                        <field name="new_project_id"
+                               invisible="annex_type != 'relocation'"/>
+                        <field name="new_location"
+                               invisible="annex_type != 'relocation'"/>
+                    </group>
+                    <field name="description" placeholder="Diễn giải / căn cứ..."/>
+                    <group string="Kết quả" invisible="not applied">
+                        <field name="value_before"/>
+                        <field name="value_after"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

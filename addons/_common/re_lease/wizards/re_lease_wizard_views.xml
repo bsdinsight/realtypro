@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Chấm dứt sớm -->
+    <record id="view_re_lease_terminate_wizard_form" model="ir.ui.view">
+        <field name="name">re.lease.terminate.wizard.form</field>
+        <field name="model">re.lease.terminate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Chấm dứt sớm HĐ thuê">
+                <field name="contract_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <field name="termination_date"/>
+                    <field name="penalty_amount"/>
+                    <field name="termination_reason"
+                           placeholder="Lý do chấm dứt sớm..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận chấm dứt" class="btn-primary"
+                            confirm="Chấm dứt sớm hợp đồng này? Các kỳ chưa lên hóa đơn sẽ không thu/trả nữa."/>
+                    <button string="Hủy" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Thanh lý -->
+    <record id="view_re_lease_liquidation_wizard_form" model="ir.ui.view">
+        <field name="name">re.lease.liquidation.wizard.form</field>
+        <field name="model">re.lease.liquidation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Thanh lý HĐ thuê">
+                <field name="contract_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <group>
+                    <group string="Quyết toán ký cược">
+                        <field name="deposit"/>
+                        <field name="repair_deduction"/>
+                        <field name="other_deduction"/>
+                        <field name="deposit_refund"/>
+                    </group>
+                    <group string="Kết thúc">
+                        <field name="liquidation_date"/>
+                        <field name="penalty_amount"/>
+                        <field name="final_settlement"/>
+                        <field name="asset_return_ok"/>
+                    </group>
+                </group>
+                <field name="note"
+                       placeholder="Tình trạng tài sản khi thanh lý, ghi chú quyết toán..."/>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận thanh lý" class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

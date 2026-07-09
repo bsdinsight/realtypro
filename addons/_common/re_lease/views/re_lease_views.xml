@@ -58,12 +58,20 @@
                             invisible="state != 'active'"/>
                     <button name="action_terminate" type="object"
                             string="Chấm dứt sớm"
-                            confirm="Chấm dứt sớm HĐ thuê này?"
                             invisible="state not in ('draft', 'active')"/>
+                    <button name="action_open_liquidation" type="object"
+                            string="Thanh lý"
+                            invisible="state == 'draft' or liquidated"/>
+                    <button name="%(action_report_re_lease_liquidation)d"
+                            type="action" string="In biên bản thanh lý"
+                            invisible="not liquidated"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,active,ended"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Đã thanh lý"
+                            invisible="not liquidated"/>
+                    <field name="liquidated" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_child_leases" type="object"
                                 class="oe_stat_button" icon="fa-exchange"
@@ -71,11 +79,28 @@
                             <field name="child_lease_count" widget="statinfo"
                                    string="Cho thuê lại"/>
                         </button>
+                        <button name="action_open_annexes" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="annex_count" widget="statinfo"
+                                   string="Phụ lục"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="HĐ thuê..."/></h1>
                     </div>
+                    <group col="4" invisible="state != 'terminated' and not liquidated">
+                        <field name="termination_date"
+                               invisible="state != 'terminated'"/>
+                        <field name="penalty_amount"
+                               invisible="state != 'terminated'"/>
+                        <field name="termination_reason" colspan="4"
+                               invisible="state != 'terminated'"/>
+                        <field name="liquidation_date" invisible="not liquidated"/>
+                        <field name="deposit_refund" invisible="not liquidated"/>
+                        <field name="final_settlement" invisible="not liquidated"/>
+                        <field name="asset_return_ok" invisible="not liquidated"/>
+                    </group>
                     <group>
                         <group string="Phân loại">
                             <field name="direction" widget="radio"
@@ -254,6 +279,28 @@
                                            invisible="not (direction == 'out' and lease_type == 'finance')"/>
                                 </group>
                             </group>
+                        </page>
+                        <page string="Phụ lục" name="annexes">
+                            <field name="annex_ids">
+                                <list decoration-muted="applied">
+                                    <field name="date_effective"/>
+                                    <field name="name"/>
+                                    <field name="annex_type"/>
+                                    <field name="value_before"/>
+                                    <field name="value_after"/>
+                                    <field name="applied" widget="boolean_toggle"/>
+                                    <button name="action_apply" type="object"
+                                            icon="fa-check" string="Áp dụng"
+                                            class="btn-link"
+                                            invisible="applied"/>
+                                </list>
+                            </field>
+                            <div class="text-muted small">
+                                Phụ lục ghi thay đổi HĐ (Điều 403 BLDS 2015);
+                                bấm <b>Áp dụng</b> để tác động vào HĐ + tạo lại
+                                các kỳ chưa lên hóa đơn. Mở dòng để khai chi
+                                tiết theo loại phụ lục.
+                            </div>
                         </page>
                         <page string="Ghi chú" name="note">
                             <field name="note"/>

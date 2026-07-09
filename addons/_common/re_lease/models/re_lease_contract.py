@@ -98,6 +98,32 @@ class ReLeaseContract(models.Model):
         're.lease.asset', 'contract_id', string='Tài sản thuê')
     payment_line_ids = fields.One2many(
         're.lease.payment.line', 'contract_id', string='Lịch thanh toán')
+    annex_ids = fields.One2many(
+        're.lease.annex', 'contract_id', string='Phụ lục')
+    annex_count = fields.Integer(
+        string='Số phụ lục', compute='_compute_annex_count')
+
+    # --- Chấm dứt sớm ---
+    termination_date = fields.Date(string='Ngày chấm dứt', readonly=True)
+    termination_reason = fields.Text(string='Lý do chấm dứt', readonly=True)
+    penalty_amount = fields.Monetary(
+        string='Phạt / bồi thường', readonly=True)
+
+    # --- Thanh lý ---
+    liquidated = fields.Boolean(string='Đã thanh lý', readonly=True,
+                                copy=False)
+    liquidation_date = fields.Date(string='Ngày thanh lý', readonly=True)
+    repair_deduction = fields.Monetary(
+        string='Khấu trừ sửa chữa / hư hỏng', readonly=True)
+    other_deduction = fields.Monetary(
+        string='Khấu trừ khác', readonly=True)
+    deposit_refund = fields.Monetary(
+        string='Hoàn ký cược', readonly=True,
+        help='Ký cược − khấu trừ (không âm).')
+    final_settlement = fields.Monetary(
+        string='Quyết toán cuối (thu/trả)', readonly=True)
+    asset_return_ok = fields.Boolean(
+        string='Đã nhận/trả lại tài sản', readonly=True)
 
     # --- Kế toán (tab Kế toán — hiện theo direction × type) ---
     journal_id = fields.Many2one(
@@ -273,6 +299,48 @@ class ReLeaseContract(models.Model):
     # ------------------------------------------------------------------
     # Lịch thanh toán
     # ------------------------------------------------------------------
+    def _compute_annex_count(self):
+        for rec in self:
+            rec.annex_count = len(rec.annex_ids)
+
+    def _reschedule_future_operating_lines(self):
+        """Tạo lại các kỳ CHƯA lên hóa đơn theo n_periods / rent / chu kỳ
+        hiện tại — GIỮ NGUYÊN kỳ đã lên hóa đơn. Dùng khi áp dụng phụ lục
+        (điều chỉnh giá / gia hạn / rút ngắn / chu kỳ). Chỉ thuê hoạt động;
+        thuê tài chính cần soạn lại lịch thủ công (biên độ khấu hao)."""
+        self.ensure_one()
+        if self.lease_type != 'operating':
+            return
+        billed = self.payment_line_ids.filtered(lambda l: l.state != 'draft')
+        # Bắt đầu kỳ mới SAU kỳ đã lên hóa đơn cuối cùng (an toàn kể cả
+        # khi bill không liền mạch); không tụt dưới số kỳ đã bill.
+        start = max(billed.mapped('sequence'), default=0) + 1
+        if self.n_periods < len(billed):
+            raise UserError(_(
+                "Không thể còn %(x)s kỳ — đã có %(b)s kỳ lên hóa đơn.",
+                x=self.n_periods, b=len(billed)))
+        self.payment_line_ids.filtered(
+            lambda l: l.state == 'draft').unlink()
+        vals = [{
+            'contract_id': self.id,
+            'sequence': i,
+            'date_due': self._period_date(i),
+            'rent_amount': self.rent_per_period,
+        } for i in range(start, self.n_periods + 1)]
+        if vals:
+            self.env['re.lease.payment.line'].create(vals)
+
+    def action_open_annexes(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phụ lục — %s', self.name),
+            'res_model': 're.lease.annex',
+            'view_mode': 'list,form',
+            'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }
+
     def action_generate_schedule(self):
         for rec in self:
             if rec.state not in ('draft', 'active'):
@@ -353,13 +421,58 @@ class ReLeaseContract(models.Model):
             {'state': 'ended'})
 
     def action_terminate(self):
-        for rec in self:
-            if rec.state not in ('draft', 'active'):
-                raise UserError(_('HĐ đã kết thúc.'))
-            rec.state = 'terminated'
-            rec.message_post(body=_(
-                'Chấm dứt sớm — các kỳ chưa lên hóa đơn sẽ không thu/'
-                'trả nữa (kỳ đã có hóa đơn xử lý theo chứng từ).'))
+        """Mở wizard chấm dứt sớm (khai lý do / ngày / phạt)."""
+        self.ensure_one()
+        if self.state not in ('draft', 'active'):
+            raise UserError(_('HĐ đã kết thúc.'))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Chấm dứt sớm HĐ thuê'),
+            'res_model': 're.lease.terminate.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_contract_id': self.id},
+        }
+
+    def _apply_termination(self, date, reason, penalty):
+        self.ensure_one()
+        self.write({
+            'state': 'terminated',
+            'termination_date': date,
+            'termination_reason': reason,
+            'penalty_amount': penalty or 0.0,
+        })
+        self.message_post(body=_(
+            'Chấm dứt sớm ngày %(d)s. Phạt/bồi thường: %(p)s. Lý do: '
+            '%(r)s. Các kỳ chưa lên hóa đơn sẽ không thu/trả nữa.',
+            d=date, p='{:,.0f}'.format(penalty or 0.0),
+            r=reason or '—'))
+
+    def action_open_liquidation(self):
+        """Mở wizard thanh lý (quyết toán + hoàn cọc + trả tài sản)."""
+        self.ensure_one()
+        if self.state == 'draft':
+            raise UserError(_('HĐ Nháp chưa cần thanh lý.'))
+        if self.liquidated:
+            raise UserError(_('HĐ đã thanh lý.'))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Thanh lý HĐ thuê'),
+            'res_model': 're.lease.liquidation.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_contract_id': self.id},
+        }
+
+    def _apply_liquidation(self, vals):
+        self.ensure_one()
+        self.write(dict(vals, liquidated=True))
+        self.message_post(body=_(
+            'Thanh lý ngày %(d)s. Hoàn ký cược: %(r)s. Quyết toán cuối: '
+            '%(f)s.',
+            d=vals.get('liquidation_date'),
+            r='{:,.0f}'.format(vals.get('deposit_refund') or 0.0),
+            f='{:,.0f}'.format(vals.get('final_settlement') or 0.0)))
 
     # ------------------------------------------------------------------
     # Kế toán

@@ -29,7 +29,12 @@ class RpCostAllocation(models.Model):
         'rp.structure', string='Hạng mục (đầu việc)',
         required=True, ondelete='restrict', index=True)
     cost_category_id = fields.Many2one(
-        'rp.cost.category', string='Nhóm chi phí', ondelete='restrict')
+        'rp.cost.category', string='Nhóm chi phí', ondelete='restrict',
+        domain="[('id', 'in', allowed_category_ids)]")
+    allowed_category_ids = fields.Many2many(
+        'rp.cost.category', string='Nhóm chi phí hợp lệ',
+        compute='_compute_allowed_categories',
+        help='Chỉ nhóm chi phí thuộc khái toán của hạng mục đã chọn.')
     amount = fields.Monetary(
         string='Số tiền phân bổ', required=True,
         currency_field='currency_id',
@@ -40,6 +45,19 @@ class RpCostAllocation(models.Model):
         related='move_line_id.currency_id', store=True)
     company_id = fields.Many2one(
         related='move_line_id.company_id', store=True)
+
+    @api.depends('structure_id')
+    def _compute_allowed_categories(self):
+        for rec in self:
+            rec.allowed_category_ids = \
+                rec.structure_id.estimate_line_ids.mapped('category_id')
+
+    @api.onchange('structure_id')
+    def _onchange_structure_clear_category(self):
+        """Đổi hạng mục → xóa nhóm chi phí nếu không còn hợp lệ."""
+        allowed = self.structure_id.estimate_line_ids.mapped('category_id')
+        if self.cost_category_id and self.cost_category_id not in allowed:
+            self.cost_category_id = False
 
     @api.constrains('amount', 'move_line_id')
     def _check_amount(self):

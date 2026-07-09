@@ -30,9 +30,14 @@
                                    decoration-success="amount_residual_after_advance == 0 and amount_advance_settled > 0"/>
                         </group>
                     </group>
-                    <field name="advance_settlement_ids" readonly="1">
-                        <list>
-                            <field name="advance_id"/>
+                    <field name="advance_settlement_ids"
+                           readonly="state != 'posted'">
+                        <list editable="bottom">
+                            <field name="advance_id"
+                                   domain="[('partner_id', '=', parent.partner_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="advance_amount_remaining"
+                                   string="TƯ còn lại"/>
                             <field name="amount" sum="Σ cấn trừ"/>
                             <field name="date"/>
                             <field name="note"/>

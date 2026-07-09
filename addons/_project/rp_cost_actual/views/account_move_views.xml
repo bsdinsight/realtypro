@@ -34,6 +34,8 @@
                                    domain="[('move_id', '=', parent.id), ('display_type', '=', 'product')]"/>
                             <field name="structure_id"
                                    options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="allowed_category_ids"
+                                   column_invisible="1"/>
                             <field name="cost_category_id"
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    optional="show"/>

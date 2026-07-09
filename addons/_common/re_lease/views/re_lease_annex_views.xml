@@ -65,6 +65,12 @@
                                invisible="annex_type != 'add_asset'"/>
                         <field name="new_asset_value"
                                invisible="annex_type not in ('add_asset','replace_asset')"/>
+                        <field name="new_asset_rent"
+                               invisible="annex_type != 'add_asset'"/>
+                        <field name="new_asset_date_start"
+                               invisible="annex_type != 'add_asset'"/>
+                        <field name="new_asset_date_end"
+                               invisible="annex_type != 'add_asset'"/>
                         <!-- remove / replace / maintenance target -->
                         <field name="target_asset_line_id"
                                invisible="annex_type not in ('remove_asset','replace_asset','maintenance_terms')"

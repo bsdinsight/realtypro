@@ -120,6 +120,7 @@
                             <field name="date_start"/>
                             <field name="n_periods"/>
                             <field name="period_months"/>
+                            <field name="payment_day"/>
                             <field name="date_end"/>
                             <field name="deposit"/>
                             <field name="currency_id" invisible="1"/>
@@ -171,6 +172,8 @@
                                     <field name="name"/>
                                     <field name="serial"/>
                                     <field name="quantity"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
                                     <field name="rent_unit_price"/>
                                     <field name="rent_subtotal" sum="Σ"/>
                                     <field name="value" sum="Σ"/>

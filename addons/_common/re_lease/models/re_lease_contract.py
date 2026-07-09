@@ -58,6 +58,11 @@ class ReLeaseContract(models.Model):
         [('1', 'Hằng tháng'), ('3', 'Hằng quý'),
          ('6', '6 tháng'), ('12', 'Hằng năm')],
         string='Chu kỳ', default='1', required=True)
+    payment_day = fields.Integer(
+        string='Ngày thanh toán',
+        help='Ngày trong tháng phải thanh toán CHẬM NHẤT (vd 10 = chậm '
+             'nhất ngày 10). Bỏ trống = đúng ngày đến hạn theo chu kỳ. '
+             'Nếu tháng không có ngày này thì lấy ngày cuối tháng.')
     date_end = fields.Date(
         string='Ngày kết thúc', compute='_compute_date_end', store=True)
     deposit = fields.Monetary(
@@ -296,6 +301,13 @@ class ReLeaseContract(models.Model):
                     raise ValidationError(_(
                         'Thuê hoạt động: Tiền thuê / kỳ phải lớn hơn 0.'))
 
+    @api.constrains('payment_day')
+    def _check_payment_day(self):
+        for rec in self:
+            if rec.payment_day and not (1 <= rec.payment_day <= 31):
+                raise ValidationError(_(
+                    'Ngày thanh toán phải từ 1 đến 31.'))
+
     @api.constrains('parent_lease_id', 'direction')
     def _check_parent(self):
         for rec in self:
@@ -336,7 +348,7 @@ class ReLeaseContract(models.Model):
             'contract_id': self.id,
             'sequence': i,
             'date_due': self._period_date(i),
-            'rent_amount': self.rent_per_period,
+            'rent_amount': self._period_rent(i),
         } for i in range(start, self.n_periods + 1)]
         if vals:
             self.env['re.lease.payment.line'].create(vals)
@@ -373,9 +385,37 @@ class ReLeaseContract(models.Model):
         return True
 
     def _period_date(self, i):
-        """Ngày đến hạn kỳ i (1-based) = date_start + i chu kỳ."""
-        return self.date_start + relativedelta(
+        """Ngày đến hạn kỳ i (1-based) = date_start + i chu kỳ; nếu khai
+        'Ngày thanh toán' thì đặt về ngày đó trong tháng (cap ngày cuối
+        tháng)."""
+        import calendar
+        due = self.date_start + relativedelta(
             months=int(self.period_months) * i)
+        if self.payment_day:
+            last = calendar.monthrange(due.year, due.month)[1]
+            due = due.replace(day=min(max(1, self.payment_day), last))
+        return due
+
+    def _period_ref(self, i):
+        """Ngày ĐẦU kỳ i — dùng xác định tài sản nào đang thuê trong kỳ."""
+        return self.date_start + relativedelta(
+            months=int(self.period_months) * (i - 1))
+
+    def _period_rent(self, i):
+        """Tiền thuê kỳ i = Σ 'Số tiền thuê' của các tài sản ĐANG THUÊ
+        trong kỳ (theo Ngày bắt đầu/kết thúc từng tài sản). Nếu chưa khai
+        đơn giá theo tài sản → dùng Tiền thuê/kỳ của HĐ (tương thích cũ)."""
+        priced = self.asset_ids.filtered('rent_subtotal')
+        if not priced:
+            return self.rent_per_period
+        ref = self._period_ref(i)
+        total = 0.0
+        for a in priced:
+            a_start = a.date_start or self.date_start
+            a_end = a.date_end or self.date_end
+            if a_start <= ref and (not a_end or ref <= a_end):
+                total += a.rent_subtotal
+        return total
 
     def _build_operating_lines(self):
         self.ensure_one()
@@ -383,7 +423,7 @@ class ReLeaseContract(models.Model):
             'contract_id': self.id,
             'sequence': i,
             'date_due': self._period_date(i),
-            'rent_amount': self.rent_per_period,
+            'rent_amount': self._period_rent(i),
         } for i in range(1, self.n_periods + 1)]
 
     def _build_finance_lines(self):
@@ -674,6 +714,14 @@ class ReLeaseAsset(models.Model):
                        help='Vd "Cẩu tháp QTZ63", "Máy đào PC200".')
     serial = fields.Char(string='Số serial / khung')
     quantity = fields.Float(string='Số lượng', default=1.0)
+    date_start = fields.Date(
+        string='Bắt đầu thuê',
+        help='Ngày tài sản này BẮT ĐẦU tính tiền thuê. Bỏ trống = theo '
+             'ngày bắt đầu HĐ. Có thể muộn hơn ngày ký HĐ (tài sản chưa '
+             'cần dùng ngay).')
+    date_end = fields.Date(
+        string='Kết thúc thuê',
+        help='Ngày tài sản này KẾT THÚC thuê. Bỏ trống = theo HĐ.')
     rent_unit_price = fields.Monetary(
         string='Đơn giá thuê',
         help='Đơn giá thuê / kỳ cho 1 đơn vị tài sản (trước thuế).')

@@ -59,6 +59,14 @@ class ReLeaseAnnex(models.Model):
     new_asset_serial = fields.Char(string='Số serial / khung (mới)')
     new_asset_qty = fields.Float(string='Số lượng (mới)', default=1.0)
     new_asset_value = fields.Monetary(string='Giá trị (mới)')
+    new_asset_rent = fields.Monetary(
+        string='Đơn giá thuê (mới)',
+        help='Đơn giá thuê / kỳ cho tài sản bổ sung.')
+    new_asset_date_start = fields.Date(
+        string='Bắt đầu thuê (mới)',
+        help='Ngày tài sản bổ sung bắt đầu tính tiền thuê (có thể muộn '
+             'hơn ngày ký phụ lục).')
+    new_asset_date_end = fields.Date(string='Kết thúc thuê (mới)')
     target_asset_line_id = fields.Many2one(
         're.lease.asset', string='Tài sản mục tiêu',
         domain="[('contract_id', '=', contract_id)]",
@@ -89,6 +97,10 @@ class ReLeaseAnnex(models.Model):
             self.new_asset_name = False
             self.new_asset_serial = False
             self.new_asset_value = 0.0
+        if t != 'add_asset':
+            self.new_asset_rent = 0.0
+            self.new_asset_date_start = False
+            self.new_asset_date_end = False
         if t not in ('remove_asset', 'replace_asset', 'maintenance_terms'):
             self.target_asset_line_id = False
         if t != 'payment_terms':
@@ -176,15 +188,24 @@ class ReLeaseAnnex(models.Model):
             'serial': self.new_asset_serial or False,
             'quantity': self.new_asset_qty or 1.0,
             'value': self.new_asset_value or 0.0,
+            'rent_unit_price': self.new_asset_rent or 0.0,
+            'date_start': self.new_asset_date_start or False,
+            'date_end': self.new_asset_date_end or False,
         })]
-        return '', self.new_asset_name, _(
-            "Bổ sung tài sản: %s", self.new_asset_name)
+        # Tài sản mới có đơn giá + cửa sổ thuê riêng → tạo lại lịch kỳ
+        # chưa lên hóa đơn (kỳ trong cửa sổ tài sản mới sẽ cộng tiền).
+        c._reschedule_future_operating_lines()
+        note = self.new_asset_name
+        if self.new_asset_date_start:
+            note += _(" (từ %s)", self.new_asset_date_start)
+        return '', note, _("Bổ sung tài sản: %s", note)
 
     def _apply_remove_asset(self, c):
         if not self.target_asset_line_id:
             raise UserError(_("Chọn 'Tài sản mục tiêu' để rút."))
         nm = self.target_asset_line_id.name
         self.target_asset_line_id.unlink()
+        c._reschedule_future_operating_lines()
         return nm, '', _("Rút tài sản: %s", nm)
 
     def _apply_replace_asset(self, c):
@@ -199,6 +220,7 @@ class ReLeaseAnnex(models.Model):
             'value': self.new_asset_value
             or self.target_asset_line_id.value,
         })
+        c._reschedule_future_operating_lines()
         return old_nm, self.new_asset_name, _(
             "Thay thế tài sản: %(o)s → %(n)s",
             o=old_nm, n=self.new_asset_name)

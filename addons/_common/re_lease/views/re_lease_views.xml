@@ -200,6 +200,9 @@
                                            decoration-muted="state == 'draft'"
                                            decoration-info="state == 'invoiced'"
                                            decoration-success="state == 'paid'"/>
+                                    <field name="amount_paid" sum="Σ"/>
+                                    <field name="amount_residual" sum="Σ"
+                                           decoration-warning="amount_residual &gt; 0"/>
                                     <button name="action_create_invoice"
                                             type="object" string="Tạo hóa đơn"
                                             icon="fa-file-text-o"

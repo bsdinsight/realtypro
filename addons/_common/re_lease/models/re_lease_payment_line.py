@@ -46,6 +46,14 @@ class ReLeasePaymentLine(models.Model):
          ('invoiced', 'Đã lên hóa đơn'),
          ('paid', 'Đã thanh toán')],
         string='Trạng thái', compute='_compute_state', store=True)
+    amount_paid = fields.Monetary(
+        string='Số tiền đã thanh toán', compute='_compute_paid_residual',
+        store=True,
+        help='Phần đã thanh toán của kỳ (quy theo tỷ lệ trả trên hóa '
+             'đơn, tính trên Tổng kỳ trước thuế).')
+    amount_residual = fields.Monetary(
+        string='Số tiền còn lại', compute='_compute_paid_residual',
+        store=True, help='= Tổng kỳ − Số tiền đã thanh toán.')
 
     @api.depends('principal_amount', 'interest_amount', 'rent_amount')
     def _compute_amount_total(self):
@@ -53,6 +61,19 @@ class ReLeasePaymentLine(models.Model):
             line.amount_total = (line.principal_amount
                                  + line.interest_amount
                                  + line.rent_amount)
+
+    @api.depends('amount_total', 'invoice_id.state',
+                 'invoice_id.amount_total', 'invoice_id.amount_residual')
+    def _compute_paid_residual(self):
+        for line in self:
+            inv = line.invoice_id
+            ratio = 0.0
+            if inv and inv.state == 'posted' and inv.amount_total:
+                ratio = (inv.amount_total - inv.amount_residual) \
+                    / inv.amount_total
+                ratio = max(0.0, min(1.0, ratio))
+            line.amount_paid = line.amount_total * ratio
+            line.amount_residual = line.amount_total - line.amount_paid
 
     @api.depends('invoice_id', 'invoice_id.state',
                  'invoice_id.payment_state')

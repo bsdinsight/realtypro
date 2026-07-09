@@ -20,6 +20,9 @@
                 <field name="amount_total" sum="Σ"/>
                 <field name="reference" string="Số chứng từ"
                        optional="show"/>
+                <field name="bank_account_id"
+                       string="Tài khoản thanh toán"
+                       optional="show"/>
                 <field name="bank_advice_line_id"
                        string="Giấy báo NH"
                        optional="show"/>

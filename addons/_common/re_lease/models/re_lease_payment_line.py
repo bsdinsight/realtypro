@@ -157,3 +157,31 @@ class ReLeasePaymentLine(models.Model):
             'res_id': self.invoice_id.id,
             'view_mode': 'form',
         }
+
+    def action_register_payment(self):
+        """Mở wizard thanh toán chuẩn của Odoo cho hóa đơn của kỳ này.
+
+        Thanh toán xong → payment_state hóa đơn đổi → state kỳ tự thành
+        'Đã thanh toán' (compute từ invoice)."""
+        self.ensure_one()
+        inv = self.invoice_id
+        if not inv or inv.state == 'cancel':
+            raise UserError(_(
+                'Kỳ này chưa có hóa đơn — bấm "Tạo hóa đơn" trước.'))
+        if inv.state != 'posted':
+            raise UserError(_(
+                'Hóa đơn của kỳ này chưa vào sổ — xác nhận (post) hóa '
+                'đơn trước khi thanh toán.'))
+        if inv.payment_state in ('paid', 'in_payment', 'reversed'):
+            raise UserError(_('Kỳ này đã thanh toán.'))
+        return {
+            'name': _('Thanh toán kỳ %s') % (self.sequence or ''),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment.register',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'active_model': 'account.move',
+                'active_ids': inv.ids,
+            },
+        }

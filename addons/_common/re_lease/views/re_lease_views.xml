@@ -177,6 +177,11 @@
                                             type="object" string="Tạo hóa đơn"
                                             icon="fa-file-text-o"
                                             invisible="invoice_id"/>
+                                    <button name="action_register_payment"
+                                            type="object" string="Thanh toán"
+                                            icon="fa-money"
+                                            class="btn-link"
+                                            invisible="state != 'invoiced'"/>
                                     <button name="action_view_invoice"
                                             type="object" string="Xem HĐơn"
                                             icon="fa-external-link"

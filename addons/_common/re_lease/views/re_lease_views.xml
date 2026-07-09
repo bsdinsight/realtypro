@@ -174,9 +174,12 @@
                                     <field name="quantity"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
-                                    <field name="rent_unit_price"/>
-                                    <field name="rent_subtotal" sum="Σ"/>
-                                    <field name="value" sum="Σ"/>
+                                    <field name="rent_unit_price"
+                                           width="150"/>
+                                    <field name="rent_subtotal" sum="Σ"
+                                           width="160"/>
+                                    <field name="value" sum="Σ"
+                                           width="160"/>
                                     <field name="note"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>

@@ -211,6 +211,24 @@ class ReLoanCreditContract(models.Model):
             'context': {'default_contract_id': self.id},
         }
 
+    def action_add_facility(self):
+        """Mở FORM khai facility mới (không nhập inline trên lưới).
+
+        Lưới trong tab để sửa nhanh hạn mức; khai mới cần đủ trường
+        (loại/mục đích/kỳ hạn/lãi suất...) nên mở form đầy đủ."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Khai hạn mức (facility) mới'),
+            'res_model': 're.loan.facility',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_credit_contract_id': self.id,
+                'default_currency_id': self.currency_id.id,
+            },
+        }
+
     # ------------------------------------------------------------------
     # State machine
     # ------------------------------------------------------------------

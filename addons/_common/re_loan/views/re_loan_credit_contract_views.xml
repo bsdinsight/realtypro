@@ -98,25 +98,31 @@
                     </div>
                     <notebook>
                         <page string="Hạn mức (Facility)" name="facilities">
+                            <button name="action_add_facility"
+                                    type="object" class="btn-primary"
+                                    icon="fa-plus"
+                                    string="Thêm facility"
+                                    style="margin-bottom:6px;"/>
                             <button name="action_open_reallocate_wizard"
                                     type="object" class="btn-secondary"
                                     icon="fa-balance-scale"
                                     string="Phân bổ lại hạn mức (có gợi ý chia tỷ lệ)"
-                                    style="margin-bottom:6px;"/>
+                                    style="margin-bottom:6px;margin-left:6px;"/>
                             <div class="alert alert-info small"
                                  role="alert" style="margin-bottom:6px;">
                                 <i class="fa fa-info-circle"/>
-                                Sửa <b>Số tiền hạn mức</b> trực tiếp trên
-                                lưới để phân bổ cho từng facility —
-                                "<b>Hạn mức HĐTD còn lại</b>" ở trên cập
-                                nhật ngay (đỏ = đã vượt tổng HĐTD). Cần
-                                khai lại tổng + chia theo tỷ lệ tự động,
-                                bấm <b>Phân bổ lại hạn mức</b>. Cấu hình
-                                sâu (lãi suất, phân bổ dự án) mở facility
-                                ở menu <b>HĐ tín dụng → Hạn mức tín dụng</b>.
+                                <b>Thêm facility</b> → mở form khai đầy đủ
+                                (loại, mục đích, kỳ hạn, lãi suất). Trên
+                                lưới sửa nhanh được <b>Số tiền hạn mức</b>
+                                — "<b>Hạn mức HĐTD còn lại</b>" ở trên cập
+                                nhật ngay (đỏ = đã vượt tổng HĐTD). Bấm
+                                <b>Mở</b> ở từng dòng để cấu hình sâu (lãi
+                                suất, phân bổ dự án, TSĐB). Cần khai lại
+                                tổng + chia theo tỷ lệ tự động, bấm
+                                <b>Phân bổ lại hạn mức</b>.
                             </div>
                             <field name="facility_ids">
-                                <list editable="bottom">
+                                <list editable="bottom" create="false">
                                     <field name="name"/>
                                     <field name="purpose"/>
                                     <field name="facility_type"/>
@@ -140,6 +146,11 @@
                                     <field name="day_count" optional="hide"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
+                                    <button name="action_open_form"
+                                            type="object"
+                                            icon="fa-expand"
+                                            string="Mở"
+                                            class="btn-link"/>
                                 </list>
                             </field>
                         </page>

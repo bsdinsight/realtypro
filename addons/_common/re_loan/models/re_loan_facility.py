@@ -200,3 +200,17 @@ class ReLoanFacility(models.Model):
                     and rec.date_end < rec.date_start:
                 raise ValidationError(_(
                     "Ngày kết thúc không được trước ngày bắt đầu."))
+
+    def action_open_form(self):
+        """Mở form đầy đủ của facility (cấu hình sâu: lãi suất, phân bổ
+        dự án, TSĐB...) — dùng cho nút 'Mở' trên từng dòng trong tab
+        Hạn mức của HĐTD (lưới sửa nhanh không mở được form)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.name or _('Hạn mức (facility)'),
+            'res_model': 're.loan.facility',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }

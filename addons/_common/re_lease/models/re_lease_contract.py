@@ -81,7 +81,18 @@ class ReLeaseContract(models.Model):
 
     # --- Hoạt động ---
     rent_per_period = fields.Monetary(
-        string='Tiền thuê / kỳ (trước thuế)', tracking=True)
+        string='Tiền thuê / kỳ (trước thuế)', tracking=True,
+        compute='_compute_rent_per_period', store=True, readonly=False,
+        help='Tự tổng "Số tiền thuê" của các tài sản khi đã khai đơn giá '
+             'theo tài sản; nếu chưa khai thì nhập tay.')
+
+    @api.depends('asset_ids.rent_subtotal')
+    def _compute_rent_per_period(self):
+        for rec in self:
+            subtotal = sum(rec.asset_ids.mapped('rent_subtotal'))
+            # Có khai đơn giá theo tài sản → tổng lên; chưa khai → giữ
+            # nguyên giá trị nhập tay (không ghi đè về 0).
+            rec.rent_per_period = subtotal if subtotal else rec.rent_per_period
 
     tax_id = fields.Many2one(
         'account.tax', string='Thuế VAT',
@@ -663,10 +674,22 @@ class ReLeaseAsset(models.Model):
                        help='Vd "Cẩu tháp QTZ63", "Máy đào PC200".')
     serial = fields.Char(string='Số serial / khung')
     quantity = fields.Float(string='Số lượng', default=1.0)
+    rent_unit_price = fields.Monetary(
+        string='Đơn giá thuê',
+        help='Đơn giá thuê / kỳ cho 1 đơn vị tài sản (trước thuế).')
+    rent_subtotal = fields.Monetary(
+        string='Số tiền thuê', compute='_compute_rent_subtotal',
+        store=True, help='= Đơn giá thuê × Số lượng.')
     value = fields.Monetary(
-        string='Giá trị', help='Giá trị tài sản (tham khảo / bảo hiểm).')
+        string='Giá trị tài sản',
+        help='Giá trị tài sản (tham khảo / bảo hiểm).')
     note = fields.Char(string='Ghi chú')
     currency_id = fields.Many2one(
         related='contract_id.currency_id', store=True)
     company_id = fields.Many2one(
         related='contract_id.company_id', store=True)
+
+    @api.depends('rent_unit_price', 'quantity')
+    def _compute_rent_subtotal(self):
+        for line in self:
+            line.rent_subtotal = line.rent_unit_price * (line.quantity or 0.0)

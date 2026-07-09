@@ -171,6 +171,8 @@
                                     <field name="name"/>
                                     <field name="serial"/>
                                     <field name="quantity"/>
+                                    <field name="rent_unit_price"/>
+                                    <field name="rent_subtotal" sum="Σ"/>
                                     <field name="value" sum="Σ"/>
                                     <field name="note"/>
                                     <field name="currency_id"

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_schedule_import_wizard_form" model="ir.ui.view">
+        <field name="name">rp.schedule.import.wizard.form</field>
+        <field name="model">rp.schedule.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import lịch thi công">
+                <field name="contract_id" invisible="1"/>
+                <group>
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                    <field name="default_structure_id"/>
+                </group>
+                <div class="alert alert-info small" role="alert">
+                    <b>Excel (.xlsx)</b>: hàng đầu là header, cần cột
+                    <b>Tên công việc</b> (kèm tùy chọn WBS / Bắt đầu / Kết
+                    thúc / % hoàn thành / Milestone / UID / Công việc trước).
+                    Hoặc <b>MS Project → Save As XML (.xml)</b>. Re-import
+                    cập nhật theo <b>UID</b>.
+                </div>
+                <footer>
+                    <button name="action_import" type="object"
+                            string="Import" class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

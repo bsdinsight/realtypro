@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Thêm field xây dựng vào form task -->
+    <record id="view_task_form2_rp_schedule" model="ir.ui.view">
+        <field name="name">project.task.form.rp.schedule</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Lịch thi công (xây dựng)"
+                       name="rp_schedule">
+                    <group>
+                        <field name="rp_contract_id"/>
+                        <field name="rp_structure_id"/>
+                        <field name="wbs_code"/>
+                        <field name="is_milestone"/>
+                    </group>
+                    <group>
+                        <field name="planned_start"/>
+                        <field name="planned_end"/>
+                        <field name="planned_days"/>
+                        <field name="progress_percent" widget="progressbar"/>
+                    </group>
+                    <field name="predecessor_ids" widget="many2many_tags"
+                           options="{'no_create': True}"/>
+                    <field name="external_uid" readonly="1" optional="hide"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Thêm cột vào list task -->
+    <record id="view_task_tree2_rp_schedule" model="ir.ui.view">
+        <field name="name">project.task.list.rp.schedule</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_tree2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="wbs_code" optional="show"/>
+                <field name="rp_contract_id" optional="hide"/>
+                <field name="planned_start" optional="show"/>
+                <field name="planned_end" optional="show"/>
+                <field name="progress_percent" widget="progressbar"
+                       optional="show"/>
+                <field name="is_milestone" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action: công việc xây dựng -->
+    <record id="action_rp_schedule_tasks" model="ir.actions.act_window">
+        <field name="name">Lịch thi công (công việc)</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form,kanban,calendar</field>
+        <field name="domain">[('rp_contract_id', '!=', False)]</field>
+    </record>
+
+    <record id="action_rp_schedule_my_tasks" model="ir.actions.act_window">
+        <field name="name">Công việc của tôi</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form,kanban,calendar</field>
+        <field name="domain">[('rp_contract_id', '!=', False), ('user_ids', 'in', uid)]</field>
+    </record>
+</odoo>

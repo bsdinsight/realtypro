@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_contract_form_schedule" model="ir.ui.view">
+        <field name="name">rp.contract.form.schedule</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_schedule" type="object"
+                        class="oe_stat_button" icon="fa-tasks">
+                    <field name="task_count" widget="statinfo"
+                           string="Công việc"/>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_import_schedule" type="object"
+                        string="Import lịch thi công" icon="fa-upload"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -89,17 +89,19 @@
                         <label for="name"/>
                         <h1><field name="name" placeholder="HĐ thuê..."/></h1>
                     </div>
-                    <group col="4" invisible="state != 'terminated' and not liquidated">
-                        <field name="termination_date"
-                               invisible="state != 'terminated'"/>
-                        <field name="penalty_amount"
-                               invisible="state != 'terminated'"/>
-                        <field name="termination_reason" colspan="4"
-                               invisible="state != 'terminated'"/>
-                        <field name="liquidation_date" invisible="not liquidated"/>
-                        <field name="deposit_refund" invisible="not liquidated"/>
-                        <field name="final_settlement" invisible="not liquidated"/>
-                        <field name="asset_return_ok" invisible="not liquidated"/>
+                    <group invisible="state != 'terminated' and not liquidated">
+                        <group string="Chấm dứt sớm"
+                               invisible="state != 'terminated'">
+                            <field name="termination_date"/>
+                            <field name="penalty_amount"/>
+                            <field name="termination_reason"/>
+                        </group>
+                        <group string="Thanh lý" invisible="not liquidated">
+                            <field name="liquidation_date"/>
+                            <field name="deposit_refund"/>
+                            <field name="final_settlement"/>
+                            <field name="asset_return_ok"/>
+                        </group>
                     </group>
                     <group>
                         <group string="Phân loại">

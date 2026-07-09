@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """HĐTD: base tổng (umbrella) + khả dụng + margin call toàn gói."""
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ReLoanCreditContract(models.Model):
@@ -41,6 +42,32 @@ class ReLoanCreditContract(models.Model):
         for rec in self:
             rec.unrated_pledge_count = len(rec.all_pledge_ids.filtered(
                 lambda p: p.state == 'active' and not p.advance_rate))
+
+    @api.constrains('amount_facility_total', 'borrowing_base_total',
+                    'has_any_pledges')
+    def _check_facility_within_base(self):
+        """CHẶN CỨNG: Σ hạn mức facility ≤ Cơ sở bảo đảm (base tổng).
+
+        Chỉ áp khi HĐTD ĐÃ khai TSĐB có tỷ lệ (has_any_pledges) — chưa
+        khai thì base = 0, không chặn (tránh khóa HĐTD chưa cấu hình).
+        Ràng buộc Σ ≤ Tổng hạn mức HĐTD do re_loan core lo riêng.
+        Fire cả khi sửa hạn mức facility (amount_facility_total) lẫn khi
+        định giá lại làm base đổi (borrowing_base_total)."""
+        for rec in self:
+            if not rec.has_any_pledges:
+                continue
+            if rec.currency_id.compare_amounts(
+                    rec.amount_facility_total,
+                    rec.borrowing_base_total) > 0:
+                raise ValidationError(_(
+                    "Tổng hạn mức các facility (%(f)s) vượt Cơ sở bảo "
+                    "đảm theo TSĐB (%(b)s).\n\nGiảm phân bổ hạn mức "
+                    "facility, hoặc bổ sung / định giá lại TSĐB để tăng "
+                    "cơ sở bảo đảm. Có thể chỉnh hạn mức facility ngay "
+                    "trong màn hình 'Định giá lại' hoặc 'Phân bổ lại "
+                    "hạn mức'.",
+                    f='{:,.0f}'.format(rec.amount_facility_total),
+                    b='{:,.0f}'.format(rec.borrowing_base_total)))
 
     @api.depends('all_pledge_ids.base_contribution',
                  'all_pledge_ids.state')

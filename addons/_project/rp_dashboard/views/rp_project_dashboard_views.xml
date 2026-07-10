@@ -43,7 +43,7 @@
                                     class="btn-link"/>
                         </group>
 
-                        <group string="Tạm ứng">
+                        <group string="Tạm ứng" invisible="not show_advance">
                             <field name="kpi_advance_to_approve"
                                    widget="statinfo"
                                    class="text-danger"/>
@@ -58,9 +58,11 @@
                         </group>
                     </group>
 
-                    <!-- ─── Row 2: Vay + Bảo lãnh ─── -->
-                    <group string="💰 Vay vốn &amp; Bảo lãnh">
-                        <group string="Vay HĐTD / KW">
+                    <!-- ─── Row 2: Vay + Bảo lãnh (ẩn nếu user không có quyền) ─── -->
+                    <group string="💰 Vay vốn &amp; Bảo lãnh"
+                           groups="re_loan.group_loan_user,re_guarantee.group_guarantee_user">
+                        <group string="Vay HĐTD / KW"
+                               groups="re_loan.group_loan_user">
                             <field name="kpi_loan_outstanding"
                                    widget="monetary"/>
                             <field name="kpi_loan_maturing_30d"
@@ -77,7 +79,8 @@
                                     class="btn-link"/>
                         </group>
 
-                        <group string="Bảo lãnh">
+                        <group string="Bảo lãnh"
+                               groups="re_guarantee.group_guarantee_user">
                             <field name="kpi_bg_outstanding"
                                    widget="monetary"/>
                             <field name="kpi_bg_expiring_30d"
@@ -93,9 +96,14 @@
                         </group>
                     </group>
 
-                    <!-- ─── Row 3: Cảnh báo ─── -->
-                    <group string="⚠ Cảnh báo (cần xử lý ngay)">
-                        <group>
+                    <!-- ─── Row 3: Cảnh báo ───
+                         Hiện chỉ có cảnh báo Vay + Bảo lãnh nên cả khối
+                         ẩn theo 2 nhóm đó. Khi cảnh báo tiến độ HĐ
+                         (rp_progress) chạy thật, BỎ groups ở group ngoài
+                         để chủ đầu tư không có quyền vay vẫn thấy nó. -->
+                    <group string="⚠ Cảnh báo (cần xử lý ngay)"
+                           groups="re_loan.group_loan_user,re_guarantee.group_guarantee_user">
+                        <group groups="re_loan.group_loan_user">
                             <field name="kpi_alert_loan_overdue"
                                    widget="statinfo"
                                    class="text-danger fw-bold"/>
@@ -104,7 +112,7 @@
                                     string="→ Xử lý KW quá hạn"
                                     class="btn-danger"/>
                         </group>
-                        <group>
+                        <group groups="re_guarantee.group_guarantee_user">
                             <field name="kpi_alert_bg_expired"
                                    widget="statinfo"
                                    class="text-danger fw-bold"/>
@@ -121,6 +129,7 @@
                     </group>
 
                     <field name="currency_id" invisible="1"/>
+                    <field name="show_advance" invisible="1"/>
                 </sheet>
             </form>
         </field>

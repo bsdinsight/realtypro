@@ -91,6 +91,29 @@ class RpProjectDashboard(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency', default=lambda s: s.env.company.currency_id)
 
+    show_advance = fields.Boolean(
+        string='Hiện khối Tạm ứng',
+        help='False khi module Tạm ứng chưa cài hoặc user không thuộc '
+             'nhóm Tạm ứng — ẩn khối thay vì hiện 0 gây hiểu nhầm.')
+
+    # ─── Helper quyền ─────────────────────────────────────────────
+    def _kpi_model(self, model_name):
+        """Model để tính KPI, hoặc None nếu không dùng được.
+
+        None khi (a) module chưa cài, hoặc (b) user không có quyền đọc
+        model đó. Dashboard gom nhiều phân hệ nên phải xuống cấp mềm:
+        một chủ đầu tư chỉ có quyền Dự án/HĐ thầu/Tạm ứng vẫn mở được
+        dashboard — KPI ngoài quyền trả 0 và bị ẩn ở view, thay vì ném
+        AccessError làm vỡ cả trang.
+
+        CHÚ Ý: giá trị trả về là recordset RỖNG (falsy) — nơi gọi phải
+        so ``is not None``, tuyệt đối không dùng ``if Model:``.
+        """
+        if model_name not in self.env:
+            return None
+        Model = self.env[model_name]
+        return Model if Model.has_access('read') else None
+
     # ─── Default get — compute KPIs khi mở dashboard ──────────────
     @api.model
     def default_get(self, fields_list):
@@ -99,28 +122,36 @@ class RpProjectDashboard(models.TransientModel):
         in_30d = today + timedelta(days=30)
 
         # 1. Dự án
-        Project = self.env['re.project']
-        res['kpi_project_active'] = Project.search_count([])
-        res['kpi_project_selling'] = Project.search_count([
-            ('is_open_for_sale', '=', True)])
+        Project = self._kpi_model('re.project')
+        res['kpi_project_active'] = (
+            Project.search_count([]) if Project is not None else 0)
+        res['kpi_project_selling'] = (
+            Project.search_count([('is_open_for_sale', '=', True)])
+            if Project is not None else 0)
 
         # 2. HĐ thầu
-        Contract = self.env['rp.contract']
-        contracts_running = Contract.search([
-            ('state', 'in', ('signed', 'executing'))])
-        contracts_with_value = Contract.search([
-            ('state', 'in', ('signed', 'executing', 'completed'))])
-        res['kpi_contract_executing'] = len(contracts_running)
-        contract_value_total = sum(contracts_with_value.mapped('contract_value_total') or [0])
-        amount_paid = sum(contracts_with_value.mapped('amount_paid') or [0])
-        res['kpi_contract_total_value'] = contract_value_total
-        # widget="percentage" tự x100 — KHÔNG x trong compute
-        res['kpi_contract_paid_pct'] = (
-            (amount_paid / contract_value_total) if contract_value_total else 0.0)
+        Contract = self._kpi_model('rp.contract')
+        if Contract is not None:
+            contracts_running = Contract.search([
+                ('state', 'in', ('signed', 'executing'))])
+            contracts_with_value = Contract.search([
+                ('state', 'in', ('signed', 'executing', 'completed'))])
+            res['kpi_contract_executing'] = len(contracts_running)
+            contract_value_total = sum(contracts_with_value.mapped('contract_value_total') or [0])
+            amount_paid = sum(contracts_with_value.mapped('amount_paid') or [0])
+            res['kpi_contract_total_value'] = contract_value_total
+            # widget="percentage" tự x100 — KHÔNG x trong compute
+            res['kpi_contract_paid_pct'] = (
+                (amount_paid / contract_value_total) if contract_value_total else 0.0)
+        else:
+            res['kpi_contract_executing'] = 0
+            res['kpi_contract_total_value'] = 0
+            res['kpi_contract_paid_pct'] = 0.0
 
-        # 3. Tạm ứng — soft check (module rp_advance_payment có thể chưa cài)
-        if 'rp.advance.payment' in self.env:
-            Advance = self.env['rp.advance.payment']
+        # 3. Tạm ứng — module soft-depend + quyền riêng (nhóm Tạm ứng)
+        Advance = self._kpi_model('rp.advance.payment')
+        res['show_advance'] = Advance is not None
+        if Advance is not None:
             res['kpi_advance_to_approve'] = Advance.search_count([
                 ('state', '=', 'to_approve')])
             paid_advances = Advance.search([('state', '=', 'paid')])
@@ -133,38 +164,52 @@ class RpProjectDashboard(models.TransientModel):
             res['kpi_advance_paid_total'] = 0
             res['kpi_advance_pending_settle'] = 0
 
-        # 4. Vay HĐTD
-        Note = self.env['re.loan.note']
-        active_notes = Note.search([
-            ('state', 'in', ('active', 'partial_paid'))])
-        res['kpi_loan_outstanding'] = sum(
-            active_notes.mapped('principal_outstanding') or [0])
-        res['kpi_loan_maturing_30d'] = len(active_notes.filtered(
-            lambda n: n.date_maturity
-            and today <= n.date_maturity <= in_30d
-            and (n.principal_outstanding or 0) > 0))
-        Contract_HD = self.env['re.loan.credit.contract']
-        active_hdtd = Contract_HD.search([('state', '=', 'active')])
-        # HĐTD field tên `amount_total`, KHÁC rp.contract dùng
-        # `contract_value_total`.
-        total_facility = sum(active_hdtd.mapped('amount_total') or [0])
-        used_facility = sum(active_hdtd.mapped('amount_pool_used') or [0])
-        res['kpi_loan_facility_used_pct'] = (
-            (used_facility / total_facility) if total_facility else 0.0)
+        # 4. Vay HĐTD — cảnh báo quá hạn tính luôn trong block này
+        Note = self._kpi_model('re.loan.note')
+        if Note is not None:
+            active_notes = Note.search([
+                ('state', 'in', ('active', 'partial_paid'))])
+            res['kpi_loan_outstanding'] = sum(
+                active_notes.mapped('principal_outstanding') or [0])
+            res['kpi_loan_maturing_30d'] = len(active_notes.filtered(
+                lambda n: n.date_maturity
+                and today <= n.date_maturity <= in_30d
+                and (n.principal_outstanding or 0) > 0))
+            res['kpi_alert_loan_overdue'] = len(active_notes.filtered(
+                lambda n: n.date_maturity and n.date_maturity < today
+                and (n.principal_outstanding or 0) > 0))
+        else:
+            res['kpi_loan_outstanding'] = 0
+            res['kpi_loan_maturing_30d'] = 0
+            res['kpi_alert_loan_overdue'] = 0
 
-        # 5. Bảo lãnh
-        BG = self.env['re.bank.guarantee']
-        active_bg = BG.search([('state', 'in', ('issued', 'extended'))])
-        res['kpi_bg_outstanding'] = sum(active_bg.mapped('amount') or [0])
-        res['kpi_bg_expiring_30d'] = len(active_bg.filtered(
-            lambda g: g.date_expiry and today <= g.date_expiry <= in_30d))
+        Contract_HD = self._kpi_model('re.loan.credit.contract')
+        if Contract_HD is not None:
+            active_hdtd = Contract_HD.search([('state', '=', 'active')])
+            # HĐTD field tên `amount_total`, KHÁC rp.contract dùng
+            # `contract_value_total`.
+            total_facility = sum(active_hdtd.mapped('amount_total') or [0])
+            used_facility = sum(active_hdtd.mapped('amount_pool_used') or [0])
+            res['kpi_loan_facility_used_pct'] = (
+                (used_facility / total_facility) if total_facility else 0.0)
+        else:
+            res['kpi_loan_facility_used_pct'] = 0.0
 
-        # 6. Cảnh báo
-        res['kpi_alert_loan_overdue'] = len(active_notes.filtered(
-            lambda n: n.date_maturity and n.date_maturity < today
-            and (n.principal_outstanding or 0) > 0))
-        res['kpi_alert_bg_expired'] = len(active_bg.filtered(
-            lambda g: g.date_expiry and g.date_expiry < today))
+        # 5. Bảo lãnh — cảnh báo hết hạn tính luôn trong block này
+        BG = self._kpi_model('re.bank.guarantee')
+        if BG is not None:
+            active_bg = BG.search([('state', 'in', ('issued', 'extended'))])
+            res['kpi_bg_outstanding'] = sum(active_bg.mapped('amount') or [0])
+            res['kpi_bg_expiring_30d'] = len(active_bg.filtered(
+                lambda g: g.date_expiry and today <= g.date_expiry <= in_30d))
+            res['kpi_alert_bg_expired'] = len(active_bg.filtered(
+                lambda g: g.date_expiry and g.date_expiry < today))
+        else:
+            res['kpi_bg_outstanding'] = 0
+            res['kpi_bg_expiring_30d'] = 0
+            res['kpi_alert_bg_expired'] = 0
+
+        # 6. Cảnh báo còn lại
         # TODO khi rp_progress xong: track lần update progress gần nhất
         res['kpi_alert_contract_no_progress'] = 0
 
@@ -189,7 +234,7 @@ class RpProjectDashboard(models.TransientModel):
         }
 
     def action_open_advances_to_approve(self):
-        if 'rp.advance.payment' not in self.env:
+        if self._kpi_model('rp.advance.payment') is None:
             return False
         return {
             'type': 'ir.actions.act_window',

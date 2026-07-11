@@ -9,11 +9,25 @@ from odoo.exceptions import UserError
 
 # Phân loại tài liệu dùng chung (hồ sơ mời thầu + tài liệu nhà thầu nộp)
 DOC_TYPES = [
-    ('quote', 'Báo giá'),
-    ('method', 'Phương án thi công'),
-    ('capability', 'Hồ sơ năng lực'),
+    # Hồ sơ hành chính - pháp lý (theo mẫu HSMT xây lắp)
+    ('bid_letter', 'Đơn dự thầu'),
+    ('joint_agreement', 'Thỏa thuận liên danh'),
     ('guarantee', 'Bảo lãnh dự thầu'),
+    ('business_reg', 'ĐKKD / GCN đăng ký DN'),
+    ('capacity_cert', 'Chứng chỉ năng lực hoạt động XD'),
+    # Đề xuất kỹ thuật
+    ('capability', 'Hồ sơ năng lực'),
+    ('method', 'Biện pháp/phương án thi công'),
     ('schedule', 'Tiến độ thi công'),
+    ('safety', 'Giải pháp chất lượng, ATLĐ, môi trường'),
+    ('subcontractor', 'Kê khai thầu phụ'),
+    # Đề xuất tài chính
+    ('quote', 'Báo giá / đơn giá dự thầu'),
+    ('price_detail', 'Bảng giá chi tiết (khối lượng - đơn giá)'),
+    # Năng lực - tài chính
+    ('financial_report', 'Báo cáo tài chính / kiểm toán'),
+    ('credit_commitment', 'Cam kết cung cấp tín dụng'),
+    # Chung
     ('boq', 'Bảng khối lượng (BOQ)'),
     ('drawing', 'Bản vẽ'),
     ('spec', 'Chỉ dẫn kỹ thuật'),

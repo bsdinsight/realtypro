@@ -60,12 +60,19 @@ class CnTender(models.Model):
 
     def action_add_default_reqs(self):
         """Nạp checklist tài liệu yêu cầu mặc định (nếu chưa có)."""
+        # Danh mục chuẩn HSDT xây lắp (BB = bắt buộc)
         defaults = [
-            ('Báo giá', 'quote', True),
-            ('Phương án thi công', 'method', True),
-            ('Hồ sơ năng lực', 'capability', True),
-            ('Bảo lãnh dự thầu', 'guarantee', False),
-            ('Tiến độ thi công', 'schedule', False),
+            ('Đơn dự thầu', 'bid_letter', True),
+            ('Bảo lãnh dự thầu', 'guarantee', True),
+            ('ĐKKD / GCN đăng ký DN', 'business_reg', True),
+            ('Chứng chỉ năng lực hoạt động XD', 'capacity_cert', True),
+            ('Báo giá / đơn giá dự thầu', 'quote', True),
+            ('Bảng giá chi tiết', 'price_detail', True),
+            ('Biện pháp/phương án thi công', 'method', True),
+            ('Giải pháp chất lượng, ATLĐ, môi trường', 'safety', True),
+            ('Báo cáo tài chính / kiểm toán', 'financial_report', True),
+            ('Cam kết cung cấp tín dụng', 'credit_commitment', False),
+            ('Thỏa thuận liên danh', 'joint_agreement', False),
         ]
         Req = self.env['cn.tender.doc.req']
         for tender in self:

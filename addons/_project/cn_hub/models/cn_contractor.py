@@ -87,6 +87,26 @@ class ResPartner(models.Model):
     cn_profile_progress = fields.Integer(
         string='% hoàn thiện hồ sơ', compute='_compute_cn_profile_progress')
 
+    def _import_poq(self, data):
+        """Đọc template Excel PoQ → thay toàn bộ 4 bảng năng lực. Trả tổng dòng."""
+        from . import cn_excel
+        self.ensure_one()
+        parsed = cn_excel.parse_poq(self.env, data)
+        o2m_field = {
+            'cn.contractor.personnel': 'cn_personnel_ids',
+            'cn.contractor.equipment': 'cn_equipment_ids',
+            'cn.contractor.experience': 'cn_experience_ids',
+            'cn.contractor.revenue.year': 'cn_revenue_year_ids',
+        }
+        total = 0
+        for model, recs in parsed.items():
+            self[o2m_field[model]].unlink()
+            Model = self.env[model]
+            for vals in recs:
+                Model.create(dict(vals, partner_id=self.id))
+                total += 1
+        return total
+
     @api.depends('cn_tax_code', 'cn_legal_rep', 'cn_avg_revenue',
                  'cn_certificate_ids', 'cn_personnel_ids',
                  'cn_equipment_ids', 'cn_experience_ids')

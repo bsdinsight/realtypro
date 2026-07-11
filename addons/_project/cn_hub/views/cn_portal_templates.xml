@@ -18,6 +18,12 @@
                 <t t-set="config_card" t-value="True"/>
                 <t t-set="count" t-value="cn_bid_count"/>
             </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Hồ sơ năng lực nhà thầu</t>
+                <t t-set="url" t-value="'/my/contractor'"/>
+                <t t-set="text">Khai năng lực (nhân sự, thiết bị, kinh nghiệm, tài chính)</t>
+                <t t-set="config_card" t-value="True"/>
+            </t>
         </xpath>
     </template>
 
@@ -69,8 +75,15 @@
             <div class="o_portal_my_doc">
                 <t t-if="request.params.get('submitted')">
                     <div class="alert alert-success">
-                        <i class="fa fa-check-circle"/> Đã nộp hồ sơ dự thầu. Bạn có thể cập nhật lại trước hạn nộp.
+                        <i class="fa fa-check-circle"/> Đã nộp hồ sơ dự thầu chính thức. Đã thông báo cho bên mời thầu.
                     </div>
+                </t>
+                <t t-if="request.params.get('sched')">
+                    <div class="alert alert-info">Đã nạp kế hoạch thi công.</div>
+                </t>
+                <t t-if="request.params.get('err')">
+                    <div class="alert alert-danger" style="white-space:pre-line"
+                         t-esc="request.params.get('err')"/>
                 </t>
                 <h3 t-esc="tender.name"/>
                 <div class="row mb-3">
@@ -160,15 +173,75 @@
                                        class="form-control"/>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">
-                                <t t-if="existing_bid">Cập nhật hồ sơ</t>
-                                <t t-else="">Nộp hồ sơ dự thầu</t>
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fa fa-save"/> Lưu nháp
                             </button>
                         </form>
                     </div>
                 </div>
                 <div t-else="" class="alert alert-info">
                     Gói thầu này không còn nhận hồ sơ dự thầu.
+                </div>
+
+                <!-- Kế hoạch thi công -->
+                <div class="card mt-3" t-if="tender.state == 'open'">
+                    <div class="card-header"><b>Kế hoạch thi công</b></div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">
+                            Nạp từ MS Project (xuất XML) hoặc tải template Excel,
+                            điền rồi upload. Có thể sửa lại sau khi nạp.
+                        </p>
+                        <a t-attf-href="/my/tenders/{{tender.id}}/schedule/template"
+                           class="btn btn-sm btn-outline-secondary mb-2">
+                            <i class="fa fa-download"/> Tải template Excel
+                        </a>
+                        <form t-attf-action="/my/tenders/{{tender.id}}/schedule/import"
+                              method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                            <input type="hidden" name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+                            <input type="file" name="schedule_file"
+                                   accept=".xml,.xlsx" class="form-control form-control-sm"/>
+                            <button type="submit" class="btn btn-sm btn-secondary">Nạp kế hoạch</button>
+                        </form>
+                        <t t-if="existing_bid and existing_bid.schedule_task_ids">
+                            <table class="table table-sm mt-3">
+                                <thead><tr><th>WBS</th><th>Công việc</th><th>Bắt đầu</th><th>Kết thúc</th><th>%</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="existing_bid.schedule_task_ids" t-as="tk">
+                                        <td t-esc="tk.wbs_code or ''"/>
+                                        <td><t t-if="tk.is_milestone"><i class="fa fa-flag text-warning me-1"/></t><t t-esc="tk.name"/></td>
+                                        <td t-field="tk.date_start"/>
+                                        <td t-field="tk.date_end"/>
+                                        <td><t t-esc="int(tk.progress_percent)"/>%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Nộp hồ sơ chính thức -->
+                <div class="card mt-3 border-primary"
+                     t-if="existing_bid and tender.state == 'open'">
+                    <div class="card-body text-center">
+                        <t t-if="existing_bid.is_submitted">
+                            <span class="badge bg-success fs-6">
+                                <i class="fa fa-check"/> Đã nộp hồ sơ chính thức
+                                (<span t-field="existing_bid.submitted_date"/>)
+                            </span>
+                            <p class="text-muted mt-2 mb-0">Bạn vẫn có thể cập nhật &amp; nộp lại trước hạn.</p>
+                        </t>
+                        <form t-attf-action="/my/tenders/{{tender.id}}/submit" method="post">
+                            <input type="hidden" name="csrf_token"
+                                   t-att-value="request.csrf_token()"/>
+                            <button type="submit" class="btn btn-primary btn-lg mt-2">
+                                <i class="fa fa-paper-plane"/> Nộp hồ sơ dự thầu chính thức
+                            </button>
+                        </form>
+                        <p class="text-muted mt-2 mb-0" style="font-size:12px">
+                            Hệ thống kiểm tra đủ tài liệu bắt buộc rồi thông báo cho bên mời thầu.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Tài liệu đã nộp -->
@@ -216,6 +289,89 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </t>
+    </template>
+
+    <!-- Hồ sơ năng lực nhà thầu: profile + PoQ (Excel round-trip) -->
+    <template id="portal_contractor" name="Hồ sơ năng lực nhà thầu">
+        <t t-call="portal.portal_layout">
+            <div class="o_portal_my_doc">
+                <t t-if="request.params.get('saved')">
+                    <div class="alert alert-success">Đã lưu hồ sơ năng lực.</div>
+                </t>
+                <t t-if="request.params.get('imported')">
+                    <div class="alert alert-success">
+                        Đã nạp <t t-esc="request.params.get('imported')"/> dòng từ file PoQ.
+                    </div>
+                </t>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Hồ sơ năng lực nhà thầu</h3>
+                    <span class="badge bg-info">Hoàn thiện <t t-esc="partner.cn_profile_progress"/>%</span>
+                </div>
+
+                <!-- Profile -->
+                <form action="/my/contractor/save" method="post" class="card mb-3">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="card-header"><b>Thông tin &amp; năng lực tài chính</b></div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-2"><label>Mã số thuế</label>
+                                <input name="cn_tax_code" class="form-control" t-att-value="partner.cn_tax_code or ''"/></div>
+                            <div class="col-md-6 mb-2"><label>Số ĐKKD</label>
+                                <input name="cn_reg_number" class="form-control" t-att-value="partner.cn_reg_number or ''"/></div>
+                            <div class="col-md-6 mb-2"><label>Người đại diện pháp luật</label>
+                                <input name="cn_legal_rep" class="form-control" t-att-value="partner.cn_legal_rep or ''"/></div>
+                            <div class="col-md-6 mb-2"><label>Chức danh</label>
+                                <input name="cn_legal_rep_title" class="form-control" t-att-value="partner.cn_legal_rep_title or ''"/></div>
+                            <div class="col-md-6 mb-2"><label>Năm thành lập</label>
+                                <input type="number" name="cn_founded_year" class="form-control" t-att-value="partner.cn_founded_year or ''"/></div>
+                            <div class="col-md-6 mb-2"><label>Loại hình DN</label>
+                                <select name="cn_company_type" class="form-select">
+                                    <option value="">—</option>
+                                    <t t-foreach="partner._fields['cn_company_type'].selection" t-as="opt">
+                                        <option t-att-value="opt[0]" t-att-selected="'selected' if partner.cn_company_type == opt[0] else None" t-esc="opt[1]"/>
+                                    </t>
+                                </select></div>
+                            <div class="col-md-4 mb-2"><label>Doanh thu XD bình quân/năm</label>
+                                <input type="number" step="any" name="cn_avg_revenue" class="form-control" t-att-value="partner.cn_avg_revenue or ''"/></div>
+                            <div class="col-md-4 mb-2"><label>Nguồn lực tài chính</label>
+                                <input type="number" step="any" name="cn_financial_resource" class="form-control" t-att-value="partner.cn_financial_resource or ''"/></div>
+                            <div class="col-md-4 mb-2"><label>Tài sản ròng</label>
+                                <input type="number" step="any" name="cn_net_asset" class="form-control" t-att-value="partner.cn_net_asset or ''"/></div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-3"><div class="form-check"><input type="checkbox" class="form-check-input" name="cn_independent_accounting" t-att-checked="'checked' if partner.cn_independent_accounting else None"/><label class="form-check-label">Hạch toán độc lập</label></div></div>
+                            <div class="col-md-3"><div class="form-check"><input type="checkbox" class="form-check-input" name="cn_not_banned" t-att-checked="'checked' if partner.cn_not_banned else None"/><label class="form-check-label">Không bị cấm thầu</label></div></div>
+                            <div class="col-md-3"><div class="form-check"><input type="checkbox" class="form-check-input" name="cn_not_bankrupt" t-att-checked="'checked' if partner.cn_not_bankrupt else None"/><label class="form-check-label">Không phá sản</label></div></div>
+                            <div class="col-md-3"><div class="form-check"><input type="checkbox" class="form-check-input" name="cn_registered_egp" t-att-checked="'checked' if partner.cn_registered_egp else None"/><label class="form-check-label">Đã ĐK mạng đấu thầu</label></div></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Lưu hồ sơ</button>
+                    </div>
+                </form>
+
+                <!-- PoQ Excel round-trip -->
+                <div class="card mb-3">
+                    <div class="card-header"><b>Bảng năng lực (PoQ)</b> — nhân sự · thiết bị · kinh nghiệm · doanh thu</div>
+                    <div class="card-body">
+                        <p class="text-muted">Tải template Excel (đã có sẵn dữ liệu hiện tại) → điền/sửa → upload để cập nhật.</p>
+                        <a href="/my/contractor/poq/template" class="btn btn-outline-secondary btn-sm mb-2">
+                            <i class="fa fa-download"/> Tải template PoQ (.xlsx)
+                        </a>
+                        <form action="/my/contractor/poq/import" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="file" name="poq_file" accept=".xlsx" class="form-control form-control-sm"/>
+                            <button type="submit" class="btn btn-secondary btn-sm">Nạp PoQ</button>
+                        </form>
+                        <div class="row mt-3 text-center">
+                            <div class="col"><h4 t-esc="len(partner.cn_personnel_ids)"/><small class="text-muted">Nhân sự</small></div>
+                            <div class="col"><h4 t-esc="len(partner.cn_equipment_ids)"/><small class="text-muted">Thiết bị</small></div>
+                            <div class="col"><h4 t-esc="len(partner.cn_experience_ids)"/><small class="text-muted">HĐ tương tự</small></div>
+                            <div class="col"><h4 t-esc="len(partner.cn_revenue_year_ids)"/><small class="text-muted">Năm doanh thu</small></div>
+                            <div class="col"><h4 t-esc="len(partner.cn_certificate_ids)"/><small class="text-muted">Chứng chỉ</small></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </t>
     </template>

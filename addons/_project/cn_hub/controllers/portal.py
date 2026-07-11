@@ -179,6 +179,128 @@ class CnPortal(CustomerPortal):
         })
 
     # ------------------------------------------------------------------
+    # Hồ sơ năng lực nhà thầu (profile + PoQ)
+    # ------------------------------------------------------------------
+    @http.route(['/my/contractor'], type='http', auth='user', website=True)
+    def cn_contractor_profile(self, **kw):
+        partner = self._cn_partner()
+        return request.render('cn_hub.portal_contractor', {
+            'partner': partner, 'page_name': 'cn_contractor',
+        })
+
+    @http.route(['/my/contractor/save'], type='http', auth='user',
+                website=True, methods=['POST'])
+    def cn_contractor_save(self, **post):
+        partner = self._cn_partner().sudo()
+        def num(k):
+            try:
+                return float(str(post.get(k) or '0').replace(',', ''))
+            except (ValueError, TypeError):
+                return 0.0
+        vals = {
+            'cn_tax_code': post.get('cn_tax_code'),
+            'cn_reg_number': post.get('cn_reg_number'),
+            'cn_company_type': post.get('cn_company_type') or False,
+            'cn_founded_year': int(num('cn_founded_year')) or False,
+            'cn_legal_rep': post.get('cn_legal_rep'),
+            'cn_legal_rep_title': post.get('cn_legal_rep_title'),
+            'cn_avg_revenue': num('cn_avg_revenue'),
+            'cn_financial_resource': num('cn_financial_resource'),
+            'cn_net_asset': num('cn_net_asset'),
+            'cn_credit_commitment': bool(post.get('cn_credit_commitment')),
+            'cn_credit_value': num('cn_credit_value'),
+            'cn_credit_bank': post.get('cn_credit_bank'),
+            'cn_independent_accounting': bool(post.get('cn_independent_accounting')),
+            'cn_not_banned': bool(post.get('cn_not_banned')),
+            'cn_not_bankrupt': bool(post.get('cn_not_bankrupt')),
+            'cn_registered_egp': bool(post.get('cn_registered_egp')),
+            'cn_tax_compliant': bool(post.get('cn_tax_compliant')),
+        }
+        partner.write(vals)
+        return request.redirect('/my/contractor?saved=1')
+
+    @http.route(['/my/contractor/poq/template'], type='http', auth='user')
+    def cn_poq_template(self, **kw):
+        from ..models import cn_excel
+        partner = self._cn_partner()
+        data = cn_excel.build_poq_template(partner)
+        return request.make_response(data, headers=[
+            ('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+             'spreadsheetml.sheet'),
+            ('Content-Disposition', http.content_disposition('PoQ_nang_luc.xlsx')),
+        ])
+
+    @http.route(['/my/contractor/poq/import'], type='http', auth='user',
+                website=True, methods=['POST'])
+    def cn_poq_import(self, **post):
+        partner = self._cn_partner().sudo()
+        f = request.httprequest.files.get('poq_file')
+        n = 0
+        if f and f.filename:
+            n = partner._import_poq(f.read())
+        return request.redirect('/my/contractor?imported=%s' % n)
+
+    # ------------------------------------------------------------------
+    # Kế hoạch thi công của hồ sơ dự thầu
+    # ------------------------------------------------------------------
+    @http.route(['/my/tenders/<int:tender_id>/schedule/template'],
+                type='http', auth='user')
+    def cn_schedule_template(self, tender_id, **kw):
+        from ..models import cn_excel
+        partner = self._cn_partner()
+        bid = request.env['cn.bid'].sudo().search([
+            ('tender_id', '=', tender_id),
+            ('contractor_id', '=', partner.id)], limit=1)
+        if not bid:
+            bid = request.env['cn.bid'].sudo().new({
+                'tender_id': tender_id, 'contractor_id': partner.id})
+        data = cn_excel.build_schedule_template(bid)
+        return request.make_response(data, headers=[
+            ('Content-Type', 'application/vnd.openxmlformats-officedocument.'
+             'spreadsheetml.sheet'),
+            ('Content-Disposition',
+             http.content_disposition('KeHoach_thi_cong.xlsx')),
+        ])
+
+    @http.route(['/my/tenders/<int:tender_id>/schedule/import'],
+                type='http', auth='user', website=True, methods=['POST'])
+    def cn_schedule_import(self, tender_id, **post):
+        partner = self._cn_partner()
+        if not self._cn_is_invited(tender_id):
+            return request.redirect('/my/tenders')
+        Bid = request.env['cn.bid'].sudo()
+        bid = Bid.search([('tender_id', '=', tender_id),
+                          ('contractor_id', '=', partner.id)], limit=1)
+        if not bid:
+            bid = Bid.create({'tender_id': tender_id,
+                              'contractor_id': partner.id})
+        f = request.httprequest.files.get('schedule_file')
+        if f and f.filename:
+            bid._import_schedule(f.read(), f.filename)
+        return request.redirect('/my/tenders/%s?sched=1' % tender_id)
+
+    # ------------------------------------------------------------------
+    # Nộp hồ sơ chính thức
+    # ------------------------------------------------------------------
+    @http.route(['/my/tenders/<int:tender_id>/submit'], type='http',
+                auth='user', website=True, methods=['POST'])
+    def cn_bid_finalize(self, tender_id, **post):
+        from odoo.exceptions import UserError
+        partner = self._cn_partner()
+        bid = request.env['cn.bid'].sudo().search([
+            ('tender_id', '=', tender_id),
+            ('contractor_id', '=', partner.id)], limit=1)
+        if not bid:
+            return request.redirect('/my/tenders/%s' % tender_id)
+        try:
+            bid.action_submit()
+        except UserError as e:
+            from urllib.parse import quote
+            return request.redirect(
+                '/my/tenders/%s?err=%s' % (tender_id, quote(str(e))))
+        return request.redirect('/my/tenders/%s?submitted=1' % tender_id)
+
+    # ------------------------------------------------------------------
     # Nhận thư mời: đăng nhập/đăng ký rồi vào thẳng gói
     # ------------------------------------------------------------------
     @http.route(['/cn/invite/<string:token>'], type='http',

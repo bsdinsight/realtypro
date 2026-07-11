@@ -40,6 +40,9 @@
                     <button name="action_close" type="object"
                             string="Đóng thầu"
                             invisible="state != 'open'"/>
+                    <button name="action_evaluate" type="object"
+                            string="Chấm thầu / Xếp hạng" class="btn-primary"
+                            invisible="state not in ('open','closed')"/>
                     <button name="action_cancel" type="object"
                             string="Hủy"
                             invisible="state in ('awarded','cancelled')"/>
@@ -123,15 +126,49 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Hồ sơ dự thầu" name="bids">
-                            <field name="bid_ids">
-                                <list decoration-success="state == 'awarded'"
-                                      decoration-muted="state == 'rejected'">
+                        <page string="Chấm thầu (cấu hình)" name="eval_config">
+                            <group>
+                                <group>
+                                    <field name="eval_method"/>
+                                    <field name="tech_threshold"/>
+                                    <field name="tech_weight"
+                                           invisible="eval_method != 'tech_combined'"/>
+                                    <field name="price_weight"
+                                           invisible="eval_method != 'tech_combined'"/>
+                                </group>
+                                <group>
+                                    <field name="criteria_template"/>
+                                    <button name="action_load_tech_criteria" type="object"
+                                            string="Nạp bộ tiêu chí" icon="fa-download"
+                                            class="btn-link"/>
+                                </group>
+                            </group>
+                            <field name="tech_criterion_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="weight" sum="Σ"/>
+                                    <field name="min_pct"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hồ sơ dự thầu / Xếp hạng" name="bids">
+                            <field name="bid_ids"
+                                   default_order="rank, evaluated_price, price">
+                                <list decoration-success="eval_state == 'ranked1'"
+                                      decoration-info="rank == 1"
+                                      decoration-muted="eval_state == 'failed'">
+                                    <field name="rank"/>
                                     <field name="contractor_id"/>
                                     <field name="price" sum="Σ"/>
-                                    <field name="document_count" string="Tài liệu"/>
-                                    <field name="date_submit"/>
-                                    <field name="state" widget="badge"/>
+                                    <field name="evaluated_price" optional="show"/>
+                                    <field name="tech_score_pct" optional="show"/>
+                                    <field name="tech_passed" optional="show"/>
+                                    <field name="total_score"
+                                           optional="hide"/>
+                                    <field name="document_count" string="TL"/>
+                                    <field name="eval_state" widget="badge"/>
+                                    <field name="state" widget="badge" optional="hide"/>
                                     <button name="action_award" type="object"
                                             string="Trao thầu" icon="fa-trophy"
                                             class="btn-link"
@@ -251,6 +288,45 @@
                                     <field name="is_milestone"/>
                                     <field name="predecessors" optional="hide"/>
                                     <field name="external_uid" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Đánh giá / Chấm điểm" name="evaluation">
+                            <group>
+                                <group string="Cửa Đạt / Không đạt">
+                                    <field name="eligible"/>
+                                    <field name="capacity_passed"/>
+                                    <field name="tech_score_pct" readonly="1"/>
+                                    <field name="tech_passed" readonly="1"/>
+                                </group>
+                                <group string="Tài chính (giá đánh giá)">
+                                    <field name="price_corrected"/>
+                                    <field name="deviation_missing"/>
+                                    <field name="deviation_surplus"/>
+                                    <field name="evaluated_price" readonly="1"/>
+                                    <field name="price_over_limit" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Kết quả">
+                                <group>
+                                    <field name="price_score" readonly="1"/>
+                                    <field name="total_score" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="rank" readonly="1"/>
+                                    <field name="eval_state" readonly="1"/>
+                                </group>
+                            </group>
+                            <button name="action_prepare_scores" type="object"
+                                    string="Nạp tiêu chí chấm điểm" class="btn-link"
+                                    icon="fa-refresh"/>
+                            <field name="tech_score_ids">
+                                <list editable="bottom">
+                                    <field name="criterion_id"/>
+                                    <field name="weight"/>
+                                    <field name="min_pct"/>
+                                    <field name="score"/>
+                                    <field name="note"/>
                                 </list>
                             </field>
                         </page>

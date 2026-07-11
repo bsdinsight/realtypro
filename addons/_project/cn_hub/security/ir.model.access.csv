@@ -23,3 +23,5 @@ access_cn_revenue_user,cn.contractor.revenue.year user,model_cn_contractor_reven
 access_cn_revenue_portal,cn.contractor.revenue.year portal,model_cn_contractor_revenue_year,base.group_portal,1,1,1,1
 access_cn_sched_task_user,cn.bid.schedule.task user,model_cn_bid_schedule_task,base.group_user,1,1,1,1
 access_cn_sched_task_portal,cn.bid.schedule.task portal,model_cn_bid_schedule_task,base.group_portal,1,1,1,1
+access_cn_tech_criterion_user,cn.tender.tech.criterion user,model_cn_tender_tech_criterion,base.group_user,1,1,1,1
+access_cn_bid_tech_score_user,cn.bid.tech.score user,model_cn_bid_tech_score,base.group_user,1,1,1,1

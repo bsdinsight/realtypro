@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_tender_invite" model="mail.template">
+        <field name="name">Thư mời thầu (Construction Network)</field>
+        <field name="model_id" ref="model_cn_tender_invite"/>
+        <field name="email_from">RealtyPro Construction Network &lt;no-reply@realtypro.vn&gt;</field>
+        <field name="reply_to">{{ object.company_id.email or object.tender_id.gc_partner_id.email or '' }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="subject">Thư mời thầu: {{ object.tender_id.name }}</field>
+        <field name="body_html" type="html">
+<div style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;color:#1a2b2e;">
+    <p>Kính gửi <t t-out="object.partner_name or object.email"/>,</p>
+    <p>
+        <t t-out="object.tender_id.gc_partner_id.name or object.company_id.name"/>
+        trân trọng kính mời Quý nhà thầu tham gia dự thầu gói:
+    </p>
+    <p style="font-size:16px;font-weight:bold;color:#0e5563;">
+        <t t-out="object.tender_id.name"/>
+    </p>
+    <table style="font-size:13px;color:#46605f;border-collapse:collapse;">
+        <tr><td style="padding:2px 12px 2px 0;">Chuyên môn:</td>
+            <td><t t-out="object.tender_id.specialty or '—'"/></td></tr>
+        <tr><td style="padding:2px 12px 2px 0;">Hạn nộp hồ sơ:</td>
+            <td><t t-out="object.tender_id.deadline or 'liên hệ'"/></td></tr>
+    </table>
+    <p>
+        Vui lòng bấm nút dưới đây để đăng nhập/đăng ký tài khoản nhà thầu,
+        tải hồ sơ mời thầu và nộp báo giá cùng tài liệu yêu cầu:
+    </p>
+    <p style="text-align:center;margin:24px 0;">
+        <a t-att-href="object.invite_url"
+           style="background:#0e5563;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:6px;font-weight:bold;display:inline-block;">
+            Xem gói thầu &amp; nộp hồ sơ
+        </a>
+    </p>
+    <p style="font-size:12px;color:#6f8583;">
+        Nếu nút không hoạt động, sao chép liên kết:
+        <br/><t t-out="object.invite_url"/>
+    </p>
+    <p style="font-size:12px;color:#6f8583;">
+        Trân trọng,<br/>Construction Network — RealtyPro
+    </p>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang or 'vi_VN' }}</field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</odoo>

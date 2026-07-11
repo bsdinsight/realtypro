@@ -27,12 +27,13 @@ compose.override.yml
 .env
 .env.local
 
-# Runtime data (Postgres + Odoo filestore)
-postgres-data/
-data/
+# Runtime data (Postgres + Odoo filestore) — anchor to repo ROOT only,
+# KHÔNG chặn thư mục data/ của các module Odoo (chứa seed/cron/mail template).
+/postgres-data/
+/data/
 
 # Backups
-backups/
+/backups/
 
 # nginx live config — only .example committed
 nginx/sites-available/*.conf

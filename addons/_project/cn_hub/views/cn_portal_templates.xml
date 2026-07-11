@@ -63,14 +63,19 @@
         </t>
     </template>
 
-    <!-- Chi tiết gói thầu + form dự thầu -->
+    <!-- Chi tiết gói thầu + hồ sơ mời thầu + form dự thầu -->
     <template id="portal_tender_detail" name="Chi tiết gói thầu">
         <t t-call="portal.portal_layout">
             <div class="o_portal_my_doc">
+                <t t-if="request.params.get('submitted')">
+                    <div class="alert alert-success">
+                        <i class="fa fa-check-circle"/> Đã nộp hồ sơ dự thầu. Bạn có thể cập nhật lại trước hạn nộp.
+                    </div>
+                </t>
                 <h3 t-esc="tender.name"/>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <p><b>Tổng thầu:</b>
+                        <p><b>Bên mời thầu:</b>
                            <span t-esc="tender.gc_partner_id.name or '—'"/></p>
                         <p><b>Chuyên môn:</b>
                            <span t-esc="tender.specialty or '—'"/></p>
@@ -90,37 +95,92 @@
                     <p t-esc="tender.description"/>
                 </div>
 
+                <!-- Hồ sơ mời thầu (tải về) -->
+                <div class="card mb-3" t-if="tender.dossier_ids">
+                    <div class="card-header"><b>Hồ sơ mời thầu</b> (tải về)</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            t-foreach="tender.dossier_ids" t-as="doc">
+                            <span>
+                                <i class="fa fa-file-o me-2"/>
+                                <span t-esc="doc.name"/>
+                                <small class="text-muted ms-2" t-esc="dict(doc._fields['category'].selection).get(doc.category)"/>
+                            </span>
+                            <a t-attf-href="/my/tenders/{{tender.id}}/dossier/{{doc.id}}"
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-download"/> Tải
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Form nộp hồ sơ dự thầu -->
                 <div class="card" t-if="tender.state == 'open'">
+                    <div class="card-header">
+                        <b><t t-if="existing_bid">Cập nhật hồ sơ dự thầu</t><t t-else="">Nộp hồ sơ dự thầu</t></b>
+                    </div>
                     <div class="card-body">
-                        <h5>
-                            <t t-if="existing_bid">Cập nhật hồ sơ dự thầu</t>
-                            <t t-else="">Nộp hồ sơ dự thầu</t>
-                        </h5>
                         <form t-attf-action="/my/tenders/{{tender.id}}/bid"
-                              method="post">
+                              method="post" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token"
                                    t-att-value="request.csrf_token()"/>
-                            <div class="mb-2">
-                                <label>Giá dự thầu</label>
+                            <div class="mb-3">
+                                <label class="form-label"><b>Giá dự thầu</b> <span t-field="tender.currency_id.symbol"/></label>
                                 <input type="number" step="any" name="price"
                                        class="form-control"
                                        t-att-value="existing_bid.price if existing_bid else ''"/>
                             </div>
-                            <div class="mb-2">
-                                <label>Thuyết minh</label>
+                            <div class="mb-3">
+                                <label class="form-label">Thuyết minh</label>
                                 <textarea name="note" class="form-control"
                                           rows="3"
                                           t-esc="existing_bid.note if existing_bid else ''"/>
                             </div>
+
+                            <t t-if="tender.doc_req_ids">
+                                <h6 class="mt-3">Tài liệu yêu cầu</h6>
+                                <div class="mb-3" t-foreach="tender.doc_req_ids" t-as="req">
+                                    <label class="form-label">
+                                        <span t-esc="req.name"/>
+                                        <span t-if="req.required" class="badge bg-danger ms-1">bắt buộc</span>
+                                        <t t-set="done" t-value="submitted_docs.get(req.id)"/>
+                                        <span t-if="done" class="badge bg-success ms-1">
+                                            <i class="fa fa-check"/> <span t-esc="done.filename"/>
+                                        </span>
+                                    </label>
+                                    <small t-if="req.note" class="text-muted d-block" t-esc="req.note"/>
+                                    <input type="file" t-attf-name="req_{{req.id}}"
+                                           class="form-control"/>
+                                </div>
+                            </t>
+
+                            <div class="mb-3">
+                                <label class="form-label">Tài liệu bổ sung (có thể chọn nhiều)</label>
+                                <input type="file" name="extra_files" multiple="multiple"
+                                       class="form-control"/>
+                            </div>
+
                             <button type="submit" class="btn btn-primary">
-                                <t t-if="existing_bid">Cập nhật dự thầu</t>
-                                <t t-else="">Nộp dự thầu</t>
+                                <t t-if="existing_bid">Cập nhật hồ sơ</t>
+                                <t t-else="">Nộp hồ sơ dự thầu</t>
                             </button>
                         </form>
                     </div>
                 </div>
                 <div t-else="" class="alert alert-info">
                     Gói thầu này không còn nhận hồ sơ dự thầu.
+                </div>
+
+                <!-- Tài liệu đã nộp -->
+                <div class="card mt-3" t-if="existing_bid and existing_bid.document_ids">
+                    <div class="card-header"><b>Tài liệu đã nộp</b></div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" t-foreach="existing_bid.document_ids" t-as="d">
+                            <i class="fa fa-file-o me-2"/>
+                            <span t-esc="d.name"/>
+                            <small class="text-muted ms-2" t-esc="dict(d._fields['doc_type'].selection).get(d.doc_type)"/>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </t>

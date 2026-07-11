@@ -3,3 +3,11 @@ access_cn_tender_user,cn.tender user,model_cn_tender,base.group_user,1,1,1,1
 access_cn_tender_portal,cn.tender portal,model_cn_tender,base.group_portal,1,0,0,0
 access_cn_bid_user,cn.bid user,model_cn_bid,base.group_user,1,1,1,1
 access_cn_bid_portal,cn.bid portal,model_cn_bid,base.group_portal,1,1,1,0
+access_cn_tender_document_user,cn.tender.document user,model_cn_tender_document,base.group_user,1,1,1,1
+access_cn_tender_document_portal,cn.tender.document portal,model_cn_tender_document,base.group_portal,1,0,0,0
+access_cn_tender_doc_req_user,cn.tender.doc.req user,model_cn_tender_doc_req,base.group_user,1,1,1,1
+access_cn_tender_doc_req_portal,cn.tender.doc.req portal,model_cn_tender_doc_req,base.group_portal,1,0,0,0
+access_cn_tender_invite_user,cn.tender.invite user,model_cn_tender_invite,base.group_user,1,1,1,1
+access_cn_tender_invite_portal,cn.tender.invite portal,model_cn_tender_invite,base.group_portal,1,0,0,0
+access_cn_bid_document_user,cn.bid.document user,model_cn_bid_document,base.group_user,1,1,1,1
+access_cn_bid_document_portal,cn.bid.document portal,model_cn_bid_document,base.group_portal,1,1,1,1

@@ -6,6 +6,9 @@
     <menuitem id="menu_cn_tender" name="Gói thầu"
               parent="menu_cn_root" action="action_cn_tender" sequence="10"/>
 
+    <menuitem id="menu_cn_invite" name="Thư mời thầu"
+              parent="menu_cn_root" action="action_cn_invite" sequence="15"/>
+
     <menuitem id="menu_cn_bid" name="Hồ sơ dự thầu"
               parent="menu_cn_root" action="action_cn_bid" sequence="20"/>
 

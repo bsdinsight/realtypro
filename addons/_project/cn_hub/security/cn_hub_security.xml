@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Gói thầu: portal CHỈ thấy gói mình được mời (invitation-gated) -->
     <record id="cn_tender_portal_rule" model="ir.rule">
-        <field name="name">Portal: chỉ gói thầu đã mở</field>
+        <field name="name">Portal: chỉ gói thầu được mời</field>
         <field name="model_id" ref="model_cn_tender"/>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        <field name="domain_force">[('state','in',('open','closed','awarded'))]</field>
+        <field name="domain_force">['&amp;', ('state','in',('open','closed','awarded')), ('invite_ids.partner_id','=',user.partner_id.id)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -16,5 +17,49 @@
         <field name="model_id" ref="model_cn_bid"/>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="domain_force">[('contractor_id','=',user.partner_id.id)]</field>
+    </record>
+
+    <!-- Hồ sơ mời thầu (dossier): portal thấy nếu được mời gói đó -->
+    <record id="cn_tender_document_portal_rule" model="ir.rule">
+        <field name="name">Portal: hồ sơ mời thầu của gói được mời</field>
+        <field name="model_id" ref="model_cn_tender_document"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('tender_id.invite_ids.partner_id','=',user.partner_id.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Tài liệu yêu cầu: portal thấy nếu được mời gói đó -->
+    <record id="cn_tender_doc_req_portal_rule" model="ir.rule">
+        <field name="name">Portal: tài liệu yêu cầu của gói được mời</field>
+        <field name="model_id" ref="model_cn_tender_doc_req"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('tender_id.invite_ids.partner_id','=',user.partner_id.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Thư mời: portal chỉ thấy thư mời gửi cho mình -->
+    <record id="cn_tender_invite_portal_rule" model="ir.rule">
+        <field name="name">Portal: thư mời của mình</field>
+        <field name="model_id" ref="model_cn_tender_invite"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Tài liệu dự thầu: portal chỉ thấy/sửa tài liệu của hồ sơ mình -->
+    <record id="cn_bid_document_portal_rule" model="ir.rule">
+        <field name="name">Portal: tài liệu hồ sơ dự thầu của mình</field>
+        <field name="model_id" ref="model_cn_bid_document"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('bid_id.contractor_id','=',user.partner_id.id)]</field>
     </record>
 </odoo>

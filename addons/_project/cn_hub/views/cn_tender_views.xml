@@ -30,6 +30,13 @@
                     <button name="action_open" type="object"
                             string="Mở mời thầu" class="btn-primary"
                             invisible="state != 'draft'"/>
+                    <button name="action_add_default_reqs" type="object"
+                            string="Nạp checklist mặc định"
+                            invisible="doc_req_ids != []"/>
+                    <button name="action_send_all_invites" type="object"
+                            string="Gửi tất cả thư mời" class="btn-primary"
+                            invisible="state == 'draft'"
+                            confirm="Gửi thư mời cho tất cả nhà thầu chưa gửi?"/>
                     <button name="action_close" type="object"
                             string="Đóng thầu"
                             invisible="state != 'open'"/>
@@ -45,6 +52,11 @@
                                 class="oe_stat_button" icon="fa-users">
                             <field name="bid_count" widget="statinfo"
                                    string="Dự thầu"/>
+                        </button>
+                        <button name="action_view_invites" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="invite_count" widget="statinfo"
+                                   string="Thư mời"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -67,12 +79,57 @@
                     </group>
                     <field name="description" placeholder="Mô tả / phạm vi..."/>
                     <notebook>
+                        <page string="Hồ sơ mời thầu" name="dossier">
+                            <p class="text-muted">Tài liệu cung cấp cho nhà thầu tải về (BOQ, bản vẽ, chỉ dẫn kỹ thuật, điều kiện HĐ...).</p>
+                            <field name="dossier_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="category"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tài liệu yêu cầu nộp" name="doc_req">
+                            <p class="text-muted">Danh mục tài liệu nhà thầu phải nộp cùng báo giá.</p>
+                            <field name="doc_req_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="doc_type"/>
+                                    <field name="required"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Thư mời thầu" name="invites">
+                            <field name="invite_ids">
+                                <list editable="bottom"
+                                      decoration-success="state in ('registered','viewed','submitted')"
+                                      decoration-muted="state == 'declined'">
+                                    <field name="partner_name"/>
+                                    <field name="email"/>
+                                    <field name="partner_id" readonly="1" optional="hide"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="invited_date" readonly="1" optional="show"/>
+                                    <field name="invite_url" widget="CopyClipboardChar"
+                                           readonly="1" optional="show"/>
+                                    <button name="action_send_invite" type="object"
+                                            string="Gửi mời" icon="fa-paper-plane"
+                                            class="btn-link"
+                                            invisible="state != 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Hồ sơ dự thầu" name="bids">
                             <field name="bid_ids">
                                 <list decoration-success="state == 'awarded'"
                                       decoration-muted="state == 'rejected'">
                                     <field name="contractor_id"/>
                                     <field name="price" sum="Σ"/>
+                                    <field name="document_count" string="Tài liệu"/>
                                     <field name="date_submit"/>
                                     <field name="state" widget="badge"/>
                                     <button name="action_award" type="object"
@@ -163,11 +220,77 @@
                         </group>
                         <group>
                             <field name="date_submit"/>
-                            <field name="doc" filename="doc_filename"/>
-                            <field name="doc_filename" invisible="1"/>
                         </group>
                     </group>
                     <field name="note" placeholder="Thuyết minh dự thầu..."/>
+                    <notebook>
+                        <page string="Tài liệu nộp" name="documents">
+                            <field name="document_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="doc_type"/>
+                                    <field name="req_id" optional="hide"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                    <field name="upload_date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== Thư mời thầu ===== -->
+    <record id="view_cn_invite_list" model="ir.ui.view">
+        <field name="name">cn.tender.invite.list</field>
+        <field name="model">cn.tender.invite</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state in ('registered','viewed','submitted')"
+                  decoration-muted="state == 'declined'"
+                  editable="bottom">
+                <field name="tender_id"/>
+                <field name="partner_name"/>
+                <field name="email"/>
+                <field name="state" widget="badge"/>
+                <field name="invited_date" readonly="1"/>
+                <field name="invite_url" widget="CopyClipboardChar" readonly="1"/>
+                <button name="action_send_invite" type="object"
+                        string="Gửi mời" icon="fa-paper-plane" class="btn-link"
+                        invisible="state != 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cn_invite_form" model="ir.ui.view">
+        <field name="name">cn.tender.invite.form</field>
+        <field name="model">cn.tender.invite</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_send_invite" type="object"
+                            string="Gửi thư mời" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_open_tender" type="object"
+                            string="Mở gói thầu"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tender_id"/>
+                            <field name="partner_name"/>
+                            <field name="email"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="invited_date" readonly="1"/>
+                            <field name="invite_url" widget="CopyClipboardChar"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                    <chatter/>
                 </sheet>
             </form>
         </field>

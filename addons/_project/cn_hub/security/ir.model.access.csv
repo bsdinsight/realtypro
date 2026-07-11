@@ -11,3 +11,15 @@ access_cn_tender_invite_user,cn.tender.invite user,model_cn_tender_invite,base.g
 access_cn_tender_invite_portal,cn.tender.invite portal,model_cn_tender_invite,base.group_portal,1,0,0,0
 access_cn_bid_document_user,cn.bid.document user,model_cn_bid_document,base.group_user,1,1,1,1
 access_cn_bid_document_portal,cn.bid.document portal,model_cn_bid_document,base.group_portal,1,1,1,1
+access_cn_cert_user,cn.contractor.certificate user,model_cn_contractor_certificate,base.group_user,1,1,1,1
+access_cn_cert_portal,cn.contractor.certificate portal,model_cn_contractor_certificate,base.group_portal,1,1,1,1
+access_cn_personnel_user,cn.contractor.personnel user,model_cn_contractor_personnel,base.group_user,1,1,1,1
+access_cn_personnel_portal,cn.contractor.personnel portal,model_cn_contractor_personnel,base.group_portal,1,1,1,1
+access_cn_equipment_user,cn.contractor.equipment user,model_cn_contractor_equipment,base.group_user,1,1,1,1
+access_cn_equipment_portal,cn.contractor.equipment portal,model_cn_contractor_equipment,base.group_portal,1,1,1,1
+access_cn_experience_user,cn.contractor.experience user,model_cn_contractor_experience,base.group_user,1,1,1,1
+access_cn_experience_portal,cn.contractor.experience portal,model_cn_contractor_experience,base.group_portal,1,1,1,1
+access_cn_revenue_user,cn.contractor.revenue.year user,model_cn_contractor_revenue_year,base.group_user,1,1,1,1
+access_cn_revenue_portal,cn.contractor.revenue.year portal,model_cn_contractor_revenue_year,base.group_portal,1,1,1,1
+access_cn_sched_task_user,cn.bid.schedule.task user,model_cn_bid_schedule_task,base.group_user,1,1,1,1
+access_cn_sched_task_portal,cn.bid.schedule.task portal,model_cn_bid_schedule_task,base.group_portal,1,1,1,1

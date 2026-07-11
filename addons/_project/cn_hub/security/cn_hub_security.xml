@@ -62,4 +62,42 @@
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="domain_force">[('bid_id.contractor_id','=',user.partner_id.id)]</field>
     </record>
+
+    <!-- Hồ sơ năng lực nhà thầu: portal chỉ record của chính mình -->
+    <record id="cn_cert_portal_rule" model="ir.rule">
+        <field name="name">Portal: chứng chỉ của mình</field>
+        <field name="model_id" ref="model_cn_contractor_certificate"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+    </record>
+    <record id="cn_personnel_portal_rule" model="ir.rule">
+        <field name="name">Portal: nhân sự của mình</field>
+        <field name="model_id" ref="model_cn_contractor_personnel"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+    </record>
+    <record id="cn_equipment_portal_rule" model="ir.rule">
+        <field name="name">Portal: thiết bị của mình</field>
+        <field name="model_id" ref="model_cn_contractor_equipment"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+    </record>
+    <record id="cn_experience_portal_rule" model="ir.rule">
+        <field name="name">Portal: kinh nghiệm của mình</field>
+        <field name="model_id" ref="model_cn_contractor_experience"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+    </record>
+    <record id="cn_revenue_portal_rule" model="ir.rule">
+        <field name="name">Portal: doanh thu của mình</field>
+        <field name="model_id" ref="model_cn_contractor_revenue_year"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+    </record>
+    <record id="cn_sched_task_portal_rule" model="ir.rule">
+        <field name="name">Portal: kế hoạch của hồ sơ mình</field>
+        <field name="model_id" ref="model_cn_bid_schedule_task"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">[('bid_id.contractor_id','=',user.partner_id.id)]</field>
+    </record>
 </odoo>

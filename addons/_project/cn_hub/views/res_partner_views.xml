@@ -6,20 +6,119 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Nhà thầu (Network)" name="cn_contractor">
+                <page string="Nhà thầu (Network)" name="cn_contractor"
+                      invisible="not cn_is_contractor">
                     <group>
-                        <group>
+                        <group string="Định danh Network">
                             <field name="cn_is_contractor"/>
                             <field name="cn_specialties"/>
-                            <field name="cn_license"/>
-                        </group>
-                        <group>
                             <field name="cn_service_areas"/>
                             <field name="cn_rating"/>
                             <field name="cn_verified"/>
-                            <field name="cn_bid_count"/>
+                            <field name="cn_profile_progress" widget="progressbar"/>
+                        </group>
+                        <group string="Tư cách pháp lý">
+                            <field name="cn_tax_code"/>
+                            <field name="cn_reg_number"/>
+                            <field name="cn_reg_date"/>
+                            <field name="cn_company_type"/>
+                            <field name="cn_founded_year"/>
+                            <field name="cn_legal_rep"/>
+                            <field name="cn_legal_rep_title"/>
                         </group>
                     </group>
+                    <group>
+                        <group string="Tư cách hợp lệ">
+                            <field name="cn_independent_accounting"/>
+                            <field name="cn_not_banned"/>
+                            <field name="cn_not_bankrupt"/>
+                            <field name="cn_registered_egp"/>
+                            <field name="cn_tax_compliant"/>
+                        </group>
+                        <group string="Năng lực tài chính">
+                            <field name="cn_currency_id" invisible="1"/>
+                            <field name="cn_avg_revenue"/>
+                            <field name="cn_financial_resource"/>
+                            <field name="cn_net_asset"/>
+                            <field name="cn_credit_commitment"/>
+                            <field name="cn_credit_value"
+                                   invisible="not cn_credit_commitment"/>
+                            <field name="cn_credit_bank"
+                                   invisible="not cn_credit_commitment"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chứng chỉ năng lực" name="certs">
+                            <field name="cn_certificate_ids">
+                                <list editable="bottom">
+                                    <field name="field_area"/>
+                                    <field name="work_type"/>
+                                    <field name="grade"/>
+                                    <field name="cert_number"/>
+                                    <field name="issuer"/>
+                                    <field name="issue_date"/>
+                                    <field name="expiry_date"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Nhân sự chủ chốt" name="personnel">
+                            <field name="cn_personnel_ids">
+                                <list editable="bottom">
+                                    <field name="position"/>
+                                    <field name="name"/>
+                                    <field name="degree"/>
+                                    <field name="cchn_number"/>
+                                    <field name="cchn_grade"/>
+                                    <field name="years_exp"/>
+                                    <field name="similar_projects"/>
+                                    <field name="mobilization"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Thiết bị thi công" name="equipment">
+                            <field name="cn_equipment_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="capacity"/>
+                                    <field name="ownership"/>
+                                    <field name="condition"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hợp đồng tương tự" name="experience">
+                            <field name="cn_experience_ids">
+                                <list editable="bottom">
+                                    <field name="contract_name"/>
+                                    <field name="owner_name"/>
+                                    <field name="value"/>
+                                    <field name="role"/>
+                                    <field name="work_type"/>
+                                    <field name="work_grade"/>
+                                    <field name="date_end"/>
+                                    <field name="accepted"/>
+                                    <field name="attachment" filename="filename"/>
+                                    <field name="filename" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Doanh thu theo năm" name="revenue">
+                            <field name="cn_revenue_year_ids">
+                                <list editable="bottom">
+                                    <field name="year"/>
+                                    <field name="revenue"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </page>
             </xpath>
         </field>

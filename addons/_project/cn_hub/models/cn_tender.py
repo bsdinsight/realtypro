@@ -149,8 +149,14 @@ class CnBid(models.Model):
     document_ids = fields.One2many(
         'cn.bid.document', 'bid_id', string='Tài liệu nộp')
     document_count = fields.Integer(compute='_compute_document_count')
+    schedule_task_ids = fields.One2many(
+        'cn.bid.schedule.task', 'bid_id', string='Kế hoạch thi công')
+    schedule_count = fields.Integer(compute='_compute_schedule_count')
+    is_submitted = fields.Boolean(
+        string='Đã nộp chính thức', tracking=True, copy=False)
+    submitted_date = fields.Datetime(string='Ngày nộp chính thức', copy=False)
     date_submit = fields.Datetime(
-        string='Ngày nộp', default=fields.Datetime.now)
+        string='Ngày tạo/cập nhật', default=fields.Datetime.now)
     state = fields.Selection(
         [('submitted', 'Đã nộp'),
          ('shortlisted', 'Vào danh sách ngắn'),
@@ -163,6 +169,10 @@ class CnBid(models.Model):
     def _compute_document_count(self):
         for rec in self:
             rec.document_count = len(rec.document_ids)
+
+    def _compute_schedule_count(self):
+        for rec in self:
+            rec.schedule_count = len(rec.schedule_task_ids)
 
     _uniq_bid = models.Constraint(
         'unique(tender_id, contractor_id)',
@@ -184,3 +194,80 @@ class CnBid(models.Model):
 
     def action_reject(self):
         self.write({'state': 'rejected'})
+
+    # ------------------------------------------------------------------
+    # Kế hoạch thi công — import MS Project XML / Excel
+    # ------------------------------------------------------------------
+    def _import_schedule(self, data, filename):
+        """Parse file → thay toàn bộ kế hoạch của hồ sơ. Trả số dòng."""
+        from . import cn_schedule
+        self.ensure_one()
+        fname = (filename or '').lower()
+        if fname.endswith('.xml'):
+            rows = cn_schedule.parse_mspdi(data)
+        else:
+            rows = cn_schedule.parse_excel(data)
+        if not rows:
+            return 0
+        self.schedule_task_ids.unlink()
+        Task = self.env['cn.bid.schedule.task']
+        seq = 10
+        for r in rows:
+            Task.create({
+                'bid_id': self.id, 'sequence': seq,
+                'external_uid': r.get('uid') or False,
+                'wbs_code': r.get('wbs') or False,
+                'name': r['name'],
+                'date_start': r.get('start') or False,
+                'date_end': r.get('finish') or False,
+                'progress_percent': r.get('percent') or 0.0,
+                'is_milestone': r.get('milestone') or False,
+                'predecessors': r.get('predecessors') or False,
+            })
+            seq += 10
+        return len(rows)
+
+    # ------------------------------------------------------------------
+    # Nộp hồ sơ chính thức + thông báo bên mời thầu
+    # ------------------------------------------------------------------
+    def _missing_required_docs(self):
+        """Danh sách tên tài liệu BẮT BUỘC chưa nộp (theo checklist gói)."""
+        self.ensure_one()
+        req = self.tender_id.doc_req_ids.filtered('required')
+        have = self.document_ids.mapped('req_id').ids
+        return [r.name for r in req if r.id not in have]
+
+    def action_submit(self):
+        """Nhà thầu nộp hồ sơ chính thức → khoá mốc + báo bên mời thầu."""
+        for bid in self:
+            missing = bid._missing_required_docs()
+            if missing:
+                raise UserError(_(
+                    "Chưa nộp đủ tài liệu bắt buộc:\n- %s",
+                    '\n- '.join(missing)))
+            bid.write({
+                'is_submitted': True,
+                'submitted_date': fields.Datetime.now(),
+                'date_submit': fields.Datetime.now(),
+            })
+            bid._notify_gc_submitted()
+        return True
+
+    def _notify_gc_submitted(self):
+        """Báo bên mời thầu: chatter trên gói + email (nếu có địa chỉ)."""
+        self.ensure_one()
+        tender = self.tender_id
+        body = _(
+            "Nhà thầu <b>%(nt)s</b> đã nộp hồ sơ dự thầu"
+            "%(price)s.",
+            nt=self.contractor_id.name,
+            price=(_(" — giá %s") % self.price) if self.price else '')
+        gc = tender.gc_partner_id
+        tender.message_post(
+            body=body,
+            partner_ids=gc.ids if gc else [],
+            subtype_xmlid='mail.mt_comment')
+        template = self.env.ref(
+            'cn_hub.mail_template_bid_submitted', raise_if_not_found=False)
+        if template and gc and gc.email:
+            template.send_mail(self.id, force_send=False)

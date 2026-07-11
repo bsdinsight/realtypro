@@ -45,4 +45,39 @@
         <field name="lang">{{ object.partner_id.lang or 'vi_VN' }}</field>
         <field name="auto_delete" eval="False"/>
     </record>
+
+    <!-- Báo bên mời thầu (CĐT/tổng thầu) khi nhà thầu nộp hồ sơ -->
+    <record id="mail_template_bid_submitted" model="mail.template">
+        <field name="name">Thông báo nộp hồ sơ dự thầu</field>
+        <field name="model_id" ref="model_cn_bid"/>
+        <field name="email_from">RealtyPro Construction Network &lt;no-reply@realtypro.vn&gt;</field>
+        <field name="email_to">{{ object.tender_id.gc_partner_id.email or '' }}</field>
+        <field name="subject">[Nộp HSDT] {{ object.contractor_id.name }} — {{ object.tender_id.name }}</field>
+        <field name="body_html" type="html">
+<div style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;color:#1a2b2e;">
+    <p>Kính gửi <t t-out="object.tender_id.gc_partner_id.name or 'Quý đơn vị'"/>,</p>
+    <p>
+        Nhà thầu <b><t t-out="object.contractor_id.name"/></b> vừa nộp hồ sơ
+        dự thầu cho gói:
+    </p>
+    <p style="font-size:16px;font-weight:bold;color:#0e5563;">
+        <t t-out="object.tender_id.name"/>
+    </p>
+    <table style="font-size:13px;color:#46605f;border-collapse:collapse;">
+        <tr><td style="padding:2px 12px 2px 0;">Giá dự thầu:</td>
+            <td><t t-out="object.price"/> <t t-out="object.currency_id.name or ''"/></td></tr>
+        <tr><td style="padding:2px 12px 2px 0;">Số tài liệu nộp:</td>
+            <td><t t-out="object.document_count"/></td></tr>
+        <tr><td style="padding:2px 12px 2px 0;">Thời điểm nộp:</td>
+            <td><t t-out="object.submitted_date"/></td></tr>
+    </table>
+    <p style="font-size:12px;color:#6f8583;">
+        Đăng nhập hệ thống để xem chi tiết hồ sơ và đánh giá.<br/>
+        Construction Network — RealtyPro
+    </p>
+</div>
+        </field>
+        <field name="lang">{{ object.tender_id.gc_partner_id.lang or 'vi_VN' }}</field>
+        <field name="auto_delete" eval="False"/>
+    </record>
 </odoo>

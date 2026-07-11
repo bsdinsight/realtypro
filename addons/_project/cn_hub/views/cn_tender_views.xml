@@ -143,6 +143,25 @@
                                             class="btn-link"/>
                                 </group>
                             </group>
+                            <group string="Ngưỡng đánh giá năng lực (tự chấm từ hồ sơ)">
+                                <group>
+                                    <field name="cap_auto_check"/>
+                                    <field name="cap_duration_months"/>
+                                    <field name="cap_revenue_k"/>
+                                    <field name="cap_finance_ratio"/>
+                                    <field name="cap_similar_pct"/>
+                                    <field name="cap_similar_count"/>
+                                    <field name="cap_min_personnel"/>
+                                    <field name="cap_min_equipment"/>
+                                    <field name="cap_require_cert"/>
+                                </group>
+                                <group>
+                                    <field name="cap_revenue_min" readonly="1"/>
+                                    <field name="cap_finance_min" readonly="1"/>
+                                    <field name="cap_similar_value_min" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Tiêu chí kỹ thuật"/>
                             <field name="tech_criterion_ids">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
@@ -295,7 +314,10 @@
                             <group>
                                 <group string="Cửa Đạt / Không đạt">
                                     <field name="eligible"/>
+                                    <field name="capacity_auto" readonly="1"/>
                                     <field name="capacity_passed"/>
+                                    <field name="capacity_detail" readonly="1"
+                                           widget="text"/>
                                     <field name="tech_score_pct" readonly="1"/>
                                     <field name="tech_passed" readonly="1"/>
                                 </group>

@@ -65,6 +65,55 @@ class CnTenderEval(models.Model):
         [('civil', 'Xây lắp dân dụng'), ('hospital', 'Bệnh viện / Y tế')],
         string='Mẫu tiêu chí', default='civil')
 
+    # ----- Ngưỡng đánh giá NĂNG LỰC (auto-chấm từ profile nhà thầu) -----
+    cap_auto_check = fields.Boolean(
+        string='Tự chấm năng lực từ hồ sơ', default=True,
+        help='Bật: hệ thống tự đối chiếu profile nhà thầu với ngưỡng dưới → '
+             'kết luận Đạt/Không đạt năng lực (người chấm sửa được).')
+    cap_duration_months = fields.Integer(
+        string='Thời gian thực hiện (tháng)', default=12,
+        help='Dùng tính ngưỡng doanh thu/nguồn lực theo năm/tháng.')
+    cap_revenue_k = fields.Float(
+        string='Hệ số doanh thu k', default=1.5,
+        help='Doanh thu bq ≥ k × (giá gói / số năm). Xây lắp k = 1,5–2.')
+    cap_finance_ratio = fields.Float(
+        string='Hệ số nguồn lực TC (t)', default=3.0,
+        help='Nguồn lực ≥ t × (giá gói / số tháng) nếu ≥12 tháng; '
+             'ngược lại 30% giá gói.')
+    cap_similar_pct = fields.Float(
+        string='% giá gói cho HĐ tương tự', default=70)
+    cap_similar_count = fields.Integer(
+        string='Số HĐ tương tự tối thiểu', default=1)
+    cap_min_personnel = fields.Integer(string='Số nhân sự chủ chốt tối thiểu')
+    cap_min_equipment = fields.Integer(string='Số loại thiết bị tối thiểu')
+    cap_require_cert = fields.Boolean(
+        string='Yêu cầu chứng chỉ NL thi công', default=True)
+
+    cap_revenue_min = fields.Monetary(
+        string='Ngưỡng doanh thu bq', compute='_compute_cap_thresholds',
+        currency_field='currency_id')
+    cap_finance_min = fields.Monetary(
+        string='Ngưỡng nguồn lực TC', compute='_compute_cap_thresholds',
+        currency_field='currency_id')
+    cap_similar_value_min = fields.Monetary(
+        string='Giá trị HĐ tương tự tối thiểu',
+        compute='_compute_cap_thresholds', currency_field='currency_id')
+
+    @api.depends('budget', 'cap_duration_months', 'cap_revenue_k',
+                 'cap_finance_ratio', 'cap_similar_pct')
+    def _compute_cap_thresholds(self):
+        for t in self:
+            budget = t.budget or 0.0
+            months = t.cap_duration_months or 0
+            years = months / 12.0 if months else 0
+            if months >= 12 and years:
+                t.cap_revenue_min = t.cap_revenue_k * (budget / years)
+                t.cap_finance_min = t.cap_finance_ratio * (budget / months)
+            else:
+                t.cap_revenue_min = t.cap_revenue_k * budget
+                t.cap_finance_min = 0.30 * budget
+            t.cap_similar_value_min = t.cap_similar_pct / 100.0 * budget
+
     @api.constrains('eval_method', 'tech_weight', 'price_weight')
     def _check_weights(self):
         for t in self:
@@ -101,6 +150,10 @@ class CnTenderEval(models.Model):
         # 1) đảm bảo mỗi HSDT có đủ dòng chấm điểm theo tiêu chí
         for b in bids:
             b._sync_tech_scores()
+        # 1b) tự chấm cửa năng lực từ profile (người chấm sửa lại được sau)
+        if self.cap_auto_check:
+            for b in bids:
+                b.capacity_passed = b.capacity_auto
         # 2) lọc qua các cửa: hợp lệ → năng lực → kỹ thuật → giá (±10%)
         qualified = bids.filtered(lambda b: (
             b.eligible and b.capacity_passed and b.tech_passed
@@ -170,6 +223,52 @@ class CnBidEval(models.Model):
     # Cửa Đạt/Không đạt (người chấm đặt)
     eligible = fields.Boolean(string='Hợp lệ (HSDT)')
     capacity_passed = fields.Boolean(string='Đạt năng lực & kinh nghiệm')
+    capacity_auto = fields.Boolean(
+        string='Tự chấm: đạt năng lực', compute='_compute_capacity_auto',
+        store=True)
+    capacity_detail = fields.Text(
+        string='Chi tiết chấm năng lực', compute='_compute_capacity_auto',
+        store=True)
+
+    @api.depends('contractor_id.cn_avg_revenue',
+                 'contractor_id.cn_financial_resource',
+                 'contractor_id.cn_revenue_year_ids.revenue',
+                 'contractor_id.cn_experience_ids.value',
+                 'contractor_id.cn_personnel_ids',
+                 'contractor_id.cn_equipment_ids',
+                 'contractor_id.cn_certificate_ids',
+                 'tender_id.cap_revenue_min', 'tender_id.cap_finance_min',
+                 'tender_id.cap_similar_value_min', 'tender_id.cap_similar_count',
+                 'tender_id.cap_min_personnel', 'tender_id.cap_min_equipment',
+                 'tender_id.cap_require_cert')
+    def _compute_capacity_auto(self):
+        today = fields.Date.context_today(self)
+        for b in self:
+            c, t = b.contractor_id, b.tender_id
+            revs = c.cn_revenue_year_ids
+            avg_rev = c.cn_avg_revenue or (
+                sum(revs.mapped('revenue')) / len(revs) if revs else 0.0)
+            n_similar = len(c.cn_experience_ids.filtered(
+                lambda e: e.value >= t.cap_similar_value_min))
+            checks = [
+                ('Doanh thu bình quân', avg_rev >= t.cap_revenue_min),
+                ('Nguồn lực tài chính', c.cn_financial_resource >= t.cap_finance_min),
+                ('Số HĐ tương tự (≥%s)' % t.cap_similar_count,
+                 n_similar >= (t.cap_similar_count or 0)),
+                ('Nhân sự chủ chốt (≥%s)' % t.cap_min_personnel,
+                 len(c.cn_personnel_ids) >= (t.cap_min_personnel or 0)),
+                ('Thiết bị thi công (≥%s)' % t.cap_min_equipment,
+                 len(c.cn_equipment_ids) >= (t.cap_min_equipment or 0)),
+            ]
+            if t.cap_require_cert:
+                valid_cert = c.cn_certificate_ids.filtered(
+                    lambda ce: ce.field_area == 'construction'
+                    and (not ce.expiry_date or ce.expiry_date >= today))
+                checks.append(('Chứng chỉ NL thi công còn hiệu lực',
+                               bool(valid_cert)))
+            b.capacity_auto = all(ok for _, ok in checks)
+            b.capacity_detail = '\n'.join(
+                '%s %s' % ('✔' if ok else '✘', label) for label, ok in checks)
     # Kỹ thuật
     tech_score_ids = fields.One2many(
         'cn.bid.tech.score', 'bid_id', string='Chấm điểm kỹ thuật')

@@ -57,26 +57,34 @@ export class RpGanttAction extends Component {
              "progress_percent", "is_milestone", "predecessor_ids"],
             { order: "planned_start asc, wbs_code asc, id asc" }
         );
-        const dated = recs.filter((r) => r.planned_start);
+        // TẤT CẢ task đều lên (kể cả chưa có ngày). frappe-gantt bắt buộc
+        // start/end → task thiếu ngày gán ngày neo ảo + ẩn bar bằng CSS;
+        // hàng lưới trái/phải vẫn khớp 1-1.
+        const anchor =
+            (recs.find((r) => r.planned_start) || {}).planned_start ||
+            new Date().toISOString().slice(0, 10);
         // Lưới trái (cùng thứ tự với thanh gantt)
-        this.state.rows = dated.map((r) => ({
+        this.state.rows = recs.map((r) => ({
             id: r.id,
             wbs: r.wbs_code || "",
             name: r.name,
-            start: this._fmt(r.planned_start),
-            end: this._fmt(r.planned_end || r.planned_start),
+            start: r.planned_start ? this._fmt(r.planned_start) : "—",
+            end: (r.planned_end || r.planned_start)
+                ? this._fmt(r.planned_end || r.planned_start) : "—",
             progress: Math.round(r.progress_percent || 0),
             milestone: r.is_milestone,
+            nodate: !r.planned_start,
         }));
         // Thanh gantt phải
-        this.tasks = dated.map((r) => ({
+        this.tasks = recs.map((r) => ({
             id: String(r.id),
             name: r.name,
-            start: r.planned_start,
-            end: r.planned_end || r.planned_start,
+            start: r.planned_start || anchor,
+            end: r.planned_end || r.planned_start || anchor,
             progress: Math.round(r.progress_percent || 0),
             dependencies: (r.predecessor_ids || []).map(String).join(","),
-            custom_class: r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
+            custom_class: !r.planned_start ? "rp-bar-nodate"
+                : r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
         }));
         this.state.count = this.tasks.length;
         this.state.empty = this.tasks.length === 0;

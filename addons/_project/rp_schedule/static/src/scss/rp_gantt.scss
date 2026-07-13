@@ -72,6 +72,10 @@
                 color: #b45309;
                 font-weight: 600;
             }
+            &.is-nodate {
+                color: #9bb0ae;
+                .col-name { font-style: italic; }
+            }
         }
 
         .col-wbs   { flex: 0 0 44px;  color: #6f8583; }
@@ -99,6 +103,10 @@
     }
     .bar-wrapper.rp-bar-milestone .bar-progress {
         fill: #b45309;
+    }
+    // Task chưa có ngày: giữ hàng lưới nhưng ẩn thanh (ngày là neo ảo)
+    .bar-wrapper.rp-bar-nodate {
+        display: none;
     }
     .bar-label {
         fill: #ffffff;

@@ -31,6 +31,7 @@ export class RpGanttAction extends Component {
             headH: HEAD_H,
             collapsed: {},          // {wbs: true} — hàng cha đang thu gọn
             leftW: 520,             // bề rộng lưới trái (kéo splitter đổi)
+            tl: { width: 0, cells: [], col: 30 },  // header timeline HTML sticky
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -170,25 +171,14 @@ export class RpGanttAction extends Component {
         window.addEventListener("pointerup", up);
     }
 
-    // Vẽ thêm chi tiết Syncfusion mà frappe-gantt không có:
-    // đường phân tầng header + bôi xám Thứ 7/CN (chế độ Ngày).
+    // Bôi xám Thứ 7/CN (chế độ Ngày) — frappe-gantt không có.
     _augment() {
         const svg = this.ganttRef.el;
         const g = this.gantt;
         if (!svg || !g) return;
         const NS = "http://www.w3.org/2000/svg";
-        const width = parseFloat(svg.getAttribute("width")) || 0;
         const height = parseFloat(svg.getAttribute("height")) || 0;
         const gridLayer = svg.querySelector("g.grid");
-        // 1) đường ngang tách 2 tầng header (tháng / ngày)
-        const div = document.createElementNS(NS, "line");
-        div.setAttribute("x1", 0);
-        div.setAttribute("x2", width);
-        div.setAttribute("y1", HEADER_HEIGHT - 20);
-        div.setAttribute("y2", HEADER_HEIGHT - 20);
-        div.setAttribute("class", "rp-header-divider");
-        svg.appendChild(div);
-        // 2) bôi xám cuối tuần (chỉ chế độ Ngày — mỗi cột = 1 ngày)
         if (this.state.viewMode === "Day" && gridLayer && g.dates) {
             const col = g.options.column_width;
             g.dates.forEach((d, i) => {
@@ -204,6 +194,35 @@ export class RpGanttAction extends Component {
                 }
             });
         }
+    }
+
+    // Header timeline HTML STICKY (thay header SVG — SVG không sticky được):
+    // 2 tầng tháng/ngày luôn ghim trên đỉnh khi cuộn dọc, như Syncfusion.
+    _buildTimelineHead() {
+        const g = this.gantt;
+        if (!g || !g.dates) return;
+        const col = g.options.column_width;
+        const mode = this.state.viewMode;
+        const MONTHS = ["01", "02", "03", "04", "05", "06",
+                        "07", "08", "09", "10", "11", "12"];
+        const cells = [];
+        let prevM = -1, prevY = -1;
+        g.dates.forEach((d, i) => {
+            const m = d.getMonth(), y = d.getFullYear();
+            let lower = "", upper = "";
+            if (mode === "Month") {
+                lower = "Th" + MONTHS[m];
+                if (y !== prevY) upper = String(y);
+            } else {
+                lower = String(d.getDate());
+                if (m !== prevM || y !== prevY) {
+                    upper = "Tháng " + MONTHS[m] + "/" + y;
+                }
+            }
+            prevM = m; prevY = y;
+            cells.push({ x: i * col, lower, upper });
+        });
+        this.state.tl = { width: g.dates.length * col, cells, col };
     }
 
     renderGantt() {
@@ -236,6 +255,7 @@ export class RpGanttAction extends Component {
             },
         });
         this._augment();
+        this._buildTimelineHead();
     }
 
     setViewMode(mode) {
@@ -243,6 +263,7 @@ export class RpGanttAction extends Component {
         if (this.gantt) {
             this.gantt.change_view_mode(mode);
             this._augment();
+            this._buildTimelineHead();
         }
     }
 }

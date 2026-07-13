@@ -60,6 +60,20 @@
                      t-attf-style="left: {{state.leftW}}px;"
                      t-on-pointerdown="onSplitterDown"/>
                 <div class="rp-gantt-right">
+                    <!-- Header timeline HTML sticky (thay header SVG):
+                         margin-bottom âm = không chiếm flow → SVG không bị
+                         đẩy xuống, hàng 2 bên vẫn khớp pixel -->
+                    <div class="rp-gantt-timeline-head"
+                         t-attf-style="height: {{state.headH}}px; margin-bottom: -{{state.headH}}px; width: {{state.tl.width}}px;">
+                        <t t-foreach="state.tl.cells" t-as="c" t-key="c_index">
+                            <span t-if="c.upper" class="rp-tl-upper"
+                                  t-attf-style="left: {{c.x + 4}}px;"
+                                  t-esc="c.upper"/>
+                            <span class="rp-tl-lower"
+                                  t-attf-style="left: {{c.x}}px; width: {{state.tl.col}}px;"
+                                  t-esc="c.lower"/>
+                        </t>
+                    </div>
                     <svg t-ref="gantt" class="rp-gantt-svg"/>
                 </div>
             </div>

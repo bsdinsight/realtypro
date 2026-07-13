@@ -197,8 +197,9 @@
                                    invisible="state in ('draft','approved','inviting','bid_closed')"/>
                             <field name="contract_amount" widget="monetary"
                                    invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"/>
+                            <field name="bidder_partner_ids" invisible="1"/>
                             <field name="contractor_id"
-                                   options="{'no_create_edit': True}"
+                                   options="{'no_create': True, 'no_create_edit': True}"
                                    invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"
                                    required="state in ('awarded','contracted','closed')"/>
                             <field name="line_count" readonly="1"/>

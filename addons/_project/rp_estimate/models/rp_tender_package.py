@@ -75,9 +75,18 @@ class RpTenderPackage(models.Model):
     contractor_id = fields.Many2one(
         'res.partner', string='Nhà thầu trúng',
         ondelete='set null', tracking=True,
-        domain="[('is_company', '=', True)]",
-        help='Nhà thầu trúng — set sau khi award.',
+        domain="[('id', 'in', bidder_partner_ids)]",
+        help='Nhà thầu trúng — chỉ chọn trong các nhà thầu đã dự thầu gói này.',
     )
+    bidder_partner_ids = fields.Many2many(
+        'res.partner', string='Partner nhà thầu dự thầu',
+        compute='_compute_bidder_partner_ids',
+        help='Danh sách partner của các bidder trong gói — để lọc Nhà thầu trúng.')
+
+    @api.depends('bidder_ids.partner_id')
+    def _compute_bidder_partner_ids(self):
+        for pkg in self:
+            pkg.bidder_partner_ids = pkg.bidder_ids.partner_id
 
     # ----- Scope
     scope_summary = fields.Text(

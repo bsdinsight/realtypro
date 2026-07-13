@@ -20,6 +20,7 @@ export class RpGanttAction extends Component {
 
     setup() {
         this.orm = useService("orm");
+        this.notification = useService("notification");
         this.ganttRef = useRef("gantt");
         this.state = useState({
             viewMode: "Week",
@@ -46,6 +47,91 @@ export class RpGanttAction extends Component {
         if (!d) return "";
         const [y, m, dd] = String(d).split("-");
         return `${dd}/${m}/${y}`;
+    }
+
+    _iso(d) {
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        return `${d.getFullYear()}-${mm}-${dd}`;
+    }
+
+    // Kéo-thả thanh → LƯU ngày kế hoạch.
+    // LƯU Ý: frappe-gantt kéo 1 task sẽ DỊCH CẢ DÂY CHUYỀN phụ thuộc và
+    // bắn on_date_change cho TỪNG task → gom batch 400ms, ghi TUẦN TỰ
+    // (bắn song song sẽ lock/fail), xong báo 1 thông báo tổng.
+    _onDateChange(task, start, end) {
+        const id = parseInt(task.id, 10);
+        const rec = this._recs.find((r) => r.id === id);
+        if (!rec) return;
+        let s = this._iso(start), e = this._iso(end);
+        if (e < s) e = s;
+        if (!this._pendingDates) this._pendingDates = new Map();
+        // Thanh cha (tổng hợp) bị cascade kéo theo: KHÔNG ghi — ngày cha
+        // sẽ vẽ lại theo dữ liệu thật sau batch.
+        if (!rec._parent) {
+            this._pendingDates.set(id, { s, e });
+        }
+        clearTimeout(this._dateFlushTimer);
+        this._dateFlushTimer = setTimeout(() => this._flushDateChanges(), 400);
+    }
+
+    async _flushDateChanges() {
+        const pending = this._pendingDates;
+        this._pendingDates = null;
+        if (!pending || !pending.size) {
+            this.renderGantt();     // chỉ cha bị kéo → vẽ lại cho về chỗ cũ
+            return;
+        }
+        let ok = 0, fail = 0;
+        for (const [id, v] of pending) {   // TUẦN TỰ — không bắn song song
+            try {
+                await this.orm.write("project.task", [id],
+                    { planned_start: v.s, planned_end: v.e });
+                const rec = this._recs.find((r) => r.id === id);
+                if (rec) {
+                    rec.planned_start = v.s;
+                    rec.planned_end = v.e;
+                }
+                ok++;
+            } catch {
+                fail++;
+            }
+        }
+        this._rebuild();
+        if (fail) {
+            this.notification.add(
+                `Đã lưu ${ok} công việc, ${fail} lỗi — hiển thị được hoàn tác.`,
+                { type: "danger" });
+            this.renderGantt();     // vẽ lại theo dữ liệu thật
+        } else if (ok > 1) {
+            this.notification.add(
+                `Đã lưu ${ok} công việc (dây chuyền phụ thuộc dịch theo).`,
+                { type: "success" });
+        } else {
+            const [id] = pending.keys();
+            const v = pending.get(id);
+            this.notification.add(
+                `Đã lưu: ${this._fmt(v.s)} – ${this._fmt(v.e)}`,
+                { type: "success" });
+        }
+    }
+
+    // Kéo tay nắm % trên thanh → LƯU % hoàn thành
+    async _onProgressChange(task, progress) {
+        const id = parseInt(task.id, 10);
+        const rec = this._recs.find((r) => r.id === id);
+        if (!rec || rec._parent) return;
+        try {
+            await this.orm.write("project.task", [id],
+                { progress_percent: progress });
+            rec.progress_percent = progress;
+            this._rebuild();
+        } catch {
+            this.notification.add(
+                "Không lưu được % hoàn thành.", { type: "danger" });
+            this._rebuild();
+            this.renderGantt();
+        }
     }
 
     // WBS "1.10.2" → [1,10,2] để sort số tự nhiên (không sort chữ 1,10,2,20…)
@@ -242,6 +328,10 @@ export class RpGanttAction extends Component {
             header_height: HEADER_HEIGHT,
             bar_corner_radius: 2,
             column_width: 30,
+            on_date_change: (task, start, end) =>
+                this._onDateChange(task, start, end),
+            on_progress_change: (task, progress) =>
+                this._onProgressChange(task, progress),
             custom_popup_html: (task) => {
                 const s = task._start ? task._start.toLocaleDateString("vi-VN") : "";
                 const e = task._end ? task._end.toLocaleDateString("vi-VN") : "";

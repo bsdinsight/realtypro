@@ -8,6 +8,9 @@
                 <span class="badge text-bg-secondary ms-2">
                     <t t-esc="state.count"/> công việc
                 </span>
+                <span class="text-muted small ms-3 d-none d-lg-inline">
+                    <i class="fa fa-arrows-h me-1"/>Kéo thanh để đổi ngày — tự lưu
+                </span>
                 <div class="btn-group btn-group-sm ms-auto" role="group">
                     <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"
                             type="button" class="btn"

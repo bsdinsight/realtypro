@@ -32,3 +32,10 @@
 .rp-gantt-ej2 .rp-ej2-milestone .e-gantt-milestone {
     fill: #e0a460;
 }
+
+// Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt
+.rp-gantt-ej2 tr.rp-ej2-level1 .e-rowcell {
+    font-weight: 700;
+    color: #0a3d47;
+    background: #eef4f5;
+}

@@ -179,6 +179,13 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 }
             },
             actionComplete: (args) => this._handleActionComplete(args, opts),
+            // Optional hooks style theo hàng/thanh (caller tự quyết)
+            ...(opts.onRowDataBound ? {
+                rowDataBound: (args) => opts.onRowDataBound(args),
+            } : {}),
+            ...(opts.onQueryTaskbarInfo ? {
+                queryTaskbarInfo: (args) => opts.onQueryTaskbarInfo(args),
+            } : {}),
             // Click trên bar (chart bên phải) → mở form
             taskbarClick: (args) => {
                 const cb = opts.onBarClick === false

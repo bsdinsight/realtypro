@@ -131,7 +131,7 @@ export class RpGanttAction extends Component {
                 id: String(r.id),
                 parent,
                 name: r.name,
-                extraFields: { TaskWbs: w },
+                extraFields: { TaskWbs: w, _isTop: !!w && !w.includes(".") },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
                     ? (r.planned_end || r.planned_start) : null,
@@ -181,6 +181,24 @@ export class RpGanttAction extends Component {
             splitterColumnIndex: 6,
             preserveLinks: true,
             onBarClick: false,
+            // Tô đậm task level 1 (WBS không chấm — giai đoạn lớn)
+            onRowDataBound: (args) => {
+                const d = args.data || {};
+                const top = d._isTop
+                    || (d.taskData && d.taskData._isTop);
+                if (top && args.row) {
+                    args.row.classList.add("rp-ej2-level1");
+                }
+            },
+            onQueryTaskbarInfo: (args) => {
+                const d = args.data || {};
+                const top = d._isTop
+                    || (d.taskData && d.taskData._isTop);
+                if (top) {
+                    args.taskbarBgColor = "#0a3d47";
+                    args.progressBarBgColor = "#062a31";
+                }
+            },
             allowAdding: true,
             allowDeleting: true,
             enableContextMenu: true,

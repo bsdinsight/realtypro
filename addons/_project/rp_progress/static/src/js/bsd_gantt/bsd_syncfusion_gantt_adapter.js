@@ -101,7 +101,9 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             ],
             // Column panel bên trái — minimal, business view ở Odoo panel
             treeColumnIndex: 1,
-            columns: [
+            // Optional: caller truyền bộ cột riêng (rp_schedule cần cột ID);
+            // default giữ nguyên bộ cột rp_progress.
+            columns: opts.columns || [
                 { field: "TaskID", headerText: "ID", width: 70,
                   visible: false },
                 { field: "TaskName", headerText: "Hạng mục / HĐ",
@@ -153,7 +155,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             //   EndDate + Progress). Set columnIndex để Syncfusion
             //   tính position theo số cột muốn hiện.
             splitterSettings: {
-                columnIndex: 4,
+                columnIndex: opts.splitterColumnIndex || 4,
             },
             // Tooltip custom — KHÔNG dùng custom template, để Syncfusion
             // tự render default tooltip với TaskName/StartDate/EndDate

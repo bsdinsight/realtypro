@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="rp_schedule.RpGantt">
+        <div class="rp-gantt-container o_action_manager">
+            <div class="rp-gantt-toolbar">
+                <span class="rp-gantt-title" t-esc="state.title"/>
+                <span class="badge text-bg-secondary ms-2">
+                    <t t-esc="state.count"/> công việc
+                </span>
+                <div class="btn-group btn-group-sm ms-auto" role="group">
+                    <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"
+                            type="button" class="btn"
+                            t-att-class="state.viewMode === m ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setViewMode(m)">
+                        <t t-if="m === 'Day'">Ngày</t>
+                        <t t-elif="m === 'Week'">Tuần</t>
+                        <t t-else="">Tháng</t>
+                    </button>
+                </div>
+            </div>
+            <div t-if="state.empty" class="alert alert-info m-3">
+                Hợp đồng này chưa có công việc nào có ngày bắt đầu để vẽ Gantt.
+                Hãy import lịch thi công (MS Project XML / Excel) hoặc khai ngày kế hoạch.
+            </div>
+            <div class="rp-gantt-wrap" t-att-class="state.empty ? 'd-none' : ''">
+                <svg t-ref="gantt" class="rp-gantt-svg"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

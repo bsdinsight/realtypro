@@ -15,6 +15,9 @@
             <xpath expr="//header" position="inside">
                 <button name="action_import_schedule" type="object"
                         string="Import lịch thi công" icon="fa-upload"/>
+                <button name="action_open_gantt" type="object"
+                        string="Xem Gantt" icon="fa-bar-chart"
+                        invisible="task_count == 0"/>
             </xpath>
         </field>
     </record>

@@ -70,3 +70,13 @@ class RpContract(models.Model):
             'target': 'new',
             'context': {'default_contract_id': self.id},
         }
+
+    def action_open_gantt(self):
+        """Mở Gantt (frappe-gantt) cho lịch thi công của HĐ này."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'rp_schedule.gantt',
+            'name': _('Gantt — %s', self.name),
+            'context': {'default_rp_contract_id': self.id, 'active_id': self.id},
+        }

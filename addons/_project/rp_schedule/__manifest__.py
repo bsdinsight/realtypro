@@ -40,6 +40,15 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'views/rp_contract_views.xml',
         'views/rp_schedule_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'rp_schedule/static/lib/frappe-gantt/frappe-gantt.css',
+            'rp_schedule/static/lib/frappe-gantt/frappe-gantt.min.js',
+            'rp_schedule/static/src/scss/rp_gantt.scss',
+            'rp_schedule/static/src/js/rp_gantt.js',
+            'rp_schedule/static/src/xml/rp_gantt.xml',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,

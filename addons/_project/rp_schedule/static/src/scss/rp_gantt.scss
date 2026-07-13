@@ -1,0 +1,63 @@
+.rp-gantt-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+
+    .rp-gantt-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-bottom: 1px solid #dee2e6;
+
+        .rp-gantt-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #0e5563;
+        }
+    }
+
+    .rp-gantt-wrap {
+        flex: 1 1 auto;
+        overflow: auto;
+        padding: 8px 4px 24px;
+    }
+}
+
+// Tinh chỉnh frappe-gantt cho hợp giao diện Realty Project (teal)
+.gantt {
+    .bar-wrapper.rp-bar-task .bar {
+        fill: #4aa3b0;
+    }
+    .bar-wrapper.rp-bar-task .bar-progress {
+        fill: #0e5563;
+    }
+    .bar-wrapper.rp-bar-milestone .bar {
+        fill: #e0a460;
+    }
+    .bar-wrapper.rp-bar-milestone .bar-progress {
+        fill: #b45309;
+    }
+    .bar-label {
+        fill: #ffffff;
+        font-size: 12px;
+    }
+    .bar-label.big {
+        fill: #1a2b2e;
+    }
+    .grid-header {
+        fill: #f5f8f8;
+    }
+    .today-highlight {
+        fill: #fbe7c9;
+        opacity: 0.5;
+    }
+}
+
+.rp-gantt-popup {
+    .rp-gantt-popup-title {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+}

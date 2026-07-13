@@ -38,23 +38,32 @@
         border-right: 2px solid #cfd8dc;
         box-shadow: 4px 0 8px -4px rgba(16, 42, 44, 0.18);
         font-size: 12.5px;
+        color: #333;
 
         .rp-gantt-left-head,
         .rp-gantt-left-row {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 0 8px;
             box-sizing: border-box;
+
+            // Kẻ cột dọc kiểu grid Syncfusion
+            > span {
+                padding: 0 8px;
+                border-right: 1px solid #eef2f2;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                &:last-child { border-right: none; }
+            }
         }
 
         .rp-gantt-left-head {
             position: sticky;
             top: 0;
             z-index: 6;
-            background: #f5f8f8;
+            background: #fafbfc;
             border-bottom: 2px solid #cfd8dc;
-            font-weight: 700;
+            font-weight: 600;
             color: #46605f;
             text-transform: uppercase;
             font-size: 11px;
@@ -62,12 +71,10 @@
         }
 
         .rp-gantt-left-row {
-            border-bottom: 1px solid #ebf0f0;
+            border-bottom: 1px solid #eef2f2;
             white-space: nowrap;
 
-            &:nth-child(odd) {
-                background: #fafcfc;
-            }
+            &:hover { background: #e8f4f5; }
             &.is-milestone .col-name {
                 color: #b45309;
                 font-weight: 600;
@@ -77,15 +84,22 @@
                 .col-name { font-style: italic; }
             }
             &.is-parent {
-                background: #eef4f4;
+                background: #f3f7f8;
                 .col-name { font-weight: 700; color: #0a3d47; }
             }
         }
 
-        .col-wbs   { flex: 0 0 44px;  color: #6f8583; }
+        .rp-caret {
+            cursor: pointer;
+            width: 12px;
+            color: #46605f;
+            &:hover { color: #0e5563; }
+        }
+
+        .col-wbs   { flex: 0 0 52px;  color: #6f8583; }
         .col-name  { flex: 1 1 auto;  overflow: hidden; text-overflow: ellipsis; }
-        .col-date  { flex: 0 0 72px;  text-align: right; font-variant-numeric: tabular-nums; }
-        .col-pct   { flex: 0 0 40px;  text-align: right; font-weight: 600; color: #0e5563; }
+        .col-date  { flex: 0 0 78px;  justify-content: flex-end; font-variant-numeric: tabular-nums; }
+        .col-pct   { flex: 0 0 44px;  justify-content: flex-end; font-weight: 600; color: #0e5563; }
     }
 
     .rp-gantt-right {
@@ -94,48 +108,50 @@
     }
 }
 
-// Tinh chỉnh frappe-gantt cho hợp giao diện Realty Project (teal)
+// ── Tinh chỉnh frappe-gantt theo dáng Syncfusion ─────────────────────
 .gantt {
-    .bar-wrapper.rp-bar-task .bar {
-        fill: #7fc4cd;
-    }
-    .bar-wrapper.rp-bar-task .bar-progress {
-        fill: #0e5563;
-    }
-    .bar-wrapper.rp-bar-milestone .bar {
-        fill: #e0a460;
-    }
-    .bar-wrapper.rp-bar-milestone .bar-progress {
-        fill: #b45309;
-    }
-    // Task chưa có ngày: giữ hàng lưới nhưng ẩn thanh (ngày là neo ảo)
-    .bar-wrapper.rp-bar-nodate {
-        display: none;
-    }
-    // Task cha (summary): thanh đậm màu, dẹt kiểu tổng hợp
+    // 1) KHÔNG hiện label cạnh/tràn thanh — thông tin đã có lưới trái + popup
+    .bar-label { display: none; }
+
+    // 2) Header timeline sạch: nền trắng, tháng đậm, ngày nhạt
+    .grid-header { fill: #fafbfc; }
+    .upper-text { font-weight: 600; fill: #0a3d47; }
+    .lower-text { fill: #6f8583; font-size: 11px; }
+    .tick { stroke: #eef2f2; }
+    .row-line { stroke: #eef2f2; }
+    .grid-row:nth-child(even) { fill: #ffffff; }
+
+    // 3) Thanh task thường
+    .bar-wrapper.rp-bar-task .bar { fill: #7fc4cd; }
+    .bar-wrapper.rp-bar-task .bar-progress { fill: #0e5563; }
+
+    // 4) Thanh CHA kiểu summary: mỏng, đậm, vuông cạnh
     .bar-wrapper.rp-bar-parent .bar {
         fill: #0a3d47;
+        height: 9px;
+        transform: translateY(5px);
     }
-    .bar-wrapper.rp-bar-parent .bar-progress {
-        fill: #062a31;
+    .bar-wrapper.rp-bar-parent .bar-progress { display: none; }
+
+    // 5) Milestone: xoay 45° thành hình thoi hổ phách
+    .bar-wrapper.rp-bar-milestone .bar {
+        fill: #e0a460;
+        width: 16px;
+        height: 16px;
+        transform: rotate(45deg) translateY(1px);
+        transform-box: fill-box;
+        transform-origin: center;
     }
-    .bar-label {
-        fill: #ffffff;
-        font-size: 12px;
-    }
-    .bar-label.big {
-        fill: #1a2b2e;
-    }
-    .grid-header {
-        fill: #f5f8f8;
-    }
-    .row-line {
-        stroke: #ebf0f0;
-    }
-    .today-highlight {
-        fill: #fbe7c9;
-        opacity: 0.5;
-    }
+    .bar-wrapper.rp-bar-milestone .bar-progress { display: none; }
+
+    // 6) Task chưa có ngày: giữ hàng lưới nhưng ẩn thanh (ngày là neo ảo)
+    .bar-wrapper.rp-bar-nodate { display: none; }
+
+    // 7) Mũi tên phụ thuộc nhạt hơn (đỡ rối như Syncfusion)
+    .arrow { stroke: #90a4ae; stroke-width: 1.2; }
+
+    // 8) Cột "hôm nay" dịu
+    .today-highlight { fill: #fbe7c9; opacity: 0.35; }
 }
 
 .rp-gantt-popup {

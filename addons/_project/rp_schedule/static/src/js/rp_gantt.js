@@ -13,7 +13,7 @@ export const ROW_H = BAR_HEIGHT + PADDING;        // 34px
 export const HEAD_H = HEADER_HEIGHT + 10;         // 60px
 
 // Client action: Gantt lịch thi công kiểu Syncfusion —
-// lưới task bên trái (sticky) + timeline frappe-gantt bên phải.
+// lưới task trái (sticky, thu/mở cây) + timeline frappe-gantt bên phải.
 export class RpGanttAction extends Component {
     static template = "rp_schedule.RpGantt";
     static props = ["*"];
@@ -29,6 +29,7 @@ export class RpGanttAction extends Component {
             rows: [],
             rowH: ROW_H,
             headH: HEAD_H,
+            collapsed: {},          // {wbs: true} — hàng cha đang thu gọn
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -83,32 +84,39 @@ export class RpGanttAction extends Component {
              "progress_percent", "is_milestone", "predecessor_ids"],
             { order: "id asc" }
         );
-        // Sort WBS theo SỐ tự nhiên (1,2,…10,11 — không phải 1,10,11,2…);
-        // task không WBS giữ thứ tự import (id).
+        // Sort WBS theo SỐ tự nhiên; cha/con suy từ WBS chấm ("1.2" con của "1")
         recs.sort((a, b) => this._wbsCompare(a, b));
-        // Cha/con suy từ WBS chấm: "1.2" là con của "1" (Excel phẳng = 1 cấp;
-        // MS Project XML có WBS chấm sẽ tự thụt cấp).
-        const wbsSet = new Set(recs.map((r) => String(r.wbs_code || "")));
-        const meta = recs.map((r) => {
+        recs.forEach((r) => {
             const w = String(r.wbs_code || "");
-            const level = w ? w.split(".").length - 1 : 0;
-            const isParent = !!w && recs.some(
+            r._wbs = w;
+            r._level = w ? w.split(".").length - 1 : 0;
+            r._parent = !!w && recs.some(
                 (o) => o !== r && String(o.wbs_code || "").startsWith(w + "."));
-            return { level, isParent };
         });
-        void wbsSet;
-        // TẤT CẢ task đều lên (kể cả chưa có ngày). frappe-gantt bắt buộc
-        // start/end → task thiếu ngày gán ngày neo ảo + ẩn bar bằng CSS;
-        // hàng lưới trái/phải vẫn khớp 1-1.
+        this._recs = recs;
+        this.state.count = recs.length;
+        this.state.empty = recs.length === 0;
+        this._rebuild();
+    }
+
+    // Dựng rows (lưới trái) + tasks (gantt phải) theo trạng thái thu/mở
+    _rebuild() {
+        const collapsed = this.state.collapsed;
+        const hiddenBy = (w) => {
+            for (const c of Object.keys(collapsed)) {
+                if (collapsed[c] && w !== c && w.startsWith(c + ".")) return true;
+            }
+            return false;
+        };
+        const visible = this._recs.filter((r) => !hiddenBy(r._wbs));
         const anchor =
-            (recs.find((r) => r.planned_start) || {}).planned_start ||
+            (visible.find((r) => r.planned_start) || {}).planned_start ||
             new Date().toISOString().slice(0, 10);
         const datedIds = new Set(
-            recs.filter((r) => r.planned_start).map((r) => r.id));
-        // Lưới trái (cùng thứ tự với thanh gantt)
-        this.state.rows = recs.map((r, i) => ({
+            visible.filter((r) => r.planned_start).map((r) => r.id));
+        this.state.rows = visible.map((r) => ({
             id: r.id,
-            wbs: r.wbs_code || "",
+            wbs: r._wbs,
             name: r.name,
             start: r.planned_start ? this._fmt(r.planned_start) : "—",
             end: (r.planned_end || r.planned_start)
@@ -116,11 +124,11 @@ export class RpGanttAction extends Component {
             progress: Math.round(r.progress_percent || 0),
             milestone: r.is_milestone,
             nodate: !r.planned_start,
-            level: meta[i].level,
-            parent: meta[i].isParent,
+            level: r._level,
+            parent: r._parent,
+            open: !collapsed[r._wbs],
         }));
-        // Thanh gantt phải (chỉ nối phụ thuộc giữa các task CÓ ngày)
-        this.tasks = recs.map((r, i) => ({
+        this.tasks = visible.map((r) => ({
             id: String(r.id),
             name: r.name,
             start: r.planned_start || anchor,
@@ -129,11 +137,19 @@ export class RpGanttAction extends Component {
             dependencies: (r.predecessor_ids || [])
                 .filter((pid) => datedIds.has(pid)).map(String).join(","),
             custom_class: !r.planned_start ? "rp-bar-nodate"
-                : meta[i].isParent ? "rp-bar-parent"
+                : r._parent ? "rp-bar-parent"
                 : r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
         }));
-        this.state.count = this.tasks.length;
-        this.state.empty = this.tasks.length === 0;
+    }
+
+    toggleRow(row) {
+        if (!row.parent) return;
+        this.state.collapsed = {
+            ...this.state.collapsed,
+            [row.wbs]: !this.state.collapsed[row.wbs],
+        };
+        this._rebuild();
+        this.renderGantt();
     }
 
     renderGantt() {
@@ -151,7 +167,7 @@ export class RpGanttAction extends Component {
             bar_height: BAR_HEIGHT,
             padding: PADDING,
             header_height: HEADER_HEIGHT,
-            bar_corner_radius: 3,
+            bar_corner_radius: 2,
             column_width: 30,
             custom_popup_html: (task) => {
                 const s = task._start ? task._start.toLocaleDateString("vi-VN") : "";

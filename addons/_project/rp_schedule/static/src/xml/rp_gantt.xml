@@ -43,7 +43,11 @@
                         <span class="col-wbs" t-esc="r.wbs"/>
                         <span class="col-name" t-att-title="r.name"
                               t-attf-style="padding-left: {{r.level * 16}}px;">
-                            <i t-if="r.milestone" class="fa fa-flag me-1"/>
+                            <i t-if="r.parent"
+                               class="rp-caret fa me-1"
+                               t-att-class="r.open ? 'fa-caret-down' : 'fa-caret-right'"
+                               t-on-click.stop="() => this.toggleRow(r)"/>
+                            <i t-elif="r.milestone" class="fa fa-diamond me-1 text-warning"/>
                             <t t-esc="r.name"/>
                         </span>
                         <span class="col-date" t-esc="r.start"/>

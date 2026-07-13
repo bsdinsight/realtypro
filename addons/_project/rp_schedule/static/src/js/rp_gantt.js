@@ -6,10 +6,10 @@ import { useService } from "@web/core/utils/hooks";
 
 // Hằng số layout — PHẢI khớp options truyền vào frappe-gantt bên dưới:
 // row height = bar_height + padding; header = header_height + 10.
-const BAR_HEIGHT = 18;
-const PADDING = 16;
+const BAR_HEIGHT = 24;
+const PADDING = 18;
 const HEADER_HEIGHT = 50;
-export const ROW_H = BAR_HEIGHT + PADDING;        // 34px
+export const ROW_H = BAR_HEIGHT + PADDING;        // 42px
 export const HEAD_H = HEADER_HEIGHT + 10;         // 60px
 
 // Client action: Gantt lịch thi công kiểu Syncfusion —
@@ -30,6 +30,7 @@ export class RpGanttAction extends Component {
             rowH: ROW_H,
             headH: HEAD_H,
             collapsed: {},          // {wbs: true} — hàng cha đang thu gọn
+            leftW: 520,             // bề rộng lưới trái (kéo splitter đổi)
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -152,6 +153,59 @@ export class RpGanttAction extends Component {
         this.renderGantt();
     }
 
+    // Splitter: kéo đổi bề rộng lưới trái (kiểu Syncfusion)
+    onSplitterDown(ev) {
+        ev.preventDefault();
+        const startX = ev.clientX;
+        const startW = this.state.leftW;
+        const move = (e) => {
+            this.state.leftW = Math.min(
+                900, Math.max(260, startW + (e.clientX - startX)));
+        };
+        const up = () => {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", up);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+    }
+
+    // Vẽ thêm chi tiết Syncfusion mà frappe-gantt không có:
+    // đường phân tầng header + bôi xám Thứ 7/CN (chế độ Ngày).
+    _augment() {
+        const svg = this.ganttRef.el;
+        const g = this.gantt;
+        if (!svg || !g) return;
+        const NS = "http://www.w3.org/2000/svg";
+        const width = parseFloat(svg.getAttribute("width")) || 0;
+        const height = parseFloat(svg.getAttribute("height")) || 0;
+        const gridLayer = svg.querySelector("g.grid");
+        // 1) đường ngang tách 2 tầng header (tháng / ngày)
+        const div = document.createElementNS(NS, "line");
+        div.setAttribute("x1", 0);
+        div.setAttribute("x2", width);
+        div.setAttribute("y1", HEADER_HEIGHT - 20);
+        div.setAttribute("y2", HEADER_HEIGHT - 20);
+        div.setAttribute("class", "rp-header-divider");
+        svg.appendChild(div);
+        // 2) bôi xám cuối tuần (chỉ chế độ Ngày — mỗi cột = 1 ngày)
+        if (this.state.viewMode === "Day" && gridLayer && g.dates) {
+            const col = g.options.column_width;
+            g.dates.forEach((d, i) => {
+                const day = d.getDay();
+                if (day === 0 || day === 6) {
+                    const rect = document.createElementNS(NS, "rect");
+                    rect.setAttribute("x", i * col);
+                    rect.setAttribute("y", HEAD_H);
+                    rect.setAttribute("width", col);
+                    rect.setAttribute("height", Math.max(0, height - HEAD_H));
+                    rect.setAttribute("class", "rp-weekend");
+                    gridLayer.appendChild(rect);
+                }
+            });
+        }
+    }
+
     renderGantt() {
         const el = this.ganttRef.el;
         if (!el || this.state.empty) return;
@@ -181,12 +235,14 @@ export class RpGanttAction extends Component {
                 );
             },
         });
+        this._augment();
     }
 
     setViewMode(mode) {
         this.state.viewMode = mode;
         if (this.gantt) {
             this.gantt.change_view_mode(mode);
+            this._augment();
         }
     }
 }

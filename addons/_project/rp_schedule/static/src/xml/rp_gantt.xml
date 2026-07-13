@@ -27,7 +27,8 @@
 
             <!-- Thân: lưới task trái (sticky) + timeline phải, chung 1 vùng cuộn -->
             <div class="rp-gantt-body" t-att-class="state.empty ? 'd-none' : ''">
-                <div class="rp-gantt-left">
+                <div class="rp-gantt-left"
+                     t-attf-style="width: {{state.leftW}}px;">
                     <div class="rp-gantt-left-head"
                          t-attf-style="height: {{state.headH}}px;">
                         <span class="col-wbs">WBS</span>
@@ -55,6 +56,9 @@
                         <span class="col-pct" t-esc="r.progress + '%'"/>
                     </div>
                 </div>
+                <div class="rp-gantt-splitter"
+                     t-attf-style="left: {{state.leftW}}px;"
+                     t-on-pointerdown="onSplitterDown"/>
                 <div class="rp-gantt-right">
                     <svg t-ref="gantt" class="rp-gantt-svg"/>
                 </div>

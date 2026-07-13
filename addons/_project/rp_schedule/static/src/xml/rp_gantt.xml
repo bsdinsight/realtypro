@@ -38,10 +38,11 @@
                     </div>
                     <div t-foreach="state.rows" t-as="r" t-key="r.id"
                          class="rp-gantt-left-row"
-                         t-att-class="(r.milestone ? 'is-milestone ' : '') + (r.nodate ? 'is-nodate' : '')"
+                         t-att-class="(r.milestone ? 'is-milestone ' : '') + (r.nodate ? 'is-nodate ' : '') + (r.parent ? 'is-parent' : '')"
                          t-attf-style="height: {{state.rowH}}px;">
                         <span class="col-wbs" t-esc="r.wbs"/>
-                        <span class="col-name" t-att-title="r.name">
+                        <span class="col-name" t-att-title="r.name"
+                              t-attf-style="padding-left: {{r.level * 16}}px;">
                             <i t-if="r.milestone" class="fa fa-flag me-1"/>
                             <t t-esc="r.name"/>
                         </span>

@@ -45,6 +45,32 @@ export class RpGanttAction extends Component {
         return `${dd}/${m}/${y}`;
     }
 
+    // WBS "1.10.2" → [1,10,2] để sort số tự nhiên (không sort chữ 1,10,2,20…)
+    _wbsKey(w) {
+        return String(w || "")
+            .split(".")
+            .map((s) => {
+                const n = parseInt(s, 10);
+                return isNaN(n) ? s : n;
+            });
+    }
+
+    _wbsCompare(a, b) {
+        const ka = this._wbsKey(a.wbs_code), kb = this._wbsKey(b.wbs_code);
+        const len = Math.max(ka.length, kb.length);
+        for (let i = 0; i < len; i++) {
+            if (ka[i] === undefined) return -1;   // cha trước con
+            if (kb[i] === undefined) return 1;
+            if (ka[i] !== kb[i]) {
+                if (typeof ka[i] === "number" && typeof kb[i] === "number") {
+                    return ka[i] - kb[i];
+                }
+                return String(ka[i]) < String(kb[i]) ? -1 : 1;
+            }
+        }
+        return a.id - b.id;
+    }
+
     async loadData() {
         if (this.contractId) {
             const c = await this.orm.read("rp.contract", [this.contractId], ["name"]);
@@ -55,16 +81,32 @@ export class RpGanttAction extends Component {
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
              "progress_percent", "is_milestone", "predecessor_ids"],
-            { order: "planned_start asc, wbs_code asc, id asc" }
+            { order: "id asc" }
         );
+        // Sort WBS theo SỐ tự nhiên (1,2,…10,11 — không phải 1,10,11,2…);
+        // task không WBS giữ thứ tự import (id).
+        recs.sort((a, b) => this._wbsCompare(a, b));
+        // Cha/con suy từ WBS chấm: "1.2" là con của "1" (Excel phẳng = 1 cấp;
+        // MS Project XML có WBS chấm sẽ tự thụt cấp).
+        const wbsSet = new Set(recs.map((r) => String(r.wbs_code || "")));
+        const meta = recs.map((r) => {
+            const w = String(r.wbs_code || "");
+            const level = w ? w.split(".").length - 1 : 0;
+            const isParent = !!w && recs.some(
+                (o) => o !== r && String(o.wbs_code || "").startsWith(w + "."));
+            return { level, isParent };
+        });
+        void wbsSet;
         // TẤT CẢ task đều lên (kể cả chưa có ngày). frappe-gantt bắt buộc
         // start/end → task thiếu ngày gán ngày neo ảo + ẩn bar bằng CSS;
         // hàng lưới trái/phải vẫn khớp 1-1.
         const anchor =
             (recs.find((r) => r.planned_start) || {}).planned_start ||
             new Date().toISOString().slice(0, 10);
+        const datedIds = new Set(
+            recs.filter((r) => r.planned_start).map((r) => r.id));
         // Lưới trái (cùng thứ tự với thanh gantt)
-        this.state.rows = recs.map((r) => ({
+        this.state.rows = recs.map((r, i) => ({
             id: r.id,
             wbs: r.wbs_code || "",
             name: r.name,
@@ -74,16 +116,20 @@ export class RpGanttAction extends Component {
             progress: Math.round(r.progress_percent || 0),
             milestone: r.is_milestone,
             nodate: !r.planned_start,
+            level: meta[i].level,
+            parent: meta[i].isParent,
         }));
-        // Thanh gantt phải
-        this.tasks = recs.map((r) => ({
+        // Thanh gantt phải (chỉ nối phụ thuộc giữa các task CÓ ngày)
+        this.tasks = recs.map((r, i) => ({
             id: String(r.id),
             name: r.name,
             start: r.planned_start || anchor,
             end: r.planned_end || r.planned_start || anchor,
             progress: Math.round(r.progress_percent || 0),
-            dependencies: (r.predecessor_ids || []).map(String).join(","),
+            dependencies: (r.predecessor_ids || [])
+                .filter((pid) => datedIds.has(pid)).map(String).join(","),
             custom_class: !r.planned_start ? "rp-bar-nodate"
+                : meta[i].isParent ? "rp-bar-parent"
                 : r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
         }));
         this.state.count = this.tasks.length;

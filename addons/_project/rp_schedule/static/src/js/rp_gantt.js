@@ -21,7 +21,10 @@ export class RpGanttAction extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.action = useService("action");
         this.ganttRef = useRef("gantt");
+        this.bodyRef = useRef("body");        // vùng cuộn CHÍNH (timeline)
+        this.leftRef = useRef("leftpane");    // lưới trái (cuộn dọc đồng bộ)
         this.state = useState({
             viewMode: "Week",
             count: 0,
@@ -33,6 +36,8 @@ export class RpGanttAction extends Component {
             collapsed: {},          // {wbs: true} — hàng cha đang thu gọn
             leftW: 520,             // bề rộng lưới trái (kéo splitter đổi)
             tl: { width: 0, cells: [], col: 30 },  // header timeline HTML sticky
+            selectedId: null,       // task đang chọn (highlight 2 bên)
+            menu: null,             // context menu {x, y, row}
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -40,7 +45,10 @@ export class RpGanttAction extends Component {
             (this.props.action.params && this.props.action.params.contract_id) || false;
 
         onWillStart(async () => { await this.loadData(); });
-        onMounted(() => this.renderGantt());
+        onMounted(() => {
+            this.renderGantt();
+            this._bindScrollSync();
+        });
     }
 
     _fmt(d) {
@@ -169,7 +177,8 @@ export class RpGanttAction extends Component {
         const recs = await this.orm.searchRead(
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
-             "progress_percent", "is_milestone", "predecessor_ids"],
+             "progress_percent", "is_milestone", "predecessor_ids",
+             "project_id"],
             { order: "id asc" }
         );
         // Sort WBS theo SỐ tự nhiên; cha/con suy từ WBS chấm ("1.2" con của "1")
@@ -238,6 +247,171 @@ export class RpGanttAction extends Component {
         };
         this._rebuild();
         this.renderGantt();
+    }
+
+    async reload() {
+        await this.loadData();
+        this.renderGantt();
+    }
+
+    // 2 vùng cuộn tách biệt (trái: dọc · phải: dọc+ngang) — đồng bộ scrollTop
+    _bindScrollSync() {
+        const r = this.bodyRef.el, l = this.leftRef.el;
+        if (!r || !l || this._syncBound) return;
+        this._syncBound = true;
+        r.addEventListener("scroll", () => {
+            if (this._syncing) return;
+            this._syncing = true;
+            l.scrollTop = r.scrollTop;
+            this._syncing = false;
+        });
+        l.addEventListener("scroll", () => {
+            if (this._syncing) return;
+            this._syncing = true;
+            r.scrollTop = l.scrollTop;
+            this._syncing = false;
+        });
+    }
+
+    // ── Click hàng → chọn + timeline TỰ CHẠY TỚI thanh đó ──────────────
+    onRowClick(row) {
+        this.state.selectedId = row.id;
+        this._scrollToBar(row.id);
+    }
+
+    onRowDblClick(row) {
+        this._openTaskForm(row.id);
+    }
+
+    _scrollToBar(id) {
+        const svg = this.ganttRef.el, body = this.bodyRef.el;
+        if (!svg || !body) return;
+        // highlight thanh được chọn
+        svg.querySelectorAll(".bar-wrapper.is-selected")
+            .forEach((w) => w.classList.remove("is-selected"));
+        const wrap = svg.querySelector(`.bar-wrapper[data-id="${id}"]`);
+        if (!wrap) return;
+        wrap.classList.add("is-selected");
+        const bar = wrap.querySelector(".bar");
+        if (!bar) return;
+        const x = parseFloat(bar.getAttribute("x")) || 0;
+        // đưa thanh về ngay sau mép lưới trái (mượt)
+        // instant (smooth bị OWL re-render huỷ giữa chừng)
+        body.scrollLeft = Math.max(0, x - 80);
+    }
+
+    _openTaskForm(id) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "project.task",
+            res_id: id,
+            views: [[false, "form"]],
+            target: "new",
+        }, { onClose: () => this.reload() });
+    }
+
+    // ── Chuột phải → context menu (thêm/nhân bản/xoá task) ─────────────
+    onRowMenu(ev, row) {
+        const rect = ev.currentTarget
+            .closest(".rp-gantt-container").getBoundingClientRect();
+        this.state.selectedId = row.id;
+        this.state.menu = {
+            x: ev.clientX - rect.left,
+            y: ev.clientY - rect.top,
+            row,
+        };
+    }
+
+    closeMenu() {
+        if (this.state.menu) this.state.menu = null;
+    }
+
+    _nextChildWbs(parentWbs) {
+        const prefix = parentWbs ? parentWbs + "." : "";
+        let max = 0;
+        this._recs.forEach((r) => {
+            if (r._wbs.startsWith(prefix)) {
+                const tail = r._wbs.slice(prefix.length);
+                if (/^\d+$/.test(tail)) max = Math.max(max, parseInt(tail, 10));
+            }
+        });
+        return prefix + (max + 1);
+    }
+
+    async _createTask(vals) {
+        const base = this._recs[0];
+        await this.orm.create("project.task", [{
+            rp_contract_id: this.contractId || false,
+            project_id: base && base.project_id ? base.project_id[0] : false,
+            ...vals,
+        }]);
+        await this.reload();
+    }
+
+    async menuOpenTask() {
+        const row = this.state.menu.row;
+        this.closeMenu();
+        this._openTaskForm(row.id);
+    }
+
+    async menuAddChild() {
+        const row = this.state.menu.row;
+        this.closeMenu();
+        await this._createTask({
+            name: "Công việc mới",
+            wbs_code: this._nextChildWbs(row.wbs),
+            planned_start: this._recs.find((r) => r.id === row.id)
+                ?.planned_start || false,
+        });
+    }
+
+    async menuAddSibling() {
+        const row = this.state.menu.row;
+        this.closeMenu();
+        const parent = row.wbs.includes(".")
+            ? row.wbs.slice(0, row.wbs.lastIndexOf(".")) : "";
+        const rec = this._recs.find((r) => r.id === row.id);
+        await this._createTask({
+            name: "Công việc mới",
+            wbs_code: this._nextChildWbs(parent),
+            planned_start: rec?.planned_end || rec?.planned_start || false,
+        });
+    }
+
+    async menuDuplicate() {
+        const row = this.state.menu.row;
+        this.closeMenu();
+        const rec = this._recs.find((r) => r.id === row.id);
+        const parent = row.wbs.includes(".")
+            ? row.wbs.slice(0, row.wbs.lastIndexOf(".")) : "";
+        await this._createTask({
+            name: rec.name + " (bản sao)",
+            wbs_code: this._nextChildWbs(parent),
+            planned_start: rec.planned_start || false,
+            planned_end: rec.planned_end || false,
+            is_milestone: rec.is_milestone,
+        });
+    }
+
+    async menuDelete() {
+        const row = this.state.menu.row;
+        this.closeMenu();
+        if (row.parent) {
+            this.notification.add(
+                "Nhóm cha còn công việc con — xoá các công việc con trước.",
+                { type: "warning" });
+            return;
+        }
+        if (!window.confirm(`Xoá công việc "${row.name}"?`)) return;
+        try {
+            await this.orm.unlink("project.task", [row.id]);
+            await this.reload();
+            this.notification.add("Đã xoá công việc.", { type: "success" });
+        } catch {
+            this.notification.add(
+                "Không xoá được (kiểm tra quyền hoặc ràng buộc).",
+                { type: "danger" });
+        }
     }
 
     // Splitter: kéo đổi bề rộng lưới trái (kiểu Syncfusion)

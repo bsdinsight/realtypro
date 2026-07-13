@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="rp_schedule.RpGantt">
-        <div class="rp-gantt-container o_action_manager">
+        <div class="rp-gantt-container o_action_manager" t-on-click="closeMenu">
             <div class="rp-gantt-toolbar">
                 <span class="rp-gantt-title" t-esc="state.title"/>
                 <span class="badge text-bg-secondary ms-2">
                     <t t-esc="state.count"/> công việc
                 </span>
                 <span class="text-muted small ms-3 d-none d-lg-inline">
-                    <i class="fa fa-arrows-h me-1"/>Kéo thanh để đổi ngày — tự lưu
+                    <i class="fa fa-arrows-h me-1"/>Kéo thanh đổi ngày ·
+                    <i class="fa fa-mouse-pointer mx-1"/>Click tới thanh ·
+                    Chuột phải: thêm/xoá
                 </span>
                 <div class="btn-group btn-group-sm ms-auto" role="group">
                     <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"
@@ -29,8 +31,9 @@
             </div>
 
             <!-- Thân: lưới task trái (sticky) + timeline phải, chung 1 vùng cuộn -->
-            <div class="rp-gantt-body" t-att-class="state.empty ? 'd-none' : ''">
-                <div class="rp-gantt-left"
+            <div class="rp-gantt-body"
+                 t-att-class="state.empty ? 'd-none' : ''">
+                <div class="rp-gantt-left" t-ref="leftpane"
                      t-attf-style="width: {{state.leftW}}px;">
                     <div class="rp-gantt-left-head"
                          t-attf-style="height: {{state.headH}}px;">
@@ -42,8 +45,11 @@
                     </div>
                     <div t-foreach="state.rows" t-as="r" t-key="r.id"
                          class="rp-gantt-left-row"
-                         t-att-class="(r.milestone ? 'is-milestone ' : '') + (r.nodate ? 'is-nodate ' : '') + (r.parent ? 'is-parent' : '')"
-                         t-attf-style="height: {{state.rowH}}px;">
+                         t-att-class="(r.milestone ? 'is-milestone ' : '') + (r.nodate ? 'is-nodate ' : '') + (r.parent ? 'is-parent ' : '') + (state.selectedId === r.id ? 'is-selected' : '')"
+                         t-attf-style="height: {{state.rowH}}px;"
+                         t-on-click="() => this.onRowClick(r)"
+                         t-on-dblclick="() => this.onRowDblClick(r)"
+                         t-on-contextmenu.prevent="(ev) => this.onRowMenu(ev, r)">
                         <span class="col-wbs" t-esc="r.wbs"/>
                         <span class="col-name" t-att-title="r.name"
                               t-attf-style="padding-left: {{r.level * 16}}px;">
@@ -60,9 +66,8 @@
                     </div>
                 </div>
                 <div class="rp-gantt-splitter"
-                     t-attf-style="left: {{state.leftW}}px;"
                      t-on-pointerdown="onSplitterDown"/>
-                <div class="rp-gantt-right">
+                <div class="rp-gantt-right" t-ref="body">
                     <!-- Header timeline HTML sticky (thay header SVG):
                          margin-bottom âm = không chiếm flow → SVG không bị
                          đẩy xuống, hàng 2 bên vẫn khớp pixel -->
@@ -78,6 +83,28 @@
                         </t>
                     </div>
                     <svg t-ref="gantt" class="rp-gantt-svg"/>
+                </div>
+            </div>
+
+            <!-- Context menu (chuột phải trên hàng) -->
+            <div t-if="state.menu" class="rp-gantt-menu"
+                 t-attf-style="left: {{state.menu.x}}px; top: {{state.menu.y}}px;">
+                <div class="rp-menu-item" t-on-click="menuOpenTask">
+                    <i class="fa fa-external-link"/> Mở chi tiết công việc
+                </div>
+                <div class="rp-menu-sep"/>
+                <div class="rp-menu-item" t-on-click="menuAddChild">
+                    <i class="fa fa-level-down"/> Thêm công việc con
+                </div>
+                <div class="rp-menu-item" t-on-click="menuAddSibling">
+                    <i class="fa fa-plus"/> Thêm công việc cùng cấp
+                </div>
+                <div class="rp-menu-item" t-on-click="menuDuplicate">
+                    <i class="fa fa-clone"/> Nhân bản công việc
+                </div>
+                <div class="rp-menu-sep"/>
+                <div class="rp-menu-item text-danger" t-on-click="menuDelete">
+                    <i class="fa fa-trash"/> Xoá công việc
                 </div>
             </div>
         </div>

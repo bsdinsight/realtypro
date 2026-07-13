@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     background: #ffffff;
+    position: relative;   // neo context menu
 
     .rp-gantt-toolbar {
         display: flex;
@@ -19,20 +20,23 @@
         }
     }
 
-    // 1 vùng cuộn chung → lưới trái sticky, timeline phải cuộn ngang,
-    // cuộn dọc 2 bên tự đồng bộ (cùng container).
+    // 2 VÙNG CUỘN TÁCH BIỆT (kiến trúc grid+gantt chuẩn):
+    // trái cuộn DỌC (ẩn scrollbar) · phải cuộn DỌC+NGANG · JS đồng bộ scrollTop.
     .rp-gantt-body {
         flex: 1 1 auto;
-        overflow: auto;
+        overflow: hidden;
         display: flex;
-        align-items: flex-start;
+        align-items: stretch;
+        min-height: 0;
     }
 
     .rp-gantt-left {
-        position: sticky;
-        left: 0;
-        z-index: 5;
         flex: 0 0 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        scrollbar-width: none;          // ẩn scrollbar (cuộn theo bên phải)
+        &::-webkit-scrollbar { display: none; }
         background: #ffffff;
         border-right: 2px solid #cfd8dc;
         box-shadow: 4px 0 8px -4px rgba(16, 42, 44, 0.18);
@@ -86,6 +90,11 @@
                 background: #f3f7f8;
                 .col-name { font-weight: 700; color: #0a3d47; }
             }
+            &.is-selected {
+                background: #d8ecef !important;
+                box-shadow: inset 3px 0 0 #0e5563;
+            }
+            cursor: pointer;
         }
 
         .rp-caret {
@@ -104,6 +113,12 @@
     .rp-gantt-right {
         flex: 1 1 auto;
         min-width: 0;
+        overflow: auto;                 // vùng cuộn CHÍNH (dọc + ngang)
+        position: relative;
+
+        // SVG mặc định display:inline → inline box 31k px trong khung hẹp
+        // bị căn dòng lệch hàng trăm px. Block hoá là hết.
+        svg.rp-gantt-svg { display: block; }
     }
 
     // Header timeline HTML STICKY — luôn ghim trên đỉnh khi cuộn dọc
@@ -194,12 +209,46 @@
 
     // 10) Hover hàng bên timeline (đồng cảm giác với lưới trái)
     .grid-row:hover { fill: #f0f7f8; }
+
+    // 11) Thanh đang chọn: viền teal đậm
+    .bar-wrapper.is-selected .bar {
+        stroke: #0e5563;
+        stroke-width: 2;
+    }
+}
+
+// Context menu chuột phải (kiểu Syncfusion)
+.rp-gantt-container .rp-gantt-menu {
+    position: absolute;
+    z-index: 60;
+    min-width: 230px;
+    background: #ffffff;
+    border: 1px solid #cfd8dc;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(16, 42, 44, 0.22);
+    padding: 4px 0;
+    font-size: 13px;
+
+    .rp-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        cursor: pointer;
+        color: #1a2b2e;
+        .fa { width: 14px; color: #46605f; }
+        &:hover { background: #e8f4f5; }
+        &.text-danger { color: #c0392b; .fa { color: #c0392b; } }
+        &.text-danger:hover { background: #fdecea; }
+    }
+    .rp-menu-sep {
+        border-top: 1px solid #eef2f2;
+        margin: 4px 0;
+    }
 }
 
 // Splitter kéo co giãn lưới trái (kiểu Syncfusion)
 .rp-gantt-container .rp-gantt-splitter {
-    position: sticky;
-    z-index: 6;
     flex: 0 0 5px;
     width: 5px;
     align-self: stretch;

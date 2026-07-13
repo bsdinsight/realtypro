@@ -1,19 +1,20 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { BSDSyncfusionGanttAdapter }
+    from "@rp_progress/js/bsd_gantt/bsd_syncfusion_gantt_adapter";
 
-// Hằng số layout — PHẢI khớp options truyền vào frappe-gantt bên dưới:
-// row height = bar_height + padding; header = header_height + 10.
-const BAR_HEIGHT = 24;
-const PADDING = 18;
-const HEADER_HEIGHT = 50;
-export const ROW_H = BAR_HEIGHT + PADDING;        // 42px
-export const HEAD_H = HEADER_HEIGHT + 10;         // 60px
-
-// Client action: Gantt lịch thi công kiểu Syncfusion —
-// lưới task trái (sticky, thu/mở cây) + timeline frappe-gantt bên phải.
+// Gantt lịch thi công theo HĐ nhà thầu — dùng Syncfusion EJ2 (bản quyền
+// BSD, license param `syncfusion.license_key`, đã triển khai ở
+// rp_progress/frm_gantt). Tái dùng BSDSyncfusionGanttAdapter:
+// EJ2 tự có TreeGrid trái + splitter + zoom + context menu + drag bar.
+//
+// Hierarchy suy từ WBS chấm ("1.2" là con "1"); ngày trống → EJ2 tự
+// aggregate summary; milestone (start=end) → EJ2 vẽ hình thoi.
 export class RpGanttAction extends Component {
     static template = "rp_schedule.RpGantt";
     static props = ["*"];
@@ -23,140 +24,50 @@ export class RpGanttAction extends Component {
         this.notification = useService("notification");
         this.action = useService("action");
         this.ganttRef = useRef("gantt");
-        this.bodyRef = useRef("body");        // vùng cuộn CHÍNH (timeline)
-        this.leftRef = useRef("leftpane");    // lưới trái (cuộn dọc đồng bộ)
         this.state = useState({
             viewMode: "Week",
             count: 0,
             title: "",
             empty: false,
-            rows: [],
-            rowH: ROW_H,
-            headH: HEAD_H,
-            collapsed: {},          // {wbs: true} — hàng cha đang thu gọn
-            leftW: 520,             // bề rộng lưới trái (kéo splitter đổi)
-            tl: { width: 0, cells: [], col: 30 },  // header timeline HTML sticky
-            selectedId: null,       // task đang chọn (highlight 2 bên)
-            menu: null,             // context menu {x, y, row}
+            loading: true,
+            error: null,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
             ctx.default_rp_contract_id || ctx.active_id ||
             (this.props.action.params && this.props.action.params.contract_id) || false;
+        this.adapter = null;
+        this._licenseKey = null;
 
-        onWillStart(async () => { await this.loadData(); });
-        onMounted(() => {
-            this.renderGantt();
-            this._bindScrollSync();
+        onMounted(async () => {
+            await this.loadAndRender();
+        });
+        onWillUnmount(() => {
+            if (this.adapter) this.adapter.destroy();
         });
     }
 
-    _fmt(d) {
-        if (!d) return "";
-        const [y, m, dd] = String(d).split("-");
-        return `${dd}/${m}/${y}`;
-    }
-
     _iso(d) {
-        const mm = String(d.getMonth() + 1).padStart(2, "0");
-        const dd = String(d.getDate()).padStart(2, "0");
-        return `${d.getFullYear()}-${mm}-${dd}`;
+        if (!d) return false;
+        const dd = d instanceof Date ? d : new Date(d);
+        const mm = String(dd.getMonth() + 1).padStart(2, "0");
+        const day = String(dd.getDate()).padStart(2, "0");
+        return `${dd.getFullYear()}-${mm}-${day}`;
     }
 
-    // Kéo-thả thanh → LƯU ngày kế hoạch.
-    // LƯU Ý: frappe-gantt kéo 1 task sẽ DỊCH CẢ DÂY CHUYỀN phụ thuộc và
-    // bắn on_date_change cho TỪNG task → gom batch 400ms, ghi TUẦN TỰ
-    // (bắn song song sẽ lock/fail), xong báo 1 thông báo tổng.
-    _onDateChange(task, start, end) {
-        const id = parseInt(task.id, 10);
-        const rec = this._recs.find((r) => r.id === id);
-        if (!rec) return;
-        let s = this._iso(start), e = this._iso(end);
-        if (e < s) e = s;
-        if (!this._pendingDates) this._pendingDates = new Map();
-        // Thanh cha (tổng hợp) bị cascade kéo theo: KHÔNG ghi — ngày cha
-        // sẽ vẽ lại theo dữ liệu thật sau batch.
-        if (!rec._parent) {
-            this._pendingDates.set(id, { s, e });
-        }
-        clearTimeout(this._dateFlushTimer);
-        this._dateFlushTimer = setTimeout(() => this._flushDateChanges(), 400);
-    }
-
-    async _flushDateChanges() {
-        const pending = this._pendingDates;
-        this._pendingDates = null;
-        if (!pending || !pending.size) {
-            this.renderGantt();     // chỉ cha bị kéo → vẽ lại cho về chỗ cũ
-            return;
-        }
-        let ok = 0, fail = 0;
-        for (const [id, v] of pending) {   // TUẦN TỰ — không bắn song song
-            try {
-                await this.orm.write("project.task", [id],
-                    { planned_start: v.s, planned_end: v.e });
-                const rec = this._recs.find((r) => r.id === id);
-                if (rec) {
-                    rec.planned_start = v.s;
-                    rec.planned_end = v.e;
-                }
-                ok++;
-            } catch {
-                fail++;
-            }
-        }
-        this._rebuild();
-        if (fail) {
-            this.notification.add(
-                `Đã lưu ${ok} công việc, ${fail} lỗi — hiển thị được hoàn tác.`,
-                { type: "danger" });
-            this.renderGantt();     // vẽ lại theo dữ liệu thật
-        } else if (ok > 1) {
-            this.notification.add(
-                `Đã lưu ${ok} công việc (dây chuyền phụ thuộc dịch theo).`,
-                { type: "success" });
-        } else {
-            const [id] = pending.keys();
-            const v = pending.get(id);
-            this.notification.add(
-                `Đã lưu: ${this._fmt(v.s)} – ${this._fmt(v.e)}`,
-                { type: "success" });
-        }
-    }
-
-    // Kéo tay nắm % trên thanh → LƯU % hoàn thành
-    async _onProgressChange(task, progress) {
-        const id = parseInt(task.id, 10);
-        const rec = this._recs.find((r) => r.id === id);
-        if (!rec || rec._parent) return;
-        try {
-            await this.orm.write("project.task", [id],
-                { progress_percent: progress });
-            rec.progress_percent = progress;
-            this._rebuild();
-        } catch {
-            this.notification.add(
-                "Không lưu được % hoàn thành.", { type: "danger" });
-            this._rebuild();
-            this.renderGantt();
-        }
-    }
-
-    // WBS "1.10.2" → [1,10,2] để sort số tự nhiên (không sort chữ 1,10,2,20…)
+    // WBS "1.10.2" → [1,10,2] để sort số tự nhiên
     _wbsKey(w) {
-        return String(w || "")
-            .split(".")
-            .map((s) => {
-                const n = parseInt(s, 10);
-                return isNaN(n) ? s : n;
-            });
+        return String(w || "").split(".").map((s) => {
+            const n = parseInt(s, 10);
+            return isNaN(n) ? s : n;
+        });
     }
 
     _wbsCompare(a, b) {
         const ka = this._wbsKey(a.wbs_code), kb = this._wbsKey(b.wbs_code);
         const len = Math.max(ka.length, kb.length);
         for (let i = 0; i < len; i++) {
-            if (ka[i] === undefined) return -1;   // cha trước con
+            if (ka[i] === undefined) return -1;
             if (kb[i] === undefined) return 1;
             if (ka[i] !== kb[i]) {
                 if (typeof ka[i] === "number" && typeof kb[i] === "number") {
@@ -168,12 +79,28 @@ export class RpGanttAction extends Component {
         return a.id - b.id;
     }
 
-    async loadData() {
+    async loadAndRender() {
+        this.state.loading = true;
+        this.state.error = null;
+        try {
+            await this._loadData();
+            if (!this.state.empty) {
+                await this._render();
+            }
+        } catch (err) {
+            this.state.error = err.message || String(err);
+        }
+        this.state.loading = false;
+    }
+
+    async _loadData() {
         if (this.contractId) {
-            const c = await this.orm.read("rp.contract", [this.contractId], ["name"]);
+            const c = await this.orm.read(
+                "rp.contract", [this.contractId], ["name"]);
             this.state.title = (c[0] && c[0].name) || "";
         }
-        const domain = this.contractId ? [["rp_contract_id", "=", this.contractId]] : [];
+        const domain = this.contractId
+            ? [["rp_contract_id", "=", this.contractId]] : [];
         const recs = await this.orm.searchRead(
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
@@ -181,354 +108,142 @@ export class RpGanttAction extends Component {
              "project_id"],
             { order: "id asc" }
         );
-        // Sort WBS theo SỐ tự nhiên; cha/con suy từ WBS chấm ("1.2" con của "1")
         recs.sort((a, b) => this._wbsCompare(a, b));
-        recs.forEach((r) => {
-            const w = String(r.wbs_code || "");
-            r._wbs = w;
-            r._level = w ? w.split(".").length - 1 : 0;
-            r._parent = !!w && recs.some(
-                (o) => o !== r && String(o.wbs_code || "").startsWith(w + "."));
-        });
         this._recs = recs;
         this.state.count = recs.length;
         this.state.empty = recs.length === 0;
-        this._rebuild();
-    }
 
-    // Dựng rows (lưới trái) + tasks (gantt phải) theo trạng thái thu/mở
-    _rebuild() {
-        const collapsed = this.state.collapsed;
-        const hiddenBy = (w) => {
-            for (const c of Object.keys(collapsed)) {
-                if (collapsed[c] && w !== c && w.startsWith(c + ".")) return true;
+        // map WBS → task id để suy cha ("2.3" → cha là task wbs "2")
+        const byWbs = new Map();
+        recs.forEach((r) => {
+            if (r.wbs_code) byWbs.set(String(r.wbs_code), r.id);
+        });
+        const idSet = new Set(recs.map((r) => r.id));
+        this.tasks = recs.map((r) => {
+            const w = String(r.wbs_code || "");
+            let parent = null;
+            if (w.includes(".")) {
+                const pw = w.slice(0, w.lastIndexOf("."));
+                if (byWbs.has(pw)) parent = String(byWbs.get(pw));
             }
-            return false;
-        };
-        const visible = this._recs.filter((r) => !hiddenBy(r._wbs));
-        const anchor =
-            (visible.find((r) => r.planned_start) || {}).planned_start ||
-            new Date().toISOString().slice(0, 10);
-        const datedIds = new Set(
-            visible.filter((r) => r.planned_start).map((r) => r.id));
-        this.state.rows = visible.map((r) => ({
-            id: r.id,
-            wbs: r._wbs,
-            name: r.name,
-            start: r.planned_start ? this._fmt(r.planned_start) : "—",
-            end: (r.planned_end || r.planned_start)
-                ? this._fmt(r.planned_end || r.planned_start) : "—",
-            progress: Math.round(r.progress_percent || 0),
-            milestone: r.is_milestone,
-            nodate: !r.planned_start,
-            level: r._level,
-            parent: r._parent,
-            open: !collapsed[r._wbs],
-        }));
-        this.tasks = visible.map((r) => ({
-            id: String(r.id),
-            name: r.name,
-            start: r.planned_start || anchor,
-            end: r.planned_end || r.planned_start || anchor,
-            progress: Math.round(r.progress_percent || 0),
-            dependencies: (r.predecessor_ids || [])
-                .filter((pid) => datedIds.has(pid)).map(String).join(","),
-            custom_class: !r.planned_start ? "rp-bar-nodate"
-                : r._parent ? "rp-bar-parent"
-                : r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
-        }));
-    }
-
-    toggleRow(row) {
-        if (!row.parent) return;
-        this.state.collapsed = {
-            ...this.state.collapsed,
-            [row.wbs]: !this.state.collapsed[row.wbs],
-        };
-        this._rebuild();
-        this.renderGantt();
-    }
-
-    async reload() {
-        await this.loadData();
-        this.renderGantt();
-    }
-
-    // 2 vùng cuộn tách biệt (trái: dọc · phải: dọc+ngang) — đồng bộ scrollTop
-    _bindScrollSync() {
-        const r = this.bodyRef.el, l = this.leftRef.el;
-        if (!r || !l || this._syncBound) return;
-        this._syncBound = true;
-        r.addEventListener("scroll", () => {
-            if (this._syncing) return;
-            this._syncing = true;
-            l.scrollTop = r.scrollTop;
-            this._syncing = false;
-        });
-        l.addEventListener("scroll", () => {
-            if (this._syncing) return;
-            this._syncing = true;
-            r.scrollTop = l.scrollTop;
-            this._syncing = false;
+            const hasDates = !!r.planned_start;
+            return {
+                id: String(r.id),
+                parent,
+                name: (w ? w + " · " : "") + r.name,
+                start: hasDates ? r.planned_start : null,
+                end: hasDates
+                    ? (r.planned_end || r.planned_start) : null,
+                progress: Math.round(r.progress_percent || 0),
+                // taskMode 'Manual': predecessor chỉ VẼ mũi tên, không
+                // auto-reschedule → giữ đúng ngày import từ MS Project
+                dependencies: (r.predecessor_ids || [])
+                    .filter((pid) => idSet.has(pid))
+                    .map((pid) => `${pid}FS`).join(","),
+                custom_class: r.is_milestone ? "rp-ej2-milestone" : "",
+            };
         });
     }
 
-    // ── Click hàng → chọn + timeline TỰ CHẠY TỚI thanh đó ──────────────
-    onRowClick(row) {
-        this.state.selectedId = row.id;
-        this._scrollToBar(row.id);
-    }
-
-    onRowDblClick(row) {
-        this._openTaskForm(row.id);
-    }
-
-    _scrollToBar(id) {
-        const svg = this.ganttRef.el, body = this.bodyRef.el;
-        if (!svg || !body) return;
-        // highlight thanh được chọn
-        svg.querySelectorAll(".bar-wrapper.is-selected")
-            .forEach((w) => w.classList.remove("is-selected"));
-        const wrap = svg.querySelector(`.bar-wrapper[data-id="${id}"]`);
-        if (!wrap) return;
-        wrap.classList.add("is-selected");
-        const bar = wrap.querySelector(".bar");
-        if (!bar) return;
-        const x = parseFloat(bar.getAttribute("x")) || 0;
-        // đưa thanh về ngay sau mép lưới trái (mượt)
-        // instant (smooth bị OWL re-render huỷ giữa chừng)
-        body.scrollLeft = Math.max(0, x - 80);
+    async _render() {
+        // License key — cùng nguồn rp_progress (param syncfusion.license_key)
+        if (!this._licenseKey) {
+            const resp = await rpc("/rp_progress/syncfusion/license_key", {});
+            if (!resp.configured) {
+                this.state.error = _t(
+                    "Syncfusion license key chưa cấu hình — Settings → "
+                    + "Technical → System Parameters → 'syncfusion.license_key'.");
+                return;
+            }
+            this._licenseKey = resp.key;
+        }
+        if (this.adapter) this.adapter.destroy();
+        this.adapter = new BSDSyncfusionGanttAdapter(this.env);
+        await this.adapter.render(this.ganttRef.el, this.tasks, {
+            viewMode: this.state.viewMode,
+            licenseKey: this._licenseKey,
+            rowHeight: 42,
+            taskMode: "Manual",
+            allowAdding: true,
+            allowDeleting: true,
+            enableContextMenu: true,
+            onClick: (task) => this._openTaskForm(parseInt(task.id, 10)),
+            onDateChange: (task, start, end) =>
+                this._onDateChange(task, start, end),
+            onAdd: (data) => this._onAdd(data),
+            onDelete: (rows) => this._onDelete(rows),
+        });
     }
 
     _openTaskForm(id) {
+        if (!id || isNaN(id)) return;
         this.action.doAction({
             type: "ir.actions.act_window",
             res_model: "project.task",
             res_id: id,
             views: [[false, "form"]],
             target: "new",
-        }, { onClose: () => this.reload() });
+        }, { onClose: () => this.loadAndRender() });
     }
 
-    // ── Chuột phải → context menu (thêm/nhân bản/xoá task) ─────────────
-    onRowMenu(ev, row) {
-        const rect = ev.currentTarget
-            .closest(".rp-gantt-container").getBoundingClientRect();
-        this.state.selectedId = row.id;
-        this.state.menu = {
-            x: ev.clientX - rect.left,
-            y: ev.clientY - rect.top,
-            row,
-        };
-    }
-
-    closeMenu() {
-        if (this.state.menu) this.state.menu = null;
-    }
-
-    _nextChildWbs(parentWbs) {
-        const prefix = parentWbs ? parentWbs + "." : "";
-        let max = 0;
-        this._recs.forEach((r) => {
-            if (r._wbs.startsWith(prefix)) {
-                const tail = r._wbs.slice(prefix.length);
-                if (/^\d+$/.test(tail)) max = Math.max(max, parseInt(tail, 10));
-            }
-        });
-        return prefix + (max + 1);
-    }
-
-    async _createTask(vals) {
-        const base = this._recs[0];
-        await this.orm.create("project.task", [{
-            rp_contract_id: this.contractId || false,
-            project_id: base && base.project_id ? base.project_id[0] : false,
-            ...vals,
-        }]);
-        await this.reload();
-    }
-
-    async menuOpenTask() {
-        const row = this.state.menu.row;
-        this.closeMenu();
-        this._openTaskForm(row.id);
-    }
-
-    async menuAddChild() {
-        const row = this.state.menu.row;
-        this.closeMenu();
-        await this._createTask({
-            name: "Công việc mới",
-            wbs_code: this._nextChildWbs(row.wbs),
-            planned_start: this._recs.find((r) => r.id === row.id)
-                ?.planned_start || false,
-        });
-    }
-
-    async menuAddSibling() {
-        const row = this.state.menu.row;
-        this.closeMenu();
-        const parent = row.wbs.includes(".")
-            ? row.wbs.slice(0, row.wbs.lastIndexOf(".")) : "";
-        const rec = this._recs.find((r) => r.id === row.id);
-        await this._createTask({
-            name: "Công việc mới",
-            wbs_code: this._nextChildWbs(parent),
-            planned_start: rec?.planned_end || rec?.planned_start || false,
-        });
-    }
-
-    async menuDuplicate() {
-        const row = this.state.menu.row;
-        this.closeMenu();
-        const rec = this._recs.find((r) => r.id === row.id);
-        const parent = row.wbs.includes(".")
-            ? row.wbs.slice(0, row.wbs.lastIndexOf(".")) : "";
-        await this._createTask({
-            name: rec.name + " (bản sao)",
-            wbs_code: this._nextChildWbs(parent),
-            planned_start: rec.planned_start || false,
-            planned_end: rec.planned_end || false,
-            is_milestone: rec.is_milestone,
-        });
-    }
-
-    async menuDelete() {
-        const row = this.state.menu.row;
-        this.closeMenu();
-        if (row.parent) {
-            this.notification.add(
-                "Nhóm cha còn công việc con — xoá các công việc con trước.",
-                { type: "warning" });
-            return;
-        }
-        if (!window.confirm(`Xoá công việc "${row.name}"?`)) return;
+    async _onDateChange(task, start, end) {
+        const id = parseInt(task.id, 10);
+        if (!id || isNaN(id)) return;
+        const s = this._iso(start);
+        const e = this._iso(end) || s;
+        if (!s) return;
         try {
-            await this.orm.unlink("project.task", [row.id]);
-            await this.reload();
-            this.notification.add("Đã xoá công việc.", { type: "success" });
+            await this.orm.write("project.task", [id],
+                { planned_start: s, planned_end: e });
+            this.notification.add(
+                _t("Đã lưu ngày kế hoạch."), { type: "success" });
         } catch {
             this.notification.add(
-                "Không xoá được (kiểm tra quyền hoặc ràng buộc).",
+                _t("Không lưu được thay đổi ngày."), { type: "danger" });
+            await this.loadAndRender();   // hoàn tác hiển thị
+        }
+    }
+
+    // Context menu EJ2 "Add" → tạo record thật trong Odoo rồi reload
+    async _onAdd(data) {
+        const base = this._recs && this._recs[0];
+        try {
+            await this.orm.create("project.task", [{
+                name: data.TaskName || _t("Công việc mới"),
+                rp_contract_id: this.contractId || false,
+                project_id: base && base.project_id
+                    ? base.project_id[0] : false,
+                planned_start: this._iso(data.StartDate) || false,
+                planned_end: this._iso(data.EndDate) || false,
+            }]);
+            this.notification.add(
+                _t("Đã thêm công việc."), { type: "success" });
+        } catch {
+            this.notification.add(
+                _t("Không thêm được công việc."), { type: "danger" });
+        }
+        await this.loadAndRender();
+    }
+
+    async _onDelete(rows) {
+        const ids = rows.map((r) => parseInt(r.TaskID, 10))
+            .filter((i) => i && !isNaN(i));
+        if (!ids.length) return;
+        try {
+            await this.orm.unlink("project.task", ids);
+            this.notification.add(
+                _t("Đã xoá %s công việc.", ids.length), { type: "success" });
+        } catch {
+            this.notification.add(
+                _t("Không xoá được (kiểm tra quyền/ràng buộc)."),
                 { type: "danger" });
         }
-    }
-
-    // Splitter: kéo đổi bề rộng lưới trái (kiểu Syncfusion)
-    onSplitterDown(ev) {
-        ev.preventDefault();
-        const startX = ev.clientX;
-        const startW = this.state.leftW;
-        const move = (e) => {
-            this.state.leftW = Math.min(
-                900, Math.max(260, startW + (e.clientX - startX)));
-        };
-        const up = () => {
-            window.removeEventListener("pointermove", move);
-            window.removeEventListener("pointerup", up);
-        };
-        window.addEventListener("pointermove", move);
-        window.addEventListener("pointerup", up);
-    }
-
-    // Bôi xám Thứ 7/CN (chế độ Ngày) — frappe-gantt không có.
-    _augment() {
-        const svg = this.ganttRef.el;
-        const g = this.gantt;
-        if (!svg || !g) return;
-        const NS = "http://www.w3.org/2000/svg";
-        const height = parseFloat(svg.getAttribute("height")) || 0;
-        const gridLayer = svg.querySelector("g.grid");
-        if (this.state.viewMode === "Day" && gridLayer && g.dates) {
-            const col = g.options.column_width;
-            g.dates.forEach((d, i) => {
-                const day = d.getDay();
-                if (day === 0 || day === 6) {
-                    const rect = document.createElementNS(NS, "rect");
-                    rect.setAttribute("x", i * col);
-                    rect.setAttribute("y", HEAD_H);
-                    rect.setAttribute("width", col);
-                    rect.setAttribute("height", Math.max(0, height - HEAD_H));
-                    rect.setAttribute("class", "rp-weekend");
-                    gridLayer.appendChild(rect);
-                }
-            });
-        }
-    }
-
-    // Header timeline HTML STICKY (thay header SVG — SVG không sticky được):
-    // 2 tầng tháng/ngày luôn ghim trên đỉnh khi cuộn dọc, như Syncfusion.
-    _buildTimelineHead() {
-        const g = this.gantt;
-        if (!g || !g.dates) return;
-        const col = g.options.column_width;
-        const mode = this.state.viewMode;
-        const MONTHS = ["01", "02", "03", "04", "05", "06",
-                        "07", "08", "09", "10", "11", "12"];
-        const cells = [];
-        let prevM = -1, prevY = -1;
-        g.dates.forEach((d, i) => {
-            const m = d.getMonth(), y = d.getFullYear();
-            let lower = "", upper = "";
-            if (mode === "Month") {
-                lower = "Th" + MONTHS[m];
-                if (y !== prevY) upper = String(y);
-            } else {
-                lower = String(d.getDate());
-                if (m !== prevM || y !== prevY) {
-                    upper = "Tháng " + MONTHS[m] + "/" + y;
-                }
-            }
-            prevM = m; prevY = y;
-            cells.push({ x: i * col, lower, upper });
-        });
-        this.state.tl = { width: g.dates.length * col, cells, col };
-    }
-
-    renderGantt() {
-        const el = this.ganttRef.el;
-        if (!el || this.state.empty) return;
-        if (typeof window.Gantt === "undefined") {
-            el.innerHTML =
-                "<div class='alert alert-warning m-3'>Không tải được thư viện Gantt.</div>";
-            return;
-        }
-        el.innerHTML = "";
-        this.gantt = new window.Gantt(el, this.tasks, {
-            view_mode: this.state.viewMode,
-            date_format: "YYYY-MM-DD",
-            bar_height: BAR_HEIGHT,
-            padding: PADDING,
-            header_height: HEADER_HEIGHT,
-            bar_corner_radius: 2,
-            column_width: 30,
-            on_date_change: (task, start, end) =>
-                this._onDateChange(task, start, end),
-            on_progress_change: (task, progress) =>
-                this._onProgressChange(task, progress),
-            custom_popup_html: (task) => {
-                const s = task._start ? task._start.toLocaleDateString("vi-VN") : "";
-                const e = task._end ? task._end.toLocaleDateString("vi-VN") : "";
-                return (
-                    "<div class='rp-gantt-popup'>" +
-                    "<div class='rp-gantt-popup-title'>" + task.name + "</div>" +
-                    "<div>" + s + " → " + e + "</div>" +
-                    "<div>Tiến độ: " + task.progress + "%</div>" +
-                    "</div>"
-                );
-            },
-        });
-        this._augment();
-        this._buildTimelineHead();
+        await this.loadAndRender();
     }
 
     setViewMode(mode) {
         this.state.viewMode = mode;
-        if (this.gantt) {
-            this.gantt.change_view_mode(mode);
-            this._augment();
-            this._buildTimelineHead();
-        }
+        if (this.adapter) this.adapter.changeViewMode(mode);
     }
 }
 

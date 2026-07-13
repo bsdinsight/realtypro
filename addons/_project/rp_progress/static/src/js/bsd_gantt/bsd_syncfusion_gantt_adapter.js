@@ -131,8 +131,22 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             editSettings: {
                 allowEditing: false,
                 allowTaskbarEditing: true,
-                showDeleteConfirmDialog: false,
+                // Optional (rp_schedule): thêm/xoá task qua context menu.
+                // Mặc định false → hành vi rp_progress không đổi.
+                allowAdding: !!opts.allowAdding,
+                allowDeleting: !!opts.allowDeleting,
+                showDeleteConfirmDialog: !!opts.allowDeleting,
             },
+            // Optional: context menu chuột phải built-in EJ2 — chỉ bật
+            // khi caller yêu cầu (rp_schedule).
+            ...(opts.enableContextMenu ? {
+                enableContextMenu: true,
+                contextMenuItems: opts.contextMenuItems
+                    || ["AutoFit", "TaskInformation", "Add", "DeleteTask"],
+            } : {}),
+            // Optional: 'Manual' = không auto-reschedule theo predecessor
+            // (giữ đúng ngày import từ MS Project); default 'Auto' như cũ.
+            taskMode: opts.taskMode || "Auto",
             allowResizing: true,
             allowSorting: true,
             // Splitter mặc định show 4 cột (TaskName + StartDate +
@@ -219,6 +233,15 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                     args.data.EndDate,
                 );
             }
+        }
+        // Optional: Add/Delete từ context menu EJ2 (rp_schedule) —
+        // caller tự ghi Odoo rồi reload để đồng bộ ID thật.
+        if (args.requestType === "add" && opts.onAdd && args.data) {
+            opts.onAdd(args.data);
+        }
+        if (args.requestType === "delete" && opts.onDelete && args.data) {
+            const rows = Array.isArray(args.data) ? args.data : [args.data];
+            opts.onDelete(rows);
         }
     }
 

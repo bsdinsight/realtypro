@@ -32,6 +32,9 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'project',
         'rp_contract',
         'rp_cost_base',
+        # Gantt Syncfusion: tái dùng lib EJ2 + BSDSyncfusionGanttAdapter
+        # + license param/controller của rp_progress (bản quyền BSD).
+        'rp_progress',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -42,8 +45,8 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
     ],
     'assets': {
         'web.assets_backend': [
-            'rp_schedule/static/lib/frappe-gantt/frappe-gantt.css',
-            'rp_schedule/static/lib/frappe-gantt/frappe-gantt.min.js',
+            # Lib Syncfusion EJ2 (+ frappe fallback) do rp_progress ship —
+            # KHÔNG vendor lại ở đây (tránh double-load).
             'rp_schedule/static/src/scss/rp_gantt.scss',
             'rp_schedule/static/src/js/rp_gantt.js',
             'rp_schedule/static/src/xml/rp_gantt.xml',

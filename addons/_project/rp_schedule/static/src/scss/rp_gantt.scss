@@ -10,6 +10,7 @@
         gap: 8px;
         padding: 10px 16px;
         border-bottom: 1px solid #dee2e6;
+        flex: 0 0 auto;
 
         .rp-gantt-title {
             font-weight: 600;
@@ -18,17 +19,77 @@
         }
     }
 
-    .rp-gantt-wrap {
+    // 1 vùng cuộn chung → lưới trái sticky, timeline phải cuộn ngang,
+    // cuộn dọc 2 bên tự đồng bộ (cùng container).
+    .rp-gantt-body {
         flex: 1 1 auto;
         overflow: auto;
-        padding: 8px 4px 24px;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .rp-gantt-left {
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        flex: 0 0 auto;
+        width: 520px;
+        background: #ffffff;
+        border-right: 2px solid #cfd8dc;
+        box-shadow: 4px 0 8px -4px rgba(16, 42, 44, 0.18);
+        font-size: 12.5px;
+
+        .rp-gantt-left-head,
+        .rp-gantt-left-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 8px;
+            box-sizing: border-box;
+        }
+
+        .rp-gantt-left-head {
+            position: sticky;
+            top: 0;
+            z-index: 6;
+            background: #f5f8f8;
+            border-bottom: 2px solid #cfd8dc;
+            font-weight: 700;
+            color: #46605f;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.03em;
+        }
+
+        .rp-gantt-left-row {
+            border-bottom: 1px solid #ebf0f0;
+            white-space: nowrap;
+
+            &:nth-child(odd) {
+                background: #fafcfc;
+            }
+            &.is-milestone .col-name {
+                color: #b45309;
+                font-weight: 600;
+            }
+        }
+
+        .col-wbs   { flex: 0 0 44px;  color: #6f8583; }
+        .col-name  { flex: 1 1 auto;  overflow: hidden; text-overflow: ellipsis; }
+        .col-date  { flex: 0 0 72px;  text-align: right; font-variant-numeric: tabular-nums; }
+        .col-pct   { flex: 0 0 40px;  text-align: right; font-weight: 600; color: #0e5563; }
+    }
+
+    .rp-gantt-right {
+        flex: 1 1 auto;
+        min-width: 0;
     }
 }
 
 // Tinh chỉnh frappe-gantt cho hợp giao diện Realty Project (teal)
 .gantt {
     .bar-wrapper.rp-bar-task .bar {
-        fill: #4aa3b0;
+        fill: #7fc4cd;
     }
     .bar-wrapper.rp-bar-task .bar-progress {
         fill: #0e5563;
@@ -48,6 +109,9 @@
     }
     .grid-header {
         fill: #f5f8f8;
+    }
+    .row-line {
+        stroke: #ebf0f0;
     }
     .today-highlight {
         fill: #fbe7c9;

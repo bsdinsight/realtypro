@@ -19,12 +19,40 @@
                     </button>
                 </div>
             </div>
+
             <div t-if="state.empty" class="alert alert-info m-3">
                 Hợp đồng này chưa có công việc nào có ngày bắt đầu để vẽ Gantt.
                 Hãy import lịch thi công (MS Project XML / Excel) hoặc khai ngày kế hoạch.
             </div>
-            <div class="rp-gantt-wrap" t-att-class="state.empty ? 'd-none' : ''">
-                <svg t-ref="gantt" class="rp-gantt-svg"/>
+
+            <!-- Thân: lưới task trái (sticky) + timeline phải, chung 1 vùng cuộn -->
+            <div class="rp-gantt-body" t-att-class="state.empty ? 'd-none' : ''">
+                <div class="rp-gantt-left">
+                    <div class="rp-gantt-left-head"
+                         t-attf-style="height: {{state.headH}}px;">
+                        <span class="col-wbs">WBS</span>
+                        <span class="col-name">Công việc</span>
+                        <span class="col-date">Bắt đầu</span>
+                        <span class="col-date">Kết thúc</span>
+                        <span class="col-pct">%</span>
+                    </div>
+                    <div t-foreach="state.rows" t-as="r" t-key="r.id"
+                         class="rp-gantt-left-row"
+                         t-att-class="r.milestone ? 'is-milestone' : ''"
+                         t-attf-style="height: {{state.rowH}}px;">
+                        <span class="col-wbs" t-esc="r.wbs"/>
+                        <span class="col-name" t-att-title="r.name">
+                            <i t-if="r.milestone" class="fa fa-flag me-1"/>
+                            <t t-esc="r.name"/>
+                        </span>
+                        <span class="col-date" t-esc="r.start"/>
+                        <span class="col-date" t-esc="r.end"/>
+                        <span class="col-pct" t-esc="r.progress + '%'"/>
+                    </div>
+                </div>
+                <div class="rp-gantt-right">
+                    <svg t-ref="gantt" class="rp-gantt-svg"/>
+                </div>
             </div>
         </div>
     </t>

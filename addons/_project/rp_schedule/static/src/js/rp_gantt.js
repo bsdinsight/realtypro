@@ -4,7 +4,16 @@ import { Component, onWillStart, onMounted, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-// Client action: Gantt lịch thi công của một HĐ nhà thầu (dùng frappe-gantt).
+// Hằng số layout — PHẢI khớp options truyền vào frappe-gantt bên dưới:
+// row height = bar_height + padding; header = header_height + 10.
+const BAR_HEIGHT = 18;
+const PADDING = 16;
+const HEADER_HEIGHT = 50;
+export const ROW_H = BAR_HEIGHT + PADDING;        // 34px
+export const HEAD_H = HEADER_HEIGHT + 10;         // 60px
+
+// Client action: Gantt lịch thi công kiểu Syncfusion —
+// lưới task bên trái (sticky) + timeline frappe-gantt bên phải.
 export class RpGanttAction extends Component {
     static template = "rp_schedule.RpGantt";
     static props = ["*"];
@@ -14,10 +23,12 @@ export class RpGanttAction extends Component {
         this.ganttRef = useRef("gantt");
         this.state = useState({
             viewMode: "Week",
-            loading: true,
             count: 0,
             title: "",
             empty: false,
+            rows: [],
+            rowH: ROW_H,
+            headH: HEAD_H,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -26,6 +37,12 @@ export class RpGanttAction extends Component {
 
         onWillStart(async () => { await this.loadData(); });
         onMounted(() => this.renderGantt());
+    }
+
+    _fmt(d) {
+        if (!d) return "";
+        const [y, m, dd] = String(d).split("-");
+        return `${dd}/${m}/${y}`;
     }
 
     async loadData() {
@@ -40,21 +57,29 @@ export class RpGanttAction extends Component {
              "progress_percent", "is_milestone", "predecessor_ids"],
             { order: "planned_start asc, wbs_code asc, id asc" }
         );
-        // frappe-gantt cần start+end; bỏ task chưa có ngày bắt đầu
-        this.tasks = recs
-            .filter((r) => r.planned_start)
-            .map((r) => ({
-                id: String(r.id),
-                name: (r.wbs_code ? r.wbs_code + " · " : "") + r.name,
-                start: r.planned_start,
-                end: r.planned_end || r.planned_start,
-                progress: Math.round(r.progress_percent || 0),
-                dependencies: (r.predecessor_ids || []).map(String).join(","),
-                custom_class: r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
-            }));
+        const dated = recs.filter((r) => r.planned_start);
+        // Lưới trái (cùng thứ tự với thanh gantt)
+        this.state.rows = dated.map((r) => ({
+            id: r.id,
+            wbs: r.wbs_code || "",
+            name: r.name,
+            start: this._fmt(r.planned_start),
+            end: this._fmt(r.planned_end || r.planned_start),
+            progress: Math.round(r.progress_percent || 0),
+            milestone: r.is_milestone,
+        }));
+        // Thanh gantt phải
+        this.tasks = dated.map((r) => ({
+            id: String(r.id),
+            name: r.name,
+            start: r.planned_start,
+            end: r.planned_end || r.planned_start,
+            progress: Math.round(r.progress_percent || 0),
+            dependencies: (r.predecessor_ids || []).map(String).join(","),
+            custom_class: r.is_milestone ? "rp-bar-milestone" : "rp-bar-task",
+        }));
         this.state.count = this.tasks.length;
         this.state.empty = this.tasks.length === 0;
-        this.state.loading = false;
     }
 
     renderGantt() {
@@ -69,10 +94,11 @@ export class RpGanttAction extends Component {
         this.gantt = new window.Gantt(el, this.tasks, {
             view_mode: this.state.viewMode,
             date_format: "YYYY-MM-DD",
-            bar_height: 18,
+            bar_height: BAR_HEIGHT,
+            padding: PADDING,
+            header_height: HEADER_HEIGHT,
             bar_corner_radius: 3,
-            padding: 16,
-            column_width: 32,
+            column_width: 30,
             custom_popup_html: (task) => {
                 const s = task._start ? task._start.toLocaleDateString("vi-VN") : "";
                 const e = task._end ? task._end.toLocaleDateString("vi-VN") : "";

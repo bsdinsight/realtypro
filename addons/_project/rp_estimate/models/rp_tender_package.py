@@ -325,7 +325,9 @@ class RpTenderPackage(models.Model):
     @api.constrains('contractor_id', 'company_id')
     def _check_contractor_company(self):
         for pkg in self:
-            if (pkg.contractor_id
+            # partner dùng chung (company_id=False) hợp lệ ở mọi company;
+            # chỉ chặn khi nhà thầu gắn HẲN vào một company KHÁC.
+            if (pkg.contractor_id.company_id
                     and pkg.contractor_id.company_id != pkg.company_id):
                 raise ValidationError(
                     'Nhà thầu phải cùng company với gói thầu.')

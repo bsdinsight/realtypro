@@ -130,7 +130,8 @@ export class RpGanttAction extends Component {
             return {
                 id: String(r.id),
                 parent,
-                name: (w ? w + " · " : "") + r.name,
+                name: r.name,
+                extraFields: { TaskWbs: w },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
                     ? (r.planned_end || r.planned_start) : null,
@@ -167,7 +168,8 @@ export class RpGanttAction extends Component {
             columns: [
                 { field: "TaskID", headerText: "ID", width: 70,
                   textAlign: "Right" },
-                { field: "TaskName", headerText: "Công việc", width: 300 },
+                { field: "TaskWbs", headerText: "WBS", width: 70 },
+                { field: "TaskName", headerText: "Công việc", width: 280 },
                 { field: "StartDate", headerText: "Bắt đầu",
                   format: "dd/MM/yyyy", width: 110 },
                 { field: "EndDate", headerText: "Kết thúc",
@@ -175,7 +177,10 @@ export class RpGanttAction extends Component {
                 { field: "Progress", headerText: "%", width: 60,
                   textAlign: "Right" },
             ],
-            splitterColumnIndex: 5,
+            treeColumnIndex: 2,
+            splitterColumnIndex: 6,
+            preserveLinks: true,
+            onBarClick: false,
             allowAdding: true,
             allowDeleting: true,
             enableContextMenu: true,

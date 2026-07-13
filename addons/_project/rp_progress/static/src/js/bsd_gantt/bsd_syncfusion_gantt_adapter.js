@@ -80,6 +80,8 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             _cssClass: t.custom_class || "",
             _isContract: !!t._isContract,
             _contractId: t._contractId || null,
+            // Field tuỳ biến cho cột riêng của caller (vd WBS)
+            ...(t.extraFields || {}),
         }));
 
         this.gantt = new ej.gantt.Gantt({
@@ -100,7 +102,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 "ZoomIn", "ZoomOut", "ZoomToFit", "ExpandAll", "CollapseAll",
             ],
             // Column panel bên trái — minimal, business view ở Odoo panel
-            treeColumnIndex: 1,
+            treeColumnIndex: opts.treeColumnIndex || 1,
             // Optional: caller truyền bộ cột riêng (rp_schedule cần cột ID);
             // default giữ nguyên bộ cột rp_progress.
             columns: opts.columns || [
@@ -165,11 +167,24 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 showTooltip: true,
             },
             // Events
+            // Khi resize/kéo bar CÓ predecessor: EJ2 mặc định bật dialog
+            // validate link — dialog compile template (new Function) gây
+            // crash trong Odoo (cùng lý do bỏ custom tooltip). Optional
+            // preserveLinks: giữ link + bỏ dialog.
+            actionBegin: (args) => {
+                if (opts.preserveLinks
+                        && args.requestType === "validateLinkedTask"
+                        && args.validateMode) {
+                    args.validateMode.preserveLinkWithEditing = true;
+                }
+            },
             actionComplete: (args) => this._handleActionComplete(args, opts),
             // Click trên bar (chart bên phải) → mở form
             taskbarClick: (args) => {
-                if (args.data && opts.onClick) {
-                    opts.onClick({
+                const cb = opts.onBarClick === false
+                    ? null : (opts.onBarClick || opts.onClick);
+                if (args.data && cb) {
+                    cb({
                         id: args.data.TaskID,
                         _isContract: args.data._isContract,
                         _contractId: args.data._contractId,

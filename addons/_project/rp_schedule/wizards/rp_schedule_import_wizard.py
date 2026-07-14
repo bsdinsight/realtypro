@@ -219,6 +219,8 @@ class RpScheduleImportWizard(models.TransientModel):
 
         # pass 3: nối cha/con theo mã WBS → subtask thật trong Odoo
         c._relink_schedule_hierarchy()
+        # pass 4: ngày task cha = min/max các con (chuẩn MS Project)
+        c._rollup_schedule_parent_dates()
 
         c.message_post(body=_(
             'Import lịch thi công: %(c)s công việc mới, %(u)s cập nhật '

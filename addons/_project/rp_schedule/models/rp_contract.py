@@ -64,6 +64,35 @@ class RpContract(models.Model):
                 if (t.parent_id.id or False) != pid:
                     t.parent_id = pid
 
+    def _rollup_schedule_parent_dates(self):
+        """Cuộn ngày KH của task CHA = min/max các con (kiểu MS Project).
+
+        Dòng summary trong file import thường mang ngày rác/lệch con;
+        chuẩn MS Project là ngày summary suy từ con. Đi từ sâu lên nông
+        để cha cấp trên nhận ngày đã cuộn của cha cấp dưới.
+        """
+        for c in self:
+            tasks = c.task_ids.filtered('wbs_code')
+            kids = {}
+            for t in tasks:
+                if t.parent_id and t.parent_id in tasks:
+                    kids.setdefault(t.parent_id.id, []).append(t)
+            for t in sorted(tasks,
+                            key=lambda x: x.wbs_code.count('.'),
+                            reverse=True):
+                ch = kids.get(t.id)
+                if not ch:
+                    continue
+                starts = [x.planned_start for x in ch if x.planned_start]
+                ends = [x.planned_end for x in ch if x.planned_end]
+                vals = {}
+                if starts and t.planned_start != min(starts):
+                    vals['planned_start'] = min(starts)
+                if ends and t.planned_end != max(ends):
+                    vals['planned_end'] = max(ends)
+                if vals:
+                    t.write(vals)
+
     def action_open_schedule(self):
         self.ensure_one()
         proj = self._get_or_create_schedule_project()

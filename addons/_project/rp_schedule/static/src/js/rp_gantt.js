@@ -119,7 +119,11 @@ export class RpGanttAction extends Component {
             if (r.wbs_code) byWbs.set(String(r.wbs_code), r.id);
         });
         const idSet = new Set(recs.map((r) => r.id));
-        this.tasks = recs.map((r) => {
+        // STT hiển thị kiểu MS Project: đánh 1..n theo thứ tự lịch;
+        // nếu dòng đầu là dòng tổng WBS "0" thì nó mang số 0.
+        const seqBase =
+            recs.length && String(recs[0].wbs_code || "") === "0" ? 0 : 1;
+        this.tasks = recs.map((r, idx) => {
             const w = String(r.wbs_code || "");
             let parent = null;
             if (w.includes(".")) {
@@ -131,7 +135,11 @@ export class RpGanttAction extends Component {
                 id: String(r.id),
                 parent,
                 name: r.name,
-                extraFields: { TaskWbs: w, _isTop: !!w && !w.includes(".") },
+                extraFields: {
+                    TaskWbs: w,
+                    TaskSeq: idx + seqBase,
+                    _isTop: !!w && !w.includes("."),
+                },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
                     ? (r.planned_end || r.planned_start) : null,
@@ -166,7 +174,14 @@ export class RpGanttAction extends Component {
             rowHeight: 42,
             taskMode: "Manual",
             columns: [
-                { field: "TaskID", headerText: "ID", width: 70,
+                // TaskID (id database) ẨN nhưng PHẢI có: là primary key
+                // của TreeGrid — thiếu nó saveSuccess→setRowData crash
+                // (undefined.replace) trước khi bắn actionComplete → mất
+                // luôn write onDateChange.
+                { field: "TaskID", isPrimaryKey: true, visible: false,
+                  width: 1 },
+                // STT 0..n theo HĐ (TaskSeq) — không lộ ID database
+                { field: "TaskSeq", headerText: "ID", width: 70,
                   textAlign: "Right" },
                 { field: "TaskWbs", headerText: "WBS", width: 70 },
                 { field: "TaskName", headerText: "Công việc", width: 280 },
@@ -177,8 +192,8 @@ export class RpGanttAction extends Component {
                 { field: "Progress", headerText: "%", width: 60,
                   textAlign: "Right" },
             ],
-            treeColumnIndex: 2,
-            splitterColumnIndex: 6,
+            treeColumnIndex: 3,
+            splitterColumnIndex: 7,
             preserveLinks: true,
             // Không cho EJ2 tự tính lại lịch theo predecessor: giữ đúng
             // ngày import + tránh crash validateTypes (allowEditing=false

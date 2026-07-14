@@ -246,7 +246,14 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
     _parseDate(d) {
         if (!d) return null;
         if (d instanceof Date) return d;
-        // ISO "YYYY-MM-DD" or "YYYY-MM-DD HH:MM:SS"
+        // "YYYY-MM-DD" (Odoo Date): PHẢI parse LOCAL midnight. new Date()
+        // với ISO date-only parse theo UTC → +7h VN = 07:00, trước giờ
+        // làm việc 08:00 → EJ2 lùi endDate về CUỐI NGÀY HÔM TRƯỚC (mọi
+        // task hiển thị kết thúc −1 ngày, và mỗi vòng kéo-lưu-reload co
+        // thêm 1 ngày). Local midnight = "date-only" đúng chuẩn EJ2.
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d);
+        if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+        // "YYYY-MM-DD HH:MM:SS" (Odoo Datetime) — browser parse local
         return new Date(d);
     }
 

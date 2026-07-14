@@ -115,8 +115,8 @@
 
 ### 4.4 Nền tảng build *(ghi chú kỹ thuật của BSD — không ảnh hưởng công việc design)* ⚠️
 
-- Với phạm vi đầy đủ (offline sâu, hàng đợi media, camera pipeline, voice, push tin cậy, ký điện tử), phương án build khuyến nghị là **native (Flutter)**; PWA trên Odoo chỉ đủ cho bản chạy thử nội bộ.
-- Yêu cầu cho design: vẽ **mobile-first thuần** theo design system riêng của Realty Site — KHÔNG lệ thuộc look & feel Odoo web; backend Odoo chỉ là nơi dữ liệu đổ về.
+- Với phạm vi đầy đủ (offline sâu, hàng đợi media, camera pipeline, voice, push tin cậy, ký điện tử), phương án build là **React Native + Expo (TypeScript)** — đồng bộ toolchain với Sapiones Mobile của BSD (đã chạy quy trình Claude Design HTML → port RN thành công); PWA trên Odoo chỉ đủ cho bản chạy thử nội bộ.
+- Yêu cầu cho design: vẽ **mobile-first thuần** theo design system riêng của Realty Site — KHÔNG lệ thuộc look & feel Odoo web; backend Odoo chỉ là nơi dữ liệu đổ về. Bản HTML của design sẽ được port sang React Native (View/Text/Pressable + StyleSheet) như đã làm với Sapiones Mobile.
 
 ---
 

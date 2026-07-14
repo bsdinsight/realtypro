@@ -13,6 +13,14 @@
               action="action_rp_contract_amendment"
               sequence="30"/>
 
+    <!-- Thay đổi (Variation) = nghiệp vụ hiện trường → menu Xây dựng,
+         chốt thương mại qua Phụ lục bên menu Hợp đồng -->
+    <menuitem id="menu_rp_contract_change"
+              name="Thay đổi (Change)"
+              parent="rp_estimate.menu_construction"
+              action="action_rp_contract_change"
+              sequence="50"/>
+
     <menuitem id="menu_rp_contract_closure"
               name="Chấm dứt / Thanh lý"
               parent="rp_estimate.menu_contracts"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project - Contractor Contracts',
-    'version': '19.0.1.6.0',
+    'version': '19.0.1.7.0',
     'category': 'Realty/Project',
     'summary': 'Hợp đồng nhà thầu (rp.contract): lifecycle, BOQ lines, '
                'lịch thanh toán, phụ lục, bảo lãnh',
@@ -43,8 +43,10 @@ NGOÀI scope v1 (làm sau):
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_sequence_change.xml',
         'views/rp_contract_views.xml',
         'views/rp_contract_closure_views.xml',
+        'views/rp_contract_change_views.xml',
         'views/rp_tender_package_views.xml',
         'views/rp_contract_report_views.xml',
         'views/menu.xml',

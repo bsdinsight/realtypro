@@ -9,3 +9,5 @@ access_rp_contract_amendment_user,rp.contract.amendment user,model_rp_contract_a
 access_rp_contract_amendment_manager,rp.contract.amendment manager,model_rp_contract_amendment,re_base.group_re_manager,1,1,1,1
 access_rp_contract_closure_user,rp.contract.closure user,model_rp_contract_closure,re_base.group_re_user,1,1,1,0
 access_rp_contract_closure_manager,rp.contract.closure manager,model_rp_contract_closure,re_base.group_re_manager,1,1,1,1
+access_rp_contract_change_user,rp.contract.change user,model_rp_contract_change,re_base.group_re_user,1,1,1,0
+access_rp_contract_change_manager,rp.contract.change manager,model_rp_contract_change,re_base.group_re_manager,1,1,1,1

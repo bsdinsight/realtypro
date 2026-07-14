@@ -37,6 +37,13 @@ class RpContractAmendment(models.Model):
 
     value_old = fields.Char(string='Giá trị cũ', readonly=True)
     value_new = fields.Char(string='Giá trị mới', readonly=True)
+
+    change_ids = fields.Many2many(
+        'rp.contract.change', 'rp_change_amendment_rel',
+        'amendment_id', 'change_id', string='Thay đổi được gom',
+        domain="[('contract_id', '=', contract_id)]",
+        help='Các Thay đổi (Variation) mà phụ lục này chốt thương mại.')
+    change_count = fields.Integer(compute='_compute_change_count')
     state = fields.Selection(
         [('draft', 'Nháp'), ('applied', 'Đã áp dụng')],
         string='Trạng thái', default='draft', required=True, tracking=True)
@@ -45,6 +52,11 @@ class RpContractAmendment(models.Model):
         related='contract_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
         related='contract_id.company_id', store=True, readonly=True)
+
+    @api.depends('change_ids')
+    def _compute_change_count(self):
+        for rec in self:
+            rec.change_count = len(rec.change_ids)
 
     @api.constrains('amendment_type', 'new_contract_value_pretax')
     def _check_new_values(self):

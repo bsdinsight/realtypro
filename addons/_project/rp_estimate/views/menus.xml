@@ -86,6 +86,13 @@
               action="rp_cost_base.action_rp_cost_category"
               sequence="80"/>
 
+    <menuitem id="menu_pm_rp_cost_category_master"
+              name="Danh mục chi phí chuẩn (Master)"
+              parent="menu_project_master"
+              action="rp_cost_base.action_rp_cost_category_master"
+              groups="re_base.group_re_manager"
+              sequence="81"/>
+
     <menuitem id="menu_pm_rp_tender_package"
               name="Gói thầu"
               parent="menu_project_master"

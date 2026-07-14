@@ -51,6 +51,7 @@ mount the actions live in ``rp_estimate``:
         "security/ir.model.access.csv",
         "views/rp_structure_views.xml",
         "views/rp_cost_category_views.xml",
+        "views/rp_cost_category_master_views.xml",
         "views/rp_structure_estimate_line_views.xml",
     ],
     "application": False,

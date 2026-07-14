@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List -->
+    <record id="view_rp_cost_category_master_list" model="ir.ui.view">
+        <field name="name">rp.cost.category.master.list</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="arch" type="xml">
+            <list string="Danh mục chi phí chuẩn (Master)" expand="1">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="complete_path" optional="hide"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="level"/>
+                <field name="project_category_count"/>
+                <field name="is_contingency" optional="show"/>
+                <field name="is_land_cost" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_rp_cost_category_master_form" model="ir.ui.view">
+        <field name="name">rp.cost.category.master.form</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="arch" type="xml">
+            <form string="Danh mục chi phí chuẩn">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="level"/>
+                            <field name="complete_path"/>
+                            <field name="is_contingency"/>
+                            <field name="is_land_cost"/>
+                            <field name="project_category_count"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="description"
+                           placeholder="Mô tả / hướng dẫn sử dụng nhóm chi phí này..."/>
+                    <field name="child_ids">
+                        <list>
+                            <field name="sequence" widget="handle"/>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="level"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_rp_cost_category_master_search" model="ir.ui.view">
+        <field name="name">rp.cost.category.master.search</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <filter name="filter_l1" string="Cấp 1"
+                        domain="[('level', '=', 1)]"/>
+                <filter name="filter_contingency" string="Dự phòng"
+                        domain="[('is_contingency', '=', True)]"/>
+                <filter name="group_parent" string="Nhóm cha"
+                        context="{'group_by': 'parent_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_rp_cost_category_master" model="ir.actions.act_window">
+        <field name="name">Danh mục chi phí chuẩn (Master)</field>
+        <field name="res_model">rp.cost.category.master</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Danh mục chi phí CHUẨN cấp công ty
+            </p>
+            <p>
+                Dự án mới sẽ nhận một bản copy của cây này. Sửa master
+                chỉ ảnh hưởng dự án tạo mới — danh mục các dự án đang
+                chạy không đổi. Benchmark chi phí chéo dự án group
+                theo mã master.
+            </p>
+        </field>
+    </record>
+</odoo>

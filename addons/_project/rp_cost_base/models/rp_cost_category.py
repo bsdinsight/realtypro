@@ -60,9 +60,27 @@ class RpCostCategory(models.Model):
         help='Marks this category as land-related (CapEx categorization).',
     )
 
+    # ----- Liên kết Master (hybrid: master → copy per project → map-back)
+    master_category_id = fields.Many2one(
+        'rp.cost.category.master', string='Mã chuẩn (Master)',
+        index=True, ondelete='set null',
+        help='Mã master mà category này được copy từ đó (hoặc map về). '
+             'Benchmark chi phí chéo dự án group theo mã này. Để trống '
+             '= mã đặc thù riêng của dự án.')
+    is_project_specific = fields.Boolean(
+        string='Đặc thù dự án', compute='_compute_is_project_specific',
+        store=True,
+        help='Không map về danh mục chuẩn công ty — mã riêng của dự án '
+             '(vd bệnh viện có nhóm chi phí không dự án nào khác có).')
+
     # ----- Metadata
     description = fields.Text()
     active = fields.Boolean(default=True)
+
+    @api.depends('master_category_id')
+    def _compute_is_project_specific(self):
+        for rec in self:
+            rec.is_project_specific = not rec.master_category_id
 
     # ----- Computeds
     @api.depends('parent_id', 'parent_id.level')
@@ -119,59 +137,30 @@ class RpCostCategory(models.Model):
             WHERE code IS NOT NULL
         """)
 
-    # ----- Helper: seed Vietnamese default set
+    # ----- Helper: instantiate từ Master catalog (hybrid model)
     @api.model
     def _seed_defaults_for_project(self, project):
-        """Seed the Vietnamese default cost category tree on project.
+        """Copy cây danh mục chuẩn (Master) vào dự án mới.
 
-        Idempotent: if the project already has any categories, this
-        is a no-op (we do not duplicate; we do not "merge").
-
-        Customers who want a different starting set can clear the
-        tree first and re-create their own categories. The hook
-        runs at project create time; on subsequent edits it does
-        nothing.
+        Idempotent: dự án đã có category thì no-op. Master trống thì
+        tự seed bộ mặc định VN vào master trước (lần chạy đầu tiên).
+        Mỗi category dự án giữ ``master_category_id`` để benchmark
+        chéo dự án; dự án thêm mã riêng sau đó sẽ mang cờ
+        ``is_project_specific``.
         """
         existing = self.search_count([('project_id', '=', project.id)])
         if existing:
             return
-
-        # Two-pass create: L1 first, then L2 with parent resolved.
-        code_to_record = {}
-        for entry in DEFAULT_COST_CATEGORIES:
-            cat = self.create({
-                'project_id': project.id,
-                'name': entry['name'],
-                'code': entry['code'],
-                'sequence': entry.get('sequence', 10),
-                'is_contingency': entry.get('is_contingency', False),
-                'is_land_cost': entry.get('is_land_cost', False),
-                'description': entry.get('description', ''),
-            })
-            code_to_record[entry['code']] = cat
-
-        for entry in DEFAULT_COST_CATEGORIES:
-            for child in entry.get('children', []):
-                parent = code_to_record.get(entry['code'])
-                if not parent:
-                    continue
-                self.create({
-                    'project_id': project.id,
-                    'parent_id': parent.id,
-                    'name': child['name'],
-                    'code': child['code'],
-                    'sequence': child.get('sequence', 10),
-                    'is_contingency': child.get('is_contingency', False),
-                    'is_land_cost': child.get('is_land_cost', False),
-                    'description': child.get('description', ''),
-                })
+        Master = self.env['rp.cost.category.master']
+        Master._ensure_seeded()
+        Master._copy_tree_to_project(project)
 
 
 # =============================================================================
 # Vietnamese real-estate default cost category tree
 # 11 L1 + 56 L2 = 67 records seeded per project.
 #
-# Source: Vinhomes Cần Giờ template document (Section 5).
+# Nguồn: mẫu điển hình cơ cấu chi phí dự án BĐS Việt Nam.
 # =============================================================================
 DEFAULT_COST_CATEGORIES = [
     {

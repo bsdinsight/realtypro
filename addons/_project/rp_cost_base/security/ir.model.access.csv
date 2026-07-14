@@ -2,6 +2,9 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_rp_structure_user,rp.structure.user,model_rp_structure,re_base.group_re_user,1,0,0,0
 access_rp_structure_manager,rp.structure.manager,model_rp_structure,re_base.group_re_manager,1,1,1,0
 access_rp_structure_admin,rp.structure.admin,model_rp_structure,re_base.group_re_admin,1,1,1,1
+access_rp_cost_category_master_user,rp.cost.category.master.user,model_rp_cost_category_master,re_base.group_re_user,1,0,0,0
+access_rp_cost_category_master_manager,rp.cost.category.master.manager,model_rp_cost_category_master,re_base.group_re_manager,1,1,1,0
+access_rp_cost_category_master_admin,rp.cost.category.master.admin,model_rp_cost_category_master,re_base.group_re_admin,1,1,1,1
 access_rp_cost_category_user,rp.cost.category.user,model_rp_cost_category,re_base.group_re_user,1,0,0,0
 access_rp_cost_category_manager,rp.cost.category.manager,model_rp_cost_category,re_base.group_re_manager,1,1,1,0
 access_rp_cost_category_admin,rp.cost.category.admin,model_rp_cost_category,re_base.group_re_admin,1,1,1,1

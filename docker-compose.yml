@@ -41,6 +41,9 @@ services:
       HOST: db
       USER: ${POSTGRES_USER:-odoo}
       PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env before first up}
+      # Key AI (re_ai) BSD cấp chung — đặt trong .env, KHÔNG hardcode.
+      # Để ngoài DB vì System Parameters lộ với user admin của DB.
+      RE_AI_API_KEY: ${RE_AI_API_KEY:-}
     volumes:
       - ./odoo.conf:/etc/odoo/odoo.conf:ro
       - ./addons/_common:/mnt/extra-addons/_common:ro

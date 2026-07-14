@@ -50,10 +50,13 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="subzone_id"/>
-                <field name="parent_id" optional="show"/>
-                <field name="structure_level"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="structure_level" optional="show"/>
                 <field name="structure_type" optional="show"/>
-                <field name="estimate_total" widget="monetary" optional="show"/>
+                <!-- Giá trị tiền quan trọng nhất màn này — cột rộng,
+                     không cho cắt cụt -->
+                <field name="estimate_total" widget="monetary"
+                       width="200px"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="planned_gfa" optional="hide"/>
                 <field name="planned_units" optional="hide"/>

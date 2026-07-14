@@ -110,6 +110,33 @@ class ProjectTask(models.Model):
                     changed.add(t.id)
         return sorted(changed)
 
+    def rp_update_progress(self, value):
+        """Cập nhật % hoàn thành + cuộn % lên các task CHA.
+
+        % cha = bình quân trọng số theo số ngày KH của các con (bỏ
+        milestone) — đi lên đến gốc. Trả về list id đã đổi.
+        """
+        self.ensure_one()
+        value = max(0.0, min(100.0, value or 0.0))
+        self.write({'progress_percent': value})
+        changed = [self.id]
+        parent = self.parent_id
+        while parent:
+            kids = parent.child_ids.filtered(lambda t: not t.is_milestone)
+            if kids:
+                total_w = sum(kids.mapped('planned_days'))
+                if total_w:
+                    pct = sum(
+                        k.progress_percent * k.planned_days for k in kids
+                    ) / total_w
+                else:
+                    pct = sum(
+                        kids.mapped('progress_percent')) / len(kids)
+                parent.write({'progress_percent': round(pct, 1)})
+                changed.append(parent.id)
+            parent = parent.parent_id
+        return changed
+
     @api.constrains('progress_percent')
     def _check_progress(self):
         from odoo.exceptions import ValidationError

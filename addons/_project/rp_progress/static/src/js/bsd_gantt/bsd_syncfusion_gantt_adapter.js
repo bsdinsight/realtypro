@@ -262,17 +262,22 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
         if (args.requestType === "save"
                 && (args.action === "TaskbarEditing"
                     || args.action === "DrawConnectorLine"
-                    || args.taskBarEditAction)) {
-            if (opts.onDateChange && args.data) {
-                opts.onDateChange(
-                    {
-                        id: args.data.TaskID,
-                        _isContract: args.data._isContract,
-                        _contractId: args.data._contractId,
-                    },
-                    args.data.StartDate,
-                    args.data.EndDate,
-                );
+                    || args.taskBarEditAction)
+                && args.data) {
+            const t = {
+                id: args.data.TaskID,
+                _isContract: args.data._isContract,
+                _contractId: args.data._contractId,
+            };
+            // Kéo nút % trên bar → sự kiện riêng (đừng dồn vào
+            // onDateChange — ngày không đổi thì caller bỏ qua mất %)
+            if (args.taskBarEditAction === "ProgressResizing") {
+                if (opts.onProgressChange) {
+                    opts.onProgressChange(t, args.data.Progress);
+                }
+            } else if (opts.onDateChange) {
+                opts.onDateChange(t, args.data.StartDate,
+                    args.data.EndDate);
             }
         }
         // Optional: Add/Delete từ context menu EJ2 (rp_schedule) —

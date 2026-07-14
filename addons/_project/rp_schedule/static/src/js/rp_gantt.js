@@ -250,6 +250,8 @@ export class RpGanttAction extends Component {
             onClick: (task) => this._openTaskForm(parseInt(task.id, 10)),
             onDateChange: (task, start, end) =>
                 this._onDateChange(task, start, end),
+            onProgressChange: (task, progress) =>
+                this._onProgressChange(task, progress),
             onAdd: (data) => this._onAdd(data),
             onDelete: (rows) => this._onDelete(rows),
         });
@@ -291,6 +293,26 @@ export class RpGanttAction extends Component {
             this.notification.add(
                 _t("Không lưu được thay đổi ngày."), { type: "danger" });
             await this.loadAndRender();   // hoàn tác hiển thị
+        }
+    }
+
+    async _onProgressChange(task, progress) {
+        const id = parseInt(task.id, 10);
+        if (!id || isNaN(id)) return;
+        try {
+            // Ghi % + cuộn % lên các task cha (server-side)
+            const changed = await this.orm.call(
+                "project.task", "rp_update_progress",
+                [[id], Math.round(progress || 0)]);
+            this.notification.add(
+                _t("Đã cập nhật % hoàn thành."), { type: "success" });
+            if ((changed || []).length > 1) {
+                await this.loadAndRender();   // % cha cuộn lại
+            }
+        } catch {
+            this.notification.add(
+                _t("Không lưu được % hoàn thành."), { type: "danger" });
+            await this.loadAndRender();
         }
     }
 

@@ -43,7 +43,7 @@
         <field name="name">rp.structure.list</field>
         <field name="model">rp.structure</field>
         <field name="arch" type="xml">
-            <list string="Hạng mục dự án" sample="1"
+            <list string="Hạng mục dự án" sample="1" expand="1"
                   decoration-muted="state == 'archived' or not active">
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>

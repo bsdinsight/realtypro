@@ -132,6 +132,40 @@
 
 ---
 
+## 5b. Kiểm kê màn hình (screen inventory)
+
+**Tổng: 18 chức năng · ~32 màn hình** (MVP 10 chức năng / 20 màn; Phase 2 8 chức năng / 12 màn)
+
+### MVP — 10 chức năng, 20 màn hình
+
+| Chức năng | Màn hình | SL |
+|---|---|---|
+| Onboarding & đăng nhập | Nhập SĐT + OTP · Chọn dự án | 2 |
+| Home "Hôm nay của tôi" | Dashboard cá nhân (việc + punch + nút lớn) | 1 |
+| Chụp ảnh hiện trường | Camera (chụp liên tiếp) · Annotate vẽ trên ảnh · Gắn thẻ dự án/hạng mục/HĐ & lưu | 3 |
+| Punch list | Danh sách/kanban punch · Tạo nhanh (3 trường + voice) · Chi tiết punch (vòng đời, ảnh khắc phục, trao đổi) | 3 |
+| Nhật ký thi công | Danh sách nhật ký · Soạn nhật ký (sections: công việc/nhân lực/máy/ảnh/ghi chú) · Xem & xác nhận | 3 |
+| An toàn HSE | Hub an toàn · Thực hiện checklist · Toolbox meeting · Sự cố/near-miss | 4 |
+| Hộp duyệt | Danh sách chờ duyệt (swipe duyệt/trả) | 1 |
+| Việc của tôi | Lịch tuần theo HĐ + slider % | 1 |
+| Thông báo | Trung tâm thông báo | 1 |
+| Hồ sơ & đồng bộ | Cài đặt cá nhân + trạng thái sync/hàng đợi offline | 1 |
+
+### Phase 2 — 8 chức năng, ~12 màn hình
+
+| Chức năng | Màn hình | SL |
+|---|---|---|
+| AI: ảnh + giọng nói → punch | Màn xác nhận đề xuất AI | 1 |
+| AI viết nhật ký | Review bản nháp AI trước khi trình | 1 |
+| AI photo insights | Feed ảnh theo ngày + nhận định AI | 1 |
+| Xem bản vẽ + pin punch | Danh sách bản vẽ · Viewer + ghim lỗi | 2 |
+| Chấm công | Chấm nhanh theo đội · Bảng công tuần | 2 |
+| Phiếu đề nghị vật tư | Danh sách phiếu · Form đề nghị | 2 |
+| BBNT trên thiết bị | Form nghiệm thu · Màn ký điện tử | 2 |
+| Dashboard executive | Thẻ tóm tắt đa dự án (read-only) | 1 |
+
+> Ghi chú cho design: 20 màn MVP dùng chung **1 design system** (bottom nav 5 tab: Hôm nay · Việc · ➕Camera · Duyệt · Thông báo) nên khối lượng thực tế ≈ 1 hệ thống + 20 biến thể; các form Odoo phía sau đã có sẵn cấu trúc trường, không cần thiết kế data model.
+
 ## 6. Moodboard & brand hints
 
 - Brand Realty Pro: **teal đậm `#0a3d47`** (đang dùng nhất quán trên web/Gantt), accent hổ phách `#e0a460` (milestone), trạng thái: xanh lá = xác nhận/đóng, vàng = chờ, đỏ = quá hạn/nghiêm trọng.

@@ -123,6 +123,9 @@ export class RpGanttAction extends Component {
         // nếu dòng đầu là dòng tổng WBS "0" thì nó mang số 0.
         const seqBase =
             recs.length && String(recs[0].wbs_code || "") === "0" ? 0 : 1;
+        // map id → STT để cột "Depend on" hiện số STT (kiểu Predecessors
+        // của MS Project), không lộ ID database
+        const seqById = new Map(recs.map((r, i) => [r.id, i + seqBase]));
         this.tasks = recs.map((r, idx) => {
             const w = String(r.wbs_code || "");
             let parent = null;
@@ -138,6 +141,11 @@ export class RpGanttAction extends Component {
                 extraFields: {
                     TaskWbs: w,
                     TaskSeq: idx + seqBase,
+                    TaskDeps: (r.predecessor_ids || [])
+                        .filter((pid) => idSet.has(pid))
+                        .map((pid) => seqById.get(pid))
+                        .sort((a, b) => a - b)
+                        .join(", "),
                     _isTop: !!w && !w.includes("."),
                 },
                 start: hasDates ? r.planned_start : null,
@@ -191,9 +199,11 @@ export class RpGanttAction extends Component {
                   format: "dd/MM/yyyy", width: 110 },
                 { field: "Progress", headerText: "%", width: 60,
                   textAlign: "Right" },
+                // STT các task đứng trước (kiểu Predecessors MS Project)
+                { field: "TaskDeps", headerText: "Depend on", width: 100 },
             ],
             treeColumnIndex: 3,
-            splitterColumnIndex: 7,
+            splitterColumnIndex: 8,
             preserveLinks: true,
             // Không cho EJ2 tự tính lại lịch theo predecessor: giữ đúng
             // ngày import + tránh crash validateTypes (allowEditing=false

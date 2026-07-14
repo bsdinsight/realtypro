@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Tài chính',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Realty/Project',
     'summary': 'Menu Tài chính hợp nhất: Dashboard, Khái toán, Dự toán (BOQ), '
                'Tạm ứng, Hoá đơn nhà thầu, Hồ sơ thanh toán, Thanh toán, Báo cáo.',

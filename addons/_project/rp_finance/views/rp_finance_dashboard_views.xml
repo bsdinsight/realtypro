@@ -63,8 +63,12 @@
                             <field name="kpi_milestone_due_30d"
                                    widget="statinfo" class="text-danger"/>
                             <field name="kpi_milestone_paid" widget="monetary"/>
+                            <field name="kpi_paid_loan" widget="monetary"/>
                             <button name="action_open_milestones_due" type="object"
                                     string="→ Mốc đến hạn ≤30d" class="btn-link"/>
+                        </group>
+                        <group string="Nguồn vay">
+                            <field name="kpi_loan_allocated" widget="monetary"/>
                         </group>
                     </group>
 

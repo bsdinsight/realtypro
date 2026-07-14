@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tài chính → Giải ngân qua khế ước: đường tiền chính của thanh toán
+         HĐ xây dựng VN (NH giải ngân thẳng nhà thầu theo hồ sơ BBN+HĐ) -->
+    <menuitem id="menu_rp_loan_disbursement_dossier"
+              name="Giải ngân qua khế ước"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_loan_disbursement_dossier"
+              sequence="65"/>
+
     <!-- Menu trong Realty Project: Tài chính > Báo cáo → Phân bổ vay
          (container "Báo cáo HĐ" root cũ đã bỏ khi gom menu Tài chính) -->
     <menuitem id="menu_rp_loan_allocation_under_project"

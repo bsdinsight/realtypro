@@ -57,6 +57,14 @@ class RpFinanceDashboard(models.TransientModel):
     kpi_milestone_paid = fields.Monetary(
         string='Đã thanh toán (theo mốc)',
         help='Σ amount mốc thanh toán state = paid.')
+    kpi_paid_loan = fields.Monetary(
+        string='— trong đó qua khế ước',
+        help='Σ amount mốc đã trả có Nguồn chi trả = Khế ước vay '
+             '(NH giải ngân thẳng nhà thầu). Cần module rp_loan_bridge.')
+    kpi_loan_allocated = fields.Monetary(
+        string='Dư nợ vay phân bổ dự án',
+        help='Σ phân bổ vay theo công trình (rp.loan.allocation). '
+             'Cần module rp_loan_bridge.')
 
     currency_id = fields.Many2one(
         'res.currency',
@@ -101,6 +109,18 @@ class RpFinanceDashboard(models.TransientModel):
         paid = self.env['rp.contract.payment.milestone'].search(
             [('state', '=', 'paid')])
 
+        # Nhánh khế ước — đọc mềm, chỉ có khi cài rp_loan_bridge
+        paid_loan = 0.0
+        if 'funding_source' in Milestone._fields:
+            paid_loan = sum(
+                paid.filtered(
+                    lambda m: m.funding_source == 'loan').mapped('amount'))
+        loan_allocated = 0.0
+        if 'rp.loan.allocation' in self.env:
+            loan_allocated = sum(
+                self.env['rp.loan.allocation'].search([])
+                .mapped('amount_allocated'))
+
         return {
             'kpi_estimate_total': sum(
                 Est.search([]).mapped('amount')),
@@ -115,6 +135,8 @@ class RpFinanceDashboard(models.TransientModel):
             'kpi_invoice_residual': sum(bills.mapped('amount_residual')),
             'kpi_milestone_due_30d': due_soon,
             'kpi_milestone_paid': sum(paid.mapped('amount')),
+            'kpi_paid_loan': paid_loan,
+            'kpi_loan_allocated': loan_allocated,
         }
 
     # ------------------------------------------------------------------

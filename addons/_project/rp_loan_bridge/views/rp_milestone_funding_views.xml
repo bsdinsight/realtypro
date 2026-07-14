@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Cột Nguồn chi trả trên list Hồ sơ thanh toán -->
+    <record id="view_rp_contract_milestone_list_funding" model="ir.ui.view">
+        <field name="name">rp.contract.payment.milestone.list.funding</field>
+        <field name="model">rp.contract.payment.milestone</field>
+        <field name="inherit_id"
+               ref="rp_contract.view_rp_contract_milestone_list"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="funding_source" optional="show"/>
+                <field name="loan_note_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Sổ hồ sơ giải ngân đứng riêng cho menu Tài chính
+         (form dialog đã có sẵn — view_rp_loan_disbursement_dossier_form) -->
+    <record id="view_rp_loan_disbursement_dossier_list" model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.list</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="disbursement_id"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="show"/>
+                <field name="acceptance_id" optional="show"/>
+                <field name="invoice_id" optional="show"/>
+                <field name="amount" width="185px" sum="Tổng giải ngân"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'disbursed'"
+                       decoration-warning="state in ('submitted', 'approved')"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_loan_disbursement_dossier_search" model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.search</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <field name="invoice_id"/>
+                <filter string="Nhà thầu" name="group_contractor"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter string="HĐ" name="group_contract"
+                        context="{'group_by': 'contract_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_loan_disbursement_dossier"
+            model="ir.actions.act_window">
+        <field name="name">Giải ngân qua khế ước</field>
+        <field name="res_model">rp.loan.disbursement.dossier</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'list',
+                              'view_id': ref('view_rp_loan_disbursement_dossier_list')}),
+                      (0, 0, {'view_mode': 'form',
+                              'view_id': ref('view_rp_loan_disbursement_dossier_form')})]"/>
+    </record>
+
+</odoo>

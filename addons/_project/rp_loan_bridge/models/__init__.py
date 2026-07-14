@@ -5,3 +5,4 @@ from . import rp_loan_disbursement_dossier
 from . import rp_structure
 from . import rp_contract
 from . import account_move
+from . import rp_contract_payment_milestone

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Loan Bridge',
-    'version': '19.0.1.26.0',
+    'version': '19.0.1.27.0',
     'category': 'Realty/Project',
     'summary': 'Phân bổ vay/lãi vay theo công trình: Project / Khu vực / '
                'Hạng mục / Gói thầu / HĐ nhà thầu',
@@ -46,6 +46,7 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
         'views/rp_structure_views.xml',
         'views/rp_contract_views.xml',
         'views/account_move_views.xml',
+        'views/rp_milestone_funding_views.xml',
         'views/menu.xml',
     ],
     'installable': True,

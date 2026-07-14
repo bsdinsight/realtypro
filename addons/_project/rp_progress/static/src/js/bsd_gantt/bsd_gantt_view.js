@@ -119,6 +119,39 @@ export class BSDGanttView extends Component {
             // → bỏ qua, Gantt chỉ render hạng mục
             contracts = [];
         }
+        // Lịch thi công (rp_schedule): lấy CÔNG VIỆC LEVEL 1 (WBS không
+        // chấm, bỏ dòng tổng "0") của từng HĐ → tổng dự án chỉ thấy các
+        // GIAI ĐOẠN, chi tiết xem ở Gantt của từng HĐ. Ngày level 1 đã
+        // được rollup từ con khi import.
+        const level1ByContract = new Map();
+        if (contracts.length) {
+            try {
+                const schedTasks = await this.orm.searchRead(
+                    "project.task",
+                    [["rp_contract_id", "in", contracts.map((c) => c.id)],
+                     ["wbs_code", "!=", false]],
+                    ["name", "wbs_code", "planned_start", "planned_end",
+                     "progress_percent", "rp_contract_id"],
+                    { order: "id asc" },
+                );
+                for (const t of schedTasks) {
+                    const w = String(t.wbs_code || "").trim();
+                    if (!w || w.includes(".") || w === "0") continue;
+                    const cid = t.rp_contract_id && t.rp_contract_id[0];
+                    if (!cid) continue;
+                    if (!level1ByContract.has(cid)) {
+                        level1ByContract.set(cid, []);
+                    }
+                    level1ByContract.get(cid).push(t);
+                }
+                level1ByContract.forEach((list) => list.sort((a, b) =>
+                    (parseInt(a.wbs_code, 10) || 0)
+                    - (parseInt(b.wbs_code, 10) || 0)));
+            } catch (err) {
+                // rp_schedule chưa cài (field wbs_code/rp_contract_id
+                // không tồn tại) → Gantt giữ nguyên 2 lớp cũ
+            }
+        }
         // Index: structureId → [contracts]
         const contractsByStructure = new Map();
         for (const c of contracts) {
@@ -135,17 +168,21 @@ export class BSDGanttView extends Component {
         // Counter để contract xuất hiện nhiều lần (cover multi-structure)
         // có ID unique mỗi instance.
         let contractRowSeq = 0;
+        // HĐ cover nhiều hạng mục xuất hiện nhiều lần — chỉ gắn giai
+        // đoạn dưới instance ĐẦU TIÊN (tránh nhân đôi số dòng).
+        const seenContracts = new Set();
         for (const s of ordered) {
             orderedWithContracts.push(s);
             const cs = contractsByStructure.get(s.id) || [];
             for (const c of cs) {
                 contractRowSeq++;
+                const rowId = `c${c.id}_${contractRowSeq}`;
                 orderedWithContracts.push({
                     _isContract: true,
                     _depth: (s._depth || 0) + 1,
                     _parent_structure_id: s.id,
                     _row_seq: contractRowSeq,
-                    id: `c${c.id}_${contractRowSeq}`,
+                    id: rowId,
                     contract_id: c.id,
                     name: c.contractor_id
                         ? `${c.name} — ${c.contractor_id[1]}`
@@ -159,6 +196,24 @@ export class BSDGanttView extends Component {
                     structure_level: 'contract',
                     _contract_value: c.contract_value_total,
                 });
+                if (!seenContracts.has(c.id)) {
+                    seenContracts.add(c.id);
+                    for (const t of (level1ByContract.get(c.id) || [])) {
+                        orderedWithContracts.push({
+                            _isTask: true,
+                            _depth: (s._depth || 0) + 2,
+                            _parent_row: rowId,
+                            id: `t${t.id}`,
+                            name: `${t.wbs_code} · ${t.name}`,
+                            code: false,
+                            date_planned_start: t.planned_start,
+                            date_planned_end:
+                                t.planned_end || t.planned_start,
+                            progress_percent: t.progress_percent || 0,
+                            structure_level: 'task',
+                        });
+                    }
+                }
             }
         }
 
@@ -187,7 +242,9 @@ export class BSDGanttView extends Component {
         // không có ngày: Syncfusion tự aggregate từ children.
         const tasks = orderedWithContracts.map((s) => {
             let parentId = null;
-            if (s._isContract) {
+            if (s._isTask) {
+                parentId = s._parent_row;
+            } else if (s._isContract) {
                 parentId = String(s._parent_structure_id);
             } else if (s.parent_id && s.parent_id[0]) {
                 parentId = String(s.parent_id[0]);
@@ -208,9 +265,11 @@ export class BSDGanttView extends Component {
                 progress: Math.min(
                     100, Math.max(0, s.progress_percent || 0)),
                 dependencies: "",
-                custom_class: s._isContract
-                    ? "bsd_gantt_bar_contract"
-                    : "bsd_gantt_bar_structure",
+                custom_class: s._isTask
+                    ? "bsd_gantt_bar_schedule"
+                    : (s._isContract
+                        ? "bsd_gantt_bar_contract"
+                        : "bsd_gantt_bar_structure"),
                 _isContract: s._isContract,
                 _contractId: s.contract_id,
             };
@@ -381,6 +440,15 @@ export class BSDGanttView extends Component {
     _openRow(task) {
         if (task._isContract) {
             this._openContract(task._contractId);
+        } else if (String(task.id).startsWith("t")) {
+            // Giai đoạn (project.task level 1) → mở form công việc
+            this.action.doAction({
+                type: "ir.actions.act_window",
+                res_model: "project.task",
+                res_id: parseInt(String(task.id).slice(1), 10),
+                views: [[false, "form"]],
+                target: "new",
+            });
         } else {
             this._openStructure(task.id);
         }
@@ -389,6 +457,15 @@ export class BSDGanttView extends Component {
     async _onDateChange(task, start, end) {
         const isoStart = start.toISOString().slice(0, 10);
         const isoEnd = end.toISOString().slice(0, 10);
+        if (String(task.id).startsWith("t")) {
+            // Giai đoạn = ngày rollup từ chi tiết HĐ — không sửa ở đây
+            this.notification.add(
+                _t("Ngày giai đoạn cuộn từ công việc chi tiết — sửa "
+                   + "trong Gantt của HĐ nhà thầu."),
+                { type: "warning" });
+            await this._reload();
+            return;
+        }
         try {
             if (task._isContract) {
                 await this.orm.write("rp.contract",

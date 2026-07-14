@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class RpOwnerAcceptance(models.Model):
     _name = 'rp.owner.acceptance'
-    _description = 'BBNT sản lượng với Chủ đầu tư'
+    _description = 'Hồ sơ nghiệm thu với Chủ đầu tư'
     _inherit = ['mail.thread']
     _order = 'date_submitted desc, id desc'
 

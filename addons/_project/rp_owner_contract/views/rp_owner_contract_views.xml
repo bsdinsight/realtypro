@@ -54,7 +54,7 @@
                         <button name="action_view_acceptances" type="object"
                                 class="oe_stat_button" icon="fa-check-square-o">
                             <field name="acceptance_count" widget="statinfo"
-                                   string="BBNT"/>
+                                   string="Hồ sơ NT"/>
                         </button>
                         <button name="action_view_payments" type="object"
                                 class="oe_stat_button" icon="fa-money">
@@ -98,7 +98,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="BBNT với CĐT" name="acceptances">
+                        <page string="Hồ sơ nghiệm thu" name="acceptances">
                             <field name="acceptance_ids"
                                    context="{'default_contract_id': id}">
                                 <list decoration-muted="state == 'cancelled'"
@@ -147,7 +147,7 @@
         <field name="name">rp.owner.acceptance.form</field>
         <field name="model">rp.owner.acceptance</field>
         <field name="arch" type="xml">
-            <form string="BBNT với Chủ đầu tư">
+            <form string="Hồ sơ nghiệm thu với Chủ đầu tư">
                 <header>
                     <button name="action_propose" type="object"
                             string="Đề xuất" class="btn-primary"
@@ -225,7 +225,7 @@
     </record>
 
     <record id="action_rp_owner_acceptance" model="ir.actions.act_window">
-        <field name="name">BBNT với CĐT</field>
+        <field name="name">Hồ sơ nghiệm thu với CĐT</field>
         <field name="res_model">rp.owner.acceptance</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -238,7 +238,7 @@
               action="action_rp_owner_contract"
               sequence="20"/>
     <menuitem id="menu_rp_owner_acceptance"
-              name="BBNT với CĐT"
+              name="Hồ sơ nghiệm thu"
               parent="rp_estimate.menu_contracts"
               action="action_rp_owner_acceptance"
               sequence="25"/>

@@ -81,6 +81,14 @@ class RpCostCategoryMaster(models.Model):
                     'Cost category tree is limited to 3 levels.')
 
     def init(self):
+        # init() được Odoo gọi ở check_tables_exist cho MỌI lần update bất kỳ
+        # module nào — trên DB chưa từng -u rp_cost_base bảng còn chưa tạo,
+        # SQL thẳng sẽ crash registry. Guard cho tới khi bảng tồn tại.
+        self.env.cr.execute(
+            "SELECT 1 FROM information_schema.tables "
+            "WHERE table_name = 'rp_cost_category_master'")
+        if not self.env.cr.fetchone():
+            return
         self.env.cr.execute("""
             CREATE UNIQUE INDEX IF NOT EXISTS
                 rp_cost_category_master_unique_code

@@ -370,10 +370,12 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="project_id" column_invisible="1"/>
                                     <field name="currency_id" column_invisible="1"/>
+                                    <!-- '=?': khi chưa chọn "Lọc theo khu vực" thì KHÔNG lọc
+                                         (dự án gắn khu vực cho mọi hạng mục sẽ không bị rỗng) -->
                                     <field name="structure_id"
                                            domain="[('project_id', '=', parent.project_id),
                                                     '|',
-                                                    ('subzone_id', '=', parent.subzone_filter_id),
+                                                    ('subzone_id', '=?', parent.subzone_filter_id),
                                                     ('subzone_id', '=', False)]"
                                            options="{'no_create': True}"/>
                                     <field name="subzone_id" readonly="1" optional="show"/>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.19.0',
+    'version': '19.0.1.20.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
@@ -34,6 +34,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
     'license': 'AGPL-3',
     'depends': [
         're_base',
+        're_core',   # mount menu ĐVT (Xây dựng) vào Realty Core > Configuration
         'account',
         'rp_cost_base',
         'rp_contractor',

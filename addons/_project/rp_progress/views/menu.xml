@@ -12,14 +12,12 @@
               action="action_rp_progress_acceptance"
               sequence="10"/>
 
-    <menuitem id="menu_rp_progress_config"
-              name="Cấu hình"
-              parent="menu_rp_progress_root"
-              sequence="90"/>
-
+    <!-- ĐVT (Xây dựng) là master data cấu hình 1 lần → mount vào
+         Realty Core > Configuration (group re_manager) thay vì
+         Tiến độ > Cấu hình. Menu "Cấu hình" cũ tự ẩn khi không còn con. -->
     <menuitem id="menu_rp_progress_uom"
               name="Đơn vị tính (Xây dựng)"
-              parent="menu_rp_progress_config"
+              parent="re_core.menu_re_core_configuration"
               action="action_rp_progress_uom"
               sequence="10"/>
 

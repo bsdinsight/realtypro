@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project - Estimate & Tender",
-    "version": "19.0.1.8.0",
+    "version": "19.0.1.9.0",
     "category": "Realty/Project",
     "summary": "Gói thầu (P5.1+P5.2+P5.3: KH lựa chọn NT + bidder "
                "+ tiêu chuẩn đánh giá + HSMT) + Khái toán",

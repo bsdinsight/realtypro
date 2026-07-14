@@ -113,11 +113,12 @@
               action="rp_contractor.action_rp_contractor"
               sequence="100"/>
 
+    <!-- Chuyên môn nhà thầu = danh mục cấu hình ít đụng → Cấu hình (v1.14.0) -->
     <menuitem id="menu_pm_rp_contractor_specialty"
               name="Chuyên môn nhà thầu"
-              parent="menu_project_master"
+              parent="menu_rp_configuration"
               action="rp_contractor.action_rp_contractor_specialty"
-              sequence="110"/>
+              sequence="30"/>
 
     <!--
         ===== Estimate submenu (sequence 10 group) =====

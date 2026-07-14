@@ -110,11 +110,47 @@ class ProjectTask(models.Model):
                     changed.add(t.id)
         return sorted(changed)
 
-    def rp_update_progress(self, value):
-        """Cập nhật % hoàn thành + cuộn % lên các task CHA.
+    def write(self, vals):
+        """Đổi % (từ Gantt, form, list...) → tự cuộn % lên chuỗi cha.
 
         % cha = bình quân trọng số theo số ngày KH của các con (bỏ
-        milestone) — đi lên đến gốc. Trả về list id đã đổi.
+        milestone). Context `rp_skip_progress_rollup` chặn đệ quy khi
+        chính rollup ghi % cho cha.
+        """
+        res = super().write(vals)
+        if 'progress_percent' in vals \
+                and not self.env.context.get('rp_skip_progress_rollup'):
+            parents = self.mapped('parent_id')
+            seen = set()
+            while parents:
+                nxt = self.env['project.task']
+                for p in parents:
+                    if p.id in seen:
+                        continue
+                    seen.add(p.id)
+                    kids = p.child_ids.filtered(
+                        lambda t: not t.is_milestone)
+                    if kids:
+                        total_w = sum(kids.mapped('planned_days'))
+                        if total_w:
+                            pct = sum(
+                                k.progress_percent * k.planned_days
+                                for k in kids) / total_w
+                        else:
+                            pct = sum(kids.mapped(
+                                'progress_percent')) / len(kids)
+                        p.with_context(
+                            rp_skip_progress_rollup=True,
+                        ).write({'progress_percent': round(pct, 1)})
+                    if p.parent_id:
+                        nxt |= p.parent_id
+                parents = nxt
+        return res
+
+    def rp_update_progress(self, value):
+        """Cập nhật % từ Gantt — rollup cha do write() lo.
+
+        Trả về [id + chuỗi cha] để Gantt biết reload.
         """
         self.ensure_one()
         value = max(0.0, min(100.0, value or 0.0))
@@ -122,18 +158,7 @@ class ProjectTask(models.Model):
         changed = [self.id]
         parent = self.parent_id
         while parent:
-            kids = parent.child_ids.filtered(lambda t: not t.is_milestone)
-            if kids:
-                total_w = sum(kids.mapped('planned_days'))
-                if total_w:
-                    pct = sum(
-                        k.progress_percent * k.planned_days for k in kids
-                    ) / total_w
-                else:
-                    pct = sum(
-                        kids.mapped('progress_percent')) / len(kids)
-                parent.write({'progress_percent': round(pct, 1)})
-                changed.append(parent.id)
+            changed.append(parent.id)
             parent = parent.parent_id
         return changed
 

@@ -19,7 +19,9 @@
                         <field name="planned_start"/>
                         <field name="planned_end"/>
                         <field name="planned_days"/>
-                        <field name="progress_percent" widget="progressbar"/>
+                        <!-- KHÔNG dùng widget progressbar: Odoo 19 render
+                             read-only, người dùng không gõ % được -->
+                        <field name="progress_percent"/>
                     </group>
                     <field name="predecessor_ids" widget="many2many_tags"
                            options="{'no_create': True}"/>

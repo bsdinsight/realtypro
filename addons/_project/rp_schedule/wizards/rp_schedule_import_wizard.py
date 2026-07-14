@@ -217,6 +217,9 @@ class RpScheduleImportWizard(models.TransientModel):
             if preds:
                 task.predecessor_ids = [(6, 0, [p.id for p in preds])]
 
+        # pass 3: nối cha/con theo mã WBS → subtask thật trong Odoo
+        c._relink_schedule_hierarchy()
+
         c.message_post(body=_(
             'Import lịch thi công: %(c)s công việc mới, %(u)s cập nhật '
             '(từ %(f)s).', c=created, u=updated, f=self.filename or 'file'))

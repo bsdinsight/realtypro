@@ -44,6 +44,26 @@ class RpContract(models.Model):
             })
         return self.schedule_project_id
 
+    def _relink_schedule_hierarchy(self):
+        """Nối parent_id các công việc theo mã WBS.
+
+        "1.2" là con của "1"; cấp 1 ("1", "2"...) là con của dòng tổng
+        "0" nếu có. Nhờ đó tab Sub-tasks trên form task phản ánh đúng
+        cây WBS (Gantt suy cây từ WBS độc lập, không phụ thuộc field này).
+        """
+        for c in self:
+            tasks = c.task_ids.filtered('wbs_code')
+            by_wbs = {t.wbs_code.strip(): t for t in tasks}
+            for t in tasks:
+                w = t.wbs_code.strip()
+                if '.' in w:
+                    parent = by_wbs.get(w.rsplit('.', 1)[0])
+                else:
+                    parent = by_wbs.get('0') if w != '0' else False
+                pid = parent.id if parent and parent is not t else False
+                if (t.parent_id.id or False) != pid:
+                    t.parent_id = pid
+
     def action_open_schedule(self):
         self.ensure_one()
         proj = self._get_or_create_schedule_project()

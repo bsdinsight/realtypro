@@ -57,33 +57,30 @@
 
 ---
 
-## 3. Feature map
+## 3. Feature map — phạm vi ĐẦY ĐỦ (18 chức năng, làm tất cả trong một bản thiết kế)
 
-### MVP — "4 luồng vàng + 1 màn hình duyệt"
+> Không chia phase. Toàn bộ 18 chức năng nằm trong scope design; thứ tự dưới đây là thứ tự **tần suất sử dụng** (trên = dùng nhiều nhất mỗi ngày) để design phân bổ độ chăm chút.
 
-| # | Chức năng | Yêu cầu trải nghiệm |
+| # | Chức năng | Yêu cầu trải nghiệm / tiền lệ đã kiểm chứng |
 |---|---|---|
 | 1 | **Chụp ảnh hiện trường** (camera-first) | FAB camera ở mọi màn hình. Chụp → vẽ annotate (mũi tên, khoanh vùng) → gắn Dự án/Hạng mục/HĐ (mặc định thông minh theo lần trước) → **watermark giờ + GPS in vào ảnh** (giá trị hồ sơ pháp lý). Chụp liên tiếp nhiều ảnh 1 lần. |
-| 2 | **Punch nhanh** | Từ ảnh vừa chụp → "+Báo lỗi": 3 trường bắt buộc (mô tả — hỗ trợ voice-to-text, nhà thầu chịu trách nhiệm, hạn khắc phục) → lưu **≤15 giây**. Vòng đời Mở→Xử lý→Khắc phục→Đóng bằng swipe/nút to. Kanban punch của tôi. |
-| 3 | **Nhật ký thi công 3 phút** | Cuối ngày: mở form đã **copy sẵn từ nhật ký hôm qua** (nhân lực, máy móc), thời tiết tự điền (API), sửa số liệu, đính ảnh đã chụp trong ngày (app tự gom ảnh theo ngày+công trường), voice-to-text phần vướng mắc → Trình xác nhận. |
-| 4 | **An toàn HSE** | Checklist kiểm tra theo template (tick Đạt/Không đạt, chụp ảnh vi phạm → tự thành punch); toolbox meeting 1 màn (chủ đề, số người, ảnh điểm danh); sự cố/near-miss có ảnh + phân loại. |
-| 5 | **Hộp duyệt** (cho persona ②④) | Một màn gom mọi thứ chờ tôi: xác nhận nhật ký, đóng punch, duyệt tạm ứng. Swipe phải = duyệt, trái = trả lại kèm ghi chú. Push khi có mục mới. |
-| 6 | **Việc của tôi** (lịch thi công) | Danh sách task tuần này theo HĐ (KHÔNG cần Gantt đầy đủ trên phone — Gantt để web/tablet); cập nhật % bằng slider; xem trước/sau phụ thuộc. |
-| 7 | **Offline-first** | Xem mục 4.1 — bắt buộc từ MVP, không phải nâng cao. |
-| 8 | **Push đúng liều** | Chỉ 4 loại: giao cho tôi / chờ tôi duyệt / punch tôi chịu trách nhiệm sắp & quá hạn / sự cố nghiêm trọng. Mặc định KHÔNG push mọi cập nhật khác. |
-
-### Nâng cao (Phase 2) — đã có tiền lệ thị trường ✅
-
-| Chức năng | Tiền lệ đã kiểm chứng |
-|---|---|
-| **Voice + ảnh → AI tạo punch** ("chụp, nói cái mình thấy, hệ tự tạo việc") | OpenSpace Field (09/2025) ship đúng flow này; beta khách hàng báo **giảm 85% thời gian** cho punch/log lỗi (số liệu vendor — dùng làm upper bound) |
-| **AI viết nhật ký** từ dữ liệu ngày (ảnh, voice, chấm công) | Procore Daily Log Agent; Raken AI daily summary (tự sinh tóm tắt, flag vấn đề) |
-| **AI đọc ảnh** → tóm tắt tiến độ + cảnh báo an toàn | Procore photo intelligence |
-| Voice-to-text nhập liệu | Raken daily report đã có |
-| Xem bản vẽ + ghim punch lên bản vẽ | Fieldwire/PlanGrid — chuẩn ngành, nhưng nặng; để P2 |
-| Chấm công, phiếu đề nghị vật tư, đề xuất thanh toán | FastCons (VN) đã đưa lên mobile — thị trường sẽ hỏi |
-| BBNT + chữ ký trên thiết bị | Chuẩn ngành; giá trị pháp lý cao |
-| Dashboard executive (read-only) | Sau khi 4 luồng vàng có dữ liệu đều |
+| 2 | **Punch nhanh** | Từ ảnh vừa chụp → "+Báo lỗi": 3 trường bắt buộc (mô tả — voice-to-text, nhà thầu chịu trách nhiệm, hạn khắc phục) → lưu **≤15 giây**. Vòng đời Mở→Xử lý→Khắc phục→Đóng bằng swipe/nút to. Kanban punch của tôi. |
+| 3 | **AI: ảnh + giọng nói → tạo punch** | "Chụp, nói cái mình thấy, hệ tự tạo việc" — OpenSpace Field (09/2025) ship đúng flow này, khách beta báo **giảm 85% thời gian** log lỗi (số vendor — upper bound). Màn xác nhận đề xuất AI trước khi lưu (nguyên tắc AI đề xuất – người duyệt của Realty Pro). |
+| 4 | **Nhật ký thi công 3 phút** | Form **copy sẵn từ hôm qua** (nhân lực, máy móc), thời tiết tự điền, đính ảnh đã chụp trong ngày (tự gom theo ngày + công trường), voice-to-text phần vướng mắc → Trình xác nhận. |
+| 5 | **AI viết nhật ký** | AI soạn nháp nhật ký từ dữ liệu ngày (ảnh, voice, công việc) — người dùng review rồi trình. Tiền lệ: Procore Daily Log Agent, Raken AI daily summary. |
+| 6 | **An toàn HSE** | Checklist theo template (tick Đạt/Không đạt, ảnh vi phạm → tự thành punch); toolbox meeting 1 màn; sự cố/near-miss có ảnh + phân loại. |
+| 7 | **Hộp duyệt** | Một màn gom mọi thứ chờ tôi: xác nhận nhật ký, đóng punch, duyệt tạm ứng, duyệt phiếu vật tư. Swipe phải = duyệt, trái = trả lại kèm ghi chú. |
+| 8 | **Việc của tôi** (lịch thi công) | Task tuần này theo HĐ (không cần Gantt đầy đủ trên phone — Gantt để web/tablet); cập nhật % bằng slider; xem phụ thuộc trước/sau. |
+| 9 | **Chấm công** | Chấm nhanh theo đội tại hiện trường + bảng công tuần. (FastCons VN đã có — thị trường sẽ hỏi.) |
+| 10 | **Phiếu đề nghị vật tư** | Lập phiếu tại hiện trường, đính ảnh; theo dõi trạng thái duyệt. (FastCons đã có.) |
+| 11 | **BBNT + chữ ký trên thiết bị** | Form nghiệm thu khối lượng + màn ký điện tử tại hiện trường — giá trị pháp lý cao, nối thẳng vào thanh toán. |
+| 12 | **Xem bản vẽ + ghim punch lên bản vẽ** | Chuẩn ngành (Fieldwire/PlanGrid): mở bản vẽ, pin lỗi đúng vị trí trên mặt bằng. |
+| 13 | **AI đọc ảnh → insight** | Feed ảnh theo ngày + AI tóm tắt tiến độ, cảnh báo an toàn từ ảnh (tiền lệ: Procore photo intelligence). |
+| 14 | **Dashboard executive** (read-only) | Thẻ tóm tắt đa dự án: tiến độ – tiền – an toàn + ảnh mới nhất. Tuyệt đối không thao tác nhập. |
+| 15 | **Thông báo** | Trung tâm thông báo; push đúng liều — chỉ 4 loại: giao cho tôi / chờ tôi duyệt / punch sắp & quá hạn / sự cố nghiêm trọng. |
+| 16 | **Onboarding & đăng nhập** | SĐT + OTP, chọn dự án; ngày đầu chỉ cần biết 1 nút Chụp ảnh. |
+| 17 | **Hồ sơ & đồng bộ** | Cài đặt cá nhân + trạng thái sync/hàng đợi offline (luôn thấy "đã lưu máy / đã lên hệ thống"). |
+| 18 | **Offline-first & voice-to-text** (năng lực nền, chạy xuyên mọi chức năng) | Xem mục 4.1; voice-to-text ở mọi ô mô tả (tiền lệ: Raken). |
 
 > **Điểm khác biệt của Realty Site so với mọi app rời:** dữ liệu hiện trường chảy **thẳng vào ERP** — punch chặn nghiệm thu/thanh toán, nhật ký nuôi AI đọc tiến độ, % nhảy vào Gantt, không cần tích hợp gì thêm (nhớ: chỉ 5% thị trường có app tích hợp được với nhau).
 
@@ -112,10 +109,10 @@
 - Onboarding: đăng nhập bằng số điện thoại + OTP (không bắt nhớ email/password); video 60 giây; ngày đầu chỉ cần biết 1 nút Chụp ảnh.
 - Phân quyền theo dự án/HĐ (TVGS và thầu phụ chỉ thấy phần của mình) — dùng chuẩn quyền Odoo hiện có.
 
-### 4.4 Nền tảng: PWA trước, native sau *(khuyến nghị kỹ thuật của BSD — Claude Design chỉ cần biết để chọn khung)* ⚠️
+### 4.4 Nền tảng build *(ghi chú kỹ thuật của BSD — không ảnh hưởng công việc design)* ⚠️
 
-- **Giai đoạn 1 — PWA/responsive trên Odoo**: nhanh ship, không qua app store, backend Odoo dùng chuẩn quyền + API sẵn. Chấp nhận hạn chế: offline nông, camera pipeline yếu hơn native.
-- **Giai đoạn 2 — Native (Flutter)**: khi cần offline sâu + hàng đợi media + push tin cậy. Design system nên vẽ **mobile-first thuần** (không lệ thuộc look Odoo) để tái dùng nguyên vẹn khi chuyển native.
+- Với phạm vi đầy đủ (offline sâu, hàng đợi media, camera pipeline, voice, push tin cậy, ký điện tử), phương án build khuyến nghị là **native (Flutter)**; PWA trên Odoo chỉ đủ cho bản chạy thử nội bộ.
+- Yêu cầu cho design: vẽ **mobile-first thuần** theo design system riêng của Realty Site — KHÔNG lệ thuộc look & feel Odoo web; backend Odoo chỉ là nơi dữ liệu đổ về.
 
 ---
 
@@ -134,9 +131,7 @@
 
 ## 5b. Kiểm kê màn hình (screen inventory)
 
-**Tổng: 18 chức năng · ~32 màn hình** (MVP 10 chức năng / 20 màn; Phase 2 8 chức năng / 12 màn)
-
-### MVP — 10 chức năng, 20 màn hình
+**Tổng phạm vi: 18 chức năng · 32 màn hình — làm tất cả trong một bản thiết kế, không chia phase.**
 
 | Chức năng | Màn hình | SL |
 |---|---|---|
@@ -144,27 +139,22 @@
 | Home "Hôm nay của tôi" | Dashboard cá nhân (việc + punch + nút lớn) | 1 |
 | Chụp ảnh hiện trường | Camera (chụp liên tiếp) · Annotate vẽ trên ảnh · Gắn thẻ dự án/hạng mục/HĐ & lưu | 3 |
 | Punch list | Danh sách/kanban punch · Tạo nhanh (3 trường + voice) · Chi tiết punch (vòng đời, ảnh khắc phục, trao đổi) | 3 |
+| AI: ảnh + giọng nói → punch | Màn xác nhận đề xuất AI | 1 |
 | Nhật ký thi công | Danh sách nhật ký · Soạn nhật ký (sections: công việc/nhân lực/máy/ảnh/ghi chú) · Xem & xác nhận | 3 |
+| AI viết nhật ký | Review bản nháp AI trước khi trình | 1 |
 | An toàn HSE | Hub an toàn · Thực hiện checklist · Toolbox meeting · Sự cố/near-miss | 4 |
 | Hộp duyệt | Danh sách chờ duyệt (swipe duyệt/trả) | 1 |
 | Việc của tôi | Lịch tuần theo HĐ + slider % | 1 |
-| Thông báo | Trung tâm thông báo | 1 |
-| Hồ sơ & đồng bộ | Cài đặt cá nhân + trạng thái sync/hàng đợi offline | 1 |
-
-### Phase 2 — 8 chức năng, ~12 màn hình
-
-| Chức năng | Màn hình | SL |
-|---|---|---|
-| AI: ảnh + giọng nói → punch | Màn xác nhận đề xuất AI | 1 |
-| AI viết nhật ký | Review bản nháp AI trước khi trình | 1 |
-| AI photo insights | Feed ảnh theo ngày + nhận định AI | 1 |
-| Xem bản vẽ + pin punch | Danh sách bản vẽ · Viewer + ghim lỗi | 2 |
 | Chấm công | Chấm nhanh theo đội · Bảng công tuần | 2 |
 | Phiếu đề nghị vật tư | Danh sách phiếu · Form đề nghị | 2 |
 | BBNT trên thiết bị | Form nghiệm thu · Màn ký điện tử | 2 |
+| Xem bản vẽ + pin punch | Danh sách bản vẽ · Viewer + ghim lỗi | 2 |
+| AI photo insights | Feed ảnh theo ngày + nhận định AI | 1 |
 | Dashboard executive | Thẻ tóm tắt đa dự án (read-only) | 1 |
+| Thông báo | Trung tâm thông báo | 1 |
+| Hồ sơ & đồng bộ | Cài đặt cá nhân + trạng thái sync/hàng đợi offline | 1 |
 
-> Ghi chú cho design: 20 màn MVP dùng chung **1 design system** (bottom nav 5 tab: Hôm nay · Việc · ➕Camera · Duyệt · Thông báo) nên khối lượng thực tế ≈ 1 hệ thống + 20 biến thể; các form Odoo phía sau đã có sẵn cấu trúc trường, không cần thiết kế data model.
+> Ghi chú cho design: cả 32 màn dùng chung **1 design system** (bottom nav 5 tab: Hôm nay · Việc · ➕Camera · Duyệt · Thông báo) nên khối lượng thực tế ≈ 1 hệ thống + 32 biến thể màn hình; các form Odoo phía sau đã có sẵn cấu trúc trường, không cần thiết kế data model. Ưu tiên độ chăm chút theo thứ tự bảng feature map (mục 3) — 4 luồng vàng ở mục 5 vẫn là thước đo chất lượng UX.
 
 ## 6. Moodboard & brand hints
 

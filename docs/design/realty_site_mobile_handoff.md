@@ -57,9 +57,9 @@
 
 ---
 
-## 3. Feature map — phạm vi ĐẦY ĐỦ (18 chức năng, làm tất cả trong một bản thiết kế)
+## 3. Feature map — phạm vi ĐẦY ĐỦ (21 chức năng, làm tất cả trong một bản thiết kế)
 
-> Không chia phase. Toàn bộ 18 chức năng nằm trong scope design; thứ tự dưới đây là thứ tự **tần suất sử dụng** (trên = dùng nhiều nhất mỗi ngày) để design phân bổ độ chăm chút.
+> Không chia phase. Toàn bộ 21 chức năng nằm trong scope design; thứ tự dưới đây là thứ tự **tần suất sử dụng** (trên = dùng nhiều nhất mỗi ngày) để design phân bổ độ chăm chút.
 
 | # | Chức năng | Yêu cầu trải nghiệm / tiền lệ đã kiểm chứng |
 |---|---|---|
@@ -81,6 +81,9 @@
 | 16 | **Onboarding & đăng nhập** | SĐT + OTP, chọn dự án; ngày đầu chỉ cần biết 1 nút Chụp ảnh. |
 | 17 | **Hồ sơ & đồng bộ** | Cài đặt cá nhân + trạng thái sync/hàng đợi offline (luôn thấy "đã lưu máy / đã lên hệ thống"). |
 | 18 | **Offline-first & voice-to-text** (năng lực nền, chạy xuyên mọi chức năng) | Xem mục 4.1; voice-to-text ở mọi ô mô tả (tiền lệ: Raken). |
+| 19 | **RFI — Phiếu yêu cầu làm rõ** *(tần suất ~nhóm 9–12)* | Nhà thầu/kỹ sư hỏi TVGS/thiết kế/CĐT khi vướng bản vẽ, xung đột thiết kế: tạo RFI kèm ảnh + voice, **hạn trả lời + đồng hồ đếm ngày chờ** (RFI trễ = căn cứ claim tiến độ), cờ *ảnh hưởng chi phí/tiến độ*, chuỗi hỏi–đáp có giá trị hồ sơ. Trả lời RFI xuất hiện trong Hộp duyệt. Lập RFI trên mobile là top use-case ngành (71% — JBKnowledge ✅). |
+| 20 | **Chỉ thị công trường (Site Instruction)** | Chiều ngược RFI: CĐT/TVGS ra chỉ thị cho nhà thầu — nội dung, hạn thực hiện, cờ *phát sinh chi phí*; nhà thầu xác nhận đã thực hiện kèm ảnh. |
+| 21 | **Trình duyệt (Submittal)** — mẫu vật liệu / shopdrawing | Nhà thầu trình mẫu/bản vẽ chế tạo kèm ảnh + file → TVGS/CĐT duyệt / duyệt có điều kiện / từ chối (trong Hộp duyệt). Sổ theo dõi trạng thái trình duyệt theo HĐ. |
 
 > **Điểm khác biệt của Realty Site so với mọi app rời:** dữ liệu hiện trường chảy **thẳng vào ERP** — punch chặn nghiệm thu/thanh toán, nhật ký nuôi AI đọc tiến độ, % nhảy vào Gantt, không cần tích hợp gì thêm (nhớ: chỉ 5% thị trường có app tích hợp được với nhau).
 
@@ -131,7 +134,7 @@
 
 ## 5b. Kiểm kê màn hình (screen inventory)
 
-**Tổng phạm vi: 18 chức năng · 32 màn hình — làm tất cả trong một bản thiết kế, không chia phase.**
+**Tổng phạm vi: 21 chức năng · 39 màn hình — làm tất cả trong một bản thiết kế, không chia phase.**
 
 | Chức năng | Màn hình | SL |
 |---|---|---|
@@ -151,10 +154,13 @@
 | Xem bản vẽ + pin punch | Danh sách bản vẽ · Viewer + ghim lỗi | 2 |
 | AI photo insights | Feed ảnh theo ngày + nhận định AI | 1 |
 | Dashboard executive | Thẻ tóm tắt đa dự án (read-only) | 1 |
+| RFI — yêu cầu làm rõ | Danh sách RFI (đồng hồ chờ) · Tạo RFI (ảnh + voice) · Chi tiết hỏi–đáp & trả lời | 3 |
+| Chỉ thị công trường | Danh sách chỉ thị · Chi tiết + xác nhận thực hiện kèm ảnh | 2 |
+| Trình duyệt (Submittal) | Sổ trình duyệt theo HĐ · Chi tiết + duyệt/từ chối | 2 |
 | Thông báo | Trung tâm thông báo | 1 |
 | Hồ sơ & đồng bộ | Cài đặt cá nhân + trạng thái sync/hàng đợi offline | 1 |
 
-> Ghi chú cho design: cả 32 màn dùng chung **1 design system** (bottom nav 5 tab: Hôm nay · Việc · ➕Camera · Duyệt · Thông báo) nên khối lượng thực tế ≈ 1 hệ thống + 32 biến thể màn hình; các form Odoo phía sau đã có sẵn cấu trúc trường, không cần thiết kế data model. Ưu tiên độ chăm chút theo thứ tự bảng feature map (mục 3) — 4 luồng vàng ở mục 5 vẫn là thước đo chất lượng UX.
+> Ghi chú cho design: cả 39 màn dùng chung **1 design system** (bottom nav 5 tab: Hôm nay · Việc · ➕Camera · Duyệt · Thông báo) nên khối lượng thực tế ≈ 1 hệ thống + 39 biến thể màn hình; các form Odoo phía sau đã có sẵn cấu trúc trường, không cần thiết kế data model. Ưu tiên độ chăm chút theo thứ tự bảng feature map (mục 3) — 4 luồng vàng ở mục 5 vẫn là thước đo chất lượng UX.
 
 ## 6. Moodboard & brand hints
 

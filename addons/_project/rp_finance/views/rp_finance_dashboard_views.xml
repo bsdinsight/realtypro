@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_finance_dashboard_form" model="ir.ui.view">
+        <field name="name">rp.finance.dashboard.form</field>
+        <field name="model">rp.finance.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Tài chính" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="↻ Refresh KPIs"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Tài chính — Dashboard</h1>
+                        <p class="text-muted">Chuỗi giá trị: Khái toán → Dự toán → HĐ ký → Nghiệm thu → Thanh toán · số liệu thời gian thực</p>
+                    </div>
+
+                    <!-- ─── Row 1: Kế hoạch chi phí ─── -->
+                    <group string="📐 Kế hoạch chi phí">
+                        <group string="Khái toán">
+                            <field name="kpi_estimate_total" widget="monetary"/>
+                            <button name="action_open_estimate" type="object"
+                                    string="→ Xem khái toán" class="btn-link"/>
+                        </group>
+                        <group string="Dự toán (BOQ)">
+                            <field name="kpi_boq_total" widget="monetary"/>
+                            <button name="action_open_boq" type="object"
+                                    string="→ Xem BOQ" class="btn-link"/>
+                        </group>
+                        <group string="Hợp đồng">
+                            <field name="kpi_contract_value" widget="monetary"/>
+                            <button name="action_open_contracts" type="object"
+                                    string="→ HĐ đã ký" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 2: Thực hiện ─── -->
+                    <group string="🏗 Thực hiện">
+                        <group string="Nghiệm thu">
+                            <field name="kpi_acceptance_to_date" widget="monetary"/>
+                        </group>
+                        <group string="Tạm ứng">
+                            <field name="kpi_advance_open" widget="monetary"/>
+                            <field name="kpi_advance_to_approve"
+                                   widget="statinfo" class="text-danger"/>
+                            <button name="action_open_advances" type="object"
+                                    string="→ TƯ chờ duyệt" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 3: Thanh toán ─── -->
+                    <group string="💳 Thanh toán">
+                        <group string="Hoá đơn nhà thầu">
+                            <field name="kpi_invoice_total" widget="monetary"/>
+                            <field name="kpi_invoice_residual" widget="monetary"
+                                   class="text-danger"/>
+                            <button name="action_open_bills" type="object"
+                                    string="→ Hoá đơn NT" class="btn-link"/>
+                        </group>
+                        <group string="Mốc thanh toán">
+                            <field name="kpi_milestone_due_30d"
+                                   widget="statinfo" class="text-danger"/>
+                            <field name="kpi_milestone_paid" widget="monetary"/>
+                            <button name="action_open_milestones_due" type="object"
+                                    string="→ Mốc đến hạn ≤30d" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_finance_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard Tài chính</field>
+        <field name="res_model">rp.finance.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

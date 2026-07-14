@@ -2,10 +2,11 @@
 <odoo>
 
     <!-- Menu Tạm ứng: đặt trong Realty Project root -->
+    <!-- v1.x: Tạm ứng chuyển từ root vào Tài chính -->
     <menuitem id="menu_rp_advance_root"
               name="Tạm ứng"
-              parent="rp_estimate.menu_realty_project_root"
+              parent="rp_estimate.menu_finance"
               action="action_rp_advance_payment"
-              sequence="60"/>
+              sequence="30"/>
 
 </odoo>

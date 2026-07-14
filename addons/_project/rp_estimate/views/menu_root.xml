@@ -38,4 +38,33 @@
               parent="menu_realty_project_root"
               sequence="10"/>
 
+    <!-- ===== Tài chính (Finance) — container, sequence 12 =====
+         Con đầu tiên (seq 5) là Dashboard Tài chính (module rp_finance)
+         → nhấp "Tài chính" trên navbar mở thẳng dashboard.
+         Các module con tự mount vào đây:
+         - rp_estimate:        Khái toán (10)
+         - rp_finance:         Dashboard (5), Dự toán BOQ (20),
+                               Hoá đơn nhà thầu (40), Hồ sơ thanh toán (50),
+                               Thanh toán (60)
+         - rp_advance_payment: Tạm ứng (30)
+         - rp_contract:        2 báo cáo → menu_finance_reports (90) -->
+    <menuitem id="menu_finance"
+              name="Tài chính"
+              parent="menu_realty_project_root"
+              sequence="12"/>
+
+    <menuitem id="menu_finance_reports"
+              name="Báo cáo"
+              parent="menu_finance"
+              sequence="90"/>
+
+    <!-- ===== Cấu hình (Realty Project) — master data ít đụng =====
+         Cost Categories + Danh mục chi phí chuẩn mount vào đây
+         (menus.xml). Group manager — nhất quán Realty Core > Configuration. -->
+    <menuitem id="menu_rp_configuration"
+              name="Cấu hình"
+              parent="menu_realty_project_root"
+              sequence="95"
+              groups="re_base.group_re_manager"/>
+
 </odoo>

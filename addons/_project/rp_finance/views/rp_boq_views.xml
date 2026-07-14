@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dự toán (BOQ) đứng riêng — trước đây rp.boq.line chỉ nhúng
+         trong form Hạng mục. Tiền quan trọng số 1: cột amount rộng. -->
+
+    <record id="view_rp_finance_boq_list" model="ir.ui.view">
+        <field name="name">rp.boq.line.finance.list</field>
+        <field name="model">rp.boq.line</field>
+        <field name="arch" type="xml">
+            <list create="false" expand="1">
+                <field name="project_id" optional="show"/>
+                <field name="structure_id"/>
+                <field name="category_id" optional="show"/>
+                <field name="description"/>
+                <field name="uom_id" optional="show"/>
+                <field name="quantity"/>
+                <field name="unit_price" width="185px"/>
+                <field name="amount" width="200px" sum="Tổng dự toán"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_finance_boq_pivot" model="ir.ui.view">
+        <field name="name">rp.boq.line.finance.pivot</field>
+        <field name="model">rp.boq.line</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="project_id" type="row"/>
+                <field name="structure_id" type="row"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_finance_boq_search" model="ir.ui.view">
+        <field name="name">rp.boq.line.finance.search</field>
+        <field name="model">rp.boq.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="description"/>
+                <field name="structure_id"/>
+                <field name="project_id"/>
+                <filter string="Dự án" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="Hạng mục" name="group_structure"
+                        context="{'group_by': 'structure_id'}"/>
+                <filter string="Cost Category" name="group_category"
+                        context="{'group_by': 'category_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_finance_boq" model="ir.actions.act_window">
+        <field name="name">Dự toán (BOQ)</field>
+        <field name="res_model">rp.boq.line</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="search_view_id" ref="view_rp_finance_boq_search"/>
+        <field name="context">{'search_default_group_project': 1}</field>
+    </record>
+
+    <!-- Hồ sơ thanh toán: toàn bộ mốc thanh toán mọi trạng thái
+         (khác action_rp_contract_payment_due vốn lọc chưa-trả) -->
+    <record id="action_rp_finance_milestones" model="ir.actions.act_window">
+        <field name="name">Hồ sơ thanh toán</field>
+        <field name="res_model">rp.contract.payment.milestone</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

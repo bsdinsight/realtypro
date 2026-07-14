@@ -80,18 +80,20 @@
               action="rp_cost_base.action_rp_structure"
               sequence="70"/>
 
+    <!-- Cost Category (per-project + Master) là danh mục cấu hình ít đụng
+         → chuyển vào Realty Project > Cấu hình (v1.11.0) -->
     <menuitem id="menu_pm_rp_cost_category"
               name="Cost Categories"
-              parent="menu_project_master"
+              parent="menu_rp_configuration"
               action="rp_cost_base.action_rp_cost_category"
-              sequence="80"/>
+              sequence="10"/>
 
     <menuitem id="menu_pm_rp_cost_category_master"
               name="Danh mục chi phí chuẩn (Master)"
-              parent="menu_project_master"
+              parent="menu_rp_configuration"
               action="rp_cost_base.action_rp_cost_category_master"
               groups="re_base.group_re_manager"
-              sequence="81"/>
+              sequence="20"/>
 
     <menuitem id="menu_pm_rp_tender_package"
               name="Gói thầu"
@@ -121,9 +123,11 @@
         ===== Estimate submenu (sequence 10 group) =====
     -->
 
+    <!-- v1.11.0: Khái toán chuyển vào Tài chính; container "Estimate"
+         không còn con sẽ tự ẩn. -->
     <menuitem id="menu_estimate_preliminary"
               name="Khái toán"
-              parent="menu_estimate_workflows"
+              parent="menu_finance"
               action="rp_cost_base.action_rp_structure_estimate_summary"
               sequence="10"/>
 

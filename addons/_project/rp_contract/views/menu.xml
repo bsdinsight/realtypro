@@ -7,19 +7,16 @@
               action="action_rp_contract"
               sequence="95"/>
 
-    <!-- Báo cáo HĐ + Mốc thanh toán đến hạn -->
-    <menuitem id="menu_rp_contract_report"
-              name="Báo cáo HĐ"
-              parent="rp_estimate.menu_realty_project_root"
-              sequence="50"/>
+    <!-- 2 báo cáo HĐ gom về Tài chính > Báo cáo (container "Báo cáo HĐ"
+         root-level bỏ từ đây — record cũ được Odoo dọn khi update) -->
     <menuitem id="menu_rp_contract_report_pivot"
               name="Pivot HĐ nhà thầu"
-              parent="menu_rp_contract_report"
+              parent="rp_estimate.menu_finance_reports"
               action="action_rp_contract_report"
               sequence="10"/>
     <menuitem id="menu_rp_contract_payment_due"
               name="Mốc thanh toán đến hạn"
-              parent="menu_rp_contract_report"
+              parent="rp_estimate.menu_finance_reports"
               action="action_rp_contract_payment_due"
               sequence="20"/>
 </odoo>

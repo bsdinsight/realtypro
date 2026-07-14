@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Tạm ứng (Advance Payment)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý Tạm ứng cho HĐ nhà thầu / NCC với workflow '
                'phê duyệt + giải ngân bằng KW + cấn trừ thủ công vào hóa đơn',

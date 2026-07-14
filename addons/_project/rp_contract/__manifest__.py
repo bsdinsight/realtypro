@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project - Contractor Contracts',
-    'version': '19.0.1.4.0',
+    'version': '19.0.1.5.0',
     'category': 'Realty/Project',
     'summary': 'Hợp đồng nhà thầu (rp.contract): lifecycle, BOQ lines, '
                'lịch thanh toán, phụ lục, bảo lãnh',

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Mount vào container rp_estimate.menu_finance ("Tài chính"):
+          5  Dashboard Tài chính   (con đầu → nhấp "Tài chính" mở dashboard)
+          10 Khái toán             (rp_estimate)
+          20 Dự toán (BOQ)
+          30 Tạm ứng               (rp_advance_payment)
+          40 Hoá đơn nhà thầu      (action chuẩn account — đúng filter/kanban kế toán)
+          50 Hồ sơ thanh toán
+          60 Thanh toán
+          90 Báo cáo               (rp_contract mount 2 báo cáo; phát triển dần)
+    -->
+
+    <menuitem id="menu_rp_finance_dashboard"
+              name="Dashboard Tài chính"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_finance_dashboard"
+              sequence="5"/>
+
+    <menuitem id="menu_rp_finance_boq"
+              name="Dự toán (BOQ)"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_finance_boq"
+              sequence="20"/>
+
+    <menuitem id="menu_rp_finance_vendor_bills"
+              name="Hoá đơn nhà thầu"
+              parent="rp_estimate.menu_finance"
+              action="account.action_move_in_invoice_type"
+              sequence="40"/>
+
+    <menuitem id="menu_rp_finance_milestones"
+              name="Hồ sơ thanh toán"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_finance_milestones"
+              sequence="50"/>
+
+    <menuitem id="menu_rp_finance_payments"
+              name="Thanh toán"
+              parent="rp_estimate.menu_finance"
+              action="account.action_account_payments_payable"
+              sequence="60"/>
+
+</odoo>

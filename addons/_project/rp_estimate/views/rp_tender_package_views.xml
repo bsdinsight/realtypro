@@ -181,18 +181,18 @@
                             <field name="subzone_filter_id"
                                    options="{'no_create': True}"
                                    help="UX filter cho việc add lines - không restrict gói thầu."/>
-                            <field name="selection_method"
-                                   required="state != 'draft'"/>
-                            <field name="deadline_contract"
-                                   required="state != 'draft'"/>
+                            <!-- KHÔNG required tĩnh theo state: record cũ/import thiếu data
+                                 sẽ đỏ ngay khi mở form. Validate đã nằm ở _require_fields
+                                 trong các action chuyển trạng thái. -->
+                            <field name="selection_method"/>
+                            <field name="deadline_contract"/>
                             <field name="sequence"/>
                         </group>
                         <group string="Tài chính">
                             <field name="currency_id"
                                    options="{'no_create': True}"/>
                             <field name="estimated_amount" widget="monetary"/>
-                            <field name="max_approved_price" widget="monetary"
-                                   required="state != 'draft'"/>
+                            <field name="max_approved_price" widget="monetary"/>
                             <field name="award_amount" widget="monetary"
                                    invisible="state in ('draft','approved','inviting','bid_closed')"/>
                             <field name="contract_amount" widget="monetary"
@@ -200,8 +200,7 @@
                             <field name="bidder_partner_ids" invisible="1"/>
                             <field name="contractor_id"
                                    options="{'no_create': True, 'no_create_edit': True}"
-                                   invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"
-                                   required="state in ('awarded','contracted','closed')"/>
+                                   invisible="state in ('draft','approved','inviting','bid_closed','evaluating','negotiating')"/>
                             <field name="line_count" readonly="1"/>
                             <field name="subzone_coverage" readonly="1"/>
                             <field name="days_to_deadline" invisible="1"/>

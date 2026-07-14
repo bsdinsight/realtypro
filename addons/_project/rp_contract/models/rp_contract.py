@@ -145,6 +145,9 @@ class RpContract(models.Model):
     amendment_ids = fields.One2many(
         'rp.contract.amendment', 'contract_id', string='Phụ lục')
     amendment_count = fields.Integer(compute='_compute_counts')
+    closure_ids = fields.One2many(
+        'rp.contract.closure', 'contract_id', string='Chấm dứt / Thanh lý')
+    closure_count = fields.Integer(compute='_compute_counts')
 
     # ----- State machine -------------------------------------------------
     state = fields.Selection(
@@ -152,7 +155,8 @@ class RpContract(models.Model):
          ('signed', 'Đã ký'),
          ('executing', 'Đang thực hiện'),
          ('completed', 'Đã hoàn thành'),
-         ('terminated', 'Đã chấm dứt')],
+         ('terminated', 'Đã chấm dứt'),
+         ('liquidated', 'Đã thanh lý')],
         string='Trạng thái', default='draft', required=True, tracking=True)
 
     note = fields.Text(string='Ghi chú')
@@ -201,12 +205,14 @@ class RpContract(models.Model):
                 paid * 100.0 / rec.contract_value_total
                 if rec.contract_value_total else 0.0)
 
-    @api.depends('line_ids', 'payment_milestone_ids', 'amendment_ids')
+    @api.depends('line_ids', 'payment_milestone_ids', 'amendment_ids',
+                 'closure_ids')
     def _compute_counts(self):
         for rec in self:
             rec.line_count = len(rec.line_ids)
             rec.payment_milestone_count = len(rec.payment_milestone_ids)
             rec.amendment_count = len(rec.amendment_ids)
+            rec.closure_count = len(rec.closure_ids)
 
     # ======================================================================
     # Constraints
@@ -288,9 +294,9 @@ class RpContract(models.Model):
 
     def action_reset_draft(self):
         for rec in self:
-            if rec.state not in ('terminated',):
+            if rec.state not in ('terminated', 'liquidated'):
                 raise UserError(_(
-                    "Chỉ HĐ đã chấm dứt mới đưa về Nháp được."))
+                    "Chỉ HĐ đã chấm dứt / đã thanh lý mới đưa về Nháp được."))
             rec.state = 'draft'
 
     # ======================================================================
@@ -328,3 +334,35 @@ class RpContract(models.Model):
             'domain': [('contract_id', '=', self.id)],
             'context': {'default_contract_id': self.id},
         }
+
+    def action_view_closures(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Chấm dứt / Thanh lý'),
+            'res_model': 'rp.contract.closure',
+            'view_mode': 'list,form',
+            'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }
+
+    def _action_new_closure(self, closure_type):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Chấm dứt HĐ') if closure_type == 'termination'
+                    else _('Thanh lý HĐ'),
+            'res_model': 'rp.contract.closure',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_contract_id': self.id,
+                'default_closure_type': closure_type,
+            },
+        }
+
+    def action_open_termination(self):
+        return self._action_new_closure('termination')
+
+    def action_open_liquidation(self):
+        return self._action_new_closure('liquidation')

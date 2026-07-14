@@ -41,12 +41,18 @@
                     <button name="action_complete" type="object"
                             string="Hoàn thành"
                             invisible="state not in ('signed','executing')"/>
-                    <button name="action_terminate" type="object"
+                    <!-- Chấm dứt/Thanh lý mở hồ sơ rp.contract.closure
+                         (có căn cứ + quyết toán) thay vì đổi state trực tiếp -->
+                    <button name="action_open_termination" type="object"
                             string="Chấm dứt"
-                            invisible="state in ('completed','terminated','draft')"/>
+                            invisible="state not in ('signed','executing')"/>
+                    <button name="action_open_liquidation" type="object"
+                            string="Thanh lý"
+                            invisible="state not in ('completed','terminated')"/>
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
-                            invisible="state != 'terminated'"/>
+                            invisible="state not in ('terminated','liquidated')"
+                            groups="re_base.group_re_manager"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,signed,executing,completed"/>
                 </header>
@@ -61,6 +67,12 @@
                                 class="oe_stat_button" icon="fa-file-text-o">
                             <field name="amendment_count" widget="statinfo"
                                    string="Phụ lục"/>
+                        </button>
+                        <button name="action_view_closures" type="object"
+                                class="oe_stat_button" icon="fa-handshake-o"
+                                invisible="closure_count == 0">
+                            <field name="closure_count" widget="statinfo"
+                                   string="CD/Thanh lý"/>
                         </button>
                     </div>
                     <div class="oe_title">

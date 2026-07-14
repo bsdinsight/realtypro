@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Sổ tập trung Bảo lãnh HĐ nhà thầu — trong Project Master,
-         ngay sau Hợp đồng nhà thầu (seq 95) -->
+    <!-- Sổ tập trung Bảo lãnh HĐ nhà thầu — gom về menu Hợp đồng -->
     <menuitem id="menu_pm_rp_contract_guarantee"
               name="Bảo lãnh HĐ nhà thầu"
-              parent="rp_estimate.menu_project_master"
+              parent="rp_estimate.menu_contracts"
               action="action_rp_contract_guarantee"
-              sequence="96"/>
+              sequence="50"/>
 
     <!-- Cảnh báo hết hạn → Tài chính > Báo cáo (container "Báo cáo HĐ"
          root cũ đã bỏ khi gom menu Tài chính) -->

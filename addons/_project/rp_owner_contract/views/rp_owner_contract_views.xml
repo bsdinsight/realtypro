@@ -230,19 +230,17 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_rp_owner_contract_root"
-              name="HĐ với CĐT"
-              parent="rp_estimate.menu_realty_project_root"
-              sequence="45"/>
+    <!-- Gom về menu Hợp đồng (root "HĐ với CĐT" cũ bỏ — record được
+         Odoo dọn khi update) -->
     <menuitem id="menu_rp_owner_contract"
               name="HĐ với Chủ đầu tư"
-              parent="menu_rp_owner_contract_root"
+              parent="rp_estimate.menu_contracts"
               action="action_rp_owner_contract"
-              sequence="10"/>
+              sequence="20"/>
     <menuitem id="menu_rp_owner_acceptance"
               name="BBNT với CĐT"
-              parent="menu_rp_owner_contract_root"
+              parent="rp_estimate.menu_contracts"
               action="action_rp_owner_acceptance"
-              sequence="20"/>
+              sequence="25"/>
 
 </odoo>

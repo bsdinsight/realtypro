@@ -76,6 +76,17 @@
               parent="menu_construction"
               sequence="90"/>
 
+    <!-- ===== Hợp đồng (Contracts) — container, sequence 40 =====
+         Gom toàn bộ nghiệp vụ hợp đồng. Các module mount vào:
+         - rp_contract:           HĐ nhà thầu (10), Phụ lục HĐ (30),
+                                  Chấm dứt / Thanh lý (40)
+         - rp_owner_contract:     HĐ với Chủ đầu tư (20), BBNT với CĐT (25)
+         - rp_contract_guarantee: Bảo lãnh HĐ nhà thầu (50) -->
+    <menuitem id="menu_contracts"
+              name="Hợp đồng"
+              parent="menu_realty_project_root"
+              sequence="40"/>
+
     <!-- ===== Cấu hình (Realty Project) — master data ít đụng =====
          Cost Categories + Danh mục chi phí chuẩn mount vào đây
          (menus.xml). Group manager — nhất quán Realty Core > Configuration. -->

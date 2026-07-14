@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- HĐ nhà thầu trong Project Master, ngay sau Gói thầu -->
+    <!-- Gom về menu Hợp đồng (container rp_estimate.menu_contracts) -->
     <menuitem id="menu_pm_rp_contract"
-              name="Hợp đồng nhà thầu"
-              parent="rp_estimate.menu_project_master"
+              name="HĐ nhà thầu"
+              parent="rp_estimate.menu_contracts"
               action="action_rp_contract"
-              sequence="95"/>
+              sequence="10"/>
+
+    <menuitem id="menu_rp_contract_amendment"
+              name="Phụ lục HĐ"
+              parent="rp_estimate.menu_contracts"
+              action="action_rp_contract_amendment"
+              sequence="30"/>
+
+    <menuitem id="menu_rp_contract_closure"
+              name="Chấm dứt / Thanh lý"
+              parent="rp_estimate.menu_contracts"
+              action="action_rp_contract_closure"
+              sequence="40"/>
 
     <!-- 2 báo cáo HĐ gom về Tài chính > Báo cáo (container "Báo cáo HĐ"
          root-level bỏ từ đây — record cũ được Odoo dọn khi update) -->

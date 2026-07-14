@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Chấm dứt / Thanh lý ===== -->
+
+    <record id="view_rp_contract_closure_list" model="ir.ui.view">
+        <field name="name">rp.contract.closure.list</field>
+        <field name="model">rp.contract.closure</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="closure_type"/>
+                <field name="contractor_id"/>
+                <field name="contract_id"/>
+                <field name="project_id" optional="hide"/>
+                <field name="date"/>
+                <field name="value_executed" width="185px" sum="Tổng"/>
+                <field name="value_paid" width="185px" optional="show"/>
+                <field name="value_remaining" width="185px" sum="Tổng"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_closure_form" model="ir.ui.view">
+        <field name="name">rp.contract.closure.form</field>
+        <field name="model">rp.contract.closure</field>
+        <field name="arch" type="xml">
+            <form string="Chấm dứt / Thanh lý HĐ">
+                <header>
+                    <button name="action_confirm" string="Xác nhận"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_cancel" string="Huỷ" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_draft" string="Về Nháp"
+                            type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"
+                                   placeholder="Vd: BB-TL-2026-014-01"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="closure_type" widget="radio"/>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="contractor_id"/>
+                            <field name="project_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group string="Quyết toán">
+                            <field name="value_executed"/>
+                            <field name="value_paid"/>
+                            <field name="value_remaining"
+                                   decoration-danger="value_remaining &lt; 0"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Căn cứ / lý do">
+                        <field name="reason" nolabel="1" colspan="2"
+                               placeholder="Chấm dứt: lý do dừng HĐ (vi phạm tiến độ, bất khả kháng, thoả thuận...). Thanh lý: căn cứ BBNT hoàn thành, các biên bản liên quan..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_closure_search" model="ir.ui.view">
+        <field name="name">rp.contract.closure.search</field>
+        <field name="model">rp.contract.closure</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <filter name="filter_termination" string="Chấm dứt"
+                        domain="[('closure_type', '=', 'termination')]"/>
+                <filter name="filter_liquidation" string="Thanh lý"
+                        domain="[('closure_type', '=', 'liquidation')]"/>
+                <separator/>
+                <filter string="Loại" name="group_type"
+                        context="{'group_by': 'closure_type'}"/>
+                <filter string="Nhà thầu" name="group_contractor"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter string="Dự án" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_contract_closure" model="ir.actions.act_window">
+        <field name="name">Chấm dứt / Thanh lý HĐ</field>
+        <field name="res_model">rp.contract.closure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ===== Phụ lục HĐ — màn đứng riêng ===== -->
+
+    <record id="view_rp_contract_amendment_list" model="ir.ui.view">
+        <field name="name">rp.contract.amendment.list</field>
+        <field name="model">rp.contract.amendment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="amendment_type"/>
+                <field name="date_effective"/>
+                <field name="value_old" optional="show"/>
+                <field name="value_new" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'applied'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_amendment_search" model="ir.ui.view">
+        <field name="name">rp.contract.amendment.search</field>
+        <field name="model">rp.contract.amendment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <filter string="HĐ" name="group_contract"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter string="Loại phụ lục" name="group_type"
+                        context="{'group_by': 'amendment_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rp_contract_amendment_form" model="ir.ui.view">
+        <field name="name">rp.contract.amendment.form</field>
+        <field name="model">rp.contract.amendment</field>
+        <field name="arch" type="xml">
+            <form string="Phụ lục HĐ">
+                <header>
+                    <button name="action_apply" string="Áp dụng"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Vd: PL-01/HĐ-2026-014"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="amendment_type"/>
+                            <field name="date_effective"/>
+                        </group>
+                        <group>
+                            <field name="new_date_end"
+                                   invisible="amendment_type != 'extension'"/>
+                            <field name="new_contract_value_pretax"
+                                   invisible="amendment_type != 'value'"/>
+                            <field name="value_old" invisible="not value_old"/>
+                            <field name="value_new" invisible="not value_new"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Diễn giải">
+                        <field name="description" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_contract_amendment" model="ir.actions.act_window">
+        <field name="name">Phụ lục HĐ</field>
+        <field name="res_model">rp.contract.amendment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

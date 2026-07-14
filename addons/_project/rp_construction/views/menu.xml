@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Mount vào container rp_estimate.menu_construction ("Xây dựng"):
+          5  Dashboard Xây dựng   (con đầu → nhấp "Xây dựng" mở dashboard)
+          10 Lịch thi công        (rp_schedule)
+          20 Tiến độ              (rp_progress)
+          30 Hiện trường          (rp_site)
+          40 RFI & Trình duyệt    (rp_rfi)
+          90 Báo cáo              (container rp_estimate.menu_construction_reports)
+    -->
+
+    <menuitem id="menu_rp_construction_dashboard"
+              name="Dashboard Xây dựng"
+              parent="rp_estimate.menu_construction"
+              action="action_rp_construction_dashboard"
+              sequence="5"/>
+
+    <menuitem id="menu_rp_construction_task_report"
+              name="Tiến độ công việc theo HĐ"
+              parent="rp_estimate.menu_construction_reports"
+              action="action_rp_construction_task_report"
+              sequence="10"/>
+
+    <menuitem id="menu_rp_construction_punch_report"
+              name="Punch theo nhà thầu"
+              parent="rp_estimate.menu_construction_reports"
+              action="action_rp_construction_punch_report"
+              sequence="20"/>
+
+</odoo>

@@ -3,8 +3,8 @@
 
     <menuitem id="menu_rp_progress_root"
               name="Tiến độ"
-              parent="rp_estimate.menu_realty_project_root"
-              sequence="40"/>
+              parent="rp_estimate.menu_construction"
+              sequence="20"/>
 
     <menuitem id="menu_rp_progress_acceptance"
               name="BBN Nghiệm thu KL"

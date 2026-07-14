@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Báo cáo Xây dựng — 2 pivot khởi điểm, phát triển dần -->
+
+    <!-- 1. Tiến độ công việc theo HĐ -->
+    <record id="view_rp_construction_task_pivot" model="ir.ui.view">
+        <field name="name">project.task.construction.pivot</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="rp_contract_id" type="row"/>
+                <field name="progress_percent" type="measure"/>
+                <field name="planned_days" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_rp_construction_task_report" model="ir.actions.act_window">
+        <field name="name">Tiến độ công việc theo HĐ</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_id" ref="view_rp_construction_task_pivot"/>
+        <field name="domain">[('rp_contract_id', '!=', False), ('is_milestone', '=', False)]</field>
+    </record>
+
+    <!-- 2. Punch theo nhà thầu × trạng thái -->
+    <record id="view_rp_construction_punch_pivot" model="ir.ui.view">
+        <field name="name">rp.site.punch.construction.pivot</field>
+        <field name="model">rp.site.punch</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <!-- punch dùng responsible_id (res.partner), không có
+                     contractor_id related như các model HSE -->
+                <field name="responsible_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_rp_construction_punch_report" model="ir.actions.act_window">
+        <field name="name">Punch theo nhà thầu</field>
+        <field name="res_model">rp.site.punch</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="view_id" ref="view_rp_construction_punch_pivot"/>
+    </record>
+
+</odoo>

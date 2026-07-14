@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Lịch thi công (Schedule)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Tầng lịch thi công theo task (Odoo Project) cho HĐ nhà '
                'thầu: import Excel/MS Project XML, WBS, %, milestone, '

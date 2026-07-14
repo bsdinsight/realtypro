@@ -8,10 +8,11 @@
               action="action_rp_contract_guarantee"
               sequence="96"/>
 
-    <!-- Cảnh báo hết hạn trong nhóm Báo cáo HĐ -->
+    <!-- Cảnh báo hết hạn → Tài chính > Báo cáo (container "Báo cáo HĐ"
+         root cũ đã bỏ khi gom menu Tài chính) -->
     <menuitem id="menu_rp_contract_guarantee_expiring"
               name="Bảo lãnh sắp / đã hết hạn"
-              parent="rp_contract.menu_rp_contract_report"
+              parent="rp_estimate.menu_finance_reports"
               action="action_rp_contract_guarantee_expiring"
               sequence="30"/>
 </odoo>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Menu trong Realty Project: Báo cáo HĐ → Phân bổ vay -->
+    <!-- Menu trong Realty Project: Tài chính > Báo cáo → Phân bổ vay
+         (container "Báo cáo HĐ" root cũ đã bỏ khi gom menu Tài chính) -->
     <menuitem id="menu_rp_loan_allocation_under_project"
               name="Phân bổ vay theo công trình"
-              parent="rp_contract.menu_rp_contract_report"
+              parent="rp_estimate.menu_finance_reports"
               action="action_rp_loan_allocation"
-              sequence="30"/>
+              sequence="40"/>
 
     <!-- Menu trong Quản lý Vay → Báo cáo -->
     <menuitem id="menu_rp_loan_allocation_under_loan"

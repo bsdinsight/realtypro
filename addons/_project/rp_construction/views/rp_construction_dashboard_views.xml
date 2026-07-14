@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_construction_dashboard_form" model="ir.ui.view">
+        <field name="name">rp.construction.dashboard.form</field>
+        <field name="model">rp.construction.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Xây dựng" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="↻ Refresh KPIs"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Xây dựng — Dashboard</h1>
+                        <p class="text-muted">Nhịp thi công hôm nay: tiến độ · hiện trường · RFI &amp; phê duyệt — số liệu thời gian thực</p>
+                    </div>
+
+                    <!-- ─── Row 1: Tiến độ thi công ─── -->
+                    <group string="📅 Tiến độ thi công">
+                        <group string="Công việc">
+                            <field name="kpi_task_active" widget="statinfo"/>
+                            <field name="kpi_task_overdue" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_tasks_overdue" type="object"
+                                    string="→ Việc trễ hạn" class="btn-link"/>
+                        </group>
+                        <group string="Nghiệm thu">
+                            <field name="kpi_acceptance_pending" widget="statinfo"/>
+                            <button name="action_open_acceptances" type="object"
+                                    string="→ BBN chờ duyệt" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 2: Hiện trường ─── -->
+                    <group string="🏗 Hiện trường">
+                        <group string="Punch — lỗi">
+                            <field name="kpi_punch_open" widget="statinfo"/>
+                            <field name="kpi_punch_overdue" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_punches" type="object"
+                                    string="→ Punch đang mở" class="btn-link"/>
+                        </group>
+                        <group string="Nhật ký &amp; An toàn">
+                            <field name="kpi_diary_pending" widget="statinfo"/>
+                            <field name="kpi_incident_30d" widget="statinfo"
+                                   class="text-danger"/>
+                            <button name="action_open_diaries" type="object"
+                                    string="→ Nhật ký chờ xác nhận" class="btn-link"/>
+                            <button name="action_open_incidents" type="object"
+                                    string="→ Sự cố 30 ngày" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 3: RFI & phê duyệt ─── -->
+                    <group string="📨 RFI &amp; phê duyệt">
+                        <group string="RFI">
+                            <field name="kpi_rfi_waiting" widget="statinfo"/>
+                            <field name="kpi_rfi_overdue" widget="statinfo"
+                                   class="text-danger fw-bold"/>
+                            <button name="action_open_rfis" type="object"
+                                    string="→ RFI chờ trả lời" class="btn-link"/>
+                        </group>
+                        <group string="Chỉ thị &amp; Submittal">
+                            <field name="kpi_instruction_open" widget="statinfo"/>
+                            <field name="kpi_submittal_pending" widget="statinfo"/>
+                            <button name="action_open_instructions" type="object"
+                                    string="→ Chỉ thị chưa xong" class="btn-link"/>
+                            <button name="action_open_submittals" type="object"
+                                    string="→ Submittal chờ duyệt" class="btn-link"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_construction_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard Xây dựng</field>
+        <field name="res_model">rp.construction.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>

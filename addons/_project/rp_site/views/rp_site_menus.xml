@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_rp_site_root" name="Hiện trường"
-              parent="rp_estimate.menu_realty_project_root" sequence="46"/>
+              parent="rp_estimate.menu_construction" sequence="30"/>
 
     <menuitem id="menu_rp_site_diary" name="Nhật ký thi công"
               parent="menu_rp_site_root"

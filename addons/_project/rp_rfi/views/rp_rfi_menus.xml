@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_rp_rfi_root" name="RFI &amp; Trình duyệt"
-              parent="rp_estimate.menu_realty_project_root" sequence="47"/>
+              parent="rp_estimate.menu_construction" sequence="40"/>
 
     <menuitem id="menu_rp_rfi" name="RFI — Yêu cầu làm rõ"
               parent="menu_rp_rfi_root"

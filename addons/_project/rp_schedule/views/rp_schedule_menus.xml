@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_rp_schedule_group" name="Lịch thi công"
-              parent="rp_estimate.menu_realty_project_root"
-              sequence="35"/>
+              parent="rp_estimate.menu_construction"
+              sequence="10"/>
 
     <menuitem id="menu_rp_schedule_tasks" name="Công việc (lịch thi công)"
               parent="menu_rp_schedule_group"

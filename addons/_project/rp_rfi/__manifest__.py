@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — RFI & Trình duyệt',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'RFI (yêu cầu làm rõ), Chỉ thị công trường (Site '
                'Instruction), Trình duyệt mẫu vật liệu/shopdrawing '

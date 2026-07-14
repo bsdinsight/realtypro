@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý hiện trường (Site Management)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Nhật ký thi công, Punch list (lỗi & khắc phục), An toàn '
                'lao động (kiểm tra, toolbox meeting, sự cố) cho công trường.',

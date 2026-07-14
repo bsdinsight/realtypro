@@ -58,6 +58,24 @@
               parent="menu_finance"
               sequence="90"/>
 
+    <!-- ===== Xây dựng (Construction) — container, sequence 30 =====
+         Nhấp "Xây dựng" mở Dashboard Xây dựng (con seq 5, module
+         rp_construction). Các module mount vào:
+         - rp_construction: Dashboard (5), Báo cáo (menu_construction_reports)
+         - rp_schedule:     Lịch thi công (10)
+         - rp_progress:     Tiến độ (20)
+         - rp_site:         Hiện trường (30)
+         - rp_rfi:          RFI & Trình duyệt (40) -->
+    <menuitem id="menu_construction"
+              name="Xây dựng"
+              parent="menu_realty_project_root"
+              sequence="30"/>
+
+    <menuitem id="menu_construction_reports"
+              name="Báo cáo"
+              parent="menu_construction"
+              sequence="90"/>
+
     <!-- ===== Cấu hình (Realty Project) — master data ít đụng =====
          Cost Categories + Danh mục chi phí chuẩn mount vào đây
          (menus.xml). Group manager — nhất quán Realty Core > Configuration. -->

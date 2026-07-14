@@ -105,9 +105,17 @@ export class RpGanttAction extends Component {
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
              "progress_percent", "is_milestone", "predecessor_ids",
-             "project_id"],
+             "project_id", "user_ids"],
             { order: "id asc" }
         );
+        // Tên người được giao (user_ids là m2m → chỉ trả ids)
+        const userIds = [...new Set(recs.flatMap((r) => r.user_ids || []))];
+        const userName = new Map();
+        if (userIds.length) {
+            const users = await this.orm.read(
+                "res.users", userIds, ["name"]);
+            users.forEach((u) => userName.set(u.id, u.name));
+        }
         recs.sort((a, b) => this._wbsCompare(a, b));
         this._recs = recs;
         this.state.count = recs.length;
@@ -145,6 +153,10 @@ export class RpGanttAction extends Component {
                         .filter((pid) => idSet.has(pid))
                         .map((pid) => seqById.get(pid))
                         .sort((a, b) => a - b)
+                        .join(", "),
+                    TaskAssign: (r.user_ids || [])
+                        .map((uid) => userName.get(uid))
+                        .filter(Boolean)
                         .join(", "),
                     _isTop: !!w && !w.includes("."),
                 },
@@ -201,9 +213,13 @@ export class RpGanttAction extends Component {
                   textAlign: "Right" },
                 // STT các task đứng trước (kiểu Predecessors MS Project)
                 { field: "TaskDeps", headerText: "Depend on", width: 100 },
+                // Người được giao (assignees Odoo Project — dblclick
+                // mở form để phân việc)
+                { field: "TaskAssign", headerText: "Phân việc",
+                  width: 150 },
             ],
             treeColumnIndex: 3,
-            splitterColumnIndex: 8,
+            splitterColumnIndex: 9,
             preserveLinks: true,
             // Không cho EJ2 tự tính lại lịch theo predecessor: giữ đúng
             // ngày import + tránh crash validateTypes (allowEditing=false

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_rp_rfi" model="ir.sequence">
+            <field name="name">RFI</field>
+            <field name="code">rp.rfi</field>
+            <field name="prefix">RFI-%(y)s-</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_rp_site_instruction" model="ir.sequence">
+            <field name="name">Chỉ thị công trường</field>
+            <field name="code">rp.site.instruction</field>
+            <field name="prefix">SI-%(y)s-</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_rp_submittal" model="ir.sequence">
+            <field name="name">Trình duyệt</field>
+            <field name="code">rp.submittal</field>
+            <field name="prefix">SUB-%(y)s-</field>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

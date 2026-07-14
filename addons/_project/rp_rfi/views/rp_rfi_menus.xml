@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_rp_rfi_root" name="RFI &amp; Trình duyệt"
+              parent="rp_estimate.menu_realty_project_root" sequence="47"/>
+
+    <menuitem id="menu_rp_rfi" name="RFI — Yêu cầu làm rõ"
+              parent="menu_rp_rfi_root"
+              action="action_rp_rfi" sequence="10"/>
+
+    <menuitem id="menu_rp_site_instruction" name="Chỉ thị công trường"
+              parent="menu_rp_rfi_root"
+              action="action_rp_site_instruction" sequence="20"/>
+
+    <menuitem id="menu_rp_submittal" name="Trình duyệt (Submittal)"
+              parent="menu_rp_rfi_root"
+              action="action_rp_submittal" sequence="30"/>
+</odoo>

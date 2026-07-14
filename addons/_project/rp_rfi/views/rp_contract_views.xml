@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_contract_form_rfi" model="ir.ui.view">
+        <field name="name">rp.contract.form.rfi</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_rfis" type="object"
+                        class="oe_stat_button" icon="fa-question-circle">
+                    <field name="open_rfi_count" widget="statinfo"
+                           string="RFI mở"/>
+                </button>
+                <button name="action_view_instructions" type="object"
+                        class="oe_stat_button" icon="fa-gavel">
+                    <field name="open_instruction_count" widget="statinfo"
+                           string="Chỉ thị"/>
+                </button>
+                <button name="action_view_submittals" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o">
+                    <field name="pending_submittal_count" widget="statinfo"
+                           string="Chờ duyệt"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

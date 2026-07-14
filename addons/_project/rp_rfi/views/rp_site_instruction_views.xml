@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_site_instruction_list" model="ir.ui.view">
+        <field name="name">rp.site.instruction.list</field>
+        <field name="model">rp.site.instruction</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_overdue"
+                  decoration-muted="state in ('closed', 'cancelled')">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="hide"/>
+                <field name="issued_by_id" widget="many2one_avatar_user"/>
+                <field name="issued_date" optional="show"/>
+                <field name="deadline"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="cost_impact" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'issued'"
+                       decoration-info="state == 'done'"
+                       decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_site_instruction_form" model="ir.ui.view">
+        <field name="name">rp.site.instruction.form</field>
+        <field name="model">rp.site.instruction</field>
+        <field name="arch" type="xml">
+            <form string="Chỉ thị công trường">
+                <header>
+                    <button name="action_issue" string="Phát hành"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_done" string="Xác nhận đã thực hiện"
+                            type="object" class="btn-primary"
+                            invisible="state != 'issued'"/>
+                    <button name="action_close" string="Nghiệm thu — đóng"
+                            type="object" class="btn-primary"
+                            invisible="state != 'done'"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_reopen" string="Mở lại"
+                            type="object"
+                            invisible="state not in ('done', 'closed')"/>
+                    <button name="action_cancel" string="Huỷ" type="object"
+                            invisible="state in ('closed', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,issued,done,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="code" readonly="1"/></h1>
+                        <h2><field name="name"
+                                   placeholder="Nội dung chỉ thị..."/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="contract_id" options="{'no_create': True}"/>
+                            <field name="structure_id" options="{'no_create': True}"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="issued_by_id"
+                                   widget="many2one_avatar_user"/>
+                            <field name="issued_date"
+                                   invisible="not issued_date"/>
+                            <field name="deadline"/>
+                            <field name="is_overdue" invisible="not is_overdue"/>
+                            <field name="cost_impact"/>
+                            <field name="done_date" invisible="not done_date"/>
+                        </group>
+                    </group>
+                    <group string="Nội dung chi tiết">
+                        <field name="description" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Kết quả thực hiện (nhà thầu)">
+                        <field name="done_note" nolabel="1" colspan="2"
+                               placeholder="Mô tả việc đã thực hiện, kèm ảnh đính kèm bên dưới..."/>
+                    </group>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_site_instruction_search" model="ir.ui.view">
+        <field name="name">rp.site.instruction.search</field>
+        <field name="model">rp.site.instruction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="contractor_id"/>
+                <filter name="filter_open" string="Chưa xong"
+                        domain="[('state', 'in', ('issued', 'done'))]"/>
+                <filter name="filter_cost" string="Phát sinh chi phí"
+                        domain="[('cost_impact', '=', True)]"/>
+                <separator/>
+                <filter string="Nhà thầu" name="group_contractor"
+                        context="{'group_by': 'contractor_id'}"/>
+                <filter string="Trạng thái" name="group_state"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_site_instruction" model="ir.actions.act_window">
+        <field name="name">Chỉ thị công trường</field>
+        <field name="res_model">rp.site.instruction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -273,10 +273,20 @@ export class RpGanttAction extends Component {
         const e = this._iso(end) || s;
         if (!s) return;
         try {
-            await this.orm.write("project.task", [id],
-                { planned_start: s, planned_end: e });
-            this.notification.add(
-                _t("Đã lưu ngày kế hoạch."), { type: "success" });
+            // Đổi ngày + dây chuyền dời task phụ thuộc (server-side)
+            const changed = await this.orm.call(
+                "project.task", "rp_shift_schedule", [[id], s, e]);
+            const others = (changed || []).filter((x) => x !== id);
+            if (others.length) {
+                this.notification.add(
+                    _t("Đã lưu — dời theo %s công việc phụ thuộc.",
+                       others.length),
+                    { type: "success" });
+                await this.loadAndRender();   // vẽ lại cả chuỗi bar
+            } else {
+                this.notification.add(
+                    _t("Đã lưu ngày kế hoạch."), { type: "success" });
+            }
         } catch {
             this.notification.add(
                 _t("Không lưu được thay đổi ngày."), { type: "danger" });

@@ -4,6 +4,8 @@
 Thêm field xây dựng (HĐ nhà thầu, hạng mục, WBS, ngày KH, %, milestone,
 predecessors) — tự khai để không phụ thuộc field native theo phiên bản
 Odoo (planned_date_begin/milestone_id là của project_enterprise)."""
+from datetime import timedelta
+
 from odoo import api, fields, models
 
 
@@ -36,6 +38,77 @@ class ProjectTask(models.Model):
                 t.planned_days = (t.planned_end - t.planned_start).days + 1
             else:
                 t.planned_days = 0
+
+    def rp_shift_schedule(self, new_start, new_end):
+        """Đổi ngày task + DÂY CHUYỀN dời các task phụ thuộc.
+
+        Gọi từ Gantt khi kéo/resize bar:
+        - Task này nhận ngày mới.
+        - Kéo cả thanh (delta start == delta end) và task có con →
+          cả CÂY CON dời theo cùng delta (dời giai đoạn = dời mọi việc
+          bên trong).
+        - Các task ĐỨNG SAU (successor theo predecessor_ids, cùng HĐ)
+          dời theo delta của NGÀY KẾT THÚC, lan truyền đến hết chuỗi —
+          giữ nguyên khoảng lag tương đối giữa các task như MS Project.
+        - Xong cuộn lại ngày các task cha (summary).
+
+        Trả về list id các task đã đổi ngày (Gantt reload khi > 1).
+        """
+        self.ensure_one()
+        old_start = self.planned_start
+        old_end = self.planned_end or self.planned_start
+        ns = fields.Date.from_string(new_start) if new_start else False
+        ne = fields.Date.from_string(new_end) if new_end else ns
+        self.write({'planned_start': ns, 'planned_end': ne})
+        changed = {self.id}
+        d_start = (ns - old_start).days if (ns and old_start) else 0
+        d_end = (ne - old_end).days if (ne and old_end) else 0
+
+        def shift(task, days):
+            vals = {}
+            if task.planned_start:
+                vals['planned_start'] = \
+                    task.planned_start + timedelta(days=days)
+            if task.planned_end:
+                vals['planned_end'] = \
+                    task.planned_end + timedelta(days=days)
+            if vals:
+                task.write(vals)
+                changed.add(task.id)
+
+        # 1) Kéo cả thanh của task CHA → cây con dời cùng delta
+        if d_start and d_start == d_end and self.child_ids:
+            subtree = self.search([
+                ('id', 'child_of', self.id), ('id', '!=', self.id)])
+            for t in subtree:
+                shift(t, d_start)
+
+        # 2) Dây chuyền successor theo delta ngày kết thúc (BFS, chặn
+        #    vòng lặp bằng visited = changed)
+        if d_end and self.rp_contract_id:
+            frontier = list(changed)
+            while frontier:
+                succs = self.search([
+                    ('predecessor_ids', 'in', frontier),
+                    ('rp_contract_id', '=', self.rp_contract_id.id),
+                    ('id', 'not in', list(changed)),
+                ])
+                frontier = []
+                for s in succs:
+                    shift(s, d_end)
+                    frontier.append(s.id)
+
+        # 3) Cuộn lại ngày cha (summary) theo con — cha nào bị đổi do
+        #    rollup cũng đưa vào changed để Gantt reload đủ
+        if self.rp_contract_id:
+            before = {
+                t.id: (t.planned_start, t.planned_end)
+                for t in self.rp_contract_id.task_ids}
+            self.rp_contract_id._rollup_schedule_parent_dates()
+            for t in self.rp_contract_id.task_ids:
+                if before.get(t.id) != (t.planned_start, t.planned_end):
+                    changed.add(t.id)
+        return sorted(changed)
 
     @api.constrains('progress_percent')
     def _check_progress(self):

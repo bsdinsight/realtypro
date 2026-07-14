@@ -144,10 +144,10 @@
                 <field name="facility_id"/>
                 <field name="date_note"/>
                 <field name="date_maturity"/>
-                <field name="amount" sum="Tổng KW"/>
-                <field name="amount_disbursed" sum="Đã giải ngân"/>
-                <field name="principal_outstanding" sum="Dư nợ gốc"/>
-                <field name="interest_rate"/>
+                <field name="amount" width="185px" sum="Tổng KW"/>
+                <field name="amount_disbursed" width="185px" sum="Đã giải ngân"/>
+                <field name="principal_outstanding" width="185px" sum="Dư nợ gốc"/>
+                <field name="interest_rate" width="185px"/>
                 <field name="is_overdue" column_invisible="1"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'active'"
@@ -267,7 +267,7 @@
                                     <field name="beneficiary_bank_account_id"
                                            string="TK NH"
                                            optional="show"/>
-                                    <field name="amount" sum="Tổng giải ngân"/>
+                                    <field name="amount" width="185px" sum="Tổng giải ngân"/>
                                     <field name="project_id"/>
                                     <field name="description"/>
                                     <field name="reference"/>
@@ -287,9 +287,9 @@
                             <field name="repayment_ids">
                                 <list editable="bottom">
                                     <field name="date"/>
-                                    <field name="amount_principal" sum="Tổng gốc"/>
-                                    <field name="amount_interest" sum="Tổng lãi"/>
-                                    <field name="amount_total" sum="Tổng trả"/>
+                                    <field name="amount_principal" width="185px" sum="Tổng gốc"/>
+                                    <field name="amount_interest" width="185px" sum="Tổng lãi"/>
+                                    <field name="amount_total" width="185px" sum="Tổng trả"/>
                                     <field name="reference"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>
@@ -311,43 +311,43 @@
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="days" optional="hide"/>
-                                    <field name="principal_base"
+                                    <field name="principal_base" width="185px"
                                            optional="hide"/>
-                                    <field name="interest_rate"
+                                    <field name="interest_rate" width="185px"
                                            string="Lãi suất (%/năm)"
                                            optional="hide"/>
-                                    <field name="principal_due"
+                                    <field name="principal_due" width="185px"
                                            string="Gốc kỳ" sum="Σ gốc"/>
-                                    <field name="amount_principal_paid"
+                                    <field name="amount_principal_paid" width="185px"
                                            string="Gốc đã trả"
                                            sum="Σ trả gốc"
                                            optional="show"/>
-                                    <field name="interest_amount"
+                                    <field name="interest_amount" width="185px"
                                            string="Lãi kỳ" sum="Σ lãi"/>
-                                    <field name="amount_interest_paid"
+                                    <field name="amount_interest_paid" width="185px"
                                            string="Lãi đã trả"
                                            sum="Σ trả lãi"
                                            optional="show"/>
-                                    <field name="fee_amount"
+                                    <field name="fee_amount" width="185px"
                                            string="Phí kỳ" sum="Σ phí"
                                            optional="show"/>
-                                    <field name="amount_fee_paid"
+                                    <field name="amount_fee_paid" width="185px"
                                            string="Phí đã trả"
                                            sum="Σ trả phí"
                                            optional="hide"/>
-                                    <field name="total_due"
+                                    <field name="total_due" width="185px"
                                            sum="Σ phải trả"
                                            optional="hide"/>
-                                    <field name="amount_paid_total"
+                                    <field name="amount_paid_total" width="185px"
                                            string="Tổng đã trả"
                                            sum="Σ đã trả"
                                            optional="show"/>
-                                    <field name="amount_principal_remaining"
+                                    <field name="amount_principal_remaining" width="185px"
                                            string="Gốc còn"
                                            sum="Σ gốc còn"
                                            optional="show"
                                            decoration-warning="amount_principal_remaining > 0"/>
-                                    <field name="amount_interest_remaining"
+                                    <field name="amount_interest_remaining" width="185px"
                                            string="Lãi còn"
                                            sum="Σ lãi còn"
                                            optional="show"
@@ -445,10 +445,10 @@
                                 <list>
                                     <field name="name"/>
                                     <field name="counterparty_id"/>
-                                    <field name="amount" sum="Tổng cho vay lại"/>
-                                    <field name="interest_rate"/>
+                                    <field name="amount" width="185px" sum="Tổng cho vay lại"/>
+                                    <field name="interest_rate" width="185px"/>
                                     <field name="date_maturity"/>
-                                    <field name="principal_outstanding"/>
+                                    <field name="principal_outstanding" width="185px"/>
                                     <field name="state" widget="badge"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>

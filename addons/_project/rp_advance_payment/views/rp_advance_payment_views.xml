@@ -17,12 +17,12 @@
                 <field name="purchase_order_id" optional="hide"/>
                 <field name="partner_id"/>
                 <field name="purpose" optional="show"/>
-                <field name="amount" sum="Σ"/>
-                <field name="amount_paid" sum="Σ đã thanh toán"
+                <field name="amount" width="185px" sum="Σ"/>
+                <field name="amount_paid" width="185px" sum="Σ đã thanh toán"
                        optional="show"/>
-                <field name="amount_settled" sum="Σ cấn trừ"
+                <field name="amount_settled" width="185px" sum="Σ cấn trừ"
                        optional="show"/>
-                <field name="amount_remaining" sum="Σ còn"
+                <field name="amount_remaining" width="185px" sum="Σ còn"
                        optional="show"
                        decoration-warning="amount_remaining > 0 and state == 'paid'"/>
                 <field name="state" widget="badge"/>
@@ -141,11 +141,11 @@
                                            options="{'no_create': True}"/>
                                     <field name="advance_partner_id"
                                            column_invisible="1"/>
-                                    <field name="invoice_amount_total"
+                                    <field name="invoice_amount_total" width="185px"
                                            readonly="1" optional="show"/>
-                                    <field name="invoice_amount_residual"
+                                    <field name="invoice_amount_residual" width="185px"
                                            readonly="1" optional="show"/>
-                                    <field name="amount" sum="Σ"/>
+                                    <field name="amount" width="185px" sum="Σ"/>
                                     <field name="date"/>
                                     <field name="note"/>
                                     <field name="user_id" readonly="1"
@@ -229,7 +229,7 @@
                 <field name="invoice_id"
                        options="{'no_create': True}"/>
                 <field name="advance_partner_id" optional="show"/>
-                <field name="amount" sum="Σ"/>
+                <field name="amount" width="185px" sum="Σ"/>
                 <field name="date"/>
                 <field name="note"/>
                 <field name="user_id" optional="hide"/>

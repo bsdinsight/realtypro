@@ -32,8 +32,8 @@
                             <field name="base"/>
                             <field name="method"/>
                             <field name="percent"/>
-                            <field name="amount"/>
-                            <field name="amount_allocated" sum="Σ"/>
+                            <field name="amount" width="185px"/>
+                            <field name="amount_allocated" width="185px" sum="Σ"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>
                     </field>

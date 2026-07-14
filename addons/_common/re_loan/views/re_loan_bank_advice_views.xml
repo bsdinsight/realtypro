@@ -14,7 +14,7 @@
                 <field name="partner_id"/>
                 <field name="reference"/>
                 <field name="line_count"/>
-                <field name="amount_total" sum="Σ"/>
+                <field name="amount_total" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
@@ -85,30 +85,30 @@
                                            options="{'no_create': True}"/>
                                     <field name="credit_contract_id"
                                            readonly="1" optional="show"/>
-                                    <field name="interest_line_id"
+                                    <field name="interest_line_id" width="185px"
                                            options="{'no_create': True}"
                                            optional="show"/>
-                                    <field name="amount" sum="Σ"/>
+                                    <field name="amount" width="185px" sum="Σ"/>
                                     <field name="description"/>
                                     <field name="repayment_count"
                                            readonly="1"
                                            optional="show"/>
-                                    <field name="amount_allocated"
+                                    <field name="amount_allocated" width="185px"
                                            readonly="1"
                                            optional="show"/>
-                                    <field name="amount_allocated_principal"
+                                    <field name="amount_allocated_principal" width="185px"
                                            readonly="1"
                                            sum="Σ gốc"
                                            optional="show"/>
-                                    <field name="amount_allocated_interest"
+                                    <field name="amount_allocated_interest" width="185px"
                                            readonly="1"
                                            sum="Σ lãi"
                                            optional="show"/>
-                                    <field name="amount_diff_period"
+                                    <field name="amount_diff_period" width="185px"
                                            string="Chênh lệch cần net-off"
                                            readonly="1" optional="show"
                                            decoration-warning="amount_diff_period > 0"/>
-                                    <field name="amount_unallocated"
+                                    <field name="amount_unallocated" width="185px"
                                            string="Chưa allocate"
                                            readonly="1" optional="hide"/>
                                     <button name="action_auto_net_off"
@@ -157,10 +157,10 @@
                                     <field name="repayment_ids" readonly="1">
                                         <list>
                                             <field name="date"/>
-                                            <field name="interest_line_id"/>
-                                            <field name="amount_principal" sum="Σ gốc"/>
-                                            <field name="amount_interest" sum="Σ lãi"/>
-                                            <field name="amount_total" sum="Σ"/>
+                                            <field name="interest_line_id" width="185px"/>
+                                            <field name="amount_principal" width="185px" sum="Σ gốc"/>
+                                            <field name="amount_interest" width="185px" sum="Σ lãi"/>
+                                            <field name="amount_total" width="185px" sum="Σ"/>
                                             <field name="currency_id"
                                                    column_invisible="1"/>
                                         </list>
@@ -244,13 +244,13 @@
                 <field name="period_no"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="principal_due" sum="Σ gốc"/>
-                <field name="amount_principal_paid" sum="Σ trả gốc"/>
-                <field name="amount_principal_remaining"
+                <field name="principal_due" width="185px" sum="Σ gốc"/>
+                <field name="amount_principal_paid" width="185px" sum="Σ trả gốc"/>
+                <field name="amount_principal_remaining" width="185px"
                        sum="Σ gốc còn"/>
-                <field name="interest_amount" sum="Σ lãi"/>
-                <field name="amount_interest_paid" sum="Σ trả lãi"/>
-                <field name="amount_interest_remaining"
+                <field name="interest_amount" width="185px" sum="Σ lãi"/>
+                <field name="amount_interest_paid" width="185px" sum="Σ trả lãi"/>
+                <field name="amount_interest_remaining" width="185px"
                        sum="Σ lãi còn"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'planned'"

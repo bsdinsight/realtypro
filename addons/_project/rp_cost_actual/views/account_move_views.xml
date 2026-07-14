@@ -39,7 +39,7 @@
                             <field name="cost_category_id"
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    optional="show"/>
-                            <field name="amount" sum="Σ phân bổ"/>
+                            <field name="amount" width="185px" sum="Σ phân bổ"/>
                             <field name="note" optional="show"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>

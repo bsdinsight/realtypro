@@ -30,9 +30,9 @@
                             <field name="name"/>
                             <field name="date_request"/>
                             <field name="purpose"/>
-                            <field name="amount" sum="Σ"/>
-                            <field name="amount_settled" sum="Σ cấn trừ"/>
-                            <field name="amount_remaining" sum="Σ còn"/>
+                            <field name="amount" width="185px" sum="Σ"/>
+                            <field name="amount_settled" width="185px" sum="Σ cấn trừ"/>
+                            <field name="amount_remaining" width="185px" sum="Σ còn"/>
                             <field name="state" widget="badge"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>

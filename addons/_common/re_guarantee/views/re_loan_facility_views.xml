@@ -38,7 +38,7 @@
                             <field name="date_issue"/>
                             <field name="date_expiry"/>
                             <field name="days_remaining"/>
-                            <field name="amount" sum="Σ"/>
+                            <field name="amount" width="185px" sum="Σ"/>
                             <field name="state" widget="badge"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>

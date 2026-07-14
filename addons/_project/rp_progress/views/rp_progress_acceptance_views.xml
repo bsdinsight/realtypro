@@ -174,9 +174,9 @@
                                            string="Đơn vị tính"/>
                                     <field name="quantity_this_period"
                                            string="Khối lượng" sum="Σ"/>
-                                    <field name="unit_price"
+                                    <field name="unit_price" width="185px"
                                            string="Đơn giá"/>
-                                    <field name="amount_this_period"
+                                    <field name="amount_this_period" width="185px"
                                            string="Thành tiền" sum="Σ"/>
                                     <!-- Các field BOQ / lũy kế / % - power user
                                          có thể bật qua menu "tùy chọn" -->
@@ -194,7 +194,7 @@
                                     <field name="quantity_to_date"
                                            string="KL lũy kế"
                                            optional="hide"/>
-                                    <field name="amount_to_date"
+                                    <field name="amount_to_date" width="185px"
                                            string="Giá trị lũy kế"
                                            optional="hide"/>
                                     <field name="progress_percent"

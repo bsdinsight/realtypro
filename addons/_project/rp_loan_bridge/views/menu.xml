@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tài chính → Hoá đơn nhà thầu: view chuyên xây dựng
+         (Dự án / HĐ / Mốc thanh toán / 3 cột tiền) -->
+    <menuitem id="menu_rp_finance_vendor_bills_bridge"
+              name="Hoá đơn nhà thầu"
+              parent="rp_estimate.menu_finance"
+              action="action_account_move_contractor_invoice"
+              sequence="40"/>
+
     <!-- Tài chính → Giải ngân qua khế ước: đường tiền chính của thanh toán
          HĐ xây dựng VN (NH giải ngân thẳng nhà thầu theo hồ sơ BBN+HĐ) -->
     <menuitem id="menu_rp_loan_disbursement_dossier"

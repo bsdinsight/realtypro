@@ -16,9 +16,9 @@
                 <field name="project_id" optional="show"/>
                 <field name="date_start"/>
                 <field name="date_end" optional="show"/>
-                <field name="amount_financed" sum="Σ" optional="show"/>
+                <field name="amount_financed" width="185px" sum="Σ" optional="show"/>
                 <field name="outstanding_principal" sum="Σ" optional="show"/>
-                <field name="rent_per_period" optional="hide"/>
+                <field name="rent_per_period" width="185px" optional="hide"/>
                 <field name="next_due_date" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
@@ -203,13 +203,13 @@
                                            column_invisible="parent.lease_type != 'finance'"/>
                                     <field name="rent_amount" sum="Σ"
                                            column_invisible="parent.lease_type != 'operating'"/>
-                                    <field name="amount_total" sum="Σ"/>
+                                    <field name="amount_total" width="185px" sum="Σ"/>
                                     <field name="state" widget="badge"
                                            decoration-muted="state == 'draft'"
                                            decoration-info="state == 'invoiced'"
                                            decoration-success="state == 'paid'"/>
-                                    <field name="amount_paid" sum="Σ"/>
-                                    <field name="amount_residual" sum="Σ"
+                                    <field name="amount_paid" width="185px" sum="Σ"/>
+                                    <field name="amount_residual" width="185px" sum="Σ"
                                            decoration-warning="amount_residual &gt; 0"/>
                                     <button name="action_create_invoice"
                                             type="object" string="Tạo hóa đơn"
@@ -244,7 +244,7 @@
                                 <list decoration-success="state == 'posted'">
                                     <field name="sequence" string="Kỳ"/>
                                     <field name="date"/>
-                                    <field name="amount" sum="Σ"/>
+                                    <field name="amount" width="185px" sum="Σ"/>
                                     <field name="state" widget="badge"
                                            decoration-muted="state == 'draft'"
                                            decoration-success="state == 'posted'"/>
@@ -299,8 +299,8 @@
                                     <field name="date_effective"/>
                                     <field name="name"/>
                                     <field name="annex_type"/>
-                                    <field name="value_before"/>
-                                    <field name="value_after"/>
+                                    <field name="value_before" width="185px"/>
+                                    <field name="value_after" width="185px"/>
                                     <field name="applied" widget="boolean_toggle"/>
                                     <button name="action_apply" type="object"
                                             icon="fa-check" string="Áp dụng"
@@ -369,7 +369,7 @@
                 <field name="partner_id"/>
                 <field name="sequence" string="Kỳ"/>
                 <field name="date_due"/>
-                <field name="amount_total" sum="Σ"/>
+                <field name="amount_total" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"
                        decoration-muted="state == 'draft'"
                        decoration-info="state == 'invoiced'"

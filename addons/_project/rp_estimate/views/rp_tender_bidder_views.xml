@@ -53,7 +53,7 @@
                 <field name="submitted_date"/>
                 <field name="technical_score"/>
                 <field name="technical_pass" widget="boolean_toggle" readonly="1"/>
-                <field name="price_offered" widget="monetary"/>
+                <field name="price_offered" width="185px" widget="monetary"/>
                 <field name="status" widget="badge"/>
             </list>
         </field>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'BSD Construction Network — Hub',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Construction Network',
     'summary': 'Mạng lưới nhà thầu & NCC vật liệu: hồ sơ nhà thầu, bảng '
                'gói thầu, dự thầu, portal cộng tác. Kết nối nhiều tổng thầu.',

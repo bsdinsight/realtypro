@@ -20,7 +20,7 @@
                 <field name="area_sellable" optional="show"/>
                 <field name="bedroom_count"/>
                 <field name="direction"/>
-                <field name="original_price" widget="monetary"/>
+                <field name="original_price" width="185px" widget="monetary"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="state" widget="badge"/>
             </list>

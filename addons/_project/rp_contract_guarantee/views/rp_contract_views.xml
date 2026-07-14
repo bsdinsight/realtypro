@@ -42,7 +42,7 @@
                             <field name="guarantee_type"/>
                             <field name="security_form" optional="hide"/>
                             <field name="issuer_partner_id" optional="show"/>
-                            <field name="amount" sum="Σ"/>
+                            <field name="amount" width="185px" sum="Σ"/>
                             <field name="date_expiry"/>
                             <field name="days_to_expiry" optional="show"/>
                             <field name="expiry_status" widget="badge"

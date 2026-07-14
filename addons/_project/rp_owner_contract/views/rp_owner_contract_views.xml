@@ -10,10 +10,10 @@
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="owner_id"/>
-                <field name="contract_value_pretax" sum="Σ"/>
-                <field name="accepted_to_date" sum="Σ"/>
-                <field name="paid_to_date" sum="Σ"/>
-                <field name="receivable" sum="Σ"
+                <field name="contract_value_pretax" width="185px" sum="Σ"/>
+                <field name="accepted_to_date" width="185px" sum="Σ"/>
+                <field name="paid_to_date" width="185px" sum="Σ"/>
+                <field name="receivable" width="185px" sum="Σ"
                        decoration-bf="receivable &gt; 0"/>
                 <field name="progress_percent" widget="percentage"
                        optional="show"/>
@@ -106,7 +106,7 @@
                                     <field name="name"/>
                                     <field name="date_submitted"/>
                                     <field name="date_approved"/>
-                                    <field name="amount_this_period"
+                                    <field name="amount_this_period" width="185px"
                                            sum="Σ"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
@@ -124,7 +124,7 @@
                                 <list editable="bottom">
                                     <field name="date"/>
                                     <field name="payment_type"/>
-                                    <field name="amount" sum="Σ"/>
+                                    <field name="amount" width="185px" sum="Σ"/>
                                     <field name="reference"/>
                                     <field name="note"/>
                                     <field name="currency_id"
@@ -199,7 +199,7 @@
                 <field name="project_id"/>
                 <field name="owner_id"/>
                 <field name="date_submitted"/>
-                <field name="amount_this_period" sum="Σ"/>
+                <field name="amount_this_period" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-warning="state == 'proposed'"

@@ -12,7 +12,7 @@
                 <field name="note_id"/>
                 <field name="partner_id"/>
                 <field name="date_issue"/>
-                <field name="amount" sum="Tổng"/>
+                <field name="amount" width="185px" sum="Tổng"/>
                 <field name="target_interest_line_id"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'applied'"

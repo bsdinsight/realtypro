@@ -8,8 +8,8 @@
                 <field name="date_effective"/>
                 <field name="name"/>
                 <field name="annex_type"/>
-                <field name="value_before" optional="show"/>
-                <field name="value_after" optional="show"/>
+                <field name="value_before" width="185px" optional="show"/>
+                <field name="value_after" width="185px" optional="show"/>
                 <field name="applied" widget="boolean_toggle"/>
             </list>
         </field>

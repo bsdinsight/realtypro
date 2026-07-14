@@ -15,7 +15,7 @@
                 <field name="contractor_id" optional="show"/>
                 <field name="project_id" optional="hide"/>
                 <field name="issuer_partner_id" optional="show"/>
-                <field name="amount" sum="Σ"/>
+                <field name="amount" width="185px" sum="Σ"/>
                 <field name="amount_percent" optional="hide"
                        decoration-warning="percent_warning"/>
                 <field name="date_expiry"/>
@@ -149,11 +149,11 @@
                                     <field name="date_effective"/>
                                     <field name="new_date_expiry"
                                            optional="show"/>
-                                    <field name="amount_change"
+                                    <field name="amount_change" width="185px"
                                            optional="show"/>
-                                    <field name="value_before"
+                                    <field name="value_before" width="185px"
                                            optional="show"/>
-                                    <field name="value_after"
+                                    <field name="value_after" width="185px"
                                            optional="show"/>
                                     <field name="note"/>
                                     <button name="action_apply" type="object"

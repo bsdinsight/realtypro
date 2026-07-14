@@ -87,14 +87,14 @@
                 <field name="partner_id"/>
                 <field name="date_note"/>
                 <field name="date_maturity"/>
-                <field name="amount"/>
+                <field name="amount" width="185px"/>
                 <field name="repayment_plan"/>
-                <field name="principal_due_to_date" sum="Σ KH gốc"/>
-                <field name="amount_repaid_principal" sum="Σ trả gốc"/>
-                <field name="principal_variance" sum="Chênh lệch gốc"/>
-                <field name="interest_due_to_date" sum="Σ KH lãi"/>
-                <field name="amount_repaid_interest" sum="Σ trả lãi"/>
-                <field name="interest_variance" sum="Chênh lệch lãi"/>
+                <field name="principal_due_to_date" width="185px" sum="Σ KH gốc"/>
+                <field name="amount_repaid_principal" width="185px" sum="Σ trả gốc"/>
+                <field name="principal_variance" width="185px" sum="Chênh lệch gốc"/>
+                <field name="interest_due_to_date" width="185px" sum="Σ KH lãi"/>
+                <field name="amount_repaid_interest" width="185px" sum="Σ trả lãi"/>
+                <field name="interest_variance" width="185px" sum="Chênh lệch lãi"/>
                 <field name="state" widget="badge"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
@@ -138,7 +138,7 @@
                 <field name="facility_id"/>
                 <field name="purpose"/>
                 <field name="project_id"/>
-                <field name="amount" sum="Σ"/>
+                <field name="amount" width="185px" sum="Σ"/>
                 <field name="description"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
@@ -199,19 +199,19 @@
                 <field name="date_note" string="Ngày nhận nợ"/>
                 <field name="tenor_months" string="Kỳ hạn (Tháng)"/>
                 <field name="date_maturity" string="Ngày đáo hạn"/>
-                <field name="amount" string="Số tiền KW" sum="Σ"/>
-                <field name="interest_rate" string="Lãi suất"/>
-                <field name="interest_total_planned"
+                <field name="amount" width="185px" string="Số tiền KW" sum="Σ"/>
+                <field name="interest_rate" width="185px" string="Lãi suất"/>
+                <field name="interest_total_planned" width="185px"
                        string="Tiền lãi" sum="Σ"/>
-                <field name="amount_repaid_principal"
+                <field name="amount_repaid_principal" width="185px"
                        string="Tiền gốc đã trả" sum="Σ"/>
-                <field name="amount_repaid_interest"
+                <field name="amount_repaid_interest" width="185px"
                        string="Tiền lãi đã trả" sum="Σ"/>
-                <field name="principal_outstanding"
+                <field name="principal_outstanding" width="185px"
                        string="Dư nợ gốc" sum="Σ"/>
-                <field name="interest_outstanding"
+                <field name="interest_outstanding" width="185px"
                        string="Dư nợ lãi" sum="Σ"/>
-                <field name="total_outstanding"
+                <field name="total_outstanding" width="185px"
                        string="Tổng dư nợ (gốc + lãi)" sum="Σ"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'active'"
@@ -342,7 +342,7 @@
                 <field name="pg_kind" widget="badge"
                        decoration-info="pg_kind == 'principal'"
                        decoration-warning="pg_kind == 'interest'"/>
-                <field name="amount" sum="Σ"/>
+                <field name="amount" width="185px" sum="Σ"/>
                 <field name="period_state" widget="badge"
                        optional="show"/>
                 <field name="partner_id" optional="hide"/>

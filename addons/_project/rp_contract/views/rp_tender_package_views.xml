@@ -19,8 +19,8 @@
                             <field name="name"/>
                             <field name="contractor_id"/>
                             <field name="contract_date"/>
-                            <field name="contract_value_total" sum="Σ"/>
-                            <field name="amount_paid"/>
+                            <field name="contract_value_total" width="185px" sum="Σ"/>
+                            <field name="amount_paid" width="185px"/>
                             <field name="payment_progress" widget="progressbar"/>
                             <field name="state" widget="badge"/>
                             <field name="currency_id" column_invisible="1"/>

@@ -19,8 +19,8 @@
                             <field name="cost_category_id"/>
                             <field name="name"/>
                             <field name="quantity"/>
-                            <field name="price_unit"/>
-                            <field name="price_subtotal" sum="Σ chi phí"/>
+                            <field name="price_unit" width="185px"/>
+                            <field name="price_subtotal" width="185px" sum="Σ chi phí"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>
                     </field>

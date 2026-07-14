@@ -70,14 +70,14 @@
                                 <field name="contract_id" readonly="1"/>
                                 <field name="invoice_id"
                                        string="Hóa đơn"/>
-                                <field name="invoice_amount_total"
+                                <field name="invoice_amount_total" width="185px"
                                        string="Giá trị HĐ"
                                        optional="show" readonly="1"/>
-                                <field name="invoice_amount_remaining"
+                                <field name="invoice_amount_remaining" width="185px"
                                        string="Còn lại HĐ"
                                        optional="show" readonly="1"
                                        decoration-danger="invoice_amount_remaining &lt;= 0"/>
-                                <field name="amount"
+                                <field name="amount" width="185px"
                                        string="Thanh toán kỳ này" sum="Σ"/>
                                 <field name="description"/>
                                 <field name="attachment_count"

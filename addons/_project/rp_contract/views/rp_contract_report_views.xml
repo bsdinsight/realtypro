@@ -50,7 +50,7 @@
                 <field name="name"/>
                 <field name="due_date"/>
                 <field name="percent"/>
-                <field name="amount" sum="Σ"/>
+                <field name="amount" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"
                        decoration-success="state == 'paid'"
                        decoration-info="state == 'invoiced'"

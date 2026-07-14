@@ -55,12 +55,12 @@
                        optional="show"/>
                 <field name="invoice_date_due" string="Ngày đến hạn"
                        optional="show"/>
-                <field name="amount_untaxed_signed"
+                <field name="amount_untaxed_signed" width="185px"
                        string="Trước thuế"
                        sum="Σ trước thuế" optional="hide"/>
-                <field name="amount_total_signed"
+                <field name="amount_total_signed" width="185px"
                        string="Tổng" sum="Σ tổng"/>
-                <field name="amount_residual_signed"
+                <field name="amount_residual_signed" width="185px"
                        string="Còn phải trả"
                        sum="Σ còn lại" optional="show"
                        decoration-danger="amount_residual_signed &gt; 0"/>

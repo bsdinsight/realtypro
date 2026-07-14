@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan ↔ Accounting',
-    'version': '19.0.1.5.0',
+    'version': '19.0.1.6.0',
     'category': 'Realty/Finance',
     'summary': 'Tích hợp kế toán cho re_loan: post bút toán giải ngân / lãi / '
                'trả nợ; capitalize lãi vay theo công trình.',

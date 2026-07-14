@@ -83,7 +83,7 @@
                 <field name="structure_level" optional="show"/>
                 <field name="category_id"/>
                 <field name="description" optional="show"/>
-                <field name="amount" widget="monetary" sum="Tổng"/>
+                <field name="amount" width="185px" widget="monetary" sum="Tổng"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>

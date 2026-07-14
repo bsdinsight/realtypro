@@ -14,9 +14,9 @@
                 <field name="code"/>
                 <field name="type_id"/>
                 <field name="owner_company_id" groups="base.group_multi_company"/>
-                <field name="value_current" sum="Σ giá trị"/>
-                <field name="total_secured" sum="Σ đã thế chấp"/>
-                <field name="value_available" sum="Σ còn lại"/>
+                <field name="value_current" width="185px" sum="Σ giá trị"/>
+                <field name="total_secured" width="185px" sum="Σ đã thế chấp"/>
+                <field name="value_available" width="185px" sum="Σ còn lại"/>
                 <field name="coverage_percent" widget="percentage"/>
                 <field name="active_pledge_count" string="# Pledge"/>
                 <field name="state" widget="badge"
@@ -92,7 +92,7 @@
                                 <list editable="bottom"
                                       decoration-danger="is_expired">
                                     <field name="date"/>
-                                    <field name="amount"/>
+                                    <field name="amount" width="185px"/>
                                     <field name="method"/>
                                     <field name="appraiser_id"/>
                                     <field name="appraiser"
@@ -155,7 +155,7 @@
                                     <field name="facility_id"
                                            optional="hide"/>
                                     <field name="note_id" optional="hide"/>
-                                    <field name="secured_amount"
+                                    <field name="secured_amount" width="185px"
                                            sum="Σ đảm bảo"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'active'"

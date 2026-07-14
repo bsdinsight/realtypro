@@ -67,9 +67,9 @@
                 <field name="subzone_coverage" string="Khu vực" optional="hide"/>
                 <field name="contractor_id" optional="show"/>
                 <field name="line_count" string="Hạng mục" optional="hide"/>
-                <field name="max_approved_price" widget="monetary" optional="show"/>
-                <field name="award_amount" widget="monetary" optional="show"/>
-                <field name="contract_amount" widget="monetary" optional="hide"/>
+                <field name="max_approved_price" width="185px" widget="monetary" optional="show"/>
+                <field name="award_amount" width="185px" widget="monetary" optional="show"/>
+                <field name="contract_amount" width="185px" widget="monetary" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="state" widget="badge"/>
                 <field name="active" column_invisible="1"/>
@@ -305,7 +305,7 @@
                                     <field name="technical_pass"
                                            widget="boolean_toggle" readonly="1"
                                            optional="show"/>
-                                    <field name="price_offered"
+                                    <field name="price_offered" width="185px"
                                            widget="monetary" sum="Tổng giá dự thầu"/>
                                     <field name="status" widget="badge"/>
                                     <field name="disqualification_reason"
@@ -380,7 +380,7 @@
                                     <field name="subzone_id" readonly="1" optional="show"/>
                                     <field name="structure_type" readonly="1" optional="hide"/>
                                     <field name="name" string="Mô tả (override)"/>
-                                    <field name="estimated_amount" widget="monetary" sum="Total"/>
+                                    <field name="estimated_amount" width="185px" widget="monetary" sum="Total"/>
                                 </list>
                                 <form>
                                     <sheet>

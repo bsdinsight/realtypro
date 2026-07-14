@@ -12,7 +12,7 @@
                 <field name="state" widget="badge"
                        decoration-success="state == 'active'"
                        decoration-danger="state == 'revoked'"/>
-                <field name="last_used"/>
+                <field name="last_used" width="185px"/>
                 <field name="use_count"/>
                 <field name="expires_at" optional="hide"/>
             </list>

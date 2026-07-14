@@ -31,7 +31,7 @@
                 <field name="ref"/>
                 <field name="partner_id"/>
                 <field name="journal_id"/>
-                <field name="amount_total" sum="Σ"/>
+                <field name="amount_total" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
@@ -154,11 +154,11 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="facility_id"/>
-                <field name="amount"/>
-                <field name="amount_disbursed"/>
-                <field name="amount_repaid_principal"/>
-                <field name="principal_outstanding" string="Dư nợ (loan)"/>
-                <field name="accounting_outstanding"/>
+                <field name="amount" width="185px"/>
+                <field name="amount_disbursed" width="185px"/>
+                <field name="amount_repaid_principal" width="185px"/>
+                <field name="principal_outstanding" width="185px" string="Dư nợ (loan)"/>
+                <field name="accounting_outstanding" width="185px"/>
                 <field name="outstanding_variance" sum="Σ chênh lệch"/>
                 <field name="state" widget="badge"/>
                 <field name="currency_id" column_invisible="1"/>

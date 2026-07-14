@@ -1,6 +1,6 @@
 {
     'name': 'Realty - Base',
-    'version': '19.0.5.2.0',
+    'version': '19.0.5.3.0',
     'category': 'Realty',
     'summary': 'Master data: Project, Subzone, Building, Floor, Unit Type, Unit',
     'description': """

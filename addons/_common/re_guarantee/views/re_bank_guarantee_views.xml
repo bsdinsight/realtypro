@@ -18,11 +18,11 @@
                 <field name="date_issue"/>
                 <field name="date_expiry"/>
                 <field name="days_remaining"/>
-                <field name="amount" sum="Σ giá trị"/>
-                <field name="guarantee_fee_amount" sum="Σ phí" optional="show"/>
-                <field name="guarantee_fee_remaining" optional="hide"/>
-                <field name="penalty_amount" optional="hide"/>
-                <field name="total_paid" optional="hide"/>
+                <field name="amount" width="185px" sum="Σ giá trị"/>
+                <field name="guarantee_fee_amount" width="185px" sum="Σ phí" optional="show"/>
+                <field name="guarantee_fee_remaining" width="185px" optional="hide"/>
+                <field name="penalty_amount" width="185px" optional="hide"/>
+                <field name="total_paid" width="185px" optional="hide"/>
                 <field name="facility_id" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
@@ -263,10 +263,10 @@
                                     <field name="name"/>
                                     <field name="payment_kind"/>
                                     <field name="due_date"/>
-                                    <field name="amount_due" sum="Σ"/>
-                                    <field name="amount_paid" sum="Σ"
+                                    <field name="amount_due" width="185px" sum="Σ"/>
+                                    <field name="amount_paid" width="185px" sum="Σ"
                                            readonly="1"/>
-                                    <field name="amount_remaining" sum="Σ"
+                                    <field name="amount_remaining" width="185px" sum="Σ"
                                            readonly="1"/>
                                     <field name="state" widget="badge"
                                            decoration-muted="state == 'not_paid'"
@@ -304,7 +304,7 @@
                                                        context="{'default_guarantee_id': guarantee_id, 'default_payment_kind': payment_kind}">
                                                     <list editable="bottom">
                                                         <field name="date"/>
-                                                        <field name="amount" sum="Σ"/>
+                                                        <field name="amount" width="185px" sum="Σ"/>
                                                         <field name="reference"/>
                                                         <field name="name"/>
                                                         <field name="state"
@@ -325,7 +325,7 @@
                                     <field name="date"/>
                                     <field name="schedule_id"/>
                                     <field name="payment_kind"/>
-                                    <field name="amount" sum="Σ"/>
+                                    <field name="amount" width="185px" sum="Σ"/>
                                     <field name="reference"/>
                                     <field name="name"/>
                                     <field name="state" widget="badge"/>

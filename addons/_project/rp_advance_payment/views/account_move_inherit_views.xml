@@ -36,9 +36,9 @@
                             <field name="advance_id"
                                    domain="[('partner_id', '=', parent.partner_id)]"
                                    options="{'no_create': True}"/>
-                            <field name="advance_amount_remaining"
+                            <field name="advance_amount_remaining" width="185px"
                                    string="TƯ còn lại"/>
-                            <field name="amount" sum="Σ cấn trừ"/>
+                            <field name="amount" width="185px" sum="Σ cấn trừ"/>
                             <field name="date"/>
                             <field name="note"/>
                             <field name="user_id"/>

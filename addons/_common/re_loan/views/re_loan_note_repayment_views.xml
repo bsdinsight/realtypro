@@ -12,12 +12,12 @@
                 <field name="note_id"
                        string="Khế ước"
                        optional="show"/>
-                <field name="interest_line_id" string="Kỳ"
+                <field name="interest_line_id" width="185px" string="Kỳ"
                        optional="show"/>
-                <field name="amount_principal" sum="Σ gốc"/>
-                <field name="amount_interest" sum="Σ lãi"/>
-                <field name="amount_fee" sum="Σ phí" optional="show"/>
-                <field name="amount_total" sum="Σ"/>
+                <field name="amount_principal" width="185px" sum="Σ gốc"/>
+                <field name="amount_interest" width="185px" sum="Σ lãi"/>
+                <field name="amount_fee" width="185px" sum="Σ phí" optional="show"/>
+                <field name="amount_total" width="185px" sum="Σ"/>
                 <field name="reference" string="Số chứng từ"
                        optional="show"/>
                 <field name="bank_account_id"

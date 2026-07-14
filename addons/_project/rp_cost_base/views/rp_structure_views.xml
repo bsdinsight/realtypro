@@ -159,7 +159,7 @@
                                            domain="[('project_id', '=', parent.project_id)]"
                                            options="{'no_create': True}"/>
                                     <field name="description"/>
-                                    <field name="amount" widget="monetary" sum="Tổng"/>
+                                    <field name="amount" width="185px" widget="monetary" sum="Tổng"/>
                                     <field name="note" optional="hide"/>
                                 </list>
                             </field>
@@ -181,7 +181,7 @@
                                     <field name="code"/>
                                     <field name="name"/>
                                     <field name="structure_type"/>
-                                    <field name="estimate_total"
+                                    <field name="estimate_total" width="185px"
                                            widget="monetary" optional="show"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>

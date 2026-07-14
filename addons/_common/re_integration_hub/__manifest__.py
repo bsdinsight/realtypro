@@ -1,6 +1,6 @@
 {
     'name': 'Realty - Integration Hub',
-    'version': '19.0.0.1.1',
+    'version': '19.0.0.2.1',
     'category': 'Realty',
     'summary': 'Webhook + API key infrastructure used by RealtyPro to '
                'sync data between the Project, Sales, and Living '

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Bank Guarantee Bridge',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Project',
     'summary': 'Link HĐ nhà thầu (rp.contract) với chứng thư BL NH '
                '(re.bank.guarantee).',

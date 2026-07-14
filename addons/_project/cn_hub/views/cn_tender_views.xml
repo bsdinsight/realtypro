@@ -179,8 +179,8 @@
                                       decoration-muted="eval_state == 'failed'">
                                     <field name="rank"/>
                                     <field name="contractor_id"/>
-                                    <field name="price" sum="Σ"/>
-                                    <field name="evaluated_price" optional="show"/>
+                                    <field name="price" width="185px" sum="Σ"/>
+                                    <field name="evaluated_price" width="185px" optional="show"/>
                                     <field name="tech_score_pct" optional="show"/>
                                     <field name="tech_passed" optional="show"/>
                                     <field name="total_score"
@@ -241,7 +241,7 @@
                   decoration-muted="state == 'rejected'">
                 <field name="tender_id"/>
                 <field name="contractor_id"/>
-                <field name="price" sum="Σ"/>
+                <field name="price" width="185px" sum="Σ"/>
                 <field name="date_submit"/>
                 <field name="state" widget="badge"/>
                 <field name="currency_id" column_invisible="1"/>

@@ -16,8 +16,8 @@
                 <field name="base"/>
                 <field name="method"/>
                 <field name="percent"/>
-                <field name="amount"/>
-                <field name="amount_allocated" sum="Σ phân bổ"/>
+                <field name="amount" width="185px"/>
+                <field name="amount_allocated" width="185px" sum="Σ phân bổ"/>
                 <field name="description" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>

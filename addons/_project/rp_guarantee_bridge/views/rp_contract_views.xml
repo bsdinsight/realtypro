@@ -39,9 +39,9 @@
                         <field name="beneficiary_partner_id"/>
                         <field name="date_request"/>
                         <field name="date_expiry"/>
-                        <field name="amount" sum="Σ"/>
-                        <field name="guarantee_fee_remaining" optional="show"/>
-                        <field name="penalty_amount" optional="show"/>
+                        <field name="amount" width="185px" sum="Σ"/>
+                        <field name="guarantee_fee_remaining" width="185px" optional="show"/>
+                        <field name="penalty_amount" width="185px" optional="show"/>
                         <field name="state" widget="badge"
                                decoration-info="state == 'draft'"
                                decoration-success="state == 'active'"

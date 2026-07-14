@@ -97,7 +97,7 @@
                                 <list editable="bottom">
                                     <field name="contract_name"/>
                                     <field name="owner_name"/>
-                                    <field name="value"/>
+                                    <field name="value" width="185px"/>
                                     <field name="role"/>
                                     <field name="work_type"/>
                                     <field name="work_grade"/>

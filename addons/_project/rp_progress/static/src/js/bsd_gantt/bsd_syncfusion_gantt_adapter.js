@@ -151,6 +151,16 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             // Optional: 'Manual' = không auto-reschedule theo predecessor
             // (giữ đúng ngày import từ MS Project); default 'Auto' như cũ.
             taskMode: opts.taskMode || "Auto",
+            // Optional: tắt auto date scheduling (rp_schedule). BẮT BUỘC
+            // khi allowEditing=false + task có predecessor: EJ2 chỉ tạo
+            // connectorLineEditModule khi allowEditing=true, mà nhánh
+            // validate predecessor lúc thả bar (initiateUpdateAction) gọi
+            // connectorLineEditModule.validateTypes → TypeError. Tắt
+            // autoCalculateDateScheduling → EJ2 đi thẳng updateEditedTask,
+            // không validate/reschedule → giữ đúng ngày import.
+            ...(opts.autoCalculateDateScheduling === false ? {
+                autoCalculateDateScheduling: false,
+            } : {}),
             allowResizing: true,
             allowSorting: true,
             // Splitter mặc định show 4 cột (TaskName + StartDate +

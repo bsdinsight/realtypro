@@ -180,6 +180,10 @@ export class RpGanttAction extends Component {
             treeColumnIndex: 2,
             splitterColumnIndex: 6,
             preserveLinks: true,
+            // Không cho EJ2 tự tính lại lịch theo predecessor: giữ đúng
+            // ngày import + tránh crash validateTypes (allowEditing=false
+            // → EJ2 không có connectorLineEditModule).
+            autoCalculateDateScheduling: false,
             onBarClick: false,
             // Tô đậm task level 1 (WBS không chấm — giai đoạn lớn)
             onRowDataBound: (args) => {

@@ -255,7 +255,9 @@ export class BSDGanttView extends Component {
                 id: s._isContract
                     ? `c${s.contract_id}_${s._row_seq}`
                     : String(s.id),
-                parent: parentId,
+                // Level gốc TOÀN DỰ ÁN: mọi row chưa có cha treo vào
+                // "proot" — EJ2 tự cuộn ngày/% từ toàn bộ cây.
+                parent: parentId || "proot",
                 name: s.code ? `[${s.code}] ${s.name}` : s.name,
                 // Pass null nếu không có ngày — Syncfusion sẽ tự
                 // compute từ children (summary task) hoặc render
@@ -273,6 +275,20 @@ export class BSDGanttView extends Component {
                 _isContract: s._isContract,
                 _contractId: s.contract_id,
             };
+        });
+        // Dòng gốc TOÀN DỰ ÁN trên cùng — không ngày (EJ2 tự aggregate
+        // min/max từ toàn bộ hạng mục/HĐ/giai đoạn bên dưới).
+        tasks.unshift({
+            id: "proot",
+            parent: null,
+            name: this.state.projectName || _t("Toàn dự án"),
+            start: null,
+            end: null,
+            progress: 0,
+            dependencies: "",
+            custom_class: "bsd_gantt_bar_project",
+            _isContract: false,
+            _contractId: null,
         });
 
         // Fetch Syncfusion license key 1 lần / view session
@@ -438,7 +454,15 @@ export class BSDGanttView extends Component {
      * else → open structure.
      */
     _openRow(task) {
-        if (task._isContract) {
+        if (String(task.id) === "proot") {
+            this.action.doAction({
+                type: "ir.actions.act_window",
+                res_model: "re.project",
+                res_id: this.projectId,
+                views: [[false, "form"]],
+                target: "new",
+            });
+        } else if (task._isContract) {
             this._openContract(task._contractId);
         } else if (String(task.id).startsWith("t")) {
             // Giai đoạn (project.task level 1) → mở form công việc
@@ -457,11 +481,13 @@ export class BSDGanttView extends Component {
     async _onDateChange(task, start, end) {
         const isoStart = start.toISOString().slice(0, 10);
         const isoEnd = end.toISOString().slice(0, 10);
-        if (String(task.id).startsWith("t")) {
-            // Giai đoạn = ngày rollup từ chi tiết HĐ — không sửa ở đây
+        if (String(task.id) === "proot"
+            || String(task.id).startsWith("t")) {
+            // Toàn dự án / giai đoạn = ngày cuộn từ cấp dưới — không
+            // sửa ở đây
             this.notification.add(
-                _t("Ngày giai đoạn cuộn từ công việc chi tiết — sửa "
-                   + "trong Gantt của HĐ nhà thầu."),
+                _t("Ngày dòng này cuộn từ cấp chi tiết — sửa trong "
+                   + "Gantt của HĐ nhà thầu."),
                 { type: "warning" });
             await this._reload();
             return;

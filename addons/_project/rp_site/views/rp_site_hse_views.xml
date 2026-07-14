@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ══════════ Kiểm tra an toàn ══════════ -->
+    <record id="view_rp_site_safety_inspection_list" model="ir.ui.view">
+        <field name="name">rp.site.safety.inspection.list</field>
+        <field name="model">rp.site.safety.inspection</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="contract_id"/>
+                <field name="inspector_id" widget="many2one_avatar_user"/>
+                <field name="result" widget="badge"
+                       decoration-success="result == 'pass'"
+                       decoration-warning="result == 'pass_note'"
+                       decoration-danger="result == 'fail'"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_site_safety_inspection_form" model="ir.ui.view">
+        <field name="name">rp.site.safety.inspection.form</field>
+        <field name="model">rp.site.safety.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Kiểm tra an toàn">
+                <header>
+                    <button name="action_done" string="Hoàn tất" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_reset_draft" string="Về nháp"
+                            type="object" invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="contract_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="inspector_id"
+                                   widget="many2one_avatar_user"/>
+                            <field name="result"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="result"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                    <field name="findings"
+                           placeholder="Tồn tại về an toàn cần khắc phục..."/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_site_safety_inspection" model="ir.actions.act_window">
+        <field name="name">Kiểm tra an toàn</field>
+        <field name="res_model">rp.site.safety.inspection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ══════════ Toolbox meeting ══════════ -->
+    <record id="view_rp_site_toolbox_list" model="ir.ui.view">
+        <field name="name">rp.site.toolbox.list</field>
+        <field name="model">rp.site.toolbox</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="project_id" optional="show"/>
+                <field name="contract_id"/>
+                <field name="contractor_id" optional="show"/>
+                <field name="presenter_id" widget="many2one_avatar_user"/>
+                <field name="attendee_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_site_toolbox_form" model="ir.ui.view">
+        <field name="name">rp.site.toolbox.form</field>
+        <field name="model">rp.site.toolbox</field>
+        <field name="arch" type="xml">
+            <form string="Toolbox meeting">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="contract_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="presenter_id"
+                                   widget="many2one_avatar_user"/>
+                            <field name="contractor_id"/>
+                            <field name="attendee_count"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Nội dung phổ biến an toàn..."/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_site_toolbox" model="ir.actions.act_window">
+        <field name="name">Toolbox meeting</field>
+        <field name="res_model">rp.site.toolbox</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ══════════ Sự cố / near-miss ══════════ -->
+    <record id="view_rp_site_incident_list" model="ir.ui.view">
+        <field name="name">rp.site.incident.list</field>
+        <field name="model">rp.site.incident</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="incident_type == 'serious'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="contract_id"/>
+                <field name="incident_type" widget="badge"
+                       decoration-danger="incident_type in ('lost_time', 'serious')"
+                       decoration-warning="incident_type == 'minor'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_site_incident_form" model="ir.ui.view">
+        <field name="name">rp.site.incident.form</field>
+        <field name="model">rp.site.incident</field>
+        <field name="arch" type="xml">
+            <form string="Sự cố an toàn">
+                <header>
+                    <button name="action_investigate" string="Điều tra"
+                            type="object" class="btn-primary"
+                            invisible="state != 'reported'"/>
+                    <button name="action_close" string="Đóng" type="object"
+                            class="btn-primary"
+                            invisible="state != 'investigating'"
+                            groups="re_base.group_re_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="code" readonly="1"/></h1>
+                        <h2><field name="name" placeholder="Sự việc..."/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="contract_id" options="{'no_create': True}"/>
+                            <field name="location"/>
+                        </group>
+                        <group>
+                            <field name="incident_type"/>
+                            <field name="people_involved"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                        <field name="immediate_action"/>
+                        <field name="corrective_action"/>
+                    </group>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_site_incident" model="ir.actions.act_window">
+        <field name="name">Sự cố / near-miss</field>
+        <field name="res_model">rp.site.incident</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

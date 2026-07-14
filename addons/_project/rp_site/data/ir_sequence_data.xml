@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_rp_site_diary" model="ir.sequence">
+            <field name="name">Nhật ký thi công</field>
+            <field name="code">rp.site.diary</field>
+            <field name="prefix">NKTC-%(y)s-</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_rp_site_punch" model="ir.sequence">
+            <field name="name">Punch list</field>
+            <field name="code">rp.site.punch</field>
+            <field name="prefix">PL-</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_rp_site_safety_inspection" model="ir.sequence">
+            <field name="name">Kiểm tra an toàn</field>
+            <field name="code">rp.site.safety.inspection</field>
+            <field name="prefix">ATLD-%(y)s-</field>
+            <field name="padding">4</field>
+        </record>
+        <record id="seq_rp_site_incident" model="ir.sequence">
+            <field name="name">Sự cố an toàn</field>
+            <field name="code">rp.site.incident</field>
+            <field name="prefix">SC-%(y)s-</field>
+            <field name="padding">3</field>
+        </record>
+    </data>
+</odoo>

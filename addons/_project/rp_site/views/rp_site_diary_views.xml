@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_site_diary_list" model="ir.ui.view">
+        <field name="name">rp.site.diary.list</field>
+        <field name="model">rp.site.diary</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'"
+                  decoration-success="state == 'confirmed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id" optional="show"/>
+                <field name="contract_id"/>
+                <field name="weather_am" optional="show"/>
+                <field name="total_manpower"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"
+                       decoration-warning="state == 'submitted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_site_diary_form" model="ir.ui.view">
+        <field name="name">rp.site.diary.form</field>
+        <field name="model">rp.site.diary</field>
+        <field name="arch" type="xml">
+            <form string="Nhật ký thi công">
+                <header>
+                    <button name="action_submit" string="Trình xác nhận"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_confirm" string="Xác nhận (TVGS/CĐT)"
+                            type="object" class="btn-primary"
+                            invisible="state != 'submitted'"
+                            groups="re_base.group_re_manager"/>
+                    <button name="action_reset_draft" string="Về nháp"
+                            type="object" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="weather_am"/>
+                            <field name="weather_pm"/>
+                            <field name="total_manpower"/>
+                            <field name="confirmed_by_id"
+                                   invisible="not confirmed_by_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Công việc thực hiện" name="works">
+                            <field name="work_ids">
+                                <list editable="bottom">
+                                    <field name="task_id"/>
+                                    <field name="structure_id"/>
+                                    <field name="description"/>
+                                    <field name="progress_note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Nhân lực" name="manpower">
+                            <field name="manpower_ids">
+                                <list editable="bottom">
+                                    <field name="contractor_id"/>
+                                    <field name="trade"/>
+                                    <field name="headcount"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Máy móc thiết bị" name="equipment">
+                            <field name="equipment_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="status"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Vật tư / Vướng mắc / Chỉ đạo" name="notes">
+                            <group>
+                                <field name="materials_note"/>
+                                <field name="issues"/>
+                                <field name="instructions"/>
+                            </group>
+                        </page>
+                        <page string="Ảnh hiện trường" name="photos">
+                            <field name="attachment_ids"
+                                   widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_site_diary_search" model="ir.ui.view">
+        <field name="name">rp.site.diary.search</field>
+        <field name="model">rp.site.diary</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <filter name="filter_confirmed" string="Đã xác nhận"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_pending" string="Chờ xác nhận"
+                        domain="[('state', '=', 'submitted')]"/>
+                <filter string="Dự án" name="group_project"
+                        context="{'group_by': 'project_id'}"/>
+                <filter string="HĐ / công trường" name="group_contract"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter string="Tháng" name="group_month"
+                        context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_site_diary" model="ir.actions.act_window">
+        <field name="name">Nhật ký thi công</field>
+        <field name="res_model">rp.site.diary</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Lập nhật ký thi công đầu tiên
+            </p>
+            <p>Hồ sơ bắt buộc theo NĐ 06/2021 — mỗi ngày một nhật ký cho
+               mỗi công trường: thời tiết, nhân lực, thiết bị, công việc,
+               ảnh hiện trường.</p>
+        </field>
+    </record>
+</odoo>

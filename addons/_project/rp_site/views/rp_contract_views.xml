@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Smart buttons hiện trường trên HĐ nhà thầu -->
+    <record id="view_rp_contract_form_site" model="ir.ui.view">
+        <field name="name">rp.contract.form.site</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_site_diaries" type="object"
+                        class="oe_stat_button" icon="fa-book">
+                    <field name="site_diary_count" widget="statinfo"
+                           string="Nhật ký"/>
+                </button>
+                <button name="action_view_punches" type="object"
+                        class="oe_stat_button" icon="fa-exclamation-triangle">
+                    <field name="open_punch_count" widget="statinfo"
+                           string="Punch mở"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_site_diary_user,rp.site.diary.user,model_rp_site_diary,re_base.group_re_user,1,1,1,0
+access_rp_site_diary_manager,rp.site.diary.manager,model_rp_site_diary,re_base.group_re_manager,1,1,1,1
+access_rp_site_diary_manpower_user,rp.site.diary.manpower.user,model_rp_site_diary_manpower,re_base.group_re_user,1,1,1,1
+access_rp_site_diary_equipment_user,rp.site.diary.equipment.user,model_rp_site_diary_equipment,re_base.group_re_user,1,1,1,1
+access_rp_site_diary_work_user,rp.site.diary.work.user,model_rp_site_diary_work,re_base.group_re_user,1,1,1,1
+access_rp_site_punch_user,rp.site.punch.user,model_rp_site_punch,re_base.group_re_user,1,1,1,0
+access_rp_site_punch_manager,rp.site.punch.manager,model_rp_site_punch,re_base.group_re_manager,1,1,1,1
+access_rp_site_safety_inspection_user,rp.site.safety.inspection.user,model_rp_site_safety_inspection,re_base.group_re_user,1,1,1,0
+access_rp_site_safety_inspection_manager,rp.site.safety.inspection.manager,model_rp_site_safety_inspection,re_base.group_re_manager,1,1,1,1
+access_rp_site_safety_inspection_line_user,rp.site.safety.inspection.line.user,model_rp_site_safety_inspection_line,re_base.group_re_user,1,1,1,1
+access_rp_site_toolbox_user,rp.site.toolbox.user,model_rp_site_toolbox,re_base.group_re_user,1,1,1,0
+access_rp_site_toolbox_manager,rp.site.toolbox.manager,model_rp_site_toolbox,re_base.group_re_manager,1,1,1,1
+access_rp_site_incident_user,rp.site.incident.user,model_rp_site_incident,re_base.group_re_user,1,1,1,0
+access_rp_site_incident_manager,rp.site.incident.manager,model_rp_site_incident,re_base.group_re_manager,1,1,1,1

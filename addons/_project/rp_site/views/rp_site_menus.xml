@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_rp_site_root" name="Hiện trường"
+              parent="rp_estimate.menu_realty_project_root" sequence="46"/>
+
+    <menuitem id="menu_rp_site_diary" name="Nhật ký thi công"
+              parent="menu_rp_site_root"
+              action="action_rp_site_diary" sequence="10"/>
+
+    <menuitem id="menu_rp_site_punch" name="Punch list (lỗi &amp; khắc phục)"
+              parent="menu_rp_site_root"
+              action="action_rp_site_punch" sequence="20"/>
+
+    <menuitem id="menu_rp_site_hse" name="An toàn lao động"
+              parent="menu_rp_site_root" sequence="30"/>
+
+    <menuitem id="menu_rp_site_safety_inspection" name="Kiểm tra an toàn"
+              parent="menu_rp_site_hse"
+              action="action_rp_site_safety_inspection" sequence="10"/>
+
+    <menuitem id="menu_rp_site_toolbox" name="Toolbox meeting"
+              parent="menu_rp_site_hse"
+              action="action_rp_site_toolbox" sequence="20"/>
+
+    <menuitem id="menu_rp_site_incident" name="Sự cố / near-miss"
+              parent="menu_rp_site_hse"
+              action="action_rp_site_incident" sequence="30"/>
+</odoo>

@@ -8,7 +8,8 @@
             <list>
                 <field name="name"/>
                 <field name="date"/>
-                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="show"/>
                 <field name="inspector_id" widget="many2one_avatar_user"/>
                 <field name="result" widget="badge"
                        decoration-success="result == 'pass'"
@@ -78,8 +79,8 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="project_id" optional="show"/>
-                <field name="contract_id"/>
-                <field name="contractor_id" optional="show"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="show"/>
                 <field name="presenter_id" widget="many2one_avatar_user"/>
                 <field name="attendee_count"/>
             </list>
@@ -129,7 +130,8 @@
                 <field name="code"/>
                 <field name="name"/>
                 <field name="date"/>
-                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="show"/>
                 <field name="incident_type" widget="badge"
                        decoration-danger="incident_type in ('lost_time', 'serious')"
                        decoration-warning="incident_type == 'minor'"/>

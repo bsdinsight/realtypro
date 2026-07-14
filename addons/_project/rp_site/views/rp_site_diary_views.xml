@@ -9,7 +9,8 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="project_id" optional="show"/>
-                <field name="contract_id"/>
+                <field name="contractor_id"/>
+                <field name="contract_id" optional="show"/>
                 <field name="weather_am" optional="show"/>
                 <field name="total_manpower"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
@@ -113,6 +114,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="contractor_id"/>
                 <field name="contract_id"/>
                 <field name="project_id"/>
                 <filter name="filter_confirmed" string="Đã xác nhận"
@@ -121,6 +123,8 @@
                         domain="[('state', '=', 'submitted')]"/>
                 <filter string="Dự án" name="group_project"
                         context="{'group_by': 'project_id'}"/>
+                <filter string="Nhà thầu" name="group_contractor"
+                        context="{'group_by': 'contractor_id'}"/>
                 <filter string="HĐ / công trường" name="group_contract"
                         context="{'group_by': 'contract_id'}"/>
                 <filter string="Tháng" name="group_month"

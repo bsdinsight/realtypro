@@ -21,6 +21,9 @@ class RpSiteSafetyInspection(models.Model):
     contract_id = fields.Many2one(
         'rp.contract', string='HĐ nhà thầu / công trường',
         domain="[('project_id', '=', project_id)]")
+    contractor_id = fields.Many2one(
+        related='contract_id.contractor_id', string='Nhà thầu',
+        store=True, index=True)
     inspector_id = fields.Many2one(
         'res.users', string='Người kiểm tra', required=True,
         default=lambda self: self.env.user)
@@ -114,6 +117,9 @@ class RpSiteIncident(models.Model):
     contract_id = fields.Many2one(
         'rp.contract', string='HĐ nhà thầu / công trường',
         domain="[('project_id', '=', project_id)]")
+    contractor_id = fields.Many2one(
+        related='contract_id.contractor_id', string='Nhà thầu',
+        store=True, index=True)
     incident_type = fields.Selection([
         ('near_miss', 'Near-miss (suýt xảy ra)'),
         ('minor', 'Nhẹ (sơ cứu tại chỗ)'),

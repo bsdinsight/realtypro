@@ -35,6 +35,9 @@ class RpSiteDiary(models.Model):
     contract_id = fields.Many2one(
         'rp.contract', string='HĐ nhà thầu / công trường', index=True,
         domain="[('project_id', '=', project_id)]", tracking=True)
+    contractor_id = fields.Many2one(
+        related='contract_id.contractor_id', string='Nhà thầu',
+        store=True, index=True)
     weather_am = fields.Selection(WEATHER, string='Thời tiết sáng')
     weather_pm = fields.Selection(WEATHER, string='Thời tiết chiều')
 

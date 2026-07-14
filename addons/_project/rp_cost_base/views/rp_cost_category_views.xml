@@ -122,6 +122,9 @@
         <field name="res_model">rp.cost.category</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_rp_cost_category_search"/>
+        <!-- Mặc định group theo dự án: màn này trộn mã của MỌI dự án,
+             không group sẽ xen kẽ theo sequence rất dễ đọc nhầm -->
+        <field name="context">{'search_default_group_project': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Project-scoped cost classification trees.

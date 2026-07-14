@@ -39,7 +39,7 @@
     <menuitem id="menu_rp_finance_payments"
               name="Thanh toán"
               parent="rp_estimate.menu_finance"
-              action="account.action_account_payments_payable"
+              action="action_rp_finance_payments"
               sequence="60"/>
 
 </odoo>

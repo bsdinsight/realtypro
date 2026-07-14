@@ -67,4 +67,14 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <!-- Thanh toán: MỌI khoản chi (nhà thầu xây dựng + NCC vật tư...),
+         không mượn action "Thanh toán mua hàng" của account nữa -->
+    <record id="action_rp_finance_payments" model="ir.actions.act_window">
+        <field name="name">Thanh toán</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,kanban,form,graph,activity</field>
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
+    </record>
+
 </odoo>

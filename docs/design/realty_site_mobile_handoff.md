@@ -31,7 +31,7 @@
 
 > Nguyên tắc chọn: app phục vụ người **đứng ngoài nắng**, không phục vụ người ngồi bàn. Nghiệp vụ bàn giấy (khái toán, BOQ, đấu thầu, kế toán, master data) **ở lại web**.
 
-### Ưu tiên P1 — thiết kế cho họ trước
+### Nhóm dùng hằng ngày — thiết kế cho họ trước
 
 **① Kỹ sư hiện trường / giám sát (CĐT & tổng thầu)** — *người dùng chính*
 - Bối cảnh: ngoài trời cả ngày, nắng gắt, tay bẩn/đeo găng, vừa đi vừa dùng một tay, di chuyển liên tục giữa các tầng/phân khu (tầng hầm mất sóng).
@@ -47,11 +47,12 @@
 - Jobs: checklist kiểm tra an toàn buổi sáng, ghi toolbox meeting, lập sự cố/near-miss ngay tại chỗ (có ảnh), theo dõi khắc phục.
 - Đặc thù: biểu mẫu lặp hằng ngày → **template + tick nhanh** quyết định adoption.
 
-### Ưu tiên P2 — sau MVP
+### Nhóm dùng theo vai trò / theo sự kiện (vẫn trong scope đầy đủ)
 
-**④ Tư vấn giám sát (TVGS)** — xác nhận nhật ký, chứng kiến nghiệm thu, đóng punch (nghiệm thu lại). Là user ngoài công ty → cần phân quyền hẹp theo dự án.
-**⑤ Đội trưởng thầu phụ (foreman)** — nhận việc, báo khối lượng, nhận punch được giao & báo đã khắc phục kèm ảnh. Điện thoại Android giá rẻ, kỹ năng công nghệ thấp nhất trong các persona → UI phải "một nút một việc".
+**④ Tư vấn giám sát (TVGS)** — xác nhận nhật ký, chứng kiến nghiệm thu, đóng punch (nghiệm thu lại), trả lời RFI, duyệt submittal. Là user ngoài công ty → cần phân quyền hẹp theo dự án.
+**⑤ Đội trưởng thầu phụ (foreman)** — nhận việc, báo khối lượng, nhận punch được giao & báo đã khắc phục kèm ảnh, gửi RFI, trình submittal. Điện thoại Android giá rẻ, kỹ năng công nghệ thấp nhất trong các persona → UI phải "một nút một việc".
 **⑥ Lãnh đạo CĐT / BQLDA (executive)** — **chỉ đọc**: thẻ tóm tắt tiến độ – tiền – an toàn của các dự án + ảnh mới nhất. Đừng nhồi thao tác nhập liệu; nếu tham vọng quá màn hình này sẽ phá cấu trúc app.
+**⑦ Tư vấn thiết kế (TVTK)** — vai "khách mời" nhẹ nhất: nhận và **trả lời RFI** (kèm bản vẽ/sketch), duyệt submittal thuộc phạm vi thiết kế — tất cả qua Hộp duyệt + màn RFI, không cần thấy phần còn lại của app. Phân quyền hẹp nhất.
 
 > Ghi chú benchmark *(khả tín, chưa kịp kiểm chứng ⚠️)*: Raken nhắm foreman/superintendent trước; Fieldwire định vị cho field teams adoption nhanh; Procore nhắm lớp quản lý enterprise. Bài học: **app thắng nhờ persona hiện trường, không phải persona quản lý.**
 

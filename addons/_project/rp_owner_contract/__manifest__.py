@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — HĐ với Chủ đầu tư (đầu ra)',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.4.0',
     'category': 'Realty/Project',
     'summary': 'HĐ thi công ĐẦU RA (tổng thầu ↔ CĐT): BBNT sản lượng với '
                'CĐT + thanh toán của CĐT → khoản phải thu (quyền đòi nợ).',
@@ -33,7 +33,9 @@ tăng → hạn mức khả dụng tại NH tăng.
     'depends': [
         're_base',
         'mail',
+        'account',
         'rp_estimate',
+        'rp_contractor',
     ],
     'data': [
         'security/ir.model.access.csv',

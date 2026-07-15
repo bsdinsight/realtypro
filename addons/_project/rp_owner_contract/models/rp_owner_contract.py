@@ -47,8 +47,29 @@ class RpOwnerContract(models.Model):
         'rp.owner.acceptance', 'contract_id', string='BBNT với CĐT')
     payment_ids = fields.One2many(
         'rp.owner.payment', 'contract_id', string='Thanh toán của CĐT')
+    milestone_ids = fields.One2many(
+        'rp.owner.payment.milestone', 'contract_id',
+        string='Kế hoạch thanh toán (theo tiến độ)')
+    invoice_ids = fields.One2many(
+        'account.move', 'owner_contract_id', string='Hoá đơn phát hành CĐT',
+        domain=[('move_type', '=', 'out_invoice')])
     acceptance_count = fields.Integer(compute='_compute_totals')
     payment_count = fields.Integer(compute='_compute_totals')
+    milestone_count = fields.Integer(compute='_compute_revenue')
+    invoice_count = fields.Integer(compute='_compute_revenue')
+
+    # --- Doanh thu / phải thu (theo hoá đơn phát hành CĐT) ---
+    revenue_invoiced = fields.Monetary(
+        string='Doanh thu đã xuất HĐ',
+        compute='_compute_revenue', store=True,
+        help='Σ giá trị trước thuế các hoá đơn CĐT đã phát hành (đã vào sổ).')
+    received_to_date = fields.Monetary(
+        string='CĐT đã thu (theo HĐ)',
+        compute='_compute_revenue', store=True)
+    receivable_invoiced = fields.Monetary(
+        string='Còn phải thu (theo HĐ)',
+        compute='_compute_revenue', store=True,
+        help='Σ còn phải trả của các hoá đơn CĐT đã phát hành.')
 
     # --- Tổng hợp phải thu ---
     accepted_to_date = fields.Monetary(
@@ -106,11 +127,56 @@ class RpOwnerContract(models.Model):
                 rec.accepted_to_date / rec.contract_value_pretax * 100.0
                 if rec.contract_value_pretax else 0.0)
 
+    @api.depends('invoice_ids.state', 'invoice_ids.amount_untaxed',
+                 'invoice_ids.amount_total', 'invoice_ids.amount_residual',
+                 'milestone_ids')
+    def _compute_revenue(self):
+        for rec in self:
+            posted = rec.invoice_ids.filtered(lambda m: m.state == 'posted')
+            rec.invoice_count = len(rec.invoice_ids)
+            rec.milestone_count = len(rec.milestone_ids)
+            rec.revenue_invoiced = sum(posted.mapped('amount_untaxed'))
+            rec.receivable_invoiced = sum(posted.mapped('amount_residual'))
+            rec.received_to_date = sum(
+                posted.mapped('amount_total')) - rec.receivable_invoiced
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        recs.owner_id.filtered(
+            lambda p: not p.is_project_owner).is_project_owner = True
+        return recs
+
     @api.constrains('contract_value_pretax')
     def _check_value(self):
         for rec in self:
             if rec.contract_value_pretax <= 0:
                 raise ValidationError('Giá trị HĐ phải > 0.')
+
+    def action_view_milestones(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Kế hoạch thanh toán',
+            'res_model': 'rp.owner.payment.milestone',
+            'view_mode': 'list,form',
+            'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }
+
+    def action_view_invoices(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Hoá đơn phát hành CĐT',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('owner_contract_id', '=', self.id),
+                       ('move_type', '=', 'out_invoice')],
+            'context': {'default_move_type': 'out_invoice',
+                        'default_owner_contract_id': self.id,
+                        'default_partner_id': self.owner_id.id},
+        }
 
     # --- Workflow ---
     def action_sign(self):

@@ -5,3 +5,4 @@ from . import rp_owner_payment
 from . import rp_owner_payment_milestone
 from . import account_move
 from . import res_partner
+from . import rp_owner_dashboard

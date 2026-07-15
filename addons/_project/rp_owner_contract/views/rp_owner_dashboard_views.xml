@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_owner_dashboard_form" model="ir.ui.view">
+        <field name="name">rp.owner.dashboard.form</field>
+        <field name="model">rp.owner.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Doanh thu" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="↻ Refresh KPIs" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Doanh thu — Dashboard</h1>
+                        <p class="text-muted">Hai chiều tiền của tổng thầu: thu CĐT − trả nhà thầu = lãi gộp dự án · số liệu thời gian thực</p>
+                    </div>
+
+                    <!-- ─── Row 1: Doanh thu &amp; phải thu ─── -->
+                    <group string="💰 Doanh thu &amp; Phải thu (với Chủ đầu tư)">
+                        <group>
+                            <field name="kpi_owner_contract" widget="monetary"/>
+                            <field name="kpi_accepted" widget="monetary"/>
+                            <field name="kpi_revenue_invoiced" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="kpi_received" widget="monetary"/>
+                            <field name="kpi_receivable" widget="monetary"
+                                   class="text-danger"/>
+                            <button name="action_open_receivable" type="object"
+                                    string="→ Hoá đơn còn phải thu" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 2: Chi phí ─── -->
+                    <group string="🏗 Chi phí (với Nhà thầu)">
+                        <group>
+                            <field name="kpi_cost_contract" widget="monetary"/>
+                            <field name="kpi_cost_accepted" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="kpi_cost_paid" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <!-- ─── Row 3: Lãi gộp &amp; dòng tiền ─── -->
+                    <group string="📈 Lãi gộp &amp; Dòng tiền">
+                        <group string="Lãi gộp dự án">
+                            <field name="kpi_gross_margin" widget="monetary"
+                                   class="fw-bold"/>
+                            <field name="kpi_margin_pct" widget="percentage"/>
+                        </group>
+                        <group string="Dòng tiền">
+                            <field name="kpi_net_cash" widget="monetary"/>
+                            <field name="kpi_inflow_90d" widget="monetary"/>
+                            <button name="action_open_inflow" type="object"
+                                    string="→ Kế hoạch thu 90 ngày" class="btn-link"/>
+                        </group>
+                    </group>
+
+                    <field name="currency_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_owner_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard Doanh thu</field>
+        <field name="res_model">rp.owner.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_owner_dashboard"
+              name="Dashboard Doanh thu"
+              parent="menu_owner_revenue"
+              action="action_rp_owner_dashboard"
+              sequence="5"/>
+
+</odoo>

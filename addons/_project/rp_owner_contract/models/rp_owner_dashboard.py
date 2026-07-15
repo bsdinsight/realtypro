@@ -67,6 +67,9 @@ class RpOwnerDashboard(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency',
         default=lambda self: self.env.company.currency_id)
+    project_id = fields.Many2one(
+        're.project', string='Lọc theo dự án',
+        help='Bỏ trống = tổng hợp tất cả dự án.')
 
     # ------------------------------------------------------------------
     @api.model
@@ -75,10 +78,16 @@ class RpOwnerDashboard(models.TransientModel):
         res.update(self._compute_kpis())
         return res
 
-    @api.model
-    def _compute_kpis(self):
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        self.update(self._compute_kpis(self.project_id.id))
+
+    def _compute_kpis(self, project_id=False):
+        pid = project_id
+        pf = [('project_id', '=', pid)] if pid else []
         OC = self.env['rp.owner.contract']
-        owner = OC.search([('state', 'in', ('signed', 'executing', 'completed'))])
+        owner = OC.search(
+            [('state', 'in', ('signed', 'executing', 'completed'))] + pf)
         accepted = sum(owner.mapped('accepted_to_date'))
 
         # Chi phí — đọc mềm từ rp.contract (phía đầu vào)
@@ -86,7 +95,7 @@ class RpOwnerDashboard(models.TransientModel):
         if 'rp.contract' in self.env:
             Contract = self.env['rp.contract']
             signed = Contract.search(
-                [('state', 'in', ('signed', 'executing', 'completed'))])
+                [('state', 'in', ('signed', 'executing', 'completed'))] + pf)
             cost_contract = sum(signed.mapped('contract_value_total'))
             cost_accepted = sum(
                 signed.mapped('acceptance_value_to_date')) \
@@ -102,7 +111,7 @@ class RpOwnerDashboard(models.TransientModel):
         due = self.env['rp.owner.payment.milestone'].search([
             ('state', 'in', ('planned', 'invoiced')),
             ('due_date', '!=', False),
-            ('due_date', '<=', horizon)])
+            ('due_date', '<=', horizon)] + pf)
         inflow = sum(m.amount - m.amount_received for m in due)
 
         return {
@@ -121,7 +130,7 @@ class RpOwnerDashboard(models.TransientModel):
         }
 
     def action_refresh(self):
-        self.write(self._compute_kpis())
+        self.write(self._compute_kpis(self.project_id.id))
         return True
 
     def _open(self, name, model, domain, views='list,form', context=None):
@@ -133,20 +142,24 @@ class RpOwnerDashboard(models.TransientModel):
         }
 
     def action_open_owner_contracts(self):
+        pf = [('project_id', '=', self.project_id.id)] if self.project_id else []
         return self._open('HĐ với CĐT', 'rp.owner.contract',
-                          [('state', 'in', ('signed', 'executing', 'completed'))])
+                          [('state', 'in', ('signed', 'executing', 'completed'))] + pf)
 
     def action_open_receivable(self):
-        return self._open(
-            'Hoá đơn còn phải thu', 'account.move',
-            [('move_type', '=', 'out_invoice'),
-             ('owner_contract_id', '!=', False),
-             ('payment_state', 'in', ('not_paid', 'partial'))])
+        pid = self.project_id.id
+        dom = [('move_type', '=', 'out_invoice'),
+               ('owner_contract_id', '!=', False),
+               ('payment_state', 'in', ('not_paid', 'partial'))]
+        if pid:
+            dom.append(('owner_project_id', '=', pid))
+        return self._open('Hoá đơn còn phải thu', 'account.move', dom)
 
     def action_open_inflow(self):
         today = fields.Date.context_today(self)
+        pf = [('project_id', '=', self.project_id.id)] if self.project_id else []
         return self._open(
             'Kế hoạch thu 90 ngày', 'rp.owner.payment.milestone',
             [('state', 'in', ('planned', 'invoiced')),
-             ('due_date', '<=', fields.Date.add(today, days=90))],
+             ('due_date', '<=', fields.Date.add(today, days=90))] + pf,
             views='list,pivot')

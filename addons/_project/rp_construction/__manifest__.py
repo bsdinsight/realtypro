@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Xây dựng',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Menu Xây dựng hợp nhất: Dashboard thi công, Lịch thi công, '
                'Tiến độ, Hiện trường, RFI & Trình duyệt, Báo cáo.',

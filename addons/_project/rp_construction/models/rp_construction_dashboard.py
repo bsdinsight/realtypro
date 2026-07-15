@@ -57,6 +57,9 @@ class RpConstructionDashboard(models.TransientModel):
     kpi_submittal_pending = fields.Integer(
         string='Submittal chờ duyệt',
         help='Trình duyệt vật liệu/shopdrawing state = submitted.')
+    project_id = fields.Many2one(
+        're.project', string='Lọc theo dự án',
+        help='Bỏ trống = tổng hợp tất cả dự án.')
 
     # ------------------------------------------------------------------
     # Compute
@@ -67,16 +70,22 @@ class RpConstructionDashboard(models.TransientModel):
         res.update(self._compute_kpis())
         return res
 
-    @api.model
-    def _compute_kpis(self):
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        self.update(self._compute_kpis(self.project_id.id))
+
+    def _compute_kpis(self, project_id=False):
+        pid = project_id
+        pf = [('project_id', '=', pid)] if pid else []           # có project_id
+        pt = [('rp_contract_id.project_id', '=', pid)] if pid else []  # task qua HĐ
         Task = self.env['project.task']
         Punch = self.env['rp.site.punch']
         Rfi = self.env['rp.rfi']
         today = fields.Date.context_today(self)
 
         open_punch = Punch.search(
-            [('state', 'in', ('open', 'in_progress'))])
-        waiting_rfi = Rfi.search([('state', '=', 'submitted')])
+            [('state', 'in', ('open', 'in_progress'))] + pf)
+        waiting_rfi = Rfi.search([('state', '=', 'submitted')] + pf)
 
         return {
             'kpi_task_active': Task.search_count([
@@ -84,39 +93,37 @@ class RpConstructionDashboard(models.TransientModel):
                 ('is_milestone', '=', False),
                 ('planned_start', '<=', today),
                 ('planned_end', '>=', today),
-                ('progress_percent', '<', 100),
-            ]),
+                ('progress_percent', '<', 100)] + pt),
             'kpi_task_overdue': Task.search_count([
                 ('rp_contract_id', '!=', False),
                 ('is_milestone', '=', False),
                 ('planned_end', '<', today),
-                ('progress_percent', '<', 100),
-            ]),
+                ('progress_percent', '<', 100)] + pt),
             'kpi_acceptance_pending': self.env[
                 'rp.progress.acceptance'].search_count(
-                [('state', '=', 'proposed')]),
+                [('state', '=', 'proposed')] + pf),
             'kpi_punch_open': len(open_punch),
             # is_overdue compute không store → filtered
             'kpi_punch_overdue': len(open_punch.filtered('is_overdue')),
             'kpi_diary_pending': self.env['rp.site.diary'].search_count(
-                [('state', '=', 'submitted')]),
+                [('state', '=', 'submitted')] + pf),
             'kpi_incident_30d': self.env['rp.site.incident'].search_count(
                 [('date', '>=', fields.Datetime.subtract(
-                    fields.Datetime.now(), days=30))]),
+                    fields.Datetime.now(), days=30))] + pf),
             'kpi_rfi_waiting': len(waiting_rfi),
             'kpi_rfi_overdue': len(waiting_rfi.filtered('is_overdue')),
             'kpi_instruction_open': self.env[
                 'rp.site.instruction'].search_count(
-                [('state', '=', 'issued')]),
+                [('state', '=', 'issued')] + pf),
             'kpi_submittal_pending': self.env['rp.submittal'].search_count(
-                [('state', '=', 'submitted')]),
+                [('state', '=', 'submitted')] + pf),
         }
 
     # ------------------------------------------------------------------
     # Actions
     # ------------------------------------------------------------------
     def action_refresh(self):
-        self.write(self._compute_kpis())
+        self.write(self._compute_kpis(self.project_id.id))
         return True
 
     def _open(self, name, res_model, domain=None, context=None):
@@ -130,44 +137,51 @@ class RpConstructionDashboard(models.TransientModel):
             'target': 'current',
         }
 
+    @property
+    def _pf(self):
+        return [('project_id', '=', self.project_id.id)] if self.project_id else []
+
     def action_open_tasks_overdue(self):
         today = fields.Date.context_today(self)
+        pt = [('rp_contract_id.project_id', '=', self.project_id.id)] \
+            if self.project_id else []
         return self._open(
             'Công việc trễ hạn', 'project.task',
             [('rp_contract_id', '!=', False), ('is_milestone', '=', False),
-             ('planned_end', '<', today), ('progress_percent', '<', 100)])
+             ('planned_end', '<', today), ('progress_percent', '<', 100)] + pt)
 
     def action_open_acceptances(self):
         return self._open(
             'BBN chờ duyệt', 'rp.progress.acceptance',
-            [('state', '=', 'proposed')])
+            [('state', '=', 'proposed')] + self._pf)
 
     def action_open_punches(self):
         return self._open(
             'Punch đang mở', 'rp.site.punch',
-            [('state', 'in', ('open', 'in_progress'))])
+            [('state', 'in', ('open', 'in_progress'))] + self._pf)
 
     def action_open_diaries(self):
         return self._open(
             'Nhật ký chờ xác nhận', 'rp.site.diary',
-            [('state', '=', 'submitted')])
+            [('state', '=', 'submitted')] + self._pf)
 
     def action_open_incidents(self):
         return self._open(
             'Sự cố 30 ngày', 'rp.site.incident',
             [('date', '>=', fields.Datetime.subtract(
-                fields.Datetime.now(), days=30))])
+                fields.Datetime.now(), days=30))] + self._pf)
 
     def action_open_rfis(self):
         return self._open(
-            'RFI chờ trả lời', 'rp.rfi', [('state', '=', 'submitted')])
+            'RFI chờ trả lời', 'rp.rfi',
+            [('state', '=', 'submitted')] + self._pf)
 
     def action_open_instructions(self):
         return self._open(
             'Chỉ thị chưa thực hiện', 'rp.site.instruction',
-            [('state', '=', 'issued')])
+            [('state', '=', 'issued')] + self._pf)
 
     def action_open_submittals(self):
         return self._open(
             'Submittal chờ duyệt', 'rp.submittal',
-            [('state', '=', 'submitted')])
+            [('state', '=', 'submitted')] + self._pf)

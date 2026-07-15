@@ -15,6 +15,10 @@
                         <h1>Doanh thu — Dashboard</h1>
                         <p class="text-muted">Hai chiều tiền của tổng thầu: thu CĐT − trả nhà thầu = lãi gộp dự án · số liệu thời gian thực</p>
                     </div>
+                    <group>
+                        <field name="project_id" options="{'no_create': True}"
+                               placeholder="Tất cả dự án"/>
+                    </group>
 
                     <!-- ─── Row 1: Doanh thu &amp; phải thu ─── -->
                     <group string="💰 Doanh thu &amp; Phải thu (với Chủ đầu tư)">

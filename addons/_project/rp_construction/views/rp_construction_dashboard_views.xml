@@ -16,6 +16,10 @@
                         <h1>Xây dựng — Dashboard</h1>
                         <p class="text-muted">Nhịp thi công hôm nay: tiến độ · hiện trường · RFI &amp; phê duyệt — số liệu thời gian thực</p>
                     </div>
+                    <group>
+                        <field name="project_id" options="{'no_create': True}"
+                               placeholder="Tất cả dự án"/>
+                    </group>
 
                     <!-- ─── Row 1: Tiến độ thi công ─── -->
                     <group string="📅 Tiến độ thi công">

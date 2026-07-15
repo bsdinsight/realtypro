@@ -16,6 +16,10 @@
                         <h1>Tài chính — Dashboard</h1>
                         <p class="text-muted">Chuỗi giá trị: Khái toán → Dự toán → HĐ ký → Nghiệm thu → Thanh toán · số liệu thời gian thực</p>
                     </div>
+                    <group>
+                        <field name="project_id" options="{'no_create': True}"
+                               placeholder="Tất cả dự án"/>
+                    </group>
 
                     <!-- ─── Row 1: Kế hoạch chi phí ─── -->
                     <group string="📐 Kế hoạch chi phí">

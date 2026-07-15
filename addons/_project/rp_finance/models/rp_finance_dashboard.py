@@ -69,6 +69,9 @@ class RpFinanceDashboard(models.TransientModel):
     currency_id = fields.Many2one(
         'res.currency',
         default=lambda self: self.env.company.currency_id)
+    project_id = fields.Many2one(
+        're.project', string='Lọc theo dự án',
+        help='Bỏ trống = tổng hợp tất cả dự án.')
 
     # ------------------------------------------------------------------
     # Compute
@@ -79,8 +82,14 @@ class RpFinanceDashboard(models.TransientModel):
         res.update(self._compute_kpis())
         return res
 
-    @api.model
-    def _compute_kpis(self):
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        self.update(self._compute_kpis(self.project_id.id))
+
+    def _compute_kpis(self, project_id=False):
+        pid = project_id
+        pf = [('project_id', '=', pid)] if pid else []       # có project_id trực tiếp
+        pc = [('contract_id.project_id', '=', pid)] if pid else []  # qua HĐ
         Est = self.env['rp.structure.estimate.line']
         Boq = self.env['rp.boq.line']
         Contract = self.env['rp.contract']
@@ -89,25 +98,24 @@ class RpFinanceDashboard(models.TransientModel):
         Move = self.env['account.move']
 
         signed = Contract.search(
-            [('state', 'in', ('signed', 'executing', 'completed'))])
+            [('state', 'in', ('signed', 'executing', 'completed'))] + pf)
 
         advances_open = Advance.search(
-            [('state', 'in', ('approved', 'partial_paid', 'paid'))])
+            [('state', 'in', ('approved', 'partial_paid', 'paid'))] + pc)
 
-        bills = Move.search([
-            ('move_type', '=', 'in_invoice'),
-            ('state', '=', 'posted'),
-            ('payment_milestone_id', '!=', False),
-        ])
+        bill_dom = [
+            ('move_type', '=', 'in_invoice'), ('state', '=', 'posted'),
+            ('payment_milestone_id', '!=', False)]
+        if pid:
+            bill_dom.append(
+                ('payment_milestone_id.contract_id.project_id', '=', pid))
+        bills = Move.search(bill_dom)
 
         today = fields.Date.context_today(self)
         due_soon = Milestone.search_count([
-            ('state', '!=', 'paid'),
-            ('due_date', '!=', False),
-            ('due_date', '<=', fields.Date.add(today, days=30)),
-        ])
-        paid = self.env['rp.contract.payment.milestone'].search(
-            [('state', '=', 'paid')])
+            ('state', '!=', 'paid'), ('due_date', '!=', False),
+            ('due_date', '<=', fields.Date.add(today, days=30))] + pc)
+        paid = Milestone.search([('state', '=', 'paid')] + pc)
 
         # Nhánh khế ước — đọc mềm, chỉ có khi cài rp_loan_bridge
         paid_loan = 0.0
@@ -118,19 +126,19 @@ class RpFinanceDashboard(models.TransientModel):
         loan_allocated = 0.0
         if 'rp.loan.allocation' in self.env:
             loan_allocated = sum(
-                self.env['rp.loan.allocation'].search([])
+                self.env['rp.loan.allocation'].search(pf)
                 .mapped('amount_allocated'))
 
         return {
             'kpi_estimate_total': sum(
-                Est.search([]).mapped('amount')),
-            'kpi_boq_total': sum(Boq.search([]).mapped('amount')),
+                Est.search(pf).mapped('amount')),
+            'kpi_boq_total': sum(Boq.search(pf).mapped('amount')),
             'kpi_contract_value': sum(signed.mapped('contract_value_total')),
             'kpi_acceptance_to_date': sum(
                 signed.mapped('acceptance_value_to_date')),
             'kpi_advance_open': sum(advances_open.mapped('amount_remaining')),
             'kpi_advance_to_approve': Advance.search_count(
-                [('state', '=', 'to_approve')]),
+                [('state', '=', 'to_approve')] + pc),
             'kpi_invoice_total': sum(bills.mapped('amount_total')),
             'kpi_invoice_residual': sum(bills.mapped('amount_residual')),
             'kpi_milestone_due_30d': due_soon,
@@ -143,7 +151,7 @@ class RpFinanceDashboard(models.TransientModel):
     # Actions
     # ------------------------------------------------------------------
     def action_refresh(self):
-        self.write(self._compute_kpis())
+        self.write(self._compute_kpis(self.project_id.id))
         return True
 
     def _open(self, name, res_model, domain=None, views='list,form',
@@ -169,26 +177,35 @@ class RpFinanceDashboard(models.TransientModel):
         return act
 
     def action_open_contracts(self):
+        pid = self.project_id.id
+        pf = [('project_id', '=', pid)] if pid else []
         return self._open(
             'HĐ nhà thầu đã ký', 'rp.contract',
-            [('state', 'in', ('signed', 'executing', 'completed'))])
+            [('state', 'in', ('signed', 'executing', 'completed'))] + pf)
 
     def action_open_advances(self):
+        pid = self.project_id.id
+        pc = [('contract_id.project_id', '=', pid)] if pid else []
         return self._open(
             'Tạm ứng chờ duyệt', 'rp.advance.payment',
-            [('state', '=', 'to_approve')])
+            [('state', '=', 'to_approve')] + pc)
 
     def action_open_bills(self):
-        return self._open(
-            'Hoá đơn nhà thầu', 'account.move',
-            [('move_type', '=', 'in_invoice'), ('state', '=', 'posted'),
-             ('payment_milestone_id', '!=', False)],
-            context={'default_move_type': 'in_invoice'})
+        pid = self.project_id.id
+        dom = [('move_type', '=', 'in_invoice'), ('state', '=', 'posted'),
+               ('payment_milestone_id', '!=', False)]
+        if pid:
+            dom.append(
+                ('payment_milestone_id.contract_id.project_id', '=', pid))
+        return self._open('Hoá đơn nhà thầu', 'account.move', dom,
+                          context={'default_move_type': 'in_invoice'})
 
     def action_open_milestones_due(self):
         today = fields.Date.context_today(self)
+        pid = self.project_id.id
+        pc = [('contract_id.project_id', '=', pid)] if pid else []
         return self._open(
             'Mốc thanh toán đến hạn ≤30 ngày',
             'rp.contract.payment.milestone',
             [('state', '!=', 'paid'), ('due_date', '!=', False),
-             ('due_date', '<=', fields.Date.add(today, days=30))])
+             ('due_date', '<=', fields.Date.add(today, days=30))] + pc)

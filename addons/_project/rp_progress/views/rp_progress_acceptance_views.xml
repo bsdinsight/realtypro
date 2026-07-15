@@ -135,6 +135,8 @@
                                    readonly="state not in ('draft','proposed')"/>
                             <field name="date_approved"/>
                             <field name="deadline_response"/>
+                            <field name="milestone_ids"
+                                   widget="many2many_tags"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>
                         </group>

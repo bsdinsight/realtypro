@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hồ sơ thanh toán: cột Hồ sơ nghiệm thu (n-n) -->
+    <record id="view_rp_contract_milestone_list_acceptance" model="ir.ui.view">
+        <field name="name">rp.contract.payment.milestone.list.acceptance</field>
+        <field name="model">rp.contract.payment.milestone</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_milestone_list"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="acceptance_ids" widget="many2many_tags"
+                       optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

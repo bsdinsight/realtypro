@@ -24,6 +24,13 @@ class RpContractPaymentMilestone(models.Model):
         related='acceptance_id.state', string='Trạng thái BBNT',
         readonly=True, store=True)
 
+    # --- n-n với hồ sơ nghiệm thu (2026-07-15, thay dần acceptance_id) ---
+    # 1 hồ sơ thanh toán gom nhiều BBN; 1 BBN chia thanh toán nhiều đợt
+    # (vd 70% khi duyệt, 30% giữ lại/đợt sau).
+    acceptance_ids = fields.Many2many(
+        'rp.progress.acceptance', 'rp_milestone_acceptance_rel',
+        'milestone_id', 'acceptance_id', string='Hồ sơ nghiệm thu')
+
     # --- Hóa đơn cho đợt thanh toán ---
     invoice_ids = fields.One2many(
         'account.move', 'payment_milestone_id',

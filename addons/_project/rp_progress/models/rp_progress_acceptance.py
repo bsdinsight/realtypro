@@ -108,6 +108,11 @@ class RpProgressAcceptance(models.Model):
         compute='_compute_progress_percent', store=True,
         help='= total_value_to_date / contract_value_pretax × 100.')
 
+    milestone_ids = fields.Many2many(
+        'rp.contract.payment.milestone', 'rp_milestone_acceptance_rel',
+        'acceptance_id', 'milestone_id', string='Hồ sơ thanh toán',
+        help='Các đợt thanh toán trả cho BBN này (n-n).')
+
     note = fields.Text(string='Ghi chú')
     active = fields.Boolean(default=True)
 

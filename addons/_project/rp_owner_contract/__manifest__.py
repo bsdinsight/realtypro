@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — HĐ với Chủ đầu tư (đầu ra)',
-    'version': '19.0.1.5.0',
+    'version': '19.0.1.6.0',
     'category': 'Realty/Project',
     'summary': 'HĐ thi công ĐẦU RA (tổng thầu ↔ CĐT): BBNT sản lượng với '
                'CĐT + thanh toán của CĐT → khoản phải thu (quyền đòi nợ).',

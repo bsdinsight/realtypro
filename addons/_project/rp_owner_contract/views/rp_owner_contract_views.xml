@@ -370,9 +370,9 @@
         <field name="context">{'default_is_project_owner': True, 'default_is_company': True, 'res_partner_search_mode': 'supplier'}</field>
     </record>
 
-    <!-- ============ Menu root: Doanh thu (CĐT) ============ -->
+    <!-- ============ Menu root: Doanh thu ============ -->
     <menuitem id="menu_owner_revenue"
-              name="Doanh thu (CĐT)"
+              name="Doanh thu"
               parent="rp_estimate.menu_realty_project_root"
               sequence="42"/>
 

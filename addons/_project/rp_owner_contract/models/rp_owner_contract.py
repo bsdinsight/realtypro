@@ -5,7 +5,7 @@
 sản lượng nghiệm thu với CĐT + tiền CĐT đã trả → khoản phải thu
 (quyền đòi nợ) — nguồn TSBĐ động cho borrowing base.
 """
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -45,6 +45,9 @@ class RpOwnerContract(models.Model):
 
     acceptance_ids = fields.One2many(
         'rp.owner.acceptance', 'contract_id', string='BBNT với CĐT')
+    ipc_ids = fields.One2many(
+        'rp.owner.ipc', 'contract_id', string='IPC (hồ sơ thanh toán)')
+    ipc_count = fields.Integer(compute='_compute_ipc')
     payment_ids = fields.One2many(
         'rp.owner.payment', 'contract_id', string='Thanh toán của CĐT')
     milestone_ids = fields.One2many(
@@ -71,11 +74,49 @@ class RpOwnerContract(models.Model):
         compute='_compute_revenue', store=True,
         help='Σ còn phải trả của các hoá đơn CĐT đã phát hành.')
 
+    # --- Điều khoản thanh toán (nguồn cho công thức Gross → Net) ---
+    # MẶC ĐỊNH 0: cài module KHÔNG làm đổi số của HĐ đang chạy. Chỉ khi
+    # khai báo điều khoản thật thì giảm trừ mới phát sinh.
+    retention_percent = fields.Float(
+        string='% giữ lại mỗi kỳ', default=0.0, tracking=True,
+        help='Tỷ lệ CĐT giữ lại trên sản lượng mỗi kỳ (thường 5%). '
+             'Để 0 = không giữ lại.')
+    retention_cap_percent = fields.Float(
+        string='Trần giữ lại (% giá trị HĐ)', default=0.0, tracking=True,
+        help='Tổng giữ lại luỹ kế không vượt tỷ lệ này trên giá trị HĐ '
+             '(thường 5%). Để 0 = không chặn trần.')
+    advance_amount = fields.Monetary(
+        string='Tạm ứng đã nhận', default=0.0, tracking=True,
+        help='Giá trị tạm ứng CĐT đã cấp — sẽ được thu hồi dần qua các '
+             'BBNT theo % bên dưới.')
+    advance_recovery_percent = fields.Float(
+        string='% thu hồi tạm ứng mỗi kỳ', default=0.0, tracking=True,
+        help='Tỷ lệ khấu trừ trên sản lượng gross mỗi kỳ để thu hồi tạm '
+             'ứng, dừng khi hết số dư. Để 0 = không tự thu hồi.')
+
+    retention_held = fields.Monetary(
+        string='Giữ lại đang nắm',
+        compute='_compute_totals', store=True,
+        help='Σ retention của các BBNT đã duyệt — tiền CĐT đang giữ, '
+             'chưa đòi được. Tới mốc hoàn thì lập BBNT mới để đòi.')
+    advance_balance = fields.Monetary(
+        string='Số dư tạm ứng',
+        compute='_compute_totals', store=True,
+        help='= Tạm ứng đã nhận − Σ đã thu hồi qua các BBNT đã duyệt.')
+
     # --- Tổng hợp phải thu ---
+    accepted_gross_to_date = fields.Monetary(
+        string='Sản lượng gross lũy kế',
+        compute='_compute_totals', store=True,
+        help='Σ sản lượng GỘP các BBNT đã duyệt — dùng để đo tiến độ so '
+             'với giá trị HĐ (retention vẫn là phần việc đã làm).')
     accepted_to_date = fields.Monetary(
         string='Sản lượng nghiệm thu lũy kế',
         compute='_compute_totals', store=True,
-        help='Σ giá trị các BBNT đã được CĐT duyệt (trước thuế).')
+        help='Σ QUYỀN ĐÒI NỢ phát sinh của các BBNT đã duyệt (trước '
+             'thuế) = gross − giữ lại − back-charge ± điều chỉnh. '
+             'KHÔNG trừ thu hồi tạm ứng ở đây — tiền tạm ứng đã nằm '
+             'trong "CĐT đã thanh toán".')
     paid_to_date = fields.Monetary(
         string='CĐT đã thanh toán',
         compute='_compute_totals', store=True,
@@ -89,6 +130,20 @@ class RpOwnerContract(models.Model):
     progress_percent = fields.Float(
         string='% sản lượng / giá trị HĐ',
         compute='_compute_totals', store=True)
+
+    # --- Chống thế chấp TRÙNG giữa 2 cấp ---
+    # TSBĐ gắn ở CẤP HĐ lấy giá trị = `receivable` (toàn bộ phải thu).
+    # Khi một IPC được cầm cố RIÊNG, phần đó phải bị trừ ra khỏi cấp HĐ,
+    # nếu không cùng một khoản tiền được thế chấp hai lần.
+    receivable_pledged_ipc = fields.Monetary(
+        string='Phải thu đã cầm cố theo IPC',
+        compute='_compute_ipc', store=True,
+        help='Σ quyền đòi nợ của các IPC đã được đưa vào TSBĐ riêng.')
+    receivable_unpledged = fields.Monetary(
+        string='Phải thu chưa cầm cố',
+        compute='_compute_ipc', store=True,
+        help='= Khoản phải thu − phần đã cầm cố theo IPC. ĐÂY là giá trị '
+             'TSBĐ gắn ở cấp hợp đồng, để không thế chấp trùng.')
 
     currency_id = fields.Many2one(
         'res.currency', string='Loại tiền', required=True,
@@ -110,8 +165,12 @@ class RpOwnerContract(models.Model):
                 1 + (rec.vat_rate or 0.0) / 100.0)
 
     @api.depends('acceptance_ids.amount_this_period',
+                 'acceptance_ids.amount_certified',
+                 'acceptance_ids.advance_recovery',
+                 'acceptance_ids.retention_amount',
                  'acceptance_ids.state',
                  'payment_ids.amount',
+                 'advance_amount',
                  'contract_value_pretax')
     def _compute_totals(self):
         for rec in self:
@@ -119,13 +178,42 @@ class RpOwnerContract(models.Model):
                 lambda a: a.state == 'approved')
             rec.acceptance_count = len(rec.acceptance_ids)
             rec.payment_count = len(rec.payment_ids)
-            rec.accepted_to_date = sum(
+            rec.accepted_gross_to_date = sum(
                 approved.mapped('amount_this_period'))
+            # QUYỀN ĐÒI NỢ — số chảy vào phải thu / borrowing base
+            rec.accepted_to_date = sum(approved.mapped('amount_certified'))
+            rec.retention_held = sum(approved.mapped('retention_amount'))
+            rec.advance_balance = max(0.0, (rec.advance_amount or 0.0) - sum(
+                approved.mapped('advance_recovery')))
             rec.paid_to_date = sum(rec.payment_ids.mapped('amount'))
             rec.receivable = rec.accepted_to_date - rec.paid_to_date
+            # Tiến độ đo trên GROSS: retention vẫn là phần việc đã làm
             rec.progress_percent = (
-                rec.accepted_to_date / rec.contract_value_pretax * 100.0
+                rec.accepted_gross_to_date / rec.contract_value_pretax * 100.0
                 if rec.contract_value_pretax else 0.0)
+
+    @api.depends('ipc_ids.amount_pledged', 'ipc_ids.is_pledged',
+                 'ipc_ids.state', 'receivable')
+    def _compute_ipc(self):
+        for rec in self:
+            rec.ipc_count = len(rec.ipc_ids)
+            rec.receivable_pledged_ipc = sum(
+                rec.ipc_ids.filtered(
+                    lambda i: i.is_pledged and i.state == 'signed'
+                ).mapped('amount_pledged'))
+            rec.receivable_unpledged = max(
+                0.0, rec.receivable - rec.receivable_pledged_ipc)
+
+    def action_open_ipc(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('IPC — %s') % self.name,
+            'res_model': 'rp.owner.ipc',
+            'view_mode': 'list,form',
+            'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }
 
     @api.depends('invoice_ids.state', 'invoice_ids.amount_untaxed',
                  'invoice_ids.amount_total', 'invoice_ids.amount_residual',

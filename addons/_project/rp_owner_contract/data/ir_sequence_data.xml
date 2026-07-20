@@ -6,4 +6,10 @@
         <field name="prefix">OBBNT/%(year)s/</field>
         <field name="padding">4</field>
     </record>
+    <record id="seq_rp_owner_ipc" model="ir.sequence">
+        <field name="name">IPC — Chứng nhận thanh toán tạm thời</field>
+        <field name="code">rp.owner.ipc</field>
+        <field name="prefix">IPC/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
 </odoo>

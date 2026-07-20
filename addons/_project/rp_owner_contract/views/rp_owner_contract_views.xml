@@ -15,8 +15,7 @@
                 <field name="paid_to_date" width="185px" sum="Σ"/>
                 <field name="receivable" width="185px" sum="Σ"
                        decoration-bf="receivable &gt; 0"/>
-                <field name="progress_percent" widget="percentage"
-                       optional="show"/>
+                <field name="progress_percent" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-primary="state == 'signed'"
@@ -89,9 +88,30 @@
                             <field name="company_id" invisible="1"/>
                         </group>
                     </group>
+                    <div class="oe_button_box" name="ipc_box">
+                        <button name="action_open_ipc" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="ipc_count" widget="statinfo"
+                                   string="IPC"/>
+                        </button>
+                    </div>
+                    <group string="Điều khoản thanh toán (dùng để tính giảm trừ mỗi BBNT)">
+                        <group>
+                            <field name="retention_percent"/>
+                            <field name="retention_cap_percent"/>
+                            <field name="retention_held" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="advance_amount"/>
+                            <field name="advance_recovery_percent"/>
+                            <field name="advance_balance" readonly="1"/>
+                        </group>
+                    </group>
                     <group string="Sản lượng &amp; doanh thu">
                         <group>
-                            <field name="accepted_to_date"/>
+                            <field name="accepted_gross_to_date"/>
+                            <field name="accepted_to_date"
+                                   decoration-bf="1"/>
                             <field name="revenue_invoiced"/>
                             <field name="received_to_date"/>
                         </group>
@@ -100,8 +120,7 @@
                                    decoration-bf="receivable_invoiced &gt; 0"/>
                             <field name="receivable"
                                    decoration-info="receivable &lt; 0"/>
-                            <field name="progress_percent"
-                                   widget="percentage"/>
+                            <field name="progress_percent"/>
                         </group>
                     </group>
                     <notebook>
@@ -147,6 +166,10 @@
                                     <field name="date_approved"/>
                                     <field name="amount_this_period" width="185px"
                                            sum="Σ"/>
+                                    <field name="retention_amount" width="185px"
+                                           sum="Σ" optional="show"/>
+                                    <field name="amount_certified" width="200px"
+                                           sum="Σ" decoration-bf="1"/>
                                     <field name="state" widget="badge"
                                            decoration-info="state == 'draft'"
                                            decoration-warning="state == 'proposed'"
@@ -217,11 +240,25 @@
                         <group>
                             <field name="date_submitted"/>
                             <field name="date_approved"/>
-                            <field name="amount_this_period"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
-                    <field name="note" placeholder="Ghi chú..."/>
+                    <group string="Sản lượng kỳ này: Gross → Ròng">
+                        <group>
+                            <field name="amount_this_period"/>
+                            <field name="advance_recovery"/>
+                            <field name="retention_amount"/>
+                        </group>
+                        <group>
+                            <field name="backcharge"/>
+                            <field name="adjustment"/>
+                            <field name="amount_certified"
+                                   decoration-bf="1"/>
+                            <field name="amount_net"/>
+                        </group>
+                    </group>
+                    <field name="note"
+                           placeholder="Ghi chú... (ghi rõ lý do khi có Điều chỉnh khác)"/>
                 </sheet>
                 <chatter/>
             </form>
@@ -239,6 +276,14 @@
                 <field name="owner_id"/>
                 <field name="date_submitted"/>
                 <field name="amount_this_period" width="185px" sum="Σ"/>
+                <field name="retention_amount" width="185px" sum="Σ"
+                       optional="show"/>
+                <field name="advance_recovery" width="185px" sum="Σ"
+                       optional="hide"/>
+                <field name="amount_certified" width="200px" sum="Σ"
+                       decoration-bf="1"/>
+                <field name="amount_net" width="185px" sum="Σ"
+                       optional="hide"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-warning="state == 'proposed'"

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_owner_ipc_list" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.list</field>
+        <field name="model">rp.owner.ipc</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'signed'">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="owner_id" optional="show"/>
+                <field name="period_from" optional="hide"/>
+                <field name="period_to" optional="hide"/>
+                <field name="date_submitted"/>
+                <field name="date_signed" optional="show"/>
+                <field name="acceptance_count" string="Số BBNT"/>
+                <field name="amount_gross" width="185px" sum="Σ"
+                       optional="hide"/>
+                <field name="amount_retention" width="185px" sum="Σ"
+                       optional="hide"/>
+                <field name="amount_certified" width="200px" sum="Σ"
+                       decoration-bf="1"/>
+                <field name="amount_net" width="185px" sum="Σ"/>
+                <field name="is_pledged" widget="boolean_toggle"
+                       string="Đã TSBĐ" readonly="1"/>
+                <field name="amount_pledged" width="185px" sum="Σ"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'submitted'"
+                       decoration-success="state == 'signed'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_ipc_form" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.form</field>
+        <field name="model">rp.owner.ipc</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Trình CĐT" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_sign" type="object"
+                            string="CĐT ký nhận" class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_apply_to_credit" type="object"
+                            string="Đưa vào HĐ tín dụng"
+                            class="btn-primary"
+                            invisible="state != 'signed' or is_pledged"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Về nháp"
+                            invisible="state in ('draft', 'cancelled')"/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ"
+                            invisible="state in ('signed', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,signed"/>
+                </header>
+                <sheet>
+                    <!-- nút TSBĐ do re_loan_borrowing_base bơm vào -->
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="CĐT đã ký"
+                            bg_color="text-bg-success"
+                            invisible="state != 'signed'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="IPC/2026/0001"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"
+                                   readonly="state == 'signed'"/>
+                            <field name="project_id"/>
+                            <field name="owner_id"/>
+                            <field name="is_pledged" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="period_from"/>
+                            <field name="period_to"/>
+                            <field name="date_submitted"/>
+                        </group>
+                    </group>
+                    <group string="CĐT ký nhận"
+                           invisible="state == 'draft'">
+                        <group>
+                            <field name="signed_by_id"
+                                   options="{'no_quick_create': True}"
+                                   context="{'default_parent_id': owner_id,
+                                             'default_company_type': 'person'}"
+                                   readonly="state == 'signed'"/>
+                            <field name="sign_ref"
+                                   placeholder="Số công văn CĐT xác nhận"
+                                   readonly="state == 'signed'"/>
+                        </group>
+                        <group>
+                            <field name="date_signed"/>
+                            <field name="amount_pledged" readonly="1"
+                                   invisible="not is_pledged"/>
+                        </group>
+                    </group>
+                    <group string="Giá trị (cộng từ các BBNT thành viên)">
+                        <group>
+                            <field name="amount_gross"/>
+                            <field name="amount_advance_recovery"/>
+                            <field name="amount_retention"/>
+                            <field name="amount_backcharge"/>
+                        </group>
+                        <group>
+                            <field name="amount_certified"
+                                   decoration-bf="1"/>
+                            <field name="amount_net"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="BBNT trong kỳ" name="acceptances">
+                            <field name="acceptance_ids"
+                                   readonly="state == 'signed'"
+                                   context="{'default_contract_id': contract_id}">
+                                <list editable="bottom">
+                                    <field name="name" readonly="1"/>
+                                    <field name="date_approved" readonly="1"/>
+                                    <field name="amount_this_period"
+                                           width="185px" sum="Σ" readonly="1"/>
+                                    <field name="retention_amount"
+                                           width="185px" sum="Σ" readonly="1"/>
+                                    <field name="amount_certified"
+                                           width="200px" sum="Σ" readonly="1"/>
+                                    <field name="amount_net" width="185px"
+                                           sum="Σ" readonly="1"/>
+                                    <field name="state" widget="badge"
+                                           readonly="1"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="text-muted mt-2">
+                                Chỉ gom được BBNT <b>đã được CĐT duyệt</b> và
+                                <b>chưa thuộc IPC khác</b> — một khối lượng
+                                không vào hai hồ sơ thanh toán.
+                            </div>
+                        </page>
+                    </notebook>
+                    <field name="note" placeholder="Ghi chú..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_ipc_search" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.search</field>
+        <field name="model">rp.owner.ipc</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="owner_id"/>
+                <field name="sign_ref"/>
+                <filter name="f_signed" string="CĐT đã ký"
+                        domain="[('state', '=', 'signed')]"/>
+                <filter name="f_pledgeable" string="Ký rồi, chưa làm TSBĐ"
+                        domain="[('state', '=', 'signed'),
+                                 ('is_pledged', '=', False)]"/>
+                <filter name="f_pledged" string="Đã làm TSBĐ"
+                        domain="[('is_pledged', '=', True)]"/>
+                <separator/>
+                <filter name="f_submitted" string="Chờ CĐT ký"
+                        domain="[('state', '=', 'submitted')]"/>
+                <group>
+                    <filter name="g_contract" string="HĐ với CĐT"
+                            context="{'group_by': 'contract_id'}"/>
+                    <filter name="g_owner" string="Chủ đầu tư"
+                            context="{'group_by': 'owner_id'}"/>
+                    <filter name="g_state" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_owner_ipc" model="ir.actions.act_window">
+        <field name="name">IPC — Chứng nhận thanh toán</field>
+        <field name="res_model">rp.owner.ipc</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Lập IPC đầu tiên</p>
+            <p>
+                IPC gom các BBNT đã được CĐT duyệt trong một kỳ thành
+                <b>một hồ sơ thanh toán</b> để trình CĐT ký nhận.
+                IPC đã ký = quyền đòi nợ chắc chắn, đưa vào hợp đồng
+                tín dụng làm TSBĐ để tăng hạn mức khả dụng.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_owner_ipc"
+              name="IPC (hồ sơ thanh toán)"
+              parent="menu_owner_revenue"
+              action="action_rp_owner_ipc"
+              sequence="25"/>
+
+</odoo>

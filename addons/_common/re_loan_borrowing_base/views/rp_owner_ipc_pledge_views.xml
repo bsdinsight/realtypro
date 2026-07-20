@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_owner_ipc_pledge_wizard_form" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.pledge.wizard.form</field>
+        <field name="model">rp.owner.ipc.pledge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Đưa IPC vào Hợp đồng tín dụng">
+                <group>
+                    <group string="Quyền đòi nợ đem bảo đảm">
+                        <field name="ipc_id"/>
+                        <field name="owner_id"/>
+                        <field name="amount_certified"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Bảo đảm cho">
+                        <field name="pledge_target" widget="radio"/>
+                        <field name="credit_contract_id"
+                               invisible="pledge_target != 'contract'"
+                               required="pledge_target == 'contract'"
+                               options="{'no_create': True}"/>
+                        <field name="facility_id"
+                               invisible="pledge_target != 'facility'"
+                               required="pledge_target == 'facility'"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Ngân hàng nhận bao nhiêu?">
+                        <field name="apply_mode" widget="radio"/>
+                        <field name="apply_percent"
+                               invisible="apply_mode != 'percent'"
+                               required="apply_mode == 'percent'"/>
+                        <field name="secured_amount"
+                               readonly="apply_mode == 'percent'"
+                               decoration-bf="1"/>
+                        <field name="remaining_amount"/>
+                        <field name="type_id" options="{'no_create': True}"/>
+                        <field name="advance_rate"/>
+                    </group>
+                    <group string="Chứng từ">
+                        <field name="date_pledge"/>
+                        <field name="pledge_ref"
+                               placeholder="Số HĐ thế chấp quyền đòi nợ"/>
+                    </group>
+                </group>
+                <group string="Tác động lên hạn mức">
+                    <group>
+                        <field name="preview_base_before"/>
+                        <field name="preview_base_add"
+                               decoration-bf="1"/>
+                    </group>
+                    <group>
+                        <field name="preview_available_before"/>
+                    </group>
+                </group>
+                <div class="alert alert-info" role="status">
+                    <field name="preview_note" nolabel="1" readonly="1"/>
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận thế chấp"
+                            class="btn-primary"/>
+                    <button string="Huỷ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tab "Quyền đòi nợ (IPC)" trên form Hợp đồng tín dụng -->
+    <record id="view_re_loan_credit_contract_form_ipc" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.ipc</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Quyền đòi nợ (IPC)" name="ipc">
+                    <div class="text-muted mb-2">
+                        Các <b>IPC đã được CĐT ký nhận</b> đang thế chấp cho
+                        hợp đồng tín dụng này. Mỗi IPC góp vào
+                        <b>Cơ sở bảo đảm</b> phần
+                        <i>giá trị bảo đảm × tỷ lệ cho vay</i> — ngân hàng
+                        thường chỉ nhận một phần giá trị IPC.
+                        <br/>
+                        Bảng này <b>chỉ để xem</b>. Muốn thêm IPC: vào
+                        <b>Realty Project → Doanh thu → IPC</b>, mở IPC đã
+                        được CĐT ký rồi bấm <b>“Đưa vào HĐ tín dụng”</b> —
+                        đi từ phía IPC để không bỏ qua bước kiểm tra chứng
+                        từ ký nhận.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="ipc_count" string="Số IPC"/>
+                        </group>
+                        <group>
+                            <field name="ipc_base_contribution"
+                                   decoration-bf="1"/>
+                        </group>
+                    </group>
+                    <field name="ipc_ids" nolabel="1" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="project_id"/>
+                            <field name="owner_id"/>
+                            <field name="date_signed"/>
+                            <field name="signed_by_id"
+                                   string="Người ký bên CĐT"/>
+                            <field name="sign_ref"/>
+                            <field name="amount_certified" width="200px"
+                                   sum="Σ"/>
+                            <field name="amount_pledged" width="200px"
+                                   sum="Σ" decoration-bf="1"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'signed'"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Nút TSBĐ trên IPC — chỉ có khi cài phân hệ vay -->
+    <record id="view_rp_owner_ipc_form_bb" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.form.bb</field>
+        <field name="model">rp.owner.ipc</field>
+        <field name="inherit_id"
+               ref="rp_owner_contract.view_rp_owner_ipc_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_collaterals" type="object"
+                        class="oe_stat_button" icon="fa-bank"
+                        invisible="not is_pledged">
+                    <field name="collateral_count" widget="statinfo"
+                           string="TSBĐ"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

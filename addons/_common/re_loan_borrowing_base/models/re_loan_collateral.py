@@ -4,6 +4,7 @@
 Advance rate mặc định khai trên loại TSBĐ (re.loan.collateral.type).
 """
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ReLoanCollateralType(models.Model):
@@ -28,22 +29,48 @@ class ReLoanCollateral(models.Model):
              'duyệt − CĐT đã trả, floor 0). Mỗi biến động tự sinh bản '
              'ghi định giá (audit).')
 
+    owner_ipc_id = fields.Many2one(
+        'rp.owner.ipc', string='IPC (CĐT đã ký)',
+        ondelete='restrict', index=True,
+        help='Gắn MỘT IPC đã được CĐT ký nhận → tài sản này là quyền đòi '
+             'nợ của riêng IPC đó, giá trị = quyền đòi nợ trên IPC. '
+             'Chi tiết hơn cấp HĐ và là chứng từ NH muốn thấy.')
+
     def write(self, vals):
         res = super().write(vals)
-        if 'owner_contract_id' in vals:
-            self.filtered('owner_contract_id')._sync_receivable_valuation(
-                reason=_('Gắn HĐ với CĐT'))
+        if 'owner_contract_id' in vals or 'owner_ipc_id' in vals:
+            self.filtered(
+                lambda c: c.owner_contract_id or c.owner_ipc_id
+            )._sync_receivable_valuation(reason=_('Gắn nguồn quyền đòi nợ'))
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         recs = super().create(vals_list)
-        recs.filtered('owner_contract_id')._sync_receivable_valuation(
-            reason=_('Gắn HĐ với CĐT'))
+        recs.filtered(
+            lambda c: c.owner_contract_id or c.owner_ipc_id
+        )._sync_receivable_valuation(reason=_('Gắn nguồn quyền đòi nợ'))
         return recs
+
+    @api.constrains('owner_contract_id', 'owner_ipc_id')
+    def _check_receivable_source(self):
+        for rec in self:
+            if rec.owner_contract_id and rec.owner_ipc_id:
+                raise ValidationError(_(
+                    'TSBĐ "%s" gắn CẢ hợp đồng CĐT lẫn IPC — chọn MỘT '
+                    'cấp thôi, gắn cả hai là thế chấp trùng.', rec.name))
+            if rec.owner_ipc_id and rec.owner_ipc_id.state != 'signed':
+                raise ValidationError(_(
+                    'IPC %s chưa được CĐT ký nhận — chưa đủ điều kiện '
+                    'làm TSBĐ.', rec.owner_ipc_id.name))
 
     def _sync_receivable_valuation(self, reason=''):
         """Tạo bản ghi định giá = khoản phải thu hiện hành (floor 0).
+
+        HAI CẤP, loại trừ nhau:
+        - cấp IPC  → giá trị = quyền đòi nợ của IPC đó;
+        - cấp HĐ   → giá trị = phải thu CHƯA cầm cố theo IPC
+                     (`receivable_unpledged`), để không thế chấp trùng.
 
         Bỏ qua nếu giá trị không đổi so với định giá mới nhất (tránh
         spam record khi không có biến động thực).
@@ -51,9 +78,29 @@ class ReLoanCollateral(models.Model):
         Valuation = self.env['re.loan.collateral.valuation']
         today = fields.Date.context_today(self)
         for col in self:
-            if not col.owner_contract_id:
+            if col.owner_ipc_id:
+                ipc = col.owner_ipc_id
+                value = max(0.0, ipc.amount_certified)
+                detail = _(
+                    'IPC %(i)s (CĐT ký %(d)s, VB %(r)s): quyền đòi nợ '
+                    '%(q)s.',
+                    i=ipc.name, d=ipc.date_signed or '—',
+                    r=ipc.sign_ref or '—',
+                    q='{:,.0f}'.format(ipc.amount_certified))
+            elif col.owner_contract_id:
+                value = max(0.0, col.owner_contract_id.receivable_unpledged)
+                detail = _(
+                    'phải thu HĐ %(c)s = nghiệm thu %(a)s − đã trả %(p)s '
+                    '− đã cầm cố theo IPC %(x)s.',
+                    c=col.owner_contract_id.name,
+                    a='{:,.0f}'.format(
+                        col.owner_contract_id.accepted_to_date),
+                    p='{:,.0f}'.format(
+                        col.owner_contract_id.paid_to_date),
+                    x='{:,.0f}'.format(
+                        col.owner_contract_id.receivable_pledged_ipc))
+            else:
                 continue
-            value = max(0.0, col.owner_contract_id.receivable)
             # Key an toàn với record chưa lưu (NewId) + date trống —
             # cùng convention với _compute_value_current (re_loan).
             date_min = fields.Date.to_date('1900-01-01')
@@ -70,13 +117,6 @@ class ReLoanCollateral(models.Model):
                 'amount': value,
                 'method': 'cost',
                 'appraiser': _('Tự động theo sản lượng/thanh toán'),
-                'note': _(
-                    'Auto (%(r)s): phải thu HĐ %(c)s = nghiệm thu '
-                    '%(a)s − đã trả %(p)s.',
-                    r=reason or _('biến động'),
-                    c=col.owner_contract_id.name,
-                    a='{:,.0f}'.format(
-                        col.owner_contract_id.accepted_to_date),
-                    p='{:,.0f}'.format(
-                        col.owner_contract_id.paid_to_date)),
+                'note': _('Auto (%(r)s): %(d)s',
+                          r=reason or _('biến động'), d=detail),
             })

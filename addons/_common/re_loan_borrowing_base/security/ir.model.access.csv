@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_owner_ipc_pledge_wizard,rp.owner.ipc.pledge.wizard,model_rp_owner_ipc_pledge_wizard,re_base.group_re_user,1,1,1,1

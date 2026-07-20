@@ -22,7 +22,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type_id']" position="after">
                 <field name="owner_contract_id"
-                       options="{'no_create': True}"/>
+                       options="{'no_create': True}"
+                       readonly="owner_ipc_id != False"/>
+                <field name="owner_ipc_id" readonly="1"
+                       invisible="not owner_ipc_id"/>
             </xpath>
         </field>
     </record>

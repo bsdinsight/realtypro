@@ -1,6 +1,6 @@
 ---
 title: "Borrowing base — hạn mức khả dụng"
-description: "Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định giá theo sản lượng, tỷ lệ cho vay, khả dụng thực tế, cảnh báo margin call."
+description: "Cơ sở bảo đảm 2 tầng cho tổng thầu — quyền đòi nợ tự định giá theo sản lượng, đưa IPC CĐT đã ký vào bảo đảm, tỷ lệ cho vay, khả dụng thực tế, cảnh báo margin call."
 order: 19
 ---
 
@@ -52,16 +52,122 @@ vượt qua thiếu bảo đảm (② ③ vẫn siết).
    "Tỷ lệ cho vay (%)" từng loại (BĐS ~70, quyền đòi nợ ~50–70, tiền
    gửi ~95). Sửa được từng lần thế chấp (CĐT uy tín → tỷ lệ cao hơn).
 2. **HĐ với CĐT** (§18): tạo HĐ + nhập BBNT + thanh toán của CĐT.
-3. **TSBĐ quyền đòi nợ**: tạo Tài sản thế chấp, chọn trường **"HĐ với
-   CĐT (quyền đòi nợ)"** → giá trị hiện hành TỰ ĐỘNG = khoản phải thu
-   (không âm). Mỗi lần BBNT được duyệt / CĐT trả tiền → tự sinh bản
-   ghi định giá (audit trail như NH đánh giá lại theo kỳ).
+3. **TSBĐ quyền đòi nợ** — chọn 1 trong 2 cấp (xem §19.4):
+   - *Cấp hợp đồng*: tạo Tài sản thế chấp, chọn **"HĐ với CĐT (quyền
+     đòi nợ)"** → giá trị hiện hành TỰ ĐỘNG = khoản phải thu (không
+     âm). Mỗi lần BBNT được duyệt / CĐT trả tiền → tự sinh bản ghi
+     định giá (audit trail như NH đánh giá lại theo kỳ).
+   - *Cấp IPC*: đưa từng **chứng nhận thanh toán CĐT đã ký** vào bảo
+     đảm — chi tiết hơn, đúng chứng từ NH yêu cầu.
 4. **Thế chấp đúng cấp**: quyền đòi nợ dự án X → cấp **Facility** của
    dự án X (ring-fence); tài sản chung → cấp **HĐTD**.
 5. Xong — mở Facility / HĐTD xem nhóm **"Borrowing base — khả dụng
    thực tế"**.
 
-## 19.4. Cảnh báo (không chặn)
+## 19.4. Quyền đòi nợ 2 cấp — hợp đồng hay IPC
+
+### Khác nhau chỗ nào
+
+| | Cấp **hợp đồng** | Cấp **IPC** |
+|---|---|---|
+| Gắn với | Cả HĐ với CĐT | Từng chứng nhận thanh toán |
+| Giá trị | Toàn bộ khoản phải thu | Quyền đòi nợ của riêng IPC đó |
+| Cập nhật | Tự động theo BBNT / thanh toán | Theo giá trị IPC đã ký |
+| Chứng từ NH | Hợp đồng + bảng kê | **Văn bản CĐT ký nhận** từng đợt |
+| Dùng khi | NH nhận bảo đảm theo hợp đồng | NH đòi từng chứng từ xác nhận nợ |
+
+Ngân hàng thường thích **cấp IPC** hơn: mỗi IPC là một văn bản CĐT đã
+ký xác nhận nợ, có người ký và số công văn — bằng chứng chắc hơn nhiều
+so với số dư phải thu trên sổ nội bộ.
+
+### IPC khác BBNT thế nào
+
+**BBNT** xác nhận *khối lượng* đã làm. **IPC** gom nhiều BBNT trong
+một kỳ thành *một hồ sơ thanh toán* trình CĐT ký nhận. Ngân hàng nhận
+thế chấp theo IPC, không theo BBNT — vì BBNT là biên bản nội bộ giữa
+hai bên kỹ thuật, còn IPC mới là cam kết trả tiền.
+
+Một BBNT chỉ thuộc **tối đa một IPC** — hệ thống chặn cứng, để cùng
+một khối lượng không lọt vào hai hồ sơ thanh toán.
+
+import IpcDaKy from './images/19-ipc-cdt-da-ky.png'
+
+<img src={IpcDaKy} alt="IPC đã được CĐT ký nhận — người ký, số văn bản, bảng gross sang quyền đòi nợ" />
+
+*IPC đã ký: có người ký bên CĐT, số văn bản, và bảng giá trị tách rõ
+sản lượng gross → giữ lại → quyền đòi nợ.*
+
+### Quyền đòi nợ tính thế nào
+
+```
+Sản lượng gross
+  − Giữ lại (retention)        CĐT giữ hợp pháp, CHƯA đòi được
+  − Back-charge                CĐT khấu trừ
+  ± Điều chỉnh                 chênh khi CĐT duyệt khác đề nghị
+  = QUYỀN ĐÒI NỢ               ← số vào borrowing base
+  − Thu hồi tạm ứng
+  = Tiền CĐT chuyển kỳ này     ← số lập đề nghị thanh toán
+```
+
+Hai con số cuối **khác nhau và đừng lẫn**:
+
+- **Quyền đòi nợ** không trừ thu hồi tạm ứng, vì tiền tạm ứng đã nằm
+  trong "CĐT đã thanh toán" — trừ nữa là **trừ hai lần**, làm hụt
+  borrowing base.
+- **Giữ lại** thì phải trừ: đó là tiền CĐT đang cầm hợp pháp, chưa
+  đòi được, không được đem thế chấp.
+
+Khai điều khoản (% giữ lại, trần giữ lại, tạm ứng, % thu hồi) một lần
+trên HĐ với CĐT — mỗi BBNT tự tính giảm trừ theo đó, sửa tay được khi
+biên bản thực tế khác công thức.
+
+### Đưa IPC vào hạn mức — 3 bước
+
+1. **Doanh thu → IPC**: tạo IPC, chọn các BBNT đã được CĐT duyệt trong
+   kỳ → bấm **Trình CĐT**.
+2. **CĐT ký nhận**: chọn **người ký bên CĐT** (lấy từ danh bạ liên hệ
+   của CĐT, không gõ tay) + nhập **số văn bản CĐT ký** → bấm **CĐT ký
+   nhận**. Thiếu một trong hai thì hệ thống không cho ký — đây đúng là
+   hai thứ NH đòi xuất trình.
+3. **Đưa vào HĐ tín dụng**: bấm nút cùng tên → chọn HĐTD hoặc facility,
+   **tỷ lệ cho vay**, và **ngân hàng nhận bao nhiêu**:
+   - *Theo %* — ví dụ NH chỉ nhận 60% giá trị IPC;
+   - *Nhập số tiền trực tiếp* — gõ thẳng con số đã thỏa thuận.
+
+   Wizard hiện sẵn **phần IPC không đưa vào** và **xem trước base tăng
+   bao nhiêu** trước khi xác nhận.
+
+import IpcWizard from './images/19-wizard-dua-ipc-vao-hdtd.png'
+
+<img src={IpcWizard} alt="Wizard đưa IPC vào hợp đồng tín dụng — chọn phần trăm hoặc số tiền, xem trước tác động lên hạn mức" />
+
+*NH nhận 60% trên quyền đòi nợ 522,5 tỷ → giá trị bảo đảm 313,5 tỷ,
+phần 209 tỷ không đưa vào. Tỷ lệ cho vay 60% → base tăng 188,1 tỷ.*
+
+Sau đó mở HĐTD → tab **"Quyền đòi nợ (IPC)"**: danh sách từng IPC đang
+bảo đảm, kèm người ký, số văn bản, quyền đòi nợ và **giá trị đã đem
+bảo đảm**. Tab này chỉ để xem — thêm IPC luôn đi từ phía IPC, để không
+bỏ qua bước kiểm tra chứng từ ký nhận.
+
+import HdtdSau from './images/19-hdtd-sau-khi-ap-ipc.png'
+
+<img src={HdtdSau} alt="Hợp đồng tín dụng sau khi áp IPC — tab Quyền đòi nợ (IPC) và cơ sở bảo đảm tăng" />
+
+*Tab "Quyền đòi nợ (IPC)" trên HĐTD, và cơ sở bảo đảm đã cộng thêm
+188,1 tỷ từ IPC.*
+
+### Chống thế chấp trùng
+
+Hai cơ chế chặn, hoạt động độc lập:
+
+- **Giữa 2 cấp**: phần đã cầm cố theo IPC bị **trừ ra** khỏi giá trị
+  TSBĐ cấp hợp đồng (trường *"Phải thu chưa cầm cố"*). Trừ đúng phần
+  NH thực nhận — nhận 60% thì chỉ trừ 60%, phần còn lại vẫn thế chấp
+  được ở cấp hợp đồng.
+- **Cùng một IPC**: không đem cầm cố lần hai; một tài sản cũng không
+  được thế chấp vượt giá trị của chính nó qua nhiều lần.
+
+## 19.5. Cảnh báo (không chặn)
 
 | Cảnh báo | Khi nào | Ở đâu |
 |---|---|---|
@@ -77,7 +183,9 @@ Dashboard Quản lý Vay có nhóm **"Borrowing base"**: tổng cơ sở bảo
 đảm, khả dụng thực tế, số facility đang margin call (click xem danh
 sách).
 
-## 19.5. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+## 19.6. Ví dụ — KĐT nghỉ dưỡng Dalat
+
+### Ví dụ 1 — ring-fence siết khả dụng
 
 Facility DA X: HM 150 tỷ, dư nợ 40 tỷ. Quyền đòi nợ DA X = 70 tỷ ×
 60% = **42 tỷ base riêng**. TSBĐ chung base 80 tỷ; tổng dư nợ HĐTD
@@ -90,7 +198,37 @@ Muốn rút thêm → nghiệm thu thêm sản lượng. Ngược lại, CĐT tr
 phải thu còn 30 × 60% = 18 tỷ base, thấp hơn dư nợ 40 tỷ → **margin
 call** bật trên facility.
 
-## 19.6. Lưu ý
+### Ví dụ 2 — IPC mở khoá hạn mức đang bị TSBĐ chặn
+
+HĐTD khung **800 tỷ**, nhưng TSBĐ mới chỉ có bất động sản 400 tỷ:
+
+import HdtdTruoc from './images/19-hdtd-truoc-khi-ap-ipc.png'
+
+<img src={HdtdTruoc} alt="Hợp đồng tín dụng trước khi áp IPC — cơ sở bảo đảm 400 tỷ đang chặn khả dụng" />
+
+| | |
+|---|---:|
+| Tổng hạn mức NH cấp | 800 tỷ |
+| Cơ sở bảo đảm | **400 tỷ** ← đang chặn |
+| Khả dụng thực tế | **400 tỷ** |
+
+Vay khung 800 tỷ nhưng chỉ rút được 400 tỷ — trong khi CĐT đã ký nhận
+một IPC trị giá **522,5 tỷ quyền đòi nợ**. Đưa IPC đó vào bảo đảm, NH
+nhận **60%** với tỷ lệ cho vay **60%**:
+
+- Giá trị bảo đảm = 522,5 × 60% = **313,5 tỷ**
+  *(phần 209 tỷ còn lại vẫn là công nợ phải thu bình thường, chỉ không
+  đem thế chấp)*
+- Base tăng thêm = 313,5 × 60% = **188,1 tỷ**
+- Base: 400 → **588,1 tỷ**
+- **Khả dụng thực tế: 400 → 588,1 tỷ**
+
+Lưu ý trần: base có vượt hạn mức khung cũng không rút thêm được, vì
+khả dụng luôn là `min(hạn mức, base) − dư nợ`. Khi đó IPC đóng vai
+**đệm dự phòng** — BĐS bị định giá lại giảm thì đã có sẵn cơ sở bảo
+đảm bù vào, và là bằng chứng để đàm phán nâng hạn mức khung.
+
+## 19.7. Lưu ý
 
 - Tỷ lệ cho vay = 0 (chưa khai) → tài sản **không được tính** vào
   borrowing base và không kích hoạt cảnh báo — dữ liệu thế chấp cũ
@@ -101,3 +239,15 @@ call** bật trên facility.
   theo số đó; bỏ trống → theo giá trị hiện hành của tài sản.
 - Số liệu khả dụng là **ước tính quản trị** — tỷ lệ và cách tính thực
   tế theo thỏa thuận từng NH.
+- Chỉ IPC ở trạng thái **"CĐT đã ký nhận"** mới đem thế chấp được.
+  IPC còn nháp / đã trình mà chưa ký, hoặc phần giá trị đang tranh
+  chấp — **không** được tính vào cơ sở bảo đảm.
+- **Giữ lại (retention)** không nằm trong quyền đòi nợ. Tới mốc hoàn
+  (nghiệm thu bàn giao / hết bảo hành), lập BBNT mới cho phần retention
+  để đưa vào đòi — theo dõi ở trường *"Giữ lại đang nắm"* trên HĐ với
+  CĐT.
+- Điều khoản thanh toán mặc định **bằng 0** (không giữ lại, không thu
+  hồi tạm ứng) — HĐ đang chạy không bị đổi số khi nâng cấp. Giảm trừ
+  chỉ phát sinh sau khi khai điều khoản thật.
+- Muốn giải chấp IPC (tất toán / đổi TSBĐ): giải chấp bên Tài sản thế
+  chấp — hạn mức khả dụng và *"Phải thu chưa cầm cố"* tự tính lại.

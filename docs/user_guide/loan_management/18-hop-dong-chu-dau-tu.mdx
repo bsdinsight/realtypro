@@ -1,6 +1,6 @@
 ---
 title: "HĐ với Chủ đầu tư & sản lượng"
-description: "Hướng dẫn quản lý hợp đồng thi công đầu ra với Chủ đầu tư — BBNT sản lượng, thanh toán của CĐT, khoản phải thu (quyền đòi nợ)."
+description: "Hướng dẫn quản lý hợp đồng thi công đầu ra với Chủ đầu tư — BBNT sản lượng gross sang ròng, IPC hồ sơ thanh toán CĐT ký nhận, thanh toán của CĐT, khoản phải thu (quyền đòi nợ)."
 order: 18
 ---
 
@@ -41,11 +41,35 @@ sản lượng, số tự sinh `OBBNT/YYYY/NNNN` (sửa được theo số văn 
 | Trường | Mô tả |
 |---|---|
 | Ngày đề xuất | Ngày tổng thầu trình CĐT |
-| Giá trị sản lượng kỳ này | Trước thuế, theo biên bản. Cho phép ÂM khi CĐT điều chỉnh giảm (cắt khối lượng sau kiểm toán) |
+| Sản lượng kỳ này (Gross) | Trước thuế, theo biên bản — số **gộp**, chưa giảm trừ. Cho phép ÂM khi CĐT điều chỉnh giảm (cắt khối lượng sau kiểm toán) |
+| Thu hồi tạm ứng | Gợi ý theo % trên HĐ, không vượt số dư tạm ứng |
+| Giữ lại (retention) | Gợi ý theo % trên HĐ, chặn theo trần luỹ kế |
+| Back-charge | CĐT khấu trừ trong kỳ (nếu có) |
+| Điều chỉnh khác (±) | Chênh khi CĐT duyệt khác đề nghị — ghi ÂM kèm lý do |
+| **Quyền đòi nợ phát sinh** | = Gross − Giữ lại − Back-charge ± Điều chỉnh |
+| **Tiền CĐT chuyển kỳ này** | = Quyền đòi nợ − Thu hồi tạm ứng |
 | Ngày CĐT duyệt | Tự ghi khi bấm "CĐT duyệt" |
 
 Workflow 2 bên: **Nháp → Đã đề xuất → CĐT duyệt** (hoặc Huỷ). Chỉ BBNT
 **CĐT duyệt** mới được cộng vào sản lượng lũy kế / khoản phải thu.
+
+### Gross → Ròng: hai con số đừng lẫn
+
+- **Quyền đòi nợ phát sinh** — phần CĐT thừa nhận NỢ. Đây là số vào
+  khoản phải thu và borrowing base. Cố ý **không** trừ thu hồi tạm
+  ứng: tiền tạm ứng đã nằm trong "CĐT đã thanh toán", trừ nữa là trừ
+  hai lần.
+- **Tiền CĐT chuyển kỳ này** — số tiền thực chuyển đợt này, dùng lập
+  đề nghị thanh toán / hoá đơn.
+
+**Giữ lại** thì phải trừ khỏi quyền đòi nợ: đó là tiền CĐT đang cầm
+hợp pháp, chưa đòi được, không đem thế chấp được.
+
+Khai điều khoản một lần trên HĐ (nhóm *"Điều khoản thanh toán"*):
+% giữ lại, trần giữ lại, tạm ứng đã nhận, % thu hồi mỗi kỳ. Mặc định
+**bằng 0** — HĐ đang chạy không bị đổi số cho tới khi khai điều khoản
+thật. Giá trị gợi ý **sửa tay được** khi biên bản thực tế khác công
+thức (có ghi vết thay đổi).
 
 > 🔒 Hai ràng buộc:
 > - Sản lượng lũy kế **không vượt giá trị HĐ** — vượt thì điều chỉnh
@@ -53,7 +77,26 @@ Workflow 2 bên: **Nháp → Đã đề xuất → CĐT duyệt** (hoặc Huỷ)
 > - BBNT **đã duyệt không huỷ được** (ảnh hưởng phải thu/TSBĐ) — cần
 >   điều chỉnh thì lập BBNT âm kỳ sau theo biên bản với CĐT.
 
-## 18.4. Thanh toán của CĐT
+## 18.4. IPC — hồ sơ thanh toán CĐT ký nhận
+
+BBNT xác nhận *khối lượng*. **IPC** gom nhiều BBNT đã duyệt trong một
+kỳ thành *một hồ sơ thanh toán* trình CĐT ký — đây mới là chứng từ
+ngân hàng nhận thế chấp (xem §19.4).
+
+Menu **Doanh thu → IPC (hồ sơ thanh toán)**, số tự sinh `IPC/YYYY/NNNN`:
+
+1. Chọn HĐ + kỳ, thêm các **BBNT đã được CĐT duyệt** → **Trình CĐT**.
+2. Chọn **người ký bên CĐT** (từ danh bạ liên hệ của CĐT, không gõ
+   tay) + **số văn bản CĐT ký** → **CĐT ký nhận**. Thiếu một trong hai
+   thì không ký được — đây là hai thứ NH đòi xuất trình.
+3. IPC đã ký → nút **"Đưa vào HĐ tín dụng"** để tăng cơ sở bảo đảm
+   (§19.4).
+
+Giá trị IPC cộng thẳng từ các BBNT thành viên. Một BBNT chỉ thuộc
+**tối đa một IPC** — chặn cứng, để cùng khối lượng không vào hai hồ sơ
+thanh toán.
+
+## 18.5. Thanh toán của CĐT
 
 Tab **Thanh toán của CĐT** — KTT ghi nhận từng lần tiền về (thường qua
 TK phong tỏa tại NH cho vay):
@@ -65,10 +108,10 @@ TK phong tỏa tại NH cho vay):
 | Quyết toán | Đợt cuối sau quyết toán |
 | Khác | Các khoản khác (âm = hoàn trả CĐT) |
 
-## 18.5. Khoản phải thu — đọc thế nào
+## 18.6. Khoản phải thu — đọc thế nào
 
 ```
-Khoản phải thu = Sản lượng nghiệm thu lũy kế − CĐT đã thanh toán
+Khoản phải thu = Σ Quyền đòi nợ (BBNT đã duyệt) − CĐT đã thanh toán
 ```
 
 - **Dương** — CĐT đang nợ tổng thầu → đây là giá trị quyền đòi nợ
@@ -76,18 +119,36 @@ Khoản phải thu = Sản lượng nghiệm thu lũy kế − CĐT đã thanh t
 - **Âm** — CĐT đang tạm ứng TRƯỚC sản lượng (bình thường đầu dự án);
   giá trị TSBĐ quyền đòi nợ khi đó = 0
 
-## 18.6. Ví dụ — KĐT nghỉ dưỡng Đà Lạt
+## 18.7. Ví dụ — KĐT nghỉ dưỡng Dalat
 
-Tổng thầu ký HĐ thi công 500 tỷ với CĐT:
+Tổng thầu ký HĐ thi công 500 tỷ với CĐT. Điều khoản: **giữ lại 5%**
+(trần 5%), **tạm ứng 50 tỷ**, **thu hồi 20%** mỗi kỳ.
 
-1. CĐT tạm ứng 50 tỷ → phải thu = 0 − 50 = **−50 tỷ** (đang ứng trước)
-2. Kỳ 1 nghiệm thu 120 tỷ (OBBNT/2026/0001, CĐT duyệt) → phải thu =
-   120 − 50 = **70 tỷ**
-3. CĐT trả tiếp 40 tỷ theo sản lượng → phải thu = **30 tỷ**
-4. Kỳ 2 nghiệm thu 80 tỷ → phải thu = **110 tỷ** — giá trị quyền đòi
-   nợ tăng theo, hạn mức khả dụng tại NH tăng theo (§19)
+1. CĐT tạm ứng 50 tỷ → phải thu = **−50 tỷ** (đang ứng trước)
+2. Kỳ 1 nghiệm thu gross 120 tỷ (`OBBNT/2026/0001`, CĐT duyệt):
 
-## 18.7. Lưu ý
+   | | |
+   |---|---:|
+   | Sản lượng gross | 120 tỷ |
+   | − Giữ lại 5% | 6 tỷ |
+   | **= Quyền đòi nợ** | **114 tỷ** |
+   | − Thu hồi tạm ứng 20% | 24 tỷ |
+   | = Tiền CĐT chuyển kỳ này | 90 tỷ |
+
+   → phải thu = 114 − 50 = **64 tỷ**. CĐT đang giữ lại 6 tỷ, số dư
+   tạm ứng còn 26 tỷ.
+3. CĐT trả 40 tỷ → phải thu = **24 tỷ**
+4. Kỳ 2 nghiệm thu gross 80 tỷ → giữ lại 4 tỷ → quyền đòi nợ 76 tỷ →
+   phải thu = **100 tỷ**
+5. Lập `IPC/2026/0001` gom 2 BBNT → quyền đòi nợ **190 tỷ**, trình CĐT
+   ký. CĐT ký (kèm người ký + số công văn) → đưa vào HĐ tín dụng, NH
+   nhận 100% với tỷ lệ cho vay 60% → cơ sở bảo đảm **+114 tỷ**, hạn
+   mức khả dụng tăng theo (§19.4).
+
+Nếu để điều khoản mặc định (bằng 0) thì quyền đòi nợ = gross, kết quả
+đúng như cách tính cũ — không có gì thay đổi.
+
+## 18.8. Lưu ý
 
 - Giá trị sản lượng nhập theo **biên bản ký với CĐT** (trước thuế) —
   đây là chứng từ NH căn cứ khi nhận thế chấp quyền đòi nợ.

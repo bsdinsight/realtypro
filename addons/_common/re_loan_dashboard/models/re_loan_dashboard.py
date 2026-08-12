@@ -212,7 +212,7 @@ class ReLoanDashboard(models.TransientModel):
         return res
 
     def _build_charts(self, active_hdtd, active_notes, active_bg, today):
-        """Sinh SVG cho các chart dashboard (CC1 — dashboard hoành tráng)."""
+        """Sinh SVG cho các chart dashboard (yêu cầu khách hàng — dashboard hoành tráng)."""
         from . import svg_charts as C
         out = {}
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Bảng "Phân bổ dự án" trên form Facility: cho chọn HỢP ĐỒNG,
+         dự án tự điền và khoá lại (chỉ khai một lần). -->
+    <record id="view_re_loan_facility_form_alloc_contract" model="ir.ui.view">
+        <field name="name">re.loan.facility.form.alloc.contract</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <!-- 1 hạn mức = 1 hợp đồng (thông lệ ngân hàng): chọn Dự án
+                 rồi chọn HĐ trong danh sách hợp đồng của dự án đó. Hệ
+                 thống tự sinh dòng phân bổ tương ứng ở tab bên dưới. -->
+            <xpath expr="//field[@name='purpose']" position="after">
+                <field name="project_id" options="{'no_create': True}"/>
+                <field name="contract_kind"/>
+                <!-- Vai TỔNG THẦU: nguồn trả nợ là tiền CĐT thanh toán -->
+                <field name="owner_contract_id"
+                       invisible="contract_kind != 'owner'"
+                       options="{'no_create': True}"
+                       domain="[('project_id', '=', project_id)]"
+                       placeholder="— chọn Dự án trước —"/>
+                <field name="owner_id"
+                       invisible="not owner_contract_id"/>
+                <field name="owner_contract_value" width="185px"
+                       invisible="not owner_contract_id"/>
+                <!-- Tiền mình chi ra cho nhà thầu / nhà cung cấp -->
+                <field name="contract_id"
+                       invisible="contract_kind != 'contractor'"
+                       options="{'no_create': True}"
+                       domain="[('project_id', '=', project_id)]"
+                       placeholder="— chọn Dự án trước —"/>
+                <field name="contractor_id"
+                       invisible="not contract_id"/>
+                <field name="contract_value_total" width="185px"
+                       invisible="not contract_id"/>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='project_id']"
+                   position="before">
+                <field name="contract_id"
+                       options="{'no_create': True}"
+                       domain="[('project_id', '=?', project_id)]"
+                       placeholder="— cấp dự án —"/>
+                <field name="contract_partner_id" optional="show"
+                       string="Nhà thầu"/>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='project_id']"
+                   position="attributes">
+                <attribute name="readonly">contract_id != False</attribute>
+                <attribute name="force_save">1</attribute>
+                <attribute name="help">Tự điền theo hợp đồng khi có chọn hợp đồng.</attribute>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='amount']"
+                   position="after">
+                <field name="contract_value_total" width="185px"
+                       optional="hide" string="Giá trị HĐ"/>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='description']"
+                   position="after">
+                <field name="is_auto" optional="show" width="110px"/>
+            </xpath>
+            <!-- 1 hạn mức = 1 hợp đồng: dòng phân bổ do hệ thống tự sinh từ
+                 Dự án + HĐ khai ở phần đầu, người dùng không còn việc gì ở
+                 tab này → ẩn cho gọn. Dữ liệu và mọi tính toán (borrowing
+                 base, nhu cầu vốn, checklist) vẫn chạy trên dòng đó; xem số
+                 liệu ở tab "Hạn mức theo dự án" của HĐTD hoặc phiếu Nhu cầu
+                 vốn dự án. Cần dùng lại (1 hạn mức chia nhiều hợp đồng) thì
+                 bỏ thuộc tính invisible dưới đây. -->
+            <xpath expr="//page[@name='project_allocation']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

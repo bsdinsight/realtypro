@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Giải ngân (disbursement) — một lần ngân hàng chuyển tiền theo một KW.
 
-Workflow (chuẩn NH VN — chuyển trực tiếp về nhà thầu, không qua TK CC1):
+Workflow (chuẩn NH VN — chuyển trực tiếp về nhà thầu, không qua TK tổng thầu):
   draft → submitted → approved → disbursed
                    ↘ cancelled
 
@@ -10,7 +10,7 @@ Workflow (chuẩn NH VN — chuyển trực tiếp về nhà thầu, không qua 
 - approved: NH duyệt giải ngân
 - disbursed: NH đã chuyển tiền vào tài khoản NT
 
-Beneficiary = nhà thầu nhận tiền (không phải CC1) + TK NH của NT.
+Beneficiary = nhà thầu nhận tiền (không phải tổng thầu) + TK NH của NT.
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -42,7 +42,7 @@ class ReLoanNoteDisbursement(models.Model):
         'res.partner', string='Bên nhận tiền (Nhà thầu)',
         tracking=True,
         help='Bên thực nhận giải ngân — chuẩn NH VN chuyển trực tiếp '
-             'cho nhà thầu, KHÔNG qua tài khoản CC1.')
+             'cho nhà thầu, KHÔNG qua tài khoản tổng thầu.')
     beneficiary_bank_account_id = fields.Many2one(
         'res.partner.bank', string='Tài khoản NH của Nhà thầu',
         tracking=True,
@@ -82,14 +82,14 @@ class ReLoanNoteDisbursement(models.Model):
     allowed_project_ids = fields.Many2many(
         're.project', string='Dự án cho phép',
         compute='_compute_allowed_project_ids',
-        help='Dự án cho phép chọn (CC1 #6):\n'
+        help='Dự án cho phép chọn (khách hàng #6):\n'
              '- Nếu facility CÓ phân bổ dự án → chỉ các dự án trong '
              'phân bổ đó.\n'
              '- Nếu facility KHÔNG có phân bổ → TẤT CẢ dự án.')
     project_id = fields.Many2one(
         're.project', string='Dự án',
         domain="[('id', 'in', allowed_project_ids)]",
-        help='Dự án thực chi từ khoản giải ngân này. Filter theo CC1 '
+        help='Dự án thực chi từ khoản giải ngân này. Filter theo tài liệu nghiệp vụ '
              '#6: chỉ dự án phân bổ trên facility, hoặc tất cả nếu '
              'facility chưa phân bổ.')
     currency_id = fields.Many2one(
@@ -166,7 +166,7 @@ class ReLoanNoteDisbursement(models.Model):
             if not rec.beneficiary_bank_account_id:
                 raise UserError(_(
                     "Cần điền 'Tài khoản NH của Nhà thầu' — chuẩn NH VN "
-                    "chuyển trực tiếp cho nhà thầu, không qua TK CC1."))
+                    "chuyển trực tiếp cho nhà thầu, không qua TK tổng thầu."))
 
     def action_submit(self):
         for rec in self:

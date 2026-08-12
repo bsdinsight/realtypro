@@ -43,13 +43,12 @@ class ReProject(models.Model):
                     for s in structures)
                 rec.weighted_progress_percent = weighted / total_weight
             else:
-                # Fallback: simple average nếu chưa có dự toán
-                if structures:
-                    rec.weighted_progress_percent = sum(
-                        structures.mapped('progress_percent')
-                    ) / len(structures)
-                else:
-                    rec.weighted_progress_percent = 0.0
+                # CHƯA có dự toán ở hạng mục nào → KHÔNG lấy trung bình
+                # cộng %HT các hạng mục: nó cho ra con số không ăn khớp
+                # EV/BAC (từng hiện 105,82% trong khi giá trị làm ra mới
+                # ~1% ngân sách). Chưa có trọng số thì trả 0 cho trung
+                # thực — anh Đại chốt 2026-08-11.
+                rec.weighted_progress_percent = 0.0
             rec.delayed_structure_count = len(structures.filtered('is_delayed'))
             rec.completed_structure_count = len(
                 structures.filtered(lambda s: s.status == 'completed'))

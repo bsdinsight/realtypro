@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_treasury_dashboard_user,re.treasury.dashboard.user,model_re_treasury_dashboard,re_loan.group_loan_user,1,1,1,0
+access_re_treasury_dashboard_manager,re.treasury.dashboard.manager,model_re_treasury_dashboard,re_loan.group_loan_manager,1,1,1,1
+access_re_credit_structure_user,re.credit.structure.user,model_re_credit_structure,re_loan.group_loan_user,1,1,1,0
+access_re_credit_structure_manager,re.credit.structure.manager,model_re_credit_structure,re_loan.group_loan_manager,1,1,1,1

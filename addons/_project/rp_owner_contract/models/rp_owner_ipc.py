@@ -102,10 +102,10 @@ class RpOwnerIpc(models.Model):
 
     note = fields.Text(string='Ghi chú')
 
-    _sql_constraints = [
-        ('name_company_unique', 'unique(name, company_id)',
-         'Số IPC đã tồn tại.'),
-    ]
+    # Odoo 19 BỎ `_sql_constraints` (xem ghi chú ở rp.owner.contract).
+    # IPC là chứng từ trình CĐT thanh toán — trùng số là vấn đề hồ sơ.
+    _name_company_unique = models.Constraint(
+        'unique(name, company_id)', 'Số IPC đã tồn tại.')
 
     # ------------------------------------------------------------------
     @api.model_create_multi
@@ -233,3 +233,53 @@ class RpOwnerIpc(models.Model):
         raise UserError(_(
             'Chưa cài phân hệ Vay & Borrowing base (re_loan_borrowing_base) '
             '— không đưa IPC vào hợp đồng tín dụng được.'))
+
+    # ------------------------------------------------------------------
+    # Gom BBNT
+    # ------------------------------------------------------------------
+    def _domain_gatherable_acceptances(self):
+        """BBNT đủ điều kiện gom: cùng HĐ · ĐÃ CĐT DUYỆT · CHƯA thuộc IPC nào.
+
+        Không cho gõ tay thêm dòng ở bảng BBNT — khối lượng phải đi từ BBNT
+        có thật, đã duyệt. Đây là chỗ chặn 'một khối lượng vào hai hồ sơ'.
+        """
+        self.ensure_one()
+        dom = [
+            ('contract_id', '=', self.contract_id.id),
+            ('state', '=', 'approved'),
+            ('ipc_id', '=', False),
+        ]
+        # nếu có khai kỳ thì chỉ gom BBNT duyệt trong kỳ
+        if self.period_from:
+            dom.append(('date_approved', '>=', self.period_from))
+        if self.period_to:
+            dom.append(('date_approved', '<=', self.period_to))
+        return dom
+
+    def action_gather_acceptances(self):
+        """Kéo mọi BBNT đủ điều kiện vào IPC này."""
+        self.ensure_one()
+        if self.state == 'signed':
+            raise UserError(_('IPC đã được CĐT ký nhận — không gom thêm BBNT.'))
+        if not self.contract_id:
+            raise UserError(_('Chọn Hợp đồng với CĐT trước khi gom BBNT.'))
+        Acc = self.env['rp.owner.acceptance']
+        found = Acc.search(self._domain_gatherable_acceptances())
+        if not found:
+            msg = _('Không có BBNT nào đủ điều kiện '
+                    '(đã CĐT duyệt · chưa thuộc IPC khác'
+                    '%s).') % (_(' · duyệt trong kỳ')
+                               if (self.period_from or self.period_to) else '')
+        else:
+            found.write({'ipc_id': self.id})
+            msg = _('Đã gom %s BBNT vào IPC.') % len(found)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Gom BBNT'),
+                'message': msg,
+                'type': 'success' if found else 'warning',
+                'sticky': False,
+            },
+        }

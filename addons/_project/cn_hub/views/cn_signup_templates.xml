@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+  /dang-ky — đăng ký nhà thầu bằng MST. Thiết kế: Claude Design (bundle
+  "RealtyPro Landing Page-handoff", dang-ky.html), re-tone sang brand thật
+  (navy #0F2C3F / teal #0E8C99 / mint #46D6C0) + bổ sung ô TICK VAI TRÒ.
+  Mấu chốt nghiệp vụ: 1 MST = 1 công ty = 1 tài khoản gốc → MST trùng thì
+  KHÔNG cho tạo mới mà chỉ đường liên hệ quản trị viên công ty.
+-->
+<template id="signup" name="Realty Pro Network — Đăng ký nhà thầu">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Đăng ký nhà thầu — Realty Pro Network</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rpn-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --rpn-ink:#12283A;--rpn-ink-2:#4A6472;--rpn-ink-3:#6C8792;
+  --rpn-navy:#0F2C3F;--rpn-teal:#0E8C99;--rpn-mint:#46D6C0;
+  --rpn-amber:#F59E0B;--rpn-amber-d:#D97F06;
+  --rpn-line:#DDE7EA;--rpn-bg:#FFFFFF;--rpn-bg-2:#F3F8F9;--rpn-bg-3:#E3F1F2;
+  --rpn-err:#C0392B;--rpn-ok:#0B7350;
+}
+body{font-family:var(--rpn-font);color:var(--rpn-ink);background:var(--rpn-bg-2);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+.rpn-wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+/* header */
+.rpn-header{background:var(--rpn-navy);color:#fff}
+.rpn-nav{display:flex;align-items:center;gap:14px;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,var(--rpn-mint),var(--rpn-teal));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-logo span{color:var(--rpn-mint)}
+.rpn-nav-right{margin-left:auto;font-size:14.5px;font-weight:600}
+/* layout */
+.rpn-main{padding:40px 0 70px}
+.rpn-grid{display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:940px){.rpn-grid{grid-template-columns:1.35fr .85fr;gap:40px;align-items:start}}
+.rpn-h1{font-size:27px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.rpn-sub{color:var(--rpn-ink-2);font-size:15.5px;margin-bottom:22px}
+.rpn-card{background:#fff;border:1px solid var(--rpn-line);border-radius:16px;padding:26px;box-shadow:0 20px 46px -34px rgba(15,44,63,.4)}
+/* fields */
+.rpn-field{margin-bottom:16px}
+.rpn-field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px}
+.rpn-req{color:var(--rpn-err)}
+.rpn-input{width:100%;font-family:inherit;font-size:15.5px;padding:11px 13px;border:1.5px solid var(--rpn-line);border-radius:10px;background:#fff;color:var(--rpn-ink);transition:border-color .15s,box-shadow .15s}
+.rpn-input:focus{outline:none;border-color:var(--rpn-teal);box-shadow:0 0 0 3px rgba(14,140,153,.14)}
+.rpn-input.err{border-color:var(--rpn-err)}
+.rpn-hint{font-size:12.5px;color:var(--rpn-ink-3);margin-top:5px}
+.rpn-err-msg{font-size:12.5px;color:var(--rpn-err);margin-top:5px;font-weight:600}
+.rpn-row{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:620px){.rpn-row{grid-template-columns:1fr 1fr;gap:14px}}
+/* vai trò */
+.rpn-roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:4px}
+.rpn-role{display:flex;align-items:flex-start;gap:9px;border:1.5px solid var(--rpn-line);border-radius:11px;padding:11px 12px;cursor:pointer;transition:border-color .15s,background .15s}
+.rpn-role:hover{border-color:var(--rpn-mint)}
+.rpn-role input{margin-top:2px;width:17px;height:17px;accent-color:var(--rpn-teal);flex-shrink:0;cursor:pointer}
+.rpn-role b{display:block;font-size:14.5px;font-weight:700}
+.rpn-role small{display:block;font-size:12px;color:var(--rpn-ink-3);line-height:1.35}
+.rpn-role:has(input:checked){border-color:var(--rpn-teal);background:var(--rpn-bg-3)}
+/* MST trùng — điểm mấu chốt */
+.rpn-dup{border:1.5px solid var(--rpn-teal);background:var(--rpn-bg-3);border-radius:13px;padding:18px;margin-bottom:16px}
+.rpn-dup-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.rpn-dup-ic{width:38px;height:38px;border-radius:10px;background:#fff;border:1px solid var(--rpn-line);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-dup h3{font-size:15.5px;font-weight:800;margin-bottom:4px}
+.rpn-dup p{font-size:13.5px;color:var(--rpn-ink-2)}
+.rpn-dup-co{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--rpn-line);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;margin-bottom:12px}
+.rpn-mst-badge{margin-left:auto;font-size:12px;font-weight:700;color:var(--rpn-teal);background:var(--rpn-bg-3);padding:4px 10px;border-radius:999px}
+.rpn-dup-actions{display:flex;flex-wrap:wrap;gap:9px}
+.rpn-dup-btn{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;padding:10px 15px;border-radius:9px;border:1.5px solid var(--rpn-line);background:#fff;cursor:pointer;font-family:inherit}
+.rpn-dup-btn.primary{background:var(--rpn-teal);border-color:var(--rpn-teal);color:#fff}
+/* submit */
+.rpn-check-line{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--rpn-ink-2);margin:16px 0}
+.rpn-check-line input{margin-top:3px;width:16px;height:16px;accent-color:var(--rpn-teal);flex-shrink:0}
+.rpn-check-line a{color:var(--rpn-teal);font-weight:700}
+.rpn-submit{width:100%;font-family:inherit;font-size:16px;font-weight:800;padding:14px;border:none;border-radius:11px;background:var(--rpn-amber);color:#241A00;cursor:pointer;box-shadow:0 8px 22px -8px rgba(245,158,11,.7)}
+.rpn-submit:hover{background:var(--rpn-amber-d)}
+.rpn-login-hint{text-align:center;font-size:13.5px;color:var(--rpn-ink-2);margin-top:13px}
+.rpn-login-hint a{color:var(--rpn-teal);font-weight:700}
+.rpn-global-err{background:#FDECEA;border:1px solid #F5C6C0;color:var(--rpn-err);font-size:13.5px;font-weight:600;padding:11px 13px;border-radius:10px;margin-bottom:16px}
+/* aside */
+.rpn-aside{background:var(--rpn-navy);color:#fff;border-radius:16px;padding:26px}
+.rpn-aside h3{font-size:16.5px;font-weight:800;margin-bottom:14px}
+.rpn-benefit{display:flex;gap:11px;align-items:flex-start;margin-bottom:15px}
+.rpn-benefit svg{flex-shrink:0;margin-top:2px}
+.rpn-benefit b{display:block;font-size:14px;font-weight:700}
+.rpn-benefit small{font-size:13px;color:#A9C2CC;line-height:1.45}
+.rpn-aside-note{border-top:1px solid rgba(255,255,255,.14);margin-top:18px;padding-top:16px;font-size:13px;color:#A9C2CC}
+.rpn-aside-note b{color:var(--rpn-mint)}
+/* done */
+.rpn-suc-ic{width:62px;height:62px;border-radius:50%;background:#E4F7EF;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.rpn-done{text-align:center;max-width:560px;margin:0 auto}
+.rpn-done h2{font-size:24px;font-weight:800;margin-bottom:8px}
+.rpn-done p{color:var(--rpn-ink-2);font-size:15px;margin-bottom:22px}
+.rpn-prog-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:7px}
+.rpn-prog-bar{height:9px;background:var(--rpn-bg-3);border-radius:999px;overflow:hidden;margin-bottom:18px}
+.rpn-prog-fill{height:100%;background:linear-gradient(90deg,var(--rpn-teal),var(--rpn-mint));border-radius:999px}
+      </style>
+    </t>
+
+    <header class="rpn-header">
+      <div class="rpn-wrap rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+        <div class="rpn-nav-right"><a href="/web/login">Đã có tài khoản? Đăng nhập</a></div>
+      </div>
+    </header>
+
+    <main class="rpn-main">
+      <div class="rpn-wrap rpn-grid">
+        <div>
+          <h1 class="rpn-h1">Đăng ký tài khoản nhà thầu</h1>
+          <p class="rpn-sub">Miễn phí. Mỗi công ty một tài khoản, xác thực bằng Mã số thuế.</p>
+
+          <div class="rpn-card">
+            <div class="rpn-global-err" t-if="errors.get('global')" t-esc="errors['global']"/>
+
+            <!-- ===== MST TRÙNG: không cho tạo mới, chỉ đường liên hệ admin ===== -->
+            <div class="rpn-dup" t-if="dup_company">
+              <div class="rpn-dup-head">
+                <span class="rpn-dup-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span>
+                <div>
+                  <h3>Công ty này đã có tài khoản trên Realty Pro Network</h3>
+                  <p>Mỗi công ty chỉ có một tài khoản gốc. Vui lòng liên hệ quản trị viên tài khoản công ty để được mời tham gia — không cần tạo tài khoản mới.</p>
+                </div>
+              </div>
+              <div class="rpn-dup-co">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4A6472" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7h6v14M12 11h6v10"/></svg>
+                <span t-esc="dup_company"/>
+                <span class="rpn-mst-badge" t-esc="dup_mst"/>
+              </div>
+              <div class="rpn-dup-actions">
+                <a class="rpn-dup-btn primary" href="/web/login">Tôi là quản trị viên — Đăng nhập</a>
+                <a class="rpn-dup-btn" href="/dang-ky">Nhập mã số thuế khác</a>
+              </div>
+            </div>
+
+            <form method="post" action="/dang-ky">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+              <div class="rpn-field">
+                <label for="company">Tên công ty <span class="rpn-req">*</span></label>
+                <input class="rpn-input" t-attf-class="rpn-input #{errors.get('company') and 'err' or ''}"
+                       id="company" name="company" type="text" t-att-value="company"
+                       placeholder="Công ty TNHH Xây dựng ..."/>
+                <div class="rpn-err-msg" t-if="errors.get('company')" t-esc="errors['company']"/>
+              </div>
+
+              <div class="rpn-field">
+                <label for="mst">Mã số thuế (MST) <span class="rpn-req">*</span></label>
+                <input t-attf-class="rpn-input #{errors.get('mst') and 'err' or ''}"
+                       id="mst" name="mst" type="text" inputmode="numeric" t-att-value="mst"
+                       placeholder="0312345678 hoặc 0312345678-001" autocomplete="off"/>
+                <div class="rpn-hint">Đây là mã định danh công ty của bạn: 10 chữ số, hoặc 13 ký tự dạng <b>xxxxxxxxxx-xxx</b> (chi nhánh).</div>
+                <div class="rpn-err-msg" t-if="errors.get('mst')" t-esc="errors['mst']"/>
+                <div class="rpn-err-msg" id="mstLive" style="display:none"></div>
+              </div>
+
+              <!-- ===== VAI TRÒ: Network là MỘT sàn → chọn nhiều vai ===== -->
+              <div class="rpn-field">
+                <label>Công ty bạn cung cấp gì? <span class="rpn-req">*</span></label>
+                <div class="rpn-hint" style="margin-top:0;margin-bottom:8px">Chọn tất cả những gì đúng — nhiều đơn vị vừa bán vật tư vừa nhận thi công.</div>
+                <div class="rpn-roles">
+                  <t t-foreach="all_roles" t-as="r">
+                    <label class="rpn-role">
+                      <input type="checkbox" name="roles" t-att-value="r.code"
+                             t-att-checked="r.code in roles and 'checked' or None"/>
+                      <span>
+                        <b t-esc="r.name"/>
+                        <small t-esc="r.description or ''"/>
+                      </span>
+                    </label>
+                  </t>
+                </div>
+                <div class="rpn-err-msg" t-if="errors.get('roles')" t-esc="errors['roles']"/>
+              </div>
+
+              <div class="rpn-field">
+                <label for="contact">Người liên hệ <span class="rpn-req">*</span></label>
+                <input t-attf-class="rpn-input #{errors.get('contact') and 'err' or ''}"
+                       id="contact" name="contact" type="text" t-att-value="contact" placeholder="Họ và tên"/>
+                <div class="rpn-hint">Người đăng ký đầu tiên của công ty sẽ là <b>quản trị viên tài khoản</b>.</div>
+                <div class="rpn-err-msg" t-if="errors.get('contact')" t-esc="errors['contact']"/>
+              </div>
+
+              <div class="rpn-row">
+                <div class="rpn-field">
+                  <label for="email">Email <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('email') and 'err' or ''}"
+                         id="email" name="email" type="email" t-att-value="email"
+                         placeholder="email@congty.vn" autocomplete="email"/>
+                  <div class="rpn-hint">Email này dùng để đăng nhập.</div>
+                  <div class="rpn-err-msg" t-if="errors.get('email')" t-esc="errors['email']"/>
+                </div>
+                <div class="rpn-field">
+                  <label for="phone">Điện thoại <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('phone') and 'err' or ''}"
+                         id="phone" name="phone" type="tel" inputmode="tel" t-att-value="phone"
+                         placeholder="09xx xxx xxx" autocomplete="tel"/>
+                  <div class="rpn-err-msg" t-if="errors.get('phone')" t-esc="errors['phone']"/>
+                </div>
+              </div>
+
+              <div class="rpn-row">
+                <div class="rpn-field">
+                  <label for="password">Mật khẩu <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('password') and 'err' or ''}"
+                         id="password" name="password" type="password"
+                         placeholder="Tối thiểu 8 ký tự" autocomplete="new-password"/>
+                  <div class="rpn-err-msg" t-if="errors.get('password')" t-esc="errors['password']"/>
+                </div>
+                <div class="rpn-field">
+                  <label for="password2">Xác nhận mật khẩu <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('password2') and 'err' or ''}"
+                         id="password2" name="password2" type="password"
+                         placeholder="Nhập lại mật khẩu" autocomplete="new-password"/>
+                  <div class="rpn-err-msg" t-if="errors.get('password2')" t-esc="errors['password2']"/>
+                </div>
+              </div>
+
+              <label class="rpn-check-line">
+                <input type="checkbox" name="agree" value="1" t-att-checked="agree and 'checked' or None"/>
+                <span>Tôi đồng ý với <a href="/dieu-khoan">Điều khoản sử dụng</a> và <a href="/bao-mat">Chính sách bảo mật</a> của Realty Pro Network.</span>
+              </label>
+              <div class="rpn-err-msg" t-if="errors.get('agree')" t-esc="errors['agree']" style="margin-top:-8px;margin-bottom:12px"/>
+
+              <button type="submit" class="rpn-submit">Tạo tài khoản nhà thầu</button>
+              <p class="rpn-login-hint">Đã có tài khoản? <a href="/web/login">Đăng nhập</a></p>
+            </form>
+          </div>
+        </div>
+
+        <aside class="rpn-aside">
+          <h3>Vì sao đăng ký?</h3>
+          <div class="rpn-benefit">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>Tiếp cận gói thầu thật</b><small>Gói thầu do các tổng thầu trên Network công bố.</small></span>
+          </div>
+          <div class="rpn-benefit">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>Khai hồ sơ một lần</b><small>Hồ sơ năng lực dùng lại cho mọi gói — không làm lại mỗi lần dự thầu.</small></span>
+          </div>
+          <div class="rpn-benefit">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span><b>Nộp online, có biên nhận</b><small>Không giấy tờ, không chạy đi nộp, không lỡ hạn.</small></span>
+          </div>
+          <div class="rpn-aside-note">
+            <b>Mỗi công ty một tài khoản.</b> Mã số thuế là mã định danh công ty trên Network. Người đăng ký đầu tiên là quản trị viên và mời thêm đồng nghiệp sau.
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script type="text/javascript">
+// Kiểm MST ngay khi rời ô — để báo "công ty đã có" sớm, không bắt điền hết form.
+// Server vẫn kiểm lại khi submit (không tin trình duyệt).
+(function () {
+  var mst = document.getElementById('mst');
+  var live = document.getElementById('mstLive');
+  if (!mst || !live) { return; }
+  var RE = /^\d{10}(-\d{3})?$/;
+  mst.addEventListener('blur', function () {
+    var v = (mst.value || '').replace(/[^\d-]/g, '');
+    live.style.display = 'none';
+    if (!v || !RE.test(v)) { return; }
+    fetch('/dang-ky/kiem-tra-mst', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', method: 'call', params: { mst: v } })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      var d = res &amp;&amp; res.result;
+      if (d &amp;&amp; d.exists) {
+        live.textContent = 'Công ty "' + d.company + '" đã có tài khoản với MST này — hãy liên hệ quản trị viên công ty để được mời.';
+        live.style.display = 'block';
+      }
+    }).catch(function () {});
+  });
+})();
+    </script>
+  </t>
+</template>
+
+<!-- ===== Đăng ký xong ===== -->
+<template id="signup_done" name="Realty Pro Network — Đăng ký thành công">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Đã tạo tài khoản — Realty Pro Network</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#12283A;background:#F3F8F9;line-height:1.55}
+a{text-decoration:none}
+.rpn-header{background:#0F2C3F;color:#fff}
+.rpn-nav{max-width:1060px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,#46D6C0,#0E8C99);display:flex;align-items:center;justify-content:center}
+.rpn-logo span{color:#46D6C0}
+.rpn-main{padding:56px 20px}
+.rpn-card{max-width:560px;margin:0 auto;background:#fff;border:1px solid #DDE7EA;border-radius:16px;padding:34px;text-align:center;box-shadow:0 20px 46px -34px rgba(15,44,63,.4)}
+.rpn-suc-ic{width:62px;height:62px;border-radius:50%;background:#E4F7EF;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.rpn-card h2{font-size:24px;font-weight:800;margin-bottom:8px}
+.rpn-card p{color:#4A6472;font-size:15px;margin-bottom:22px}
+.rpn-co{display:inline-flex;align-items:center;gap:8px;background:#E3F1F2;color:#0E8C99;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px;margin-bottom:22px}
+.rpn-prog-top{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;margin-bottom:7px}
+.rpn-prog-bar{height:9px;background:#E3F1F2;border-radius:999px;overflow:hidden;margin-bottom:24px}
+.rpn-prog-fill{height:100%;background:linear-gradient(90deg,#0E8C99,#46D6C0);border-radius:999px}
+.rpn-cta{display:block;background:#F59E0B;color:#241A00;font-weight:800;font-size:16px;padding:14px;border-radius:11px}
+.rpn-hint{font-size:13.5px;color:#4A6472;margin-top:13px}
+.rpn-hint a{color:#0E8C99;font-weight:700}
+      </style>
+    </t>
+    <header class="rpn-header">
+      <div class="rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+      </div>
+    </header>
+    <main class="rpn-main">
+      <div class="rpn-card">
+        <div class="rpn-suc-ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0F9D6C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <h2>Đã tạo tài khoản — chào mừng bạn!</h2>
+        <div class="rpn-co">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7h6v14M12 11h6v10"/></svg>
+          <span t-esc="company.name"/>
+        </div>
+        <p>Hãy hoàn thiện hồ sơ năng lực để có thể đăng ký tham gia gói thầu. Hồ sơ khai một lần, dùng cho mọi gói.</p>
+        <div class="rpn-prog-top"><span>Mức độ hoàn thiện hồ sơ</span><span t-esc="progress_pct"/></div>
+        <div class="rpn-prog-bar"><div class="rpn-prog-fill" t-att-style="progress_style"/></div>
+        <a class="rpn-cta" href="/my/contractor">Hoàn thiện hồ sơ năng lực →</a>
+        <p class="rpn-hint">Hoặc <a href="/">xem gói thầu đang mời</a> trước.</p>
+      </div>
+    </main>
+  </t>
+</template>
+
+<!-- ===== Đã gửi đơn xin tham gia gói thầu ===== -->
+<template id="apply_done" name="Realty Pro Network — Đã đăng ký tham gia">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Đăng ký tham gia gói thầu — Realty Pro Network</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#12283A;background:#F3F8F9;line-height:1.55}
+a{text-decoration:none}
+.rpn-header{background:#0F2C3F;color:#fff}
+.rpn-nav{max-width:1060px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#fff}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,#46D6C0,#0E8C99);display:flex;align-items:center;justify-content:center}
+.rpn-logo span{color:#46D6C0}
+.rpn-main{padding:56px 20px}
+.rpn-card{max-width:600px;margin:0 auto;background:#fff;border:1px solid #DDE7EA;border-radius:16px;padding:34px;box-shadow:0 20px 46px -34px rgba(15,44,63,.4)}
+.rpn-ic{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.rpn-ic.wait{background:#FFF3EA}.rpn-ic.ok{background:#E4F7EF}
+.rpn-card h2{font-size:23px;font-weight:800;margin-bottom:8px;text-align:center}
+.rpn-card .lead{color:#4A6472;font-size:15px;margin-bottom:22px;text-align:center}
+.rpn-t{background:#F3F8F9;border:1px solid #DDE7EA;border-radius:12px;padding:16px;margin-bottom:20px}
+.rpn-t b{display:block;font-size:16px;margin-bottom:6px}
+.rpn-t small{color:#4A6472;font-size:13.5px;display:block}
+.rpn-step{display:flex;gap:11px;align-items:flex-start;margin-bottom:12px;font-size:14px}
+.rpn-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.rpn-dot.done{background:#0F9D6C;color:#fff}.rpn-dot.now{background:#F59E0B;color:#241A00}.rpn-dot.todo{background:#E3F1F2;color:#6C8792}
+.rpn-note{background:#E3F1F2;border-left:3px solid #0E8C99;padding:12px 14px;border-radius:8px;font-size:13.5px;color:#12283A;margin:20px 0}
+.rpn-cta{display:block;background:#F59E0B;color:#241A00;font-weight:800;font-size:15.5px;padding:13px;border-radius:11px;text-align:center}
+.rpn-hint{text-align:center;font-size:13.5px;color:#4A6472;margin-top:13px}
+.rpn-hint a{color:#0E8C99;font-weight:700}
+      </style>
+    </t>
+    <header class="rpn-header">
+      <div class="rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+      </div>
+    </header>
+    <main class="rpn-main">
+      <div class="rpn-card">
+        <t t-if="invite.approval == 'approved'">
+          <div class="rpn-ic ok"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0F9D6C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h2>Bạn đã được duyệt tham gia</h2>
+          <p class="lead">Mở gói thầu để tải hồ sơ mời thầu và nộp hồ sơ dự thầu.</p>
+        </t>
+        <t t-elif="invite.approval == 'rejected'">
+          <div class="rpn-ic wait"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></div>
+          <h2>Đăng ký chưa được chấp thuận</h2>
+          <p class="lead">Bên mời thầu chưa chấp thuận đăng ký của bạn cho gói này.</p>
+        </t>
+        <t t-else="">
+          <div class="rpn-ic wait"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C2410C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h2 t-if="created">Đã gửi đăng ký tham gia</h2>
+          <h2 t-else="">Đăng ký của bạn đang chờ duyệt</h2>
+          <p class="lead">Tổng thầu của gói thầu sẽ xem xét hồ sơ năng lực của bạn.</p>
+        </t>
+
+        <div class="rpn-t">
+          <b t-esc="tender.name"/>
+          <small>Bên mời thầu: <t t-esc="tender.gc_partner_id.name or 'Đang cập nhật'"/></small>
+          <small t-if="tender.deadline">Hạn nộp hồ sơ: <t t-esc="tender.deadline.strftime('%d/%m/%Y')"/></small>
+        </div>
+
+        <div class="rpn-step">
+          <span class="rpn-dot done">✓</span>
+          <span><b>Đã gửi đăng ký</b> — <t t-esc="company.name"/></span>
+        </div>
+        <div class="rpn-step">
+          <span t-attf-class="rpn-dot #{invite.approval == 'pending' and 'now' or 'done'}">2</span>
+          <span>
+            <b t-if="invite.approval == 'pending'">Chờ tổng thầu duyệt</b>
+            <b t-elif="invite.approval == 'approved'">Đã được duyệt</b>
+            <b t-else="">Không được chấp thuận</b>
+          </span>
+        </div>
+        <div class="rpn-step">
+          <span t-attf-class="rpn-dot #{invite.approval == 'approved' and 'now' or 'todo'}">3</span>
+          <span>Tải hồ sơ mời thầu &amp; nộp hồ sơ dự thầu</span>
+        </div>
+
+        <div class="rpn-note" t-if="invite.approval == 'pending'">
+          <b>Hồ sơ năng lực của bạn: <t t-esc="progress_pct"/> hoàn thiện.</b>
+          Tổng thầu duyệt dựa trên hồ sơ này — hồ sơ càng đầy đủ, cơ hội được duyệt càng cao.
+          Bạn sẽ nhận email khi có kết quả.
+        </div>
+
+        <a class="rpn-cta" t-if="invite.approval == 'approved'"
+           t-attf-href="/my/tenders/#{tender.id}">Mở gói thầu &amp; nộp hồ sơ →</a>
+        <a class="rpn-cta" t-else="" href="/my/contractor">Hoàn thiện hồ sơ năng lực →</a>
+        <p class="rpn-hint">Hoặc <a href="/">xem các gói thầu khác</a>.</p>
+      </div>
+    </main>
+  </t>
+</template>
+
+<!-- ===== /dang-ky?invite=<token> — ĐĂNG KÝ TỪ LỜI MỜI =====
+     Thiết kế: Claude Design (dang-ky-invite.html, đã đúng brand navy/teal).
+     Khác bản thường: banner ngữ cảnh lời mời · email KHOÁ theo email được
+     mời · MST VẪN BẮT BUỘC · MST trùng thì bảo ĐĂNG NHẬP (vì đã có lời mời)
+     chứ không bảo liên hệ quản trị viên. Ô tick vai trò do tôi thêm
+     (Design chưa có). Kế thừa CSS của cn_hub.signup + phần rpn-inv-*. -->
+<template id="signup_invite" name="Realty Pro Network — Đăng ký từ lời mời">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Đăng ký từ lời mời — Realty Pro Network</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rpn-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --rpn-ink:#12283A;--rpn-ink-2:#4A6472;--rpn-ink-3:#6C8792;
+  --rpn-navy:#0F2C3F;--rpn-teal:#0E8C99;--rpn-mint:#46D6C0;
+  --rpn-amber:#F59E0B;--rpn-amber-d:#D97F06;
+  --rpn-line:#DDE7EA;--rpn-bg:#FFFFFF;--rpn-bg-2:#F3F8F9;--rpn-bg-3:#E3F1F2;
+  --rpn-err:#C0392B;
+}
+body{font-family:var(--rpn-font);color:var(--rpn-ink);background:var(--rpn-bg-2);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+.rpn-wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+.rpn-header{background:var(--rpn-navy);color:#fff}
+.rpn-nav{display:flex;align-items:center;gap:14px;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,var(--rpn-mint),var(--rpn-teal));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-logo span{color:var(--rpn-mint)}
+.rpn-back{margin-left:auto;font-size:14px;font-weight:600;opacity:.9}
+.rpn-main{padding:32px 0 70px}
+.rpn-grid{display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:940px){.rpn-grid{grid-template-columns:1.35fr .85fr;gap:36px;align-items:start}}
+/* banner lời mời */
+.rpn-inv-banner{background:linear-gradient(160deg,#0F2C3F,#124A5C 75%,#0E8C99);color:#fff;border-radius:16px;padding:26px;margin-bottom:20px}
+.rpn-inv-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(70,214,192,.18);color:#7FE7D6;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:14px}
+.rpn-inv-banner h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.rpn-inv-banner h1 b{color:var(--rpn-mint)}
+.rpn-inv-lead{color:#CFE3E6;font-size:15px;margin-bottom:18px}
+.rpn-inv-tender{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:14px;margin-bottom:14px}
+.rpn-inv-tender .t-title{font-size:15.5px;font-weight:800;margin-bottom:3px}
+.rpn-inv-tender .t-meta{font-size:13px;color:#A9C2CC}
+.rpn-inv-tender .t-meta b{color:var(--rpn-mint)}
+.rpn-inv-assure{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:#DCEDEF}
+.rpn-inv-assure b{color:var(--rpn-mint)}
+/* form */
+.rpn-card{background:#fff;border:1px solid var(--rpn-line);border-radius:16px;padding:26px;box-shadow:0 20px 46px -34px rgba(15,44,63,.4)}
+.rpn-field{margin-bottom:16px}
+.rpn-field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px}
+.rpn-req{color:var(--rpn-err)}
+.rpn-input{width:100%;font-family:inherit;font-size:15.5px;padding:11px 13px;border:1.5px solid var(--rpn-line);border-radius:10px;background:#fff;color:var(--rpn-ink)}
+.rpn-input:focus{outline:none;border-color:var(--rpn-teal);box-shadow:0 0 0 3px rgba(14,140,153,.14)}
+.rpn-input.err{border-color:var(--rpn-err)}
+.rpn-locked{background:var(--rpn-bg-2);color:var(--rpn-ink-2);cursor:not-allowed}
+.rpn-lock-wrap{position:relative}
+.rpn-lock-wrap .rpn-lock-ic{position:absolute;right:13px;top:50%;transform:translateY(-50%);pointer-events:none}
+.rpn-lock-wrap .rpn-input{padding-right:40px}
+.rpn-hint{font-size:12.5px;color:var(--rpn-ink-3);margin-top:5px}
+.rpn-err-msg{font-size:12.5px;color:var(--rpn-err);margin-top:5px;font-weight:600}
+.rpn-row{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:620px){.rpn-row{grid-template-columns:1fr 1fr;gap:14px}}
+.rpn-roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
+.rpn-role{display:flex;align-items:flex-start;gap:9px;border:1.5px solid var(--rpn-line);border-radius:11px;padding:11px 12px;cursor:pointer}
+.rpn-role:hover{border-color:var(--rpn-mint)}
+.rpn-role input{margin-top:2px;width:17px;height:17px;accent-color:var(--rpn-teal);flex-shrink:0}
+.rpn-role b{display:block;font-size:14.5px;font-weight:700}
+.rpn-role small{display:block;font-size:12px;color:var(--rpn-ink-3);line-height:1.35}
+.rpn-role:has(input:checked){border-color:var(--rpn-teal);background:var(--rpn-bg-3)}
+.rpn-check-line{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--rpn-ink-2);margin:16px 0}
+.rpn-check-line input{margin-top:3px;width:16px;height:16px;accent-color:var(--rpn-teal);flex-shrink:0}
+.rpn-check-line a{color:var(--rpn-teal);font-weight:700}
+.rpn-submit{width:100%;font-family:inherit;font-size:16px;font-weight:800;padding:14px;border:none;border-radius:11px;background:var(--rpn-amber);color:#241A00;cursor:pointer;box-shadow:0 8px 22px -8px rgba(245,158,11,.7)}
+.rpn-submit:hover{background:var(--rpn-amber-d)}
+.rpn-login-hint{text-align:center;font-size:13.5px;color:var(--rpn-ink-2);margin-top:13px}
+.rpn-login-hint a{color:var(--rpn-teal);font-weight:700}
+.rpn-global-err{background:#FDECEA;border:1px solid #F5C6C0;color:var(--rpn-err);font-size:13.5px;font-weight:600;padding:11px 13px;border-radius:10px;margin-bottom:16px}
+/* MST trùng — bản lời mời: chỉ cần đăng nhập */
+.rpn-dup{border:1.5px solid var(--rpn-teal);background:var(--rpn-bg-3);border-radius:13px;padding:18px;margin-bottom:16px}
+.rpn-dup-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.rpn-dup-ic{width:38px;height:38px;border-radius:10px;background:#fff;border:1px solid var(--rpn-line);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-dup h3{font-size:15.5px;font-weight:800;margin-bottom:4px}
+.rpn-dup p{font-size:13.5px;color:var(--rpn-ink-2)}
+.rpn-dup-co{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--rpn-line);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;margin-bottom:12px}
+.rpn-mst-badge{margin-left:auto;font-size:12px;font-weight:700;color:var(--rpn-teal);background:var(--rpn-bg-3);padding:4px 10px;border-radius:999px}
+.rpn-dup-login{display:inline-flex;align-items:center;gap:8px;background:var(--rpn-teal);color:#fff;font-size:14px;font-weight:700;padding:11px 16px;border-radius:9px}
+.rpn-dup-note{font-size:12.5px;color:var(--rpn-ink-3);margin-top:8px}
+/* aside */
+.rpn-aside{background:var(--rpn-navy);color:#fff;border-radius:16px;padding:24px}
+.rpn-aside h3{font-size:16px;font-weight:800;margin-bottom:14px}
+.rpn-aside-list{list-style:none}
+.rpn-aside-list li{display:flex;gap:11px;align-items:flex-start;margin-bottom:14px;font-size:13.5px;color:#CFE3E6}
+.rpn-aside-list .n{width:22px;height:22px;border-radius:50%;background:rgba(70,214,192,.2);color:var(--rpn-mint);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-aside-list b{color:#fff;display:block}
+.rpn-aside-note{border-top:1px solid rgba(255,255,255,.14);margin-top:16px;padding-top:14px;font-size:12.5px;color:#A9C2CC}
+.rpn-aside-note b{color:var(--rpn-mint)}
+      </style>
+    </t>
+
+    <header class="rpn-header">
+      <div class="rpn-wrap rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+        <a class="rpn-back" href="/">← Về trang chủ</a>
+      </div>
+    </header>
+
+    <main class="rpn-main">
+      <div class="rpn-wrap rpn-grid">
+        <div>
+          <div class="rpn-inv-banner">
+            <span class="rpn-inv-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg>
+              Lời mời trực tiếp
+            </span>
+            <h1>Tổng thầu <b t-esc="gc_name or 'bên mời thầu'"/> mời bạn dự thầu</h1>
+            <p class="rpn-inv-lead">Tạo tài khoản nhà thầu để mở hồ sơ mời thầu và nộp hồ sơ dự thầu online.</p>
+            <div class="rpn-inv-tender">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg>
+              <div>
+                <div class="t-title" t-esc="tender.name"/>
+                <div class="t-meta" t-if="deadline_txt">Hạn nộp hồ sơ: <b t-esc="deadline_txt"/></div>
+              </div>
+            </div>
+            <div class="rpn-inv-assure">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+              <span>Đăng ký xong bạn mở được hồ sơ mời thầu <b>NGAY</b> — không phải chờ duyệt.</span>
+            </div>
+          </div>
+
+          <div class="rpn-card">
+            <div class="rpn-global-err" t-if="errors.get('global')" t-esc="errors['global']"/>
+
+            <!-- MST trùng: đã có lời mời nên chỉ cần ĐĂNG NHẬP -->
+            <div class="rpn-dup" t-if="dup_company">
+              <div class="rpn-dup-head">
+                <span class="rpn-dup-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+                <div>
+                  <h3>Công ty bạn đã có tài khoản trên Realty Pro Network</h3>
+                  <p>Bạn không cần tạo tài khoản mới. Hãy đăng nhập — lời mời dự thầu này sẽ xuất hiện trong tài khoản công ty bạn.</p>
+                </div>
+              </div>
+              <div class="rpn-dup-co">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4A6472" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7h6v14M12 11h6v10"/></svg>
+                <span t-esc="dup_company"/>
+                <span class="rpn-mst-badge" t-esc="dup_mst"/>
+              </div>
+              <a class="rpn-dup-login" t-attf-href="/web/login?redirect=/cn/invite/#{invite.access_token}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+                Đăng nhập để nhận lời mời này
+              </a>
+              <p class="rpn-dup-note">Đăng nhập bằng tài khoản công ty đã có để mở gói thầu.</p>
+            </div>
+
+            <form method="post" action="/dang-ky">
+              <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+              <input type="hidden" name="invite" t-att-value="invite.access_token"/>
+
+              <div class="rpn-field">
+                <label for="company">Tên công ty <span class="rpn-req">*</span></label>
+                <input t-attf-class="rpn-input #{errors.get('company') and 'err' or ''}"
+                       id="company" name="company" type="text" t-att-value="company"
+                       placeholder="Công ty TNHH Xây dựng ..."/>
+                <div class="rpn-err-msg" t-if="errors.get('company')" t-esc="errors['company']"/>
+              </div>
+
+              <div class="rpn-field">
+                <label for="mst">Mã số thuế (MST) <span class="rpn-req">*</span></label>
+                <input t-attf-class="rpn-input #{errors.get('mst') and 'err' or ''}"
+                       id="mst" name="mst" type="text" inputmode="numeric" t-att-value="mst"
+                       placeholder="0312345678 hoặc 0312345678-001" autocomplete="off"/>
+                <div class="rpn-hint">Mã định danh công ty: 10 chữ số, hoặc dạng <b>xxxxxxxxxx-xxx</b> (chi nhánh). Mỗi công ty một tài khoản gốc — <b>bắt buộc kể cả khi được mời</b>.</div>
+                <div class="rpn-err-msg" t-if="errors.get('mst')" t-esc="errors['mst']"/>
+              </div>
+
+              <div class="rpn-field">
+                <label>Công ty bạn cung cấp gì? <span class="rpn-req">*</span></label>
+                <div class="rpn-hint" style="margin-top:0;margin-bottom:8px">Chọn tất cả những gì đúng.</div>
+                <div class="rpn-roles">
+                  <t t-foreach="all_roles" t-as="r">
+                    <label class="rpn-role">
+                      <input type="checkbox" name="roles" t-att-value="r.code"
+                             t-att-checked="r.code in roles and 'checked' or None"/>
+                      <span><b t-esc="r.name"/><small t-esc="r.description or ''"/></span>
+                    </label>
+                  </t>
+                </div>
+                <div class="rpn-err-msg" t-if="errors.get('roles')" t-esc="errors['roles']"/>
+              </div>
+
+              <div class="rpn-field">
+                <label for="contact">Người liên hệ <span class="rpn-req">*</span></label>
+                <input t-attf-class="rpn-input #{errors.get('contact') and 'err' or ''}"
+                       id="contact" name="contact" type="text" t-att-value="contact" placeholder="Họ và tên"/>
+                <div class="rpn-err-msg" t-if="errors.get('contact')" t-esc="errors['contact']"/>
+              </div>
+
+              <div class="rpn-row">
+                <div class="rpn-field">
+                  <label for="email">Email <span class="rpn-req">*</span></label>
+                  <div class="rpn-lock-wrap">
+                    <input class="rpn-input rpn-locked" id="email" name="email" type="email"
+                           t-att-value="email" readonly="readonly" aria-readonly="true" tabindex="-1"/>
+                    <span class="rpn-lock-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6C8792" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span>
+                  </div>
+                  <div class="rpn-hint">Email này do bên mời thầu cung cấp.</div>
+                  <div class="rpn-err-msg" t-if="errors.get('email')" t-esc="errors['email']"/>
+                </div>
+                <div class="rpn-field">
+                  <label for="phone">Điện thoại <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('phone') and 'err' or ''}"
+                         id="phone" name="phone" type="tel" inputmode="tel" t-att-value="phone"
+                         placeholder="09xx xxx xxx"/>
+                  <div class="rpn-err-msg" t-if="errors.get('phone')" t-esc="errors['phone']"/>
+                </div>
+              </div>
+
+              <div class="rpn-row">
+                <div class="rpn-field">
+                  <label for="password">Mật khẩu <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('password') and 'err' or ''}"
+                         id="password" name="password" type="password" placeholder="Tối thiểu 8 ký tự"/>
+                  <div class="rpn-err-msg" t-if="errors.get('password')" t-esc="errors['password']"/>
+                </div>
+                <div class="rpn-field">
+                  <label for="password2">Xác nhận mật khẩu <span class="rpn-req">*</span></label>
+                  <input t-attf-class="rpn-input #{errors.get('password2') and 'err' or ''}"
+                         id="password2" name="password2" type="password" placeholder="Nhập lại mật khẩu"/>
+                  <div class="rpn-err-msg" t-if="errors.get('password2')" t-esc="errors['password2']"/>
+                </div>
+              </div>
+
+              <label class="rpn-check-line">
+                <input type="checkbox" name="agree" value="1" t-att-checked="agree and 'checked' or None"/>
+                <span>Tôi đồng ý với <a href="/dieu-khoan">Điều khoản sử dụng</a> và <a href="/bao-mat">Chính sách bảo mật</a>.</span>
+              </label>
+              <div class="rpn-err-msg" t-if="errors.get('agree')" t-esc="errors['agree']" style="margin-top:-8px;margin-bottom:12px"/>
+
+              <button type="submit" class="rpn-submit">Đăng ký &amp; mở gói thầu</button>
+              <p class="rpn-login-hint">Đã có tài khoản? <a t-attf-href="/web/login?redirect=/cn/invite/#{invite.access_token}">Đăng nhập để nhận lời mời</a></p>
+            </form>
+          </div>
+        </div>
+
+        <aside class="rpn-aside">
+          <h3>Sau khi đăng ký</h3>
+          <ul class="rpn-aside-list">
+            <li><span class="n">1</span><span><b>Mở hồ sơ mời thầu</b>Ngay lập tức — vì bạn được mời trực tiếp.</span></li>
+            <li><span class="n">2</span><span><b>Khai hồ sơ năng lực</b>Một lần duy nhất, dùng lại cho mọi gói thầu.</span></li>
+            <li><span class="n">3</span><span><b>Nộp hồ sơ dự thầu</b>Online, có biên nhận, theo dõi được trạng thái.</span></li>
+          </ul>
+          <div class="rpn-aside-note">
+            <b>Mỗi công ty một tài khoản.</b> Mã số thuế là mã định danh công ty trên Network — bắt buộc kể cả khi được mời.
+          </div>
+        </aside>
+      </div>
+    </main>
+  </t>
+</template>
+
+</odoo>

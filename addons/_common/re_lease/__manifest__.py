@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Thuê tài sản (Lease)',
-    'version': '19.0.1.4.0',
+    'version': '19.0.1.4.1',
     'category': 'Realty/Lease',
     'summary': 'Quản lý thuê tài sản 2 chiều × 2 loại: Đi thuê / Cho thuê '
                'lại × Hoạt động / Tài chính. Lịch gốc+lãi, kế toán tích '
@@ -25,7 +25,7 @@ Tính năng Phase 1:
 - Tài sản thuê (mô tả, serial, giá trị) per HĐ.
 - Lịch thanh toán: TÀI CHÍNH = tách GỐC + LÃI (gốc đều hoặc niên kim),
   HOẠT ĐỘNG = tiền thuê đều theo kỳ (tháng/quý/6T/năm).
-- **Kế toán tích hợp** (quyết định CC1 — ngay từ đầu):
+- **Kế toán tích hợp** (quyết định của khách hàng — ngay từ đầu):
   - Đi thuê TC: bút toán ghi nhận tài sản thuê TC (Nợ TS thuê TC / Có
     Nợ gốc thuê TC) + mỗi kỳ 1 HÓA ĐƠN NCC 2 dòng (lãi → CP lãi thuê,
     gốc → giảm Nợ gốc thuê TC) — thanh toán hóa đơn là xong kỳ.

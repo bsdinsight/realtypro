@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_treasury_dashboard_form" model="ir.ui.view">
+        <field name="name">re.treasury.dashboard.form</field>
+        <field name="model">re.treasury.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Vốn &amp; Ngân quỹ">
+                <header>
+                    <!-- Đổi tab bằng nút thật: Odoo nạp lại bản ghi và
+                         tính lại body_html. Không cần JavaScript. -->
+                    <button name="action_tab_1" type="object"
+                            string="① Bức tranh vốn"
+                            class="btn-primary"
+                            invisible="tab == '1'"/>
+                    <button name="action_tab_1" type="object"
+                            string="① Bức tranh vốn"
+                            class="btn-secondary" disabled="1"
+                            invisible="tab != '1'"/>
+                    <button name="action_tab_2" type="object"
+                            string="② Việc hôm nay"
+                            class="btn-primary"
+                            invisible="tab == '2'"/>
+                    <button name="action_tab_2" type="object"
+                            string="② Việc hôm nay"
+                            class="btn-secondary" disabled="1"
+                            invisible="tab != '2'"/>
+                    <button name="action_tab_3" type="object"
+                            string="③ Vốn theo dự án"
+                            class="btn-primary"
+                            invisible="tab == '3'"/>
+                    <button name="action_tab_3" type="object"
+                            string="③ Vốn theo dự án"
+                            class="btn-secondary" disabled="1"
+                            invisible="tab != '3'"/>
+                </header>
+                <sheet style="max-width: 100%; padding: 0">
+                    <group invisible="1">
+                        <field name="tab"/>
+                        <field name="company_id"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <field name="body_html" nolabel="1" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- xmlid MỚI (…_win) chứ không tái dùng tên cũ: một external id
+         KHÔNG đổi được model, bản cũ trỏ ir.actions.server nên nâng cấp
+         đổ ngay. Bỏ record server khỏi data file thì Odoo tự dọn nó. -->
+    <record id="action_treasury_dashboard_win" model="ir.actions.act_window">
+        <field name="name">Dashboard Vốn &amp; Ngân quỹ</field>
+        <field name="res_model">re.treasury.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_re_treasury_dashboard_form"/>
+    </record>
+
+
+    <record id="view_re_credit_structure_form" model="ir.ui.view">
+        <field name="name">re.credit.structure.form</field>
+        <field name="model">re.credit.structure</field>
+        <field name="arch" type="xml">
+            <form string="Cấu trúc tín dụng">
+                <sheet style="max-width: 100%; padding: 0">
+                    <field name="body_html" nolabel="1" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_credit_structure_win" model="ir.actions.act_window">
+        <field name="name">Cấu trúc tín dụng</field>
+        <field name="res_model">re.credit.structure</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="view_re_credit_structure_form"/>
+    </record>
+
+    <!-- ============ Cấu trúc menu ============
+         Bấm menu gốc (hoặc tên module trên thanh trên) → vào thẳng
+         dashboard mới. "Dashboard" trong submenu trở thành NHÓM chứa
+         hai màn, để dashboard cũ vẫn còn nguyên chỗ truy cập.
+
+               Vốn & Ngân quỹ            ← action = dashboard mới
+                 └── Dashboard           ← nhóm, không mang action
+                       ├── Vốn & Ngân quỹ        (mới)
+                       └── Vay & Bảo lãnh (chi tiết)  (cũ)
+    -->
+
+    <!-- Menu gốc có tới BA module cùng muốn sửa: re_loan đặt tên gốc,
+         re_loan_dashboard gắn action dashboard cũ, re_treasury_menu đổi
+         tên thành "Vốn & Ngân quỹ". Không module nào phụ thuộc module
+         kia nên thứ tự nạp không chắc chắn — kết quả là tên và action
+         ghi đè lẫn nhau tuỳ lần nâng cấp.
+
+         Xử: module này khai phụ thuộc CẢ HAI module kia nên luôn nạp
+         SAU CÙNG, và chốt cả tên lẫn action ở đây. Từ giờ đây là nơi
+         duy nhất quyết định menu gốc trông thế nào. -->
+    <record id="re_loan.menu_re_loan_root" model="ir.ui.menu">
+        <field name="name">Vốn &amp; Ngân quỹ</field>
+        <field name="action"
+               eval="'ir.actions.act_window,%d' % ref('re_treasury_dashboard.action_treasury_dashboard_win')"/>
+    </record>
+
+    <!-- "Dashboard" là MỤC LÁ trỏ thẳng dashboard mới.
+         Không làm nhóm chứa hai dashboard nữa: dashboard cũ đã chuyển
+         vào nhóm HĐ tín dụng (xem ngay dưới), nên nhóm này chỉ còn một
+         con — thừa đúng một cấp bấm, đúng cái lỗi của menu "Ngân quỹ"
+         trước đây. -->
+    <record id="re_loan_dashboard.menu_re_loan_dashboard_sub"
+            model="ir.ui.menu">
+        <field name="action"
+               eval="'ir.actions.act_window,%d' % ref('re_treasury_dashboard.action_treasury_dashboard_win')"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <!-- Dashboard CŨ về nhóm HĐ tín dụng.
+         Nó không phải dashboard của Khế ước như tên gọi dễ gây hiểu
+         nhầm — Khế ước chỉ là một trong sáu khối. Nội dung chủ đạo là
+         HĐTD hiệu lực / sắp hết hạn, facility tách cho vay vs bảo lãnh,
+         và các biểu đồ cơ cấu facility · dư nợ theo ngân hàng. Đó đúng
+         là phạm vi của nhóm HĐ tín dụng, nên đổi tên luôn cho khớp việc
+         nó làm. -->
+    <menuitem id="menu_dash_loan_legacy"
+              name="Cấu trúc tín dụng"
+              parent="re_loan.menu_grp_credit_contract"
+              action="action_credit_structure_win"
+              sequence="1"/>
+
+</odoo>

@@ -220,7 +220,7 @@ class ReLoanBankAdviceLine(models.Model):
 
     # Chênh lệch CỦA KỲ — sau khi post: số kỳ còn phải trả
     # (= principal_remaining + interest_remaining)
-    # Đây là số chênh lệch cần net-off theo CC1.
+    # Đây là số chênh lệch cần net-off theo tài liệu nghiệp vụ.
     amount_diff_period = fields.Monetary(
         string='Chênh lệch cần net-off',
         compute='_compute_diff_period',
@@ -312,7 +312,7 @@ class ReLoanBankAdviceLine(models.Model):
     @api.onchange('interest_line_id')
     def _onchange_interest_line_suggest_amount(self):
         """Khi pick 1 kỳ, gợi ý 'Số tiền trích thu' = (gốc còn + lãi còn
-        + phí còn) của kỳ đó (bug #21 CC1). User vẫn sửa được sau đó
+        + phí còn) của kỳ đó (bug #21 của khách hàng). User vẫn sửa được sau đó
         nếu NH trích ít hơn.
 
         Compute trực tiếp từ stored fields (principal_due, interest_amount,
@@ -384,7 +384,7 @@ class ReLoanBankAdviceLine(models.Model):
 
         if self.interest_line_id:
             # Case A: chỉ đích danh kỳ.
-            # Thứ tự allocation (CC1 #9): lãi → phí → gốc.
+            # Thứ tự allocation (khách hàng #9): lãi → phí → gốc.
             il = self.interest_line_id
             il._compute_paid_amounts()
             ir = max(0, il.interest_amount - il.amount_interest_paid)
@@ -441,7 +441,7 @@ class ReLoanBankAdviceLine(models.Model):
         1 repayment write-off cho kỳ với amount = remaining → kỳ về
         'paid'. Threshold 100,000 ₫.
 
-        Conditions (CC1 #3 thêm):
+        Conditions (khách hàng #3 thêm):
           - state phải = 'posted' (phiếu đã đăng)
           - dòng phải chỉ định kỳ (interest_line_id)
           - chênh lệch > 0 và ≤ 100,000 ₫

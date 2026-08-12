@@ -15,7 +15,7 @@ class TestBankGuarantee(TransactionCase):
         cls.bank = cls.env['res.partner'].create({
             'name': 'NH BL Test', 'is_company': True, 'is_bank': True})
         cls.applicant = cls.env['res.partner'].create({
-            'name': 'CC1 Applicant', 'is_company': True})
+            'name': 'Tổng thầu Applicant', 'is_company': True})
         cls.beneficiary = cls.env['res.partner'].create({
             'name': 'CĐT Beneficiary', 'is_company': True})
         cls.contract = cls.env['re.loan.credit.contract'].create({
@@ -90,7 +90,7 @@ class TestBankGuarantee(TransactionCase):
         bl = self._bl()
         bl.action_issue()
         bl.forfeit_amount = 8_000_000_000.0
-        bl.forfeit_reason = 'CC1 vi phạm tiến độ'
+        bl.forfeit_reason = 'Nhà thầu vi phạm tiến độ'
         bl.action_forfeit()
         self.assertEqual(bl.state, 'forfeited')
         self.assertTrue(bl.date_forfeited)

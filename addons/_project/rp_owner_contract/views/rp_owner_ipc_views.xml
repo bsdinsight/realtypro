@@ -118,14 +118,28 @@
                             <field name="amount_certified"
                                    decoration-bf="1"/>
                             <field name="amount_net"/>
+                            <field name="amount_received"
+                                   decoration-success="1"/>
+                            <field name="amount_receivable_open"
+                                   decoration-warning="amount_receivable_open &gt; 0"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="BBNT trong kỳ" name="acceptances">
+                            <button name="action_gather_acceptances"
+                                    type="object" icon="fa-download"
+                                    class="btn-primary mb-2"
+                                    string="Gom BBNT đủ điều kiện"
+                                    invisible="state == 'signed'"
+                                    help="Kéo mọi BBNT đã được CĐT duyệt,
+                                          chưa thuộc IPC nào, thuộc HĐ này
+                                          (và trong kỳ nếu có khai kỳ)."/>
+                            <!-- KHÔNG cho tạo/xoá dòng: khối lượng phải đi từ
+                                 BBNT có thật đã duyệt, không gõ tay. Gỡ BBNT
+                                 dùng nút "Bỏ khỏi IPC" (chỉ bỏ liên kết). -->
                             <field name="acceptance_ids"
-                                   readonly="state == 'signed'"
-                                   context="{'default_contract_id': contract_id}">
-                                <list editable="bottom">
+                                   readonly="state == 'signed'">
+                                <list create="false" delete="false">
                                     <field name="name" readonly="1"/>
                                     <field name="date_approved" readonly="1"/>
                                     <field name="amount_this_period"
@@ -140,12 +154,18 @@
                                            readonly="1"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
+                                    <button name="action_remove_from_ipc"
+                                            type="object" icon="fa-times"
+                                            title="Bỏ khỏi IPC (không xoá BBNT)"
+                                            invisible="parent.state == 'signed'"/>
                                 </list>
                             </field>
                             <div class="text-muted mt-2">
                                 Chỉ gom được BBNT <b>đã được CĐT duyệt</b> và
                                 <b>chưa thuộc IPC khác</b> — một khối lượng
                                 không vào hai hồ sơ thanh toán.
+                                Không nhập tay dòng BBNT ở đây: dùng nút
+                                <b>Gom BBNT đủ điều kiện</b>.
                             </div>
                         </page>
                     </notebook>

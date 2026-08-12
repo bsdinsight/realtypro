@@ -17,14 +17,14 @@ class ReLoanNoteRepayment(models.Model):
     amount_interest = fields.Monetary(string='Trả lãi', default=0.0)
     amount_fee = fields.Monetary(
         string='Trả phí', default=0.0,
-        help='Phí KW phân bổ kỳ (CC1 #9).')
+        help='Phí KW phân bổ kỳ (khách hàng #9).')
     amount_total = fields.Monetary(
         string='Tổng trả', compute='_compute_total', store=True)
     reference = fields.Char(string='Chứng từ')
     bank_account_id = fields.Many2one(
         'res.partner.bank', string='Tài khoản thanh toán',
         domain="[('partner_id', '=', company_partner_id)]",
-        help='TK NH của doanh nghiệp dùng để trả nợ đợt này (CC1 #24).')
+        help='TK NH của doanh nghiệp dùng để trả nợ đợt này (khách hàng #24).')
     company_partner_id = fields.Many2one(
         'res.partner', related='company_id.partner_id', readonly=True)
     # --- Link tới kỳ lãi cụ thể (tracking allocation) ---

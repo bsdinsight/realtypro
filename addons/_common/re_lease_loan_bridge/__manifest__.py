@@ -9,7 +9,7 @@
 Glue module (auto_install khi có cả re_lease + re_loan_dashboard):
 thêm nhóm "Thuê tài chính (tham khảo)" vào dashboard Quản lý Vay —
 dư nợ gốc thuê TC + kỳ thuê đến hạn 30 ngày. Giữ re_lease độc lập
-với Quản lý Vay (quyết định kiến trúc CC1).
+với Quản lý Vay (quyết định kiến trúc theo yêu cầu khách hàng).
 """,
     'author': 'BSDInsight',
     'website': 'https://bsdinsight.com',

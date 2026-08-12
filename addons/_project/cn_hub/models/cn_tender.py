@@ -33,6 +33,17 @@ class CnTender(models.Model):
          ('awarded', 'Đã trao thầu'),
          ('cancelled', 'Đã hủy')],
         string='Trạng thái', default='draft', required=True, tracking=True)
+    visibility = fields.Selection(
+        [('invite_only', 'Kín — chỉ nhà thầu được mời'),
+         ('public', 'Công khai trên Network')],
+        string='Phạm vi hiển thị', default='invite_only', required=True,
+        tracking=True, index=True,
+        help='KÍN (mặc định): gói thầu chỉ hiện với nhà thầu được mời.\n'
+             'CÔNG KHAI: gói hiện trên trang công khai network.realtypro.vn — '
+             'chỉ tên gói · tổng thầu · chuyên môn · mô tả · ngày mở · hạn '
+             'nộp. TUYỆT ĐỐI không hiện giá gói. Nhà thầu vẫn phải được mời '
+             'hoặc được tổng thầu duyệt mới xem được hồ sơ mời thầu và nộp '
+             'hồ sơ dự thầu.')
     bid_ids = fields.One2many('cn.bid', 'tender_id', string='Hồ sơ dự thầu')
     bid_count = fields.Integer(compute='_compute_bid_count')
     awarded_bid_id = fields.Many2one(
@@ -46,9 +57,27 @@ class CnTender(models.Model):
         help='Tài liệu bên mời thầu cung cấp cho nhà thầu tải về.')
     doc_req_ids = fields.One2many(
         'cn.tender.doc.req', 'tender_id', string='Tài liệu yêu cầu nộp')
+    # Gộp sẵn danh sách nhà thầu ĐÃ ĐƯỢC DUYỆT (store=True để ir.rule search
+    # được). BẮT BUỘC phải có: viết rule kiểu
+    #   [('tender_id.invite_ids.partner_id','=',me),
+    #    ('tender_id.invite_ids.approval','=','approved')]
+    # KHÔNG khớp cùng-một-bản-ghi — nó là "có mời cho tôi" VÀ "có mời nào đó
+    # được duyệt" ⇒ thủng quyền (nhà thầu chờ duyệt vẫn đọc được dossier khi
+    # gói có một nhà thầu khác đã duyệt).
+    approved_partner_ids = fields.Many2many(
+        'res.partner', 'cn_tender_approved_partner_rel', 'tender_id',
+        'partner_id', string='Nhà thầu được duyệt tham gia',
+        compute='_compute_approved_partner_ids', store=True)
     invite_ids = fields.One2many(
         'cn.tender.invite', 'tender_id', string='Thư mời thầu')
     invite_count = fields.Integer(compute='_compute_invite_count')
+
+    @api.depends('invite_ids.partner_id', 'invite_ids.approval')
+    def _compute_approved_partner_ids(self):
+        for t in self:
+            t.approved_partner_ids = t.invite_ids.filtered(
+                lambda i: i.approval == 'approved' and i.partner_id
+            ).mapped('partner_id')
 
     def _compute_invite_count(self):
         data = self.env['cn.tender.invite']._read_group(
@@ -244,9 +273,23 @@ class CnBid(models.Model):
         have = self.document_ids.mapped('req_id').ids
         return [r.name for r in req if r.id not in have]
 
+    def _check_approved(self):
+        """Chỉ nhà thầu ĐƯỢC MỜI hoặc ĐÃ ĐƯỢC DUYỆT mới được nộp hồ sơ.
+
+        ir.rule đã chặn đọc hồ sơ mời thầu, nhưng phải chặn cả ở đây — nếu
+        không, nhà thầu tự đăng ký còn đang chờ duyệt vẫn nộp được hồ sơ.
+        """
+        self.ensure_one()
+        if self.contractor_id in self.tender_id.approved_partner_ids:
+            return True
+        raise UserError(_(
+            'Bạn chưa được tổng thầu duyệt tham gia gói thầu "%s". '
+            'Hãy chờ duyệt rồi mới nộp hồ sơ dự thầu.', self.tender_id.name))
+
     def action_submit(self):
         """Nhà thầu nộp hồ sơ chính thức → khoá mốc + báo bên mời thầu."""
         for bid in self:
+            bid._check_approved()
             missing = bid._missing_required_docs()
             if missing:
                 raise UserError(_(

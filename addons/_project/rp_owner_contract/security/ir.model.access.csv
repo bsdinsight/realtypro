@@ -10,3 +10,5 @@ access_rp_owner_milestone_manager,rp.owner.payment.milestone manager,model_rp_ow
 access_rp_owner_dashboard_user,rp.owner.dashboard user,model_rp_owner_dashboard,re_base.group_re_user,1,1,1,1
 access_rp_owner_ipc_user,rp.owner.ipc user,model_rp_owner_ipc,re_base.group_re_user,1,1,1,0
 access_rp_owner_ipc_manager,rp.owner.ipc manager,model_rp_owner_ipc,re_base.group_re_manager,1,1,1,1
+access_rp_owner_advance_user,rp.owner.advance user,model_rp_owner_advance,re_base.group_re_user,1,1,1,0
+access_rp_owner_advance_manager,rp.owner.advance manager,model_rp_owner_advance,re_base.group_re_manager,1,1,1,1

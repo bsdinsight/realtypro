@@ -34,6 +34,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Bảo lãnh nhận — %s') % self.name,
             'res_model': 'rp.contract.guarantee',
             'view_mode': 'list,form',

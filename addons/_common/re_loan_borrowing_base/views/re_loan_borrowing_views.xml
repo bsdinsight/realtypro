@@ -127,7 +127,12 @@
         <field name="inherit_id" ref="re_loan.view_re_loan_facility_list"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='amount_available']" position="after">
-                <field name="amount_available_effective" optional="show"/>
+                <!-- 200px: đây là cột tiền QUAN TRỌNG NHẤT của màn này
+                     (số rút được thật, đã trừ ràng buộc TSBĐ) mà nhãn
+                     lại dài — không khai width thì Odoo co cột theo chỗ
+                     còn thừa và cắt cụt chữ số. -->
+                <field name="amount_available_effective" width="200px"
+                       optional="show" sum="Tổng khả dụng thực tế"/>
                 <field name="margin_call" optional="hide"/>
             </xpath>
         </field>

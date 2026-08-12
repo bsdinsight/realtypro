@@ -42,7 +42,7 @@ class RpCostCategory(models.Model):
     parent_path = fields.Char(index=True)
     level = fields.Integer(
         compute='_compute_level', store=True, recursive=True,
-        help='Depth from root (1, 2, or 3). Enforced max 3.',
+        help='Độ sâu từ gốc (1 hoặc 2). Tối đa 2 cấp.',
     )
     complete_path = fields.Char(
         compute='_compute_complete_path', store=True, recursive=True,
@@ -54,6 +54,14 @@ class RpCostCategory(models.Model):
         string='Contingency',
         help='Marks this category as contingency / dự phòng. '
              'Useful for finding all contingency lines in a cost plan.',
+    )
+
+    is_finance_cost = fields.Boolean(
+        string='Chi phí tài chính',
+        help='Nhóm chi phí tài chính (lãi vay vốn hoá, phí thu '
+             'xếp vốn, phí bảo lãnh...). Được LOẠI khỏi CTC và '
+             'khỏi gốc tính vốn tự có — tránh vòng lặp lãi vay '
+             '(tài liệu nghiệp vụ §3).',
     )
     is_land_cost = fields.Boolean(
         string='Land Cost',
@@ -118,9 +126,12 @@ class RpCostCategory(models.Model):
     @api.constrains('parent_id')
     def _check_max_3_levels(self):
         for rec in self:
-            if rec.level and rec.level > 3:
+            if rec.level and rec.level > 2:
                 raise ValidationError(
-                    'Cost category tree is limited to 3 levels.'
+                    'Cây nhóm chi phí chỉ có TỐI ĐA 2 CẤP (anh Đại chốt '
+                    '2026-08-10). Cấp 3 làm vỡ roll-up dự toán và không '
+                    'ai dùng — chi tiết hơn thì dùng trường "Yếu tố chi '
+                    'phí" trên dòng BOQ.'
                 )
 
     @property
@@ -162,145 +173,157 @@ class RpCostCategory(models.Model):
 #
 # Nguồn: mẫu điển hình cơ cấu chi phí dự án BĐS Việt Nam.
 # =============================================================================
+# ── BỘ DANH MỤC CHI PHÍ CHUẨN — 10 NHÓM CẤP 1 ──────────────────────
+# Anh Đại chốt 2026-08-10: rút gọn còn ĐÚNG 10 nhóm cấp 1 cho dễ nhớ,
+# chia theo HẠNG MỤC CÔNG VIỆC (WBS) — tách phần xây lắp thành Kết cấu /
+# Hoàn thiện / MEP vì đó là cách chia gói thầu và cách NH theo dõi giải
+# ngân. Yếu tố chi phí (vật liệu / nhân công / máy / thầu phụ / chung)
+# KHÔNG nằm trong cây này mà là một TRƯỜNG riêng trên dòng BOQ — tránh
+# nhân chéo 10 × 5 nhóm.
+# Thuế và Marketing gộp vào nhóm 08 (chi phí khác) để giữ đúng con số 10.
+# Nhóm 09 (tài chính) và 10 (dự phòng) mặc định BỊ LOẠI khỏi CTC khi tính
+# Nhu cầu vốn — theo tài liệu nghiệp vụ §3 (chỉ tính chi phí thực phát sinh
+# dòng tiền, có hồ sơ hợp lệ) và để tránh vòng lặp lãi vay.
 DEFAULT_COST_CATEGORIES = [
     {
-        'code': '1', 'sequence': 10,
-        'name': 'Chi phí đất, pháp lý, GPMB',
-        'is_land_cost': True,
+        'code': '01', 'sequence': 10, 'is_land_cost': True,
+        'name': 'Chi phí đất & mặt bằng',
+        'description': 'Đất, GPMB, đền bù, chuẩn bị mặt bằng.',
         'children': [
-            {'code': '1.1', 'sequence': 10, 'name': 'Chi phí đất / tiền sử dụng đất / tiền thuê đất', 'is_land_cost': True},
-            {'code': '1.2', 'sequence': 20, 'name': 'Chi phí bồi thường, giải phóng mặt bằng', 'is_land_cost': True},
-            {'code': '1.3', 'sequence': 30, 'name': 'Chi phí chuyển mục đích sử dụng đất', 'is_land_cost': True},
-            {'code': '1.4', 'sequence': 40, 'name': 'Thuế trước bạ / phí đất đai', 'is_land_cost': True},
-            {'code': '1.5', 'sequence': 50, 'name': 'Chi phí pháp lý dự án'},
-            {'code': '1.6', 'sequence': 60, 'name': 'Chi phí quy hoạch / phê duyệt chủ trương'},
+            {'code': '01.1', 'sequence': 10, 'is_land_cost': True, 'name': 'Tiền sử dụng đất / tiền thuê đất'},
+            {'code': '01.2', 'sequence': 20, 'is_land_cost': True, 'name': 'Bồi thường, hỗ trợ, tái định cư'},
+            {'code': '01.3', 'sequence': 30, 'is_land_cost': True, 'name': 'Chuyển mục đích sử dụng đất, thuế phí đất'},
+            {'code': '01.4', 'sequence': 40, 'name': 'Di dời hạ tầng, mồ mả, vật kiến trúc'},
+            {'code': '01.5', 'sequence': 50, 'name': 'Rà phá bom mìn, dò tìm vật cản'},
+            {'code': '01.6', 'sequence': 60, 'name': 'San lấp, chuẩn bị mặt bằng'},
+            {'code': '01.7', 'sequence': 70, 'name': 'Pháp lý dự án, quy hoạch, chủ trương'},
         ],
     },
     {
-        'code': '2', 'sequence': 20,
-        'name': 'Chi phí chuẩn bị đầu tư',
+        'code': '02', 'sequence': 20,
+        'name': 'Chi phí thiết kế & tư vấn',
+        'description': 'Thiết kế, khảo sát, tư vấn, PM/CM.',
         'children': [
-            {'code': '2.1', 'sequence': 10, 'name': 'Khảo sát địa hình'},
-            {'code': '2.2', 'sequence': 20, 'name': 'Khảo sát địa chất'},
-            {'code': '2.3', 'sequence': 30, 'name': 'Khảo sát thủy văn / môi trường biển'},
-            {'code': '2.4', 'sequence': 40, 'name': 'Lập báo cáo tiền khả thi / khả thi'},
-            {'code': '2.5', 'sequence': 50, 'name': 'Đánh giá tác động môi trường'},
-            {'code': '2.6', 'sequence': 60, 'name': 'Thẩm định / phê duyệt dự án'},
-            {'code': '2.7', 'sequence': 70, 'name': 'Chi phí chuẩn bị khác'},
+            {'code': '02.1', 'sequence': 10, 'name': 'Khảo sát địa hình, địa chất, thuỷ văn'},
+            {'code': '02.2', 'sequence': 20, 'name': 'Lập báo cáo tiền khả thi / khả thi'},
+            {'code': '02.3', 'sequence': 30, 'name': 'Thiết kế (concept, cơ sở, kỹ thuật, BVTC)'},
+            {'code': '02.4', 'sequence': 40, 'name': 'Thẩm tra, thẩm định thiết kế & dự toán'},
+            {'code': '02.5', 'sequence': 50, 'name': 'Tư vấn quản lý dự án (PM/CM)'},
+            {'code': '02.6', 'sequence': 60, 'name': 'Tư vấn giám sát (TVGS)'},
+            {'code': '02.7', 'sequence': 70, 'name': 'Đánh giá tác động môi trường, PCCC, chuyên ngành'},
+            {'code': '02.8', 'sequence': 80, 'name': 'Tư vấn khác'},
         ],
     },
     {
-        'code': '3', 'sequence': 30,
-        'name': 'Chi phí xây dựng công trình',
+        'code': '03', 'sequence': 30,
+        'name': 'Chi phí kết cấu & phần thô',
+        'description': 'Móng, kết cấu, xây dựng phần thô.',
         'children': [
-            {'code': '3.1', 'sequence': 10, 'name': 'San nền / xử lý nền'},
-            {'code': '3.2', 'sequence': 20, 'name': 'Móng / cọc / tầng hầm'},
-            {'code': '3.3', 'sequence': 30, 'name': 'Kết cấu thân'},
-            {'code': '3.4', 'sequence': 40, 'name': 'Kiến trúc / hoàn thiện'},
-            {'code': '3.5', 'sequence': 50, 'name': 'MEP'},
-            {'code': '3.6', 'sequence': 60, 'name': 'PCCC'},
-            {'code': '3.7', 'sequence': 70, 'name': 'Facade / mặt dựng'},
-            {'code': '3.8', 'sequence': 80, 'name': 'Nội thất xây dựng cơ bản'},
-            {'code': '3.9', 'sequence': 90, 'name': 'Xây dựng khác'},
+            {'code': '03.1', 'sequence': 10, 'name': 'Cọc, tường vây, xử lý nền'},
+            {'code': '03.2', 'sequence': 20, 'name': 'Đào đất, chống vách, hạ mực nước ngầm'},
+            {'code': '03.3', 'sequence': 30, 'name': 'Móng, đài, giằng'},
+            {'code': '03.4', 'sequence': 40, 'name': 'Kết cấu bê tông cốt thép thân'},
+            {'code': '03.5', 'sequence': 50, 'name': 'Kết cấu thép'},
+            {'code': '03.6', 'sequence': 60, 'name': 'Xây thô, tường bao che'},
+            {'code': '03.7', 'sequence': 70, 'name': 'Chống thấm phần ngầm'},
+            {'code': '03.8', 'sequence': 80, 'name': 'Kết cấu & phần thô khác'},
         ],
     },
     {
-        'code': '4', 'sequence': 40,
-        'name': 'Chi phí thiết bị',
+        'code': '04', 'sequence': 40,
+        'name': 'Chi phí kiến trúc & hoàn thiện',
+        'description': 'Kiến trúc, façade, hoàn thiện.',
         'children': [
-            {'code': '4.1', 'sequence': 10, 'name': 'Thang máy / thang cuốn'},
-            {'code': '4.2', 'sequence': 20, 'name': 'Thiết bị MEP chính'},
-            {'code': '4.3', 'sequence': 30, 'name': 'Thiết bị PCCC'},
-            {'code': '4.4', 'sequence': 40, 'name': 'Thiết bị khách sạn / FF&E'},
-            {'code': '4.5', 'sequence': 50, 'name': 'Thiết bị y tế'},
-            {'code': '4.6', 'sequence': 60, 'name': 'Thiết bị bến du thuyền / cảng'},
-            {'code': '4.7', 'sequence': 70, 'name': 'Thiết bị công viên / vui chơi giải trí'},
-            {'code': '4.8', 'sequence': 80, 'name': 'Thiết bị khác'},
+            {'code': '04.1', 'sequence': 10, 'name': 'Hoàn thiện sàn, tường, trần'},
+            {'code': '04.2', 'sequence': 20, 'name': 'Cửa, vách kính, lan can'},
+            {'code': '04.3', 'sequence': 30, 'name': 'Mặt dựng / façade'},
+            {'code': '04.4', 'sequence': 40, 'name': 'Sơn, chống thấm hoàn thiện'},
+            {'code': '04.5', 'sequence': 50, 'name': 'Thiết bị vệ sinh, phụ kiện'},
+            {'code': '04.6', 'sequence': 60, 'name': 'Nội thất cố định (fit-out)'},
+            {'code': '04.7', 'sequence': 70, 'name': 'Hoàn thiện khác'},
         ],
     },
     {
-        'code': '5', 'sequence': 50,
-        'name': 'Chi phí hạ tầng kỹ thuật',
+        'code': '05', 'sequence': 50,
+        'name': 'Chi phí cơ điện (MEP)',
+        'description': 'Điện, nước, HVAC, PCCC, ELV...',
         'children': [
-            {'code': '5.1', 'sequence': 10, 'name': 'Đường giao thông nội khu'},
-            {'code': '5.2', 'sequence': 20, 'name': 'Cầu / kè / bến / cảng'},
-            {'code': '5.3', 'sequence': 30, 'name': 'Cấp nước'},
-            {'code': '5.4', 'sequence': 40, 'name': 'Thoát nước mưa'},
-            {'code': '5.5', 'sequence': 50, 'name': 'Thoát nước thải'},
-            {'code': '5.6', 'sequence': 60, 'name': 'Xử lý nước thải'},
-            {'code': '5.7', 'sequence': 70, 'name': 'Cấp điện / trạm điện'},
-            {'code': '5.8', 'sequence': 80, 'name': 'Viễn thông / ICT'},
-            {'code': '5.9', 'sequence': 90, 'name': 'Chiếu sáng công cộng'},
-            {'code': '5.10', 'sequence': 100, 'name': 'Hạ tầng kỹ thuật khác'},
+            {'code': '05.1', 'sequence': 10, 'name': 'Điện động lực & chiếu sáng'},
+            {'code': '05.2', 'sequence': 20, 'name': 'Cấp thoát nước trong nhà'},
+            {'code': '05.3', 'sequence': 30, 'name': 'Điều hoà, thông gió (HVAC)'},
+            {'code': '05.4', 'sequence': 40, 'name': 'Phòng cháy chữa cháy (PCCC)'},
+            {'code': '05.5', 'sequence': 50, 'name': 'Điện nhẹ (ELV, BMS, camera, mạng)'},
+            {'code': '05.6', 'sequence': 60, 'name': 'Thang máy, thang cuốn'},
+            {'code': '05.7', 'sequence': 70, 'name': 'Trạm biến áp, máy phát điện'},
+            {'code': '05.8', 'sequence': 80, 'name': 'Cơ điện khác'},
         ],
     },
     {
-        'code': '6', 'sequence': 60,
-        'name': 'Chi phí cảnh quan, mặt nước, môi trường',
+        'code': '06', 'sequence': 60,
+        'name': 'Chi phí hạ tầng & ngoài nhà',
+        'description': 'Đường, cảnh quan, hạ tầng kỹ thuật ngoài nhà.',
         'children': [
-            {'code': '6.1', 'sequence': 10, 'name': 'Cây xanh / cảnh quan'},
-            {'code': '6.2', 'sequence': 20, 'name': 'Công viên / quảng trường'},
-            {'code': '6.3', 'sequence': 30, 'name': 'Hồ nước / lagoon / kênh nội khu'},
-            {'code': '6.4', 'sequence': 40, 'name': 'Bãi biển nhân tạo / kè biển'},
-            {'code': '6.5', 'sequence': 50, 'name': 'Sân golf'},
-            {'code': '6.6', 'sequence': 60, 'name': 'Bảo tồn / phục hồi môi trường'},
-            {'code': '6.7', 'sequence': 70, 'name': 'Cảnh quan khác'},
+            {'code': '06.1', 'sequence': 10, 'name': 'Đường giao thông nội bộ, sân bãi'},
+            {'code': '06.2', 'sequence': 20, 'name': 'Cấp thoát nước ngoài nhà'},
+            {'code': '06.3', 'sequence': 30, 'name': 'Cấp điện, chiếu sáng ngoài nhà'},
+            {'code': '06.4', 'sequence': 40, 'name': 'Hạ tầng viễn thông ngoài nhà'},
+            {'code': '06.5', 'sequence': 50, 'name': 'Cảnh quan, cây xanh, mặt nước'},
+            {'code': '06.6', 'sequence': 60, 'name': 'Tường rào, cổng, nhà bảo vệ'},
+            {'code': '06.7', 'sequence': 70, 'name': 'Xử lý nước thải, môi trường'},
+            {'code': '06.8', 'sequence': 80, 'name': 'Hạ tầng & ngoài nhà khác'},
         ],
     },
     {
-        'code': '7', 'sequence': 70,
-        'name': 'Chi phí tư vấn',
+        'code': '07', 'sequence': 70,
+        'name': 'Chi phí thiết bị & công nghệ',
+        'description': 'Máy móc, thiết bị, hệ thống công nghệ.',
         'children': [
-            {'code': '7.1', 'sequence': 10, 'name': 'Quy hoạch tổng thể'},
-            {'code': '7.2', 'sequence': 20, 'name': 'Thiết kế concept'},
-            {'code': '7.3', 'sequence': 30, 'name': 'Thiết kế cơ sở'},
-            {'code': '7.4', 'sequence': 40, 'name': 'Thiết kế kỹ thuật / bản vẽ thi công'},
-            {'code': '7.5', 'sequence': 50, 'name': 'Thẩm tra thiết kế'},
-            {'code': '7.6', 'sequence': 60, 'name': 'Thẩm tra dự toán'},
-            {'code': '7.7', 'sequence': 70, 'name': 'Lập và đánh giá hồ sơ thầu'},
-            {'code': '7.8', 'sequence': 80, 'name': 'Tư vấn giám sát'},
-            {'code': '7.9', 'sequence': 90, 'name': 'Tư vấn khác'},
+            {'code': '07.1', 'sequence': 10, 'name': 'Thiết bị công nghệ / dây chuyền'},
+            {'code': '07.2', 'sequence': 20, 'name': 'Thiết bị chuyên dụng (y tế, thí nghiệm...)'},
+            {'code': '07.3', 'sequence': 30, 'name': 'Thiết bị văn phòng, nội thất rời'},
+            {'code': '07.4', 'sequence': 40, 'name': 'Vận chuyển, lắp đặt, chạy thử'},
+            {'code': '07.5', 'sequence': 50, 'name': 'Đào tạo, chuyển giao công nghệ'},
+            {'code': '07.6', 'sequence': 60, 'name': 'Thiết bị khác'},
         ],
     },
     {
-        'code': '8', 'sequence': 80,
-        'name': 'Chi phí quản lý dự án',
+        'code': '08', 'sequence': 80,
+        'name': 'Chi phí quản lý & chi phí khác',
+        'description': 'Quản lý dự án, công trường, pháp lý, kiểm định, '
+                       'bảo hiểm, thuế, marketing và chi phí khác.',
         'children': [
-            {'code': '8.1', 'sequence': 10, 'name': 'Ban quản lý dự án chủ đầu tư'},
-            {'code': '8.2', 'sequence': 20, 'name': 'Tư vấn quản lý dự án thuê ngoài'},
-            {'code': '8.3', 'sequence': 30, 'name': 'Chi phí văn phòng dự án'},
-            {'code': '8.4', 'sequence': 40, 'name': 'Chi phí công cụ / phần mềm PMO'},
-            {'code': '8.5', 'sequence': 50, 'name': 'Quản lý dự án khác'},
+            {'code': '08.1', 'sequence': 10, 'name': 'Chi phí quản lý dự án / Ban điều hành'},
+            {'code': '08.2', 'sequence': 20, 'name': 'Chi phí công trường (lán trại, an toàn, vệ sinh MT)'},
+            {'code': '08.3', 'sequence': 30, 'name': 'Bảo hiểm công trình, bảo hiểm trách nhiệm'},
+            {'code': '08.4', 'sequence': 40, 'name': 'Kiểm định, thí nghiệm, nghiệm thu nhà nước'},
+            {'code': '08.5', 'sequence': 50, 'name': 'Lệ phí, thẩm định, thủ tục hành chính'},
+            {'code': '08.6', 'sequence': 60, 'name': 'Thuế, phí (VAT không khấu trừ, thuế nhà thầu)'},
+            {'code': '08.7', 'sequence': 70, 'name': 'Marketing & bán hàng (capex)'},
+            {'code': '08.8', 'sequence': 80, 'name': 'Chi phí khác'},
         ],
     },
     {
-        'code': '9', 'sequence': 90,
-        'name': 'Chi phí tài chính & thuế',
+        'code': '09', 'sequence': 90, 'is_finance_cost': True,
+        'name': 'Chi phí tài chính',
+        'description': 'Lãi vay, phí tín dụng và chi phí tài chính được '
+                       'phân bổ cho dự án. Mặc định LOẠI khỏi CTC khi '
+                       'tính Nhu cầu vốn (tránh vòng lặp lãi vay).',
         'children': [
-            {'code': '9.1', 'sequence': 10, 'name': 'Lãi vay capitalized trong xây dựng'},
-            {'code': '9.2', 'sequence': 20, 'name': 'Phí thu xếp vốn / phí ngân hàng'},
-            {'code': '9.3', 'sequence': 30, 'name': 'Phí kết nối hạ tầng / cấp phép'},
-            {'code': '9.4', 'sequence': 40, 'name': 'Thuế phi xây dựng / phí khác'},
+            {'code': '09.1', 'sequence': 10, 'is_finance_cost': True, 'name': 'Lãi vay trong thời gian xây dựng (vốn hoá)'},
+            {'code': '09.2', 'sequence': 20, 'is_finance_cost': True, 'name': 'Phí thu xếp vốn, phí cam kết'},
+            {'code': '09.3', 'sequence': 30, 'is_finance_cost': True, 'name': 'Phí bảo lãnh ngân hàng'},
+            {'code': '09.4', 'sequence': 40, 'is_finance_cost': True, 'name': 'Chênh lệch tỷ giá, chi phí tài chính khác'},
         ],
     },
     {
-        'code': '10', 'sequence': 100,
-        'name': 'Chi phí marketing và bán hàng (capex)',
-        'children': [
-            {'code': '10.1', 'sequence': 10, 'name': 'Showflat / sales gallery'},
-            {'code': '10.2', 'sequence': 20, 'name': 'Event launch / mở bán'},
-            {'code': '10.3', 'sequence': 30, 'name': 'Brand / PR capex'},
-            {'code': '10.4', 'sequence': 40, 'name': 'Marketing capex khác'},
-        ],
-    },
-    {
-        'code': '11', 'sequence': 110,
+        'code': '10', 'sequence': 100, 'is_contingency': True,
         'name': 'Dự phòng',
-        'is_contingency': True,
+        'description': 'Dự phòng khối lượng, trượt giá, rủi ro. Mặc định '
+                       'LOẠI khỏi CTC (chưa phát sinh, chưa có hồ sơ).',
         'children': [
-            {'code': '11.1', 'sequence': 10, 'name': 'Dự phòng khối lượng phát sinh', 'is_contingency': True},
-            {'code': '11.2', 'sequence': 20, 'name': 'Dự phòng trượt giá', 'is_contingency': True},
-            {'code': '11.3', 'sequence': 30, 'name': 'Dự phòng rủi ro khác', 'is_contingency': True},
+            {'code': '10.1', 'sequence': 10, 'is_contingency': True, 'name': 'Dự phòng khối lượng phát sinh'},
+            {'code': '10.2', 'sequence': 20, 'is_contingency': True, 'name': 'Dự phòng trượt giá'},
+            {'code': '10.3', 'sequence': 30, 'is_contingency': True, 'name': 'Dự phòng rủi ro khác'},
         ],
     },
 ]

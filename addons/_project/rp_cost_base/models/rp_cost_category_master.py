@@ -43,6 +43,14 @@ class RpCostCategoryMaster(models.Model):
         compute='_compute_complete_path', store=True, recursive=True)
 
     is_contingency = fields.Boolean(string='Contingency')
+
+    is_finance_cost = fields.Boolean(
+        string='Chi phí tài chính',
+        help='Nhóm chi phí tài chính (lãi vay vốn hoá, phí thu '
+             'xếp vốn, phí bảo lãnh...). Được LOẠI khỏi CTC và '
+             'khỏi gốc tính vốn tự có — tránh vòng lặp lãi vay '
+             '(tài liệu nghiệp vụ §3).',
+    )
     is_land_cost = fields.Boolean(string='Land Cost')
     description = fields.Text()
     active = fields.Boolean(default=True)
@@ -112,6 +120,7 @@ class RpCostCategoryMaster(models.Model):
                 'code': entry['code'],
                 'sequence': entry.get('sequence', 10),
                 'is_contingency': entry.get('is_contingency', False),
+                'is_finance_cost': entry.get('is_finance_cost', False),
                 'is_land_cost': entry.get('is_land_cost', False),
                 'description': entry.get('description', ''),
             })
@@ -125,6 +134,7 @@ class RpCostCategoryMaster(models.Model):
                     'code': child['code'],
                     'sequence': child.get('sequence', 10),
                     'is_contingency': child.get('is_contingency', False),
+                    'is_finance_cost': child.get('is_finance_cost', False),
                     'is_land_cost': child.get('is_land_cost', False),
                     'description': child.get('description', ''),
                 })
@@ -143,6 +153,7 @@ class RpCostCategoryMaster(models.Model):
                 'code': m.code,
                 'sequence': m.sequence,
                 'is_contingency': m.is_contingency,
+                'is_finance_cost': m.is_finance_cost,
                 'is_land_cost': m.is_land_cost,
                 'description': m.description or '',
                 'master_category_id': m.id,

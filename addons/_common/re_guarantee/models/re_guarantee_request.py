@@ -80,10 +80,10 @@ class ReGuaranteeRequest(models.Model):
     applicant_partner_id = fields.Many2one(
         'res.partner', string='Bên xin BL', required=True, tracking=True,
         default=lambda self: self.env.company.partner_id,
-        help='Thường là chính company (CC1).')
+        help='Thường là chính company (tổng thầu).')
     beneficiary_partner_id = fields.Many2one(
         'res.partner', string='Bên thụ hưởng', required=True, tracking=True,
-        help='Bên nhận BL — vd CĐT (khi CC1 mua BL).')
+        help='Bên nhận BL — vd CĐT (khi tổng thầu mua BL).')
     project_id = fields.Many2one(
         're.project', string='Dự án (áp dụng)',
         help='Dự án mà BL này phục vụ. Optional — chỉ filter báo cáo.')

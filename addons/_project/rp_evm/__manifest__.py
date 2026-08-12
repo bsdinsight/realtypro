@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — EVM (Kiểm soát chi phí)',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.6.3',
     'category': 'Realty/Project',
     'summary': 'Earned Value Management: CPI/CV/EAC/VAC + cảnh báo vượt chi '
                'theo hạng mục, rollup dự án.',
@@ -38,13 +38,26 @@ Ban QLDA → Phase 3b.
     'depends': [
         'rp_progress',
         'rp_cost_actual',
+        'rp_site',       # heat/QA/an toàn/nhân lực + gắn menu Rủi ro dưới Hiện trường
+        'rp_contract',   # BAC = Σ HĐ thầu phụ + re-parent menu Thay đổi (Change)
     ],
     'data': [
         'security/ir.model.access.csv',
+        'views/rp_project_estimate_views.xml',
+        'data/rp_risk_data.xml',
         'views/rp_structure_views.xml',
         'views/re_project_views.xml',
+        'views/rp_risk_views.xml',
         'views/rp_evm_dashboard_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            # Lib Syncfusion EJ2 (charts) do rp_progress ship — không vendor lại.
+            'rp_evm/static/src/scss/rp_evm_dashboard.scss',
+            'rp_evm/static/src/js/rp_evm_dashboard.js',
+            'rp_evm/static/src/xml/rp_evm_dashboard.xml',
+        ],
+    },
     'application': False,
     'installable': True,
 }

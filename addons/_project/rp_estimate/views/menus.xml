@@ -95,23 +95,33 @@
               groups="re_base.group_re_manager"
               sequence="20"/>
 
+    <!--
+        Đấu thầu / Chọn thầu = giai đoạn TRƯỚC hợp đồng (procure-to-contract):
+        Gói thầu (mời thầu) → Nhà thầu nộp HSDT → chấm thầu → Ký HĐ.
+        Là nghiệp vụ hình thành hợp đồng (không phải master data) → gom về
+        menu Hợp đồng, thành nhóm "Đấu thầu" đứng ĐẦU, trước "HĐ đã ký".
+        (2026-07-15 — chuyển khỏi Project Master)
+    -->
+    <menuitem id="menu_contracts_tender"
+              name="Đấu thầu / Chọn thầu"
+              parent="menu_contracts"
+              sequence="5"/>
+
     <menuitem id="menu_pm_rp_tender_package"
               name="Gói thầu"
-              parent="menu_project_master"
+              parent="menu_contracts_tender"
               action="rp_estimate.action_rp_tender_package"
-              sequence="90"/>
+              sequence="10"/>
 
     <menuitem id="menu_pm_rp_tender_bidder"
               name="Nhà thầu nộp HSDT"
-              parent="menu_project_master"
+              parent="menu_contracts_tender"
               action="rp_estimate.action_rp_tender_bidder"
-              sequence="95"/>
+              sequence="20"/>
 
-    <menuitem id="menu_pm_rp_contractor"
-              name="Nhà thầu"
-              parent="menu_project_master"
-              action="rp_contractor.action_rp_contractor"
-              sequence="100"/>
+    <!-- "Nhà thầu" là danh mục cấu hình → chỉ để 1 chỗ ở Cấu hình
+         (rp_owner_contract.menu_cfg_contractor). Bỏ bản trùng ở Project
+         Master. (2026-07-15) -->
 
     <!-- Chuyên môn nhà thầu = danh mục cấu hình ít đụng → Cấu hình (v1.14.0) -->
     <menuitem id="menu_pm_rp_contractor_specialty"

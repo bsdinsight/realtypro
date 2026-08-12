@@ -43,3 +43,4 @@ access_account_account_loan_user,account.account loan user,account.model_account
 access_account_account_loan_manager,account.account loan manager,account.model_account_account,re_loan.group_loan_manager,1,0,0,0
 access_account_account_tag_loan_user,account.account.tag loan user,account.model_account_account_tag,re_loan.group_loan_user,1,0,1,0
 access_account_account_tag_loan_manager,account.account.tag loan manager,account.model_account_account_tag,re_loan.group_loan_manager,1,1,1,1
+access_rp_milestone_funding_line,rp.milestone.funding.line,model_rp_milestone_funding_line,re_loan.group_loan_user,1,1,1,1

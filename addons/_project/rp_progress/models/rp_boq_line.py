@@ -58,6 +58,19 @@ class RpBoqLine(models.Model):
         related='category_id.sequence', store=True, index=True)
 
     # ----- Đầu việc + khối lượng × đơn giá
+    cost_element = fields.Selection(
+        [('material', 'Vật liệu'),
+         ('labor', 'Nhân công'),
+         ('machine', 'Máy thi công'),
+         ('subcontract', 'Thầu phụ'),
+         ('overhead', 'Chi phí chung'),
+         ('other', 'Khác')],
+        string='Yếu tố chi phí', index=True,
+        help='Chiều thứ HAI của chi phí, độc lập với cây nhóm chi phí '
+             '(vốn chia theo HẠNG MỤC CÔNG VIỆC). Để riêng thành trường '
+             'thay vì nhánh trong cây — nếu nhét vào cây sẽ phải nhân '
+             'chéo 10 nhóm × 5 yếu tố. Nhờ vậy xem theo hạng mục hay '
+             'pivot theo yếu tố đều được.')
     sequence = fields.Integer(string='STT', default=10)
     description = fields.Char(
         string='Đầu việc', required=True, translate=True,

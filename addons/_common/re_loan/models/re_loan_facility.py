@@ -20,6 +20,13 @@ class ReLoanFacility(models.Model):
     credit_contract_id = fields.Many2one(
         're.loan.credit.contract', string='HĐTD', required=True,
         ondelete='cascade', tracking=True)
+    partner_id = fields.Many2one(
+        'res.partner', string='Ngân hàng',
+        related='credit_contract_id.partner_id', store=True, index=True,
+        help='Suy từ HĐTD. Lưu lại để lọc/nhóm hạn mức theo ngân hàng — '
+             'số ngân hàng có BIÊN (vài nhà tài trợ, gần như không đổi), '
+             'khác với số HĐTD tăng dần theo năm.')
+
     facility_type = fields.Selection(
         [('revolving', 'Tuần hoàn (Revolving)'),
          ('term', 'Có kỳ hạn (Term)'),
@@ -31,21 +38,88 @@ class ReLoanFacility(models.Model):
         help='Cấu trúc kỹ thuật của hạn mức (cách hoàn lại/cam kết). '
              'Khác với Mục đích — chỉ "cái này hoạt động thế nào".')
     purpose = fields.Selection(
-        [('working_capital', 'Bổ sung vốn lưu động'),
-         ('investment_short', 'Đầu tư ngắn hạn'),
-         ('investment_medium', 'Đầu tư trung hạn'),
-         ('investment_long', 'Đầu tư dài hạn / dự án'),
-         ('bank_guarantee', 'Bảo lãnh'),
-         ('letter_of_credit', 'Tín dụng chứng từ (L/C)'),
-         ('overdraft', 'Thấu chi'),
-         ('trade_finance', 'Tài trợ thương mại'),
-         ('refinance', 'Tái cấp vốn / cơ cấu nợ'),
-         ('other', 'Khác')],
+        [
+         # ── A. VỐN LƯU ĐỘNG THI CÔNG (tổng thầu / thầu phụ) ──────────
+         # Đặt nhãn theo NGHIỆP VỤ thi công (mẫu OCB: vật tư · nhân công ·
+         # máy móc · thanh toán thầu phụ), không theo tên sản phẩm NH.
+         ('wc_construction', 'VLĐ thi công · Theo hợp đồng/gói thầu'),
+         ('wc_material', 'VLĐ thi công · Mua vật tư, nguyên vật liệu'),
+         ('wc_labor', 'VLĐ thi công · Chi phí nhân công'),
+         ('wc_subcontractor', 'VLĐ thi công · Thanh toán nhà thầu phụ'),
+         ('working_capital', 'VLĐ · Bổ sung vốn lưu động chung'),
+
+         # ── B. TÀI TRỢ KHOẢN PHẢI THU ────────────────────────────────
+         # NGANG HÀNG vốn lưu động, KHÔNG lồng vào: bao thanh toán là một
+         # HÌNH THỨC CẤP TÍN DỤNG riêng (TT 20/2024). Đây là chỗ IPC làm
+         # TSBĐ — BIDV tài trợ tới 85% giá trị HĐ, OCB tới 80% quyền đòi nợ.
+         ('ar_ipc_loan',
+          'Khoản phải thu · Vay bảo đảm bằng quyền đòi nợ KL hoàn thành (IPC)'),
+         ('factoring_seller',
+          'Khoản phải thu · Bao thanh toán bên bán (chiết khấu phải thu)'),
+         ('factoring_buyer',
+          'Khoản phải thu · Bao thanh toán bên mua (tài trợ chuỗi cung ứng)'),
+
+         # ── C. BẢO LÃNH ──────────────────────────────────────────────
+         # ⚠️ 'bank_guarantee' là giá trị CHỊU LỰC — KHÔNG tách thành loại
+         # BL con. Nó gate: _compute_amount_used (cộng BL đang hiệu lực),
+         # credit_contract._compute_split_stats (tách vay/bảo lãnh), và
+         # domain chọn facility ở re.bank.guarantee + re.guarantee.request.
+         # Loại BL chi tiết nằm ở re.bank.guarantee.guarantee_type.
+         ('bank_guarantee', 'Bảo lãnh ngân hàng'),
+
+         # ── D. ĐẦU TƯ THIẾT BỊ THI CÔNG ──────────────────────────────
+         ('equip_purchase', 'Thiết bị · Vay mua máy móc, thiết bị thi công'),
+         ('equip_finlease', 'Thiết bị · Thuê tài chính thiết bị thi công'),
+
+         # ── E. ĐẦU TƯ CHUNG (giữ từ bản cũ) ──────────────────────────
+         ('investment_short', 'Đầu tư · Ngắn hạn'),
+         ('investment_medium', 'Đầu tư · Trung hạn'),
+         ('investment_long', 'Đầu tư · Dài hạn / dự án'),
+
+         # ── F. TÀI TRỢ THƯƠNG MẠI ────────────────────────────────────
+         ('lc_import_equipment',
+          'Thương mại · L/C nhập khẩu thiết bị, vật tư công trình'),
+         ('letter_of_credit', 'Thương mại · Tín dụng chứng từ (L/C)'),
+         ('trade_finance', 'Thương mại · Tài trợ thương mại khác'),
+
+         # ── G. DỰ ÁN BĐS (chỉ CHỦ ĐẦU TƯ) ───────────────────────────
+         ('dev_project',
+          'Dự án BĐS · Phát triển dự án (tiền SDĐ, GPMB, xây dựng, hạ tầng)'),
+         ('dev_acquisition',
+          'Dự án BĐS · Mua/nhận chuyển nhượng, M&A dự án'),
+         ('dev_cooperation',
+          'Dự án BĐS · Góp vốn, hợp tác đầu tư kinh doanh dự án'),
+         ('dev_restructure',
+          'Dự án BĐS · Tái cấu trúc nợ dự án / trái phiếu DN BĐS'),
+
+         # ── H. KHÁC ──────────────────────────────────────────────────
+         ('overdraft', 'Khác · Thấu chi'),
+         ('refinance', 'Khác · Tái cấp vốn / cơ cấu nợ'),
+         ('reimbursement', 'Khác · Bù đắp tài chính'),
+         ('other', 'Khác'),
+        ],
         string='Mục đích sử dụng vốn', required=True, default='other',
         tracking=True,
         help='Mục đích sử dụng vốn theo HĐTD. NH VN thường chia hạn mức '
-             'theo mục đích (vd 50 tỷ vốn lưu động + 30 tỷ đầu tư dự án + '
-             '20 tỷ bảo lãnh). Tách bạch với Loại (facility_type).')
+             'theo mục đích (vd 50 tỷ VLĐ thi công + 30 tỷ đầu tư dự án + '
+             '20 tỷ bảo lãnh). Tách bạch với Loại (facility_type) — cái đó '
+             'nói hạn mức HOẠT ĐỘNG thế nào (tuần hoàn/có kỳ hạn/thấu chi).')
+
+    purpose_restricted = fields.Boolean(
+        string='Mục đích hạn chế', compute='_compute_purpose_restricted',
+        help='Điều 8 khoản 8/9/10 TT 39/2016 cấm 3 nhóm nhu cầu vốn này, '
+             'NHƯNG đang NGƯNG hiệu lực từ 01/9/2023 theo TT 10/2023 và '
+             'chưa được khôi phục. Giữ làm CỜ CẢNH BÁO, không chặn cứng — '
+             'NHNN có thể khôi phục bất cứ lúc nào; khi đó chỉ cần đổi cờ.')
+
+    @api.depends('purpose')
+    def _compute_purpose_restricted(self):
+        # Điều 8 TT 39/2016: kh.8 góp vốn/mua cổ phần chưa niêm yết ·
+        # kh.9 hợp đồng hợp tác vào dự án chưa đủ điều kiện KDBĐS ·
+        # kh.10 bù đắp tài chính. Cả 3 đang ngưng hiệu lực (TT 10/2023).
+        restricted = ('dev_acquisition', 'dev_cooperation', 'reimbursement')
+        for rec in self:
+            rec.purpose_restricted = rec.purpose in restricted
     amount_limit = fields.Monetary(
         string='Số tiền hạn mức', required=True, tracking=True)
     date_start = fields.Date(string='Ngày bắt đầu')

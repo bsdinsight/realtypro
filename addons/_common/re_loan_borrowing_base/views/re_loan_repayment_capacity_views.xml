@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- §8 ② nguồn thanh toán của CĐT — khai trên HĐ với CĐT -->
+    <record id="view_rp_owner_contract_form_funding_source"
+            model="ir.ui.view">
+        <field name="name">rp.owner.contract.form.funding.source</field>
+        <field name="model">rp.owner.contract</field>
+        <field name="inherit_id"
+               ref="rp_owner_contract.view_rp_owner_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='ipc_box']" position="before">
+                <group string="Nguồn thanh toán của CĐT (§8 ②)">
+                    <field name="owner_funding_source"/>
+                    <field name="owner_funding_note"
+                           placeholder="Số thư cam kết cấp tín dụng, QĐ giao vốn..."/>
+                    <field name="owner_overdue_amount" readonly="1"
+                           decoration-danger="owner_overdue_amount &gt; 0"/>
+                    <field name="owner_overdue_days_max" readonly="1"
+                           decoration-danger="owner_overdue_days_max &gt; 0"/>
+                    <div colspan="2" class="text-muted small"
+                         invisible="owner_funding_source not in (False, 'unclear')">
+                        Chưa khai nguồn thanh toán thì mọi đề xuất giải
+                        ngân cho dự án này sẽ bật cảnh báo §8 ② — CĐT
+                        không có nguồn trả rõ ràng là rủi ro lớn nhất của
+                        tổng thầu.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- §8 ④ phương án bù đắp lỗ — khai trên phiếu Nhu cầu vốn -->
+    <record id="view_re_loan_project_funding_form_loss_plan"
+            model="ir.ui.view">
+        <field name="name">re.loan.project.funding.form.loss.plan</field>
+        <field name="model">re.loan.project.funding</field>
+        <field name="inherit_id"
+               ref="re_loan_borrowing_base.view_re_loan_project_funding_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='note']" position="before">
+                <page string="Phương án bù đắp lỗ (§8 ④)" name="loss_plan">
+                    <div class="text-muted small mb-2">
+                        Tài liệu §8: <i>"không giải ngân mới nếu dự án
+                        đang lỗ mà chưa có phương án bù đắp"</i>. Dự báo
+                        lỗ = giá trị HĐ với CĐT thấp hơn dự báo chi phí
+                        cuối kỳ (EAC). Tick ô dưới khi đã có phương án
+                        được duyệt để gỡ cảnh báo.
+                    </div>
+                    <group>
+                        <field name="loss_plan_confirmed"/>
+                    </group>
+                    <field name="loss_plan"
+                           placeholder="Làm gì để bù lỗ, ai duyệt, hiệu lực khi nào..."/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ngưỡng ngày CĐT chậm trả -->
+    <record id="view_re_loan_kpi_policy_form_capacity" model="ir.ui.view">
+        <field name="name">re.loan.kpi.policy.form.capacity</field>
+        <field name="model">re.loan.kpi.policy</field>
+        <field name="inherit_id"
+               ref="re_loan_borrowing_base.view_re_loan_kpi_policy_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="owner_overdue_days"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- bảng theo dõi năng lực trả nợ theo KW -->
+    <record id="view_re_loan_note_list_capacity" model="ir.ui.view">
+        <field name="name">re.loan.note.list.capacity</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <list string="Năng lực trả nợ (§8)" create="false"
+                  decoration-danger="cap_state == 'warn'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="facility_id" optional="show"/>
+                <field name="amount" width="185px"/>
+                <field name="state"/>
+                <field name="cap_warning_count" string="Tín hiệu đỏ"/>
+                <field name="cap_cashflow" widget="badge" string="①"
+                       decoration-danger="cap_cashflow == 'warn'"
+                       decoration-success="cap_cashflow == 'ok'"/>
+                <field name="cap_owner_source" widget="badge" string="②"
+                       decoration-danger="cap_owner_source == 'warn'"
+                       decoration-success="cap_owner_source == 'ok'"/>
+                <field name="cap_schedule" widget="badge" string="③"
+                       decoration-danger="cap_schedule == 'warn'"
+                       decoration-success="cap_schedule == 'ok'"/>
+                <field name="cap_profit" widget="badge" string="④"
+                       decoration-danger="cap_profit == 'warn'"
+                       decoration-success="cap_profit == 'ok'"/>
+                <field name="cap_dscr" widget="badge" string="⑤"
+                       decoration-danger="cap_dscr == 'warn'"
+                       decoration-success="cap_dscr == 'ok'"/>
+                <field name="cap_dscr_value" string="DSCR"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_note_capacity" model="ir.actions.act_window">
+        <field name="name">Năng lực trả nợ (§8)</field>
+        <field name="res_model">re.loan.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_re_loan_note_list_capacity"/>
+        <field name="domain">[('project_id', '!=', False), ('state', 'not in', ('cancelled', 'fully_paid'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có khế ước nào gắn dự án
+            </p>
+            <p>
+                Năm tình huống <b>"không giải ngân mới"</b> của tài liệu
+                nghiệp vụ §8: ① dòng tiền không đủ trả nợ · ② CĐT không có
+                nguồn thanh toán rõ ràng · ③ chậm tiến độ nghiêm trọng ·
+                ④ lỗ chưa có phương án bù đắp · ⑤ DSCR dưới ngưỡng.<br/>
+                Tất cả là <b>cảnh báo mềm</b> — không chặn thao tác.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_note_capacity"
+              name="Năng lực trả nợ (§8)"
+              parent="re_loan.menu_re_loan_report"
+              action="action_re_loan_note_capacity"
+              sequence="33"/>
+
+</odoo>

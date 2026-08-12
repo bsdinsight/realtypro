@@ -19,7 +19,15 @@ class CnPortal(CustomerPortal):
     # Helpers
     # ------------------------------------------------------------------
     def _cn_partner(self):
-        return request.env.user.partner_id
+        """Partner CÔNG TY của người đang đăng nhập.
+
+        Form /dang-ky tạo công ty (cha) + người liên hệ (con), user gắn vào
+        NGƯỜI LIÊN HỆ. Nhưng thư mời / hồ sơ dự thầu / hồ sơ năng lực đều
+        gắn ở cấp CÔNG TY → phải dùng commercial_partner_id, nếu không portal
+        sẽ trắng trơn với mọi tài khoản đăng ký qua form.
+        (commercial_partner_id = chính nó nếu user gắn thẳng vào công ty.)
+        """
+        return request.env.user.partner_id.commercial_partner_id
 
     def _cn_invited_tenders(self):
         """Các gói mà partner hiện tại được mời (recordset cn.tender)."""
@@ -314,7 +322,9 @@ class CnPortal(CustomerPortal):
         if user and not user._is_public():
             # đã đăng nhập → gắn partner (nếu chưa) + đánh dấu, vào gói
             if not invite.partner_id:
-                invite.partner_id = user.partner_id
+                # gắn CÔNG TY, không phải người liên hệ — thư mời là mời
+                # doanh nghiệp, và ir.rule cũng khớp theo công ty
+                invite.partner_id = user.partner_id.commercial_partner_id
             if invite.state in ('draft', 'invited'):
                 invite.state = 'registered'
             return request.redirect('/my/tenders/%s' % invite.tender_id.id)

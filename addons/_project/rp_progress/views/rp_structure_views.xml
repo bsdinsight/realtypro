@@ -15,6 +15,7 @@
                             <field name="project_id" column_invisible="1"/>
                             <field name="currency_id" column_invisible="1"/>
                             <field name="category_id"/>
+                            <field name="cost_element" optional="show"/>
                             <field name="description"/>
                             <field name="uom_id"/>
                             <field name="quantity"/>

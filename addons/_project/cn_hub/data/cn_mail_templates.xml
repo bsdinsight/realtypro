@@ -80,4 +80,85 @@
         <field name="lang">{{ object.tender_id.gc_partner_id.lang or 'vi_VN' }}</field>
         <field name="auto_delete" eval="False"/>
     </record>
+
+    <!-- ===== Nhà thầu tự đăng ký: báo TỔNG THẦU có đơn mới ===== -->
+    <record id="mail_template_apply_new" model="mail.template">
+        <field name="name">Có nhà thầu đăng ký tham gia gói thầu</field>
+        <field name="model_id" ref="model_cn_tender_invite"/>
+        <field name="email_from">{{ (user.email_formatted or '') }}</field>
+        <field name="email_to">{{ object.tender_id.gc_partner_id.email or '' }}</field>
+        <field name="subject">[Đăng ký tham gia] {{ object.partner_name }} — {{ object.tender_id.name }}</field>
+        <field name="body_html" type="html">
+<div style="font-family:Arial,sans-serif;font-size:14px;color:#12283A">
+    <p>Kính gửi <t t-out="object.tender_id.gc_partner_id.name or 'Quý đơn vị'"/>,</p>
+    <p>Một nhà thầu vừa <b>đăng ký tham gia</b> gói thầu
+       <b><t t-out="object.tender_id.name or ''"/></b> trên Realty Pro Network:</p>
+    <table style="border-collapse:collapse;margin:12px 0">
+        <tr><td style="padding:4px 12px 4px 0;color:#4A6472">Nhà thầu</td>
+            <td style="padding:4px 0"><b><t t-out="object.partner_name or ''"/></b></td></tr>
+        <tr><td style="padding:4px 12px 4px 0;color:#4A6472">Mã số thuế</td>
+            <td style="padding:4px 0"><t t-out="object.partner_id.cn_tax_code or '—'"/></td></tr>
+        <tr><td style="padding:4px 12px 4px 0;color:#4A6472">Email</td>
+            <td style="padding:4px 0"><t t-out="object.email or ''"/></td></tr>
+        <tr><td style="padding:4px 12px 4px 0;color:#4A6472">Hồ sơ năng lực</td>
+            <td style="padding:4px 0"><t t-out="object.partner_id.cn_profile_progress or 0"/>% hoàn thiện</td></tr>
+    </table>
+    <p>Nhà thầu này <b>chưa xem được hồ sơ mời thầu</b> và <b>chưa nộp được hồ sơ dự thầu</b>
+       cho tới khi Quý đơn vị duyệt.</p>
+    <p style="color:#6C8792;font-size:12.5px">— Realty Pro Network</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- ===== Báo nhà thầu: ĐÃ DUYỆT ===== -->
+    <record id="mail_template_apply_approved" model="mail.template">
+        <field name="name">Đã duyệt tham gia gói thầu</field>
+        <field name="model_id" ref="model_cn_tender_invite"/>
+        <field name="email_from">{{ (user.email_formatted or '') }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="subject">[Được duyệt] Bạn có thể dự thầu: {{ object.tender_id.name }}</field>
+        <field name="body_html" type="html">
+<div style="font-family:Arial,sans-serif;font-size:14px;color:#12283A">
+    <p>Kính gửi <t t-out="object.partner_name or 'Quý nhà thầu'"/>,</p>
+    <p><b><t t-out="object.tender_id.gc_partner_id.name or 'Bên mời thầu'"/></b> đã
+       <b style="color:#0B7350">duyệt</b> cho Quý đơn vị tham gia gói thầu
+       <b><t t-out="object.tender_id.name or ''"/></b>.</p>
+    <p>Quý đơn vị đã có thể <b>tải hồ sơ mời thầu</b> và <b>nộp hồ sơ dự thầu</b>.</p>
+    <p style="margin:18px 0">
+        <a t-att-href="object.tender_id.get_base_url() + '/my/tenders/' + str(object.tender_id.id)"
+           style="background:#0E8C99;color:#fff;font-weight:700;padding:11px 20px;border-radius:9px;text-decoration:none">
+           Xem gói thầu &amp; nộp hồ sơ</a>
+    </p>
+    <p t-if="object.tender_id.deadline">
+        <b>Hạn nộp hồ sơ:</b> <t t-out="object.tender_id.deadline.strftime('%d/%m/%Y')"/>
+    </p>
+    <p style="color:#6C8792;font-size:12.5px">— Realty Pro Network</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+    <!-- ===== Báo nhà thầu: TỪ CHỐI ===== -->
+    <record id="mail_template_apply_rejected" model="mail.template">
+        <field name="name">Từ chối tham gia gói thầu</field>
+        <field name="model_id" ref="model_cn_tender_invite"/>
+        <field name="email_from">{{ (user.email_formatted or '') }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="subject">Kết quả đăng ký tham gia: {{ object.tender_id.name }}</field>
+        <field name="body_html" type="html">
+<div style="font-family:Arial,sans-serif;font-size:14px;color:#12283A">
+    <p>Kính gửi <t t-out="object.partner_name or 'Quý nhà thầu'"/>,</p>
+    <p>Cảm ơn Quý đơn vị đã quan tâm gói thầu
+       <b><t t-out="object.tender_id.name or ''"/></b>.</p>
+    <p>Rất tiếc, lần này bên mời thầu <b>chưa chấp thuận</b> đăng ký tham gia của Quý đơn vị<t t-if="object.reject_reason">:
+       <i><t t-out="object.reject_reason"/></i></t>.</p>
+    <p>Quý đơn vị vẫn có thể theo dõi và đăng ký các gói thầu khác đang mở trên Network.
+       Hồ sơ năng lực càng đầy đủ, cơ hội được duyệt càng cao.</p>
+    <p style="color:#6C8792;font-size:12.5px">— Realty Pro Network</p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+
 </odoo>

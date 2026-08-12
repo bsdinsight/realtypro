@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="rp_evm.Dashboard">
+        <div class="rp-evm">
+
+            <!-- Header -->
+            <div class="rp-evm-header">
+                <div class="rp-evm-title">
+                    <span class="rp-evm-eyebrow">BẢNG ĐIỀU KHIỂN DỰ ÁN · EVM</span>
+                    <h2 t-esc="state.data and state.data.project ? state.data.project.name : 'Đang tải…'"/>
+                </div>
+                <div class="rp-evm-tools">
+                    <select class="form-select form-select-sm rp-evm-proj"
+                            t-on-change="onSelectProject"
+                            t-if="state.data and state.data.projects">
+                        <t t-foreach="state.data.projects" t-as="p" t-key="p.id">
+                            <option t-att-value="p.id"
+                                    t-att-selected="p.id === state.projectId"
+                                    t-esc="p.name"/>
+                        </t>
+                    </select>
+                    <span class="rp-evm-today" t-if="state.data and state.data.project">
+                        Cập nhật: <b t-esc="state.data.project.today"/>
+                    </span>
+                    <button class="btn btn-sm btn-outline-secondary"
+                            t-on-click="onRefresh" title="Tải lại">
+                        <i class="fa fa-refresh"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading / error -->
+            <div t-if="state.loading" class="rp-evm-loading">
+                <i class="fa fa-spinner fa-spin fa-2x"/>
+                <div>Đang tổng hợp số liệu EVM…</div>
+            </div>
+            <div t-elif="state.error" class="rp-evm-empty">
+                <i class="fa fa-info-circle fa-2x"/>
+                <div t-esc="state.error"/>
+            </div>
+
+            <!-- Body -->
+            <t t-elif="state.data and state.data.ok">
+
+                <!-- KPI cards -->
+                <div class="rp-evm-kpis">
+                    <div class="rp-evm-card rp-evm-hero" t-att-class="healthClass(k.health)">
+                        <div class="rp-evm-card-label">Sức khỏe dự án</div>
+                        <div class="rp-evm-card-value">
+                            <t t-esc="k.health"/><span class="u">/100</span>
+                        </div>
+                        <div class="rp-evm-card-sub">
+                            CPI <t t-esc="k.cpi.toFixed(2)"/> · SPI <t t-esc="k.spi.toFixed(2)"/>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Giá trị hợp đồng (BAC)</div>
+                        <div class="rp-evm-card-value" t-esc="fmt(k.bac)"/>
+                        <div class="rp-evm-card-sub"><t t-esc="k.contract_count"/> gói thầu</div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">% Hoàn thành (EV/BAC)</div>
+                        <div class="rp-evm-card-value" t-esc="pct(k.progress_pct)"/>
+                        <div class="rp-evm-card-sub">EV <t t-esc="fmt(k.ev)"/></div>
+                    </div>
+                    <div class="rp-evm-card" t-att-class="cpiClass(k.cpi)">
+                        <div class="rp-evm-card-label">CPI — Hiệu quả chi phí</div>
+                        <div class="rp-evm-card-value" t-esc="k.cpi.toFixed(2)"/>
+                        <div class="rp-evm-card-sub">
+                            CV <t t-esc="fmt(k.cv)"/>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card" t-att-class="cpiClass(k.spi)">
+                        <div class="rp-evm-card-label">SPI — Hiệu quả tiến độ</div>
+                        <div class="rp-evm-card-value" t-esc="k.spi.toFixed(2)"/>
+                        <div class="rp-evm-card-sub">SV <t t-esc="fmt(k.sv)"/></div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Đã chi / Ngân sách</div>
+                        <div class="rp-evm-card-value" t-esc="pct(k.budget_used_pct)"/>
+                        <div class="rp-evm-card-sub">AC <t t-esc="fmt(k.ac)"/></div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Dự báo chi phí cuối (EAC)</div>
+                        <div class="rp-evm-card-value" t-esc="fmt(k.eac)"/>
+                        <div class="rp-evm-card-sub">theo CPI hiện tại</div>
+                    </div>
+                    <div class="rp-evm-card" t-att-class="k.vac >= 0 ? 'is-good' : 'is-bad'">
+                        <div class="rp-evm-card-label">Chênh lệch dự báo (VAC)</div>
+                        <div class="rp-evm-card-value">
+                            <t t-if="k.vac >= 0">+</t><t t-esc="fmt(k.vac)"/>
+                        </div>
+                        <div class="rp-evm-card-sub">
+                            <t t-if="k.vac >= 0">dưới ngân sách</t>
+                            <t t-else="">vượt ngân sách</t>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row: S-curve + Donut -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Đường cong S — Kế hoạch vs Thực tế (lũy kế)</h3>
+                            <span class="rp-evm-panel-note">
+                                PV kế hoạch · EV giá trị làm ra · AC chi phí thực — dừng ở tháng hiện tại
+                            </span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="scurve"/>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Cơ cấu giá trị hợp đồng</h3>
+                            <span class="rp-evm-panel-note">Theo gói thầu</span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="donut"/>
+                    </div>
+                </div>
+
+                <!-- Row: Cashflow + Progress by package -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Dòng tiền theo tháng</h3>
+                            <span class="rp-evm-panel-note">
+                                Thu từ CĐT (hóa đơn phát hành) vs Chi cho nhà thầu · ròng lũy kế
+                            </span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="cash"/>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Tiến độ theo gói thầu</h3>
+                            <span class="rp-evm-panel-note">% nghiệm thu / giá trị HĐ</span>
+                        </div>
+                        <div class="rp-evm-bars">
+                            <t t-foreach="state.data.packages" t-as="pk" t-key="pk_index">
+                                <div class="rp-evm-bar-row">
+                                    <div class="rp-evm-bar-top">
+                                        <span class="rp-evm-bar-name" t-esc="pk.name"/>
+                                        <span class="rp-evm-bar-val" t-esc="fmt(pk.value)"/>
+                                    </div>
+                                    <div class="rp-evm-bar-track">
+                                        <div class="rp-evm-bar-fill"
+                                             t-att-style="'width:' + Math.min(Math.max(pk.percent, 1.5), 100) + '%'"/>
+                                    </div>
+                                    <div class="rp-evm-bar-pct" t-esc="pct(pk.percent)"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register table -->
+                <div class="rp-evm-panel">
+                    <div class="rp-evm-panel-head">
+                        <h3>Danh mục gói thầu</h3>
+                    </div>
+                    <table class="rp-evm-table">
+                        <thead>
+                            <tr>
+                                <th>Gói thầu</th>
+                                <th>Nhà thầu</th>
+                                <th class="num">Giá trị HĐ</th>
+                                <th class="num">% Nghiệm thu</th>
+                                <th class="c">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.data.packages" t-as="pk" t-key="pk_index">
+                                <tr>
+                                    <td t-esc="pk.name"/>
+                                    <td class="muted" t-esc="pk.contractor or '—'"/>
+                                    <td class="num" t-esc="fmt(pk.value)"/>
+                                    <td class="num" t-esc="pct(pk.percent)"/>
+                                    <td class="c">
+                                        <span class="rp-evm-chip" t-esc="pk.state"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ============ BƯỚC 2: Rủi ro · An toàn · Chất lượng ============ -->
+                <div class="rp-evm-divider">
+                    <span>An toàn · Chất lượng · Rủi ro — kiểm soát dự án</span>
+                </div>
+
+                <!-- Mini KPI hàng 2 -->
+                <div class="rp-evm-kpis rp-evm-kpis-4">
+                    <div class="rp-evm-card" t-att-class="state.data.risk.high_count ? 'is-bad' : ''">
+                        <div class="rp-evm-card-label">Rủi ro đang mở</div>
+                        <div class="rp-evm-card-value" t-esc="state.data.risk.open_count"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="state.data.risk.high_count"/> rủi ro cao/nghiêm trọng
+                        </div>
+                    </div>
+                    <div class="rp-evm-card" t-att-class="state.data.safety.days_without_lti >= 30 ? 'is-good' : 'is-warn'">
+                        <div class="rp-evm-card-label">Ngày an toàn LĐ (không LTI)</div>
+                        <div class="rp-evm-card-value" t-esc="state.data.safety.days_without_lti"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="state.data.safety.toolbox_count"/> toolbox ·
+                            <t t-esc="state.data.safety.incident_count"/> sự cố
+                        </div>
+                    </div>
+                    <div class="rp-evm-card" t-att-class="state.data.qaqc.critical_open ? 'is-warn' : 'is-good'">
+                        <div class="rp-evm-card-label">Chất lượng QA/QC</div>
+                        <div class="rp-evm-card-value" t-esc="pct(state.data.qaqc.quality_pct)"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="state.data.qaqc.open"/> lỗi mở ·
+                            <t t-esc="state.data.qaqc.overdue"/> quá hạn
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Nhân lực (TB/ngày)</div>
+                        <div class="rp-evm-card-value" t-esc="state.data.manpower.avg"/>
+                        <div class="rp-evm-card-sub">
+                            đỉnh <t t-esc="state.data.manpower.peak"/> người
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heat map + Top risks -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Ma trận rủi ro (Risk heat map)</h3>
+                            <span class="rp-evm-panel-note">
+                                Khả năng (dọc) × Mức ảnh hưởng (ngang) — số = số rủi ro
+                            </span>
+                        </div>
+                        <div class="rp-evm-heat">
+                            <div class="rp-evm-heat-corner"/>
+                            <t t-foreach="[1,2,3,4,5]" t-as="ix" t-key="ix">
+                                <div class="rp-evm-heat-xh" t-esc="ix"/>
+                            </t>
+                            <t t-foreach="state.data.risk.matrix" t-as="row" t-key="row_index">
+                                <div class="rp-evm-heat-yh" t-esc="5 - row_index"/>
+                                <t t-foreach="row" t-as="cell" t-key="cell_index">
+                                    <div class="rp-evm-heat-cell"
+                                         t-att-class="heatClass(cell.score) + (cell.count ? '' : ' is-empty')">
+                                        <t t-if="cell.count" t-esc="cell.count"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                        <div class="rp-evm-heat-axis">
+                            <span>← Khả năng cao</span>
+                            <span>Mức ảnh hưởng →</span>
+                        </div>
+                        <div class="rp-evm-heat-legend">
+                            <span class="lv-low">Thấp</span>
+                            <span class="lv-medium">Trung bình</span>
+                            <span class="lv-high">Cao</span>
+                            <span class="lv-critical">Nghiêm trọng</span>
+                        </div>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Rủi ro trọng yếu</h3>
+                            <span class="rp-evm-panel-note">Top theo điểm rủi ro</span>
+                        </div>
+                        <table class="rp-evm-table rp-evm-table-sm">
+                            <thead>
+                                <tr><th>Rủi ro</th><th class="c">Ảnh hưởng</th><th class="c">Mức</th></tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.data.risk.top" t-as="rk" t-key="rk_index">
+                                    <tr>
+                                        <td>
+                                            <div class="rp-evm-risk-name" t-esc="rk.name"/>
+                                            <div class="rp-evm-risk-cat" t-esc="rk.category"/>
+                                        </td>
+                                        <td class="c muted" t-esc="rk.impact_note or '—'"/>
+                                        <td class="c">
+                                            <span class="rp-evm-lv" t-att-class="heatClass(rk.score)"
+                                                  t-esc="levelLabel(rk.level)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Manpower + QA/QC donut -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Nhân lực huy động</h3>
+                            <span class="rp-evm-panel-note">Theo nhật ký thi công (người/ngày)</span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="manpower"/>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Lỗi chất lượng đang mở</h3>
+                            <span class="rp-evm-panel-note">Theo mức độ</span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="qa"/>
+                    </div>
+                </div>
+
+                <!-- Decision insights -->
+                <div class="rp-evm-panel">
+                    <div class="rp-evm-panel-head">
+                        <h3>Cảnh báo &amp; khuyến nghị</h3>
+                        <span class="rp-evm-panel-note">Tự động theo ngưỡng CPI/SPI · rủi ro · an toàn · chất lượng</span>
+                    </div>
+                    <div class="rp-evm-insights">
+                        <t t-foreach="state.data.insights" t-as="it" t-key="it_index">
+                            <div class="rp-evm-insight" t-att-class="'is-' + it.type">
+                                <div class="rp-evm-insight-icon" t-esc="it.icon"/>
+                                <div class="rp-evm-insight-body">
+                                    <div class="rp-evm-insight-title" t-esc="it.title"/>
+                                    <div class="rp-evm-insight-text" t-esc="it.text"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Milestones -->
+                <div class="rp-evm-panel">
+                    <div class="rp-evm-panel-head">
+                        <h3>Mốc tiến độ (Milestones)</h3>
+                    </div>
+                    <table class="rp-evm-table">
+                        <thead>
+                            <tr>
+                                <th>Mốc</th>
+                                <th class="c">Kế hoạch</th>
+                                <th class="num">% Hoàn thành</th>
+                                <th class="c">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="state.data.milestones" t-as="mi" t-key="mi_index">
+                                <tr>
+                                    <td t-esc="mi.name"/>
+                                    <td class="c" t-esc="mi.date"/>
+                                    <td class="num" t-esc="pct(mi.percent)"/>
+                                    <td class="c">
+                                        <span class="rp-evm-ms" t-att-class="'ms-' + mi.status"
+                                              t-esc="msLabel(mi.status)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+            </t>
+        </div>
+    </t>
+
+</templates>

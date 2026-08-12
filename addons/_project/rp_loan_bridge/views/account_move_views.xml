@@ -22,6 +22,23 @@
                  tab "Chi tiết hóa đơn". Widget many2many_tax_tags của
                  Odoo chuẩn hardcode no_create=True → ẩn nút "Tạo mới".
                  Override options để hiện nút này. -->
+            <!-- Gắn Dự án / HĐ nhà thầu ngay trên hoá đơn: thiếu Dự án
+                 thì công nợ KHÔNG vào được ④ Nhu cầu vốn dự án. -->
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="move_type" invisible="1"/>
+                <field name="contract_id"
+                       invisible="move_type != 'in_invoice'"
+                       options="{'no_create': True}"/>
+                <field name="project_id"
+                       invisible="move_type != 'in_invoice'"
+                       options="{'no_create': True}"/>
+                <field name="supplier_credit_state" widget="badge"
+                       invisible="move_type != 'in_invoice'"
+                       decoration-success="supplier_credit_state == 'source'"
+                       decoration-danger="supplier_credit_state == 'overdue'"
+                       decoration-muted="supplier_credit_state in ['paid', 'na']"/>
+            </xpath>
+
             <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='tax_ids']"
                    position="attributes">
                 <attribute name="options">
@@ -141,7 +158,6 @@
         <field name="context">{
             'default_move_type': 'in_invoice',
             'search_default_g_project': 1,
-            'search_default_g_partner': 1,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

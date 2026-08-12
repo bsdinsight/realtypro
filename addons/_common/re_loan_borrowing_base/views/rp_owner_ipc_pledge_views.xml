@@ -57,6 +57,40 @@
                 <div class="alert alert-info" role="status">
                     <field name="preview_note" nolabel="1" readonly="1"/>
                 </div>
+                <!-- Phân bổ base vào từng facility — chỉ khi bảo đảm
+                     cấp HĐTD (toàn hợp đồng) -->
+                <group string="Phân bổ vào facility (tuỳ chọn)"
+                       invisible="pledge_target != 'contract' or not credit_contract_id">
+                    <field name="line_ids" nolabel="1" colspan="2">
+                        <list editable="bottom" create="false"
+                              delete="false">
+                            <field name="facility_id" readonly="1"
+                                   force_save="1"/>
+                            <field name="purpose" readonly="1"/>
+                            <field name="project_alloc" width="185px"
+                                   readonly="1"/>
+                            <field name="available_before" width="185px"
+                                   readonly="1"/>
+                            <field name="base_amount" width="185px"
+                                   sum="Σ phân bổ"/>
+                            <field name="secured_equiv" width="185px"
+                                   readonly="1" optional="show"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group>
+                        <field name="line_allocated"/>
+                        <field name="line_unallocated"/>
+                    </group>
+                    <div class="text-muted small" colspan="2">
+                        Nhập số ở dòng nào thì phần base đó <b>dành riêng
+                        cho facility đó</b> (ring-fence); phần còn lại nằm ở
+                        <b>bể chung HĐTD</b> — mọi facility dùng chung.
+                        Để trống hết = giữ nguyên kiểu cũ (tất cả vào bể
+                        chung). Danh sách chỉ gồm facility có phân bổ hạn
+                        mức cho dự án của IPC.
+                    </div>
+                </group>
                 <footer>
                     <button name="action_confirm" type="object"
                             string="Xác nhận thế chấp"

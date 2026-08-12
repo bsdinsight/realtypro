@@ -463,10 +463,42 @@
         </field>
     </record>
 
+
+    <!-- Graph + Pivot ngay trên danh sách Chứng thư BL — cùng lý do như
+         Khế ước: đọc thẳng cùng bản ghi nên không thể lệch số, và người
+         dùng tự chọn trục (loại BL · ngân hàng phát hành · bên thụ
+         hưởng) thay vì bị khoá vào một bố cục dựng sẵn. -->
+    <record id="view_re_bank_guarantee_graph" model="ir.ui.view">
+        <field name="name">re.bank.guarantee.graph</field>
+        <field name="model">re.bank.guarantee</field>
+        <field name="arch" type="xml">
+            <graph string="Cơ cấu bảo lãnh" type="bar" sample="1">
+                <field name="guarantee_type"/>
+                <field name="amount" type="measure" string="Giá trị BL"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_re_bank_guarantee_pivot" model="ir.ui.view">
+        <field name="name">re.bank.guarantee.pivot</field>
+        <field name="model">re.bank.guarantee</field>
+        <field name="arch" type="xml">
+            <pivot string="Cơ cấu bảo lãnh" sample="1">
+                <field name="issuing_bank_partner_id" type="row"/>
+                <field name="guarantee_type" type="col"/>
+                <field name="amount" type="measure" string="Giá trị BL"/>
+                <field name="guarantee_fee_amount" type="measure"
+                       string="Phí bảo lãnh"/>
+                <field name="deposit_amount" type="measure"
+                       string="Ký quỹ"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="action_re_bank_guarantee" model="ir.actions.act_window">
         <field name="name">Chứng thư Bảo lãnh</field>
         <field name="res_model">re.bank.guarantee</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
         <field name="search_view_id" ref="view_re_bank_guarantee_search"/>
         <field name="context">{'search_default_f_active': 1}</field>
     </record>

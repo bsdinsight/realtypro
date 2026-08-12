@@ -199,6 +199,25 @@
                         context="{'group_by': 'state'}"/>
                 <filter name="g_month" string="Tháng"
                         context="{'group_by': 'date_advice:month'}"/>
+
+                <!-- Panel lọc bên trái. Ba trục của người đối chiếu giấy
+                     báo nợ: ngân hàng nào trích · giấy đã xác nhận chưa
+                     · trích từ TÀI KHOẢN nào. Trục tài khoản là trục
+                     riêng của màn này — cùng một ngân hàng có thể trích
+                     từ nhiều tài khoản, mà đối chiếu sao kê thì phải
+                     soi theo đúng tài khoản chứ không theo ngân hàng. -->
+                <searchpanel>
+                    <field name="partner_id" string="Ngân hàng"
+                           select="multi" icon="fa-university"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-tasks"
+                           enable_counters="1"/>
+                    <field name="bank_account_id"
+                           string="Tài khoản bị trích"
+                           select="multi" icon="fa-credit-card"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

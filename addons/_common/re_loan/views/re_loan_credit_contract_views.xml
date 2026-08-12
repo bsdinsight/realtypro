@@ -14,6 +14,7 @@
                 <field name="date_end"/>
                 <field name="amount_total" sum="Tổng hạn mức"
                        string="Tổng HM HĐTD" width="220"/>
+                <field name="interest_rate_weighted" optional="show"/>
                 <field name="amount_facility_total" sum="Đã cấp"
                        string="HM đã cấp" width="220"/>
                 <field name="state" widget="badge"
@@ -75,6 +76,7 @@
                     <group>
                         <group string="Hạn mức (cấp)">
                             <field name="amount_facility_total"/>
+                            <field name="interest_rate_weighted"/>
                             <field name="amount_facility_available"
                                    decoration-danger="amount_facility_available &lt; 0"
                                    decoration-success="amount_facility_available &gt;= 0"/>
@@ -112,17 +114,20 @@
                                  role="alert" style="margin-bottom:6px;">
                                 <i class="fa fa-info-circle"/>
                                 <b>Thêm facility</b> → mở form khai đầy đủ
-                                (loại, mục đích, kỳ hạn, lãi suất). Trên
-                                lưới sửa nhanh được <b>Số tiền hạn mức</b>
-                                — "<b>Hạn mức HĐTD còn lại</b>" ở trên cập
-                                nhật ngay (đỏ = đã vượt tổng HĐTD). Bấm
-                                <b>Mở</b> ở từng dòng để cấu hình sâu (lãi
-                                suất, phân bổ dự án, TSĐB). Cần khai lại
-                                tổng + chia theo tỷ lệ tự động, bấm
-                                <b>Phân bổ lại hạn mức</b>.
+                                (loại, mục đích, kỳ hạn, lãi suất, Dự án +
+                                Hợp đồng). <b>Bấm vào một dòng</b> để mở lại
+                                form đó và cấu hình sâu (phân bổ dự án,
+                                TSĐB). "<b>Hạn mức HĐTD còn lại</b>" ở trên
+                                cập nhật ngay sau khi lưu (đỏ = đã vượt tổng
+                                HĐTD). Cần khai lại tổng + chia theo tỷ lệ
+                                tự động, bấm <b>Phân bổ lại hạn mức</b>.
                             </div>
                             <field name="facility_ids">
-                                <list editable="bottom" create="false">
+                                <!-- KHÔNG editable: bấm vào dòng là mở form đầy đủ trong
+                                     dialog (khai Dự án + Hợp đồng, TSBĐ riêng,
+                                     lãi suất). Sửa nhanh trên lưới không còn
+                                     cần thiết — anh Đại 2026-08-10. -->
+                                <list create="false">
                                     <field name="name"/>
                                     <field name="purpose"/>
                                     <field name="facility_type"/>
@@ -146,11 +151,6 @@
                                     <field name="day_count" optional="hide"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
-                                    <button name="action_open_form"
-                                            type="object"
-                                            icon="fa-expand"
-                                            string="Mở"
-                                            class="btn-link"/>
                                 </list>
                             </field>
                         </page>
@@ -210,6 +210,30 @@
                         context="{'group_by': 'partner_id'}"/>
                 <filter name="g_state" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+
+                <!-- Panel lọc bên trái. Ba trục người làm tín dụng dùng
+                     để khoanh vùng: vay của ngân hàng nào · HĐTD đang ở
+                     bước nào. `select="multi"` để soi nhiều giá trị
+                     một lượt —
+                     ví dụ xem chung "Hiệu lực + Sắp hết hạn".
+                     Trục Công ty chỉ hiện với người dùng đa công ty:
+                     một pháp nhân thì nó chỉ là một dòng vô nghĩa.
+                     KHÔNG đưa Loại tiền vào: dữ liệu thực tế chỉ có
+                     VND, một mục duy nhất thì chiếm chỗ mà không lọc
+                     được gì. Có khoản vay ngoại tệ thì thêm lại một
+                     dòng là xong. -->
+                <searchpanel>
+                    <field name="partner_id" string="Ngân hàng"
+                           select="multi" icon="fa-university"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-tasks"
+                           enable_counters="1"/>
+                    <field name="company_id" string="Công ty (bên vay)"
+                           select="multi" icon="fa-building"
+                           enable_counters="1"
+                           groups="base.group_multi_company"/>
+                </searchpanel>
             </search>
         </field>
     </record>

@@ -46,21 +46,8 @@ class ReLoanFacilityProjectAllocation(models.Model):
                 raise ValidationError(_(
                     "Số tiền phân bổ không được âm."))
 
-    @api.constrains('amount', 'facility_id')
-    def _check_total_within_facility(self):
-        for rec in self:
-            fac = rec.facility_id
-            total = sum(fac.project_allocation_ids.mapped('amount'))
-            if total > fac.amount_limit + 1:  # tolerance VND
-                raise ValidationError(_(
-                    "Tổng phân bổ theo dự án (%(t)s) vượt hạn mức "
-                    "facility '%(f)s' (%(l)s).",
-                    t=total, f=fac.name, l=fac.amount_limit))
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        # @api.constrains on O2M không fire khi create từ phía child
-        # → check tường minh.
-        recs = super().create(vals_list)
-        recs._check_total_within_facility()
-        return recs
+    # ⚠ KHÔNG chặn khi tổng phân bổ vượt hạn mức facility — anh Đại chốt
+    # 2026-07-29 là CẢNH BÁO MỀM (thực tế cần phân bổ tạm rồi điều chỉnh,
+    # và hạn mức hay được cấp trước khi ký đủ hợp đồng). Cảnh báo hiển thị
+    # bằng `amount_unallocated` âm: tô đỏ trên form facility + list trong
+    # HĐTD + alert trong tab Phân bổ dự án.

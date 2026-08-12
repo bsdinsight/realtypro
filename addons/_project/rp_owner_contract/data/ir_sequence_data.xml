@@ -12,4 +12,12 @@
         <field name="prefix">IPC/%(year)s/</field>
         <field name="padding">4</field>
     </record>
+    <record id="seq_rp_owner_advance" model="ir.sequence">
+        <field name="name">Tạm ứng CĐT</field>
+        <field name="code">rp.owner.advance</field>
+        <field name="prefix">TU-CDT/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
 </odoo>

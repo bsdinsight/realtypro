@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sepay_simulate_wizard_form" model="ir.ui.view">
+        <field name="name">re.bank.sepay.simulate.wizard.form</field>
+        <field name="model">re.bank.sepay.simulate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Mô phỏng giao dịch SePay">
+                <div class="alert alert-info" role="alert">
+                    Demo: dựng giao dịch đúng dạng SePay và đưa vào sổ đệm như
+                    webhook thật. Không cần tài khoản ngân hàng thật.
+                </div>
+                <group>
+                    <group>
+                        <field name="direction"/>
+                        <field name="amount"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                    </group>
+                    <group>
+                        <field name="bank_gateway"/>
+                        <field name="account_number"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="content"/>
+                    <field name="code"/>
+                </group>
+                <footer>
+                    <button name="action_simulate" type="object"
+                            string="Mô phỏng" class="btn-primary"/>
+                    <button string="Huỷ" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sepay_simulate" model="ir.actions.act_window">
+        <field name="name">Mô phỏng giao dịch SePay</field>
+        <field name="res_model">re.bank.sepay.simulate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_sepay_simulate" name="Mô phỏng giao dịch (demo)"
+              parent="menu_re_bank_sync_root"
+              action="action_sepay_simulate" sequence="20"/>
+
+</odoo>

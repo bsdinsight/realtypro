@@ -6,7 +6,22 @@ thiết bị, hợp đồng tương tự, doanh thu) + chứng chỉ năng lực
 Ngưỡng đánh giá (k, t, %HĐ tương tự) KHÔNG để ở đây — thuộc cấu hình gói
 thầu — vì mỗi gói HSMT quy định khác nhau trong biên độ luật cho phép.
 """
-from odoo import api, fields, models
+import re
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
+
+# MST Việt Nam: 10 chữ số (doanh nghiệp), hoặc 13 ký tự xxxxxxxxxx-xxx (đơn
+# vị phụ thuộc/chi nhánh).
+MST_RE = re.compile(r'^\d{10}(-\d{3})?$')
+
+
+def normalize_mst(value):
+    """Chuẩn hoá MST: bỏ khoảng trắng/chấm, giữ số và dấu gạch."""
+    if not value:
+        return value
+    return re.sub(r'[^\d-]', '', value).strip()
+
 
 FIELD_AREA = [
     ('survey', 'Khảo sát xây dựng'),
@@ -31,8 +46,33 @@ GRADE = [('1', 'Hạng I'), ('2', 'Hạng II'), ('3', 'Hạng III')]
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    # ----- Vai trò trên Network (một công ty được nhiều vai) -----
+    cn_role_ids = fields.Many2many(
+        'cn.role', 'cn_partner_role_rel', 'partner_id', 'role_id',
+        string='Vai trò trên Network',
+        help='Công ty này cung cấp gì: thi công · vật tư · nhân công · '
+             'nội thất · dịch vụ. Được chọn NHIỀU — nhiều đơn vị vừa bán '
+             'vật tư vừa nhận thi công.')
+
     # ----- Nhóm 1: tư cách pháp lý / thông tin doanh nghiệp -----
-    cn_tax_code = fields.Char(string='Mã số thuế')
+    # MST = ĐỊNH DANH CÔNG TY trên Network: mỗi công ty đúng 1 tài khoản gốc.
+    # Người đăng ký đầu tiên của 1 MST là quản trị viên công ty; người sau
+    # phải được mời (xem controllers/signup.py).
+    cn_tax_code = fields.Char(string='Mã số thuế', index=True)
+
+    _uniq_cn_tax_code = models.Constraint(
+        'unique(cn_tax_code)',
+        'Mã số thuế này đã được đăng ký trên Realty Pro Network. '
+        'Mỗi công ty chỉ có một tài khoản gốc.')
+
+    @api.constrains('cn_tax_code')
+    def _check_cn_tax_code(self):
+        for p in self:
+            if p.cn_tax_code and not MST_RE.match(p.cn_tax_code.strip()):
+                raise ValidationError(_(
+                    'Mã số thuế "%s" chưa đúng định dạng: phải là 10 chữ số, '
+                    'hoặc 13 ký tự dạng xxxxxxxxxx-xxx (chi nhánh).',
+                    p.cn_tax_code))
     cn_reg_number = fields.Char(string='Số ĐKKD')
     cn_reg_date = fields.Date(string='Ngày cấp ĐKKD')
     cn_reg_place = fields.Char(string='Nơi cấp ĐKKD')

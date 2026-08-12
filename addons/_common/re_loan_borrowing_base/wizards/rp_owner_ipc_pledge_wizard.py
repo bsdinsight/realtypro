@@ -27,6 +27,11 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
         related='ipc_id.amount_certified', string='Quyền đòi nợ trên IPC')
     owner_id = fields.Many2one(
         related='ipc_id.owner_id', string='Chủ đầu tư (con nợ)')
+    project_id = fields.Many2one(
+        related='ipc_id.project_id', string='Dự án',
+        help='IPC của dự án nào chỉ thế chấp cho khoản vay của CHÍNH dự '
+             'án đó — danh sách HĐTD/facility bên dưới đã lọc theo các '
+             'HĐTD có khai phân bổ hạn mức cho dự án này.')
 
     pledge_target = fields.Selection(
         [('contract', 'HĐTD (toàn hợp đồng)'),
@@ -36,6 +41,25 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
         're.loan.credit.contract', string='Hợp đồng tín dụng')
     facility_id = fields.Many2one(
         're.loan.facility', string='Facility (hạn mức)')
+
+    def _project_allocations(self):
+        """Các dòng phân bổ hạn mức thuộc dự án của IPC."""
+        self.ensure_one()
+        if not self.project_id:
+            return self.env['re.loan.facility.project.allocation']
+        return self.env['re.loan.facility.project.allocation'].search(
+            [('project_id', '=', self.project_id.id)])
+
+    @api.onchange('ipc_id', 'pledge_target')
+    def _onchange_project_domain(self):
+        """Ràng buộc nghiệp vụ: chỉ cho chọn HĐTD/facility CỦA dự án IPC."""
+        allocs = self._project_allocations()
+        return {'domain': {
+            'credit_contract_id':
+                [('id', 'in', allocs.mapped('credit_contract_id').ids)],
+            'facility_id':
+                [('id', 'in', allocs.mapped('facility_id').ids)],
+        }}
 
     type_id = fields.Many2one(
         're.loan.collateral.type', string='Loại TSBĐ', required=True,
@@ -72,6 +96,51 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
     pledge_ref = fields.Char(
         string='Số HĐ thế chấp',
         help='Số văn bản thế chấp quyền đòi nợ ký với ngân hàng.')
+
+    # --- Phân bổ base vào từng facility (khi bảo đảm cấp HĐTD) ---
+    line_ids = fields.One2many(
+        'rp.owner.ipc.pledge.line', 'wizard_id',
+        string='Phân bổ vào facility',
+        help='Chia phần "cộng thêm từ IPC này" cho từng facility của HĐTD '
+             'có phân bổ hạn mức cho dự án của IPC. Để TRỐNG hết = giữ '
+             'nguyên kiểu cũ: toàn bộ vào bể chung của HĐTD (umbrella).')
+    line_allocated = fields.Monetary(
+        string='Đã phân bổ vào facility', compute='_compute_line_stats')
+    line_unallocated = fields.Monetary(
+        string='Còn ở bể chung HĐTD', compute='_compute_line_stats',
+        help='Phần base không phân bổ riêng facility nào — vẫn nằm ở '
+             'umbrella HĐTD, mọi facility dùng chung.')
+
+    @api.depends('line_ids.base_amount', 'preview_base_add')
+    def _compute_line_stats(self):
+        for w in self:
+            alloc = sum(w.line_ids.mapped('base_amount'))
+            w.line_allocated = alloc
+            w.line_unallocated = max(0.0, (w.preview_base_add or 0.0) - alloc)
+
+    @api.onchange('credit_contract_id', 'pledge_target')
+    def _onchange_build_lines(self):
+        """Sinh danh sách facility của HĐTD CÓ phân bổ cho dự án IPC."""
+        self.line_ids = [(5, 0, 0)]
+        if self.pledge_target != 'contract' or not self.credit_contract_id:
+            return
+        allocs = self._project_allocations().filtered(
+            lambda a: a.credit_contract_id == self.credit_contract_id)
+        self.line_ids = [(0, 0, {
+            'facility_id': a.facility_id.id,
+            'base_amount': 0.0,
+        }) for a in allocs]
+
+    @api.constrains('line_ids')
+    def _check_line_total(self):
+        for w in self:
+            alloc = sum(w.line_ids.mapped('base_amount'))
+            if alloc > (w.preview_base_add or 0.0) + 0.01:
+                raise ValidationError(_(
+                    'Tổng phân bổ vào các facility (%(a)s) vượt phần base '
+                    'cộng thêm từ IPC này (%(t)s).',
+                    a='{:,.0f}'.format(alloc),
+                    t='{:,.0f}'.format(w.preview_base_add or 0.0)))
 
     # --- Xem trước tác động lên hạn mức ---
     preview_base_before = fields.Monetary(
@@ -149,6 +218,35 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
             raise UserError(_('Chọn Hợp đồng tín dụng.'))
         if self.pledge_target == 'facility' and not self.facility_id:
             raise UserError(_('Chọn Facility (hạn mức).'))
+
+        # Ràng buộc nghiệp vụ: IPC dự án X chỉ thế chấp cho khoản vay dự án X.
+        # HĐTD/facility được chọn PHẢI có phân bổ hạn mức cho dự án đó
+        # (onchange đã lọc UI, đây là chặn server-side).
+        allocs = self._project_allocations()
+        if self.project_id:
+            if not allocs:
+                raise UserError(_(
+                    'Chưa có HĐTD nào khai PHÂN BỔ HẠN MỨC cho dự án '
+                    '%(p)s.\nVào HĐTD → Facility → tab "Phân bổ dự án" '
+                    'khai trước, rồi mới đưa IPC vào làm TSBĐ — quyền '
+                    'đòi nợ của dự án nào chỉ bảo đảm cho khoản vay của '
+                    'chính dự án đó.', p=self.project_id.display_name))
+            if (self.pledge_target == 'contract'
+                    and self.credit_contract_id
+                    not in allocs.mapped('credit_contract_id')):
+                raise UserError(_(
+                    'HĐTD %(c)s không có phân bổ hạn mức cho dự án '
+                    '%(p)s — không nhận IPC của dự án này làm TSBĐ.',
+                    c=self.credit_contract_id.display_name,
+                    p=self.project_id.display_name))
+            if (self.pledge_target == 'facility'
+                    and self.facility_id
+                    not in allocs.mapped('facility_id')):
+                raise UserError(_(
+                    'Facility %(f)s không có phân bổ cho dự án %(p)s — '
+                    'không nhận IPC của dự án này làm TSBĐ.',
+                    f=self.facility_id.display_name,
+                    p=self.project_id.display_name))
         if self.secured_amount <= 0:
             raise UserError(_('Giá trị bảo đảm phải lớn hơn 0.'))
         if self.secured_amount > ipc.amount_certified + 0.01:
@@ -178,21 +276,52 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
                 q='{:,.0f}'.format(ipc.amount_certified)),
         })
 
-        pledge_vals = {
-            'name': self.pledge_ref or False,
-            'collateral_id': collateral.id,
-            'pledge_target': self.pledge_target,
-            'secured_amount': self.secured_amount,
-            'date_pledge': self.date_pledge,
-            'state': 'active',
-        }
-        if self.pledge_target == 'contract':
-            pledge_vals['credit_contract_id'] = self.credit_contract_id.id
+        Pledge = self.env['re.loan.collateral.pledge']
+        rate = self.advance_rate or (self.type_id.advance_rate or 0.0)
+
+        def _mk(vals, secured):
+            v = {
+                'name': self.pledge_ref or False,
+                'collateral_id': collateral.id,
+                'secured_amount': secured,
+                'date_pledge': self.date_pledge,
+                'state': 'active',
+            }
+            v.update(vals)
+            p = Pledge.create(v)
+            if rate:
+                p.advance_rate = rate
+            return p
+
+        pledges = Pledge.browse()
+        if self.pledge_target == 'contract' and any(
+                l.base_amount for l in self.line_ids):
+            # Chia base cho từng facility → tạo pledge RIÊNG facility
+            # (ring-fence). Quy ngược: secured = base / tỷ lệ cho vay.
+            if not rate:
+                raise UserError(_(
+                    'Chưa khai Tỷ lệ cho vay — không quy đổi được phần '
+                    'base phân bổ sang giá trị bảo đảm.'))
+            used = 0.0
+            for line in self.line_ids.filtered('base_amount'):
+                secured = line.base_amount / (rate / 100.0)
+                used += secured
+                pledges |= _mk({'pledge_target': 'facility',
+                                'facility_id': line.facility_id.id}, secured)
+            rest = self.secured_amount - used
+            if rest > 0.01:
+                pledges |= _mk(
+                    {'pledge_target': 'contract',
+                     'credit_contract_id': self.credit_contract_id.id}, rest)
+        elif self.pledge_target == 'contract':
+            pledges = _mk({'pledge_target': 'contract',
+                           'credit_contract_id': self.credit_contract_id.id},
+                          self.secured_amount)
         else:
-            pledge_vals['facility_id'] = self.facility_id.id
-        pledge = self.env['re.loan.collateral.pledge'].create(pledge_vals)
-        if self.advance_rate:
-            pledge.advance_rate = self.advance_rate
+            pledges = _mk({'pledge_target': 'facility',
+                           'facility_id': self.facility_id.id},
+                          self.secured_amount)
+        pledge = pledges[:1]
 
         cc = self.credit_contract_id or self.facility_id.credit_contract_id
         cc.invalidate_recordset()

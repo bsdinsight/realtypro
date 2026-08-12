@@ -76,6 +76,9 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             Progress: Math.round(t.progress || 0),
             Predecessor: t.dependencies || "",
             ParentID: t.parent || null,
+            // Baseline (kế hoạch gốc) — chỉ set khi caller truyền
+            BaselineStartDate: this._parseDate(t.baselineStart),
+            BaselineEndDate: this._parseDate(t.baselineEnd),
             // Preserve custom fields cho callbacks
             _cssClass: t.custom_class || "",
             _isContract: !!t._isContract,
@@ -94,7 +97,16 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 progress: "Progress",
                 dependency: "Predecessor",
                 parentID: "ParentID",
+                baselineStartDate: "BaselineStartDate",
+                baselineEndDate: "BaselineEndDate",
             },
+            // Baseline (kế hoạch gốc) — bar phụ dưới bar hiện hành. Bật khi
+            // caller opts.renderBaseline = true (mục 1 khung phân tích).
+            renderBaseline: !!opts.renderBaseline,
+            baselineColor: opts.baselineColor || "#8a6fb0",
+            // Đường găng (critical path) — EJ2 tự tính từ dependency +
+            // duration, tô đỏ chuỗi quyết định ngày về đích (mục 3).
+            enableCriticalPath: !!opts.enableCriticalPath,
             // View mode
             viewType: "ProjectView",
             // Toolbar built-in: zoom in/out, search, expand/collapse
@@ -134,7 +146,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             //    để update ngày
             editSettings: {
                 allowEditing: false,
-                allowTaskbarEditing: true,
+                allowTaskbarEditing: opts.allowTaskbarEditing !== false,
                 // Optional (rp_schedule): thêm/xoá task qua context menu.
                 // Mặc định false → hành vi rp_progress không đổi.
                 allowAdding: !!opts.allowAdding,
@@ -308,6 +320,8 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 Progress: Math.round(t.progress || 0),
                 Predecessor: t.dependencies || "",
                 ParentID: t.parent || null,
+                BaselineStartDate: this._parseDate(t.baselineStart),
+                BaselineEndDate: this._parseDate(t.baselineEnd),
                 _cssClass: t.custom_class || "",
                 _isContract: !!t._isContract,
                 _contractId: t._contractId || null,

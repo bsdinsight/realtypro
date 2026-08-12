@@ -32,6 +32,7 @@ class RpContract(models.Model):
         ctx.update(extra_ctx or {})
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('%s — %s', name, self.name),
             'res_model': model,
             'view_mode': 'list,form',

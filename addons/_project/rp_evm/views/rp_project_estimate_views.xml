@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Dự toán dự án: cây nhóm chi phí 2 cấp + 3 cột tiền ===== -->
+    <record id="view_rp_cost_category_estimate_list" model="ir.ui.view">
+        <field name="name">rp.cost.category.estimate.list</field>
+        <field name="model">rp.cost.category</field>
+        <field name="arch" type="xml">
+            <list string="Dự toán dự án theo nhóm chi phí"
+                  create="false" delete="false" edit="false"
+                  default_order="complete_path">
+                <field name="complete_path" string="Nhóm chi phí"/>
+                <field name="level" string="Cấp" optional="show"/>
+                <field name="est_from_structure" width="185px"
+                       string="Từ hạng mục (BOQ)"/>
+                <field name="est_direct" width="185px"
+                       string="Khai riêng cấp dự án"/>
+                <field name="est_total" width="185px"
+                       string="Dự toán dự án" decoration-bf="1"/>
+                <field name="needs_detail"
+                       string="Có thể tách chi tiết"
+                       readonly="1" optional="hide"/>
+                <field name="est_own_boq" width="185px" optional="hide"
+                       string="BOQ gắn thẳng nhóm này"/>
+                <field name="project_id" column_invisible="1"/>
+                <field name="parent_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_category_estimate_search" model="ir.ui.view">
+        <field name="name">rp.cost.category.estimate.search</field>
+        <field name="model">rp.cost.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_lv1" string="Cấp 1"
+                        domain="[('level', '=', 1)]"/>
+                <filter name="f_lv2" string="Cấp 2"
+                        domain="[('level', '=', 2)]"/>
+                <separator/>
+                <filter name="g_parent" string="Nhóm cấp 1"
+                        context="{'group_by': 'parent_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_project_estimate" model="ir.actions.act_window">
+        <field name="name">Dự toán dự án (theo nhóm chi phí)</field>
+        <field name="res_model">rp.cost.category</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_rp_cost_category_estimate_list"/>
+        <field name="search_view_id"
+               ref="view_rp_cost_category_estimate_search"/>
+        <field name="context">{'search_default_g_parent': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có nhóm chi phí nào cho dự án
+            </p>
+            <p>
+                Dự toán dự án = <b>Σ BOQ các hạng mục</b> +
+                <b>chi phí khai riêng cấp dự án</b> (quản lý dự án, lán
+                trại, bảo hiểm… — những khoản không thuộc hạng mục nào).
+                Cột <b>Có thể tách chi tiết</b> chỉ là <b>gợi ý</b> —
+                nhóm cấp 1 đang ôm tiền chưa tách xuống cấp 2. Để nguyên
+                cũng đúng: BAC, CTC và Nhu cầu vốn không đổi. Chỉ tách khi
+                cần đọc cơ cấu chi phí chi tiết hơn.
+            </p>
+        </field>
+    </record>
+
+    <!-- ===== Chi phí cấp dự án (khai tay) ===== -->
+    <record id="view_rp_project_cost_line_list" model="ir.ui.view">
+        <field name="name">rp.project.cost.line.list</field>
+        <field name="model">rp.project.cost.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="category_id" options="{'no_create': True}"/>
+                <field name="category_level" string="Cấp" optional="show"/>
+                <field name="description"/>
+                <field name="amount" width="185px" sum="Σ"/>
+                <field name="note" optional="hide"/>
+                <field name="project_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tab trên form Dự án -->
+    <record id="view_re_project_form_cost_lines" model="ir.ui.view">
+        <field name="name">re.project.form.cost.lines</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id"
+               ref="rp_progress.view_re_project_form_inherit_progress"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Chi phí cấp dự án" name="project_cost">
+                    <div class="alert alert-info small" role="status">
+                        Khai ở đây những khoản <b>không thuộc hạng mục
+                        nào</b>: quản lý dự án, lán trại, an toàn, bảo
+                        hiểm, lãi vay vốn hoá… Chúng <b>cộng vào tổng dự
+                        toán (BAC)</b> của dự án, nên chảy tiếp vào
+                        <b>Chi phí còn phải chi (CTC)</b> và
+                        <b>Nhu cầu vốn dự án</b>.
+                        Chi phí thuộc hạng mục thì khai ở
+                        <b>BOQ của hạng mục</b>, đừng khai lại ở đây.
+                    </div>
+                    <field name="project_cost_line_ids"
+                           context="{'default_project_id': id}">
+                        <list editable="bottom">
+                            <field name="category_id"
+                                   options="{'no_create': True}"
+                                   domain="[('project_id', '=', parent.id)]"/>
+                            <field name="category_level" string="Cấp"
+                                   optional="show"/>
+                            <field name="description"/>
+                            <field name="amount" width="185px" sum="Σ"/>
+                            <field name="note" optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="project_cost_direct_total"/>
+                        </group>
+                    </group>
+                    <button name="%(action_rp_project_estimate)d"
+                            type="action" class="btn-secondary"
+                            icon="fa-table"
+                            string="Xem Dự toán dự án theo nhóm chi phí"
+                            context="{'search_default_project_id': id,
+                                      'search_default_g_parent': 1}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

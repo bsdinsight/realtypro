@@ -43,31 +43,16 @@ class ReLoanCreditContract(models.Model):
             rec.unrated_pledge_count = len(rec.all_pledge_ids.filtered(
                 lambda p: p.state == 'active' and not p.advance_rate))
 
-    @api.constrains('amount_facility_total', 'borrowing_base_total',
-                    'has_any_pledges')
-    def _check_facility_within_base(self):
-        """CHẶN CỨNG: Σ hạn mức facility ≤ Cơ sở bảo đảm (base tổng).
-
-        Chỉ áp khi HĐTD ĐÃ khai TSĐB có tỷ lệ (has_any_pledges) — chưa
-        khai thì base = 0, không chặn (tránh khóa HĐTD chưa cấu hình).
-        Ràng buộc Σ ≤ Tổng hạn mức HĐTD do re_loan core lo riêng.
-        Fire cả khi sửa hạn mức facility (amount_facility_total) lẫn khi
-        định giá lại làm base đổi (borrowing_base_total)."""
-        for rec in self:
-            if not rec.has_any_pledges:
-                continue
-            if rec.currency_id.compare_amounts(
-                    rec.amount_facility_total,
-                    rec.borrowing_base_total) > 0:
-                raise ValidationError(_(
-                    "Tổng hạn mức các facility (%(f)s) vượt Cơ sở bảo "
-                    "đảm theo TSĐB (%(b)s).\n\nGiảm phân bổ hạn mức "
-                    "facility, hoặc bổ sung / định giá lại TSĐB để tăng "
-                    "cơ sở bảo đảm. Có thể chỉnh hạn mức facility ngay "
-                    "trong màn hình 'Định giá lại' hoặc 'Phân bổ lại "
-                    "hạn mức'.",
-                    f='{:,.0f}'.format(rec.amount_facility_total),
-                    b='{:,.0f}'.format(rec.borrowing_base_total)))
+    # ⚠ GỠ CHẶN CỨNG "Σ hạn mức facility ≤ Cơ sở bảo đảm" (2026-08-10).
+    # Tài liệu nghiệp vụ tài liệu nghiệp vụ §2 tách rõ BA con số: (1) hạn mức được PHÊ
+    # DUYỆT — trần ngân hàng cam kết; (2) cơ sở bảo đảm — trần thực theo
+    # TSBĐ, lên xuống liên tục; (3) khả dụng = min(1,2) − dư nợ. Hạn mức
+    # phê duyệt ĐƯỢC PHÉP cao hơn TSBĐ hiện có — đó chính là cảnh báo
+    # trung tâm của tài liệu ("nhiều DN chỉ nhìn (1) mà quên (2)"), và ví
+    # dụ §9 của họ có sublimit 500 tỷ trên BB 250 tỷ. Chặn cứng ở đây làm
+    # hệ thống KHÔNG dựng nổi chính ví dụ của khách.
+    # Thiếu bảo đảm vẫn thấy được: `margin_call` trên HĐTD, cột "Đang bị
+    # chặn bởi" ở dòng dự án, và khả dụng tự siết qua nhánh ② của min().
 
     @api.depends('all_pledge_ids.base_contribution',
                  'all_pledge_ids.state')
@@ -98,3 +83,22 @@ class ReLoanCreditContract(models.Model):
             rec.margin_call = (
                 rec.has_any_pledges
                 and used > rec.borrowing_base_total + 0.01)
+
+
+class ReLoanCreditContractProjectView(models.Model):
+    """Bảng tổng hợp hạn mức THEO DỰ ÁN trên HĐTD (spec nghiệp vụ khối 2 mục 1:
+    'hạn mức còn lại của từng dự án theo từng mục đích')."""
+    _inherit = 're.loan.credit.contract'
+
+    project_allocation_all_ids = fields.One2many(
+        're.loan.facility.project.allocation', string='Phân bổ theo dự án',
+        compute='_compute_project_allocation_all',
+        help='Mọi dòng phân bổ dự án của các facility thuộc HĐTD này.')
+
+    @api.depends('facility_ids.project_allocation_ids')
+    def _compute_project_allocation_all(self):
+        Alloc = self.env['re.loan.facility.project.allocation']
+        for rec in self:
+            rec.project_allocation_all_ids = Alloc.search(
+                [('facility_id.credit_contract_id', '=', rec.id)],
+                order='project_id, facility_id')

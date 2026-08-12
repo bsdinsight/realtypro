@@ -76,17 +76,27 @@
         </field>
     </record>
 
+    <!-- Form rollup cũ — GIỮ action (dùng drill-down "chi tiết theo hạng
+         mục" sau), nhưng KHÔNG còn menu top-level riêng. -->
     <record id="action_rp_evm_dashboard" model="ir.actions.act_window">
-        <field name="name">Kiểm soát chi phí (EVM)</field>
+        <field name="name">EVM — Chi tiết theo hạng mục (rollup)</field>
         <field name="res_model">rp.evm.dashboard</field>
         <field name="view_mode">form</field>
         <field name="target">current</field>
     </record>
 
+    <!-- Client action: bảng điều khiển trực quan (OWL + Syncfusion) -->
+    <record id="action_rp_evm_board" model="ir.actions.client">
+        <field name="name">Bảng điều khiển dự án (EVM)</field>
+        <field name="tag">rp_evm.dashboard</field>
+    </record>
+
+    <!-- MỘT menu EVM duy nhất → bảng điều khiển trực quan (KPI + S-curve +
+         rủi ro + an toàn + chất lượng + nhân lực + insight). -->
     <menuitem id="menu_rp_evm_dashboard"
-              name="Kiểm soát chi phí (EVM)"
+              name="EVM"
               parent="rp_estimate.menu_realty_project_root"
-              action="action_rp_evm_dashboard"
+              action="action_rp_evm_board"
               sequence="55"/>
 
 </odoo>

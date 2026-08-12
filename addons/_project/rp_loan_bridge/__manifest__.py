@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Loan Bridge',
-    'version': '19.0.1.28.0',
+    'version': '19.0.1.35.4',
     'category': 'Realty/Project',
     'summary': 'Phân bổ vay/lãi vay theo công trình: Project / Khu vực / '
                'Hạng mục / Gói thầu / HĐ nhà thầu',
@@ -36,6 +36,12 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
         'rp_estimate',
         'rp_contract',
         'rp_progress',
+        # re.loan.facility.owner_contract_id → rp.owner.contract và
+        # rp.milestone.funding.line → rp.owner.advance. Thiếu khai ở đây
+        # thì đồ thị module có thể nạp rp_loan_bridge TRƯỚC
+        # rp_owner_contract → AssertionError "unknown comodel_name".
+        # Dev không lộ vì re_loan_borrowing_base kéo sẵn thứ tự đúng.
+        'rp_owner_contract',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -44,8 +50,10 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
         'views/re_loan_note_views.xml',
         'views/re_loan_disbursement_dossier_views.xml',
         'views/rp_structure_views.xml',
+        'views/re_loan_facility_alloc_views.xml',
         'views/rp_contract_views.xml',
         'views/account_move_views.xml',
+        'views/rp_supplier_debt_views.xml',
         'views/rp_milestone_funding_views.xml',
         'views/menu.xml',
     ],

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_bank_transaction_list" model="ir.ui.view">
+        <field name="name">re.bank.transaction.list</field>
+        <field name="model">re.bank.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Giao dịch ngân hàng"
+                  decoration-success="state=='reconciled'"
+                  decoration-info="state=='matched'"
+                  decoration-muted="state=='ignored'">
+                <field name="txn_date"/>
+                <field name="bank_gateway"/>
+                <field name="direction"/>
+                <field name="amount" sum="Σ"/>
+                <field name="content"/>
+                <field name="code" optional="show"/>
+                <field name="source"/>
+                <field name="state"/>
+                <field name="matched_ref" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_bank_transaction_form" model="ir.ui.view">
+        <field name="name">re.bank.transaction.form</field>
+        <field name="model">re.bank.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Giao dịch ngân hàng">
+                <header>
+                    <button name="action_ignore" type="object" string="Bỏ qua"
+                            invisible="state in ('ignored','reconciled')"/>
+                    <button name="action_reset_new" type="object"
+                            string="Đặt lại (Mới)"
+                            invisible="state=='new'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,matched,reconciled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Giao dịch">
+                            <field name="direction"/>
+                            <field name="amount"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="txn_date"/>
+                            <field name="bank_gateway"/>
+                            <field name="account_number"/>
+                        </group>
+                        <group string="Đối chiếu">
+                            <field name="content"/>
+                            <field name="code"/>
+                            <field name="reference_code"/>
+                            <field name="accumulated"/>
+                            <field name="matched_ref"/>
+                            <field name="matched_note"/>
+                        </group>
+                    </group>
+                    <group string="Nguồn">
+                        <field name="source"/>
+                        <field name="external_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Payload gốc" name="raw"
+                              invisible="not raw_payload">
+                            <field name="raw_payload" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_bank_transaction_search" model="ir.ui.view">
+        <field name="name">re.bank.transaction.search</field>
+        <field name="model">re.bank.transaction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="content"/>
+                <field name="code"/>
+                <field name="reference_code"/>
+                <field name="amount"/>
+                <filter name="in" string="Tiền vào"
+                        domain="[('direction','=','in')]"/>
+                <filter name="out" string="Tiền ra"
+                        domain="[('direction','=','out')]"/>
+                <separator/>
+                <filter name="new" string="Chưa đối soát"
+                        domain="[('state','=','new')]"/>
+                <filter name="reconciled" string="Đã đối soát"
+                        domain="[('state','=','reconciled')]"/>
+                <separator/>
+                <filter name="g_source" string="Nguồn"
+                        context="{'group_by':'source'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_bank_transaction" model="ir.actions.act_window">
+        <field name="name">Giao dịch ngân hàng</field>
+        <field name="res_model">re.bank.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có giao dịch nào</p>
+            <p>Giao dịch từ SePay (webhook), sao kê, AI đọc chứng từ hay nhập
+               tay — gom về đây để đối soát vào IPC / đặt cọc / trả nợ.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_bank_sync_root" name="Đối soát ngân hàng"
+              sequence="48"/>
+    <menuitem id="menu_re_bank_transaction" name="Giao dịch ngân hàng"
+              parent="menu_re_bank_sync_root"
+              action="action_re_bank_transaction" sequence="10"/>
+
+</odoo>

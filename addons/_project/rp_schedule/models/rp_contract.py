@@ -18,6 +18,51 @@ class RpContract(models.Model):
         help='Trung bình % hoàn thành các công việc, trọng số theo số '
              'ngày kế hoạch (bỏ qua milestone).')
 
+    # --- Phân tích tiến độ: baseline + đường găng (mục 1+3 khung) ---
+    critical_task_count = fields.Integer(
+        string='Công việc trên đường găng',
+        compute='_compute_schedule_analysis')
+    near_critical_count = fields.Integer(
+        string='Cận găng (dự trữ ≤ 5 ngày)',
+        compute='_compute_schedule_analysis')
+    critical_pct = fields.Float(
+        string='% công việc găng', compute='_compute_schedule_analysis')
+    baseline_slip_max = fields.Integer(
+        string='Trượt baseline lớn nhất (ngày)',
+        compute='_compute_schedule_analysis')
+    has_baseline = fields.Boolean(
+        string='Đã chốt baseline', compute='_compute_schedule_analysis')
+
+    def _compute_schedule_analysis(self):
+        Task = self.env['project.task']
+        for c in self:
+            tasks = Task.search([
+                ('rp_contract_id', '=', c.id),
+                ('planned_start', '!=', False)])
+            crit = tasks.filtered('is_critical')
+            near = tasks.filtered(lambda t: 0 < t.total_float <= 5)
+            base = tasks.filtered('baseline_end')
+            c.critical_task_count = len(crit)
+            c.near_critical_count = len(near)
+            c.critical_pct = (len(crit) / len(tasks) * 100.0) if tasks else 0.0
+            c.baseline_slip_max = max(
+                base.mapped('baseline_slip_days'), default=0)
+            c.has_baseline = bool(base)
+
+    def action_recompute_critical_path(self):
+        """Tính lại đường găng + total float, ghi vào công việc."""
+        self.ensure_one()
+        self.env['project.task'].rp_compute_critical_path(self.id)
+        return {
+            'type': 'ir.actions.client', 'tag': 'reload',
+        }
+
+    def action_set_schedule_baseline(self):
+        """Chốt baseline = copy lịch KH hiện hành làm mốc gốc."""
+        self.ensure_one()
+        self.env['project.task'].rp_set_baseline(contract_id=self.id)
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
     @api.depends('task_ids.progress_percent', 'task_ids.planned_days',
                  'task_ids.is_milestone')
     def _compute_schedule(self):
@@ -98,6 +143,7 @@ class RpContract(models.Model):
         proj = self._get_or_create_schedule_project()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Lịch thi công — %s', self.name),
             'res_model': 'project.task',
             'view_mode': 'list,form',

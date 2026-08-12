@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Bank Guarantee Bridge',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.4.0',
     'category': 'Realty/Project',
     'summary': 'Link HĐ nhà thầu (rp.contract) với chứng thư BL NH '
                '(re.bank.guarantee).',
@@ -20,6 +20,7 @@ Cài tuỳ chọn — chỉ KH dùng cả rp_contract + re_guarantee mới cần
     'license': 'AGPL-3',
     'depends': [
         'rp_contract',
+        'rp_owner_contract',
         're_guarantee',
     ],
     'data': [

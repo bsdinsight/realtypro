@@ -129,7 +129,7 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------------
     # Distinct from Odoo's native parent_id (contact hierarchy). This is
     # the GROUP parent used by intercompany lending: a parent company
-    # (e.g. CC1) borrows from a bank and on-lends to its subsidiaries.
+    # (e.g. tổng thầu) borrows from a bank and on-lends to its subsidiaries.
     parent_company_id = fields.Many2one(
         'res.partner', string='Parent Company (Group)',
         domain="[('is_company', '=', True), ('id', '!=', id)]",

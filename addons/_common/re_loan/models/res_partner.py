@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Extend res.partner (NH) — config phí KW theo ngân hàng (CC1 #9)."""
+"""Extend res.partner (NH) — config phí KW theo ngân hàng (khách hàng #9)."""
 from odoo import fields, models
 
 

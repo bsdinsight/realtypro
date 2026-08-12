@@ -117,7 +117,7 @@ class RpAdvancePayment(models.Model):
     settlement_count = fields.Integer(
         compute='_compute_settled', store=True)
 
-    # Thanh toán từng phần qua nhiều hồ sơ giải ngân (bug #19 CC1):
+    # Thanh toán từng phần qua nhiều hồ sơ giải ngân (bug #19 của khách hàng):
     # 1 Tạm ứng có thể được thanh toán qua NHIỀU dossier — mỗi dossier
     # 1 phần. State 'paid' CHỈ khi Σ đã thanh toán đủ giá trị tạm ứng.
     dossier_ids = fields.One2many(

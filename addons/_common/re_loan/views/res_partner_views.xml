@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- % phí KW theo NH (CC1 #9) — thêm vào page Realty Identity
+    <!-- % phí KW theo NH (khách hàng #9) — thêm vào page Realty Identity
          của re_party, chỉ hiện khi partner là ngân hàng. -->
     <record id="view_partner_form_re_loan_fee" model="ir.ui.view">
         <field name="name">res.partner.form.re.loan.fee</field>

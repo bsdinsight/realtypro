@@ -66,7 +66,7 @@
                          invisible="state != 'draft'">
                         <i class="fa fa-info-circle" title="Lưu ý"/>
                         <b>Chuẩn NH VN:</b> giải ngân chuyển TRỰC TIẾP về
-                        tài khoản nhà thầu, KHÔNG qua tài khoản CC1. Cần
+                        tài khoản nhà thầu, KHÔNG qua tài khoản tổng thầu. Cần
                         điền đủ "Bên nhận tiền" + "TK NH của Nhà thầu"
                         trước khi gửi NH duyệt.
                     </div>
@@ -500,14 +500,72 @@
                         context="{'group_by': 'state'}"/>
                 <filter name="g_aging" string="Nhóm tuổi nợ"
                         context="{'group_by': 'aging_bucket'}"/>
+
+                <!-- Panel lọc bên trái. Bốn trục người làm tín dụng dùng
+                     hằng ngày: đang ở bước nào · nợ ngân hàng nào · dưới
+                     HĐTD nào · quá hạn bao lâu.
+                     `select="multi"` để chọn nhiều giá trị cùng lúc (một
+                     KW chỉ ở một trạng thái, nhưng người xem thường muốn
+                     soi "hiệu lực + trả một phần" chung một lượt).
+                     Trục DỰ ÁN không khai ở đây: field `project_id` nằm
+                     ở re_loan_borrowing_base, khai vào đây thì cài mỗi
+                     re_loan là view đổ.
+                     KHÔNG đưa HĐTD vào panel: số HĐTD tăng dần theo năm
+                     nên panel sẽ phình vô hạn — trục panel phải là danh
+                     mục có biên. Lọc theo HĐTD dùng ô tìm kiếm. -->
+                <searchpanel>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-tasks"
+                           enable_counters="1"/>
+                    <field name="partner_id" string="Ngân hàng"
+                           select="multi" icon="fa-university"
+                           enable_counters="1"/>
+                    <field name="aging_bucket" string="Nhóm tuổi nợ"
+                           select="multi" icon="fa-clock-o"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
+        </field>
+    </record>
+
+
+    <!-- Graph + Pivot ngay trên danh sách Khế ước.
+         Chọn cách này thay vì dựng thêm một dashboard cho nhóm "Rút vốn
+         & Bảo lãnh": hai chế độ xem này đọc THẲNG cùng bản ghi nên
+         không thể lệch số với danh sách, lại cho người dùng tự chọn
+         trục cắt lát — thứ mà dashboard cố định không làm được. -->
+    <record id="view_re_loan_note_graph" model="ir.ui.view">
+        <field name="name">re.loan.note.graph</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <graph string="Cơ cấu khế ước" type="bar" sample="1">
+                <field name="partner_id"/>
+                <field name="principal_outstanding" type="measure"
+                       string="Dư nợ gốc"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_re_loan_note_pivot" model="ir.ui.view">
+        <field name="name">re.loan.note.pivot</field>
+        <field name="model">re.loan.note</field>
+        <field name="arch" type="xml">
+            <pivot string="Cơ cấu khế ước" sample="1">
+                <field name="partner_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure" string="Số tiền KW"/>
+                <field name="principal_outstanding" type="measure"
+                       string="Dư nợ gốc"/>
+                <field name="interest_outstanding" type="measure"
+                       string="Lãi còn phải trả"/>
+            </pivot>
         </field>
     </record>
 
     <record id="action_re_loan_note" model="ir.actions.act_window">
         <field name="name">Khế ước nhận nợ</field>
         <field name="res_model">re.loan.note</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,graph,pivot</field>
         <field name="search_view_id" ref="view_re_loan_note_search"/>
         <field name="context">{'search_default_f_external': 1}</field>
         <field name="help" type="html">

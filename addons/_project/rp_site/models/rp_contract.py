@@ -26,6 +26,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Nhật ký thi công — %s', self.name),
             'res_model': 'rp.site.diary',
             'view_mode': 'list,form',
@@ -38,6 +39,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Punch list — %s', self.name),
             'res_model': 'rp.site.punch',
             'view_mode': 'list,form',

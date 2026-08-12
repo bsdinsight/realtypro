@@ -57,7 +57,7 @@ class ReLoanNote(models.Model):
         # Logic mới: xử lý advance dossiers
         self.ensure_one()
         advances = self._collect_dossier_advances()
-        # Bug #19 CC1: KHÔNG mark 'paid' vô điều kiện — 1 Tạm ứng có
+        # Bug #19 tài liệu nghiệp vụ: KHÔNG mark 'paid' vô điều kiện — 1 Tạm ứng có
         # thể thanh toán qua NHIỀU dossier, mỗi dossier 1 phần. Dùng
         # _update_paid_state(): so Σ tiền dossier đã giải ngân với giá
         # trị tạm ứng → paid (đủ) / partial_paid (một phần).

@@ -1,0 +1,228 @@
+// Bảng điều khiển dự án (EVM) — Nắng & Thép
+.rp-evm {
+    --sand: #f6f3ec;
+    --card: #ffffff;
+    --ink: #1c2b36;
+    --muted: #6b7a85;
+    --line: #e7e2d8;
+    --steel: #34617a;
+    --nang: #c9873d;
+    --good: #2e7d5b;
+    --warn: #c99a2e;
+    --bad: #c0453b;
+
+    background: var(--sand);
+    padding: 16px;
+    // Khung cha (.o_action_manager) có overflow:hidden → dashboard PHẢI tự
+    // cuộn nội bộ. Dùng height:100% (KHÔNG min-height, kẻo nở hết chiều cao
+    // nội dung rồi chặn wheel) + overflow-y:auto để có thanh cuộn thật.
+    height: 100%;
+    box-sizing: border-box;
+    color: var(--ink);
+    font-size: 13px;
+    overflow-y: auto;
+
+    // ---- Header ----
+    .rp-evm-header {
+        display: flex; align-items: flex-end; justify-content: space-between;
+        gap: 16px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .rp-evm-eyebrow {
+        font-size: 11px; font-weight: 700; letter-spacing: .09em;
+        color: var(--nang); text-transform: uppercase;
+    }
+    .rp-evm-title h2 { margin: 2px 0 0; font-size: 22px; font-weight: 700; }
+    .rp-evm-tools {
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .rp-evm-proj { min-width: 240px; max-width: 340px; }
+    .rp-evm-today { font-size: 12px; color: var(--muted); }
+
+    // ---- States ----
+    .rp-evm-loading, .rp-evm-empty {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 12px; padding: 80px 0;
+        color: var(--muted);
+    }
+
+    // ---- KPI cards ----
+    .rp-evm-kpis {
+        display: grid; gap: 12px; margin-bottom: 14px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 1200px) { .rp-evm-kpis { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .rp-evm-kpis { grid-template-columns: 1fr; } }
+
+    .rp-evm-card {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 12px; padding: 14px 16px;
+        border-left: 4px solid var(--steel);
+        box-shadow: 0 1px 2px rgba(28, 43, 54, .04);
+    }
+    .rp-evm-card-label {
+        font-size: 11.5px; color: var(--muted); font-weight: 600;
+        text-transform: uppercase; letter-spacing: .03em;
+    }
+    .rp-evm-card-value {
+        font-size: 26px; font-weight: 700; line-height: 1.15; margin-top: 4px;
+        .u { font-size: 14px; color: var(--muted); font-weight: 600; }
+    }
+    .rp-evm-card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .rp-evm-card.is-good { border-left-color: var(--good); }
+    .rp-evm-card.is-warn { border-left-color: var(--warn); }
+    .rp-evm-card.is-bad  { border-left-color: var(--bad); }
+    .rp-evm-card.is-good .rp-evm-card-value { color: var(--good); }
+    .rp-evm-card.is-warn .rp-evm-card-value { color: #a9791a; }
+    .rp-evm-card.is-bad  .rp-evm-card-value { color: var(--bad); }
+
+    .rp-evm-hero {
+        background: linear-gradient(135deg, #22333f 0%, #34617a 100%);
+        border: none; color: #fff;
+        .rp-evm-card-label { color: rgba(255, 255, 255, .8); }
+        .rp-evm-card-sub { color: rgba(255, 255, 255, .75); }
+        .rp-evm-card-value { color: #fff; }
+        &.is-good { box-shadow: inset 4px 0 0 #7fd6a8; }
+        &.is-warn { box-shadow: inset 4px 0 0 #f0c65a; }
+        &.is-bad  { box-shadow: inset 4px 0 0 #e79a94; }
+    }
+
+    // ---- Panels / rows ----
+    .rp-evm-row {
+        display: grid; gap: 12px; margin-bottom: 12px;
+        grid-template-columns: 2fr 1fr;
+    }
+    @media (max-width: 980px) { .rp-evm-row { grid-template-columns: 1fr; } }
+
+    .rp-evm-panel {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
+        box-shadow: 0 1px 2px rgba(28, 43, 54, .04);
+    }
+    .rp-evm-panel-head {
+        display: flex; align-items: baseline; justify-content: space-between;
+        gap: 10px; flex-wrap: wrap; margin-bottom: 8px;
+        h3 { margin: 0; font-size: 15px; font-weight: 700; }
+    }
+    .rp-evm-panel-note { font-size: 11.5px; color: var(--muted); }
+    .rp-evm-chart { width: 100%; min-height: 300px; }
+
+    // ---- Progress bars ----
+    .rp-evm-bars { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+    .rp-evm-bar-top {
+        display: flex; justify-content: space-between; gap: 8px;
+        font-size: 12.5px; margin-bottom: 4px;
+    }
+    .rp-evm-bar-name { font-weight: 600; }
+    .rp-evm-bar-val { color: var(--muted); white-space: nowrap; }
+    .rp-evm-bar-track {
+        position: relative; height: 10px; border-radius: 6px;
+        background: #ece7dd; overflow: hidden;
+    }
+    .rp-evm-bar-fill {
+        position: absolute; inset: 0 auto 0 0; height: 100%;
+        border-radius: 6px;
+        background: linear-gradient(90deg, var(--steel), var(--nang));
+    }
+    .rp-evm-bar-pct {
+        font-size: 11.5px; color: var(--muted); text-align: right; margin-top: 2px;
+    }
+
+    // ---- Table ----
+    .rp-evm-table {
+        width: 100%; border-collapse: collapse; font-size: 12.5px;
+        th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+        th { color: var(--muted); font-weight: 600; text-transform: uppercase;
+             font-size: 11px; letter-spacing: .03em; }
+        td.num, th.num { text-align: right; white-space: nowrap; }
+        td.c, th.c { text-align: center; }
+        td.muted { color: var(--muted); }
+        tbody tr:hover { background: #faf8f3; }
+    }
+    .rp-evm-chip {
+        display: inline-block; padding: 2px 9px; border-radius: 999px;
+        background: #eef1ee; color: var(--steel); font-size: 11px; font-weight: 600;
+    }
+
+    // ---- Step 2: divider ----
+    .rp-evm-divider {
+        display: flex; align-items: center; gap: 12px; margin: 20px 0 12px;
+        span {
+            font-size: 12px; font-weight: 700; letter-spacing: .06em;
+            text-transform: uppercase; color: var(--nang); white-space: nowrap;
+        }
+        &::before, &::after {
+            content: ""; flex: 1; height: 1px; background: var(--line);
+        }
+    }
+    .rp-evm-kpis-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 1200px) { .rp-evm-kpis-4 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .rp-evm-kpis-4 { grid-template-columns: 1fr; } }
+
+    // ---- Risk heat map ----
+    .rp-evm-heat {
+        display: grid; grid-template-columns: 26px repeat(5, 1fr);
+        gap: 4px; margin-top: 6px;
+    }
+    .rp-evm-heat-corner { }
+    .rp-evm-heat-xh, .rp-evm-heat-yh {
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700; color: var(--muted);
+    }
+    .rp-evm-heat-cell {
+        aspect-ratio: 1.9 / 1; border-radius: 5px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 700; font-size: 13px;
+        &.is-empty { opacity: .18; }
+    }
+    .lv-low { background: #6fae83; }
+    .lv-medium { background: #d4a72c; }
+    .lv-high { background: #d97b3d; }
+    .lv-critical { background: #c0453b; }
+
+    .rp-evm-heat-axis {
+        display: flex; justify-content: space-between; margin-top: 6px;
+        font-size: 10.5px; color: var(--muted);
+    }
+    .rp-evm-heat-legend {
+        display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;
+        span {
+            font-size: 10.5px; font-weight: 600; color: #fff;
+            padding: 2px 8px; border-radius: 4px;
+        }
+    }
+
+    // ---- Risk register (small table) ----
+    .rp-evm-table-sm td, .rp-evm-table-sm th { padding: 7px 8px; }
+    .rp-evm-risk-name { font-weight: 600; font-size: 12px; line-height: 1.3; }
+    .rp-evm-risk-cat { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+    .rp-evm-lv {
+        display: inline-block; padding: 2px 8px; border-radius: 4px;
+        color: #fff; font-size: 10.5px; font-weight: 700; white-space: nowrap;
+    }
+
+    // ---- Decision insights ----
+    .rp-evm-insights {
+        display: grid; gap: 10px; grid-template-columns: 1fr 1fr; padding-top: 4px;
+    }
+    @media (max-width: 720px) { .rp-evm-insights { grid-template-columns: 1fr; } }
+    .rp-evm-insight {
+        display: flex; gap: 10px; padding: 12px 14px; border-radius: 10px;
+        background: #faf8f3; border-left: 4px solid var(--steel);
+    }
+    .rp-evm-insight.is-good { border-left-color: var(--good); background: #f1f8f4; }
+    .rp-evm-insight.is-warn { border-left-color: var(--warn); background: #fdf8ec; }
+    .rp-evm-insight.is-danger { border-left-color: var(--bad); background: #fbf1f0; }
+    .rp-evm-insight-icon { font-size: 18px; line-height: 1.2; }
+    .rp-evm-insight-title { font-weight: 700; font-size: 13px; }
+    .rp-evm-insight-text { font-size: 12px; color: #4a5860; margin-top: 2px; line-height: 1.45; }
+
+    // ---- Milestones status ----
+    .rp-evm-ms {
+        display: inline-block; padding: 2px 9px; border-radius: 999px;
+        font-size: 11px; font-weight: 600;
+    }
+    .rp-evm-ms.ms-done { background: #e4f3ea; color: var(--good); }
+    .rp-evm-ms.ms-ontrack { background: #eaf0f4; color: var(--steel); }
+    .rp-evm-ms.ms-overdue { background: #fbe9e7; color: var(--bad); }
+}

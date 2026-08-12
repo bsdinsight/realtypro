@@ -249,3 +249,17 @@ class RpOwnerAcceptance(models.Model):
                     'phải thu/TSBĐ). Cần điều chỉnh thì lập BBNT âm kỳ '
                     'sau theo biên bản với CĐT.'))
             rec.state = 'cancelled'
+
+    def action_remove_from_ipc(self):
+        """Gỡ BBNT khỏi IPC — CHỈ bỏ liên kết, KHÔNG xoá BBNT.
+
+        Bảng BBNT trong IPC chặn tạo/xoá dòng (khối lượng phải đi từ BBNT
+        có thật). Đây là lối gỡ đúng: BBNT quay về 'chưa thuộc IPC nào' và
+        gom lại được vào IPC khác.
+        """
+        for rec in self:
+            if rec.ipc_id and rec.ipc_id.state == 'signed':
+                raise UserError(_(
+                    'IPC %s đã được CĐT ký nhận — không gỡ BBNT ra được.',
+                    rec.ipc_id.name))
+            rec.ipc_id = False

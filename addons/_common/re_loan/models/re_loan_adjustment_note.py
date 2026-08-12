@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Thông báo Nợ / Có — điều chỉnh lãi hồi tố (CC1 #8).
+Thông báo Nợ / Có — điều chỉnh lãi hồi tố (khách hàng #8).
 
 Nghiệp vụ: NH đổi lãi suất qua phụ lục, nhưng khách đã thanh toán kỳ
 lãi TRƯỚC khi phụ lục có hiệu lực → chênh lệch giữa số đã trả (LS cũ)

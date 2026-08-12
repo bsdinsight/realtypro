@@ -2,11 +2,11 @@
 <odoo>
     <!-- Demo: cấu trúc tập đoàn + 1 khoản cho vay lại từ KW-2026/0001 -->
     <record id="demo_partner_cc1" model="res.partner">
-        <field name="name">Tổng Công ty CC1</field>
+        <field name="name">Tổng Công ty Xây dựng ABC</field>
         <field name="is_company" eval="True"/>
     </record>
     <record id="demo_partner_cc1_sub" model="res.partner">
-        <field name="name">CC1 - Công ty con Miền Nam</field>
+        <field name="name">Công ty con Miền Nam</field>
         <field name="is_company" eval="True"/>
         <field name="parent_company_id" ref="demo_partner_cc1"/>
     </record>

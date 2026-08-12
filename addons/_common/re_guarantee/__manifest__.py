@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bank Guarantee Management',
-    'version': '19.0.1.16.0',
+    'version': '19.0.1.16.1',
     'category': 'Realty/Finance',
     'summary': 'Quản lý chứng thư bảo lãnh ngân hàng: dự thầu, thực hiện HĐ, '
                'tạm ứng, bảo hành, thanh toán — phí + ký quỹ + lifecycle.',
@@ -22,7 +22,7 @@ Tính năng:
 
   - Tracking đầy đủ:
     + Số chứng thư, ngày phát hành, ngày hết hạn
-    + Bên xin BL (applicant) — vd CC1
+    + Bên xin BL (applicant) — vd tổng thầu
     + Bên thụ hưởng (beneficiary) — vd CĐT
     + NH phát hành, chi nhánh
     + Giá trị BL, phí BL (% năm + số tiền)

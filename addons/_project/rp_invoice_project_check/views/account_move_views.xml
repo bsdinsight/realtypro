@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Băng cảnh báo + ô khai báo trên phiếu hoá đơn -->
+    <record id="view_move_form_project_check" model="ir.ui.view">
+        <field name="name">account.move.form.project.check</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger m-0" role="alert"
+                     invisible="not rp_project_missing">
+                    <i class="fa fa-exclamation-triangle me-1"
+                       title="Cảnh báo"/>
+                    <b>Hoá đơn chưa gắn dự án.</b>
+                    Số tiền này sẽ không vào <b>Công nợ NCC</b> của phiếu
+                    Nhu cầu vốn, cũng không vào <b>chi phí đã thực hiện
+                    (AC)</b> của dự án nào — nhu cầu vay và biên lợi nhuận
+                    dự báo sẽ lệch.
+                    Gắn dự án qua hợp đồng, hoặc tick
+                    <b>"Không thuộc dự án nào"</b> ở tab Thông tin khác
+                    nếu đúng là chi phí chung.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="rp_no_project"
+                       invisible="move_type not in ('in_invoice', 'out_invoice')"/>
+                <field name="rp_project_missing" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Bộ lọc "Chưa gắn dự án" — hoá đơn mua vào và bán ra -->
+    <record id="view_account_invoice_filter_project_check"
+            model="ir.ui.view">
+        <field name="name">account.invoice.select.project.check</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="before">
+                <filter name="rp_project_missing"
+                        string="Chưa gắn dự án"
+                        domain="[('rp_project_missing', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_bill_filter_project_check" model="ir.ui.view">
+        <field name="name">account.bill.select.project.check</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_bill_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="before">
+                <filter name="rp_project_missing"
+                        string="Chưa gắn dự án"
+                        domain="[('rp_project_missing', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Cột Dự án trên danh sách hoá đơn: nhìn ra ngay chỗ nào rỗng.
+         Neo vào account.view_invoice_tree — đây mới là list GỐC dùng
+         chung; view_out_invoice_tree / view_in_invoice_tree đều chỉ là
+         bản kế thừa của nó nên xpath vào chúng không thấy field. -->
+    <record id="view_invoice_tree_project_check" model="ir.ui.view">
+        <field name="name">account.invoice.list.project.check</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <!-- list gốc KHÔNG có field partner_id (dùng
+                 invoice_partner_display_name) → neo vào ngày đến hạn. -->
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="project_id" string="Dự án (chi)"
+                       optional="show"
+                       column_invisible="context.get('default_move_type') == 'out_invoice'"/>
+                <field name="owner_project_id" string="Dự án (thu)"
+                       optional="show"
+                       column_invisible="context.get('default_move_type') == 'in_invoice'"/>
+                <field name="rp_project_missing" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

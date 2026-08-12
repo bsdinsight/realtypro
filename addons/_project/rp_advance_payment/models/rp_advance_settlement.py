@@ -30,7 +30,7 @@ class RpAdvanceSettlement(models.Model):
                " ('partner_id', '=', advance_partner_id)]",
         help='Hóa đơn vendor bill cần cấn trừ. Chỉ hiện hóa đơn '
              'cùng Bên nhận tạm ứng + đã posted + CHƯA thanh toán '
-             'hết (bug #22 CC1 — hóa đơn Paid không còn gì để cấn).')
+             'hết (bug #22 của khách hàng — hóa đơn Paid không còn gì để cấn).')
 
     amount = fields.Monetary(
         string='Số tiền cấn trừ', required=True,
@@ -63,7 +63,7 @@ class RpAdvanceSettlement(models.Model):
     payment_id = fields.Many2one(
         'account.payment', string='Thanh toán cấn trừ',
         readonly=True, copy=False,
-        help='Payment ghi nhận cấn trừ trên hóa đơn (bug #23 CC1) — '
+        help='Payment ghi nhận cấn trừ trên hóa đơn (bug #23 của khách hàng) — '
              'tự tạo khi thêm dòng cấn trừ, tự huỷ khi xoá dòng. '
              'Nhờ payment này Amount Due + trạng thái thanh toán '
              'của hóa đơn cập nhật đúng.')
@@ -125,7 +125,7 @@ class RpAdvanceSettlement(models.Model):
 
     def _register_invoice_payment(self):
         """Ghi nhận cấn trừ lên hóa đơn qua account.payment.register
-        (bug #23 CC1) — Amount Due giảm + payment_state tự update
+        (bug #23 của khách hàng) — Amount Due giảm + payment_state tự update
         (partial khi cấn 1 phần, paid khi đủ). Cùng pattern
         _mark_dossier_invoices_paid của rp_loan_bridge.
         """

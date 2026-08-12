@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+  Landing công khai Realty Pro Network — phục vụ tại `/` cho khách chưa
+  đăng nhập (controllers/landing.py).
+  Thiết kế: Claude Design (bundle "RealtyPro Landing Page-handoff").
+  Nguyên tắc giữ nguyên: self-contained (KHÔNG CDN ngoài), class prefix
+  `rpn-`, tiếng Việt, mobile-first, KHÔNG hiện giá gói thầu.
+-->
+<template id="landing" name="Realty Pro Network — Landing">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Realty Pro Network — Sàn đấu thầu ngành xây dựng</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+/* ===== Realty Pro Network · landing · self-contained, prefix rpn- ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rpn-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --rpn-ink:#12283A;--rpn-ink-2:#4A6472;--rpn-ink-3:#6C8792;
+  --rpn-navy:#0F2C3F;--rpn-teal:#0E8C99;--rpn-mint:#46D6C0;
+  --rpn-amber:#F59E0B;--rpn-amber-d:#D97F06;
+  --rpn-line:#DDE7EA;--rpn-bg:#FFFFFF;--rpn-bg-2:#F3F8F9;--rpn-bg-3:#E3F1F2;
+  --rpn-ok:#0F9D6C;--rpn-warn:#C2410C;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--rpn-font);color:var(--rpn-ink);background:var(--rpn-bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+.rpn-wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+
+/* buttons */
+.rpn-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:16px;font-weight:700;padding:14px 24px;border-radius:10px;border:2px solid transparent;cursor:pointer;text-align:center;transition:transform .12s,background .15s,box-shadow .15s;line-height:1.2}
+.rpn-btn-primary{background:var(--rpn-amber);color:#241A00;box-shadow:0 6px 18px -6px rgba(245,158,11,.6)}
+.rpn-btn-primary:hover{background:var(--rpn-amber-d);transform:translateY(-1px)}
+.rpn-btn-ghost{background:transparent;border-color:rgba(255,255,255,.45);color:#fff}
+.rpn-btn-ghost:hover{background:rgba(255,255,255,.12)}
+.rpn-btn-solid{background:var(--rpn-teal);color:#fff}
+.rpn-btn-solid:hover{background:var(--rpn-navy);transform:translateY(-1px)}
+.rpn-btn-lg{font-size:17px;padding:16px 28px}
+
+/* ===== HEADER ===== */
+.rpn-header{position:sticky;top:0;z-index:40;background:var(--rpn-navy);color:#fff}
+.rpn-nav{display:flex;align-items:center;gap:18px;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,var(--rpn-mint),var(--rpn-teal));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-logo b{font-weight:800}.rpn-logo span{color:var(--rpn-mint)}
+.rpn-nav-links{display:none;gap:22px;margin-left:12px;font-size:14.5px;font-weight:600}
+.rpn-nav-links a{opacity:.86}.rpn-nav-links a:hover{opacity:1}
+.rpn-nav-cta{margin-left:auto;display:flex;align-items:center;gap:10px}
+.rpn-nav-login{font-size:14.5px;font-weight:600;opacity:.9;padding:8px 6px}
+.rpn-nav-login:hover{opacity:1}
+.rpn-nav-reg{background:var(--rpn-amber);color:#241A00;font-weight:700;font-size:14.5px;padding:9px 16px;border-radius:9px}
+.rpn-nav-reg:hover{background:var(--rpn-amber-d)}
+@media(min-width:900px){.rpn-nav-links{display:flex}}
+
+/* ===== HERO ===== */
+.rpn-hero{background:linear-gradient(165deg,#0F2C3F 0%,#124A5C 58%,#0E8C99 100%);color:#fff;position:relative;overflow:hidden}
+.rpn-hero::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(600px 300px at 85% -10%,rgba(245,158,11,.16),transparent 60%),
+  radial-gradient(500px 400px at 0% 110%,rgba(70,214,192,.30),transparent 60%);pointer-events:none}
+.rpn-hero-inner{position:relative;z-index:1;padding:44px 0 0}
+.rpn-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:rgba(70,214,192,.16);color:#7FE7D6;padding:7px 13px;border-radius:999px;margin-bottom:18px}
+.rpn-h1{font-size:32px;line-height:1.12;font-weight:800;letter-spacing:-.02em;margin-bottom:14px;max-width:15ch}
+.rpn-hero-sub{font-size:17px;line-height:1.55;color:#CFE3E6;max-width:52ch;margin-bottom:26px}
+.rpn-hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.rpn-hero-cta .rpn-btn{flex:1 1 auto;min-width:200px}
+.rpn-hero-trust{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14px;font-weight:600;color:#DCEDEF;padding-bottom:40px}
+.rpn-hero-trust span{display:inline-flex;align-items:center;gap:8px}
+.rpn-check{width:18px;height:18px;flex-shrink:0}
+@media(min-width:820px){
+  .rpn-hero-inner{padding:64px 0 0}
+  .rpn-h1{font-size:50px}
+  .rpn-hero-sub{font-size:19px}
+  .rpn-hero-cta .rpn-btn{flex:0 0 auto}
+}
+
+/* stat strip */
+.rpn-stats{position:relative;z-index:1;background:rgba(6,26,36,.34);border-top:1px solid rgba(255,255,255,.14)}
+.rpn-stats-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.rpn-stat{padding:20px 16px;text-align:center;border-left:1px solid rgba(255,255,255,.12)}
+.rpn-stat:first-child{border-left:none}
+.rpn-stat b{display:block;font-size:26px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.rpn-stat small{display:block;font-size:12.5px;color:#9FC6CC;margin-top:2px;font-weight:600}
+@media(min-width:820px){.rpn-stat b{font-size:34px}.rpn-stat{padding:26px 20px}}
+
+/* ===== SECTION SHELL ===== */
+.rpn-sec{padding:60px 0}
+.rpn-sec-2{background:var(--rpn-bg-2)}
+.rpn-sec-head{max-width:620px;margin:0 auto 40px;text-align:center}
+.rpn-kicker{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--rpn-teal);margin-bottom:12px}
+.rpn-h2{font-size:28px;line-height:1.18;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.rpn-lead{font-size:16.5px;color:var(--rpn-ink-2)}
+@media(min-width:820px){.rpn-sec{padding:84px 0}.rpn-h2{font-size:36px}}
+
+/* ===== 3 STEPS ===== */
+.rpn-steps{display:grid;grid-template-columns:1fr;gap:20px}
+.rpn-step{background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:16px;padding:28px;position:relative}
+.rpn-step-n{width:44px;height:44px;border-radius:12px;background:var(--rpn-bg-3);color:var(--rpn-teal);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.rpn-step h3{font-size:19px;font-weight:800;margin-bottom:8px}
+.rpn-step p{font-size:15px;color:var(--rpn-ink-2)}
+.rpn-step p b{color:var(--rpn-ink)}
+@media(min-width:820px){.rpn-steps{grid-template-columns:repeat(3,1fr);gap:24px}
+  .rpn-step:not(:last-child)::after{content:"→";position:absolute;right:-18px;top:44px;color:var(--rpn-mint);font-size:22px;font-weight:800;z-index:2}}
+
+/* ===== TENDERS PREVIEW ===== */
+.rpn-tender-grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:640px){.rpn-tender-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.rpn-tender-grid{grid-template-columns:repeat(3,1fr)}}
+.rpn-tcard{background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:14px;padding:22px;display:flex;flex-direction:column;transition:box-shadow .15s,transform .12s,border-color .15s}
+.rpn-tcard:hover{box-shadow:0 18px 40px -22px rgba(15,44,63,.45);transform:translateY(-3px);border-color:#BFDCE0}
+.rpn-tcard-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.rpn-trade{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--rpn-teal);background:var(--rpn-bg-3);padding:5px 11px;border-radius:999px}
+.rpn-open{font-size:12px;font-weight:600;color:var(--rpn-ink-3);white-space:nowrap}
+.rpn-tcard h3{font-size:17.5px;line-height:1.3;font-weight:800;margin-bottom:8px}
+.rpn-tcard .rpn-gc{font-size:13.5px;color:var(--rpn-ink-2);font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.rpn-tcard .rpn-desc{font-size:14px;color:var(--rpn-ink-2);margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rpn-deadline{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--rpn-warn);background:#FFF3EA;border:1px solid #FBD9C0;padding:9px 12px;border-radius:9px;margin-bottom:16px}
+.rpn-tcard .rpn-btn{margin-top:auto;width:100%}
+.rpn-more{text-align:center;margin-top:34px}
+.rpn-empty{text-align:center;background:var(--rpn-bg);border:1px dashed #BFD5DA;border-radius:14px;padding:44px 24px;color:var(--rpn-ink-2);font-size:15.5px}
+.rpn-empty b{display:block;color:var(--rpn-ink);font-size:17px;margin-bottom:6px}
+
+/* ===== BENEFITS ===== */
+.rpn-ben-grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media(min-width:720px){.rpn-ben-grid{grid-template-columns:repeat(2,1fr)}}
+.rpn-ben{display:flex;gap:16px;align-items:flex-start;background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:14px;padding:22px}
+.rpn-ben-ic{width:46px;height:46px;border-radius:11px;background:var(--rpn-bg-3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-ben h3{font-size:17px;font-weight:800;margin-bottom:5px}
+.rpn-ben p{font-size:14.5px;color:var(--rpn-ink-2)}
+
+/* ===== FOR GENERAL CONTRACTORS band ===== */
+.rpn-gc-band{background:var(--rpn-navy);color:#fff;border-radius:20px;padding:34px 26px;display:flex;flex-direction:column;gap:22px}
+.rpn-gc-band .rpn-gc-txt h2{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+.rpn-gc-band .rpn-gc-txt p{color:#BFDDE1;font-size:15.5px;max-width:52ch}
+.rpn-gc-steps{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.rpn-gc-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:600}
+.rpn-gc-band .rpn-btn{align-self:flex-start}
+@media(min-width:860px){.rpn-gc-band{flex-direction:row;align-items:center;justify-content:space-between;padding:40px 44px}
+  .rpn-gc-band .rpn-btn{align-self:center;flex-shrink:0}}
+
+/* ===== FAQ ===== */
+.rpn-faq{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.rpn-q{background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:12px;overflow:hidden}
+.rpn-q summary{list-style:none;cursor:pointer;padding:18px 22px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.rpn-q summary::-webkit-details-marker{display:none}
+.rpn-q summary::after{content:"+";font-size:24px;font-weight:400;color:var(--rpn-teal);flex-shrink:0;transition:transform .2s}
+.rpn-q[open] summary::after{transform:rotate(45deg)}
+.rpn-q-body{padding:0 22px 20px;font-size:15px;color:var(--rpn-ink-2)}
+.rpn-q-body b{color:var(--rpn-ink)}
+.rpn-flowtag{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-right:6px}
+.rpn-flowtag.a{background:#E4F7EF;color:var(--rpn-ok)}
+.rpn-flowtag.b{background:#FFF3EA;color:var(--rpn-warn)}
+
+/* ===== FINAL CTA ===== */
+.rpn-final{background:linear-gradient(160deg,#0F2C3F,#0E8C99);color:#fff;border-radius:22px;padding:44px 26px;text-align:center;position:relative;overflow:hidden}
+.rpn-final::after{content:"";position:absolute;inset:0;background:radial-gradient(500px 260px at 80% 120%,rgba(245,158,11,.2),transparent 60%);pointer-events:none}
+.rpn-final h2{position:relative;font-size:28px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.rpn-final p{position:relative;color:#CFE3E6;font-size:16.5px;max-width:48ch;margin:0 auto 26px}
+.rpn-final .rpn-final-cta{position:relative;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+@media(min-width:820px){.rpn-final{padding:60px}.rpn-final h2{font-size:36px}}
+
+/* ===== FOOTER ===== */
+.rpn-footer{background:#0A2130;color:#93B4BB;padding:48px 0 26px;margin-top:60px}
+.rpn-foot-grid{display:grid;grid-template-columns:1fr;gap:28px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.09)}
+@media(min-width:720px){.rpn-foot-grid{grid-template-columns:2fr 1fr 1fr}}
+.rpn-foot-brand .rpn-logo{color:#fff;margin-bottom:12px}
+.rpn-foot-brand p{font-size:14px;max-width:38ch}
+.rpn-foot-col h4{color:#fff;font-size:14px;font-weight:700;margin-bottom:14px}
+.rpn-foot-col a{display:block;font-size:14px;margin-bottom:10px}
+.rpn-foot-col a:hover{color:#fff}
+.rpn-foot-bot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;padding-top:22px;font-size:13px;color:#6A8E97}
+      </style>
+    </t>
+
+    <!-- ===== HEADER ===== -->
+    <header class="rpn-header">
+      <div class="rpn-wrap rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>
+          </span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+        <nav class="rpn-nav-links">
+          <a href="#goi-thau">Gói thầu đang mời</a>
+          <a href="#cach-hoat-dong">Cách hoạt động</a>
+          <a href="#loi-ich">Lợi ích</a>
+          <a href="#faq">Câu hỏi thường gặp</a>
+        </nav>
+        <div class="rpn-nav-cta">
+          <a class="rpn-nav-login" href="/web/login">Đăng nhập</a>
+          <a class="rpn-nav-reg" t-att-href="signup_url">Đăng ký</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="rpn-hero">
+      <div class="rpn-wrap rpn-hero-inner">
+        <span class="rpn-eyebrow">Sàn đấu thầu ngành xây dựng · Miễn phí đăng ký nhà thầu</span>
+        <h1 class="rpn-h1">Tìm gói thầu phù hợp. Nộp hồ sơ dự thầu online.</h1>
+        <p class="rpn-hero-sub">Tổng thầu công bố gói thầu — nhà thầu phụ tìm đúng chuyên môn, khai hồ sơ năng lực một lần rồi nộp hồ sơ ngay trên điện thoại. Không giấy tờ, không chạy đi nộp, không lỡ hạn.</p>
+        <div class="rpn-hero-cta">
+          <a class="rpn-btn rpn-btn-primary rpn-btn-lg" t-att-href="signup_url">Đăng ký làm nhà thầu
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="rpn-btn rpn-btn-ghost rpn-btn-lg" href="#goi-thau">Xem gói thầu đang mời</a>
+        </div>
+        <div class="rpn-hero-trust">
+          <span><svg class="rpn-check" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Miễn phí đăng ký</span>
+          <span><svg class="rpn-check" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Xác thực bằng Mã số thuế</span>
+          <span><svg class="rpn-check" viewBox="0 0 24 24" fill="none" stroke="#46D6C0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Không cần cài đặt phần mềm</span>
+        </div>
+      </div>
+      <!-- dải số liệu: đếm THẬT từ DB, không bịa -->
+      <div class="rpn-stats">
+        <div class="rpn-wrap">
+          <div class="rpn-stats-grid">
+            <div class="rpn-stat"><b t-esc="stat_tenders"/><small>Gói thầu đang mời</small></div>
+            <div class="rpn-stat"><b t-esc="stat_contractors"/><small>Nhà thầu tham gia</small></div>
+            <div class="rpn-stat"><b t-esc="stat_gcs"/><small>Tổng thầu mời thầu</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3 STEPS ===== -->
+    <section class="rpn-sec" id="cach-hoat-dong">
+      <div class="rpn-wrap">
+        <div class="rpn-sec-head">
+          <div class="rpn-kicker">Cách hoạt động</div>
+          <h2 class="rpn-h2">Ba bước để bắt đầu dự thầu</h2>
+          <p class="rpn-lead">Không rườm rà. Khai một lần, dự thầu nhiều gói.</p>
+        </div>
+        <div class="rpn-steps">
+          <div class="rpn-step">
+            <div class="rpn-step-n">1</div>
+            <h3>Đăng ký bằng Mã số thuế</h3>
+            <p>Tạo tài khoản công ty bằng <b>MST</b> — mỗi doanh nghiệp một tài khoản gốc. Người đăng ký đầu tiên là quản trị viên, mời thêm đồng nghiệp sau.</p>
+          </div>
+          <div class="rpn-step">
+            <div class="rpn-step-n">2</div>
+            <h3>Khai hồ sơ năng lực một lần</h3>
+            <p>Nhập năng lực, kinh nghiệm, hồ sơ pháp lý <b>một lần duy nhất</b> — dùng lại cho mọi gói thầu, không phải làm lại mỗi lần dự thầu.</p>
+          </div>
+          <div class="rpn-step">
+            <div class="rpn-step-n">3</div>
+            <h3>Đăng ký tham gia &amp; nộp hồ sơ</h3>
+            <p>Tìm gói đúng chuyên môn, bấm <b>Đăng ký tham gia</b> và nộp hồ sơ dự thầu online — có biên nhận, theo dõi được trạng thái.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TENDERS PREVIEW (dữ liệu THẬT, chỉ gói visibility=public) ===== -->
+    <section class="rpn-sec rpn-sec-2" id="goi-thau">
+      <div class="rpn-wrap">
+        <div class="rpn-sec-head">
+          <div class="rpn-kicker">Gói thầu đang mời</div>
+          <h2 class="rpn-h2">Gói thầu thật, đang tìm nhà thầu</h2>
+          <p class="rpn-lead">Xem trước một vài gói. Đăng nhập để xem hồ sơ mời thầu chi tiết.</p>
+        </div>
+
+        <div class="rpn-tender-grid" t-if="tenders">
+          <t t-foreach="tenders" t-as="t">
+            <article class="rpn-tcard">
+              <div class="rpn-tcard-top">
+                <span class="rpn-trade" t-esc="t.specialty or 'Chuyên môn khác'"/>
+                <!-- format cứng dd/mm/yyyy: khách vãng lai chạy locale en_US
+                     nên t-field sẽ ra mm/dd/yyyy → người Việt đọc nhầm ngày -->
+                <span class="rpn-open" t-if="t.date_open">Mở: <t t-esc="t.date_open.strftime('%d/%m/%Y')"/></span>
+              </div>
+              <h3 t-esc="t.name"/>
+              <div class="rpn-gc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7h6v14M12 11h6v10"/></svg>
+                Bên mời thầu: <t t-esc="t.gc_partner_id.name or 'Đang cập nhật'"/>
+              </div>
+              <p class="rpn-desc" t-esc="t.description or ''"/>
+              <div class="rpn-deadline" t-if="t.deadline">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                Hạn nộp hồ sơ: <t t-esc="t.deadline.strftime('%d/%m/%Y')"/>
+              </div>
+              <a class="rpn-btn rpn-btn-solid" t-attf-href="/goi-thau/#{t.id}/tham-gia">Đăng ký tham gia</a>
+            </article>
+          </t>
+        </div>
+
+        <div class="rpn-empty" t-if="not tenders">
+          <b>Chưa có gói thầu công khai</b>
+          Các gói thầu hiện tại đang ở chế độ mời riêng. Hãy đăng ký tài khoản
+          và hoàn thiện hồ sơ năng lực để được tổng thầu mời khi có gói phù hợp.
+        </div>
+
+        <div class="rpn-more" t-if="tenders">
+          <a class="rpn-btn rpn-btn-ghost rpn-btn-lg" style="border-color:var(--rpn-teal);color:var(--rpn-teal)" t-att-href="signup_url">Đăng ký để xem tất cả gói thầu →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BENEFITS ===== -->
+    <section class="rpn-sec" id="loi-ich">
+      <div class="rpn-wrap">
+        <div class="rpn-sec-head">
+          <div class="rpn-kicker">Lợi ích cho nhà thầu</div>
+          <h2 class="rpn-h2">Vì sao nên tham gia Network</h2>
+        </div>
+        <div class="rpn-ben-grid">
+          <div class="rpn-ben">
+            <span class="rpn-ben-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+            <div><h3>Tiếp cận gói thầu thật</h3><p>Gói thầu do các tổng thầu trên Network công bố — đúng ngành, đúng chuyên môn của bạn.</p></div>
+          </div>
+          <div class="rpn-ben">
+            <span class="rpn-ben-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></svg></span>
+            <div><h3>Khai hồ sơ một lần, dùng mãi</h3><p>Hồ sơ năng lực khai một lần dùng cho mọi gói — không phải chuẩn bị lại mỗi lần dự thầu.</p></div>
+          </div>
+          <div class="rpn-ben">
+            <span class="rpn-ben-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14H4z"/><path d="M4 9h16M8 13h5"/><path d="M9 22l3-3 3 3"/></svg></span>
+            <div><h3>Nộp online, có biên nhận</h3><p>Nộp hồ sơ dự thầu ngay trên điện thoại, nhận biên nhận điện tử — không giấy tờ, không chạy đi nộp.</p></div>
+          </div>
+          <div class="rpn-ben">
+            <span class="rpn-ben-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E8C99" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <div><h3>Minh bạch từng bước</h3><p>Luôn biết mình đang ở đâu: được mời · được duyệt · đã nộp · kết quả — không mập mờ.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOR GENERAL CONTRACTORS ===== -->
+    <section class="rpn-sec rpn-sec-2">
+      <div class="rpn-wrap">
+        <div class="rpn-gc-band">
+          <div class="rpn-gc-txt">
+            <h2>Bạn là Tổng thầu?</h2>
+            <p>Công bố gói thầu, mời nhà thầu, so sánh và chấm thầu — tất cả trên một nền tảng, minh bạch và có lưu vết.</p>
+            <div class="rpn-gc-steps">
+              <span class="rpn-gc-chip">Công bố &amp; mời thầu</span>
+              <span class="rpn-gc-chip">So sánh hồ sơ</span>
+              <span class="rpn-gc-chip">Chấm thầu</span>
+            </div>
+          </div>
+          <a class="rpn-btn rpn-btn-primary rpn-btn-lg" href="mailto:network@realtypro.vn?subject=Toi%20la%20Tong%20thau%20-%20muon%20moi%20thau%20tren%20Network">Liên hệ mời thầu</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="rpn-sec" id="faq">
+      <div class="rpn-wrap">
+        <div class="rpn-sec-head">
+          <div class="rpn-kicker">Câu hỏi thường gặp</div>
+          <h2 class="rpn-h2">Những điều nhà thầu hay hỏi</h2>
+        </div>
+        <div class="rpn-faq">
+          <details class="rpn-q" open="open">
+            <summary>Đăng ký xong tôi xem được hồ sơ mời thầu ngay không?</summary>
+            <div class="rpn-q-body">Có hai luồng:
+              <p style="margin-top:8px"><span class="rpn-flowtag a">Được mời</span> Nếu tổng thầu mời bạn trực tiếp qua email, bạn <b>mở gói và xem hồ sơ mời thầu ngay</b> sau khi đăng ký.</p>
+              <p style="margin-top:6px"><span class="rpn-flowtag b">Tự đăng ký</span> Nếu bạn tự tìm gói và bấm "Đăng ký tham gia", cần <b>tổng thầu của gói đó duyệt</b> thì mới mở được hồ sơ mời thầu và nộp hồ sơ dự thầu.</p>
+            </div>
+          </details>
+          <details class="rpn-q">
+            <summary>Đăng ký và tham gia có mất phí không?</summary>
+            <div class="rpn-q-body">Đăng ký tài khoản nhà thầu <b>miễn phí</b>.</div>
+          </details>
+          <details class="rpn-q">
+            <summary>Ai xem được hồ sơ năng lực của tôi?</summary>
+            <div class="rpn-q-body">Chỉ <b>tổng thầu của gói thầu mà bạn đăng ký tham gia</b> mới xem được hồ sơ năng lực của bạn. Hồ sơ không công khai cho bên thứ ba.</div>
+          </details>
+          <details class="rpn-q">
+            <summary>Bao lâu thì được duyệt tham gia?</summary>
+            <div class="rpn-q-body">Thời gian duyệt <b>tuỳ theo từng tổng thầu</b> của gói thầu. Bạn sẽ nhận được thông báo khi trạng thái thay đổi.</div>
+          </details>
+          <details class="rpn-q">
+            <summary>Tôi khai hồ sơ một lần dùng được cho nhiều gói không?</summary>
+            <div class="rpn-q-body"><b>Có.</b> Hồ sơ năng lực khai một lần được dùng lại cho mọi gói thầu bạn tham gia — chỉ cần cập nhật khi có thay đổi.</div>
+          </details>
+          <details class="rpn-q">
+            <summary>Công ty tôi đã có người đăng ký rồi thì sao?</summary>
+            <div class="rpn-q-body">Mỗi công ty (theo <b>Mã số thuế</b>) chỉ có một tài khoản gốc. Nếu MST của bạn đã được đăng ký, hãy <b>liên hệ quản trị viên tài khoản công ty</b> để được mời tham gia — không tạo tài khoản trùng.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="rpn-sec">
+      <div class="rpn-wrap">
+        <div class="rpn-final">
+          <h2>Bắt đầu tìm gói thầu hôm nay</h2>
+          <p>Đăng ký miễn phí bằng Mã số thuế, khai hồ sơ năng lực và tiếp cận gói thầu thật từ các tổng thầu.</p>
+          <div class="rpn-final-cta">
+            <a class="rpn-btn rpn-btn-primary rpn-btn-lg" t-att-href="signup_url">Đăng ký làm nhà thầu</a>
+            <a class="rpn-btn rpn-btn-ghost rpn-btn-lg" href="#goi-thau">Xem gói thầu đang mời</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="rpn-footer">
+      <div class="rpn-wrap">
+        <div class="rpn-foot-grid">
+          <div class="rpn-foot-brand">
+            <a class="rpn-logo" href="/"><span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span><b>Realty Pro <span>Network</span></b></a>
+            <p>Sàn đấu thầu ngành xây dựng — kết nối tổng thầu và nhà thầu phụ. Một sản phẩm của BSD Insight.</p>
+          </div>
+          <div class="rpn-foot-col">
+            <h4>Dành cho nhà thầu</h4>
+            <a t-att-href="signup_url">Đăng ký tài khoản</a>
+            <a href="#goi-thau">Gói thầu đang mời</a>
+            <a href="#cach-hoat-dong">Cách hoạt động</a>
+            <a href="/web/login">Đăng nhập</a>
+          </div>
+          <div class="rpn-foot-col">
+            <h4>Liên hệ &amp; pháp lý</h4>
+            <a href="mailto:network@realtypro.vn">network@realtypro.vn</a>
+          </div>
+        </div>
+        <div class="rpn-foot-bot">
+          <span>© 2026 Realty Pro Network · BSD Insight</span>
+          <span>network.realtypro.vn</span>
+        </div>
+      </div>
+    </footer>
+
+  </t>
+</template>
+
+</odoo>

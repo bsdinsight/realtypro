@@ -11,6 +11,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='credit_contract_id']"
                    position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
                 <field name="rp_contract_id"
                        options="{'no_create': True}"/>
                 <field name="rp_project_id" readonly="1"/>
@@ -28,6 +30,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='guarantee_type']"
                    position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
+                <field name="owner_contract_id" optional="show"/>
                 <field name="rp_contract_id" optional="show"/>
                 <field name="rp_project_id" optional="hide"/>
             </xpath>
@@ -43,6 +48,8 @@
                ref="re_guarantee.view_re_bank_guarantee_search"/>
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
                 <field name="rp_contract_id"/>
                 <field name="rp_project_id"/>
                 <separator/>
@@ -63,6 +70,8 @@
                ref="re_guarantee.view_re_guarantee_request_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='project_id']" position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
                 <field name="rp_contract_id"
                        options="{'no_create': True}"/>
             </xpath>
@@ -77,6 +86,9 @@
                ref="re_guarantee.view_re_guarantee_request_list"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='project_id']" position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
+                <field name="owner_contract_id" optional="show"/>
                 <field name="rp_contract_id" optional="show"/>
             </xpath>
         </field>
@@ -90,6 +102,8 @@
                ref="re_guarantee.view_re_guarantee_request_search"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='project_id']" position="after">
+                <field name="owner_contract_id"
+                       options="{'no_create': True}"/>
                 <field name="rp_contract_id"/>
             </xpath>
             <xpath expr="//filter[@name='g_project']" position="after">

@@ -25,6 +25,13 @@
                     </group>
                     <field name="predecessor_ids" widget="many2many_tags"
                            options="{'no_create': True}"/>
+                    <group string="Baseline &amp; Đường găng" col="4">
+                        <field name="baseline_start" readonly="1"/>
+                        <field name="baseline_end" readonly="1"/>
+                        <field name="baseline_slip_days" readonly="1"/>
+                        <field name="is_critical" readonly="1"/>
+                        <field name="total_float" readonly="1"/>
+                    </group>
                     <field name="external_uid" readonly="1" optional="hide"/>
                 </group>
             </xpath>
@@ -45,6 +52,35 @@
                 <field name="progress_percent" widget="progressbar"
                        optional="show"/>
                 <field name="is_milestone" optional="hide"/>
+                <field name="total_float" optional="show"/>
+                <field name="is_critical" optional="show"/>
+                <field name="baseline_slip_days" string="Trượt baseline"
+                       optional="hide"/>
+            </xpath>
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-danger">is_critical</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Filter đường găng / cận găng / trễ baseline -->
+    <record id="view_task_search_rp_schedule" model="ir.ui.view">
+        <field name="name">project.task.search.rp.schedule</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="rp_critical" string="Trên đường găng"
+                        domain="[('is_critical', '=', True)]"/>
+                <filter name="rp_near_critical" string="Cận găng (≤5 ngày)"
+                        domain="[('total_float', '&gt;', 0),
+                                 ('total_float', '&lt;=', 5)]"/>
+                <filter name="rp_baseline_slip" string="Trễ so baseline"
+                        domain="[('baseline_slip_days', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="rp_group_critical" string="Đường găng"
+                        context="{'group_by': 'is_critical'}"/>
             </xpath>
         </field>
     </record>

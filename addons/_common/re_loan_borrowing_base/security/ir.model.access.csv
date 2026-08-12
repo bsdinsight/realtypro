@@ -1,2 +1,15 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_rp_owner_ipc_pledge_wizard,rp.owner.ipc.pledge.wizard,model_rp_owner_ipc_pledge_wizard,re_base.group_re_user,1,1,1,1
+access_re_loan_project_funding_user,re.loan.project.funding.user,model_re_loan_project_funding,re_base.group_re_user,1,1,1,0
+access_re_loan_project_funding_admin,re.loan.project.funding.admin,model_re_loan_project_funding,base.group_system,1,1,1,1
+access_rp_owner_ipc_pledge_line,rp.owner.ipc.pledge.line,model_rp_owner_ipc_pledge_line,re_base.group_re_user,1,1,1,1
+access_re_loan_kpi_policy_user,re.loan.kpi.policy.user,model_re_loan_kpi_policy,re_loan.group_loan_user,1,0,0,0
+access_re_loan_kpi_policy_manager,re.loan.kpi.policy.manager,model_re_loan_kpi_policy,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_project_cashflow_user,re.loan.project.cashflow.user,model_re_loan_project_cashflow,re_loan.group_loan_user,1,1,1,0
+access_re_loan_project_cashflow_manager,re.loan.project.cashflow.manager,model_re_loan_project_cashflow,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_project_cashflow_line_user,re.loan.project.cashflow.line.user,model_re_loan_project_cashflow_line,re_loan.group_loan_user,1,1,1,0
+access_re_loan_project_cashflow_line_manager,re.loan.project.cashflow.line.manager,model_re_loan_project_cashflow_line,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_weekly_review_user,re.loan.weekly.review.user,model_re_loan_weekly_review,re_loan.group_loan_user,1,1,1,0
+access_re_loan_weekly_review_manager,re.loan.weekly.review.manager,model_re_loan_weekly_review,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_weekly_exception_user,re.loan.weekly.exception.user,model_re_loan_weekly_exception,re_loan.group_loan_user,1,1,1,0
+access_re_loan_weekly_exception_manager,re.loan.weekly.exception.manager,model_re_loan_weekly_exception,re_loan.group_loan_manager,1,1,1,1

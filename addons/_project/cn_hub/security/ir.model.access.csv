@@ -25,3 +25,6 @@ access_cn_sched_task_user,cn.bid.schedule.task user,model_cn_bid_schedule_task,b
 access_cn_sched_task_portal,cn.bid.schedule.task portal,model_cn_bid_schedule_task,base.group_portal,1,1,1,1
 access_cn_tech_criterion_user,cn.tender.tech.criterion user,model_cn_tender_tech_criterion,base.group_user,1,1,1,1
 access_cn_bid_tech_score_user,cn.bid.tech.score user,model_cn_bid_tech_score,base.group_user,1,1,1,1
+access_cn_role_user,cn.role user,model_cn_role,base.group_user,1,1,1,1
+access_cn_role_portal,cn.role portal,model_cn_role,base.group_portal,1,0,0,0
+access_cn_role_public,cn.role public,model_cn_role,base.group_public,1,0,0,0

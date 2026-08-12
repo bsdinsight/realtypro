@@ -5,6 +5,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { ConfirmationDialog }
+    from "@web/core/confirmation_dialog/confirmation_dialog";
 import { BSDSyncfusionGanttAdapter }
     from "@rp_progress/js/bsd_gantt/bsd_syncfusion_gantt_adapter";
 
@@ -23,6 +25,7 @@ export class RpGanttAction extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.ganttRef = useRef("gantt");
         this.state = useState({
             viewMode: "Week",
@@ -31,6 +34,9 @@ export class RpGanttAction extends Component {
             empty: false,
             loading: true,
             error: null,
+            showBaseline: false,
+            showCriticalPath: false,
+            hasBaseline: false,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         this.contractId =
@@ -105,9 +111,10 @@ export class RpGanttAction extends Component {
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
              "progress_percent", "is_milestone", "predecessor_ids",
-             "project_id", "user_ids"],
+             "project_id", "user_ids", "baseline_start", "baseline_end"],
             { order: "id asc" }
         );
+        this.state.hasBaseline = recs.some((r) => r.baseline_start);
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
         const userIds = [...new Set(recs.flatMap((r) => r.user_ids || []))];
         const userName = new Map();
@@ -134,7 +141,20 @@ export class RpGanttAction extends Component {
         // map id → STT để cột "Depend on" hiện số STT (kiểu Predecessors
         // của MS Project), không lộ ID database
         const seqById = new Map(recs.map((r, i) => [r.id, i + seqBase]));
+        // Đường găng — tính CPM ở backend chỉ khi bật + có HĐ
+        let cpMap = {};
+        if (this.state.showCriticalPath && this.contractId) {
+            try {
+                cpMap = await this.orm.call(
+                    "project.task", "rp_compute_critical_path",
+                    [this.contractId]) || {};
+            } catch {
+                cpMap = {};
+            }
+        }
+        this._critCount = Object.values(cpMap).filter((v) => v.critical).length;
         this.tasks = recs.map((r, idx) => {
+            const cpv = cpMap[r.id];
             const w = String(r.wbs_code || "");
             let parent = null;
             if (w.includes(".")) {
@@ -159,10 +179,16 @@ export class RpGanttAction extends Component {
                         .filter(Boolean)
                         .join(", "),
                     _isTop: !!w && !w.includes("."),
+                    // Đường găng (CPM tự tính)
+                    _critical: !!(cpv && cpv.critical),
+                    _near: !!(cpv && cpv.near),
+                    TaskFloat: cpv ? cpv.tf : "",
                 },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
                     ? (r.planned_end || r.planned_start) : null,
+                baselineStart: r.baseline_start || null,
+                baselineEnd: r.baseline_end || r.baseline_start || null,
                 progress: Math.round(r.progress_percent || 0),
                 // taskMode 'Manual': predecessor chỉ VẼ mũi tên, không
                 // auto-reschedule → giữ đúng ngày import từ MS Project
@@ -188,11 +214,17 @@ export class RpGanttAction extends Component {
         }
         if (this.adapter) this.adapter.destroy();
         this.adapter = new BSDSyncfusionGanttAdapter(this.env);
+        // Đường găng: tính CPM ở backend (rp_compute_critical_path) rồi tô
+        // ĐỎ leaf-task găng + CAM cận-găng qua queryTaskbarInfo. KHÔNG dùng
+        // EJ2 enableCriticalPath (không tính được trên WBS lồng + predecessor
+        // của ta). Giữ Manual + ngày import gốc.
         await this.adapter.render(this.ganttRef.el, this.tasks, {
             viewMode: this.state.viewMode,
             licenseKey: this._licenseKey,
             rowHeight: 42,
             taskMode: "Manual",
+            renderBaseline: this.state.showBaseline,
+            baselineColor: "#8a6fb0",
             columns: [
                 // TaskID (id database) ẨN nhưng PHẢI có: là primary key
                 // của TreeGrid — thiếu nó saveSuccess→setRowData crash
@@ -211,6 +243,11 @@ export class RpGanttAction extends Component {
                   format: "dd/MM/yyyy", width: 110 },
                 { field: "Progress", headerText: "%", width: 60,
                   textAlign: "Right" },
+                // Tổng dự trữ (Total Float) — chỉ hiện khi bật đường găng
+                ...(this.state.showCriticalPath ? [{
+                    field: "TaskFloat", headerText: "Dự trữ (ngày)",
+                    width: 100, textAlign: "Right",
+                }] : []),
                 // STT các task đứng trước (kiểu Predecessors MS Project)
                 { field: "TaskDeps", headerText: "Depend on", width: 100 },
                 // Người được giao (assignees Odoo Project — dblclick
@@ -221,9 +258,8 @@ export class RpGanttAction extends Component {
             treeColumnIndex: 3,
             splitterColumnIndex: 9,
             preserveLinks: true,
-            // Không cho EJ2 tự tính lại lịch theo predecessor: giữ đúng
-            // ngày import + tránh crash validateTypes (allowEditing=false
-            // → EJ2 không có connectorLineEditModule).
+            // KHÔNG auto-reschedule (giữ ngày import, tránh crash
+            // validateTypes khi allowEditing=false + có predecessor).
             autoCalculateDateScheduling: false,
             onBarClick: false,
             // Tô đậm task level 1 (WBS không chấm — giai đoạn lớn)
@@ -237,11 +273,20 @@ export class RpGanttAction extends Component {
             },
             onQueryTaskbarInfo: (args) => {
                 const d = args.data || {};
-                const top = d._isTop
-                    || (d.taskData && d.taskData._isTop);
+                const td = d.taskData || {};
+                const top = d._isTop || td._isTop;
                 if (top) {
                     args.taskbarBgColor = "#0a3d47";
                     args.progressBarBgColor = "#062a31";
+                } else if (this.state.showCriticalPath) {
+                    // Tô đường găng (CPM tự tính): đỏ = găng, cam = cận găng
+                    if (d._critical || td._critical) {
+                        args.taskbarBgColor = "#c0453b";
+                        args.progressBarBgColor = "#8e2f27";
+                    } else if (d._near || td._near) {
+                        args.taskbarBgColor = "#d98b3d";
+                        args.progressBarBgColor = "#b06f28";
+                    }
                 }
             },
             allowAdding: true,
@@ -356,6 +401,53 @@ export class RpGanttAction extends Component {
     setViewMode(mode) {
         this.state.viewMode = mode;
         if (this.adapter) this.adapter.changeViewMode(mode);
+    }
+
+    // Hiện/ẩn baseline (kế hoạch gốc) — vẽ lại Gantt với renderBaseline mới
+    async toggleBaseline() {
+        this.state.showBaseline = !this.state.showBaseline;
+        await this.loadAndRender();
+    }
+
+    // Bật/tắt tô đường găng (critical path)
+    async toggleCriticalPath() {
+        this.state.showCriticalPath = !this.state.showCriticalPath;
+        await this.loadAndRender();
+    }
+
+    // Chốt baseline = copy lịch kế hoạch hiện hành làm mốc gốc.
+    // Re-baseline (đã có baseline) yêu cầu xác nhận — tránh che giấu trượt.
+    setBaseline() {
+        const doSet = async () => {
+            try {
+                const n = await this.orm.call(
+                    "project.task", "rp_set_baseline", [],
+                    { contract_id: this.contractId || false });
+                this.notification.add(
+                    _t("Đã chốt baseline cho %s công việc.", n),
+                    { type: "success" });
+                this.state.showBaseline = true;
+                await this.loadAndRender();
+            } catch {
+                this.notification.add(
+                    _t("Không chốt được baseline."), { type: "danger" });
+            }
+        };
+        if (this.state.hasBaseline) {
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Cập nhật baseline"),
+                body: _t(
+                    "Baseline hiện tại sẽ bị GHI ĐÈ bằng lịch kế hoạch hiện "
+                    + "hành — mọi số đo trượt tiến độ sẽ tính lại từ mốc mới. "
+                    + "Re-baseline nên có chủ đích (qua kiểm soát thay đổi). "
+                    + "Tiếp tục?"),
+                confirmLabel: _t("Chốt lại baseline"),
+                confirm: doSet,
+                cancel: () => {},
+            });
+        } else {
+            doSet();
+        }
     }
 }
 

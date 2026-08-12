@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_owner_advance_list" model="ir.ui.view">
+        <field name="name">rp.owner.advance.list</field>
+        <field name="model">rp.owner.advance</field>
+        <field name="arch" type="xml">
+            <list string="Tạm ứng của Chủ đầu tư"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'received'"
+                  decoration-info="state == 'closed'">
+                <field name="name"/>
+                <field name="owner_contract_id"/>
+                <field name="project_id"/>
+                <field name="owner_id" optional="show"/>
+                <field name="date_request" optional="hide"/>
+                <field name="date_received"/>
+                <field name="amount" width="185px" sum="Σ tạm ứng"/>
+                <field name="percent_of_contract" widget="percentage"
+                       optional="show" string="% giá trị HĐ"/>
+                <field name="amount_used_payment" width="185px" optional="show"
+                       sum="Σ đã dùng"/>
+                <field name="amount_cash_left" width="185px" optional="show"
+                       sum="Σ còn trong TK" decoration-bf="1"/>
+                <field name="amount_recovered" width="185px"
+                       sum="Σ đã thu hồi"/>
+                <field name="amount_remaining" width="185px"
+                       sum="Σ còn lại" decoration-bf="1"/>
+                <field name="guarantee_ref" optional="show"/>
+                <field name="guarantee_date_expiry" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'received'"
+                       decoration-warning="state == 'requested'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_advance_form" model="ir.ui.view">
+        <field name="name">rp.owner.advance.form</field>
+        <field name="model">rp.owner.advance</field>
+        <field name="arch" type="xml">
+            <form string="Tạm ứng của Chủ đầu tư">
+                <header>
+                    <button name="action_request" type="object"
+                            string="Đề nghị CĐT" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_receive" type="object"
+                            string="Ghi nhận tiền về" class="btn-primary"
+                            invisible="state not in ['draft', 'requested']"/>
+                    <button name="action_cancel" type="object"
+                            string="Huỷ" class="btn-secondary"
+                            invisible="state in ['cancelled', 'closed']"/>
+                    <button name="action_draft" type="object"
+                            string="Về nháp" class="btn-secondary"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,requested,received,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Hợp đồng">
+                            <field name="owner_contract_id"
+                                   options="{'no_create': True}"
+                                   readonly="state not in ['draft']"/>
+                            <field name="project_id"/>
+                            <field name="owner_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Số tiền">
+                            <field name="amount"
+                                   readonly="state in ['received','closed','cancelled']"/>
+                            <field name="percent_of_contract"
+                                   widget="percentage"/>
+                            <field name="recovery_percent"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Thời điểm">
+                            <field name="date_request"/>
+                            <field name="date_received"
+                                   readonly="state in ['closed']"/>
+                        </group>
+                        <group string="Bảo lãnh tạm ứng">
+                            <field name="guarantee_required"/>
+                            <field name="guarantee_ref"
+                                   required="guarantee_required and state == 'received'"/>
+                            <field name="guarantee_bank_id"
+                                   options="{'no_create': True}"
+                                   invisible="not guarantee_required"/>
+                            <field name="guarantee_date_expiry"
+                                   invisible="not guarantee_required"/>
+                        </group>
+                    </group>
+                    <group string="Thu hồi (khấu trừ qua BBNT)">
+                        <group string="Mặt TIỀN — còn gì để trả nhà thầu">
+                            <field name="amount_used_payment"/>
+                            <field name="amount_cash_left"
+                                   decoration-bf="1"/>
+                        </group>
+                        <group string="Mặt NỢ — còn phải hoàn CĐT">
+                            <field name="amount_recovered"/>
+                            <field name="amount_remaining"
+                                   decoration-bf="1"/>
+                        </group>
+                        <group>
+                            <div class="text-muted small">
+                                Thu hồi được khấu trừ dần trên các
+                                <b>BBNT đã duyệt</b> của hợp đồng. Nhiều đợt
+                                tạm ứng thì phân bổ theo <b>FIFO</b> — đợt
+                                nhận trước thu hồi trước. Số
+                                <b>Còn trong tài khoản</b> (mặt TIỀN) mới là
+                                nguồn ③ của phiếu Nhu cầu vốn dự án —
+                                tiền chưa tiêu thì mới tài trợ được phần
+                                việc còn lại. <b>Còn phải thu hồi</b> (mặt
+                                NỢ) là nghĩa vụ hoàn lại CĐT, khấu trừ dần
+                                qua BBNT theo FIFO.
+                            </div>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Ghi chú..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_owner_advance_search" model="ir.ui.view">
+        <field name="name">rp.owner.advance.search</field>
+        <field name="model">rp.owner.advance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="owner_contract_id"/>
+                <field name="project_id"/>
+                <field name="owner_id"/>
+                <filter name="f_received" string="Đã nhận tiền"
+                        domain="[('state', '=', 'received')]"/>
+                <filter name="f_open" string="Còn phải thu hồi"
+                        domain="[('amount_remaining', '&gt;', 0),
+                                 ('state', '=', 'received')]"/>
+                <separator/>
+                <filter name="f_no_guarantee" string="Thiếu bảo lãnh"
+                        domain="[('guarantee_required', '=', True),
+                                 ('guarantee_ref', '=', False)]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_contract" string="HĐ với CĐT"
+                        context="{'group_by': 'owner_contract_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_owner_advance" model="ir.actions.act_window">
+        <field name="name">Tạm ứng CĐT</field>
+        <field name="res_model">rp.owner.advance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_owner_advance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ghi nhận đợt tạm ứng đầu tiên từ chủ đầu tư
+            </p>
+            <p>
+                Tiền CĐT ứng trước theo hợp đồng tổng thầu — thường 10–20%
+                giá trị HĐ, đổi lại mình phát hành <b>bảo lãnh tạm ứng</b>.
+                Số tiền được thu hồi dần qua các BBNT. Phần
+                <b>còn phải thu hồi</b> là nguồn vốn đã có, trừ vào
+                <b>Nhu cầu vốn dự án</b>.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_owner_advance"
+              name="Tạm ứng CĐT"
+              parent="menu_owner_revenue"
+              action="action_rp_owner_advance"
+              sequence="15"/>
+
+    <!-- Tab trên form HĐ với CĐT -->
+    <record id="view_rp_owner_contract_form_advance" model="ir.ui.view">
+        <field name="name">rp.owner.contract.form.advance</field>
+        <field name="model">rp.owner.contract</field>
+        <field name="inherit_id" ref="view_rp_owner_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Tạm ứng CĐT" name="advance">
+                    <div class="alert alert-info small" role="status">
+                        Mỗi đợt tạm ứng CĐT cấp là một dòng ở đây. Ô
+                        <b>Tạm ứng đã nhận</b> trên hợp đồng = Σ các đợt
+                        đã <b>Ghi nhận tiền về</b> — không gõ tay nữa.
+                    </div>
+                    <field name="advance_ids"
+                           context="{'default_owner_contract_id': id}">
+                        <list editable="bottom">
+                            <field name="name" readonly="1"/>
+                            <field name="date_received"/>
+                            <field name="amount" width="185px" sum="Σ"/>
+                            <field name="amount_recovered" width="185px"
+                                   readonly="1"/>
+                            <field name="amount_remaining" width="185px"
+                                   readonly="1" decoration-bf="1"/>
+                            <field name="guarantee_ref"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'received'"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

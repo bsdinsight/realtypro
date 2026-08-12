@@ -7,14 +7,14 @@
         <field name="model">rp.contract</field>
         <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="after">
-                <div class="oe_button_box" name="button_box">
-                    <button name="action_view_acceptances" type="object"
-                            class="oe_stat_button" icon="fa-check-square-o">
-                        <field name="acceptance_count" widget="statinfo"
-                               string="BBN"/>
-                    </button>
-                </div>
+            <!-- Thêm VÀO button_box có sẵn (đừng tạo div mới → tránh
+                 trùng 2 hàng smart button). -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_acceptances" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o">
+                    <field name="acceptance_count" widget="statinfo"
+                           string="BBN"/>
+                </button>
             </xpath>
             <xpath expr="//sheet" position="inside">
                 <group string="Tiến độ nghiệm thu">

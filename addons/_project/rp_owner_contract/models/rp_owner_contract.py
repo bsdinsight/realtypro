@@ -86,9 +86,17 @@ class RpOwnerContract(models.Model):
         help='Tổng giữ lại luỹ kế không vượt tỷ lệ này trên giá trị HĐ '
              '(thường 5%). Để 0 = không chặn trần.')
     advance_amount = fields.Monetary(
-        string='Tạm ứng đã nhận', default=0.0, tracking=True,
-        help='Giá trị tạm ứng CĐT đã cấp — sẽ được thu hồi dần qua các '
-             'BBNT theo % bên dưới.')
+        string='Tạm ứng đã nhận', compute='_compute_advance_amount',
+        store=True, tracking=True,
+        help='Σ các đợt tạm ứng CĐT ĐÃ NHẬN TIỀN (tab "Tạm ứng CĐT") — '
+             'thu hồi dần qua các BBNT theo % bên dưới. Muốn đổi số thì '
+             'sửa/thêm đợt tạm ứng, không gõ thẳng vào đây.')
+
+    @api.depends('advance_ids.amount', 'advance_ids.state')
+    def _compute_advance_amount(self):
+        for rec in self:
+            rec.advance_amount = sum(rec.advance_ids.filtered(
+                lambda a: a.state in ('received', 'closed')).mapped('amount'))
     advance_recovery_percent = fields.Float(
         string='% thu hồi tạm ứng mỗi kỳ', default=0.0, tracking=True,
         help='Tỷ lệ khấu trừ trên sản lượng gross mỗi kỳ để thu hồi tạm '
@@ -153,10 +161,10 @@ class RpOwnerContract(models.Model):
         default=lambda self: self.env.company)
     note = fields.Text(string='Ghi chú')
 
-    _sql_constraints = [
-        ('name_company_unique', 'unique(name, company_id)',
-         'Số HĐ với CĐT đã tồn tại.'),
-    ]
+    # Odoo 19 BỎ `_sql_constraints` — khai kiểu cũ thì constraint KHÔNG
+    # được tạo trong DB (chỉ log warning), tức số HĐ trùng vẫn lưu được.
+    _name_company_unique = models.Constraint(
+        'unique(name, company_id)', 'Số HĐ với CĐT đã tồn tại.')
 
     @api.depends('contract_value_pretax', 'vat_rate')
     def _compute_value_total(self):

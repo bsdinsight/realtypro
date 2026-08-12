@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Ẩn menu gốc "Dự án" của app Project (Odoo lõi).
+
+         Module `project` là phụ thuộc BẮT BUỘC của rp_schedule: lịch thi
+         công dựng trên project.task mở rộng (WBS, HĐ nhà thầu, hạng mục,
+         quan hệ trước-sau, mốc). Nhưng MENU của nó thì có hại:
+
+         • trùng tên tiếng Việt với "Realty Project" — người dùng bấm
+           "Dự án" trước vì đó là tiếng Việt tự nhiên, rồi vào nhầm app;
+         • trong đó là các project.project hệ thống TỰ SINH cho mỗi HĐ
+           nhà thầu ("... — Lịch thi công") — không phải dự án nghiệp vụ,
+           mở ra sẽ đếm nhầm số dự án của công ty;
+         • tạo tay project.project ở đó sẽ sinh container lịch thi công
+           mồ côi, không gắn hợp đồng nào, không vào tiến độ/EVM.
+
+         Lịch thi công đã có cửa đúng: Realty Project → Xây dựng → Lịch
+         thi công. Dữ liệu KHÔNG đụng tới; gỡ rp_schedule thì menu hiện
+         lại. -->
+    <record id="project.menu_main_pm" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
     <menuitem id="menu_rp_schedule_group" name="Lịch thi công"
               parent="rp_estimate.menu_construction"
               sequence="10"/>

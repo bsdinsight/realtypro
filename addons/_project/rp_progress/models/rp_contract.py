@@ -50,6 +50,7 @@ class RpContract(models.Model):
         return {
             'name': 'BBNT nghiệm thu — %s' % self.name,
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'res_model': 'rp.progress.acceptance',
             'view_mode': 'list,form',
             'domain': [('contract_id', '=', self.id)],

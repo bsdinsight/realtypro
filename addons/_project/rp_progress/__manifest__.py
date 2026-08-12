@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.23.0',
+    'version': '19.0.1.24.4',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
@@ -67,7 +67,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
             'rp_progress/static/lib/syncfusion/ej2.min.js',
             'rp_progress/static/lib/syncfusion/ej2-gantt.min.js',
             # Frappe-Gantt giữ lại làm fallback nếu Syncfusion fail
-            # (KHÔNG auto fallback — yêu cầu admin retry, theo CC1 decision)
+            # (KHÔNG auto fallback — yêu cầu admin retry, theo quyết định của khách hàng)
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.css',
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.js',
             'rp_progress/static/src/scss/bsd_gantt.scss',

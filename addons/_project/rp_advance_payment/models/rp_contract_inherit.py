@@ -36,6 +36,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': 'Tạm ứng — %s' % (self.name or ''),
             'res_model': 'rp.advance.payment',
             'view_mode': 'list,form',

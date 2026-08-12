@@ -317,6 +317,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Lịch thanh toán'),
             'res_model': 'rp.contract.payment.milestone',
             'view_mode': 'list,form',
@@ -328,6 +329,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Phụ lục'),
             'res_model': 'rp.contract.amendment',
             'view_mode': 'list,form',
@@ -339,6 +341,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Chấm dứt / Thanh lý'),
             'res_model': 'rp.contract.closure',
             'view_mode': 'list,form',

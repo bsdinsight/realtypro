@@ -224,10 +224,10 @@ class ReLeaseContract(models.Model):
         default=lambda self: self.env.company)
     note = fields.Text(string='Ghi chú')
 
-    _sql_constraints = [
-        ('name_company_unique', 'unique(name, company_id)',
-         'Số HĐ thuê đã tồn tại.'),
-    ]
+    # Odoo 19 BỎ `_sql_constraints` — khai kiểu cũ chỉ log warning, DB
+    # không có constraint nào nên số HĐ trùng vẫn lưu được.
+    _name_company_unique = models.Constraint(
+        'unique(name, company_id)', 'Số HĐ thuê đã tồn tại.')
 
     # ------------------------------------------------------------------
     # Computes

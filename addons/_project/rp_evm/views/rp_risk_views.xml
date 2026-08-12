@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_risk_search" model="ir.ui.view">
+        <field name="name">rp.risk.search</field>
+        <field name="model">rp.risk</field>
+        <field name="arch" type="xml">
+            <search string="Rủi ro">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="category"/>
+                <field name="owner_id"/>
+                <separator/>
+                <filter name="open" string="Đang mở"
+                        domain="[('state', 'in', ('open', 'mitigating'))]"/>
+                <filter name="high" string="Cao / Nghiêm trọng"
+                        domain="[('level', 'in', ('high', 'critical'))]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_category" string="Nhóm"
+                        context="{'group_by': 'category'}"/>
+                <filter name="g_level" string="Mức"
+                        context="{'group_by': 'level'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rp_risk_list" model="ir.ui.view">
+        <field name="name">rp.risk.list</field>
+        <field name="model">rp.risk</field>
+        <field name="arch" type="xml">
+            <list string="Đăng ký rủi ro"
+                  decoration-danger="level == 'critical'"
+                  decoration-warning="level == 'high'"
+                  decoration-muted="state in ('closed',)">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_id" optional="show"/>
+                <field name="category"/>
+                <field name="probability" string="KN"/>
+                <field name="impact" string="AH"/>
+                <field name="score"/>
+                <field name="level" widget="badge"
+                       decoration-danger="level == 'critical'"
+                       decoration-warning="level == 'high'"
+                       decoration-info="level == 'medium'"
+                       decoration-muted="level == 'low'"/>
+                <field name="cost_exposure" widget="monetary" optional="show"
+                       sum="Tổng giá trị rủi ro"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="owner_id" optional="show"/>
+                <field name="due_date" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-danger="state == 'realized'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_risk_form" model="ir.ui.view">
+        <field name="name">rp.risk.form</field>
+        <field name="model">rp.risk</field>
+        <field name="arch" type="xml">
+            <form string="Rủi ro">
+                <header>
+                    <button name="action_mitigate" type="object"
+                            string="Chuyển giảm thiểu" class="btn-primary"
+                            invisible="state != 'open'"/>
+                    <button name="action_close" type="object"
+                            string="Đóng rủi ro"
+                            invisible="state in ('closed', 'realized')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="open,mitigating,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Mô tả rủi ro…"/></h1>
+                        <field name="code" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="category"/>
+                            <field name="owner_id"/>
+                        </group>
+                        <group string="Đánh giá">
+                            <field name="probability"/>
+                            <field name="impact"/>
+                            <field name="score"/>
+                            <field name="level" widget="badge"
+                                   decoration-danger="level == 'critical'"
+                                   decoration-warning="level == 'high'"
+                                   decoration-info="level == 'medium'"
+                                   decoration-muted="level == 'low'"/>
+                            <field name="cost_exposure"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Thời hạn">
+                            <field name="date_identified"/>
+                            <field name="due_date"/>
+                        </group>
+                        <group string="Ảnh hưởng">
+                            <field name="impact_note"
+                                   placeholder="VD: chậm 2 tuần, phát sinh 1,5 tỷ…"/>
+                        </group>
+                    </group>
+                    <group string="Biện pháp giảm thiểu">
+                        <field name="mitigation" nolabel="1"
+                               placeholder="Kế hoạch phòng ngừa / ứng phó…"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_risk_pivot" model="ir.ui.view">
+        <field name="name">rp.risk.pivot</field>
+        <field name="model">rp.risk</field>
+        <field name="arch" type="xml">
+            <pivot string="Ma trận rủi ro" sample="1">
+                <field name="probability" type="row"/>
+                <field name="impact" type="col"/>
+                <field name="id" type="measure" string="Số rủi ro"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_rp_risk" model="ir.actions.act_window">
+        <field name="name">Đăng ký rủi ro</field>
+        <field name="res_model">rp.risk</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="search_view_id" ref="view_rp_risk_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có rủi ro nào được ghi nhận.
+            </p>
+            <p>
+                Đăng ký rủi ro theo ma trận 5×5 (Khả năng × Mức ảnh hưởng).
+                Rủi ro Cao / Nghiêm trọng sẽ nổi lên Bảng điều khiển EVM.
+            </p>
+        </field>
+    </record>
+
+    <!--
+        Gom bộ ba "Vấn đề · Thay đổi · Rủi ro" (Issues · Changes · Risks)
+        vào mục Hiện trường (menu Xây dựng), ngay dưới Punch list:
+          Nhật ký (10) · Punch list (20) · Thay đổi (25) · Rủi ro (28)
+          · An toàn lao động (30)
+    -->
+    <menuitem id="menu_rp_risk"
+              name="Rủi ro (Risk)"
+              parent="rp_site.menu_rp_site_root"
+              action="action_rp_risk"
+              sequence="28"/>
+
+    <!-- Chuyển menu Thay đổi (Change) từ gốc Xây dựng vào Hiện trường -->
+    <menuitem id="rp_contract.menu_rp_contract_change"
+              name="Thay đổi (Change)"
+              parent="rp_site.menu_rp_site_root"
+              sequence="25"/>
+
+</odoo>

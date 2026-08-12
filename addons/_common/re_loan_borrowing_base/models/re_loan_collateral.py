@@ -120,3 +120,23 @@ class ReLoanCollateral(models.Model):
                 'note': _('Auto (%(r)s): %(d)s',
                           r=reason or _('biến động'), d=detail),
             })
+
+
+class ReLoanCollateralProjectAxis(models.Model):
+    """Trục DỰ ÁN cho TSBĐ — nguyên tắc nghiệp vụ: quyền đòi nợ của dự án X chỉ
+    bảo đảm cho khoản vay của dự án X, không tự động gánh dự án khác.
+    TSBĐ không gắn dự án (BĐS, tiền gửi...) = TSBĐ CHUNG, gánh cả gói."""
+    _inherit = 're.loan.collateral'
+
+    project_id = fields.Many2one(
+        're.project', string='Dự án (ring-fence)',
+        compute='_compute_project_id', store=True, index=True,
+        help='TSBĐ quyền đòi nợ thuộc dự án nào — tự lấy từ IPC/HĐ CĐT. '
+             'TRỐNG = tài sản chung của doanh nghiệp, bảo đảm chung cho '
+             'toàn bộ gói tín dụng (bể dùng chung).')
+
+    @api.depends('owner_ipc_id.project_id', 'owner_contract_id.project_id')
+    def _compute_project_id(self):
+        for rec in self:
+            rec.project_id = (rec.owner_ipc_id.project_id
+                              or rec.owner_contract_id.project_id)

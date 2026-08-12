@@ -76,10 +76,19 @@
                         <group>
                             <field name="date_open"/>
                             <field name="deadline"/>
+                            <field name="visibility" widget="radio"/>
                             <field name="ref"/>
                             <field name="gc_source" readonly="1"/>
                         </group>
                     </group>
+                    <div class="alert alert-info" role="alert"
+                         invisible="visibility != 'public'">
+                        Gói thầu này <b>hiện công khai</b> trên
+                        network.realtypro.vn — khách chưa đăng nhập thấy được
+                        tên gói, tổng thầu, chuyên môn, mô tả và hạn nộp.
+                        <b>Giá gói thầu KHÔNG bao giờ hiện công khai.</b>
+                        Hồ sơ mời thầu chỉ mở cho nhà thầu được mời/được duyệt.
+                    </div>
                     <field name="description" placeholder="Mô tả / phạm vi..."/>
                     <notebook>
                         <page string="Hồ sơ mời thầu" name="dossier">
@@ -107,18 +116,41 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Thư mời thầu" name="invites">
+                        <page string="Thư mời &amp; đăng ký" name="invites">
+                            <div class="alert alert-info" role="alert">
+                                <b>Hai luồng vào gói thầu:</b>
+                                <b>Tổng thầu mời</b> → duyệt sẵn, nhà thầu mở hồ sơ mời thầu được ngay ·
+                                <b>Nhà thầu tự đăng ký</b> (thấy gói công khai) → <b>chờ bạn duyệt</b>
+                                mới mở được hồ sơ mời thầu và nộp hồ sơ dự thầu.
+                            </div>
                             <field name="invite_ids">
                                 <list editable="bottom"
-                                      decoration-success="state in ('registered','viewed','submitted')"
+                                      decoration-warning="approval == 'pending'"
+                                      decoration-danger="approval == 'rejected'"
                                       decoration-muted="state == 'declined'">
                                     <field name="partner_name"/>
                                     <field name="email"/>
                                     <field name="partner_id" readonly="1" optional="hide"/>
-                                    <field name="state" widget="badge"/>
-                                    <field name="invited_date" readonly="1" optional="show"/>
+                                    <field name="source" widget="badge" readonly="1"
+                                           decoration-info="source == 'applied'"/>
+                                    <field name="approval" widget="badge"
+                                           decoration-success="approval == 'approved'"
+                                           decoration-warning="approval == 'pending'"
+                                           decoration-danger="approval == 'rejected'"/>
+                                    <field name="state" widget="badge" optional="show"/>
+                                    <field name="reject_reason" optional="hide"/>
+                                    <field name="invited_date" readonly="1" optional="hide"/>
                                     <field name="invite_url" widget="CopyClipboardChar"
-                                           readonly="1" optional="show"/>
+                                           readonly="1" optional="hide"/>
+                                    <button name="action_approve" type="object"
+                                            string="Duyệt" icon="fa-check"
+                                            class="btn-link"
+                                            invisible="approval == 'approved'"/>
+                                    <button name="action_reject" type="object"
+                                            string="Từ chối" icon="fa-ban"
+                                            class="btn-link"
+                                            invisible="approval == 'rejected'"
+                                            confirm="Từ chối nhà thầu này tham gia gói thầu?"/>
                                     <button name="action_send_invite" type="object"
                                             string="Gửi mời" icon="fa-paper-plane"
                                             class="btn-link"

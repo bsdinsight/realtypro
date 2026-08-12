@@ -96,6 +96,55 @@ class CnTenderInvite(models.Model):
          ('submitted', 'Đã nộp hồ sơ'),
          ('declined', 'Từ chối')],
         string='Trạng thái', default='draft', required=True, tracking=True)
+    source = fields.Selection(
+        [('invited', 'Tổng thầu mời'),
+         ('applied', 'Nhà thầu tự đăng ký')],
+        string='Nguồn', default='invited', required=True, index=True,
+        help='Tổng thầu mời = tổng thầu chủ động gửi thư mời. '
+             'Nhà thầu tự đăng ký = nhà thầu thấy gói công khai và xin tham gia.')
+    approval = fields.Selection(
+        [('pending', 'Chờ duyệt'),
+         ('approved', 'Đã duyệt'),
+         ('rejected', 'Từ chối')],
+        string='Duyệt tham gia', default='approved', required=True,
+        index=True, tracking=True,
+        help='MỜI = duyệt sẵn (tổng thầu đã chủ động mời).\n'
+             'TỰ ĐĂNG KÝ = chờ duyệt: nhà thầu thấy gói nhưng CHƯA mở được hồ '
+             'sơ mời thầu và CHƯA nộp được hồ sơ dự thầu cho tới khi tổng thầu '
+             'của gói đó duyệt.')
+    reject_reason = fields.Char(string='Lý do từ chối')
+
+    def _send_tpl(self, xmlid):
+        """Gửi email theo template; không để lỗi mail làm hỏng nghiệp vụ."""
+        tpl = self.env.ref(xmlid, raise_if_not_found=False)
+        if not tpl:
+            return
+        for inv in self:
+            try:
+                tpl.send_mail(inv.id, force_send=False)
+            except Exception:  # noqa: BLE001
+                inv.tender_id.message_post(body=_(
+                    'Không gửi được email tới %s (kiểm tra cấu hình SMTP).',
+                    inv.email))
+
+    def action_approve(self):
+        for inv in self:
+            inv.write({'approval': 'approved', 'reject_reason': False})
+            inv.tender_id.message_post(body=_(
+                'Đã duyệt cho %s tham gia gói thầu.',
+                inv.partner_id.display_name or inv.email))
+        self._send_tpl('cn_hub.mail_template_apply_approved')
+        return True
+
+    def action_reject(self):
+        self.write({'approval': 'rejected'})
+        for inv in self:
+            inv.tender_id.message_post(body=_(
+                'Đã từ chối %s tham gia gói thầu.%s',
+                inv.partner_id.display_name or inv.email,
+                (' Lý do: %s' % inv.reject_reason) if inv.reject_reason else ''))
+        self._send_tpl('cn_hub.mail_template_apply_rejected')
+        return True
     invited_date = fields.Datetime(string='Ngày gửi mời', copy=False)
     company_id = fields.Many2one(related='tender_id.company_id', store=True)
 
@@ -133,20 +182,17 @@ class CnTenderInvite(models.Model):
         return partner
 
     def _signup_url(self):
-        """URL để nhà thầu đăng ký/đăng nhập rồi vào thẳng gói.
+        """URL trong thư mời → trang lời mời của Network.
 
-        Odoo 19: dùng ``_get_signup_url_for_action(url=redirect)`` — tự sinh
-        signup token (nếu partner chưa có user + đã signup_prepare) và chèn
-        redirect; partner đã có user thì ra URL đăng nhập kèm redirect.
+        TRƯỚC: trỏ thẳng signup gốc Odoo (`_get_signup_url_for_action`) —
+        form đó **KHÔNG thu Mã số thuế**, nên nhà thầu ĐƯỢC MỜI sẽ tạo tài
+        khoản thiếu MST, lách đúng luật "1 MST = 1 công ty" mình vừa dựng.
+        NAY: đưa về `/loi-moi/<token>` → nhà thầu thấy ngữ cảnh lời mời rồi
+        sang `/dang-ky?invite=<token>` (form có MST). Người đã có tài khoản
+        thì trang đó chỉ việc đăng nhập.
         """
         self.ensure_one()
-        partner = self.partner_id.sudo()
-        redirect = '/my/tenders/%s' % self.tender_id.id
-        if not partner.user_ids:
-            partner.signup_prepare()
-        urls = partner.with_context(signup_valid=True)._get_signup_url_for_action(
-            url=redirect)
-        return urls.get(partner.id) or (partner.get_base_url() + redirect)
+        return '%s/loi-moi/%s' % (self.get_base_url(), self.access_token)
 
     def action_send_invite(self):
         template = self.env.ref(

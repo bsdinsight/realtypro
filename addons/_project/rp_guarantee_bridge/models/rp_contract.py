@@ -29,6 +29,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _("Bảo lãnh NH — %s") % self.name,
             'res_model': 're.bank.guarantee',
             'view_mode': 'list,kanban,form',
@@ -44,6 +45,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _("Đề nghị BL — %s") % self.name,
             'res_model': 're.guarantee.request',
             'view_mode': 'list,form',

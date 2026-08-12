@@ -35,7 +35,7 @@ class ReLoanCollateralValuation(models.Model):
     date_valid_until = fields.Date(
         string='Ngày hết hạn định giá',
         help='Chứng thư định giá thường có hiệu lực 6-12 tháng — NH '
-             'yêu cầu định giá lại khi hết hạn (CC1 #15).')
+             'yêu cầu định giá lại khi hết hạn (khách hàng #15).')
     is_expired = fields.Boolean(
         string='Hết hạn', compute='_compute_is_expired',
         help='True khi quá Ngày hết hạn định giá.')
@@ -43,7 +43,7 @@ class ReLoanCollateralValuation(models.Model):
         'ir.attachment', 're_loan_collateral_valuation_att_rel',
         'valuation_id', 'attachment_id',
         string='Tài liệu đính kèm',
-        help='Upload file chứng thư định giá (PDF/scan) — CC1 #15.')
+        help='Upload file chứng thư định giá (PDF/scan) — khách hàng #15.')
     note = fields.Char(string='Ghi chú')
 
     def _compute_is_expired(self):

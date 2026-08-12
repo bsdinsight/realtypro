@@ -7,7 +7,7 @@
         <field name="model">re.project</field>
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
+            <xpath expr="//notebook" position="before">
                 <group string="EVM — Kiểm soát chi phí dự án">
                     <group>
                         <field name="currency_id" invisible="1"/>

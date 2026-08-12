@@ -74,7 +74,7 @@ class ReLoanNoteInterestLine(models.Model):
     fee_amount = fields.Monetary(
         string='Phí kỳ',
         compute='_compute_fee_amount', store=True, readonly=False,
-        help='Phí KW phân bổ kỳ này (CC1 #9):\n'
+        help='Phí KW phân bổ kỳ này (khách hàng #9):\n'
              '• Mode "% trên lãi": = % phí × lãi kỳ\n'
              '• Mode "Cố định": = Tổng phí / số kỳ (kỳ cuối nhận dư '
              'làm tròn)\n'
@@ -171,7 +171,7 @@ class ReLoanNoteInterestLine(models.Model):
                  'note_id.fee_amount_total', 'interest_amount',
                  'line_type')
     def _compute_fee_amount(self):
-        """Phân bổ phí KW vào kỳ (CC1 #9).
+        """Phân bổ phí KW vào kỳ (khách hàng #9).
 
         - pct_interest: phí kỳ = fee_rate% × lãi kỳ (phí theo lãi,
           giảm dần tự nhiên)
@@ -315,7 +315,7 @@ class ReLoanNoteInterestLine(models.Model):
                 0, self.principal_due - self.amount_principal_paid),
             'amount_interest': max(
                 0, self.interest_amount - self.amount_interest_paid),
-            # Bug #20 CC1: gợi ý sẵn phí còn lại của kỳ (user sửa
+            # Bug #20 tài liệu nghiệp vụ: gợi ý sẵn phí còn lại của kỳ (user sửa
             # được trên form trước khi Save).
             'amount_fee': max(
                 0, self.fee_amount - self.amount_fee_paid),

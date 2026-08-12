@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Bảng phân bổ dự án trên Facility: thêm 4 cột khả dụng theo dự án.
+         Đây chính là "hạn mức còn lại của từng dự án theo từng mục đích"
+         (facility = mục đích) — spec nghiệp vụ khối 2, mục 1. -->
+    <record id="view_re_loan_facility_form_project_axis" model="ir.ui.view">
+        <field name="name">re.loan.facility.form.project.axis</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <!-- Cảnh báo MỀM: phân bổ vượt hạn mức facility (cho lưu,
+                 hiện đỏ) — thực tế cần phân bổ tạm rồi điều chỉnh. -->
+            <xpath expr="//field[@name='amount_unallocated']"
+                   position="attributes">
+                <attribute name="decoration-danger">amount_unallocated &lt; 0</attribute>
+                <attribute name="decoration-bf">amount_unallocated &lt; 0</attribute>
+            </xpath>
+            <xpath expr="//page[@name='project_allocation']" position="inside">
+                <div class="alert alert-danger mt-2" role="alert"
+                     invisible="amount_unallocated &gt;= 0">
+                    <b>Phân bổ VƯỢT hạn mức facility.</b> Tổng phân bổ dự án
+                    đang lớn hơn số tiền hạn mức — phần vượt hiện ở ô
+                    "Chưa phân bổ" dưới dạng số âm. Hệ thống vẫn cho lưu
+                    (phân bổ tạm), nhưng cần điều chỉnh lại phân bổ hoặc
+                    tăng hạn mức trước khi trình ngân hàng.
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='description']"
+                   position="before">
+                <field name="amount_used_project" width="185px"/>
+                <field name="borrowing_base_project" width="185px"
+                       optional="show"/>
+                <field name="shared_headroom" width="185px" optional="hide"/>
+                <field name="amount_available_project" width="185px"
+                       decoration-danger="amount_available_project &lt;= 0"
+                       decoration-success="amount_available_project &gt; 0"/>
+                <field name="project_margin_call" widget="boolean_toggle"
+                       optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']/list/field[@name='project_margin_call']"
+                   position="after">
+                <field name="project_limit_total" width="185px"
+                       optional="hide"/>
+                <field name="project_available_total" width="185px"
+                       optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='project_allocation_ids']"
+                   position="after">
+                <div class="text-muted small mt-2">
+                    Khả dụng dự án = min(phân bổ còn lại; BB riêng dự án +
+                    bể chung còn trống − dư nợ dự án; khả dụng facility).
+                    Các dòng <b>không cộng</b> được với nhau — TSBĐ chung là
+                    bể dùng chung. IPC dự án nào chỉ gánh dự án đó. Muốn xem
+                    TỔNG của dự án trên toàn HĐTD: mở HĐTD → tab
+                    <b>Hạn mức theo dự án</b>.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- HĐTD: tab tổng hợp hạn mức THEO DỰ ÁN (tài liệu nghiệp vụ khối 2 mục 1) -->
+    <record id="view_re_loan_credit_contract_form_project_limit"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.project.limit</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <!-- cảnh báo mềm ngay trên list facility của HĐTD -->
+            <xpath expr="//field[@name='facility_ids']/list/field[@name='amount_unallocated']"
+                   position="attributes">
+                <attribute name="decoration-danger">amount_unallocated &lt; 0</attribute>
+                <attribute name="decoration-bf">amount_unallocated &lt; 0</attribute>
+            </xpath>
+            <xpath expr="//page[@name='facilities']" position="after">
+                <page string="Hạn mức theo dự án" name="project_limits">
+                    <field name="project_allocation_all_ids" readonly="1">
+                        <list default_order="project_id">
+                            <field name="project_id"/>
+                            <field name="contract_id" optional="show"
+                                   string="HĐ nhà thầu"/>
+                            <field name="contract_partner_id" optional="hide"
+                                   string="Nhà thầu"/>
+                            <field name="facility_id"/>
+                            <field name="amount" width="185px"
+                                   string="Phân bổ ở facility"/>
+                            <field name="amount_used_project" width="185px"/>
+                            <field name="amount_available_project"
+                                   width="185px"
+                                   decoration-danger="amount_available_project &lt;= 0"
+                                   decoration-success="amount_available_project &gt; 0"/>
+                            <field name="blocked_by" widget="badge"
+                                   decoration-warning="blocked_by == 'collateral'"
+                                   decoration-info="blocked_by in ['limit','facility','umbrella']"
+                                   decoration-success="blocked_by == 'none'"/>
+                            <field name="unlock_gap" width="185px"
+                                   optional="show"
+                                   decoration-warning="unlock_gap &gt; 0"/>
+                            <field name="project_limit_total" width="200px"/>
+                            <field name="project_used_total" width="185px"
+                                   optional="hide"/>
+                            <field name="project_available_total"
+                                   width="200px" decoration-bf="1"/>
+                            <field name="borrowing_base_project"
+                                   width="185px" optional="hide"/>
+                            <field name="shared_headroom" width="185px"
+                                   optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <div class="text-muted small mt-2">
+                        <b>Tổng hạn mức dự án</b> = Σ phân bổ cho dự án đó
+                        trên mọi facility của HĐTD này (giá trị lặp ở các
+                        dòng cùng dự án). <b>Tổng khả dụng dự án</b> = Σ khả
+                        dụng qua các facility nhưng <b>bị cap bởi phần
+                        umbrella còn lại của HĐTD</b> — không phải phép cộng
+                        đơn thuần, vì các facility dùng chung bể TSBĐ.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- KW: chọn dự án (nền của dư nợ theo dự án) -->
+    <record id="view_re_loan_note_form_project_axis" model="ir.ui.view">
+        <field name="name">re.loan.note.form.project.axis</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='facility_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Panel lọc bên trái: thêm trục DỰ ÁN lên đầu.
+         Trục này khai ở đây chứ không ở re_loan vì `project_id` là field
+         của module này — với tổng thầu thì "khế ước này của công trình
+         nào" mới là câu hỏi đầu tiên, nên đặt trên cùng panel. -->
+    <record id="view_re_loan_note_search_project_axis" model="ir.ui.view">
+        <field name="name">re.loan.note.search.project.axis</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//searchpanel/field[@name='state']"
+                   position="before">
+                <field name="project_id" string="Dự án"
+                       select="multi" icon="fa-building"
+                       enable_counters="1"/>
+            </xpath>
+            <xpath expr="//filter[@name='g_state']" position="after">
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Wizard đưa IPC vào HĐTD: hiện dự án + giải thích vì sao lọc -->
+    <record id="view_rp_owner_ipc_pledge_wizard_project" model="ir.ui.view">
+        <field name="name">rp.owner.ipc.pledge.wizard.project</field>
+        <field name="model">rp.owner.ipc.pledge.wizard</field>
+        <field name="inherit_id"
+               ref="re_loan_borrowing_base.view_rp_owner_ipc_pledge_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

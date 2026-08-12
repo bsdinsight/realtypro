@@ -19,7 +19,6 @@ class RpProgressUom(models.Model):
     description = fields.Char(string='Diễn giải')
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('code_unique', 'unique(code)',
-         'Mã đơn vị tính phải duy nhất.'),
-    ]
+    # Odoo 19 BỎ `_sql_constraints` — khai kiểu cũ không tạo constraint.
+    _code_unique = models.Constraint(
+        'unique(code)', 'Mã đơn vị tính phải duy nhất.')

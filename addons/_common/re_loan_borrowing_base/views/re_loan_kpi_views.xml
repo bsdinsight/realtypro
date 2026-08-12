@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Ngưỡng cảnh báo (cấu hình) ===== -->
+    <record id="view_re_loan_kpi_policy_form" model="ir.ui.view">
+        <field name="name">re.loan.kpi.policy.form</field>
+        <field name="model">re.loan.kpi.policy</field>
+        <field name="arch" type="xml">
+            <form string="Ngưỡng cảnh báo chỉ tiêu">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <div class="alert alert-info small" role="status">
+                        Ngưỡng do <b>ngân hàng / chính sách công ty</b> ấn
+                        định nên để sửa được. Ba chỉ tiêu đầu
+                        <b>càng cao càng xấu</b>; bốn chỉ tiêu sau
+                        <b>càng thấp càng xấu</b>.
+                    </div>
+                    <group>
+                        <group string="Càng CAO càng xấu">
+                            <label for="limit_usage_yellow"
+                                   string="① Sử dụng hạn mức (vàng / đỏ %)"/>
+                            <div>
+                                <field name="limit_usage_yellow"
+                                       class="oe_inline"/> /
+                                <field name="limit_usage_red"
+                                       class="oe_inline"/>
+                            </div>
+                            <label for="debt_collateral_yellow"
+                                   string="② Dư nợ / TSBĐ (vàng / đỏ %)"/>
+                            <div>
+                                <field name="debt_collateral_yellow"
+                                       class="oe_inline"/> /
+                                <field name="debt_collateral_red"
+                                       class="oe_inline"/>
+                            </div>
+                            <label for="overdue_yellow"
+                                   string="③ Nợ quá hạn (vàng / đỏ %)"/>
+                            <div>
+                                <field name="overdue_yellow"
+                                       class="oe_inline"/> /
+                                <field name="overdue_red"
+                                       class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group string="Càng THẤP càng xấu">
+                            <label for="equity_yellow"
+                                   string="④ Vốn tự có thực góp (vàng / đỏ %)"/>
+                            <div>
+                                <field name="equity_yellow"
+                                       class="oe_inline"/> /
+                                <field name="equity_red" class="oe_inline"/>
+                            </div>
+                            <label for="dscr_yellow"
+                                   string="⑤ DSCR (vàng / đỏ, lần)"/>
+                            <div>
+                                <field name="dscr_yellow"
+                                       class="oe_inline"/> /
+                                <field name="dscr_red" class="oe_inline"/>
+                            </div>
+                            <label for="spi_yellow"
+                                   string="⑥ Tiến độ SPI (vàng / đỏ %)"/>
+                            <div>
+                                <field name="spi_yellow"
+                                       class="oe_inline"/> /
+                                <field name="spi_red" class="oe_inline"/>
+                            </div>
+                            <label for="margin_yellow"
+                                   string="⑦ Biên lợi nhuận (vàng / đỏ %)"/>
+                            <div>
+                                <field name="margin_yellow"
+                                       class="oe_inline"/> /
+                                <field name="margin_red" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="company_id"
+                               groups="base.group_multi_company"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_kpi_policy_list" model="ir.ui.view">
+        <field name="name">re.loan.kpi.policy.list</field>
+        <field name="model">re.loan.kpi.policy</field>
+        <field name="arch" type="xml">
+            <list><field name="name"/><field name="company_id"/></list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_kpi_policy" model="ir.actions.act_window">
+        <field name="name">Ngưỡng cảnh báo chỉ tiêu</field>
+        <field name="res_model">re.loan.kpi.policy</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ===== Bảng chỉ tiêu theo dự án ===== -->
+    <record id="view_re_loan_kpi_board_list" model="ir.ui.view">
+        <field name="name">re.loan.project.funding.kpi.list</field>
+        <field name="model">re.loan.project.funding</field>
+        <field name="arch" type="xml">
+            <list string="Bảng chỉ tiêu xanh/vàng/đỏ" create="false"
+                  decoration-danger="kpi_overall_state == 'red'"
+                  decoration-warning="kpi_overall_state == 'yellow'"
+                  decoration-success="kpi_overall_state == 'green'">
+                <field name="project_id"/>
+                <field name="kpi_overall_state" widget="badge"
+                       decoration-danger="kpi_overall_state == 'red'"
+                       decoration-warning="kpi_overall_state == 'yellow'"
+                       decoration-success="kpi_overall_state == 'green'"/>
+                <field name="kpi_red_count"/>
+                <!-- KHÔNG dùng widget="percentage": field này đã lưu
+                     sẵn dạng phần trăm (17,50 = 17,5%), gắn widget đó
+                     Odoo nhân thêm 100 → hiện ra 1750,32%. -->
+                <field name="kpi_limit_usage" string="① HM"/>
+                <field name="kpi_limit_usage_state" widget="badge"
+                       string="TT①"
+                       decoration-danger="kpi_limit_usage_state == 'red'"
+                       decoration-warning="kpi_limit_usage_state == 'yellow'"
+                       decoration-success="kpi_limit_usage_state == 'green'"/>
+                <field name="kpi_debt_collateral" string="② Nợ/TSBĐ"/>
+                <field name="kpi_debt_collateral_state" widget="badge"
+                       string="TT②"
+                       decoration-danger="kpi_debt_collateral_state == 'red'"
+                       decoration-warning="kpi_debt_collateral_state == 'yellow'"
+                       decoration-success="kpi_debt_collateral_state == 'green'"/>
+                <field name="kpi_overdue" string="③ Quá hạn"/>
+                <field name="kpi_overdue_state" widget="badge" string="TT③"
+                       decoration-danger="kpi_overdue_state == 'red'"
+                       decoration-warning="kpi_overdue_state == 'yellow'"
+                       decoration-success="kpi_overdue_state == 'green'"/>
+                <field name="kpi_equity" string="④ Vốn tự có"/>
+                <field name="kpi_equity_state" widget="badge" string="TT④"
+                       decoration-danger="kpi_equity_state == 'red'"
+                       decoration-warning="kpi_equity_state == 'yellow'"
+                       decoration-success="kpi_equity_state == 'green'"/>
+                <field name="kpi_dscr" string="⑤ DSCR"/>
+                <field name="kpi_dscr_state" widget="badge" string="TT⑤"
+                       decoration-danger="kpi_dscr_state == 'red'"
+                       decoration-warning="kpi_dscr_state == 'yellow'"
+                       decoration-success="kpi_dscr_state == 'green'"/>
+                <field name="kpi_spi" string="⑥ SPI"/>
+                <field name="kpi_spi_state" widget="badge" string="TT⑥"
+                       decoration-danger="kpi_spi_state == 'red'"
+                       decoration-warning="kpi_spi_state == 'yellow'"
+                       decoration-success="kpi_spi_state == 'green'"/>
+                <field name="kpi_margin" string="⑦ Biên LN"/>
+                <field name="kpi_margin_state" widget="badge" string="TT⑦"
+                       decoration-danger="kpi_margin_state == 'red'"
+                       decoration-warning="kpi_margin_state == 'yellow'"
+                       decoration-success="kpi_margin_state == 'green'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_kpi_board" model="ir.actions.act_window">
+        <field name="name">Bảng chỉ tiêu (xanh/vàng/đỏ)</field>
+        <field name="res_model">re.loan.project.funding</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_re_loan_kpi_board_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có phiếu Nhu cầu vốn dự án nào
+            </p>
+            <p>
+                Bảy chỉ tiêu theo dõi theo tài liệu nghiệp vụ §11. Một chỉ
+                tiêu <b>đỏ</b> là cả dự án đỏ. Ngưỡng sửa được ở
+                <b>Cấu hình → Ngưỡng cảnh báo chỉ tiêu</b>.
+                <b>DSCR</b> lấy từ <b>Báo cáo → Dòng tiền dự án &amp;
+                DSCR</b> — dự án chưa lập bảng dòng tiền thì để trống
+                thay vì tô xanh giả.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_kpi_board"
+              name="Bảng chỉ tiêu (xanh/vàng/đỏ)"
+              parent="re_loan.menu_re_loan_report"
+              action="action_re_loan_kpi_board"
+              sequence="35"/>
+
+    <menuitem id="menu_re_loan_kpi_policy"
+              name="Ngưỡng cảnh báo chỉ tiêu"
+              parent="re_loan.menu_re_loan_config"
+              action="action_re_loan_kpi_policy"
+              sequence="80"/>
+
+</odoo>

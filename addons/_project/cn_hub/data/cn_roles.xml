@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Vai trò trên Network. Thêm vai mới = thêm record ở đây, không sửa code.
+       (Network gộp nhà thầu + nhà cung ứng → 1 công ty được nhiều vai.) -->
+  <data noupdate="1">
+
+    <record id="role_construction" model="cn.role">
+      <field name="name">Thi công</field>
+      <field name="code">construction</field>
+      <field name="description">Nhận thầu thi công, xây lắp</field>
+      <field name="sequence">10</field>
+    </record>
+
+    <record id="role_material" model="cn.role">
+      <field name="name">Vật tư</field>
+      <field name="code">material</field>
+      <field name="description">Cung cấp vật tư, vật liệu xây dựng</field>
+      <field name="sequence">20</field>
+    </record>
+
+    <record id="role_labor" model="cn.role">
+      <field name="name">Nhân công</field>
+      <field name="code">labor</field>
+      <field name="description">Cung ứng nhân công, tổ đội</field>
+      <field name="sequence">30</field>
+    </record>
+
+    <record id="role_interior" model="cn.role">
+      <field name="name">Nội thất</field>
+      <field name="code">interior</field>
+      <field name="description">Sản xuất, cung cấp &amp; lắp đặt nội thất</field>
+      <field name="sequence">40</field>
+    </record>
+
+    <record id="role_service" model="cn.role">
+      <field name="name">Dịch vụ</field>
+      <field name="code">service</field>
+      <field name="description">Dịch vụ vận hành, bảo trì, vệ sinh, an ninh</field>
+      <field name="sequence">50</field>
+    </record>
+
+  </data>
+</odoo>

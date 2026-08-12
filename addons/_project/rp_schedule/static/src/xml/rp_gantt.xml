@@ -12,15 +12,40 @@
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·
                     Chuột phải thêm/xoá
                 </span>
-                <div class="btn-group btn-group-sm ms-auto" role="group">
-                    <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"
-                            type="button" class="btn"
-                            t-att-class="state.viewMode === m ? 'btn-primary' : 'btn-outline-secondary'"
-                            t-on-click="() => this.setViewMode(m)">
-                        <t t-if="m === 'Day'">Ngày</t>
-                        <t t-elif="m === 'Week'">Tuần</t>
-                        <t t-else="">Tháng</t>
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <!-- Baseline (kế hoạch gốc) -->
+                    <button type="button" class="btn btn-sm"
+                            t-att-class="state.showBaseline ? 'btn-info' : 'btn-outline-secondary'"
+                            t-att-disabled="!state.hasBaseline"
+                            t-on-click="() => this.toggleBaseline()"
+                            title="Hiện/ẩn baseline (kế hoạch gốc). Cần chốt baseline trước.">
+                        <i class="fa fa-flag-o me-1"/>Baseline
                     </button>
+                    <!-- Đường găng (critical path) -->
+                    <button type="button" class="btn btn-sm"
+                            t-att-class="state.showCriticalPath ? 'btn-danger' : 'btn-outline-secondary'"
+                            t-on-click="() => this.toggleCriticalPath()"
+                            title="Tô đỏ đường găng — chuỗi công việc quyết định ngày về đích.">
+                        <i class="fa fa-exclamation-triangle me-1"/>Đường găng
+                    </button>
+                    <!-- Chốt / cập nhật baseline -->
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            t-on-click="() => this.setBaseline()"
+                            title="Chốt lịch kế hoạch hiện hành làm baseline gốc.">
+                        <i class="fa fa-thumb-tack me-1"/>
+                        <t t-if="state.hasBaseline">Cập nhật baseline</t>
+                        <t t-else="">Chốt baseline</t>
+                    </button>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"
+                                type="button" class="btn"
+                                t-att-class="state.viewMode === m ? 'btn-primary' : 'btn-outline-secondary'"
+                                t-on-click="() => this.setViewMode(m)">
+                            <t t-if="m === 'Day'">Ngày</t>
+                            <t t-elif="m === 'Week'">Tuần</t>
+                            <t t-else="">Tháng</t>
+                        </button>
+                    </div>
                 </div>
             </div>
 

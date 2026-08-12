@@ -10,6 +10,7 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <field name="funding_source" optional="show"/>
+                <field name="owner_advance_id" optional="show"/>
                 <field name="loan_note_id" optional="show"/>
             </field>
         </field>
@@ -64,6 +65,77 @@
                               'view_id': ref('view_rp_loan_disbursement_dossier_list')}),
                       (0, 0, {'view_mode': 'form',
                               'view_id': ref('view_rp_loan_disbursement_dossier_form')})]"/>
+    </record>
+
+
+    <!-- Chia MỘT mốc cho NHIỀU nguồn (vd: một phần tạm ứng CĐT,
+         phần còn lại giải ngân từ khế ước vay) -->
+    <record id="view_rp_milestone_form_split" model="ir.ui.view">
+        <field name="name">rp.contract.payment.milestone.form.split</field>
+        <field name="model">rp.contract.payment.milestone</field>
+        <field name="arch" type="xml">
+            <form string="Mốc thanh toán">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="contract_id" readonly="1"/>
+                            <field name="name"/>
+                            <field name="percent"/>
+                            <field name="amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="due_date"/>
+                            <field name="state"/>
+                            <field name="funding_source"
+                                   readonly="is_split_funding"/>
+                            <field name="owner_advance_id"
+                                   invisible="funding_source != 'owner_advance' or is_split_funding"
+                                   options="{'no_create': True}"/>
+                            <field name="loan_note_id"
+                                   invisible="funding_source != 'loan' or is_split_funding"
+                                   options="{'no_create': True}"/>
+                            <field name="is_split_funding" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chia nhiều nguồn" name="split">
+                            <div class="alert alert-info small" role="status">
+                                Mốc trả bằng <b>một nguồn</b> thì khai ở ô
+                                "Nguồn chi trả" bên trên, để trống bảng này.
+                                Trả bằng <b>nhiều nguồn</b> thì thêm dòng ở
+                                đây — khi đó <b>bảng này thắng</b>, và
+                                "Chưa gán nguồn" phải về 0.
+                            </div>
+                            <field name="funding_line_ids">
+                                <list editable="bottom">
+                                    <field name="source"/>
+                                    <field name="owner_advance_id"
+                                           invisible="source != 'owner_advance'"
+                                           options="{'no_create': True}"/>
+                                    <field name="loan_note_id"
+                                           invisible="source != 'loan'"
+                                           options="{'no_create': True}"/>
+                                    <field name="amount" width="185px"
+                                           sum="Σ"/>
+                                    <field name="note"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="funding_split_total"/>
+                                    <field name="funding_unallocated"
+                                           decoration-danger="funding_unallocated != 0"
+                                           decoration-bf="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
     </record>
 
 </odoo>

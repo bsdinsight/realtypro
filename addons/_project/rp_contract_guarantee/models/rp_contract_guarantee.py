@@ -241,6 +241,7 @@ class RpContractGuarantee(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
+            'target': 'new',
             'name': _('Phụ lục bảo lãnh'),
             'res_model': 'rp.contract.guarantee.amendment',
             'view_mode': 'list,form',

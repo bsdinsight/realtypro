@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — HĐ với Chủ đầu tư (đầu ra)',
-    'version': '19.0.2.0.0',
+    'version': '19.0.2.0.4',
     'category': 'Realty/Project',
     'summary': 'HĐ thi công ĐẦU RA (tổng thầu ↔ CĐT): BBNT sản lượng với '
                'CĐT + thanh toán của CĐT → khoản phải thu (quyền đòi nợ).',
@@ -9,7 +9,7 @@
 Realty Project — HĐ với Chủ đầu tư (rp_owner_contract)
 ======================================================
 
-Chiều ĐẦU RA của tổng thầu (vd CC1): hợp đồng thi công ký với Chủ đầu
+Chiều ĐẦU RA của tổng thầu (tổng thầu): hợp đồng thi công ký với Chủ đầu
 tư — đối xứng với rp_contract (HĐ ĐẦU VÀO thuê nhà thầu phụ).
 
 Models:
@@ -36,11 +36,13 @@ tăng → hạn mức khả dụng tại NH tăng.
         'account',
         'rp_estimate',
         'rp_contractor',
+        're_bank_sync',
     ],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'views/rp_owner_contract_views.xml',
+        'views/rp_owner_advance_views.xml',
         'views/rp_owner_ipc_views.xml',
         'views/rp_owner_dashboard_views.xml',
     ],

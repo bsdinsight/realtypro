@@ -56,12 +56,12 @@ class ReBankGuarantee(models.Model):
     applicant_partner_id = fields.Many2one(
         'res.partner', string='Bên xin BL (Applicant)', required=True,
         tracking=True,
-        help='Người mua bảo lãnh — thường là CC1 hoặc nhà thầu phụ.')
+        help='Người mua bảo lãnh — thường là tổng thầu hoặc nhà thầu phụ.')
     beneficiary_partner_id = fields.Many2one(
         'res.partner', string='Bên thụ hưởng (Beneficiary)', required=True,
         tracking=True,
-        help='Bên nhận BL — vd CĐT (khi CC1 mua) hoặc CC1 (khi nhà thầu '
-             'phụ mua đưa cho CC1).')
+        help='Bên nhận BL — vd CĐT (khi tổng thầu mua) hoặc tổng thầu (khi nhà thầu '
+             'phụ mua đưa cho tổng thầu).')
 
     # --- Thời gian ---
     date_issue = fields.Date(
@@ -105,11 +105,11 @@ class ReBankGuarantee(models.Model):
          ('annual',     'Hàng năm')],
         string='Tần suất trả phí BL', default='quarterly',
         help='Chu kỳ thanh toán Phí BL — dùng cho nút "Tạo lịch phí '
-             'BL" (CC1 #11): chia phí theo đợt, số tiền mỗi đợt '
+             'BL" (khách hàng #11): chia phí theo đợt, số tiền mỗi đợt '
              'pro-rata theo SỐ NGÀY của đợt.')
     fee_first_payment = fields.Monetary(
         string='Phí BL trả lần đầu',
-        help='CC1 #12: khoản phí NH thu NGAY khi phát hành (như ký '
+        help='khách hàng #12: khoản phí NH thu NGAY khi phát hành (như ký '
              'quỹ) — thành Đợt 1 riêng, hạn = ngày kích hoạt/phát '
              'hành. Phần còn lại (tổng phí − lần đầu) chia vào các '
              'kỳ theo tần suất. Để 0 nếu NH không thu trước.')
@@ -553,7 +553,7 @@ class ReBankGuarantee(models.Model):
 
 
     # ------------------------------------------------------------------
-    # CC1 #11 — Gen lịch thanh toán Phí BL theo tần suất
+    # khách hàng #11 — Gen lịch thanh toán Phí BL theo tần suất
     # ------------------------------------------------------------------
     def action_generate_fee_schedule(self):
         """Tự động tạo các đợt thanh toán Phí BL (payment_kind='fee').
@@ -592,7 +592,7 @@ class ReBankGuarantee(models.Model):
             months = step_map[rec.fee_schedule_freq or 'quarterly']
             total_days = (rec.date_expiry - start).days
             total_fee = rec.guarantee_fee_amount
-            # CC1 #12: phí trả lần đầu tách thành Đợt 1 riêng (thu
+            # khách hàng #12: phí trả lần đầu tách thành Đợt 1 riêng (thu
             # ngay khi phát hành), phần còn lại chia kỳ pro-rata.
             first_pay = min(rec.fee_first_payment or 0.0, total_fee)
             remain_fee = total_fee - first_pay
@@ -819,7 +819,7 @@ class ReBankGuaranteePayment(models.Model):
         'res.partner.bank', string='Tài khoản chuyển tiền',
         domain="[('partner_id', '=', company_partner_id)]",
         help='Tài khoản NH của doanh nghiệp dùng để thanh toán đợt '
-             'này (CC1 #16). Chỉ hiện TK của công ty hiện tại.')
+             'này (khách hàng #16). Chỉ hiện TK của công ty hiện tại.')
     company_partner_id = fields.Many2one(
         'res.partner', related='company_id.partner_id',
         string='Đối tác công ty', readonly=True)

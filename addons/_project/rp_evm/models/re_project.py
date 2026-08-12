@@ -70,11 +70,17 @@ class ReProject(models.Model):
     @api.depends('structure_ids.estimate_value',
                  'structure_ids.progress_value',
                  'structure_ids.actual_cost',
-                 'structure_ids.cost_status')
+                 'structure_ids.cost_status',
+                 'project_cost_direct_total')
     def _compute_project_evm(self):
         for proj in self:
             structs = proj.structure_ids
-            bac = sum(structs.mapped('estimate_value'))
+            # BAC = Σ dự toán hạng mục + chi phí CẤP DỰ ÁN (quản lý dự án,
+            # lán trại, bảo hiểm… — không thuộc hạng mục nào). Anh Đại chốt
+            # 2026-08-10: thiếu phần này thì CTC và Nhu cầu vốn tính hụt
+            # đúng bằng nó (tài liệu nghiệp vụ §3 đòi chi phí ĐỦ đến hoàn thành).
+            bac = (sum(structs.mapped('estimate_value'))
+                   + (proj.project_cost_direct_total or 0.0))
             ev = sum(structs.mapped('progress_value'))
             ac = sum(structs.mapped('actual_cost'))
             cpi = (ev / ac) if ac else 0.0

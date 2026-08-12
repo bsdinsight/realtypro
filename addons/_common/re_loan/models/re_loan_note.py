@@ -98,7 +98,7 @@ class ReLoanNote(models.Model):
          ('30_360', '30 / 360')],
         string='Quy ước ngày tính lãi', default='act_360', required=True)
 
-    # --- Phí KW (CC1 #9) ---------------------------------------------
+    # --- Phí KW (khách hàng #9) ---------------------------------------------
     fee_mode = fields.Selection(
         [('none',         'Không có phí'),
          ('fixed',        'Số tiền cố định'),
@@ -197,6 +197,16 @@ class ReLoanNote(models.Model):
              'nợ toàn bộ số tiền cam kết; dư nợ giảm dần khi trả gốc. '
              'Lưu ý: nếu đã giải ngân không đủ số tiền KW, vẫn tính '
              'theo cam kết — disbursement chỉ tracking dòng tiền thực.')
+    interest_x_outstanding = fields.Float(
+        string='Lãi suất × Dư nợ', compute='_compute_interest_weight',
+        store=True, digits=(16, 2), aggregator='sum',
+        help='= Lãi suất (%%/năm) × Dư nợ gốc. Không đọc riêng con số '
+             'này — nó tồn tại để tính LÃI SUẤT BÌNH QUÂN GIA QUYỀN '
+             'trong Pivot:  tổng cột này ÷ tổng Dư nợ gốc.\n'
+             'Vì sao cần: trung bình cộng lãi suất là SAI. Một KW 1 tỷ '
+             'lãi 12%% và một KW 100 tỷ lãi 8%% cho trung bình cộng 10%%, '
+             'trong khi lãi suất thực trả bình quân là 8,04%%.')
+
     interest_outstanding = fields.Monetary(
         string='Dư nợ lãi',
         compute='_compute_interest_outstanding', store=True,
@@ -645,7 +655,7 @@ class ReLoanNote(models.Model):
                  'interest_line_ids.interest_amount',
                  'interest_line_ids.line_type')
     def _compute_fee_amount_total(self):
-        """Tổng phí KW (CC1 #9).
+        """Tổng phí KW (khách hàng #9).
 
         - pct_interest: = fee_rate% × Σ lãi dự kiến (period lines).
           store readonly=False → user override được theo số NH báo.
@@ -866,3 +876,9 @@ class ReLoanNote(models.Model):
                        o=note.principal_outstanding),
                 user_id=note.create_uid.id or self.env.uid)
         return True
+
+    @api.depends('interest_rate', 'principal_outstanding')
+    def _compute_interest_weight(self):
+        for rec in self:
+            rec.interest_x_outstanding = ((rec.interest_rate or 0.0)
+                                          * (rec.principal_outstanding or 0.0))

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu gốc đổi tên cho khớp tài liệu bán hàng: đây là BỘ Treasury,
+         không phải riêng phân hệ vay. -->
+    <record id="re_loan.menu_re_loan_root" model="ir.ui.menu">
+        <field name="name">Vốn &amp; Ngân quỹ</field>
+    </record>
+
+    <!-- KHÔNG gom "Thuê tài sản" (anh Đại chốt 2026-08-11).
+         Tài liệu bán mô tả bộ Treasury có thuê tài sản, nhưng "bộ" đó là
+         bộ BÁN chứ không phải cây menu. 4/8 mục của nhánh này — Tài sản
+         thuê, Nhật ký bảo trì, Luân chuyển dự án, Đổi/Trả tài sản — là
+         vận hành CÔNG TRƯỜNG; đội thiết bị không liên quan gì tới hạn
+         mức tín dụng, bắt họ chui vào menu tài chính là sai đối tượng.
+         Phần thật sự thuộc Treasury là NGHĨA VỤ TÀI CHÍNH của thuê tài
+         chính, và phần đó đã lên dashboard Vay qua re_lease_loan_bridge.
+
+         Ghi TƯỜNG MINH parent_id = False chứ không chỉ xoá dòng lệnh cũ:
+         bản 19.0.1.0.0 đã ghi parent_id vào DB, xoá record đi thì Odoo
+         không có lý do gì để trả lại — các DB đã nâng bản trước sẽ kẹt
+         menu ở chỗ sai. -->
+    <record id="re_lease.menu_re_lease_root" model="ir.ui.menu">
+        <field name="parent_id" eval="False"/>
+        <field name="sequence">26</field>
+    </record>
+
+    <!-- ==================================================================
+         GOM THEO VIỆC NGƯỜI DÙNG ĐANG LÀM, KHÔNG THEO MODULE
+
+         Menu gốc trước đây có 10 mục, trong đó bốn mục nằm cạnh nhau chỉ
+         vì "đều dính tới ngân hàng": Thông báo Nợ/Có · Trích thu &
+         Thanh toán · Đối soát ngân hàng · Bảo lãnh NH. Nhìn kỹ thì ba
+         cái đầu cùng một bản chất còn cái thứ tư thì không:
+
+         • Thông báo Nợ/Có · Trích thu · Đối soát — đều là chứng từ và
+           tiền ĐẾN TỪ ngân hàng, mình BỊ ĐỘNG ghi nhận rồi đối chiếu.
+         • Bảo lãnh thì ngược lại: là một SẢN PHẨM TÍN DỤNG mình chủ
+           động rút, và trong chính hệ thống nó đứng ngang hàng với khế
+           ước — `re.loan.facility.facility_type` có giá trị "Hạn mức
+           bảo lãnh", `re.bank.guarantee.facility_id` trừ thẳng vào hạn
+           mức, dashboard tách sẵn kpi_facility_loan_* / _bg_*.
+           Vay tiền mặt và bảo lãnh là HAI CÁCH RÚT CÙNG MỘT HẠN MỨC.
+
+         Nên chia hai nhóm: "Rút vốn & Bảo lãnh" (chủ động rút, trừ hạn
+         mức) và "Chứng từ & tiền từ NH" (bị động ghi nhận, đối chiếu).
+    ================================================================== -->
+
+    <!-- Rút vốn & Bảo lãnh -->
+    <record id="re_loan.menu_grp_note" model="ir.ui.menu">
+        <field name="name">Rút vốn &amp; Bảo lãnh</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="re_guarantee.menu_re_guarantee_request" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_note"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_guarantee.menu_re_bank_guarantee" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_note"/>
+        <field name="sequence">32</field>
+    </record>
+    <!-- gốc "Bảo lãnh NH" rỗng sau khi chuyển con → tắt -->
+    <record id="re_guarantee.menu_re_guarantee_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Chứng từ & tiền từ ngân hàng -->
+    <record id="re_loan.menu_grp_payment" model="ir.ui.menu">
+        <field name="name">Chứng từ &amp; tiền từ NH</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_loan.menu_re_loan_adjustment_note" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_payment"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="re_bank_sync.menu_re_bank_transaction" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_payment"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_bank_sync.menu_sepay_simulate" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_payment"/>
+        <field name="sequence">32</field>
+    </record>
+    <!-- gốc "Đối soát ngân hàng" rỗng sau khi chuyển con → tắt -->
+    <record id="re_bank_sync.menu_re_bank_sync_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="re_loan_borrowing_base.menu_re_loan_project_funding"
+            model="ir.ui.menu">
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Ngân quỹ chỉ có ĐÚNG MỘT mục con: giữ cả cụm là thừa một cấp
+         bấm. Chuyển thẳng "Dự báo dòng tiền" vào nhóm Báo cáo, menu gốc
+         rỗng sẽ tự ẩn. -->
+    <!-- Menu gốc "Ngân quỹ" TỰ MANG action (trùng đúng action của mục
+         con), nên chuyển con đi rồi nó vẫn hiện như một mục gốc trơ.
+         Tắt hẳn — gỡ module này thì active trả lại True. -->
+    <record id="re_cashflow.menu_re_cashflow_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+
+    <!-- ==================================================================
+         BÁO CÁO: 17 mục nằm phẳng cạnh nhau thì không ai tìm được
+         cái mình cần — người dùng quay về Excel không phải vì hệ
+         thống thiếu số, mà vì không biết số nằm ở đâu. Chia 4 nhóm
+         theo câu hỏi đang cần trả lời.
+    ================================================================== -->
+    <menuitem id="menu_rep_debt" name="Dư nợ &amp; đến hạn"
+              parent="re_loan.menu_re_loan_report"
+              sequence="10"/>
+    <record id="re_loan.menu_re_loan_report_outstanding" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_debt"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_due" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_debt"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_aging" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_debt"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_payment_plan" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_debt"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_progress" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_debt"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <menuitem id="menu_rep_cash" name="Dòng tiền &amp; năng lực trả nợ"
+              parent="re_loan.menu_re_loan_report"
+              sequence="20"/>
+    <record id="re_cashflow.menu_re_cashflow_forecast" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_cash"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="re_loan_borrowing_base.menu_re_loan_project_cashflow" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_cash"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="re_loan_borrowing_base.menu_re_loan_note_capacity" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_cash"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_loan_borrowing_base.menu_re_loan_kpi_board" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_cash"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="re_loan_borrowing_base.menu_re_loan_weekly_review" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_cash"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <menuitem id="menu_rep_limit" name="Hạn mức &amp; phân bổ"
+              parent="re_loan.menu_re_loan_report"
+              sequence="30"/>
+    <record id="re_loan.menu_re_loan_report_facility_alloc" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_limit"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_alloc_by_contract" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_limit"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="rp_loan_bridge.menu_rp_loan_allocation_under_loan" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_limit"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_loan.menu_re_loan_report_credit_contract_summary" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_limit"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <menuitem id="menu_rep_recon" name="Đối chiếu &amp; bảng kê"
+              parent="re_loan.menu_re_loan_report"
+              sequence="40"/>
+    <record id="re_loan_account.menu_loan_voucher_list" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_recon"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="re_loan_account.menu_loan_move_line_summary" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_recon"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="re_loan_account.menu_loan_reconciliation" model="ir.ui.menu">
+        <field name="parent_id" ref="menu_rep_recon"/>
+        <field name="sequence">30</field>
+    </record>
+
+</odoo>

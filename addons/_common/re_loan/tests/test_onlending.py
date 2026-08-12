@@ -15,9 +15,9 @@ class TestOnlending(TransactionCase):
         cls.bank = cls.env['res.partner'].create({
             'name': 'NH OL', 'is_company': True, 'is_bank': True})
         cls.parent = cls.env['res.partner'].create({
-            'name': 'CC1 Mẹ', 'is_company': True})
+            'name': 'Tổng thầu Mẹ', 'is_company': True})
         cls.sub = cls.env['res.partner'].create({
-            'name': 'CC1 Con A', 'is_company': True,
+            'name': 'Công ty con A', 'is_company': True,
             'parent_company_id': cls.parent.id})
         cls.contract = cls.env['re.loan.credit.contract'].create({
             'name': 'HĐTD-OL', 'partner_id': cls.bank.id,

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tab "Điều kiện giải ngân" trên KW (chỉ hiện khi có dự án) -->
+    <record id="view_re_loan_note_form_checklist" model="ir.ui.view">
+        <field name="name">re.loan.note.form.checklist</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Điều kiện giải ngân (8)" name="disb_checklist"
+                      invisible="not project_id">
+                    <div class="alert alert-info small" role="alert">
+                        <field name="chk_summary" readonly="1" nolabel="1"
+                               class="oe_inline fw-bold"/>
+                        — đợt giải ngân chỉ TRÌNH NGÂN HÀNG được khi đạt
+                        đủ 8 điều kiện. Nháp vẫn tạo được để chuẩn bị hồ sơ.
+                    </div>
+                    <div class="alert alert-danger small" role="alert"
+                         invisible="cap_state != 'warn'">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Cảnh báo"/>
+                        <b>Năng lực trả nợ (§8): <field
+                           name="cap_warning_count" readonly="1"
+                           nolabel="1" class="oe_inline"/> tín hiệu
+                           đỏ</b>
+                        <field name="cap_message" readonly="1" nolabel="1"
+                               class="mb-0"/>
+                        Đây là <b>cảnh báo mềm</b> — hệ thống KHÔNG chặn
+                        trình giải ngân, vì cả 5 tín hiệu đều là số
+                        <i>dự báo</i>. Người duyệt tự cân nhắc.
+                    </div>
+                    <group>
+                        <group string="Tự động từ dữ liệu">
+                            <field name="chk_contract_active"
+                                   widget="boolean_toggle" readonly="1"/>
+                            <field name="chk_volume_docs"
+                                   widget="boolean_toggle" readonly="1"/>
+                            <field name="chk_equity" readonly="1"/>
+                            <field name="chk_budget"
+                                   widget="boolean_toggle" readonly="1"/>
+                            <field name="chk_no_overdue"
+                                   widget="boolean_toggle" readonly="1"/>
+                            <field name="chk_no_double_finance"
+                                   widget="boolean_toggle" readonly="1"/>
+                            <field name="chk_funds_account" readonly="1"/>
+                        </group>
+                        <group string="Xác nhận tay">
+                            <field name="chk_covenant_manual"/>
+                            <field name="chk_funds_manual"
+                                   invisible="chk_funds_account != 'manual'"/>
+                        </group>
+                    </group>
+                    <separator string="Năng lực trả nợ (§8) — cảnh báo mềm, KHÔNG chặn"/>
+                    <div class="text-muted small mb-2">
+                        Tài liệu nghiệp vụ §8 liệt kê 5 tình huống
+                        <i>"không giải ngân mới"</i>. Hệ thống đo đủ 5 và
+                        tô đỏ, nhưng để người duyệt quyết — số dự báo mà
+                        chặn cứng thì kẹt vận hành.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="cap_cashflow" readonly="1"
+                                   decoration-danger="cap_cashflow == 'warn'"/>
+                            <field name="cap_owner_source" readonly="1"
+                                   decoration-danger="cap_owner_source == 'warn'"/>
+                            <field name="cap_schedule" readonly="1"
+                                   decoration-danger="cap_schedule == 'warn'"/>
+                        </group>
+                        <group>
+                            <field name="cap_profit" readonly="1"
+                                   decoration-danger="cap_profit == 'warn'"/>
+                            <field name="cap_dscr" readonly="1"
+                                   decoration-danger="cap_dscr == 'warn'"/>
+                            <field name="cap_dscr_value" readonly="1"
+                                   invisible="cap_dscr == 'na'"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TK kiểm soát trên HĐTD -->
+    <record id="view_re_loan_credit_contract_form_ctrl_account"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.ctrl.account</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="controlled_account"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

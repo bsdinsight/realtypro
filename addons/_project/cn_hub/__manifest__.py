@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'BSD Construction Network — Hub',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.9.0',
     'category': 'Construction Network',
     'summary': 'Mạng lưới nhà thầu & NCC vật liệu: hồ sơ nhà thầu, bảng '
                'gói thầu, dự thầu, portal cộng tác. Kết nối nhiều tổng thầu.',
@@ -29,11 +29,15 @@ thu/nhật ký công trường), đánh giá/review, Next.js frontend.
         'security/ir.model.access.csv',
         'security/cn_hub_security.xml',
         'data/cn_mail_templates.xml',
+        'data/cn_roles.xml',
         'views/cn_tender_views.xml',
         'views/cn_invite_views.xml',
         'views/res_partner_views.xml',
         'views/cn_hub_menus.xml',
         'views/cn_portal_templates.xml',
+        'views/cn_landing_templates.xml',
+        'views/cn_signup_templates.xml',
+        'views/cn_tender_list_templates.xml',
     ],
     'installable': True,
     'application': True,

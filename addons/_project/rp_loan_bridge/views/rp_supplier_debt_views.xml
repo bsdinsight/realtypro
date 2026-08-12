@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Công nợ nhà thầu / NCC theo dự án =====
+         Nguồn ④ "Công nợ NCC được trả chậm" của phiếu Nhu cầu vốn:
+         hoá đơn CHƯA ĐẾN HẠN là nguồn tài trợ; hoá đơn QUÁ HẠN thì
+         không phải nguồn mà là cảnh báo. -->
+    <record id="view_supplier_debt_list" model="ir.ui.view">
+        <field name="name">account.move.supplier.debt.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Công nợ nhà thầu / NCC" create="false"
+                  default_order="invoice_date_due"
+                  decoration-danger="invoice_date_due &lt; current_date"
+                  decoration-muted="payment_state == 'paid'">
+                <field name="name"/>
+                <field name="partner_id" string="Nhà thầu / NCC"/>
+                <field name="project_id" optional="show"/>
+                <field name="contract_id" optional="show"/>
+                <field name="invoice_date" optional="hide"/>
+                <field name="invoice_date_due" string="Đến hạn"/>
+                <field name="amount_total" width="185px" sum="Σ hoá đơn"/>
+                <field name="amount_residual" width="185px"
+                       string="Còn phải trả" sum="Σ còn phải trả"
+                       decoration-bf="1"/>
+                <field name="payment_state" widget="badge"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"/>
+                <field name="state" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="move_type" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_supplier_debt_search" model="ir.ui.view">
+        <field name="name">account.move.supplier.debt.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <field name="contract_id"/>
+                <field name="name"/>
+                <filter name="f_unpaid" string="Còn phải trả"
+                        domain="[('payment_state', 'not in', ['paid', 'reversed'])]"/>
+                <filter name="f_not_due" string="Chưa đến hạn (là nguồn vốn)"
+                        domain="[('payment_state', 'not in', ['paid', 'reversed']),
+                                 ('invoice_date_due', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="f_overdue" string="QUÁ HẠN (cảnh báo)"
+                        domain="[('payment_state', 'not in', ['paid', 'reversed']),
+                                 ('invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="f_no_project" string="Chưa gắn dự án"
+                        domain="[('project_id', '=', False)]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_partner" string="Nhà thầu / NCC"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_contract" string="HĐ nhà thầu"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_due" string="Tháng đến hạn"
+                        context="{'group_by': 'invoice_date_due:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_supplier_debt" model="ir.actions.act_window">
+        <field name="name">Công nợ nhà thầu / NCC</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_supplier_debt_list"/>
+        <field name="search_view_id" ref="view_supplier_debt_search"/>
+        <field name="domain">[('move_type', '=', 'in_invoice'),
+                              ('state', '=', 'posted')]</field>
+        <field name="context">{'search_default_f_unpaid': 1,
+                               'search_default_g_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có hoá đơn nhà thầu / nhà cung cấp nào
+            </p>
+            <p>
+                Hoá đơn <b>chưa đến hạn</b> là <b>nguồn vốn</b> — trừ vào
+                Nhu cầu vốn dự án (④). Hoá đơn <b>quá hạn</b> thì ngược
+                lại: không tính là nguồn, mà là <b>cảnh báo</b> với ngân
+                hàng. Hoá đơn <b>chưa gắn dự án</b> sẽ không vào được
+                phiếu Nhu cầu vốn — dùng bộ lọc để rà.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_supplier_debt"
+              name="Công nợ nhà thầu / NCC"
+              parent="rp_estimate.menu_contracts"
+              action="action_supplier_debt"
+              sequence="60"/>
+
+</odoo>

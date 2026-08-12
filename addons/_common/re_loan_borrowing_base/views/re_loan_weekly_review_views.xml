@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_weekly_review_form" model="ir.ui.view">
+        <field name="name">re.loan.weekly.review.form</field>
+        <field name="model">re.loan.weekly.review</field>
+        <field name="arch" type="xml">
+            <form string="Phiên rà soát tuần">
+                <header>
+                    <button name="action_run_week" type="object"
+                            string="Tính lại &amp; rà ngoại lệ"
+                            class="btn-primary" icon="fa-refresh"
+                            invisible="state == 'done'"/>
+                    <button name="action_recompute" type="object"
+                            string="Chỉ tính lại" invisible="state == 'done'"/>
+                    <button name="action_done" type="object"
+                            string="Chốt phiên" invisible="state == 'done'"/>
+                    <button name="action_reopen" type="object"
+                            string="Mở lại" invisible="state != 'done'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-warning small" role="alert"
+                         invisible="not activity_warning">
+                        <i class="fa fa-exclamation-circle me-1"
+                           title="Nhắc"/>
+                        <field name="activity_warning" readonly="1"
+                               nolabel="1" class="oe_inline"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_recomputed" readonly="1"/>
+                            <field name="exception_count"/>
+                            <field name="exception_open" decoration-bf="1"
+                                   decoration-danger="exception_open &gt; 0"/>
+                        </group>
+                    </group>
+
+                    <separator string="Bước 1-3 — người cập nhật, hệ thống chỉ đo"/>
+                    <div class="text-muted small mb-2">
+                        Số chứng từ phát sinh trong tuần. Về 0 hết không
+                        phải lỗi hệ thống — là dấu hiệu tuần đó chưa ai
+                        cập nhật, mà rà soát trên số cũ thì vô nghĩa.
+                    </div>
+                    <group>
+                        <group string="① HĐ · tiến độ · chi phí">
+                            <field name="upd_contract_count"/>
+                        </group>
+                        <group string="② Nghiệm thu → hồ sơ trình CĐT">
+                            <field name="upd_progress_count"/>
+                            <field name="upd_ipc_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="③ Dư nợ · giải ngân · trả nợ · bảo lãnh">
+                            <field name="upd_disbursement_count"/>
+                            <field name="upd_repayment_count"/>
+                            <field name="upd_guarantee_count"/>
+                        </group>
+                        <group string="Bước 4-5 — hệ thống tính lại">
+                            <field name="recompute_log" nolabel="1"
+                                   colspan="2" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <separator string="Bước 6-7 — ngoại lệ và quyết định của cấp quản lý"/>
+                    <field name="exception_ids"
+                           readonly="state == 'done'">
+                        <list editable="bottom" create="false"
+                              decoration-danger="not decision"
+                              decoration-muted="decision == 'watch'">
+                            <field name="kind" widget="badge" readonly="1"
+                                   decoration-danger="kind in ('overdue', 'over_limit')"
+                                   decoration-warning="kind in ('cashflow', 'equity')"/>
+                            <field name="name" readonly="1"/>
+                            <field name="amount" width="185px" readonly="1"/>
+                            <field name="detail" readonly="1"/>
+                            <field name="decision"
+                                   placeholder="Chọn quyết định..."/>
+                            <field name="decision_note"
+                                   placeholder="Lý do / chỉ đạo"/>
+                            <field name="decision_uid" readonly="1"
+                                   optional="show"/>
+                            <field name="decision_date" readonly="1"
+                                   optional="hide"/>
+                            <button name="action_open_record" type="object"
+                                    icon="fa-external-link"
+                                    title="Mở bản ghi gốc"/>
+                            <field name="res_model" column_invisible="1"/>
+                            <field name="res_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group>
+                        <field name="note" nolabel="1" colspan="2"
+                               placeholder="Kết luận phiên rà soát tuần..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_weekly_review_list" model="ir.ui.view">
+        <field name="name">re.loan.weekly.review.list</field>
+        <field name="model">re.loan.weekly.review</field>
+        <field name="arch" type="xml">
+            <list string="Rà soát tuần"
+                  decoration-danger="exception_open &gt; 0"
+                  decoration-muted="state == 'done'">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="exception_count"/>
+                <field name="exception_open"/>
+                <field name="date_recomputed"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_weekly_review" model="ir.actions.act_window">
+        <field name="name">Rà soát tuần (§10)</field>
+        <field name="res_model">re.loan.weekly.review</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Mở phiên rà soát tuần đầu tiên
+            </p>
+            <p>
+                Vòng vận hành hàng tuần theo tài liệu nghiệp vụ §10: cập
+                nhật dữ liệu → định giá lại tài sản bảo đảm và tính lại
+                khả dụng → rà bốn loại ngoại lệ (<b>âm dòng tiền</b>,
+                <b>thiếu vốn tự có</b>, <b>nợ quá hạn</b>, <b>vượt hạn
+                mức</b>) → cấp quản lý ra quyết định từng ca.<br/>
+                Cron sáng thứ Hai tự mở phiên mới và chạy sẵn bước 4-6.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_weekly_review"
+              name="Rà soát tuần (§10)"
+              parent="re_loan.menu_re_loan_report"
+              action="action_re_loan_weekly_review"
+              sequence="32"/>
+
+    <record id="cron_re_loan_weekly_review" model="ir.cron">
+        <field name="name">Loan: mở phiên rà soát tuần (§10)</field>
+        <field name="model_id" ref="model_re_loan_weekly_review"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_weekly_review()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=(7 - datetime.now().weekday()) % 7 or 7)).strftime('%Y-%m-%d 01:00:00')"/>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

@@ -11,6 +11,12 @@
                     <field name="task_count" widget="statinfo"
                            string="Công việc"/>
                 </button>
+                <button name="action_open_gantt" type="object"
+                        class="oe_stat_button" icon="fa-exclamation-triangle"
+                        invisible="critical_task_count == 0">
+                    <field name="critical_task_count" widget="statinfo"
+                           string="Trên đường găng"/>
+                </button>
             </xpath>
             <xpath expr="//header" position="inside">
                 <button name="action_import_schedule" type="object"
@@ -18,6 +24,47 @@
                 <button name="action_open_gantt" type="object"
                         string="Xem Gantt" icon="fa-bar-chart"
                         invisible="task_count == 0"/>
+                <button name="action_set_schedule_baseline" type="object"
+                        string="Chốt baseline" icon="fa-thumb-tack"
+                        invisible="task_count == 0"
+                        confirm="Chốt lịch kế hoạch hiện hành làm baseline gốc? (Ghi đè baseline cũ nếu có.)"/>
+                <button name="action_recompute_critical_path" type="object"
+                        string="Tính đường găng" icon="fa-sitemap"
+                        invisible="task_count == 0"/>
+            </xpath>
+            <!-- Đưa nút trạng thái Hoàn thành / Chấm dứt xuống CUỐI header
+                 (sau các nút thao tác lịch thi công). -->
+            <xpath expr="//header" position="inside">
+                <xpath expr="//button[@name='action_complete']"
+                       position="move"/>
+                <xpath expr="//button[@name='action_open_termination']"
+                       position="move"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Phân tích tiến độ" name="schedule_analysis"
+                      invisible="task_count == 0">
+                    <group>
+                        <group string="Tiến độ">
+                            <field name="task_count"/>
+                            <field name="schedule_progress"
+                                   widget="percentage"/>
+                        </group>
+                        <group string="Baseline &amp; Đường găng">
+                            <field name="has_baseline"/>
+                            <field name="critical_task_count"/>
+                            <field name="near_critical_count"/>
+                            <field name="critical_pct"
+                                   string="% công việc trên đường găng"/>
+                            <field name="baseline_slip_max"/>
+                        </group>
+                    </group>
+                    <div class="text-muted mt8">
+                        Nút <b>Chốt baseline</b> đông cứng kế hoạch gốc để đo
+                        trượt tiến độ; <b>Tính đường găng</b> cập nhật Total
+                        Float cho công việc. Mở <b>Xem Gantt</b> để bật lớp
+                        Đường cơ sở / Đường găng trực quan.
+                    </div>
+                </page>
             </xpath>
         </field>
     </record>

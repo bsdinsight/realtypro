@@ -13,6 +13,7 @@
                 <field name="flexible_limits" widget="boolean_toggle"
                        optional="show"/>
                 <field name="amount_used" width="185px" sum="Tổng đã dùng"/>
+                <field name="interest_rate_weighted" optional="show"/>
                 <field name="amount_available" width="185px" sum="Tổng còn lại"/>
                 <field name="interest_rate_default" width="185px"/>
                 <field name="currency_id" column_invisible="1"/>
@@ -28,6 +29,15 @@
                 <sheet>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Tên hạn mức"/></h1>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not purpose_restricted">
+                        <field name="purpose_restricted" invisible="1"/>
+                        <b>Mục đích thuộc nhóm hạn chế.</b> Điều 8 khoản 8/9/10
+                        Thông tư 39/2016/TT-NHNN cấm nhóm nhu cầu vốn này,
+                        nhưng <b>đang ngưng hiệu lực từ 01/9/2023</b> theo
+                        Thông tư 10/2023/TT-NHNN. Kiểm tra trạng thái quy định
+                        hiện hành trước khi cấp.
                     </div>
                     <group>
                         <group>
@@ -48,6 +58,7 @@
                     <group>
                         <group string="Sử dụng hạn mức">
                             <field name="amount_used"/>
+                            <field name="interest_rate_weighted"/>
                             <field name="amount_available"/>
                             <div colspan="2" class="alert alert-success small"
                                  role="alert"
@@ -140,10 +151,59 @@
         </field>
     </record>
 
+
+    <!-- Màn này trước đây KHÔNG có search view nào (action không khai
+         search_view_id) — nên vừa thêm panel lọc vừa bổ sung luôn ô tìm
+         kiếm và nhóm cơ bản. -->
+    <record id="view_re_loan_facility_search" model="ir.ui.view">
+        <field name="name">re.loan.facility.search</field>
+        <field name="model">re.loan.facility</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="credit_contract_id"/>
+                <field name="partner_id"/>
+                <field name="purpose"/>
+                <filter name="f_guarantee" string="Hạn mức bảo lãnh"
+                        domain="[('facility_type','=','guarantee_line')]"/>
+                <filter name="f_revolving" string="Tuần hoàn"
+                        domain="[('facility_type','=','revolving')]"/>
+                <separator/>
+                <filter name="g_contract" string="HĐTD"
+                        context="{'group_by': 'credit_contract_id'}"/>
+                <filter name="g_type" string="Loại hạn mức"
+                        context="{'group_by': 'facility_type'}"/>
+                <filter name="g_purpose" string="Mục đích vay"
+                        context="{'group_by': 'purpose'}"/>
+
+                <!-- Panel lọc bên trái — anh Đại chốt 2026-08-11:
+                     trục panel phải là DANH MỤC CÓ BIÊN, không phải tập
+                     chứng từ tăng dần. HĐTD tích luỹ theo năm nên panel
+                     sẽ phình vô hạn; để ở ô tìm kiếm và nhóm là đủ.
+
+                     Ba trục dưới đây đều có biên cố định: số ngân hàng
+                     tài trợ gần như không đổi, còn mục đích vay và loại
+                     hạn mức là danh mục khai sẵn. -->
+                <searchpanel>
+                    <field name="partner_id" string="Ngân hàng"
+                           select="multi" icon="fa-university"
+                           enable_counters="1"/>
+                    <field name="purpose" string="Mục đích vay"
+                           select="multi" icon="fa-bullseye"
+                           enable_counters="1"/>
+                    <field name="facility_type" string="Loại hạn mức"
+                           select="multi" icon="fa-sliders"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
     <record id="action_re_loan_facility" model="ir.actions.act_window">
         <field name="name">Hạn mức tín dụng</field>
         <field name="res_model">re.loan.facility</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_loan_facility_search"/>
     </record>
 
 </odoo>

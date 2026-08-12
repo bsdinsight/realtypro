@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_project_funding_list" model="ir.ui.view">
+        <field name="name">re.loan.project.funding.list</field>
+        <field name="model">re.loan.project.funding</field>
+        <field name="arch" type="xml">
+            <!-- Cột theo đúng CHUỖI của phiếu: ① → ⑤, rồi mới tới
+                 hạn mức. Bản cũ dẫn đầu bằng ba cột "loại trừ" và ô
+                 diễn giải — đó là chi tiết bên trong bước ①, không phải
+                 thứ cần thấy khi lướt danh sách; đọc xong cả hàng vẫn
+                 không biết dự án cần vay bao nhiêu. -->
+            <list string="Nhu cầu vốn dự án"
+                  decoration-danger="equity_shortfall &gt; 0"
+                  decoration-warning="unfunded_need &gt; 0">
+                <field name="project_id"/>
+                <field name="cost_to_complete" width="185px"
+                       string="① Chi phí còn phải chi" sum="Σ"/>
+                <field name="equity_to_contribute" width="185px"
+                       string="② Vốn tự có còn góp" optional="show"/>
+                <field name="advance_available" width="185px"
+                       string="③ Tạm ứng CĐT" optional="hide"/>
+                <field name="supplier_credit_total" width="185px"
+                       string="④ Công nợ NCC" optional="hide"/>
+                <field name="funding_need" width="200px" decoration-bf="1"
+                       string="⑤ Nhu cầu vay thêm" sum="Σ"/>
+                <field name="limit_used" width="185px"
+                       string="Dư nợ dự án" optional="show"/>
+                <field name="available_now" width="185px"
+                       string="Khả dụng rút ngay" optional="show"/>
+                <field name="unfunded_need" width="185px"
+                       string="⑧ Chưa được tài trợ" optional="show"/>
+                <field name="equity_shortfall" width="185px"
+                       string="Thiếu vốn tự có" optional="hide"
+                       decoration-danger="equity_shortfall &gt; 0"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_project_funding_form" model="ir.ui.view">
+        <field name="name">re.loan.project.funding.form</field>
+        <field name="model">re.loan.project.funding</field>
+        <field name="arch" type="xml">
+            <form string="Nhu cầu vốn dự án">
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="equity_ok">
+                        <b>ĐANG CHẶN GIẢI NGÂN.</b> Dự án góp thiếu vốn tự
+                        có <field name="equity_shortfall" readonly="1"
+                        class="oe_inline"/> so với cam kết — bổ sung thực
+                        góp rồi hệ thống tự mở lại.
+                    </div>
+                    <div class="oe_title" style="width:100%">
+                        <h1><field name="project_id"
+                                   placeholder="Chọn dự án..."
+                                   options="{'no_create': True}"/></h1>
+                    </div>
+
+                    <!-- Trước đây bốn khối ①②③④ xếp thành lưới 2×2 nên
+                         mắt phải đọc zig-zag và KHÔNG thấy được mạch
+                         tính, trong khi cả phiếu chỉ là MỘT phép trừ
+                         dần. Giờ đưa nguyên chuỗi thành một cột dọc —
+                         đọc từ trên xuống chính là phép tính; chi tiết
+                         từng khoản đẩy vào tab bên dưới. -->
+                    <group>
+                        <group string="Chuỗi tính nhu cầu vốn (§3)">
+                            <field name="cost_to_complete"
+                                   string="① Chi phí còn phải chi (CTC)"/>
+                            <field name="equity_to_contribute"
+                                   string="− ② Vốn tự có còn phải góp"/>
+                            <field name="advance_available"
+                                   string="− ③ Tạm ứng CĐT còn khả dụng"/>
+                            <field name="supplier_credit_total"
+                                   string="− ④ Công nợ NCC được trả chậm"/>
+                            <field name="supplier_advance_paid"
+                                   string="− ⑥ Tạm ứng đã chi cho thầu phụ"/>
+                            <field name="funding_need" decoration-bf="1"
+                                   string="= ⑤ NHU CẦU VAY THÊM"/>
+                        </group>
+                        <group string="Hạn mức &amp; khả dụng">
+                            <field name="limit_allocated"/>
+                            <field name="limit_used"/>
+                            <field name="limit_remaining"/>
+                            <field name="available_now"/>
+                            <field name="unfunded_need" decoration-bf="1"
+                                   decoration-warning="unfunded_need &gt; 0"/>
+                            <field name="equity_shortfall"
+                                   decoration-danger="equity_shortfall &gt; 0"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="① Chi phí còn phải chi"
+                              name="ctc">
+                            <group>
+                                <group string="Từ EVM (tự động)">
+                                    <field name="amount_bac"/>
+                                    <field name="amount_ac"/>
+                                </group>
+                                <group string="Loại trừ khỏi CTC">
+                                    <field name="exclude_contingency"/>
+                                    <field name="amount_contingency"
+                                           readonly="1"/>
+                                    <field name="exclude_finance_cost"/>
+                                    <field name="amount_finance_cost"
+                                           readonly="1"/>
+                                    <field name="cost_excluded"/>
+                                    <field name="cost_excluded_note"
+                                           placeholder="Loại khoản nào, vì sao..."/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="cost_to_complete"
+                                       decoration-bf="1"/>
+                            </group>
+                        </page>
+
+                        <page string="② Vốn tự có" name="equity">
+                            <group>
+                                <group string="Cam kết với ngân hàng">
+                                    <field name="equity_base"/>
+                                    <field name="amount_finance_contingency"
+                                           readonly="1"/>
+                                    <field name="equity_base_amount"
+                                           readonly="1"/>
+                                    <field name="equity_rate_pct"/>
+                                    <field name="equity_required"/>
+                                    <field name="equity_to_contribute"
+                                           decoration-bf="1"/>
+                                </group>
+                                <group string="Thực góp &amp; sử dụng">
+                                    <field name="equity_contributed"/>
+                                    <field name="equity_in_kind"/>
+                                    <field name="equity_in_kind_note"
+                                           placeholder="QSDĐ thửa..., chứng thư định giá..."/>
+                                    <field name="equity_contributed_total"
+                                           readonly="1"/>
+                                    <field name="equity_used"/>
+                                    <field name="equity_cash_left"
+                                           decoration-bf="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="③ ④ Nguồn khác" name="other_sources">
+                            <group>
+                                <group string="③ Tạm ứng của chủ đầu tư">
+                                    <field name="advance_available"
+                                           decoration-bf="1"/>
+                                </group>
+                                <group string="④ Công nợ nhà cung cấp">
+                                    <field name="supplier_credit_invoiced"/>
+                                    <field name="supplier_credit_retention"/>
+                                    <field name="supplier_credit"/>
+                                    <field name="supplier_credit_total"
+                                           decoration-bf="1"/>
+                                    <field name="supplier_credit_overdue"
+                                           decoration-danger="supplier_credit_overdue &gt; 0"/>
+                                    <field name="supplier_advance_paid"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Phân bổ hạn mức theo facility"
+                              name="allocations">
+                            <field name="allocation_ids" readonly="1">
+                                <list>
+                                    <field name="facility_id"/>
+                                    <field name="contract_id" optional="show"
+                                           string="HĐ nhà thầu"/>
+                                    <field name="credit_contract_id"/>
+                                    <field name="amount" width="185px"/>
+                                    <field name="amount_used_project"
+                                           width="185px"/>
+                                    <field name="borrowing_base_project"
+                                           width="185px"/>
+                                    <field name="amount_available_project"
+                                           width="185px"/>
+                                    <field name="blocked_by" widget="badge"
+                                           decoration-warning="blocked_by == 'collateral'"
+                                           decoration-success="blocked_by == 'none'"/>
+                                    <field name="unlock_gap" width="185px"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="text-muted small mt-2">
+                                ⑧ Nhu cầu chưa tài trợ = ⑤ − Σ hạn mức còn
+                                lại (con số đi đàm phán thêm hạn mức — theo
+                                ví dụ §9.7 của tài liệu nghiệp vụ). "Khả
+                                dụng rút ngay" là chỉ dẫn, các bể TSBĐ
+                                chung độc lập theo từng facility.
+                            </div>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_project_funding" model="ir.actions.act_window">
+        <field name="name">Nhu cầu vốn dự án</field>
+        <field name="res_model">re.loan.project.funding</field>
+        <field name="view_mode">list,form</field>
+        <!-- Khoá view_id: model này có HAI list view (phiếu nhu cầu vốn
+             và bảng chỉ tiêu §11). Không khoá thì Odoo tự chọn theo
+             (priority, id) — và thực tế nó đã chọn nhầm bảng chỉ tiêu,
+             khiến menu Nhu cầu vốn mở ra toàn cột KPI, không thấy cột
+             tiền nào. Đừng dựa vào thứ tự id. -->
+        <field name="view_id" ref="view_re_loan_project_funding_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Lập phiếu Nhu cầu vốn cho dự án đầu tiên</p>
+            <p>Trả lời 3 câu tại mọi thời điểm: cần vay bao nhiêu · được
+               vay bao nhiêu · rút được bao nhiêu hôm nay — cho TỪNG công
+               trình. Góp thiếu vốn tự có sẽ chặn giải ngân mới.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_project_funding"
+              name="Nhu cầu vốn dự án"
+              parent="re_loan.menu_re_loan_root"
+              action="action_re_loan_project_funding" sequence="35"/>
+
+</odoo>

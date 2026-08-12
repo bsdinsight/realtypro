@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+  /goi-thau — danh sách gói thầu CÔNG KHAI (không cần đăng nhập).
+  Thiết kế: Claude Design (goi-thau.html), re-tone brand thật navy/teal.
+  Lọc chạy ở SERVER. Chuyên môn lấy từ dữ liệu thật.
+  KHÔNG hiện giá gói · KHÔNG cho tải hồ sơ mời thầu.
+  Bộ lọc "khu vực": cn.tender CHƯA có field địa điểm → chưa làm (Design cũng
+  đã ghi chú "ẩn sẵn để bật sau"). Thêm field rồi mới mở.
+-->
+<template id="tender_list" name="Realty Pro Network — Gói thầu đang mời">
+  <t t-call="web.layout">
+    <t t-set="html_data" t-value="{'lang': 'vi'}"/>
+    <t t-set="title">Gói thầu đang mời — Realty Pro Network</t>
+    <t t-set="head">
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rpn-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --rpn-ink:#12283A;--rpn-ink-2:#4A6472;--rpn-ink-3:#6C8792;
+  --rpn-navy:#0F2C3F;--rpn-teal:#0E8C99;--rpn-mint:#46D6C0;
+  --rpn-amber:#F59E0B;--rpn-amber-d:#D97F06;
+  --rpn-line:#DDE7EA;--rpn-bg:#FFFFFF;--rpn-bg-2:#F3F8F9;--rpn-bg-3:#E3F1F2;
+  --rpn-warn:#C2410C;
+}
+body{font-family:var(--rpn-font);color:var(--rpn-ink);background:var(--rpn-bg-2);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+svg{display:block;max-width:100%}
+.rpn-wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+/* header */
+.rpn-header{background:var(--rpn-navy);color:#fff}
+.rpn-nav{display:flex;align-items:center;gap:16px;height:60px}
+.rpn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.rpn-logo-mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(150deg,var(--rpn-mint),var(--rpn-teal));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rpn-logo span{color:var(--rpn-mint)}
+.rpn-nav-cta{margin-left:auto;display:flex;align-items:center;gap:10px}
+.rpn-nav-login{font-size:14.5px;font-weight:600;opacity:.9}
+.rpn-nav-reg{background:var(--rpn-amber);color:#241A00;font-weight:700;font-size:14.5px;padding:9px 16px;border-radius:9px}
+/* banner */
+.rpn-banner{background:linear-gradient(165deg,#0F2C3F,#124A5C 70%,#0E8C99);color:#fff;padding:40px 0 44px}
+.rpn-crumb{font-size:13px;color:#9FC6CC;margin-bottom:10px}
+.rpn-banner h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.rpn-banner p{color:#CFE3E6;font-size:16px;max-width:60ch}
+@media(min-width:820px){.rpn-banner h1{font-size:38px}}
+/* filters */
+.rpn-filters{background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:14px;padding:16px;margin:-22px 0 26px;box-shadow:0 14px 36px -26px rgba(15,44,63,.5);position:relative;z-index:2}
+.rpn-filters-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:720px){.rpn-filters-grid{grid-template-columns:2fr 1fr 1fr auto;align-items:end}}
+.rpn-fl label{display:block;font-size:12.5px;font-weight:700;color:var(--rpn-ink-2);margin-bottom:5px}
+.rpn-fl input,.rpn-fl select{font-family:inherit;font-size:15px;color:var(--rpn-ink);background:var(--rpn-bg);border:1.5px solid var(--rpn-line);border-radius:9px;padding:11px 12px;width:100%}
+.rpn-fl input:focus,.rpn-fl select:focus{outline:none;border-color:var(--rpn-teal);box-shadow:0 0 0 3px rgba(14,140,153,.14)}
+.rpn-fbtn{font-family:inherit;font-size:15px;font-weight:700;padding:11px 20px;border-radius:9px;border:none;background:var(--rpn-teal);color:#fff;cursor:pointer;white-space:nowrap}
+.rpn-fbtn:hover{background:var(--rpn-navy)}
+.rpn-count{font-size:14px;color:var(--rpn-ink-2);margin-bottom:16px}
+.rpn-count b{color:var(--rpn-ink)}
+/* cards */
+.rpn-grid{display:grid;grid-template-columns:1fr;gap:18px;padding-bottom:20px}
+@media(min-width:640px){.rpn-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:980px){.rpn-grid{grid-template-columns:repeat(3,1fr)}}
+.rpn-tcard{background:var(--rpn-bg);border:1px solid var(--rpn-line);border-radius:14px;padding:22px;display:flex;flex-direction:column;transition:box-shadow .15s,transform .12s,border-color .15s}
+.rpn-tcard:hover{box-shadow:0 18px 40px -22px rgba(15,44,63,.45);transform:translateY(-3px);border-color:#BFDCE0}
+.rpn-tcard-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.rpn-trade{display:inline-flex;font-size:12.5px;font-weight:700;color:var(--rpn-teal);background:var(--rpn-bg-3);padding:5px 11px;border-radius:999px}
+.rpn-open{font-size:12px;font-weight:600;color:var(--rpn-ink-3);white-space:nowrap}
+.rpn-tcard h3{font-size:17.5px;line-height:1.3;font-weight:800;margin-bottom:8px}
+.rpn-gc{font-size:13.5px;color:var(--rpn-ink-2);font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.rpn-desc{font-size:14px;color:var(--rpn-ink-2);margin-bottom:16px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rpn-deadline{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--rpn-warn);background:#FFF3EA;border:1px solid #FBD9C0;padding:9px 12px;border-radius:9px;margin-bottom:16px}
+.rpn-btn{margin-top:auto;width:100%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;padding:12px;border-radius:10px;background:var(--rpn-teal);color:#fff}
+.rpn-btn:hover{background:var(--rpn-navy)}
+/* empty */
+.rpn-empty{text-align:center;background:var(--rpn-bg);border:1px dashed #BFD5DA;border-radius:14px;padding:52px 24px;color:var(--rpn-ink-2);font-size:15.5px}
+.rpn-empty b{display:block;color:var(--rpn-ink);font-size:18px;margin-bottom:6px}
+.rpn-empty-ic{width:56px;height:56px;border-radius:50%;background:var(--rpn-bg-3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+/* bottom cta */
+.rpn-botcta{background:var(--rpn-navy);color:#fff;border-radius:18px;padding:32px 26px;text-align:center;margin:34px 0 60px}
+.rpn-botcta h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.rpn-botcta p{color:#A9C2CC;font-size:15px;margin-bottom:20px}
+.rpn-botcta a{display:inline-block;background:var(--rpn-amber);color:#241A00;font-weight:800;font-size:15.5px;padding:13px 26px;border-radius:11px}
+      </style>
+    </t>
+
+    <header class="rpn-header">
+      <div class="rpn-wrap rpn-nav">
+        <a class="rpn-logo" href="/">
+          <span class="rpn-logo-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F2C3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></span>
+          <b>Realty Pro <span>Network</span></b>
+        </a>
+        <div class="rpn-nav-cta">
+          <a class="rpn-nav-login" href="/web/login">Đăng nhập</a>
+          <a class="rpn-nav-reg" t-att-href="signup_url">Đăng ký</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="rpn-banner">
+      <div class="rpn-wrap">
+        <div class="rpn-crumb"><a href="/">Trang chủ</a> › Gói thầu đang mời</div>
+        <h1>Gói thầu đang mời</h1>
+        <p>Gói thầu do các tổng thầu trên Network công bố. Đăng ký tham gia để xem hồ sơ mời thầu và nộp hồ sơ dự thầu.</p>
+      </div>
+    </section>
+
+    <div class="rpn-wrap">
+      <!-- lọc chạy ở server: form GET -->
+      <form class="rpn-filters" method="get" action="/goi-thau">
+        <div class="rpn-filters-grid">
+          <div class="rpn-fl">
+            <label for="q">Tìm kiếm</label>
+            <input id="q" name="q" type="text" t-att-value="q"
+                   placeholder="Tên gói, phạm vi công việc..."/>
+          </div>
+          <div class="rpn-fl">
+            <label for="specialty">Chuyên môn</label>
+            <select id="specialty" name="specialty">
+              <option value="">Tất cả chuyên môn</option>
+              <t t-foreach="specialties" t-as="s">
+                <option t-att-value="s" t-att-selected="s == specialty and 'selected' or None" t-esc="s"/>
+              </t>
+            </select>
+          </div>
+          <div class="rpn-fl">
+            <label for="sort">Sắp xếp</label>
+            <select id="sort" name="sort">
+              <option value="soon" t-att-selected="sort != 'late' and 'selected' or None">Hạn nộp gần nhất</option>
+              <option value="late" t-att-selected="sort == 'late' and 'selected' or None">Hạn nộp xa nhất</option>
+            </select>
+          </div>
+          <div class="rpn-fl"><button type="submit" class="rpn-fbtn">Lọc</button></div>
+        </div>
+      </form>
+
+      <div class="rpn-count">
+        <b t-esc="count"/> gói thầu
+        <t t-if="count != total"> (lọc từ <t t-esc="total"/> gói đang mở)</t>
+      </div>
+
+      <div class="rpn-grid" t-if="tenders">
+        <t t-foreach="tenders" t-as="t">
+          <article class="rpn-tcard">
+            <div class="rpn-tcard-top">
+              <span class="rpn-trade" t-esc="t.specialty or 'Chuyên môn khác'"/>
+              <span class="rpn-open" t-if="t.date_open">Mở: <t t-esc="t.date_open.strftime('%d/%m/%Y')"/></span>
+            </div>
+            <h3 t-esc="t.name"/>
+            <div class="rpn-gc">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V7h6v14M12 11h6v10"/></svg>
+              Bên mời thầu: <t t-esc="t.gc_partner_id.name or 'Đang cập nhật'"/>
+            </div>
+            <p class="rpn-desc" t-esc="t.description or ''"/>
+            <div class="rpn-deadline" t-if="t.deadline">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              Hạn nộp hồ sơ: <t t-esc="t.deadline.strftime('%d/%m/%Y')"/>
+            </div>
+            <a class="rpn-btn" t-attf-href="/goi-thau/#{t.id}/tham-gia">Đăng ký tham gia</a>
+          </article>
+        </t>
+      </div>
+
+      <div class="rpn-empty" t-if="not tenders">
+        <div class="rpn-empty-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6C8792" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <t t-if="total">
+          <b>Không có gói nào khớp bộ lọc</b>
+          Thử bỏ bớt điều kiện tìm kiếm, hoặc <a href="/goi-thau" style="color:#0E8C99;font-weight:700">xem tất cả gói đang mời</a>.
+        </t>
+        <t t-else="">
+          <b>Chưa có gói thầu công khai</b>
+          Các gói hiện đang ở chế độ mời riêng. Hãy đăng ký tài khoản và hoàn thiện
+          hồ sơ năng lực để được tổng thầu mời khi có gói phù hợp.
+        </t>
+      </div>
+
+      <div class="rpn-botcta">
+        <h2>Thấy gói phù hợp?</h2>
+        <p>Đăng ký miễn phí bằng Mã số thuế — khai hồ sơ năng lực một lần, dùng cho mọi gói thầu.</p>
+        <a t-att-href="signup_url">Đăng ký làm nhà thầu →</a>
+      </div>
+    </div>
+  </t>
+</template>
+
+</odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project - Cost Base",
-    "version": "19.0.1.3.2",
+    "version": "19.0.1.5.1",
     "category": "Realty/Project",
     "summary": "Cost-management foundation: structures, categories, Khái toán inline",
     "description": """

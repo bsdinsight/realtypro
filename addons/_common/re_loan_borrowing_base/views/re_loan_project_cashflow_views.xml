@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_project_cashflow_form" model="ir.ui.view">
+        <field name="name">re.loan.project.cashflow.form</field>
+        <field name="model">re.loan.project.cashflow</field>
+        <field name="arch" type="xml">
+            <form string="Dòng tiền dự án &amp; DSCR">
+                <header>
+                    <button name="action_generate" type="object"
+                            string="Tính lại dòng tiền"
+                            class="btn-primary" icon="fa-refresh"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="project_id"
+                                   options="{'no_create': True}"/></h1>
+                    </div>
+                    <div class="alert alert-info small" role="status">
+                        <b>CFADS</b> = Thu từ CĐT − Chi trả thầu phụ/NCC −
+                        Chi phí cấp dự án. <b>Không</b> tính tiền giải ngân
+                        vay vào phần thu — tiền vay là <i>tài trợ</i>, không
+                        phải nguồn trả nợ; cộng vào thì DSCR luôn đẹp và mất
+                        hết ý nghĩa.<br/>
+                        <b>DSCR toàn kỳ</b> = Σ CFADS ÷ Σ nghĩa vụ trả nợ —
+                        đây là số nuôi chỉ tiêu ⑤.<br/>
+                        <b>Đừng đọc "DSCR tháng thấp nhất" như rủi ro</b>:
+                        tiền xây lắp về theo <i>đợt nghiệm thu</i> (2-3
+                        lần/năm) trong khi gốc + lãi đến hạn <i>hàng
+                        tháng</i>, nên tháng không có đợt thu tự động âm.
+                        Rủi ro thật nằm ở cột <b>Số dư tiền luỹ kế</b> —
+                        âm mới là tháng gom cả tiền đợt trước vẫn không đủ
+                        trả nợ.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="horizon_months"/>
+                            <field name="date_generated" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="dscr_overall" decoration-bf="1"
+                                   decoration-danger="dscr_overall &lt; 1"/>
+                        </group>
+                        <group string="Thanh khoản theo tháng">
+                            <field name="month_cash_short" decoration-bf="1"
+                                   decoration-danger="month_cash_short &gt; 0"/>
+                            <field name="cash_min"
+                                   decoration-danger="cash_min &lt; 0"/>
+                            <field name="dscr_min"/>
+                            <field name="dscr_avg"/>
+                            <field name="month_below_count"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <list decoration-danger="cash_balance &lt; 0"
+                              decoration-muted="debt_service == 0 and amount_in == 0">
+                            <field name="period_label" string="Tháng"/>
+                            <field name="amount_in" width="185px" sum="Σ"/>
+                            <field name="amount_out_contract" width="185px"
+                                   sum="Σ"/>
+                            <field name="amount_out_direct" width="185px"
+                                   sum="Σ"/>
+                            <field name="cfads" width="185px" sum="Σ"
+                                   decoration-bf="1"/>
+                            <field name="debt_principal" width="185px"
+                                   sum="Σ" optional="show"/>
+                            <field name="debt_interest" width="185px"
+                                   sum="Σ" optional="show"/>
+                            <field name="debt_service" width="185px" sum="Σ"/>
+                            <field name="cash_balance" width="200px"
+                                   decoration-bf="1"
+                                   decoration-danger="cash_balance &lt; 0"/>
+                            <field name="dscr" optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="total_cfads"/>
+                            <field name="total_debt_service"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_project_cashflow_list" model="ir.ui.view">
+        <field name="name">re.loan.project.cashflow.list</field>
+        <field name="model">re.loan.project.cashflow</field>
+        <field name="arch" type="xml">
+            <list string="Dòng tiền dự án"
+                  decoration-danger="(dscr_overall &lt; 1 and total_debt_service &gt; 0) or month_cash_short &gt; 0">
+                <field name="project_id"/>
+                <field name="horizon_months"/>
+                <field name="total_cfads" width="185px"/>
+                <field name="total_debt_service" width="185px"/>
+                <field name="dscr_overall" decoration-bf="1"/>
+                <field name="month_cash_short"/>
+                <field name="cash_min" width="185px"/>
+                <field name="dscr_min" optional="hide"/>
+                <field name="date_generated"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_project_cashflow" model="ir.actions.act_window">
+        <field name="name">Dòng tiền dự án &amp; DSCR</field>
+        <field name="res_model">re.loan.project.cashflow</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Lập bảng dòng tiền cho dự án đầu tiên
+            </p>
+            <p>
+                Chọn dự án rồi bấm <b>Tính lại dòng tiền</b> — hệ thống gom
+                mốc thu từ chủ đầu tư, mốc trả thầu phụ, chi phí cấp dự án
+                và kỳ trả gốc/lãi của các khế ước, chia theo <b>tháng</b>.
+                Tháng nào <b>số dư tiền luỹ kế âm</b> là thật sự thiếu
+                tiền trả nợ.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_project_cashflow"
+              name="Dòng tiền dự án &amp; DSCR"
+              parent="re_loan.menu_re_loan_report"
+              action="action_re_loan_project_cashflow"
+              sequence="34"/>
+
+</odoo>

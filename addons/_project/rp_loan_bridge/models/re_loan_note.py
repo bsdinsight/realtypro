@@ -21,6 +21,29 @@ class ReLoanNote(models.Model):
         string='Σ phân bổ lãi', compute='_compute_allocation_stats',
         store=True)
 
+    def _outstanding_by_contract(self):
+        """Trả {contract_id: dư nợ gốc}; khoá 0 = không gắn hợp đồng.
+
+        Song song với `_outstanding_by_project()` của trục dự án: dư nợ là
+        số CÒN LẠI sau khi trả gốc, mà trả gốc không gắn hợp đồng nào —
+        nên phân bổ theo TỶ TRỌNG số tiền các dòng giải ngân (bỏ dòng đã
+        huỷ). KW không có dòng giải ngân nào → dồn hết vào khoá 0.
+        """
+        self.ensure_one()
+        out = self.principal_outstanding or 0.0
+        if not out:
+            return {}
+        lines = self.disbursement_ids.filtered(
+            lambda d: d.state != 'cancelled' and d.amount)
+        total = sum(lines.mapped('amount'))
+        if not total:
+            return {0: out}
+        res = {}
+        for d in lines:
+            key = d.contract_id.id or 0
+            res[key] = res.get(key, 0.0) + out * (d.amount / total)
+        return res
+
     @api.depends('allocation_ids.amount_allocated', 'allocation_ids.base')
     def _compute_allocation_stats(self):
         for rec in self:

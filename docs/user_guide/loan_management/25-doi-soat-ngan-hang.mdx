@@ -1,0 +1,136 @@
+---
+title: "Đối soát ngân hàng — chủ đầu tư đã trả chưa, trả bao nhiêu"
+description: "Sổ đệm giao dịch ngân hàng tự khớp tiền chủ đầu tư chuyển về vào đúng hồ sơ thanh toán IPC, đóng vòng từ nghiệm thu tới tiền thật — nguồn cắm được, không khoá vào một nhà cung cấp."
+order: 25
+---
+
+# 25. Đối soát ngân hàng — chủ đầu tư đã trả chưa, trả bao nhiêu
+
+## 25.1. Khoảng trống giữa "đã ký" và "đã có tiền"
+
+Hệ thống theo dõi rất kỹ tới lúc **chủ đầu tư ký nhận IPC**: khối lượng
+nghiệm thu, giá trị gross, thu hồi tạm ứng, giữ lại, quyền đòi nợ đem
+thế chấp. Nhưng từ đó tới lúc **tiền thật vào tài khoản** là một khoảng
+trống mà hầu hết doanh nghiệp lấp bằng cách mở app ngân hàng ra nhìn,
+rồi gõ tay vào Excel.
+
+Khoảng trống đó gây ba chuyện:
+
+- không ai trả lời nhanh được *"IPC nào ký rồi mà chưa thấy tiền"*;
+- dòng tiền dự báo (mục 21) chạy trên số **đáng lẽ thu**, không phải số
+  **đã thu**;
+- điều kiện giải ngân ⑦ — *tiền về đúng TK kiểm soát* (mục 24) — không
+  có gì để kiểm, đành tick tay.
+
+## 25.2. Sổ đệm, không ghi thẳng vào chứng từ
+
+Giao dịch ngân hàng **không** được ghi thẳng vào IPC. Nó vào một sổ đệm
+riêng — *Giao dịch ngân hàng* — rồi mới đối soát sang chứng từ. Ba lý
+do, đều là chuyện xảy ra thật:
+
+**Chống trùng và phát lại.** Webhook ngân hàng có thể bắn lại cùng một
+giao dịch. Sổ đệm khoá theo cặp *(nguồn, mã giao dịch nguồn)*, nên bắn
+lại bao nhiêu lần cũng chỉ có một bản ghi.
+
+**Đổi nguồn không phải làm lại.** Hôm nay nhận qua dịch vụ webhook, mai
+đổi sang API ngân hàng hoặc nạp file sao kê — chỉ viết thêm một đầu
+nạp, tầng đối soát và mọi báo cáo phía sau giữ nguyên. Doanh nghiệp
+không bị khoá vào một nhà cung cấp, và với đơn vị có yêu cầu chặt về
+việc bên thứ ba đọc tài khoản thì vẫn dùng được bằng đường nạp file.
+
+**Khớp nhầm thì gỡ được.** Gỡ khớp một dòng trong sổ đệm không đụng gì
+tới chứng từ gốc. Nếu ghi thẳng vào IPC thì sửa sai đồng nghĩa với sửa
+số liệu thật.
+
+## 25.3. Bốn trạng thái của một giao dịch
+
+| Trạng thái | Nghĩa |
+|---|---|
+| **Mới nhận** | Đã vào sổ, chưa gắn vào chứng từ nào |
+| **Đã khớp** | Đã gắn vào một chứng từ, chờ xác nhận |
+| **Đã đối soát** | Xác nhận xong — tính vào số đã thu |
+| **Bỏ qua** | Giao dịch không liên quan (phí, lãi tiền gửi, nội bộ) |
+
+Mỗi dòng giữ **payload gốc** của nguồn. Khi số liệu lệch, đó là chỗ duy
+nhất trả lời được ngân hàng đã gửi sang cái gì — thay vì tranh luận
+dựa trên trí nhớ.
+
+## 25.4. Tự khớp vào IPC — theo nội dung chuyển khoản
+
+Với tiền **vào**, hệ thống đọc *mã tham chiếu* và *nội dung chuyển
+khoản*, rồi tìm IPC có số hiệu xuất hiện trong đó.
+
+Điểm đáng nói là cách so: cả hai vế đều được **chuẩn hoá** — bỏ hết ký
+tự không phải chữ và số, viết hoa — rồi mới so chuỗi con. Nhờ vậy khớp
+được dù kế toán bên chủ đầu tư gõ nội dung kiểu nào:
+
+```
+IPC/2026/0006     →  IPC20260006
+IPC_0006          →  IPC0006
+"TT IPC 2026 0006 du an ABC"  →  TTIPC20260006DUANABC   ✔ khớp
+```
+
+Không phụ thuộc một định dạng mã cố định — đây là điều kiện sống còn,
+vì nội dung chuyển khoản là thứ mình **không** kiểm soát được.
+
+import BankTxn from './images/25-giao-dich-ngan-hang.png'
+
+<img src={BankTxn} alt="Sổ giao dịch ngân hàng — ba nội dung chuyển khoản viết ba kiểu khác nhau đều tự khớp vào IPC, hai dòng không có mã IPC nằm lại trạng thái Mới nhận" />
+
+Đọc bảng trên theo cột **Trạng thái**: ba dòng ghi số IPC theo ba kiểu
+khác nhau (`IPC/2026/0006`, `IPC_0008`, `TT/IPC/0009`) đều về *Đã đối
+soát* và hiện chứng từ đã gắn ở cột cuối. Hai dòng còn lại — một khoản
+hoàn tiền ký quỹ và một khoản trích thu lãi vay — **không** có mã IPC
+nào nên nằm lại *Mới nhận*, chờ người xử. Hệ thống không đoán bừa.
+
+Khi khớp, hệ thống đồng thời **ghi một dòng vào chatter của IPC**:
+nhận bao nhiêu, ngân hàng nào, mã giao dịch nào. Người mở IPC sáu tháng
+sau vẫn đọc được lịch sử tiền về ngay tại chứng từ.
+
+## 25.5. Hai con số mới trên IPC
+
+Sau khi đối soát, mỗi IPC có thêm:
+
+| Trường | Nghĩa |
+|---|---|
+| **CĐT đã thu (thực nhận)** | Σ các giao dịch đã đối soát vào IPC này |
+| **Còn phải thu** | Đề nghị thanh toán − đã thu |
+
+Đây chính là con số đóng vòng: từ khối lượng nghiệm thu → IPC trình chủ
+đầu tư → chủ đầu tư ký → **tiền về tài khoản**. Và nó chảy tiếp vào:
+
+- **Dòng tiền dự án** (mục 21) — phần *Thu từ CĐT* dùng số đã thu thật;
+- **Điều kiện giải ngân ⑦** (mục 24) — có dữ liệu để so tài khoản kiểm
+  soát;
+- **Bảng chỉ tiêu** (mục 22) — nguồn thanh toán của chủ đầu tư có rõ
+  ràng hay không.
+
+## 25.6. Xem thử trên bản demo
+
+Bản demo **không đấu nối tài khoản ngân hàng thật** — nên có sẵn một
+nút mô phỏng để chạy trọn vòng.
+
+Vào [demo.realtypro.vn](https://demo.realtypro.vn) (`demo` / `demo`):
+
+1. **Đối soát ngân hàng → Giao dịch ngân hàng**: xem sổ đệm, lọc theo
+   trạng thái và chiều tiền.
+2. Mở **Realty Project → Doanh thu → IPC (hồ sơ thanh toán)**, chọn một
+   IPC đã được chủ đầu tư ký, ghi lại **số hiệu IPC** và số tiền đề
+   nghị thanh toán.
+3. Quay lại **Đối soát ngân hàng → Mô phỏng giao dịch (demo)**. Nhập số
+   tiền, và ở ô **Nội dung** gõ tự do có chứa số IPC vừa ghi — thử gõ
+   sai định dạng (`TT IPC 2026 0006`) để thấy phần chuẩn hoá làm việc.
+4. Bấm chạy, rồi mở lại IPC: **CĐT đã thu** đã tăng, **Còn phải thu**
+   giảm tương ứng, và chatter có dòng ghi nhận tiền về.
+5. Thử gõ nội dung **không** chứa số IPC nào: giao dịch nằm lại ở trạng
+   thái *Mới nhận* để người xử tay — hệ thống không đoán bừa.
+
+## 25.7. Lưu ý
+
+- Chỉ **tiền vào** mới tự khớp IPC. Tiền ra (trả nợ, phí) vào sổ và chờ
+  đối soát thủ công.
+- Giao dịch trùng bị chặn ở tầng dữ liệu theo *(nguồn, mã giao dịch)* —
+  nạp lại cùng một file sao kê không sinh số liệu ảo.
+- IPC đã huỷ không được nhận khớp.
+- Khớp nhầm: mở giao dịch → đưa về **Mới nhận**, số liệu trên IPC tự
+  tính lại. Không cần sửa chứng từ.

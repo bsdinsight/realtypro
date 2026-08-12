@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Bank Sync (SePay)',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.0.2',
     'category': 'Realty/Finance',
     'summary': 'Sổ đệm giao dịch ngân hàng + webhook SePay + đối soát. '
                'Nguồn-bất-khả-tri: SePay / file / AI / thủ công.',

@@ -103,7 +103,62 @@ import FacilityAlloc from './images/08-facility-alloc.png'
 
 <img src={FacilityAlloc} alt="Dialog phân bổ hạn mức theo dự án × mục đích" />
 
-## 8.7. Ví dụ — KĐT nghỉ dưỡng Dalat
+### Nhánh nào đang chặn, và thiếu bao nhiêu để mở khoá
+
+Khi một dự án hết chỗ rút, câu hỏi thật không phải *"còn bao nhiêu"* mà
+là ***"vì sao hết, và làm gì thì hết chặn"***. Bảng phân bổ trả lời
+thẳng bằng hai cột:
+
+| Cột | Nghĩa |
+|---|---|
+| **Đang bị chặn bởi** | nhánh nào đang quyết định con số khả dụng |
+| **Cần thêm để mở khoá** | bù thêm chừng này vào đúng nhánh đó thì khả dụng mới nhích lên |
+
+Khả dụng của một dự án là giá trị **nhỏ nhất** trong bốn nhánh, nên
+biết nhánh nào đang siết mới biết xử ở đâu — bốn nhánh cần bốn cách xử
+hoàn toàn khác nhau:
+
+| Nhánh chặn | Xử thế nào |
+|---|---|
+| **Hạn mức phân bổ cho dự án** | chia lại phân bổ giữa các dự án |
+| **Hạn mức còn của facility** | đàm phán tăng hạn mức với ngân hàng |
+| **TSBĐ riêng dự án** | bổ sung IPC được chủ đầu tư ký / thu hồi công nợ |
+| **TSBĐ chung toàn HĐTD** | bổ sung tài sản bảo đảm cấp hợp đồng |
+
+Cột *"Cần thêm để mở khoá"* đã quy đổi sẵn về đúng đơn vị hành động.
+Ví dụ đang thiếu 48 tỷ ở nhánh tài sản bảo đảm, mà tỷ lệ cho vay trên
+quyền đòi nợ là 60%, thì đưa thêm một IPC 80 tỷ đã được chủ đầu tư ký
+vào hợp đồng tín dụng là mở đúng 48 tỷ. Người dùng không phải tự nhân
+chia ngược.
+
+Lưu ý: mở khoá xong thì khả dụng chỉ nhích **tới khi chạm nhánh kế
+tiếp** — bốn nhánh xếp hàng chứ không cộng dồn.
+
+## 8.7. Lãi suất bình quân — gia quyền, không phải trung bình cộng
+
+Trên facility và trên hợp đồng tín dụng có ô **LS bình quân gia quyền
+(%/năm)**. Đây không phải trung bình cộng lãi suất các khế ước, mà là
+bình quân **gia quyền theo dư nợ gốc** của các khế ước còn dư nợ.
+
+Khác biệt không nhỏ như tên gọi gợi ý:
+
+| | Khế ước A | Khế ước B | Bình quân |
+|---|---|---|---|
+| Dư nợ | 1 tỷ | 100 tỷ | |
+| Lãi suất | 12%/năm | 8%/năm | |
+| Trung bình cộng | | | **10,00%** ✗ |
+| Gia quyền theo dư nợ | | | **8,04%** ✔ |
+
+Chênh gần 2 điểm phần trăm trên 101 tỷ là hơn 2 tỷ đồng lãi mỗi năm —
+đủ để làm sai một bản chào vốn. Vì con số này rất dễ bị lấy trung bình
+cộng một cách vô tình, hệ thống **tính sẵn và bày ra đúng chỗ** thay vì
+để người dùng tự cộng trong báo cáo.
+
+Trọng số là **dư nợ gốc** chứ không phải số tiền khế ước: lãi tính trên
+phần còn nợ, nên khế ước đã trả gần hết thì lãi suất của nó gần như
+không còn ảnh hưởng tới chi phí vốn hiện tại.
+
+## 8.8. Ví dụ — KĐT nghỉ dưỡng Dalat
 
 1. HĐTD 100 tỷ VCB đã Hiệu lực (xem §7)
 2. Tạo 3 facility: VLĐ 50 tỷ (9.5%) + Đầu tư 30 tỷ (10%) + BL 20 tỷ (phí 1.5%)
@@ -112,7 +167,7 @@ import FacilityAlloc from './images/08-facility-alloc.png'
 5. Phát hành BL thực hiện HĐ 5 tỷ (§13) → BL: dùng 5/20, còn 15
 6. HĐTD tổng: đã dùng 15/100 — xem section thống kê trên form HĐTD
 
-## 8.8. Lưu ý
+## 8.9. Lưu ý
 
 - **Không xoá facility còn KW/BL** — hệ thống chặn để giữ vết. Hết
   dùng thì để "Đã sử dụng" về 0 và không tạo KW mới.

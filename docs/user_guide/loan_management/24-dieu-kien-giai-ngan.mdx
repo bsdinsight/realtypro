@@ -1,0 +1,155 @@
+---
+title: "Điều kiện giải ngân — tám cửa phải qua trước khi trình ngân hàng"
+description: "Bộ tám điều kiện chặn một đợt giải ngân đi ra ngân hàng khi hồ sơ chưa đủ — sáu điều máy tự soát từ dữ liệu đang có, hai điều người xác nhận, và điểm chặn đặt đúng lúc trình chứ không phải lúc lập nháp."
+order: 24
+---
+
+# 24. Điều kiện giải ngân — tám cửa phải qua trước khi trình ngân hàng
+
+## 24.1. Vấn đề: hồ sơ quay đầu
+
+Một bộ hồ sơ giải ngân bị ngân hàng trả về hiếm khi vì lý do phức tạp.
+Thường là những thứ đáng ra biết trước khi gửi: hợp đồng với chủ đầu tư
+đã hết hiệu lực, chưa có biên bản nghiệm thu nào được chủ đầu tư ký,
+công ty đang có một khế ước quá hạn ở ngân hàng khác, hoặc phần vốn tự
+có cam kết chưa góp đủ.
+
+Mỗi lần quay đầu như vậy mất vài ngày — và trên công trường, vài ngày
+chậm tiền cho thầu phụ là chậm tiến độ thật.
+
+Hệ thống soát tám điều kiện này **ngay trên khế ước**, và **chặn** đợt
+giải ngân tại đúng bước bấm *"Gửi NH duyệt"*.
+
+## 24.2. Chặn lúc TRÌNH, không chặn lúc lập
+
+Đây là chi tiết dễ làm sai và làm hỏng trải nghiệm nếu đặt nhầm chỗ.
+
+Nháp giải ngân là nơi **chuẩn bị** hồ sơ: đính hợp đồng, gom hoá đơn,
+chờ biên bản nghiệm thu về. Trong lúc chuẩn bị thì đương nhiên còn
+thiếu. Chặn ngay lúc tạo nháp sẽ buộc người dùng phải làm đủ mọi thứ
+trước khi được ghi lại thứ gì — thực tế không ai làm việc như thế.
+
+Vậy nên:
+
+- **Tạo nháp: thoải mái.** Không điều kiện nào chặn.
+- **Bấm "Gửi NH duyệt": soát đủ tám điều.** Thiếu điều nào, hệ thống
+  báo ra **tất cả** các điều còn thiếu trong một lần — không phải sửa
+  một cái rồi bấm lại mới biết cái tiếp theo.
+
+Checklist chỉ áp dụng cho **khế ước có gắn dự án**. Khế ước không gắn
+dự án (vay chung, tái cấp vốn) giữ nguyên hành vi cũ.
+
+## 24.3. Tám điều kiện
+
+Sáu điều máy tự soát từ dữ liệu đang có trong hệ thống; hai điều còn
+lại chưa có model tự kiểm nên để người xác nhận.
+
+| | Điều kiện | Ai soát | Lấy từ đâu |
+|---|---|---|---|
+| ① | Hợp đồng xây lắp còn hiệu lực | máy | Dự án có HĐ với chủ đầu tư ở trạng thái *Đã ký* / *Đang thi công* |
+| ② | Hồ sơ khối lượng hợp lệ | máy | Dự án có ít nhất một **IPC đã được chủ đầu tư ký nhận** |
+| ③ | Đủ vốn tự có | máy | Phiếu **Nhu cầu vốn dự án** (mục 20) |
+| ④ | Không vượt ngân sách | máy | EVM: chi phí đã thực hiện (AC) ≤ tổng dự toán (BAC) |
+| ⑤ | Không vi phạm covenant | **người** | Tick tay trên khế ước |
+| ⑥ | Không có nợ quá hạn chưa xử lý | máy | Không khế ước nào của công ty đang ở trạng thái *Quá hạn* |
+| ⑦ | Tiền về đúng TK kiểm soát của NH | máy **hoặc** người | Xem §24.5 |
+| ⑧ | Chống tài trợ trùng | máy | Ràng buộc sẵn có, xem §24.6 |
+
+import Checklist from './images/24-dieu-kien-giai-ngan.png'
+
+<img src={Checklist} alt="Tab Điều kiện giải ngân trên khế ước — cột trái tự động từ dữ liệu, cột phải xác nhận tay, và khối năng lực trả nợ cảnh báo mềm bên dưới" />
+
+Băng trên cùng tóm tắt kết quả. Cột trái là các điều **máy tự soát**,
+cột phải là hai ô **người xác nhận** — chia hai cột để không ai nhầm
+điều nào do hệ thống bảo đảm, điều nào là chữ ký của mình.
+
+## 24.4. Điều ③ có ba trạng thái, không phải hai
+
+Vốn tự có không phải câu hỏi đúng/sai mà là ba khả năng — và cách xử
+mỗi khả năng khác hẳn nhau:
+
+| Trạng thái | Nghĩa | Có chặn không |
+|---|---|---|
+| **Đủ** | Đã góp đủ phần cam kết | không |
+| **THIẾU** | Đã lập phiếu, và còn thiếu thật | **chặn** |
+| **Chưa lập phiếu** | Dự án chưa có phiếu Nhu cầu vốn | **không chặn** — chỉ cảnh báo |
+
+Lý do "chưa lập phiếu" không chặn: phiếu Nhu cầu vốn là tính năng
+**bật thêm khi cần**, không bắt buộc với mọi công trình. Một khách hàng
+mới cài, chưa lập phiếu nào, mà bị chặn toàn bộ giải ngân thì hệ thống
+biến thành vật cản ngay ngày đầu.
+
+Nhưng cũng không im lặng: điều ③ hiện rõ *"Chưa lập phiếu"* để người
+duyệt biết mình đang duyệt trong lúc thiếu một mảng thông tin.
+
+## 24.5. Điều ⑦ — để máy tự đối chiếu thay vì tick tay
+
+Điều kiện *"dòng tiền về đúng tài khoản kiểm soát của ngân hàng"* thông
+thường chỉ được xác nhận bằng lời. Ở đây có thể để máy kiểm, nếu khai
+đủ hai thứ:
+
+1. Trên **hợp đồng tín dụng**, khai ô **"TK kiểm soát dòng tiền (NH)"**
+   — số tài khoản mà ngân hàng chỉ định để nhận tiền chủ đầu tư thanh
+   toán.
+2. Có dữ liệu **đối soát ngân hàng** (mục 25) cho các IPC của dự án.
+
+Khi đủ hai điều kiện đó, hệ thống tự soi mọi giao dịch tiền vào đã đối
+soát của dự án và so số tài khoản:
+
+| Kết quả | Nghĩa | Có chặn không |
+|---|---|---|
+| **Khớp** | Tiền chủ đầu tư về đúng TK kiểm soát | không |
+| **SAI TK** | Có giao dịch về tài khoản khác | **chặn** |
+| **Tự xác nhận** | Chưa khai TK kiểm soát → không tự kiểm được | chặn tới khi tick tay |
+
+Trường hợp *SAI TK* đáng để dừng lại: tiền dự án chảy về tài khoản
+ngoài luồng kiểm soát là đúng thứ ngân hàng sẽ hỏi khi tất toán, và là
+lỗi khó giải thích sau nhiều tháng.
+
+## 24.6. Điều ⑧ — chống tài trợ trùng là ràng buộc máy, không phải lời hứa
+
+"Không tài trợ trùng" thường chỉ là một dòng cam kết trong hồ sơ. Ở
+đây nó là ba ràng buộc đang chạy trong cơ sở dữ liệu:
+
+- một **biên bản nghiệm thu** chỉ vào được **một IPC** duy nhất;
+- một **IPC** chỉ **cầm cố một lần**;
+- tài sản bảo đảm cấp hợp đồng chỉ tính **phần chưa cầm cố theo IPC**.
+
+Vì máy đã chặn ở tầng dữ liệu nên điều ⑧ luôn đạt — nhưng vẫn hiện trên
+checklist, kèm mô tả đúng phạm vi, để người duyệt biết cái gì đang được
+bảo đảm bởi hệ thống và cái gì vẫn phải tự soát.
+
+## 24.7. Tám điều kiện CHẶN, năm tín hiệu CẢNH BÁO — đừng lẫn
+
+Trên cùng một khế ước còn có **năm tín hiệu năng lực trả nợ** (mục 21).
+Hai thứ dễ nhầm nhưng bản chất khác hẳn:
+
+| | Tám điều kiện (mục này) | Năm tín hiệu (mục 21) |
+|---|---|---|
+| Bản chất | sự kiện **đã xảy ra**, kiểm được | **dự báo** |
+| Hành vi | **chặn** trình giải ngân | **không chặn**, chỉ tô đỏ |
+| Ai quyết | hệ thống | người duyệt |
+
+Lý do không chặn bằng số dự báo: dự báo dòng tiền luôn có sai số, và
+một hệ thống chặn cứng theo số dự báo sẽ kẹt vận hành ngay tháng đầu —
+tiền xây lắp về theo đợt nghiệm thu nên nhiều tháng dòng tiền âm là
+bình thường. Máy đo đủ và tô đỏ; quyết định vẫn của người.
+
+## 24.8. Xem thử trên bản demo
+
+Vào [demo.realtypro.vn](https://demo.realtypro.vn) (tài khoản
+`demo` / `demo`):
+
+1. **Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Khế ước nhận nợ**, mở một
+   khế ước có gắn dự án.
+2. Mở tab **Điều kiện giải ngân (8)**. Băng trên cùng tóm tắt *"CHƯA
+   ĐẠT n điều kiện"* hoặc *"ĐẠT 8/8 — sẵn sàng trình NH"*.
+3. Cột trái là các điều **tự động từ dữ liệu**, cột phải là hai ô **xác
+   nhận tay**. Thử bỏ tick điều ⑤ rồi bấm **Gửi NH duyệt** trên một đợt
+   giải ngân — hệ thống báo ra toàn bộ điều còn thiếu và không cho đi
+   tiếp.
+4. Cuộn xuống khối **Năng lực trả nợ (§8)** ngay dưới đó để thấy khác
+   biệt: các tín hiệu này tô *CẢNH BÁO* nhưng nút vẫn bấm được.
+
+Đọc tiếp mục 21 — *Dòng tiền dự án & DSCR* — để hiểu năm tín hiệu cảnh
+báo, và mục 25 — *Đối soát ngân hàng* — để bật kiểm tự động cho điều ⑦.

@@ -12,7 +12,9 @@
                 <field name="txn_date"/>
                 <field name="bank_gateway"/>
                 <field name="direction"/>
-                <field name="amount" sum="Σ"/>
+                <!-- cột tiền để đủ rộng: số tiền bị cắt cụt là lỗi đọc
+                     số, không phải chuyện thẩm mỹ -->
+                <field name="amount" sum="Σ" width="200px"/>
                 <field name="content"/>
                 <field name="code" optional="show"/>
                 <field name="source"/>

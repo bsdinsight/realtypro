@@ -1,0 +1,495 @@
+ON  Báo cáo tổng quan
+ON  Báo cáo tổng quan → Báo cáo tổng quan
+ON  Báo cáo tổng quan → Cấu hình
+ON  Báo cáo tổng quan → Cấu hình → Báo cáo tổng quan
+ON  Cài đặt
+ON  Cài đặt → Dịch thuật
+ON  Cài đặt → Dịch thuật → Ngôn ngữ
+ON  Cài đặt → Dịch thuật → Nhập/Xuất
+ON  Cài đặt → Dịch thuật → Nhập/Xuất → Nhập Bản dịch
+ON  Cài đặt → Dịch thuật → Nhập/Xuất → Xuất Bản dịch
+ON  Cài đặt → Dịch thuật → Thuật ngữ Ứng dụng
+ON  Cài đặt → Kỹ thuật
+ON  Cài đặt → Kỹ thuật → AI Request Log (Realty)
+ON  Cài đặt → Kỹ thuật → Báo cáo
+ON  Cài đặt → Kỹ thuật → Báo cáo → Báo cáo
+ON  Cài đặt → Kỹ thuật → Báo cáo → Định dạng trang in
+ON  Cài đặt → Kỹ thuật → Bảo mật
+ON  Cài đặt → Kỹ thuật → Bảo mật → Quyền truy cập
+ON  Cài đặt → Kỹ thuật → Bảo mật → Quy tắc truy cập
+ON  Cài đặt → Kỹ thuật → Bảo mật → Thiết bị của người dùng
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Độ chính xác Thập phân
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Ghi nhận
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Hồ sơ
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Lựa chọn Trường
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Mô hình
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Quan hệ ManyToMany
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Ràng buộc đối tượng
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Tài sản
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Tệp đính kèm
+ON  Cài đặt → Kỹ thuật → Cấu trúc Cơ sở dữ liệu → Trường
+ON  Cài đặt → Kỹ thuật → Điện thoại/SMS
+ON  Cài đặt → Kỹ thuật → Điện thoại/SMS → Danh sách hạn chế số điện thoại
+ON  Cài đặt → Kỹ thuật → Điện thoại/SMS → Mẫu SMS
+ON  Cài đặt → Kỹ thuật → Điện thoại/SMS → SMS
+ON  Cài đặt → Kỹ thuật → Email
+ON  Cài đặt → Kỹ thuật → Email → Bí danh
+ON  Cài đặt → Kỹ thuật → Email → Cổng email được cho phép
+ON  Cài đặt → Kỹ thuật → Email → Email
+ON  Cài đặt → Kỹ thuật → Email → Email tóm tắt
+ON  Cài đặt → Kỹ thuật → Email → Kênh
+ON  Cài đặt → Kỹ thuật → Email → Kênh/Thành viên
+ON  Cài đặt → Kỹ thuật → Email → Mẫu email
+ON  Cài đặt → Kỹ thuật → Email → Máy chủ gửi email
+ON  Cài đặt → Kỹ thuật → Email → Máy chủ thư đến
+ON  Cài đặt → Kỹ thuật → Email → Mẹo tóm tắt
+ON  Cài đặt → Kỹ thuật → Email → Miền bí danh
+ON  Cài đặt → Kỹ thuật → Email → Thư bưu điện Thư
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Bộ lọc người dùng tạo
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Chế độ xem được Tùy chỉnh
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Du lịch
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Lượt xem
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Mục Menu
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Onboarding
+ON  Cài đặt → Kỹ thuật → Giao diện Người dùng → Trình tự onboarding
+ON  Cài đặt → Kỹ thuật → Hoạt động
+ON  Cài đặt → Kỹ thuật → Hoạt động → Kế hoạch hoạt động
+ON  Cài đặt → Kỹ thuật → Hoạt động → Loại hoạt động
+ON  Cài đặt → Kỹ thuật → Hoạt động → Tổng quan hoạt động
+ON  Cài đặt → Kỹ thuật → IAP
+ON  Cài đặt → Kỹ thuật → IAP → Tài khoản IAP
+ON  Cài đặt → Kỹ thuật → Lịch
+ON  Cài đặt → Kỹ thuật → Lịch → Kiểu Cuộc gặp
+ON  Cài đặt → Kỹ thuật → Lịch → Lịch Chuông báo
+ON  Cài đặt → Kỹ thuật → Nhân lực
+ON  Cài đặt → Kỹ thuật → Nhân lực → Lịch làm việc
+ON  Cài đặt → Kỹ thuật → Nhân lực → Ngày nghỉ của tài nguyên
+ON  Cài đặt → Kỹ thuật → Nhân lực → Nhân lực
+ON  Cài đặt → Kỹ thuật → Tác vụ
+ON  Cài đặt → Kỹ thuật → Tác vụ → Báo cáo
+ON  Cài đặt → Kỹ thuật → Tác vụ → Mặc dịnh người dùng tạo
+ON  Cài đặt → Kỹ thuật → Tác vụ → Tác vụ
+ON  Cài đặt → Kỹ thuật → Tác vụ → Tác vụ Cửa sổ
+ON  Cài đặt → Kỹ thuật → Tác vụ → Tác vụ máy khách
+ON  Cài đặt → Kỹ thuật → Tác vụ → Tác vụ nhúng
+ON  Cài đặt → Kỹ thuật → Tác vụ → Tác vụ Phía máy chủ
+ON  Cài đặt → Kỹ thuật → Tác vụ → Trình Cấu hình
+ON  Cài đặt → Kỹ thuật → Tham số
+ON  Cài đặt → Kỹ thuật → Tham số → Thông số hệ thống
+ON  Cài đặt → Kỹ thuật → Thảo luận
+ON  Cài đặt → Kỹ thuật → Thảo luận → Cài đặt người dùng
+ON  Cài đặt → Kỹ thuật → Thảo luận → Đánh giá
+ON  Cài đặt → Kỹ thuật → Thảo luận → Email Danh sách hạn chế
+ON  Cài đặt → Kỹ thuật → Thảo luận → Giá trị theo dõi
+ON  Cài đặt → Kỹ thuật → Thảo luận → GIF yêu thích
+ON  Cài đặt → Kỹ thuật → Thảo luận → Khách
+ON  Cài đặt → Kỹ thuật → Thảo luận → Kiểu phụ
+ON  Cài đặt → Kỹ thuật → Thảo luận → Máy chủ ICE
+ON  Cài đặt → Kỹ thuật → Thảo luận → Người theo dõi
+ON  Cài đặt → Kỹ thuật → Thảo luận → Phản ứng tin nhắn
+ON  Cài đặt → Kỹ thuật → Thảo luận → Phiên RTC
+ON  Cài đặt → Kỹ thuật → Thảo luận → Thông báo
+ON  Cài đặt → Kỹ thuật → Thảo luận → Tin nhắn
+ON  Cài đặt → Kỹ thuật → Thảo luận → Tin nhắn đã lên lịch
+ON  Cài đặt → Kỹ thuật → Thảo luận → Xem trước liên kết
+ON  Cài đặt → Kỹ thuật → Tính riêng tư
+ON  Cài đặt → Kỹ thuật → Tính riêng tư → Nhật ký quyền riêng tư
+ON  Cài đặt → Kỹ thuật → Trình tự & Mã định danh
+ON  Cài đặt → Kỹ thuật → Trình tự & Mã định danh → Các Mã định danh Bên ngoài
+ON  Cài đặt → Kỹ thuật → Trình tự & Mã định danh → Trình tự
+ON  Cài đặt → Kỹ thuật → Tự động hoá
+ON  Cài đặt → Kỹ thuật → Tự động hoá → Tác vụ đã lên lịch
+ON  Cài đặt → Kỹ thuật → Tự động hoá → Trình kích hoạt tác vụ đã lên lịch
+ON  Cài đặt → Lối tắt tùy chỉnh
+ON  Cài đặt → Người dùng & Công ty
+ON  Cài đặt → Người dùng & Công ty → Công ty
+ON  Cài đặt → Người dùng & Công ty → Người dùng
+ON  Cài đặt → Người dùng & Công ty → Nhóm
+ON  Cài đặt → Người dùng & Công ty → Quyền hạn
+ON  Cài đặt → Thiết lập Chung
+ON  Cài đặt → Thiết lập Chung
+ON  Construction Network
+ON  Construction Network → Gói thầu
+ON  Construction Network → Hồ sơ dự thầu
+ON  Construction Network → Nhà thầu
+ON  Construction Network → Thư mời thầu
+ON  CRM
+ON  CRM → Bán hàng
+ON  CRM → Bán hàng → Bộ phận
+ON  CRM → Bán hàng → Hoạt động của tôi
+ON  CRM → Bán hàng → Khách hàng
+ON  CRM → Bán hàng → Quy trình bán hàng của tôi
+ON  CRM → Báo cáo
+ON  CRM → Báo cáo → Dự báo
+ON  CRM → Báo cáo → Hoạt động
+ON  CRM → Báo cáo → Lead
+ON  CRM → Báo cáo → Quy trình bán hàng
+ON  CRM → Cấu hình
+ON  CRM → Cấu hình → Bộ phận sales
+ON  CRM → Cấu hình → Cài đặt
+ON  CRM → Cấu hình → Cơ hội
+ON  CRM → Cấu hình → Hoạt động
+ON  CRM → Cấu hình → Hoạt động → Kế hoạch hoạt động
+ON  CRM → Cấu hình → Hoạt động → Loại hoạt động
+ON  CRM → Cấu hình → Kế hoạch định kỳ
+ON  CRM → Cấu hình → Quy trình bán hàng
+ON  CRM → Cấu hình → Quy trình bán hàng → Giai đoạn
+ON  CRM → Cấu hình → Quy trình bán hàng → Lý do mất
+ON  CRM → Cấu hình → Quy trình bán hàng → Thẻ
+ON  CRM → Cấu hình → Tạo lead
+ON  CRM → Cấu hình → Tạo lead → Yêu cầu khai thác lead
+ON  CRM → Cấu hình → Thành viên bộ phận
+ON  CRM → Lead
+ON  CRM → Nhập & đồng bộ
+ON  Dashboard
+OFF Đối soát ngân hàng
+OFF Dự án
+OFF Dự án → Báo cáo
+OFF Dự án → Báo cáo → Đánh giá của khách hàng
+OFF Dự án → Báo cáo → Phân tích nhiệm vụ
+OFF Dự án → Cấu hình
+OFF Dự án → Cấu hình → Cài đặt
+OFF Dự án → Cấu hình → Dự án
+OFF Dự án → Cấu hình → Dự án
+OFF Dự án → Cấu hình → Giai đoạn dự án
+OFF Dự án → Cấu hình → Giai đoạn nhiệm vụ
+OFF Dự án → Cấu hình → Kế hoạch hoạt động
+OFF Dự án → Cấu hình → Loại hoạt động
+OFF Dự án → Cấu hình → Thẻ
+OFF Dự án → Cấu hình → Vai trò dự án
+OFF Dự án → Dự án
+OFF Dự án → Dự án
+OFF Dự án → Nhiệm vụ
+OFF Dự án → Nhiệm vụ → Nhiệm vụ của tôi
+OFF Dự án → Nhiệm vụ → Tất cả nhiệm vụ
+ON  Hóa đơn
+ON  Hóa đơn → Báo cáo
+ON  Hóa đơn → Báo cáo → Báo cáo đối tác
+ON  Hóa đơn → Báo cáo → Báo cáo sao kê
+ON  Hóa đơn → Báo cáo → Quản lý
+ON  Hóa đơn → Báo cáo → Quản lý → Báo cáo phân tích
+ON  Hóa đơn → Báo cáo → Quản lý → Phân tích hoá đơn
+ON  Hóa đơn → Báo cáo → Thuế & tài chính
+ON  Hóa đơn → Báo cáo tổng quan
+ON  Hóa đơn → Cấu hình
+ON  Hóa đơn → Cấu hình → Cài đặt
+ON  Hóa đơn → Cấu hình → Hóa đơn
+ON  Hóa đơn → Cấu hình → Hóa đơn → Danh mục sản phẩm
+ON  Hóa đơn → Cấu hình → Hóa đơn → Điều khoản thanh toán
+ON  Hóa đơn → Cấu hình → Hóa đơn → Incoterm
+ON  Hóa đơn → Cấu hình → Kế toán
+ON  Hóa đơn → Cấu hình → Kế toán → Báo cáo
+ON  Hóa đơn → Cấu hình → Kế toán → Hệ thống tài khoản
+ON  Hóa đơn → Cấu hình → Kế toán → Làm tròn tiền
+ON  Hóa đơn → Cấu hình → Kế toán → Nhiều sổ cái
+ON  Hóa đơn → Cấu hình → Kế toán → Nhóm thuế
+ON  Hóa đơn → Cấu hình → Kế toán phân tích
+ON  Hóa đơn → Cấu hình → Kế toán phân tích → Kế hoạch phân tích
+ON  Hóa đơn → Cấu hình → Kế toán phân tích → Mô hình phân bổ phân tích
+ON  Hóa đơn → Cấu hình → Kế toán phân tích → Tài khoản phân tích
+ON  Hóa đơn → Cấu hình → Kế toán → Sổ nhật ký
+ON  Hóa đơn → Cấu hình → Kế toán → Thuế
+ON  Hóa đơn → Cấu hình → Kế toán → Tiền tệ
+ON  Hóa đơn → Cấu hình → Kế toán → Vị trí tài chính
+ON  Hóa đơn → Cấu hình → Khoản thanh toán online
+ON  Hóa đơn → Cấu hình → Khoản thanh toán online → Giao dịch thanh toán
+ON  Hóa đơn → Cấu hình → Khoản thanh toán online → Mã thanh toán
+ON  Hóa đơn → Cấu hình → Khoản thanh toán online → Nhà cung cấp dịch vụ thanh toán
+ON  Hóa đơn → Cấu hình → Khoản thanh toán online → Phương thức thanh toán
+ON  Hóa đơn → Kế toán
+ON  Hóa đơn → Kế toán → Đóng
+ON  Hóa đơn → Kế toán → Đóng → Bảo mật bút toán
+ON  Hóa đơn → Kế toán → Giao dịch
+ON  Hóa đơn → Kế toán → Giao dịch → Bút toán
+ON  Hóa đơn → Kế toán → Giao dịch → Hạng mục phân tích
+ON  Hóa đơn → Khách hàng
+ON  Hóa đơn → Khách hàng → Giấy báo có
+ON  Hóa đơn → Khách hàng → Hóa đơn
+ON  Hóa đơn → Khách hàng → Khách hàng
+ON  Hóa đơn → Khách hàng → Sản phẩm
+ON  Hóa đơn → Khách hàng → Thanh toán
+ON  Hóa đơn → Nhà cung cấp
+ON  Hóa đơn → Nhà cung cấp → Đơn hoàn tiền
+ON  Hóa đơn → Nhà cung cấp → Hoá đơn
+ON  Hóa đơn → Nhà cung cấp → Nhà cung cấp
+ON  Hóa đơn → Nhà cung cấp → Sản phẩm
+ON  Hóa đơn → Nhà cung cấp → Thanh toán
+ON  Hóa đơn → Xem lại
+ON  Hóa đơn → Xem lại → Kiểm soát
+ON  Hóa đơn → Xem lại → Kiểm soát → Hạng mục bút toán
+ON  Hóa đơn → Xem lại → Nhật ký
+ON  Hóa đơn → Xem lại → Nhật ký → Dấu vết kiểm toán
+ON  Integration
+ON  Integration → API Keys
+ON  Integration → Inbound Webhook Log
+ON  Integration → Outbound Webhooks
+ON  Lịch
+ON  Lịch → Cấu hình
+ON  Lịch → Cấu hình → Cài đặt
+ON  Lịch → Cấu hình → Nhắc nhở
+ON  Lịch → Lịch
+ON  Liên hệ
+ON  Liên hệ → Cấu hình
+ON  Liên hệ → Cấu hình → Bản địa hóa
+ON  Liên hệ → Cấu hình → Bản địa hóa → Nhóm quốc gia
+ON  Liên hệ → Cấu hình → Bản địa hóa → Quốc gia
+ON  Liên hệ → Cấu hình → Bản địa hóa → Tỉnh thành/Bang
+ON  Liên hệ → Cấu hình → Ngành nghề
+ON  Liên hệ → Cấu hình → Tài khoản ngân hàng
+ON  Liên hệ → Cấu hình → Tài khoản ngân hàng → Ngân hàng
+ON  Liên hệ → Cấu hình → Tài khoản ngân hàng → Tài khoản ngân hàng
+ON  Liên hệ → Cấu hình → Thẻ liên hệ
+ON  Liên hệ → Liên hệ
+ON  Mua hàng
+ON  Mua hàng → Báo cáo
+ON  Mua hàng → Báo cáo → Mua hàng
+ON  Mua hàng → Cấu hình
+ON  Mua hàng → Cấu hình → Bảng giá nhập hàng
+ON  Mua hàng → Cấu hình → Cài đặt
+ON  Mua hàng → Cấu hình → Sản phẩm
+ON  Mua hàng → Cấu hình → Sản phẩm → Danh mục
+ON  Mua hàng → Cấu hình → Sản phẩm → Đơn vị & đóng gói
+ON  Mua hàng → Cấu hình → Sản phẩm → Thuộc tính
+ON  Mua hàng → Đơn hàng
+ON  Mua hàng → Đơn hàng → Đơn mua hàng
+ON  Mua hàng → Đơn hàng → Nhà cung cấp
+ON  Mua hàng → Đơn hàng → Yêu cầu báo giá
+ON  Mua hàng → Sản phẩm
+ON  Mua hàng → Sản phẩm → Biến thể sản phẩm
+ON  Mua hàng → Sản phẩm → Sản phẩm
+OFF Ngân quỹ
+ON  Realty Core
+ON  Realty Core → Configuration
+ON  Realty Core → Configuration → Đơn vị tính (Xây dựng)
+ON  Realty Core → Configuration → Wards (Phường/Xã)
+ON  Realty Core → Master Data
+ON  Realty Core → Master Data → Buildings
+ON  Realty Core → Master Data → Danh mục Item
+ON  Realty Core → Master Data → Floors
+ON  Realty Core → Master Data → Generate Floors
+ON  Realty Core → Master Data → Import Floors
+ON  Realty Core → Master Data → Import Units
+ON  Realty Core → Master Data → Nhóm Item
+ON  Realty Core → Master Data → Projects
+ON  Realty Core → Master Data → Subzones
+ON  Realty Core → Master Data → Units
+ON  Realty Core → Master Data → Unit Types
+ON  Realty Project
+ON  Realty Project → Cấu hình
+ON  Realty Project → Cấu hình → Chủ đầu tư
+ON  Realty Project → Cấu hình → Chuyên môn nhà thầu
+ON  Realty Project → Cấu hình → Cost Categories
+ON  Realty Project → Cấu hình → Danh mục chi phí chuẩn (Master)
+ON  Realty Project → Cấu hình → Nhà thầu
+ON  Realty Project → Doanh thu
+ON  Realty Project → Doanh thu → Dashboard Doanh thu
+ON  Realty Project → Doanh thu → HĐ với Chủ đầu tư
+ON  Realty Project → Doanh thu → Hoá đơn phát hành CĐT
+ON  Realty Project → Doanh thu → IPC (hồ sơ thanh toán)
+ON  Realty Project → Doanh thu → Kế hoạch dòng tiền thu
+ON  Realty Project → Doanh thu → Nghiệm thu gửi CĐT
+ON  Realty Project → Doanh thu → Tạm ứng CĐT
+ON  Realty Project → Doanh thu → Thu tiền (Receipt)
+ON  Realty Project → Estimate
+ON  Realty Project → EVM
+ON  Realty Project → Hợp đồng
+ON  Realty Project → Hợp đồng → Bảo lãnh HĐ nhà thầu
+ON  Realty Project → Hợp đồng → Chấm dứt / Thanh lý
+ON  Realty Project → Hợp đồng → Công nợ nhà thầu / NCC
+ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu
+ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu → Gói thầu
+ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu → Nhà thầu nộp HSDT
+ON  Realty Project → Hợp đồng → HĐ nhà thầu
+ON  Realty Project → Hợp đồng → Phụ lục HĐ
+ON  Realty Project → Project Master
+ON  Realty Project → Project Master → Buildings
+ON  Realty Project → Project Master → Floors
+ON  Realty Project → Project Master → Hạng mục dự án
+ON  Realty Project → Project Master → Projects
+ON  Realty Project → Project Master → Subzones
+ON  Realty Project → Project Master → Units
+ON  Realty Project → Project Master → Unit Types
+ON  Realty Project → Tài chính
+ON  Realty Project → Tài chính → Báo cáo
+ON  Realty Project → Tài chính → Báo cáo → Bảo lãnh sắp / đã hết hạn
+ON  Realty Project → Tài chính → Báo cáo → Mốc thanh toán đến hạn
+ON  Realty Project → Tài chính → Báo cáo → Phân bổ vay theo công trình
+ON  Realty Project → Tài chính → Báo cáo → Pivot HĐ nhà thầu
+ON  Realty Project → Tài chính → Dashboard Tài chính
+ON  Realty Project → Tài chính → Dự toán (BOQ)
+ON  Realty Project → Tài chính → Giải ngân qua khế ước
+ON  Realty Project → Tài chính → Hoá đơn nhà thầu
+ON  Realty Project → Tài chính → Hồ sơ thanh toán
+ON  Realty Project → Tài chính → Khái toán
+ON  Realty Project → Tài chính → Tạm ứng
+ON  Realty Project → Tài chính → Thanh toán
+ON  Realty Project → Trợ lý AI
+ON  Realty Project → Trợ lý AI → AI đọc báo cáo tiến độ
+ON  Realty Project → Trợ lý AI → AI đọc dự toán
+ON  Realty Project → Trợ lý AI → AI hỏi đáp số liệu
+ON  Realty Project → Xây dựng
+ON  Realty Project → Xây dựng → Báo cáo
+ON  Realty Project → Xây dựng → Báo cáo → Punch theo nhà thầu
+ON  Realty Project → Xây dựng → Báo cáo → Tiến độ công việc theo HĐ
+ON  Realty Project → Xây dựng → Dashboard Xây dựng
+ON  Realty Project → Xây dựng → Hiện trường
+ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động
+ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Kiểm tra an toàn
+ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Sự cố / near-miss
+ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Toolbox meeting
+ON  Realty Project → Xây dựng → Hiện trường → Nhật ký thi công
+ON  Realty Project → Xây dựng → Hiện trường → Punch list (lỗi & khắc phục)
+ON  Realty Project → Xây dựng → Hiện trường → Rủi ro (Risk)
+ON  Realty Project → Xây dựng → Hiện trường → Thay đổi (Change)
+ON  Realty Project → Xây dựng → Lịch thi công
+ON  Realty Project → Xây dựng → Lịch thi công → Công việc của tôi
+ON  Realty Project → Xây dựng → Lịch thi công → Công việc (lịch thi công)
+ON  Realty Project → Xây dựng → RFI & Trình duyệt
+ON  Realty Project → Xây dựng → RFI & Trình duyệt → Chỉ thị công trường
+ON  Realty Project → Xây dựng → RFI & Trình duyệt → RFI — Yêu cầu làm rõ
+ON  Realty Project → Xây dựng → RFI & Trình duyệt → Trình duyệt (Submittal)
+ON  Realty Project → Xây dựng → Tiến độ
+ON  Realty Project → Xây dựng → Tiến độ → BBN Nghiệm thu KL
+ON  Tests
+ON  Thảo luận
+ON  Thảo luận → Cấu hình
+ON  Thảo luận → Cấu hình → Câu trả lời soạn sẵn
+ON  Thảo luận → Cấu hình → Giọng nói & video
+ON  Thảo luận → Cấu hình → Thông báo
+ON  Thảo luận → Cấu hình → Vai trò
+ON  Thảo luận → Kênh
+ON  Thảo luận → Kỹ thuật
+ON  Thảo luận → Kỹ thuật → Lịch sử cuộc gọi
+ON  Thảo luận → Thảo luận
+OFF Thảo luận → Tích hợp
+ON  Thuê tài sản
+ON  Thuê tài sản → Cấu hình
+ON  Thuê tài sản → Cấu hình → Nhóm / Loại tài sản
+ON  Thuê tài sản → Cấu hình → Thuộc tính kỹ thuật
+ON  Thuê tài sản → Dashboard
+ON  Thuê tài sản → Đổi / Trả tài sản
+ON  Thuê tài sản → Hợp đồng thuê
+ON  Thuê tài sản → Kỳ thanh toán
+ON  Thuê tài sản → Luân chuyển dự án
+ON  Thuê tài sản → Nhật ký bảo trì
+ON  Thuê tài sản → Tài sản thuê
+ON  Thư viện đơn giá
+ON  Thư viện đơn giá → Bộ định mức
+ON  Thư viện đơn giá → Cấp phối vữa/bê tông
+ON  Thư viện đơn giá → Công bố giá
+ON  Thư viện đơn giá → Danh mục Item
+ON  Thư viện đơn giá → Định mức
+ON  Thư viện đơn giá → Dòng giá (toàn kho)
+ON  Thư viện đơn giá → Đơn giá tổng hợp
+ON  Thư viện đơn giá → Nạp file GXD
+ON  Thư viện đơn giá → Thang markup
+ON  Thư viện đơn giá → Tiêu chuẩn kỹ thuật
+ON  Thư viện đơn giá → Vùng giá
+ON  Tồn kho
+ON  Tồn kho → Báo cáo
+ON  Tồn kho → Báo cáo → Lịch sử điều chuyển
+ON  Tồn kho → Báo cáo → Phân tích điều chuyển
+ON  Tồn kho → Báo cáo → Tồn kho
+ON  Tồn kho → Báo cáo → Vị trí
+ON  Tồn kho → Cấu hình
+ON  Tồn kho → Cấu hình → Cài đặt
+ON  Tồn kho → Cấu hình → Giao hàng
+ON  Tồn kho → Cấu hình → Giao hàng → Loại kiện hàng
+ON  Tồn kho → Cấu hình → Quản lý kho hàng
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Danh mục lưu kho
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Kho hàng
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Loại hoạt động
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Quy tắc
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Quy tắc lưu kho
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Tuyến cung ứng
+ON  Tồn kho → Cấu hình → Quản lý kho hàng → Vị trí
+ON  Tồn kho → Cấu hình → Sản phẩm
+ON  Tồn kho → Cấu hình → Sản phẩm → Danh mục
+ON  Tồn kho → Cấu hình → Sản phẩm → Danh pháp mã vạch
+ON  Tồn kho → Cấu hình → Sản phẩm → Đơn vị & đóng gói
+ON  Tồn kho → Cấu hình → Sản phẩm → Thuộc tính
+ON  Tồn kho → Hoạt động
+ON  Tồn kho → Hoạt động → Điều chỉnh
+ON  Tồn kho → Hoạt động → Điều chỉnh → Kiểm kê thực tế
+ON  Tồn kho → Hoạt động → Điều chỉnh → Loại bỏ
+ON  Tồn kho → Hoạt động → Lệnh chuyển hàng
+ON  Tồn kho → Hoạt động → Lệnh chuyển hàng → Giao hàng
+ON  Tồn kho → Hoạt động → Lệnh chuyển hàng → Nội bộ
+ON  Tồn kho → Hoạt động → Lệnh chuyển hàng → Phiếu nhập kho
+ON  Tồn kho → Hoạt động → Mua sắm
+ON  Tồn kho → Hoạt động → Mua sắm → Bổ sung hàng
+ON  Tồn kho → Hoạt động → Mua sắm → Các tham chiếu
+ON  Tồn kho → Hoạt động → Mua sắm: chạy trình lên lịch
+ON  Tồn kho → Sản phẩm
+ON  Tồn kho → Sản phẩm → Biến thể sản phẩm
+ON  Tồn kho → Sản phẩm → Kiện hàng
+ON  Tồn kho → Sản phẩm → Sản phẩm
+ON  Tồn kho → Sản phẩm → Số lô/sê-ri
+ON  Tồn kho → Tổng quan
+ON  Trình theo dõi Liên kết
+ON  Trình theo dõi Liên kết → UTM
+ON  Trình theo dõi Liên kết → UTM → Chiến dịch
+ON  Trình theo dõi Liên kết → UTM → Nguồn
+ON  Trình theo dõi Liên kết → UTM → Phương tiện
+ON  Ứng dụng
+ON  Ứng dụng → Cập nhật danh sách Ứng dụng
+ON  Ứng dụng → Import Phân hệ
+ON  Ứng dụng → Tiến hành Nâng cấp theo Kế hoạch
+ON  Ứng dụng → Ứng dụng
+ON  Ứng dụng → Ứng dụng → Kho giao diện
+ON  Ứng dụng → Ứng dụng → Kho giao diện
+ON  Ứng dụng → Ứng dụng → Ứng dụng chính
+ON  Ứng dụng → Ứng dụng → Ứng dụng thứ ba
+ON  Việc cần làm
+ON  Vốn & Ngân quỹ
+ON  Vốn & Ngân quỹ → Báo cáo
+ON  Vốn & Ngân quỹ → Báo cáo → Đối chiếu & bảng kê
+ON  Vốn & Ngân quỹ → Báo cáo → Đối chiếu & bảng kê → Bảng kê chứng từ theo KW
+ON  Vốn & Ngân quỹ → Báo cáo → Đối chiếu & bảng kê → Đối chiếu KW vay
+ON  Vốn & Ngân quỹ → Báo cáo → Đối chiếu & bảng kê → Tổng hợp phát sinh theo KW
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Bảng chỉ tiêu (xanh/vàng/đỏ)
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Dòng tiền dự án & DSCR
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Dự báo dòng tiền
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Năng lực trả nợ (§8)
+ON  Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Rà soát tuần (§10)
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn → Dư nợ vay
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn → Kế hoạch thanh toán KW (năm)
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn → Khế ước đến hạn
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn → Nợ quá hạn (Aging)
+ON  Vốn & Ngân quỹ → Báo cáo → Dư nợ & đến hạn → Tiến độ thanh toán
+ON  Vốn & Ngân quỹ → Báo cáo → Hạn mức & phân bổ
+ON  Vốn & Ngân quỹ → Báo cáo → Hạn mức & phân bổ → Phân bổ HĐTD theo Dự án × Mục đích
+ON  Vốn & Ngân quỹ → Báo cáo → Hạn mức & phân bổ → Phân bổ HĐTD theo Khế ước
+ON  Vốn & Ngân quỹ → Báo cáo → Hạn mức & phân bổ → Phân bổ vay theo công trình
+ON  Vốn & Ngân quỹ → Báo cáo → Hạn mức & phân bổ → Tổng hợp HĐTD (cho vay + BL)
+OFF Vốn & Ngân quỹ → Bảo lãnh NH
+ON  Vốn & Ngân quỹ → Cấu hình
+ON  Vốn & Ngân quỹ → Cấu hình → Loại tài sản thế chấp
+ON  Vốn & Ngân quỹ → Cấu hình → Ngân hàng
+ON  Vốn & Ngân quỹ → Cấu hình → Ngưỡng cảnh báo chỉ tiêu
+ON  Vốn & Ngân quỹ → Cấu hình → Tài khoản kế toán
+ON  Vốn & Ngân quỹ → Cấu hình → Tổ chức / Người định giá
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Giao dịch ngân hàng
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Import giấy báo nợ (Excel/CSV)
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Mô phỏng giao dịch (demo)
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Thông báo Nợ/Có
+ON  Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Trích thu tự động (NH)
+ON  Vốn & Ngân quỹ → Dashboard
+ON  Vốn & Ngân quỹ → HĐ tín dụng
+ON  Vốn & Ngân quỹ → HĐ tín dụng → Cấu trúc tín dụng
+ON  Vốn & Ngân quỹ → HĐ tín dụng → Hạn mức tín dụng
+ON  Vốn & Ngân quỹ → HĐ tín dụng → Hợp đồng tín dụng
+ON  Vốn & Ngân quỹ → HĐ tín dụng → Tài sản thế chấp
+ON  Vốn & Ngân quỹ → Nhu cầu vốn dự án
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Chứng thư BL
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Đề nghị phát hành
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Điều chỉnh LS hàng loạt
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Hóa đơn HĐ nhà thầu
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Khế ước nhận nợ
+ON  Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Vay nội bộ

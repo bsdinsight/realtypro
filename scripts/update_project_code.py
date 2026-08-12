@@ -1,4 +1,4 @@
-"""Đổi project code: GV → DL (consistent với rename Greenview → Đà Lạt).
+"""Đổi project code của dự án demo: GV → DL.
 
 Chạy trên VPS:
     docker cp /root/realtypro/scripts/update_project_code.py \

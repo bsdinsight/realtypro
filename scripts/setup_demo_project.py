@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
-"""Setup demo data 'Khu đô thị Greenview' cho screenshots docs.
+"""Setup demo data 'Khu đô thị ABC' cho screenshots docs.
 
 Idempotent: chạy lại sẽ:
-  - Archive (set active=False) các record cũ tên 'Vinhomes Green Paradise'
-  - Tạo / re-update 'Khu đô thị Greenview' với data đầy đủ cho Section 4-6 docs
+  - Tạo / re-update 'Khu đô thị ABC' với data đầy đủ cho Section 4-6 docs
 
 Usage (trên VPS):
     docker compose -p realtypro -f /root/realtypro-enterprise/docker-compose.yml \\
-      exec odoo odoo shell -d dev --no-http < setup_demo_greenview.py
+      exec odoo odoo shell -d dev --no-http < setup_demo_project.py
 
 Hoặc copy paste vào shell tương tác:
     docker compose -p realtypro -f /root/realtypro-enterprise/docker-compose.yml \\
       exec odoo odoo shell -d dev --no-http
-    >>> exec(open('/tmp/setup_demo_greenview.py').read())
+    >>> exec(open('/tmp/setup_demo_project.py').read())
 """
 
 from datetime import date, timedelta
 
 # ============================================================
-# 0. Archive demo data cũ (Vinhomes Green Paradise) nếu có
+# 0. Archive demo data cũ của lần seed trước nếu có
 # ============================================================
 print("\n=== Step 0: Archive demo data cũ ===")
 
 old_projects = env['re.project'].search([
-    ('name', 'ilike', 'Vinhomes Green Paradise'),
+    ('name', 'ilike', 'Khu đô thị ABC'),
 ])
 if old_projects:
     print(f"Archive {len(old_projects)} project cũ + structures + tenders + contracts liên quan")
@@ -61,9 +60,9 @@ else:
     print("  Không có data cũ cần archive")
 
 # ============================================================
-# 1. Re-use hoặc tạo project 'Khu đô thị Greenview'
+# 1. Re-use hoặc tạo project 'Khu đô thị ABC'
 # ============================================================
-print("\n=== Step 1: Project 'Khu đô thị Greenview' ===")
+print("\n=== Step 1: Project 'Khu đô thị ABC' ===")
 
 Project = env['re.project']
 project = Project.search([('code', '=', 'GV')], limit=1)
@@ -72,7 +71,7 @@ if project:
     project.write({'active': True})
 else:
     project = Project.create({
-        'name': 'Khu đô thị Greenview',
+        'name': 'Khu đô thị ABC',
         'code': 'GV',
         'development_type': 'mixed',
         'lifecycle_level': 'building',
@@ -599,7 +598,7 @@ if not bbn.line_ids:
 # ============================================================
 env.cr.commit()
 print("\n" + "=" * 60)
-print("✅ SETUP COMPLETE — Khu đô thị Greenview")
+print("✅ SETUP COMPLETE — Khu đô thị ABC")
 print("=" * 60)
 print(f"""
 Project:        {project.name} (ID={project.id})

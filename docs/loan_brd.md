@@ -113,7 +113,7 @@ cho 1..n khoản cho vay lại; dư nợ mỗi bên độc lập.
 | OUT-5 | Thư tín dụng (L/C) | `_finance/rf_letter_of_credit` |
 | OUT-6 | Tiền gửi có kỳ hạn (HDTG) | `_finance/rf_time_deposit` |
 | OUT-7 | Cam kết tín dụng (TX TC CK) | `_finance/rf_credit_commitment` |
-| OUT-8 | COA / branding / migration tổng thầu | `_cc1/*` |
+| OUT-8 | COA / branding / migration riêng từng khách | addons riêng của khách |
 | OUT-9 | Master data ngân hàng đầy đủ (seed 20+ NH, mã NHNN, template per bank) | `re_bank` (dùng `res.bank` chuẩn cho v1, xem §13) |
 
 ### 3.3 Ranh giới với kế toán

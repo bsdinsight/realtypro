@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Demo: cấu trúc tập đoàn + 1 khoản cho vay lại từ KW-2026/0001 -->
-    <record id="demo_partner_cc1" model="res.partner">
+    <record id="demo_partner_parent" model="res.partner">
         <field name="name">Tổng Công ty Xây dựng ABC</field>
         <field name="is_company" eval="True"/>
     </record>
-    <record id="demo_partner_cc1_sub" model="res.partner">
+    <record id="demo_partner_parent_sub" model="res.partner">
         <field name="name">Công ty con Miền Nam</field>
         <field name="is_company" eval="True"/>
-        <field name="parent_company_id" ref="demo_partner_cc1"/>
+        <field name="parent_company_id" ref="demo_partner_parent"/>
     </record>
 
     <record id="demo_note_onlend_1" model="re.loan.note">
         <field name="loan_type">onlending</field>
         <field name="name">KW-OL-2026/01</field>
         <field name="source_note_id" ref="demo_note_rev_1"/>
-        <field name="counterparty_id" ref="demo_partner_cc1_sub"/>
+        <field name="counterparty_id" ref="demo_partner_parent_sub"/>
         <field name="amount">80000000000</field>
         <field name="date_note">2026-02-15</field>
         <field name="tenor_months">12</field>

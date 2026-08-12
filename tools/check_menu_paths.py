@@ -35,8 +35,17 @@ import re
 import sys
 
 # Chỉ soi chuỗi in đậm có mũi tên — đó là quy ước ghi đường dẫn menu.
-# Mũi tên diễn tả luồng trạng thái ("Nháp → Hiệu lực") bị loại bằng cách
-# đòi vế đầu phải là tên một menu gốc có thật.
+#
+# Nhận diện "đây có phải đường dẫn menu không" KHÔNG dựa vào vế đầu.
+# Hai bản trước đều đòi vế đầu phải là một menu gốc có thật, và cả hai
+# lần đều mù đúng chỗ nguy hiểm nhất:
+#   • bản 1 — root bị TẮT  → vế đầu không khớp gốc nào → bỏ qua im lặng;
+#   • bản 2 — root bị ĐỔI TÊN tại chỗ ("Quản lý Vay" → "Vốn & Ngân quỹ")
+#     → tên cũ biến mất hẳn khỏi cây, không ON cũng không OFF → lại bỏ
+#     qua im lặng, đúng loại đường dẫn cần bắt nhất.
+# Quy tắc mới: chỉ cần MỘT đoạn bất kỳ trùng tên một menu có thật thì
+# coi là đường dẫn menu và soát tới cùng. Chuỗi mũi tên không dính menu
+# nào ("Nháp → Hiệu lực", "lãi → phí → gốc") vẫn tự rơi ra ngoài.
 BOLD_ARROW = re.compile(r'\*\*([^*\n]*?→[^*\n]*?)\*\*')
 SPLIT = re.compile(r'\s*→\s*')
 
@@ -54,11 +63,11 @@ def main(tree_file, docs_dir):
         print('  ! file cây menu rỗng hoặc thiếu cờ ON/OFF')
         return 2
 
-    # Vế đầu nhận diện "đây là đường dẫn menu" — lấy từ CẢ menu đã tắt,
-    # nếu không thì đường dẫn trỏ vào nhánh đã tắt sẽ lọt lưới.
-    roots = ({p.split(' → ')[0] for p in live}
-             | {p.split(' → ')[0] for p in dead})
     known, off = set(live), set(dead)
+    roots = {p.split(' → ')[0] for p in live}
+    # MỌI tên menu ở mọi cấp, kể cả menu đã tắt — dùng để nhận diện
+    # "chuỗi này đang nói về menu", không dùng để kết luận đúng/sai.
+    names = {seg for p in live + dead for seg in p.split(' → ')}
 
     bad = 0
     for mdx in sorted(pathlib.Path(docs_dir).rglob('*.mdx')):
@@ -67,16 +76,22 @@ def main(tree_file, docs_dir):
             for m in BOLD_ARROW.finditer(line):
                 parts = [p.strip(' .:*') for p in SPLIT.split(m.group(1))]
                 parts = [p for p in parts if p]
-                if not parts or parts[0] not in roots:
-                    continue          # không phải đường dẫn menu
+                if len(parts) < 2 or not (set(parts) & names):
+                    continue          # không dính menu nào → không soi
                 chain = ' → '.join(parts)
                 if chain in known:
                     continue
+                if chain in off:
+                    why = 'MENU ĐÃ TẮT'
+                elif parts[0] not in roots:
+                    why = ('VẾ ĐẦU "%s" KHÔNG PHẢI MENU GỐC (đổi tên? '
+                           'viết tắt đường dẫn?)' % parts[0])
+                else:
+                    why = 'KHÔNG CÓ'
                 tail = parts[-1]
-                why = 'MENU ĐÃ TẮT' if chain in off else 'KHÔNG CÓ'
                 hint = [p for p in live
                         if p.endswith(' → ' + tail) or p == tail][:2]
-                print('  SAI (%s)  %s:%d\n       viết: %s'
+                print('  SAI (%s)\n       %s:%d\n       viết: %s'
                       % (why, mdx, i, chain))
                 for h in hint:
                     print('       thật: %s' % h)

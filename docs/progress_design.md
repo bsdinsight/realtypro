@@ -2,7 +2,7 @@
 
 > **Trạng thái:** Draft for discussion — chưa code, chưa lock.
 > **Mục đích:** Thống nhất scope + kiến trúc trước khi triển khai.
-> **Đối tượng đọc:** BSDInsight tech + CC1 PM/CFO/KTT.
+> **Đối tượng đọc:** BSDInsight tech + tổng thầu PM/CFO/KTT.
 
 ---
 
@@ -383,12 +383,12 @@ Flow:
 
 ---
 
-## 10. Câu hỏi mở — cần CC1 xác nhận trước khi P1
+## 10. Câu hỏi mở — cần tổng thầu xác nhận trước khi P1
 
 1. **Đơn vị BBN:** theo tháng (chuẩn VN) hay tuần/quý? → em đoán **tháng**
 2. **Workflow ký:** chỉ 2 bên (NT + CĐT) hay có thêm Tư vấn giám sát (TVGS)? → ảnh hưởng state machine
 3. **Số BBN:** tự động hay nhập tay? Format: `BBN-{YYYY}/{MM}-HĐ{xx}` OK?
-4. **BOQ chuẩn:** CC1 đã có template BOQ hay cần BSDInsight tạo?
+4. **BOQ chuẩn:** tổng thầu đã có template BOQ hay cần BSDInsight tạo?
 5. **Đơn vị tính (UOM):** danh mục đóng (m², m³, kg, tấn, bộ, cái) hay mở?
 6. **Mức điều chỉnh BOQ:** có cho phép sửa quantity_estimated giữa kỳ (vd phát sinh)? Workflow phụ lục HĐ?
 7. **Multi-currency:** BBN dùng currency của HĐ. OK chứ?
@@ -412,8 +412,8 @@ Flow:
 
 Trước khi em bắt tay vào code Phase P1:
 
-1. Anh có muốn em viết **BRD chi tiết** cho CC1 review không, hay sang code luôn?
-2. Anh có muốn em tạo **demo mockup** (PDF / Figma) cho CC1 xem trước UI/UX không?
+1. Anh có muốn em viết **BRD chi tiết** cho tổng thầu review không, hay sang code luôn?
+2. Anh có muốn em tạo **demo mockup** (PDF / Figma) cho tổng thầu xem trước UI/UX không?
 3. Tên module: `rp_progress` OK chứ, hay đặt khác?
 
 ---

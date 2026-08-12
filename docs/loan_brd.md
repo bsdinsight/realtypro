@@ -6,8 +6,8 @@
 **Tác giả**: BSDInsight (Claude Code)
 **Trạng thái**: Draft — chờ owner review
 **Nguồn tham chiếu**:
-- `BÁO CÁO KẾ TOÁN TRÊN ODOO.docx` (catalog ~96 báo cáo/biểu mẫu CC1)
-- `CC1_scope_v4.xlsx` (scope tổng hợp 82 yêu cầu, 17 module, 71.5 man-week)
+- `BÁO CÁO KẾ TOÁN TRÊN ODOO.docx` (catalog ~96 báo cáo/biểu mẫu tổng thầu)
+- `tổng thầu_scope_v4.xlsx` (scope tổng hợp 82 yêu cầu, 17 module, 71.5 man-week)
 - Đối tượng tổng quát hoá: doanh nghiệp xây dựng / tổng thầu / chủ đầu tư
 
 ---
@@ -25,7 +25,7 @@ vay lại.
 `re_loan` là module **foundation dùng chung** (đặt tại `addons/_common/`), phục
 vụ mọi suite của Realty Pro. Realty Project bổ sung **bridge** để phân bổ gốc/lãi
 vay theo công trình (`rp.structure`). Module này **không** ôm trọn gói tài chính
-CC1 (VAS, treasury reports, biểu mẫu ngân hàng theo từng bank, bảo lãnh/L/C/tiền
+tổng thầu (VAS, treasury reports, biểu mẫu ngân hàng theo từng bank, bảo lãnh/L/C/tiền
 gửi) — các phần đó để domain `_finance/` xử lý sau.
 
 ---
@@ -76,7 +76,7 @@ ERP nước ngoài (nơi 1 loan = 1 khoản trả góp).
 
 ### 2.3 Vay nội bộ (intercompany / on-lending)
 
-Tập đoàn như CC1: công ty mẹ có quan hệ tín dụng tốt, đứng ra vay ngân hàng
+Tập đoàn như tài liệu nghiệp vụ: công ty mẹ có quan hệ tín dụng tốt, đứng ra vay ngân hàng
 (KW external) rồi **cho công ty con vay lại** (KW on-lending), thường cùng/cao
 hơn lãi suất gốc một biên độ. Cần theo dõi đối ứng: 1 khoản vay ngoài tài trợ
 cho 1..n khoản cho vay lại; dư nợ mỗi bên độc lập.
@@ -113,7 +113,7 @@ cho 1..n khoản cho vay lại; dư nợ mỗi bên độc lập.
 | OUT-5 | Thư tín dụng (L/C) | `_finance/rf_letter_of_credit` |
 | OUT-6 | Tiền gửi có kỳ hạn (HDTG) | `_finance/rf_time_deposit` |
 | OUT-7 | Cam kết tín dụng (TX TC CK) | `_finance/rf_credit_commitment` |
-| OUT-8 | COA / branding / migration CC1 | `_cc1/*` |
+| OUT-8 | COA / branding / migration tổng thầu | `_cc1/*` |
 | OUT-9 | Master data ngân hàng đầy đủ (seed 20+ NH, mã NHNN, template per bank) | `re_bank` (dùng `res.bank` chuẩn cho v1, xem §13) |
 
 ### 3.3 Ranh giới với kế toán
@@ -410,7 +410,7 @@ re.loan.credit.contract (HĐTD)
 | R-5 | Tổng hợp tài sản thế chấp & giá trị đảm bảo | re.loan.collateral + pledge |
 | R-6 | Dư nợ vay nội bộ theo công ty con | re.loan.onlending |
 
-> Bộ 23 treasury reports đầy đủ của CC1 nằm ở `_finance/rf_treasury_reports`.
+> Bộ 23 treasury reports đầy đủ của tài liệu nghiệp vụ nằm ở `_finance/rf_treasury_reports`.
 
 ---
 
@@ -467,7 +467,7 @@ re.loan.credit.contract (HĐTD)
 | OQ-5 | Phê duyệt nhiều cấp | **Để sau** — v1 tập trung logic + quy trình, chưa làm approval workflow |
 | OQ-6 | Loại tiền | **Chỉ VND** (không cần đa tiền tệ / chênh lệch tỷ giá ở v1) |
 
-### 16.2 Còn mở — phát sinh sau khi khảo sát source Viindoo CC1 đang có
+### 16.2 Còn mở — phát sinh sau khi khảo sát source Viindoo tổng thầu đang có
 
 - **OQ-7 — Build vs Reuse**: (A) viết mới `re_loan` Odoo 19; (B) port + extend
   Viindoo `xb_loan_management`; (C) viết mới nhưng tham khảo thuật toán Viindoo.
@@ -497,9 +497,9 @@ re.loan.credit.contract (HĐTD)
 
 ---
 
-## 19. Phụ lục — Đánh giá source Viindoo/Xboss CC1 đang có
+## 19. Phụ lục — Đánh giá source Viindoo/Xboss tổng thầu đang có
 
-CC1 đã mua module vay **Viindoo `to_loan_management`** (Odoo 17), rebrand thành
+tổng thầu đã mua module vay **Viindoo `to_loan_management`** (Odoo 17), rebrand thành
 `xb_loan_management`; Xboss đang phát triển thêm. BSDInsight đã tự khảo sát source
 (không chỉ dựa review bên thứ ba). Tóm tắt verify ngày 26/05/2026:
 

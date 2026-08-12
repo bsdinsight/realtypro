@@ -21,7 +21,7 @@ phải lập **1 KW mới** với đầy đủ thông tin:
 - Mục đích sử dụng vốn
 - Kế hoạch trả gốc/lãi
 
-KW là **đơn vị tài chính cốt lõi** của module Quản lý vay — mọi nghiệp
+KW là **đơn vị tài chính cốt lõi** của module Vốn & Ngân quỹ — mọi nghiệp
 vụ phía sau (giải ngân, tính lãi, trả nợ, đối chiếu) đều xoay quanh KW.
 
 ### Khi nào dùng KW?
@@ -68,8 +68,8 @@ KW có **6 trạng thái**, đi tuần tự:
 
 ### Bước 1 — Vào menu
 
-Vào **Quản lý Vay → Khế ước nhận nợ → Tất cả KW** (hoặc "Đang hiệu lực"
-nếu chỉ xem KW active).
+Vào **Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Khế ước nhận nợ**. Bộ lọc
+sẵn "Đang hiệu lực" nếu chỉ xem KW active.
 
 import KwMenu from './images/09-kw-menu.png'
 
@@ -306,7 +306,8 @@ lãi trước khi phụ lục có hiệu lực** → NH tính chênh lệch và 
 - **Thông báo Nợ** (truy thu) — khách phải trả thêm
 - **Thông báo Có** (truy hoàn) — khách được giảm trừ
 
-Ghi nhận tại menu **Quản lý Vay → Thông báo Nợ/Có**: chọn KW + số tiền
+Ghi nhận tại menu **Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Thông báo
+Nợ/Có**: chọn KW + số tiền
 (theo chứng từ NH) + kỳ áp dụng (mặc định kỳ chưa thanh toán sớm
 nhất) → **"Áp dụng vào kỳ"** → tạo dòng **"Điều chỉnh"** trong lịch
 lãi (tô đỏ, ref số thông báo), tăng/giảm số phải trả kỳ đó.
@@ -317,8 +318,8 @@ bị xoá khi "Tạo lại lịch lãi".
 
 ## 9.8d. Điều chỉnh lãi suất hàng loạt
 
-NH gửi 1 thông báo điều chỉnh LS áp cho nhiều KW: dùng **Quản lý Vay
-→ Khế ước → Điều chỉnh LS hàng loạt** (quyền Loan Manager):
+NH gửi 1 thông báo điều chỉnh LS áp cho nhiều KW: dùng **Vốn & Ngân quỹ
+→ Rút vốn & Bảo lãnh → Điều chỉnh LS hàng loạt** (quyền Loan Manager):
 
 1. Lọc KW theo NH / HĐTD / hạn mức → "Tải danh sách KW"
 2. **Xoá dòng KW không điều chỉnh** (không phải mọi KW đều đổi)

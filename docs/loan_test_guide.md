@@ -8,10 +8,14 @@
 - `re_party` 19.0.0.3.0 (extend)
 
 **Ngày**: 26/05/2026
-**Đối tượng**: Team BSDInsight (dev / tester / BA) — làm việc, test, học, và chuẩn bị demo cho CC1
+**Đối tượng**: Team BSDInsight (dev / tester / BA) — làm việc, test, học, và chuẩn bị demo cho tổng thầu
 **Tài liệu liên quan**: `docs/loan_brd.md` (nghiệp vụ), `docs/loan_sdd.md` (thiết kế kỹ thuật)
 
 > Module viết MỚI 100% (clean-room), IP của BSDInsight. Không dùng code Viindoo.
+
+> **Lưu ý**: tài liệu lập 26/05/2026. Phiên bản module và một số tên
+> dự án / hạng mục trong dữ liệu demo đã thay đổi từ đó — dùng làm kịch bản
+> tham khảo, đối chiếu lại tên thực tế trên DB demo trước khi test.
 
 ---
 
@@ -149,7 +153,7 @@ BIDV, Vietcombank, VietinBank, Agribank, Techcombank, SHB (6 NH).
 
 - KW-2026/0001: giải ngân 200 tỷ, trả gốc 50 tỷ → dư nợ 150 tỷ (revolving hoàn 50 tỷ hạn mức).
 - KW-2026/0002: giải ngân 150 tỷ, chưa trả (term — hạn mức không hoàn).
-- KW-OL-2026/01: cho **CC1 - Công ty con Miền Nam** vay lại 80 tỷ từ KW-2026/0001 @ 9.5% (> lãi nguồn 8.5%).
+- KW-OL-2026/01: cho **Công ty con Miền Nam** vay lại 80 tỷ từ KW-2026/0001 @ 9.5% (> lãi nguồn 8.5%).
 
 ### 3.5 Tài sản thế chấp
 
@@ -158,13 +162,13 @@ BIDV, Vietcombank, VietinBank, Agribank, Techcombank, SHB (6 NH).
 | Đất dự án Khu A | Bất động sản | 800 tỷ | 300 tỷ (cho KW-2026/0001) | Đang thế chấp |
 
 ### 3.6 Cấu trúc tập đoàn (vay nội bộ)
-- Tổng Công ty CC1 (mẹ) → CC1 - Công ty con Miền Nam (con, `parent_company_id`).
+- Tổng Công ty Xây dựng ABC (mẹ) → Công ty con Miền Nam (con, `parent_company_id`).
 
 ### 3.7 Hợp đồng nhà thầu (rp.contract — Realty Project)
 
 | Số HĐ | Gói thầu | Nhà thầu | Giá trị HĐ (sau VAT) | Đã trả | Tiến độ | Trạng thái |
 |---|---|---|---|---|---|---|
-| HD-2026/CXCQ-01 | Gói cây xanh cảnh quan - Đảo mặt trời | Công ty xây dựng CC1 | 54 tỷ (50 + 8% VAT) | 16.2 tỷ (tạm ứng 30%) | 30% | Đang thực hiện |
+| HD-2026/CXCQ-01 | Gói cây xanh cảnh quan - Khu A | Công ty xây dựng tổng thầu | 54 tỷ (50 + 8% VAT) | 16.2 tỷ (tạm ứng 30%) | 30% | Đang thực hiện |
 
 - 3 mốc thanh toán: Tạm ứng 30% (đã trả), Đợt 1 — 50% KL (40%), Nghiệm thu hoàn thành (25%).
 - Bảo lãnh thực hiện HĐ: BL-TH-001 / BIDV / 2.7 tỷ / hết hạn 2027-12-31.
@@ -175,8 +179,8 @@ KW-2026/0001 (BIDV revolving 200 tỷ) phân bổ:
 
 | # | Base | Đích | Method | Giá trị | Mục đích |
 |---|---|---|---|---|---|
-| 1 | Lãi | Vinhomes / cost cat **CPTC** (Financing Cost) | 100% | ~17.24 tỷ | Capitalize toàn bộ lãi vay |
-| 2 | Gốc | Vinhomes / Hạng mục Tầng hầm Toà A / HĐ HD-2026/CXCQ-01 | 50 tỷ amount | 50 tỷ | Tài trợ HĐ cây xanh cảnh quan |
+| 1 | Lãi | Dự án KDC Vĩnh Bảo / cost cat **CPTC** (Financing Cost) | 100% | ~17.24 tỷ | Capitalize toàn bộ lãi vay |
+| 2 | Gốc | Dự án KDC Vĩnh Bảo / Hạng mục Tầng hầm Toà A / HĐ HD-2026/CXCQ-01 | 50 tỷ amount | 50 tỷ | Tài trợ HĐ cây xanh cảnh quan |
 
 ---
 
@@ -244,10 +248,10 @@ KW-2026/0001 (BIDV revolving 200 tỷ) phân bổ:
 
 ### TC-9: Phân bổ vay theo công trình (L5 bridge)
 1. Mở 1 KW (vd KW-2026/0001) → tab **Phân bổ công trình** → thêm dòng:
-   - Project = Vinhomes, Cost category = CPTC (Financing Cost)
+   - Project = Dự án KDC Vĩnh Bảo, Cost category = CPTC (Financing Cost)
    - Base = Lãi, Method = %, Percent = 100
    - → Σ phân bổ lãi ≈ 17.24 tỷ
-2. Thêm dòng thứ 2: Project = Vinhomes, Structure = "Tầng hầm Toà A", HĐ = HD-2026/CXCQ-01
+2. Thêm dòng thứ 2: Project = Dự án KDC Vĩnh Bảo, Structure = "Tầng hầm Toà A", HĐ = HD-2026/CXCQ-01
    - Base = Gốc, Method = amount, Amount = 50,000,000,000
 3. Mở **Realty Project → Hạng mục → Tầng hầm Toà A → tab Vay phân bổ**: thấy 50 tỷ.
 4. Mở **HD-2026/CXCQ-01 → tab Vay tài trợ**: thấy 50 tỷ gốc tài trợ HĐ.
@@ -316,7 +320,7 @@ Chạy theo từng module (xem lệnh ở Section 2):
   Gói thầu là phạm vi đấu thầu; HĐ nhà thầu là kết quả ký sau đấu thầu.
 - 1 gói thầu có thể có nhiều HĐ (vd subcontract). 1 HĐ thuộc 1 gói.
 - Bảo lãnh (TH HĐ / Tạm ứng / Bảo hành) là 3 chứng từ khác nhau từ NH —
-  hiện lưu text fields; sẽ FK sang module `rf_bank_guarantee` (scope CC1) khi ship.
+  hiện lưu text fields; sẽ FK sang module `rf_bank_guarantee` (scope tổng thầu) khi ship.
 - Tạm ứng 10-30% là chuẩn VN; retention 5% giữ lại bảo hành 12-24 tháng.
 
 ### Kế toán vay VN (VAS TT 200)
@@ -341,9 +345,9 @@ Chạy theo từng module (xem lệnh ở Section 2):
 
 ---
 
-## 7. Kịch bản DEMO cho CC1 (story end-to-end ~15 phút)
+## 7. Kịch bản DEMO cho tổng thầu (story end-to-end ~15 phút)
 
-> Mục tiêu: cho CC1 thấy module giải quyết đúng nghiệp vụ vay tổng thầu mà
+> Mục tiêu: cho tổng thầu thấy module giải quyết đúng nghiệp vụ vay tổng thầu mà
 > Viindoo/Xboss còn thiếu (4 tầng + thế chấp + công trình + vay nội bộ).
 
 **Bước 1 — Khung hạn mức tín dụng (2')**
@@ -369,14 +373,14 @@ Mở **Đất dự án Khu A (800 tỷ)** → định giá nhiều lần, thế 
 KW-2026/0001, multi-pledge. Viindoo **không có** collateral.
 
 **Bước 6 — Vay nội bộ (2')**
-Mở **KW-OL-2026/01**: CC1 cho công ty con vay lại 80 tỷ @ 9.5% từ khoản vay
-BIDV 8.5% → biên lãi 1%. Đúng nghiệp vụ tập đoàn CC1.
+Mở **KW-OL-2026/01**: tổng thầu cho công ty con vay lại 80 tỷ @ 9.5% từ khoản vay
+BIDV 8.5% → biên lãi 1%. Đúng nghiệp vụ tập đoàn tổng thầu.
 
 **Bước 7 — HĐ nhà thầu + Bridge phân bổ công trình (3')**
-Mở **HD-2026/CXCQ-01** (HĐ nhà thầu cho CC1, 54 tỷ): cho thấy lifecycle, milestones,
+Mở **HD-2026/CXCQ-01** (HĐ nhà thầu cho tổng thầu, 54 tỷ): cho thấy lifecycle, milestones,
 bảo lãnh. Quay lại KW-2026/0001 → tab **Phân bổ công trình** → thấy 2 dòng:
-- Lãi 100% → cost cat **CPTC** (Financing Cost) của Vinhomes (= 17.24 tỷ capitalize)
-- Gốc 50 tỷ → hạng mục **Tầng hầm Toà A** / HĐ cây xanh CC1 (cashflow tracking)
+- Lãi 100% → cost cat **CPTC** (Financing Cost) của Dự án KDC Vĩnh Bảo (= 17.24 tỷ capitalize)
+- Gốc 50 tỷ → hạng mục **Tầng hầm Toà A** / HĐ cây xanh tổng thầu (cashflow tracking)
 
 Mở **Hạng mục Tầng hầm Toà A → tab Vay phân bổ** thấy 50 tỷ. Mở HĐ → tab Vay
 tài trợ thấy 50 tỷ. **Chuỗi end-to-end Project → Khu vực → Hạng mục → Gói thầu
@@ -409,13 +413,13 @@ theo công trình** (pivot Project × Hạng mục × Base). Cron tự đánh d�
 - **Phê duyệt nhiều cấp**: chưa làm (OQ-5 — để sau khi nghiệp vụ ổn).
 - **Đa tiền tệ**: chỉ VND (OQ-6). Field `currency_id` có sẵn để mở rộng.
 - **Biểu mẫu in NH per-bank** (UNC, giấy nhận nợ): thuộc domain `_finance/`
-  trong scope CC1 — chưa ship (`rf_bank_forms`).
-- **`rf_bank_guarantee`** (CC1 scope): module bảo lãnh đầy đủ chưa ship; HĐ nhà
+  trong scope tổng thầu — chưa ship (`rf_bank_forms`).
+- **`rf_bank_guarantee`** (tổng thầu scope): module bảo lãnh đầy đủ chưa ship; HĐ nhà
   thầu lưu BL ở text fields, sẽ FK khi module này có.
 - **HĐ nhà thầu — multi-bidder/award workflow**: chưa làm (Phase 5 sau của
   Realty Project). v1 đã đủ dùng để demo end-to-end.
 - Lịch lãi là **dự kiến** (forecast theo số tiền KW), chưa khớp giải ngân thực
-  tế từng phần — sẽ tinh chỉnh nếu CC1 yêu cầu chính xác từng đợt giải ngân.
+  tế từng phần — sẽ tinh chỉnh nếu tổng thầu yêu cầu chính xác từng đợt giải ngân.
 - **Capitalization tỷ lệ**: hiện đọc allocation `interest`. Future: cho phép cấu
   hình bằng cost-category-type=`capitalize` flag để control sạch hơn.
 

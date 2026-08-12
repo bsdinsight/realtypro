@@ -1,0 +1,127 @@
+---
+title: "Dòng tiền dự án & DSCR — công trình có trả nổi nợ không"
+description: "Bảng dòng tiền theo tháng cho từng công trình, hệ số trả nợ DSCR tính đúng cách, số dư tiền luỹ kế, và năm tín hiệu cảnh báo trước khi giải ngân thêm."
+order: 21
+---
+
+# 21. Dòng tiền dự án & DSCR — công trình có trả nổi nợ không
+
+## 21.1. Vì sao hệ số trả nợ của ngành xây lắp hay bị tính sai
+
+DSCR — hệ số khả năng trả nợ — là con số ngân hàng nào cũng hỏi:
+
+`DSCR = Dòng tiền khả dụng trả nợ ÷ (Gốc + lãi đến hạn)`
+
+Áp thẳng công thức đó theo từng tháng vào một công trình xây lắp thì ra
+kết quả vô nghĩa, vì **hai vế lệch nhịp nhau**:
+
+- **Tiền về theo đợt nghiệm thu** — hai đến ba lần một năm.
+- **Gốc và lãi đến hạn hàng tháng.**
+
+Nên tháng nào không có đợt nghiệm thu thì DSCR tháng đó **luôn âm** —
+không phải vì công trình mất khả năng trả nợ, mà chỉ vì tháng đó không
+có đợt thu. Lấy tháng thấp nhất làm chỉ tiêu thì **dự án nào cũng đỏ**,
+và chỉ tiêu mất sạch khả năng phân biệt.
+
+RealtyPro xử lý bằng hai con số đi cùng nhau:
+
+| Con số | Ý nghĩa | Dùng để |
+|---|---|---|
+| **DSCR toàn kỳ** = Σ CFADS ÷ Σ nghĩa vụ trả nợ | Cả vòng đời dự án có đủ trả nợ không | Chấm chỉ tiêu |
+| **Số dư tiền luỹ kế** theo tháng | Tháng nào thật sự cạn tiền | Đo rủi ro thanh khoản |
+
+## 21.2. CFADS — và một khoản cố tình không được cộng vào
+
+`CFADS = Thu từ chủ đầu tư − Chi trả thầu phụ/NCC − Chi phí cấp dự án`
+
+Hệ thống gom tự động: mốc thu từ chủ đầu tư (phần còn phải thu), mốc trả
+thầu phụ, chi phí khai ở cấp dự án, và kỳ trả gốc + lãi của các khế ước.
+
+**Tiền giải ngân vay KHÔNG được tính vào phần thu.** Tiền vay là *nguồn
+tài trợ*, không phải *nguồn trả nợ* — cộng vào thì hệ số nào cũng đẹp và
+mất hết ý nghĩa. Đây là chỗ nhiều bảng tính tự dựng bị sai mà không ai
+để ý, vì cộng vào thì con số nhìn "khoẻ" hơn.
+
+## 21.3. Số dư tiền luỹ kế — mắt xích hay bị bỏ quên
+
+Tiền thu đợt trước **được giữ lại để trả nợ các tháng sau**. Bỏ qua điều
+hiển nhiên đó thì tháng nào không có đợt nghiệm thu cũng bị chấm là
+"không trả nổi nợ".
+
+Cột **Số dư tiền luỹ kế** mô phỏng đúng việc này:
+
+`Số dư cuối tháng = số dư tháng trước + CFADS tháng này − nợ trả tháng này`
+
+Tháng nào số dư luỹ kế **âm** mới là tháng thật sự thiếu tiền. Hệ thống
+đưa ra hai con số: **số tháng thiếu tiền** và **đáy số dư** — tức là
+phải xoay bao nhiêu, vào lúc nào.
+
+Biểu đồ tô đỏ nguyên đoạn âm, đổi màu đúng tại điểm đường cắt trục 0.
+
+## 21.4. Năm tín hiệu "không giải ngân mới"
+
+Trước khi rút thêm, ngân hàng soát năm tình huống. Hệ thống đo đủ cả năm
+trên từng khế ước có gắn dự án:
+
+| | Tín hiệu | Đo bằng |
+|---|---|---|
+| ① | Dòng tiền dự báo không đủ trả nợ | Có tháng số dư tiền luỹ kế âm |
+| ② | Chủ đầu tư không có nguồn thanh toán rõ ràng | Hợp đồng CĐT chưa khai nguồn vốn, **hoặc** CĐT để mốc thu quá hạn quá lâu |
+| ③ | Công trình chậm tiến độ nghiêm trọng | Chỉ số tiến độ SPI dưới ngưỡng đỏ |
+| ④ | Dự án đang lỗ mà chưa có phương án bù đắp | Giá trị hợp đồng CĐT thấp hơn dự báo chi phí cuối kỳ, và chưa xác nhận phương án |
+| ⑤ | Hệ số trả nợ dưới ngưỡng cho phép | DSCR toàn kỳ dưới ngưỡng chính sách |
+
+**Tín hiệu ① và ⑤ cố ý tách riêng** vì bắt hai kiểu hỏng khác nhau:
+① là *"đến hạn mà trong két không có tiền"* (dù cả kỳ vẫn thừa), ⑤ là
+*"làm xong dự án vẫn không trả nổi"*. Một công trình có thể dính cái này
+mà không dính cái kia — gộp lại là mất đúng ca đó.
+
+**Tín hiệu ② cần cả khai báo lẫn bằng chứng.** Chỉ khai báo thì thành
+hình thức; chỉ đo chậm trả thì bắt hụt chủ đầu tư mới chưa phát sinh đợt
+thu nào. Trên hợp đồng với CĐT có ô **Nguồn thanh toán của CĐT** (vốn tự
+có · vốn vay ngân hàng đã có cam kết cấp vốn · vốn ngân sách · hỗn hợp ·
+chưa rõ) kèm ô diễn giải số thư cam kết, cạnh đó là hai số tự tính: *mốc
+thu quá hạn* và *quá hạn lâu nhất*.
+
+## 21.5. Cảnh báo mềm, không khoá thao tác
+
+Cả năm tín hiệu **tô đỏ và giải thích, nhưng không chặn** việc trình
+giải ngân.
+
+Đây là lựa chọn có chủ đích: cả năm đều là số **dự báo**. Chặn cứng theo
+dự báo thì công trường kẹt vì một con số ước lượng, còn người duyệt thì
+mất quyền cân nhắc. Chỗ chặn thật nằm ở **checklist tám điều kiện giải
+ngân** — những điều kiện có bằng chứng chứ không phải dự báo.
+
+Ngưỡng vàng/đỏ của mọi chỉ tiêu **không cố định trong phần mềm**: mỗi
+công ty một bộ ngưỡng sửa được trong Cấu hình, vì mỗi ngân hàng đòi mức
+khác nhau.
+
+## 21.6. Xem thử trên bản demo
+
+> **Bản demo công khai**: `demo.realtypro.vn` — đăng nhập `demo` / `demo`.
+
+1. Vào **Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Dòng
+   tiền dự án và DSCR**.
+2. Mở bảng của **Bệnh Viện ABC**. Bấm **Tính lại dòng tiền** để hệ thống
+   dựng lại 24 tháng từ dữ liệu đang có.
+3. Nhìn hai con số đầu bảng: **DSCR toàn kỳ ≈ 6,76** — cả kỳ dư sức trả
+   nợ; nhưng **số tháng thiếu tiền = 1**, đáy khoảng **−13,4 tỷ**. Đó
+   chính là ca "tổng thể đủ nhưng lệch pha" mà DSCR bình quân không nói
+   ra được.
+4. Kéo xuống bảng theo tháng: cột **Số dư tiền luỹ kế** tô đỏ đúng tháng
+   âm. Bật thêm cột *DSCR tháng* (mặc định ẩn) để thấy vì sao không nên
+   dùng nó làm chỉ tiêu — nó nhảy từ âm tới vài trăm lần.
+5. Vào **Báo cáo → Dòng tiền & năng lực trả nợ → Năng lực trả nợ**: mỗi
+   khế ước một dòng, năm tín hiệu năm chấm màu.
+6. Mở một khế ước bất kỳ, vào tab **Điều kiện giải ngân**: phần trên là
+   tám điều kiện *chặn thật*, phần dưới là năm tín hiệu *cảnh báo mềm*
+   kèm câu giải thích cụ thể — ví dụ *"tổng thể đủ nhưng lệch pha: 1
+   tháng số dư tiền âm"*.
+7. Mở **Hợp đồng với chủ đầu tư** của dự án, tìm khối **Nguồn thanh
+   toán của CĐT**: thử khai nguồn rồi quay lại xem tín hiệu ② — nếu CĐT
+   vẫn đang nợ quá hạn thì tín hiệu **vẫn đỏ**, vì bằng chứng thắng khai
+   báo.
+
+Chỉ tiêu tổng thể của cả danh mục công trình xem tiếp ở mục 22 — *Bảng
+chỉ tiêu và rà soát tuần*.

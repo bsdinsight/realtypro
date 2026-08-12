@@ -1,0 +1,153 @@
+---
+title: "Nhu cầu vốn dự án — cần vay bao nhiêu là đủ"
+description: "Chuỗi sáu bước tính ra con số vay thêm cho từng công trình — chi phí còn phải chi, vốn tự có, tạm ứng chủ đầu tư, công nợ nhà cung cấp — thay cho việc ước lượng bằng Excel."
+order: 20
+---
+
+# 20. Nhu cầu vốn dự án — cần vay bao nhiêu là đủ
+
+## 20.1. Câu hỏi mà mọi tổng thầu đều phải trả lời
+
+Ngân hàng hỏi: *"Công trình này còn cần bao nhiêu tiền?"*
+
+Câu trả lời quen thuộc là một file Excel do phòng kế hoạch dựng lại mỗi
+lần họp. Vấn đề không nằm ở Excel, mà ở chỗ **con số đó phải trừ đúng
+những nguồn mình đã có** — nếu quên một nguồn thì xin vay thừa, ngân
+hàng cắt; nếu trừ nhầm hai lần thì xin thiếu, công trường đứng.
+
+RealtyPro tính con số này thành một **chuỗi trừ dần sáu bước**, mỗi bước
+lấy số thẳng từ dữ liệu đang chạy chứ không nhập tay:
+
+```
+①  Chi phí còn phải chi (CTC)          ← từ dự toán và chi phí thực tế
+−  ②  Vốn tự có còn phải góp            ← cam kết với ngân hàng
+−  ③  Tạm ứng chủ đầu tư còn khả dụng   ← tiền CĐT đã ứng, chưa tiêu hết
+−  ④  Công nợ nhà cung cấp được trả chậm
+−  ⑥  Tạm ứng đã chi cho thầu phụ
+=  ⑤  NHU CẦU VAY THÊM
+```
+
+Mở phiếu ra là đọc được cả phép tính từ trên xuống. Không ai phải hỏi
+"số này ở đâu ra".
+
+## 20.2. ① Chi phí còn phải chi — lấy từ EVM, không nhập tay
+
+`Chi phí còn phải chi = Tổng dự toán (BAC) − Chi phí đã thực hiện (AC)`
+
+Cả hai đầu vào đều đã có sẵn trong phân hệ kiểm soát chi phí, nên con
+số này **tự cập nhật** mỗi khi có phát sinh được duyệt hoặc hoá đơn
+được ghi nhận.
+
+Nhưng "còn phải chi" theo nghĩa **dòng tiền** thì không bằng phần dự
+toán còn lại. Ba khoản sau nằm trong dự toán mà không sinh chi tiền:
+
+| Khoản loại trừ | Vì sao |
+|---|---|
+| **Chi phí dự phòng** | Chưa chắc phát sinh — xin vay cho nó là xin vay cho một giả định |
+| **Chi phí tài chính (lãi vay)** | Chính là thứ đang đi vay, tính vào nhu cầu vay là vòng tròn |
+| **Khai tay** (lợi nhuận dự kiến, khấu hao, khoản đang tranh chấp) | Không phát sinh dòng tiền hoặc chưa được duyệt |
+
+Hai khoản đầu có **công tắc riêng**: bật lên là hệ thống tự trừ đúng số
+tiền của nhóm chi phí tương ứng, không cần gõ lại. Khoản thứ ba khai
+tay kèm ô diễn giải — ngân hàng sẽ hỏi loại trừ cái gì.
+
+## 20.3. ② Vốn tự có — tính trên tổng dự toán, và chỉ trừ phần chưa góp
+
+Ngân hàng ấn định tỷ lệ vốn tự có theo xếp hạng tín dụng và mức rủi ro
+công trình, thường dưới dạng *"vốn tự có tối thiểu x% tổng mức đầu tư"*.
+Hệ thống cho chọn gốc tính là **tổng dự toán (BAC)** hay **chi phí còn
+phải chi (CTC)**, mặc định là BAC theo đúng thông lệ đó.
+
+Một chỗ rất dễ tính sai, và phiếu này xử lý sẵn: **chỉ trừ phần vốn tự
+có CÒN PHẢI GÓP**, không trừ cả số phải góp.
+
+Lý do: phần đã góp rồi thì đã nằm trong **chi phí đã thực hiện (AC)**,
+nghĩa là bước ① đã tự nhỏ đi tương ứng. Trừ cả tổng nữa là **trừ hai
+lần** — nhu cầu vay bị kê thiếu, đến lúc thi công mới vỡ ra.
+
+Vốn tự có còn theo dõi được cả phần **góp bằng hiện vật** (quyền sử
+dụng đất, tài sản đưa vào công trình) kèm ô diễn giải số thửa và chứng
+thư định giá, và tách rõ **đã dùng trả nhà thầu bao nhiêu / còn lại
+bao nhiêu**.
+
+## 20.4. ③ Tạm ứng chủ đầu tư — hai mặt của cùng một khoản tiền
+
+Khi tổng thầu ký hợp đồng với chủ đầu tư, CĐT thường ứng trước một
+khoản để khởi động công trường. Khoản này có **hai mặt** mà nếu lẫn
+nhau thì tính sai ngay:
+
+| Mặt | Ý nghĩa | Dùng vào đâu |
+|---|---|---|
+| **Tiền còn trong tài khoản** | Đã nhận − đã dùng trả thầu phụ | Trừ vào nhu cầu vay (bước ③) |
+| **Còn phải hoàn CĐT** | Đã nhận − đã bị khấu trừ qua nghiệm thu | Nghĩa vụ, không phải nguồn |
+
+Bước ③ lấy **mặt thứ nhất**. Phiếu tạm ứng theo dõi song song cả hai
+cột nên không nhầm được.
+
+Cũng vì vậy mà khi trả tiền cho thầu phụ, hệ thống bắt **chọn nguồn chi
+trả**: vốn tự có · tạm ứng CĐT · khế ước vay. Một đợt thanh toán chia
+được nhiều nguồn — ví dụ một phần lấy từ tạm ứng CĐT, phần còn lại
+giải ngân từ ngân hàng. Rút tới đâu trừ vào đúng đợt tạm ứng tới đó.
+
+## 20.5. ④ Công nợ nhà cung cấp — nguồn vốn không mất lãi
+
+Phần hàng hoá, khối lượng đã nhận mà **chưa phải trả tiền ngay** cũng
+là vốn. Hệ thống gom từ ba chỗ:
+
+- **Hoá đơn nhà thầu/NCC chưa đến hạn** — đã ghi sổ, chưa thanh toán,
+  và chưa quá hạn.
+- **Tiền giữ lại của thầu phụ** — tính theo tiến độ đã thanh toán; tiền
+  nằm trong túi mình suốt thời gian thi công nên là nguồn rõ ràng nhất.
+- **Khai tay bổ sung** — hạn mức tín dụng thương mại đã thoả thuận với
+  nhà cung cấp (60–90 ngày).
+
+Hoá đơn **quá hạn** được tách riêng và **không** tính là nguồn. Nó hiện
+thành một cảnh báo — vì đó chính là con số ngân hàng nhìn vào khi thẩm
+định.
+
+## 20.6. ⑥ Tạm ứng đã chi cho thầu phụ — vì sao lại trừ
+
+Tiền đã ứng cho thầu phụ nhưng khối lượng chưa nghiệm thu thì **chi phí
+đó vẫn nằm nguyên trong CTC**, trong khi tiền đã ra khỏi túi. Nghĩa là
+bước ① đang kê **thừa** đúng bằng số này, nên phải trừ ra.
+
+Có một điều kiện đi kèm, ghi thẳng trong phần trợ giúp của trường: chỉ
+đúng khi kế toán **chưa** ghi tạm ứng vào chi phí đã thực hiện. Nếu đã
+ghi thì CTC đã tự trừ một lần rồi, giữ dòng này là trừ hai lần.
+
+## 20.7. ⑧ Nhu cầu chưa được tài trợ — con số đi đàm phán
+
+Song song với ⑤, phiếu còn cho ra:
+
+`⑧ Nhu cầu chưa được tài trợ = ⑤ − dư nợ đã giải ngân cho dự án`
+
+Đây là con số mang đi **đàm phán thêm hạn mức**. Nó theo dõi song song,
+không nằm trong công thức khả dụng.
+
+Bên phải phiếu là bức tranh hạn mức của chính dự án đó: hạn mức được
+phân bổ · dư nợ · còn lại · **khả dụng rút ngay** · phần chưa tài trợ ·
+thiếu vốn tự có.
+
+## 20.8. Xem thử trên bản demo
+
+> **Bản demo công khai**: `demo.realtypro.vn` — đăng nhập `demo` / `demo`.
+> Dữ liệu được nạp lại mỗi đêm nên bạn thao tác thoải mái.
+
+1. Vào **Vốn & Ngân quỹ → Nhu cầu vốn dự án**.
+2. Mở phiếu **Bệnh Viện ABC**. Khối bên trái là nguyên chuỗi sáu bước —
+   đọc từ trên xuống chính là phép trừ, kết quả ⑤ khoảng **1.447 tỷ**.
+3. Mở tab **① Chi phí còn phải chi**: thử bật/tắt hai công tắc *loại trừ
+   dự phòng* và *loại trừ chi phí tài chính*, quay lại nhìn ⑤ đổi theo.
+4. Mở tab **② Vốn tự có**: bên trái là phần cam kết với ngân hàng, bên
+   phải là thực góp. Sửa **tỷ lệ vốn tự có cam kết** rồi xem *"còn phải
+   góp"* và ⑤ đổi tức thì.
+5. Mở tab **③ ④ Nguồn khác**: xem công nợ nhà cung cấp được tách thành
+   hoá đơn chưa đến hạn · giữ lại thầu phụ · khai tay, và dòng **quá
+   hạn** tô đỏ nằm riêng.
+6. Mở tab **Phân bổ hạn mức theo facility**: mỗi dòng cho biết dự án
+   còn rút được bao nhiêu trên từng hạn mức, **nhánh nào đang chặn**, và
+   **thiếu bao nhiêu để mở khoá**.
+
+Muốn hiểu vì sao "khả dụng" không phải phép trừ đơn giản, đọc tiếp
+mục 19 — *Borrowing base, hạn mức khả dụng*. Muốn biết dự án có trả nổi
+nợ không, đọc mục 21 — *Dòng tiền dự án và DSCR*.

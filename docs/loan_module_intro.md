@@ -1,4 +1,4 @@
-# Module Quản lý Vay — Giới thiệu cho CC1
+# Module Quản lý Vay — Giới thiệu cho tổng thầu
 
 > Tài liệu giới thiệu giải pháp **Quản lý vay vốn** dành cho doanh nghiệp
 > xây dựng / tổng thầu / chủ đầu tư trên nền tảng **Realty Pro** (Odoo 19).
@@ -279,7 +279,7 @@ rp_contract / rp_estimate        (Dependency — chỉ với rp_loan_bridge)
 
 | Tuần | Hoạt động |
 |---|---|
-| 1 | Khảo sát quy trình hiện tại của CC1, mapping với module |
+| 1 | Khảo sát quy trình hiện tại của tài liệu nghiệp vụ, mapping với module |
 | 2 | Cấu hình master data: NH, loại tài sản, tài khoản hạch toán |
 | 3 | Import HĐTD đang hiệu lực + Facility + KW dư nợ ban đầu |
 | 4 | Đào tạo cán bộ tín dụng + kế toán (1-2 buổi) |
@@ -296,7 +296,7 @@ rp_contract / rp_estimate        (Dependency — chỉ với rp_loan_bridge)
 
 > Module này là **IP độc quyền của BSDInsight**, được viết clean-room
 > từ thiết kế nghiệp vụ chuẩn ngân hàng Việt Nam — không sao chép code
-> bất kỳ thư viện thương mại nào. CC1 sở hữu license sử dụng vô thời hạn
+> bất kỳ thư viện thương mại nào. tổng thầu sở hữu license sử dụng vô thời hạn
 > sau khi triển khai.
 
 ---

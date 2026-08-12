@@ -1,0 +1,120 @@
+---
+title: "Bảng chỉ tiêu & rà soát tuần — biến số liệu thành quyết định"
+description: "Bảy chỉ tiêu xanh vàng đỏ cho từng công trình, và vòng vận hành hàng tuần đưa ngoại lệ ra bàn để cấp quản lý quyết — có vết ai quyết, quyết gì, lúc nào."
+order: 22
+---
+
+# 22. Bảng chỉ tiêu & rà soát tuần — biến số liệu thành quyết định
+
+## 22.1. Bảy chỉ tiêu theo dõi
+
+Mỗi công trình được chấm màu trên bảy chỉ tiêu:
+
+| | Chỉ tiêu | Chiều xấu |
+|---|---|---|
+| ① | Tỷ lệ sử dụng hạn mức | càng **cao** càng xấu |
+| ② | Dư nợ trên tài sản bảo đảm | càng **cao** càng xấu |
+| ③ | Tỷ lệ nợ quá hạn | càng **cao** càng xấu |
+| ④ | Tỷ lệ vốn tự có thực góp | càng **thấp** càng xấu |
+| ⑤ | Hệ số trả nợ DSCR | càng **thấp** càng xấu |
+| ⑥ | Mức độ chậm tiến độ (SPI) | càng **thấp** càng xấu |
+| ⑦ | Biên lợi nhuận dự báo | càng **thấp** càng xấu |
+
+Ba chỉ tiêu đầu và bốn chỉ tiêu sau **ngược chiều nhau**, nên hệ thống
+so ngưỡng theo đúng chiều của từng chỉ tiêu thay vì so máy móc. Một chỉ
+tiêu đỏ là **cả dự án đỏ**.
+
+## 22.2. Bốn trạng thái, không phải ba
+
+Đây là chi tiết nhỏ nhưng quyết định việc bảng cảnh báo có đáng tin hay
+không: ngoài **Tốt / Cảnh báo / Nguy hiểm** còn có trạng thái thứ tư —
+**Chưa đủ dữ liệu**, tô xám.
+
+Chỉ tiêu nào chưa tính được thì để xám, **tuyệt đối không tô xanh**. Tô
+xanh khi chưa biết gì là kiểu sai nguy hiểm nhất của một bảng cảnh báo:
+người đọc yên tâm vì một ô màu vô nghĩa.
+
+Ví dụ có thật trên demo: chỉ tiêu ⑥ *tiến độ SPI* để xám khi công trình
+chưa có đường cong giá trị kế hoạch — chưa có mốc so thì không có cách
+nào biết đang nhanh hay chậm.
+
+Ngưỡng vàng/đỏ của cả bảy chỉ tiêu **sửa được trong Cấu hình**, theo
+từng công ty, vì mỗi ngân hàng đòi mức khác nhau.
+
+## 22.3. Vòng vận hành hàng tuần
+
+Số liệu đẹp mà không ai xử thì vô ích. Vòng tuần biến bảng chỉ tiêu
+thành **danh sách việc phải quyết**, và chia rõ ai làm gì.
+
+### Bước 1–3: người cập nhật, hệ thống chỉ đo
+
+Cập nhật hợp đồng, tiến độ, chi phí · nghiệm thu và gộp hồ sơ thanh
+toán trình chủ đầu tư ký · cập nhật dư nợ, giải ngân, trả nợ, bảo lãnh.
+
+Máy không làm thay được, nhưng **đo được tuần này có động hay không**:
+hệ thống đếm số chứng từ phát sinh trong tuần và **nhắc khi về 0**.
+
+> Rà soát trên dữ liệu cũ mà tưởng là dữ liệu mới là sai lầm nguy hiểm
+> nhất của một quy trình định kỳ. Vì vậy dòng nhắc ghi thẳng: *"Tuần này
+> KHÔNG có cập nhật ... — số liệu rà soát bên dưới đang dựa trên dữ liệu
+> tuần trước."*
+
+### Bước 4–5: hệ thống tính lại
+
+Một nút: **định giá lại toàn bộ tài sản bảo đảm quyền đòi nợ** theo sản
+lượng mới, rồi **tính lại dòng tiền và hạn mức khả dụng** của từng công
+trình.
+
+### Bước 6: rà bốn loại ngoại lệ
+
+| Loại | Nội dung |
+|---|---|
+| **Âm dòng tiền** | Công trình có tháng số dư tiền luỹ kế âm |
+| **Thiếu vốn tự có** | Góp chưa đủ cam kết |
+| **Nợ quá hạn** | Khế ước đang quá hạn |
+| **Vượt hạn mức / thiếu bảo đảm** | Dư nợ vượt cơ sở bảo đảm |
+
+Mỗi ngoại lệ kèm số tiền liên quan, câu diễn giải, và nút mở thẳng bản
+ghi gốc.
+
+### Bước 7: cấp quản lý quyết
+
+Từng ca chọn một trong năm hướng: **vẫn giải ngân · điều chuyển hạn mức
+· yêu cầu bổ sung tài sản bảo đảm · dừng tài trợ · theo dõi tiếp**, kèm
+lý do. Hệ thống ghi lại **ai quyết và lúc nào**, đồng thời để lại vết
+trong nhật ký của phiên rà soát.
+
+Hai ràng buộc khiến vòng này không trôi thành hình thức:
+
+- **Quét lại không xoá ca đã có quyết định.** Nếu quét lại xoá sạch thì
+  quyết định của tuần biến mất chỉ vì ai đó bấm nút lần nữa.
+- **Không chốt phiên được khi còn ca chưa quyết.** Đây là chỗ duy nhất
+  chặn cứng trong toàn bộ khối cảnh báo — vì bước 7 là hành động của con
+  người, không phải một con số dự báo.
+
+**Tác vụ nền sáng thứ Hai** tự mở phiên tuần mới và chạy sẵn bước 4–6,
+để đầu tuần vào là đã có danh sách ngoại lệ nằm chờ.
+
+## 22.4. Xem thử trên bản demo
+
+> **Bản demo công khai**: `demo.realtypro.vn` — đăng nhập `demo` / `demo`.
+
+1. Vào **Vốn & Ngân quỹ → Báo cáo → Dòng tiền & năng lực trả nợ → Bảng
+   chỉ tiêu**. Mỗi công trình một dòng, bảy chỉ tiêu bảy huy hiệu màu.
+   Chú ý ô **xám** — đó là chỉ tiêu chưa đủ dữ liệu, không phải chỉ tiêu
+   tốt.
+2. Vào **Cấu hình → Ngưỡng cảnh báo chỉ tiêu**: sửa một ngưỡng rồi quay
+   lại bảng, màu đổi theo ngay.
+3. Vào **Báo cáo → Dòng tiền & năng lực trả nợ → Rà soát tuần**. Mở
+   phiên đang có (*Tuần 33/2026* trên demo).
+4. Bấm **Tính lại và rà ngoại lệ**. Kết quả trên demo: **9 ngoại lệ** —
+   1 âm dòng tiền, 1 thiếu vốn tự có, 5 nợ quá hạn, 2 vượt hạn mức.
+5. Thử chọn quyết định cho một ca rồi bấm **Tính lại và rà ngoại lệ**
+   lần nữa: ca đã quyết **vẫn còn nguyên**, kèm tên người quyết.
+6. Thử bấm **Chốt phiên** khi còn ca chưa quyết — hệ thống chặn và nói
+   rõ còn bao nhiêu ca.
+7. Mở tab nhật ký bên phải phiên: mỗi quyết định để lại một dòng ghi rõ
+   loại ngoại lệ, đối tượng và lý do.
+
+Muốn xem toàn cảnh thay vì đi từng công trình, đọc tiếp mục 23 —
+*Dashboard Vốn và Ngân quỹ*.

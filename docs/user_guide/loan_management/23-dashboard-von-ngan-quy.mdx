@@ -1,0 +1,159 @@
+---
+title: "Dashboard Vốn & Ngân quỹ — bốn màn cho bốn vai"
+description: "Bức tranh vốn cho giám đốc tài chính, việc hôm nay cho cán bộ vay, vốn theo dự án cho chỉ huy trưởng, và cấu trúc tín dụng theo ngân hàng — chia theo người mở chứ không theo module."
+order: 23
+---
+
+# 23. Dashboard Vốn & Ngân quỹ — bốn màn cho bốn vai
+
+## 23.1. Chia theo người mở, không chia theo module
+
+Cách làm quen thuộc là mỗi phân hệ một dashboard. Kết quả là một bức
+tường ba mươi con số dùng chung cho ba vai người dùng rất khác nhau —
+ai cũng phải lọc bằng mắt phần không liên quan tới mình.
+
+RealtyPro chia theo **ai mở nó mỗi sáng và để quyết cái gì**:
+
+| Màn | Người dùng | Câu hỏi phải trả lời |
+|---|---|---|
+| **Bức tranh vốn** | Giám đốc tài chính | Đang nợ bao nhiêu · còn rút được bao nhiêu · tháng tới có kẹt tiền không · chỗ nào đỏ |
+| **Việc hôm nay** | Cán bộ vay, kế toán | Hôm nay tôi phải xử lý những gì |
+| **Vốn theo dự án** | Chỉ huy trưởng, ban giám đốc | Công trình của tôi còn rút được bao nhiêu · thiếu vốn tự có không · trả nợ nổi không |
+| **Cấu trúc tín dụng** | Trưởng phòng tín dụng | Vay ở những ngân hàng nào · hạn mức chia ra sao · chỗ nào sắp hết hiệu lực |
+
+Ba màn đầu nằm chung một chỗ, đổi qua lại bằng nút trên đầu trang. Màn
+thứ tư nằm trong nhóm **HĐ tín dụng** vì nó nói về cấu trúc quan hệ với
+ngân hàng chứ không phải việc hằng ngày.
+
+## 23.2. Bức tranh vốn — trần cứng mười hai thẻ số
+
+Bốn thẻ lớn: **tổng hạn mức được cấp · dư nợ hiện tại · khả dụng thực tế
+· tỷ lệ sử dụng**.
+
+Thẻ *khả dụng thực tế* là chỗ dễ sai nhất, nên nó nói luôn **nhánh nào
+đang chặn**: hạn mức, tài sản bảo đảm, hay trần toàn hợp đồng tín dụng —
+kèm số tiền sẽ mở ra được nếu gỡ nhánh đó.
+
+> Khả dụng toàn hệ **không phải** tổng khả dụng của từng hạn mức con.
+> Các hạn mức dưới cùng một hợp đồng tín dụng dùng **chung một bể**, nên
+> cộng thẳng là đếm trùng phần dùng chung — trên dữ liệu thật, cách cộng
+> sai cho ra con số lớn hơn cả hạn mức còn lại của hợp đồng.
+
+Kế đó là **đường dòng tiền 13 tuần** — tô đỏ đoạn âm và ghim thẳng *tuần
+âm đầu tiên*; **dải đèn dự án** mỗi công trình một chấm màu kèm số chỉ
+tiêu đỏ; hai thẻ **bảo lãnh ngân hàng**; và dải **cảnh báo đỏ** chỉ hiện
+khi thật sự có.
+
+Giới hạn mười hai thẻ là ràng buộc cố ý — không đặt trần thì màn này sẽ
+lại phình về ba mươi thẻ như trước.
+
+## 23.3. Việc hôm nay — danh sách việc, không phải bảng số liệu
+
+Mỗi ô là một con số, **bấm vào ra đúng danh sách bản ghi cần xử lý**,
+chia năm nhóm:
+
+- **Đến hạn** — khế ước đáo hạn trong 30 và 90 ngày, gốc và lãi đến hạn
+  trong tuần.
+- **Chờ xử lý** — hồ sơ giải ngân chờ trình ngân hàng, giấy báo ngân
+  hàng chờ xử, đề nghị phát hành bảo lãnh.
+- **Đối soát** — giao dịch ngân hàng chưa khớp chứng từ.
+- **Vệ sinh dữ liệu** — hoá đơn chưa gắn dự án, khế ước chưa gắn dự án.
+- **Quá hạn** — theo từng nhóm tuổi nợ.
+
+**Ô bằng 0 được làm mờ chứ không ẩn.** Người dùng cần thấy rõ "đã sạch",
+khác hẳn với "mục này không tồn tại".
+
+Nhóm *vệ sinh dữ liệu* đáng chú ý: hoá đơn tạo thẳng trong ứng dụng kế
+toán không mang ngữ cảnh dự án, nên sẽ **rơi khỏi** công nợ nhà cung cấp
+của phiếu nhu cầu vốn và khỏi chi phí đã thực hiện của công trình — làm
+nhu cầu vay và biên lợi nhuận tính lệch. Hệ thống đếm sẵn số hoá đơn
+đang lơ lửng, và trên chính phiếu hoá đơn có băng đỏ nhắc, kèm ô *"không
+thuộc dự án nào"* để khai có chủ đích cho chi phí chung.
+
+## 23.4. Vốn theo dự án — gộp bốn màn rời thành một dòng
+
+Trước đó dữ liệu đã đủ nhưng nằm ở bốn chỗ khác nhau: nhu cầu vốn · bảng
+chỉ tiêu · năng lực trả nợ · dòng tiền và DSCR. Người dùng phải mở bốn
+màn rồi tự ghép trong đầu.
+
+Nay mỗi công trình một dòng ngang, thu gọn cho biết ngay: **hạn mức phân
+bổ · dư nợ · khả dụng · nhánh đang chặn · nhu cầu vay thêm · DSCR toàn
+kỳ · số tháng thiếu tiền**.
+
+Bấm vào dòng để mở rộng, bên trong có:
+
+- **Biểu đồ thác nước** sáu bước của chuỗi nhu cầu vốn.
+- **Đường số dư tiền luỹ kế** theo tháng, tô đỏ đoạn âm.
+- **Năm chấm màu** cho năm tín hiệu năng lực trả nợ.
+- **Dải bảy chỉ tiêu** xanh vàng đỏ.
+- Khối **Việc cần làm tiếp** — không phải câu chữ mẫu, mà suy ra từ nút
+  thắt thật: chặn bởi tài sản bảo đảm thì tính đúng số cần bổ sung;
+  thiếu vốn tự có thì nêu số còn phải góp; có tháng âm thì nêu đáy.
+
+## 23.5. Cấu trúc tín dụng — chuẩn bị đàm phán với ngân hàng
+
+Màn này trả lời câu hỏi của **trưởng phòng tín dụng**, dùng theo tháng
+hoặc quý chứ không phải hằng ngày:
+
+- Bốn thẻ đầu: **hợp đồng tín dụng đang hiệu lực · tổng hạn mức · đã cấp
+  thành hạn mức con · phần chưa cấp**.
+- **Cho vay và bảo lãnh** tách đôi đối xứng — hạn mức, đã dùng, chưa
+  dùng, tỷ lệ.
+- **Bảng theo ngân hàng** — mỗi nhà tài trợ một hàng đủ số hợp đồng,
+  tổng hạn mức, đã cấp, dư nợ, bảo lãnh, **lãi suất bình quân**, tỷ lệ
+  sử dụng. Đi đàm phán với một ngân hàng thì cần đọc cả hàng.
+- Bốn biểu đồ: cơ cấu hạn mức · dư nợ theo ngân hàng · khế ước đáo hạn
+  theo mốc · bảo lãnh theo loại.
+- **Dòng thời gian hiệu lực** — mỗi hợp đồng một thanh ngang, tô cam khi
+  còn dưới 90 ngày, kèm câu *việc cần làm tiếp* nêu đích danh hợp đồng
+  nào phải lo tái cấp trước.
+
+Hai chi tiết đáng nói về cách đặt tên số liệu:
+
+> Thẻ ở màn này là **"hạn mức chưa dùng"** = hạn mức trừ dư nợ, **chưa
+> trừ ràng buộc tài sản bảo đảm** — nên lớn hơn số rút được thật. Vì vậy
+> nó có tên khác với **"khả dụng thực tế"** ở màn Bức tranh vốn, và luôn
+> kèm dòng chú thích chỉ sang chỗ có con số đúng. Hai con số khác nhau
+> thì phải gọi khác tên.
+
+> **Lãi suất bình quân là bình quân GIA QUYỀN theo dư nợ**, không phải
+> trung bình cộng. Một khế ước 1 tỷ lãi 12%/năm và một khế ước 100 tỷ
+> lãi 8%/năm cho trung bình cộng 10%, trong khi lãi suất thực trả bình
+> quân là 8,04% — chênh 2 điểm phần trăm trên 101 tỷ là hơn 2 tỷ đồng
+> lãi mỗi năm.
+
+## 23.6. Xem thử trên bản demo
+
+> **Bản demo công khai**: `demo.realtypro.vn` — đăng nhập `demo` / `demo`.
+
+1. Bấm vào tên ứng dụng **Vốn & Ngân quỹ** trên thanh trên cùng — vào
+   thẳng dashboard.
+2. **Tab ① Bức tranh vốn**: xem thẻ *khả dụng thực tế* và nhãn nhánh
+   đang chặn. Kéo xuống xem đường 13 tuần và dải đèn dự án.
+3. **Tab ② Việc hôm nay**: đếm tổng việc cần xử ở góc phải. Bấm vào ô
+   *hoá đơn chưa gắn dự án* — trên demo có khoảng **36 hoá đơn** đang lơ
+   lửng, danh sách mở ra ngay.
+4. **Tab ③ Vốn theo dự án**: bấm vào dòng **Bệnh Viện ABC** để mở rộng.
+   Xem biểu đồ thác nước, đường số dư luỹ kế, năm tín hiệu và bảy chỉ
+   tiêu nằm cạnh nhau trên cùng một màn.
+5. Vào **HĐ tín dụng → Cấu trúc tín dụng**: xem bảng theo ngân hàng và
+   dòng thời gian hiệu lực hợp đồng. Trên demo có hợp đồng còn dưới 90
+   ngày — hệ thống nêu đích danh trong khối *việc cần làm tiếp*.
+6. Thử **Ctrl + P** ở màn Bức tranh vốn hoặc Cấu trúc tín dụng: bố cục
+   tự ẩn phần điều hướng để in mang đi họp với ngân hàng.
+
+## 23.7. Lọc nhanh trên các danh sách
+
+Bốn danh sách chính đều có **panel lọc bên trái**, chọn được nhiều giá
+trị cùng lúc và hiện số bản ghi từng nhóm:
+
+| Danh sách | Trục lọc |
+|---|---|
+| Khế ước nhận nợ | Dự án · Trạng thái · Ngân hàng · Nhóm tuổi nợ |
+| Hợp đồng tín dụng | Ngân hàng · Trạng thái |
+| Hạn mức tín dụng | Ngân hàng · Mục đích vay · Loại hạn mức |
+| Trích thu tự động | Ngân hàng · Trạng thái · Tài khoản bị trích |
+
+Riêng **Khế ước** và **Chứng thư bảo lãnh** còn có chế độ xem **Biểu đồ**
+và **Pivot** — tự chọn trục cắt lát theo ngân hàng, kỳ hạn, loại bảo
+lãnh, bên thụ hưởng, thay vì bị khoá vào một bố cục dựng sẵn.

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_gxd_import_form" model="ir.ui.view">
+        <field name="name">rp.gxd.import.wizard.form</field>
+        <field name="model">rp.gxd.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Nạp file Dự toán GXD">
+                <group>
+                    <field name="filename" invisible="1"/>
+                    <field name="file" filename="filename"/>
+                    <field name="publication_id"/>
+                </group>
+                <field name="result" readonly="1" invisible="not result"
+                       nolabel="1"/>
+                <footer>
+                    <button name="action_import" type="object" string="Nạp"
+                            class="btn-primary"/>
+                    <button string="Đóng" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_gxd_import" model="ir.actions.act_window">
+        <field name="name">Nạp file GXD</field>
+        <field name="res_model">rp.gxd.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_rp_gxd_import" name="Nạp file GXD"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_gxd_import" sequence="5"/>
+
+</odoo>

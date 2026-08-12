@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Thêm cột Item + Nguồn giá vào bảng BOQ trong form Hạng mục -->
+    <record id="view_rp_structure_form_boq_library" model="ir.ui.view">
+        <field name="name">rp.structure.form.boq.library</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id"
+                ref="rp_progress.view_rp_structure_form_inherit_progress"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='boq_line_ids']/list/field[@name='description']"
+                   position="before">
+                <field name="resource_id"/>
+            </xpath>
+            <xpath expr="//field[@name='boq_line_ids']/list/field[@name='unit_price']"
+                   position="before">
+                <field name="unit_price_id"
+                       options="{'no_create': True}"/>
+                <field name="price_source"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

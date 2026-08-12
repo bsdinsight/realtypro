@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========== CÔNG BỐ GIÁ ========== -->
+    <record id="view_rp_price_publication_list" model="ir.ui.view">
+        <field name="name">rp.price.publication.list</field>
+        <field name="model">rp.price.publication</field>
+        <field name="arch" type="xml">
+            <list string="Công bố giá" decoration-muted="is_superseded">
+                <field name="doc_no"/>
+                <field name="doc_date"/>
+                <field name="province_id"/>
+                <field name="source_type"/>
+                <field name="effective_to"/>
+                <field name="superseded_by_id"/>
+                <field name="is_superseded" widget="boolean_toggle"/>
+                <field name="line_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_price_publication_form" model="ir.ui.view">
+        <field name="name">rp.price.publication.form</field>
+        <field name="model">rp.price.publication</field>
+        <field name="arch" type="xml">
+            <form string="Công bố giá">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="doc_no"/>
+                        <h1><field name="doc_no" placeholder="3461/QĐ-SXD"/></h1>
+                    </div>
+                    <group>
+                        <group string="Ai / khi nào">
+                            <field name="doc_date"/>
+                            <field name="publisher_ids" widget="many2many_tags"/>
+                            <field name="province_id"/>
+                            <field name="source_type"/>
+                        </group>
+                        <group string="Hiệu lực">
+                            <field name="effective_from"/>
+                            <field name="effective_to"
+                                   placeholder="Trống = đến khi có bản mới"/>
+                            <field name="superseded_by_id"/>
+                            <field name="is_reference_only"/>
+                        </group>
+                    </group>
+                    <field name="legal_basis" placeholder="Căn cứ pháp lý..."/>
+                    <notebook>
+                        <page string="Dòng giá" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom" decoration-warning="vat_included=='unknown' or price_basis=='unknown'">
+                                    <field name="resource_id"/>
+                                    <field name="price"/>
+                                    <field name="vat_included"/>
+                                    <field name="price_basis"/>
+                                    <field name="supplier_id"/>
+                                    <field name="price_inc_vat" readonly="1"/>
+                                    <field name="vat_certain" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_price_publication" model="ir.actions.act_window">
+        <field name="name">Công bố giá</field>
+        <field name="res_model">rp.price.publication</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai công bố giá đầu tiên</p>
+            <p>Không có "bảng giá tỉnh" — chỉ có CÔNG BỐ GIÁ: ai công bố, khi
+               nào, còn hiệu lực không.</p>
+        </field>
+    </record>
+
+    <!-- ========== DÒNG GIÁ (view độc lập để soi cả kho) ========== -->
+    <record id="view_rp_price_line_list" model="ir.ui.view">
+        <field name="name">rp.price.line.list</field>
+        <field name="model">rp.price.line</field>
+        <field name="arch" type="xml">
+            <list string="Dòng giá" decoration-warning="vat_included=='unknown' or price_basis=='unknown'">
+                <field name="resource_id"/>
+                <field name="price"/>
+                <field name="vat_included"/>
+                <field name="price_basis"/>
+                <field name="supplier_id"/>
+                <field name="region_id" optional="hide"/>
+                <field name="source_doc_date" optional="hide"/>
+                <field name="publication_id"/>
+                <field name="vat_certain"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_price_line_search" model="ir.ui.view">
+        <field name="name">rp.price.line.search</field>
+        <field name="model">rp.price.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="resource_id"/>
+                <field name="supplier_id"/>
+                <filter name="vat_unknown" string="VAT không rõ"
+                        domain="[('vat_included','=','unknown')]"/>
+                <filter name="basis_unknown" string="Mốc giá không rõ"
+                        domain="[('price_basis','=','unknown')]"/>
+                <separator/>
+                <filter name="g_res" string="Tài nguyên"
+                        context="{'group_by':'resource_id'}"/>
+                <filter name="g_sup" string="Nguồn cung"
+                        context="{'group_by':'supplier_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_price_line" model="ir.actions.act_window">
+        <field name="name">Dòng giá (toàn kho)</field>
+        <field name="res_model">rp.price.line</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ========== VÙNG GIÁ ========== -->
+    <record id="view_rp_price_region_form" model="ir.ui.view">
+        <field name="name">rp.price.region.form</field>
+        <field name="model">rp.price.region</field>
+        <field name="arch" type="xml">
+            <form string="Vùng giá">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="province_id"/>
+                    </group>
+                    <field name="description"
+                           placeholder="Chép nguyên văn danh sách phường/xã/đặc khu..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_price_region" model="ir.actions.act_window">
+        <field name="name">Vùng giá</field>
+        <field name="res_model">rp.price.region</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_rp_price_publication" name="Công bố giá"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_price_publication" sequence="70"/>
+    <menuitem id="menu_rp_price_line" name="Dòng giá (toàn kho)"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_price_line" sequence="80"/>
+    <menuitem id="menu_rp_price_region" name="Vùng giá"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_price_region" sequence="90"/>
+
+</odoo>

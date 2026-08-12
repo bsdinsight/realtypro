@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_standard_list" model="ir.ui.view">
+        <field name="name">rp.standard.list</field>
+        <field name="model">rp.standard</field>
+        <field name="arch" type="xml">
+            <list string="Tiêu chuẩn kỹ thuật">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="standard_type"/>
+                <field name="is_mandatory" widget="boolean_toggle"/>
+                <field name="country_id"/>
+                <field name="edition_count" string="Phiên bản"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_standard_form" model="ir.ui.view">
+        <field name="name">rp.standard.form</field>
+        <field name="model">rp.standard</field>
+        <field name="arch" type="xml">
+            <form string="Tiêu chuẩn kỹ thuật">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code" placeholder="TCVN 6260"/></h1>
+                        <field name="name" placeholder="Xi măng poóc lăng hỗn hợp"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="standard_type"/>
+                            <field name="is_mandatory"/>
+                        </group>
+                        <group>
+                            <field name="country_id"/>
+                            <field name="issuer"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Phiên bản" name="editions">
+                            <field name="edition_ids">
+                                <list editable="bottom">
+                                    <field name="year"/>
+                                    <field name="effective_date"/>
+                                    <field name="superseded_by_id"
+                                           domain="[('standard_id','=',parent.id)]"/>
+                                    <field name="is_superseded"
+                                           widget="boolean_toggle" readonly="1"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_standard_search" model="ir.ui.view">
+        <field name="name">rp.standard.search</field>
+        <field name="model">rp.standard</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <filter name="mandatory" string="Bắt buộc (QCVN)"
+                        domain="[('is_mandatory','=',True)]"/>
+                <separator/>
+                <filter name="g_type" string="Loại"
+                        context="{'group_by':'standard_type'}"/>
+                <filter name="g_country" string="Quốc gia"
+                        context="{'group_by':'country_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_standard" model="ir.actions.act_window">
+        <field name="name">Tiêu chuẩn kỹ thuật</field>
+        <field name="res_model">rp.standard</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai tiêu chuẩn đầu tiên</p>
+            <p>TCVN, QCVN, TCCS hay tiêu chuẩn nước ngoài — kèm các phiên bản
+               theo năm và quan hệ thay thế.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_cost_library_root" name="Thư viện đơn giá"
+              sequence="46"/>
+    <menuitem id="menu_rp_standard" name="Tiêu chuẩn kỹ thuật"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_standard" sequence="10"/>
+
+</odoo>

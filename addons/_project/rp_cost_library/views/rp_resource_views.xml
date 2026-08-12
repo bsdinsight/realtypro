@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========== NHÓM TÀI NGUYÊN ========== -->
+    <record id="view_rp_resource_category_list" model="ir.ui.view">
+        <field name="name">rp.resource.category.list</field>
+        <field name="model">rp.resource.category</field>
+        <field name="arch" type="xml">
+            <list string="Nhóm tài nguyên">
+                <field name="complete_name"/>
+                <field name="code"/>
+                <field name="resource_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_resource_category_form" model="ir.ui.view">
+        <field name="name">rp.resource.category.form</field>
+        <field name="model">rp.resource.category</field>
+        <field name="arch" type="xml">
+            <form string="Nhóm tài nguyên">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="parent_id"/>
+                        <field name="resource_count"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_resource_category" model="ir.actions.act_window">
+        <field name="name">Nhóm tài nguyên</field>
+        <field name="res_model">rp.resource.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========== TÀI NGUYÊN ========== -->
+    <record id="view_rp_resource_list" model="ir.ui.view">
+        <field name="name">rp.resource.list</field>
+        <field name="model">rp.resource</field>
+        <field name="arch" type="xml">
+            <list string="Tài nguyên đơn giá">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="resource_type"/>
+                <field name="uom_id"/>
+                <field name="categ_id"/>
+                <field name="gxd_code" optional="hide"/>
+                <field name="unspsc_code" optional="hide"/>
+                <field name="standard_edition_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_resource_form" model="ir.ui.view">
+        <field name="name">rp.resource.form</field>
+        <field name="model">rp.resource</field>
+        <field name="arch" type="xml">
+            <form string="Tài nguyên đơn giá">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code" placeholder="NC2357 / M101.0101 / VL.CAT.001"/></h1>
+                        <field name="name" placeholder="Tên tài nguyên"/>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="resource_type"/>
+                            <field name="categ_id"/>
+                            <field name="uom_id"/>
+                            <field name="standard_edition_id"/>
+                        </group>
+                        <group string="Mã liên thông">
+                            <field name="gxd_code"/>
+                            <field name="unspsc_code"/>
+                            <field name="product_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Ghi chú..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_resource_search" model="ir.ui.view">
+        <field name="name">rp.resource.search</field>
+        <field name="model">rp.resource</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="gxd_code"/>
+                <field name="categ_id"/>
+                <filter name="material" string="Vật liệu"
+                        domain="[('resource_type','in',['material','material_aux'])]"/>
+                <filter name="labor" string="Nhân công"
+                        domain="[('resource_type','=','labor')]"/>
+                <filter name="machine" string="Máy"
+                        domain="[('resource_type','=','machine')]"/>
+                <separator/>
+                <filter name="g_type" string="Loại tài nguyên"
+                        context="{'group_by':'resource_type'}"/>
+                <filter name="g_categ" string="Nhóm"
+                        context="{'group_by':'categ_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_resource" model="ir.actions.act_window">
+        <field name="name">Tài nguyên đơn giá</field>
+        <field name="res_model">rp.resource</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai tài nguyên đầu tiên</p>
+            <p>Vật tư, nhân công, máy thi công — mỗi tài nguyên một loại
+               (field, không phải cấp cây).</p>
+        </field>
+    </record>
+
+    <!-- Danh mục Item = master data cốt lõi → đặt TRONG Realty Core.
+         Theo thiết kế: item khai ở Core, dùng chung mọi dự án; giá thì
+         tách sang app "Thư viện đơn giá". -->
+    <menuitem id="menu_rp_resource" name="Danh mục Item"
+              parent="re_core.menu_re_core_master_data"
+              action="action_rp_resource" sequence="60"/>
+    <menuitem id="menu_rp_resource_category" name="Nhóm Item"
+              parent="re_core.menu_re_core_master_data"
+              action="action_rp_resource_category" sequence="61"/>
+    <!-- soi nhanh Item ngay trong app Thư viện đơn giá luôn -->
+    <menuitem id="menu_rp_resource_lib" name="Danh mục Item"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_resource" sequence="20"/>
+
+</odoo>

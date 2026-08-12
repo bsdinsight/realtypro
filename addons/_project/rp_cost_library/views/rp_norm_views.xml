@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========== BỘ ĐỊNH MỨC ========== -->
+    <record id="view_rp_norm_set_list" model="ir.ui.view">
+        <field name="name">rp.norm.set.list</field>
+        <field name="model">rp.norm.set</field>
+        <field name="arch" type="xml">
+            <list string="Bộ định mức" decoration-muted="is_superseded">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="publisher"/>
+                <field name="effective_date"/>
+                <field name="superseded_by_id"/>
+                <field name="is_superseded" widget="boolean_toggle"/>
+                <field name="norm_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_norm_set_form" model="ir.ui.view">
+        <field name="name">rp.norm.set.form</field>
+        <field name="model">rp.norm.set</field>
+        <field name="arch" type="xml">
+            <form string="Bộ định mức">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code" placeholder="TT 38/2026"/></h1>
+                        <field name="name" placeholder="Định mức dự toán xây dựng"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="doc_no"/>
+                            <field name="publisher"/>
+                            <field name="scope"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="effective_date"/>
+                            <field name="superseded_by_id"/>
+                            <field name="is_superseded"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Định mức" name="norms">
+                            <field name="norm_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="is_leaf"/>
+                                    <field name="eff_uom_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_norm_set" model="ir.actions.act_window">
+        <field name="name">Bộ định mức</field>
+        <field name="res_model">rp.norm.set</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========== ĐỊNH MỨC ========== -->
+    <record id="view_rp_norm_list" model="ir.ui.view">
+        <field name="name">rp.norm.list</field>
+        <field name="model">rp.norm</field>
+        <field name="arch" type="xml">
+            <list string="Định mức">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="set_id"/>
+                <field name="row_label" optional="show"/>
+                <field name="col_label" optional="show"/>
+                <field name="eff_uom_id"/>
+                <field name="norm_type"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_norm_form" model="ir.ui.view">
+        <field name="name">rp.norm.form</field>
+        <field name="model">rp.norm</field>
+        <field name="arch" type="xml">
+            <form string="Định mức">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code" placeholder="AB.11311"/></h1>
+                        <field name="name" placeholder="Tên công tác"/>
+                    </div>
+                    <group>
+                        <group string="Cây / Bộ">
+                            <field name="set_id"/>
+                            <field name="parent_id"/>
+                            <field name="is_leaf"/>
+                        </group>
+                        <group string="Ở cấp nhóm (item kế thừa)">
+                            <field name="uom_id"/>
+                            <field name="labor_grade"/>
+                            <field name="eff_uom_id"/>
+                            <field name="eff_labor_grade"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ma trận">
+                            <field name="row_label"/>
+                            <field name="col_label"/>
+                        </group>
+                        <group string="Kiểu hao phí">
+                            <field name="norm_type"/>
+                            <field name="formula_note"
+                                   invisible="norm_type != 'formula'"/>
+                        </group>
+                    </group>
+                    <field name="work_scope" placeholder="Thành phần công việc..."/>
+                    <notebook>
+                        <page string="Hao phí" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="resource_id"/>
+                                    <field name="resource_type"/>
+                                    <field name="quantity"/>
+                                    <field name="is_percent"/>
+                                    <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_norm_search" model="ir.ui.view">
+        <field name="name">rp.norm.search</field>
+        <field name="model">rp.norm</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="set_id"/>
+                <filter name="leaf" string="Chỉ dòng có hao phí"
+                        domain="[('is_leaf','=',True)]"/>
+                <separator/>
+                <filter name="g_set" string="Bộ định mức"
+                        context="{'group_by':'set_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_norm" model="ir.actions.act_window">
+        <field name="name">Định mức</field>
+        <field name="res_model">rp.norm</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========== CẤP PHỐI (VỮA / BÊ TÔNG) ========== -->
+    <record id="view_rp_buildup_form" model="ir.ui.view">
+        <field name="name">rp.buildup.form</field>
+        <field name="model">rp.buildup</field>
+        <field name="arch" type="xml">
+            <form string="Cấp phối">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="code"/>
+                        <h1><field name="code" placeholder="VUA.M100"/></h1>
+                        <field name="name"/>
+                    </div>
+                    <group>
+                        <field name="grade"/>
+                        <field name="uom_id"/>
+                    </group>
+                    <field name="component_ids">
+                        <list editable="bottom">
+                            <field name="resource_id"/>
+                            <field name="quantity"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_buildup" model="ir.actions.act_window">
+        <field name="name">Cấp phối (vữa / bê tông)</field>
+        <field name="res_model">rp.buildup</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_rp_norm_set" name="Bộ định mức"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_norm_set" sequence="40"/>
+    <menuitem id="menu_rp_norm" name="Định mức"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_norm" sequence="50"/>
+    <menuitem id="menu_rp_buildup" name="Cấp phối vữa/bê tông"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_buildup" sequence="60"/>
+
+</odoo>

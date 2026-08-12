@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ========== THANG MARKUP ========== -->
+    <record id="view_rp_markup_scheme_form" model="ir.ui.view">
+        <field name="name">rp.markup.scheme.form</field>
+        <field name="model">rp.markup.scheme</field>
+        <field name="arch" type="xml">
+            <form string="Thang markup">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Thang chuẩn"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_type"/>
+                            <field name="overhead_pct"/>
+                            <field name="profit_pct"/>
+                        </group>
+                        <group>
+                            <field name="vat_pct"/>
+                            <field name="contingency_pct"/>
+                        </group>
+                    </group>
+                    <field name="note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_markup_scheme" model="ir.actions.act_window">
+        <field name="name">Thang markup</field>
+        <field name="res_model">rp.markup.scheme</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========== ĐƠN GIÁ TỔNG HỢP ========== -->
+    <record id="view_rp_unit_price_list" model="ir.ui.view">
+        <field name="name">rp.unit.price.list</field>
+        <field name="model">rp.unit.price</field>
+        <field name="arch" type="xml">
+            <list string="Đơn giá tổng hợp"
+                  decoration-warning="missing_price_count > 0 or price_uncertain">
+                <field name="norm_id"/>
+                <field name="publication_id"/>
+                <field name="material_amount"/>
+                <field name="labor_amount"/>
+                <field name="machine_amount"/>
+                <field name="direct_cost"/>
+                <field name="bid_price"/>
+                <field name="missing_price_count"/>
+                <field name="price_uncertain"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_unit_price_form" model="ir.ui.view">
+        <field name="name">rp.unit.price.form</field>
+        <field name="model">rp.unit.price</field>
+        <field name="arch" type="xml">
+            <form string="Đơn giá tổng hợp">
+                <sheet>
+                    <group>
+                        <group string="Core × Dự án">
+                            <field name="norm_id"/>
+                            <field name="publication_id"/>
+                            <field name="markup_scheme_id"/>
+                        </group>
+                        <group string="Trung thực">
+                            <field name="missing_price_count"/>
+                            <field name="price_uncertain"/>
+                        </group>
+                    </group>
+                    <group string="3 số cho AI đối chiếu">
+                        <field name="material_amount"/>
+                        <field name="labor_amount"/>
+                        <field name="machine_amount"/>
+                        <field name="subcontract_amount"/>
+                    </group>
+                    <group string="Thang markup (bóc ngược được)">
+                        <field name="direct_cost"/>
+                        <field name="overhead"/>
+                        <field name="profit"/>
+                        <field name="pre_tax"/>
+                        <field name="vat_amount"/>
+                        <field name="contingency"/>
+                        <field name="bid_price"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_unit_price" model="ir.actions.act_window">
+        <field name="name">Đơn giá tổng hợp</field>
+        <field name="res_model">rp.unit.price</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_rp_unit_price" name="Đơn giá tổng hợp"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_unit_price" sequence="100"/>
+    <menuitem id="menu_rp_markup_scheme" name="Thang markup"
+              parent="menu_rp_cost_library_root"
+              action="action_rp_markup_scheme" sequence="110"/>
+
+</odoo>

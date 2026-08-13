@@ -1,0 +1,220 @@
+---
+title: "Doanh thu chủ đầu tư — từ nghiệm thu tới tiền về tài khoản"
+description: "Chiều THU của tổng thầu — nghiệm thu gửi chủ đầu tư, tạm ứng hai mặt nợ và tiền, kế hoạch dòng tiền thu, ghi nhận tiền về và dashboard lãi gộp hai chiều."
+order: 26
+---
+
+# 26. Doanh thu chủ đầu tư — từ nghiệm thu tới tiền về tài khoản
+
+## 26.1. Tổng thầu có hai chiều tiền, phần mềm thường chỉ có một
+
+Hầu hết phần mềm quản lý xây dựng làm rất kỹ chiều **CHI** — hợp đồng
+nhà thầu phụ, nghiệm thu khối lượng, hoá đơn đầu vào, thanh toán. Chiều
+**THU** với chủ đầu tư thì bị đẩy sang kế toán, hoặc tệ hơn, sang một
+file Excel của phòng kinh doanh.
+
+Với tổng thầu, thiếu chiều thu là thiếu nửa bức tranh:
+
+- không biết **lãi gộp thi công** thật là bao nhiêu (thu trừ chi), chỉ
+  biết đã chi bao nhiêu;
+- không biết **tháng tới thu được bao nhiêu** từ chủ đầu tư, nên không
+  lập được kế hoạch trả nhà thầu phụ;
+- và quan trọng nhất với người đi vay: **khoản phải thu chủ đầu tư
+  chính là tài sản bảo đảm** để vay ngân hàng (mục 19). Không quản được
+  nó thì không vay được trên nó.
+
+Cụm chức năng này là chiều thu, nằm ở **Realty Project → Doanh thu**.
+
+## 26.2. Chuỗi năm bước
+
+```
+Nghiệm thu gửi CĐT  →  IPC (hồ sơ thanh toán)  →  Hoá đơn phát hành
+        ↓                       ↓                        ↓
+  sản lượng kỳ này        CĐT ký nhận            ghi nhận doanh thu
+                                ↓
+                        đem thế chấp vay (§19)
+                                ↓
+                        CĐT trả tiền  →  Thu tiền / đối soát NH (§25)
+```
+
+Ba mắt xích đã có bài riêng: **hợp đồng với chủ đầu tư** ở mục 18,
+**IPC đem thế chấp** ở mục 19, **đối soát tiền về** ở mục 25. Bài này
+nói phần còn lại.
+
+## 26.3. Nghiệm thu gửi chủ đầu tư — ba con số, đừng lẫn
+
+Mỗi biên bản nghiệm thu gửi chủ đầu tư sinh ra **ba** con số khác nhau,
+và nhầm chúng là nguồn gốc của phần lớn tranh cãi công nợ:
+
+| Con số | Nghĩa | Dùng để |
+|---|---|---|
+| **Sản lượng kỳ này (Gross)** | giá trị khối lượng đã làm, trước mọi khấu trừ | đo **tiến độ** hợp đồng |
+| **Giá trị chứng nhận** | gross − thu hồi tạm ứng − giữ lại − back-charge ± điều chỉnh | **quyền đòi nợ** — số đem thế chấp |
+| **Còn phải thanh toán (Net)** | số chủ đầu tư thực chuyển kỳ này | **dòng tiền** |
+
+Bốn khoản trừ giữa gross và chứng nhận:
+
+- **Thu hồi tạm ứng** — khấu trừ dần khoản đã ứng trước (xem §26.4);
+- **Giữ lại** — phần chủ đầu tư giữ theo hợp đồng, hoàn khi hết bảo hành;
+- **Back-charge** — chủ đầu tư trừ lại chi phí họ đã chi thay;
+- **Điều chỉnh** — chênh lệch đơn giá, khối lượng thống nhất lại.
+
+> 💡 **Tiến độ đo trên GROSS, không đo trên số tiền nhận được.** Tiền
+> giữ lại vẫn là phần việc đã làm xong. Đo tiến độ bằng tiền đã thu sẽ
+> làm công trình luôn trông chậm hơn thực tế đúng bằng tỷ lệ giữ lại.
+
+Sản lượng kỳ này **cho phép âm** — khi chủ đầu tư điều chỉnh giảm phần
+đã nghiệm thu ở kỳ trước. Chặn số âm sẽ buộc người dùng xoá biên bản cũ,
+mất luôn vết đã từng nghiệm thu bao nhiêu.
+
+Vòng đời hai bên: **Nháp → Đã đề xuất → CĐT duyệt**. Chỉ biên bản ở
+trạng thái *CĐT duyệt* mới cộng vào sản lượng luỹ kế và khoản phải thu —
+đề xuất chưa được duyệt không phải là quyền đòi nợ.
+
+## 26.4. Tạm ứng chủ đầu tư — MỘT khoản tiền, HAI mặt
+
+Đây là chỗ dễ sai nhất trong cả cụm, và cũng là chỗ hệ thống giúp được
+nhiều nhất.
+
+Khi chủ đầu tư ứng trước 100 tỷ, con số đó đồng thời là **hai thứ khác
+nhau**, biến động theo hai nhịp khác nhau:
+
+| | Câu hỏi | Giảm khi nào |
+|---|---|---|
+| **Còn phải thu hồi** (mặt NỢ) | *"Tôi còn nợ chủ đầu tư bao nhiêu?"* | mỗi kỳ nghiệm thu bị khấu trừ |
+| **Còn trong tài khoản** (mặt TIỀN) | *"Tôi còn bao nhiêu để tiêu?"* | mỗi lần dùng trả nhà thầu phụ |
+
+Hai số này **không bằng nhau** và không cùng nhịp. Ứng 100 tỷ, đã tiêu
+70 tỷ trả thầu phụ, mới bị khấu trừ 20 tỷ qua nghiệm thu → *còn phải
+thu hồi* 80 tỷ nhưng *còn trong tài khoản* chỉ 30 tỷ.
+
+Lấy nhầm số là hỏng kế hoạch vốn: **phiếu Nhu cầu vốn dự án (mục 20)
+dùng mặt TIỀN** — "tạm ứng còn dùng được". Dùng mặt nợ sẽ tưởng còn 80
+tỷ trong khi thực tế chỉ còn 30.
+
+**Thu hồi phân bổ theo FIFO** — đợt ứng trước được thu hồi trước. Nhờ
+vậy mỗi đợt biết riêng còn dư bao nhiêu, thay vì chỉ có một số tổng trên
+hợp đồng.
+
+**Bảo lãnh tạm ứng chặn ghi nhận tiền về.** Chủ đầu tư gần như luôn đòi
+bảo lãnh tạm ứng trước khi giải ngân. Nên nếu đợt tạm ứng bật cờ *có
+bảo lãnh* mà chưa nhập số chứng thư, hệ thống **không cho** đánh dấu "đã
+nhận tiền" — đúng thứ tự ngoài đời, và giữ được vết chứng thư nào bảo
+lãnh cho đợt nào.
+
+Σ các đợt tạm ứng cũng **không được vượt giá trị hợp đồng** — chặn khi
+lưu, bắt sớm lỗi nhập thừa một con số 0.
+
+## 26.5. Kế hoạch dòng tiền thu
+
+Trên hợp đồng với chủ đầu tư, lập lịch các đợt sẽ thu: tạm ứng, theo
+sản lượng từng đợt, giữ lại bảo hành, quyết toán. Mỗi đợt có **số tiền
+kế hoạch** và **ngày dự kiến thu**, vòng đời *Kế hoạch → Đã xuất hoá đơn
+→ Đã thu*.
+
+Đây là nguồn trả lời câu *"ba tháng tới thu được bao nhiêu"* — và nó
+chảy thẳng vào **dự báo dòng tiền** (mục 21) cùng ô *Kế hoạch thu 90
+ngày tới* trên dashboard.
+
+Điểm đáng chú ý: đợt **giữ lại bảo hành** cũng nằm trong lịch, với ngày
+thu thật sự của nó — thường là vài năm sau khi bàn giao. Nhiều doanh
+nghiệp quên hẳn khoản này vì nó không nằm trong bất kỳ báo cáo nào; để
+nó thành một dòng có ngày tháng thì không ai quên nữa.
+
+## 26.6. Ba sổ cùng ghi "chủ đầu tư đã trả" — biết rõ sổ nào làm gì
+
+⚠️ **Đọc kỹ mục này trước khi so số giữa các màn.** Hệ thống hiện có
+**ba** chỗ ghi nhận tiền chủ đầu tư trả, phục vụ ba mục đích khác nhau,
+và **chúng không tự đồng bộ với nhau**:
+
+| Ghi ở đâu | Chảy vào | Trả lời câu |
+|---|---|---|
+| Tab **"Thanh toán của CĐT"** trên hợp đồng | khoản phải thu → **định giá lại tài sản bảo đảm** (§19) | *còn bao nhiêu quyền đòi nợ để thế chấp* |
+| **Hoá đơn phát hành CĐT** đã ghi sổ | doanh thu & công nợ kế toán → **Dashboard Doanh thu** | *doanh thu và công nợ theo sổ kế toán* |
+| **Đối soát ngân hàng** (§25) | *CĐT đã thu* trên từng **IPC** | *IPC nào ký rồi mà chưa thấy tiền* |
+| Menu **Thu tiền (Receipt)** | sổ kế toán (phiếu thu khách hàng) | *chứng từ thu tiền chuẩn kế toán* |
+
+⚠️ **Cái tên dễ đánh lừa nhất là menu "Thu tiền (Receipt)".** Nó mở
+danh sách **phiếu thu kế toán** chuẩn của Odoo, lọc theo chiều thu từ
+khách hàng — **không** gắn với hợp đồng chủ đầu tư và **không** làm giảm
+khoản phải thu dùng làm tài sản bảo đảm.
+
+Chỗ duy nhất làm giảm khoản phải thu là **tab "Thanh toán của CĐT" ngay
+trên hợp đồng** — nhập trực tiếp trên lưới.
+
+Hệ quả cần biết:
+
+- Ô **"CĐT đã thanh toán"** trên hợp đồng (lấy từ tab *Thanh toán của
+  CĐT*) và ô cùng tên trên **Dashboard Doanh thu** (lấy từ hoá đơn đã
+  ghi sổ) **có thể lệch nhau** — không phải lỗi hiển thị, mà là hai
+  nguồn khác nhau.
+- **Đối soát ngân hàng KHÔNG tự làm giảm khoản phải thu.** Tiền về được
+  ghi vào IPC, nhưng giá trị tài sản bảo đảm vẫn giữ nguyên cho tới khi
+  có dòng tương ứng trong tab *Thanh toán của CĐT*.
+
+> 🚩 **Việc bắt buộc trong vận hành**: mỗi lần chủ đầu tư trả tiền,
+> ngoài đối soát ngân hàng **phải thêm một dòng ở tab "Thanh toán của
+> CĐT"** trên hợp đồng. Bỏ qua bước này thì borrowing base vẫn tính
+> trên khoản phải thu **đã thu rồi** — tức hệ thống báo còn dư địa vay
+> nhiều hơn thực tế. Đây là phía an toàn ngược: dễ rút vượt.
+>
+> Trên bản demo có thể thấy đúng tình huống này: 382,7 tỷ đã về qua đối
+> soát ngân hàng, nhưng chưa có bản ghi Thu tiền nào nên khoản phải thu
+> vẫn hiển thị đủ 2.060,55 tỷ.
+
+## 26.7. Dashboard Doanh thu — hai chiều trên một màn
+
+`Realty Project → Doanh thu → Dashboard Doanh thu` đặt chiều thu và
+chiều chi cạnh nhau:
+
+| Khối | Gồm |
+|---|---|
+| **Doanh thu & phải thu** | giá trị HĐ với CĐT · sản lượng nghiệm thu · đã xuất hoá đơn · đã thanh toán · còn phải thu |
+| **Chi phí** | giá trị HĐ nhà thầu · nghiệm thu từ nhà thầu · đã trả nhà thầu |
+| **Lãi gộp & dòng tiền** | lãi gộp thi công · tỷ suất · dòng tiền ròng · kế hoạch thu 90 ngày |
+
+Hai con số đáng nhìn nhất:
+
+- **Lãi gộp thi công** = sản lượng nghiệm thu gửi chủ đầu tư − chi phí
+  nghiệm thu của nhà thầu phụ. Đo trên **khối lượng đã nghiệm thu hai
+  đầu**, không đo trên tiền — nên nó phản ánh hiệu quả thi công, không
+  bị nhiễu bởi việc ai trả tiền trước ai.
+- **Dòng tiền ròng** = chủ đầu tư đã trả − đã trả nhà thầu. Đây mới là
+  tiền thật. Lãi gộp dương mà dòng tiền ròng âm là tình huống kinh điển
+  của tổng thầu: làm có lãi nhưng vẫn phải đi vay để sống.
+
+Lọc theo dự án được; bỏ trống là tổng hợp tất cả.
+
+## 26.8. Xem thử trên bản demo
+
+Vào [demo.realtypro.vn](https://demo.realtypro.vn) (`demo` / `demo`) —
+hợp đồng `HĐ-TC/2026/ABC-BVABC`, giá trị 3.456 tỷ:
+
+1. **Realty Project → Doanh thu → Nghiệm thu gửi CĐT**: 12 biên bản đã
+   được chủ đầu tư duyệt. Mở một cái, so **Sản lượng kỳ này** với **Giá
+   trị chứng nhận** — chênh lệch chính là bốn khoản trừ. Toàn hợp đồng
+   đang giữ lại 108,45 tỷ và đã khấu trừ 21,69 tỷ tạm ứng.
+2. **→ Tạm ứng CĐT**: đợt `TU-CDT/2026/0001` nhận 100 tỷ. Đối chiếu
+   **Còn phải thu hồi** (78,31 tỷ) với **Còn trong tài khoản** — hai mặt
+   của cùng khoản tiền, không bằng nhau.
+3. **→ Kế hoạch dòng tiền thu**: 8 đợt từ 2026 tới 2031, gồm cả đợt
+   *Giữ lại bảo hành 5% (hoàn 2031)* 172,8 tỷ — khoản mà không có lịch
+   thì thường bị quên.
+4. **→ Dashboard Doanh thu**: xem lãi gộp và dòng tiền ròng cạnh nhau.
+5. Mở **Realty Project → Doanh thu → HĐ với Chủ đầu tư**, vào tab
+   **Thanh toán của CĐT**: đang **trống**.
+   Đối chiếu với mục 25 (đối soát ngân hàng) đã ghi nhận 382,7 tỷ về tài
+   khoản — đây chính là tình huống §26.6 cảnh báo, xem trực tiếp trên số
+   liệu thật.
+
+## 26.9. Lưu ý
+
+- Chỉ biên bản nghiệm thu **đã được chủ đầu tư duyệt** mới thành quyền
+  đòi nợ; bản nháp và bản mới đề xuất không tính.
+- Đợt tạm ứng **đã thu hồi một phần thì không huỷ được** — muốn sửa phải
+  điều chỉnh qua nghiệm thu, giữ nguyên vết.
+- Tiền giữ lại **không** phải khoản mất; nó là một dòng trong kế hoạch
+  thu với ngày hoàn thật sự. Theo dõi nó như một khoản phải thu có kỳ
+  hạn dài.
+- Sản lượng nghiệm thu âm là hợp lệ (chủ đầu tư điều chỉnh giảm) — đừng
+  xoá biên bản cũ để "sửa cho tròn".

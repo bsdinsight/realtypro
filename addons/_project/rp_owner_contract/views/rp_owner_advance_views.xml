@@ -16,7 +16,9 @@
                 <field name="date_request" optional="hide"/>
                 <field name="date_received"/>
                 <field name="amount" width="185px" sum="Σ tạm ứng"/>
-                <field name="percent_of_contract" widget="percentage"
+                <!-- KHÔNG widget="percentage": compute đã nhân 100 sẵn
+                     (amount/total*100), thêm widget là nhân hai lần. -->
+                <field name="percent_of_contract"
                        optional="show" string="% giá trị HĐ"/>
                 <field name="amount_used_payment" width="185px" optional="show"
                        sum="Σ đã dùng"/>
@@ -73,8 +75,7 @@
                         <group string="Số tiền">
                             <field name="amount"
                                    readonly="state in ['received','closed','cancelled']"/>
-                            <field name="percent_of_contract"
-                                   widget="percentage"/>
+                            <field name="percent_of_contract"/>
                             <field name="recovery_percent"/>
                         </group>
                     </group>

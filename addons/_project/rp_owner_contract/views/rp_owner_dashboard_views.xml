@@ -52,7 +52,8 @@
                         <group string="Lãi gộp dự án">
                             <field name="kpi_gross_margin" widget="monetary"
                                    class="fw-bold"/>
-                            <field name="kpi_margin_pct" widget="percentage"/>
+                            <!-- compute đã ×100 → không dùng widget -->
+                            <field name="kpi_margin_pct"/>
                         </group>
                         <group string="Dòng tiền">
                             <field name="kpi_net_cash" widget="monetary"/>

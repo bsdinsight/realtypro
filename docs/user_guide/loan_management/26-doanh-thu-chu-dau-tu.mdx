@@ -144,23 +144,26 @@ trên hợp đồng** — nhập trực tiếp trên lưới.
 
 Hệ quả cần biết:
 
+- **Đối soát ngân hàng TỰ làm giảm tài sản bảo đảm.** Tiền chủ đầu tư
+  trả cho một IPC đang thế chấp thì giá trị IPC đó trong borrowing base
+  **giảm ngay đúng số đã thu**, không đợi ai nhập tay. Lý do: khoản phải
+  thu đã thu thì không còn đem thế chấp được — giữ nguyên giá trị là báo
+  dư địa vay cao hơn thực tế, tức sai về phía dễ rút vượt.
+  Gỡ khớp nhầm thì giá trị **hoàn nguyên** tự động.
 - Ô **"CĐT đã thanh toán"** trên hợp đồng (lấy từ tab *Thanh toán của
   CĐT*) và ô cùng tên trên **Dashboard Doanh thu** (lấy từ hoá đơn đã
   ghi sổ) **có thể lệch nhau** — không phải lỗi hiển thị, mà là hai
-  nguồn khác nhau.
-- **Đối soát ngân hàng KHÔNG tự làm giảm khoản phải thu.** Tiền về được
-  ghi vào IPC, nhưng giá trị tài sản bảo đảm vẫn giữ nguyên cho tới khi
-  có dòng tương ứng trong tab *Thanh toán của CĐT*.
+  nguồn khác nhau cho hai mục đích khác nhau.
 
-> 🚩 **Việc bắt buộc trong vận hành**: mỗi lần chủ đầu tư trả tiền,
-> ngoài đối soát ngân hàng **phải thêm một dòng ở tab "Thanh toán của
-> CĐT"** trên hợp đồng. Bỏ qua bước này thì borrowing base vẫn tính
-> trên khoản phải thu **đã thu rồi** — tức hệ thống báo còn dư địa vay
-> nhiều hơn thực tế. Đây là phía an toàn ngược: dễ rút vượt.
+> ⚠️ **Còn một khoảng hở, biết để tránh**: đối soát ngân hàng chỉ giảm
+> tài sản bảo đảm khi tiền được khớp vào một **IPC đang thế chấp**. Tiền
+> chủ đầu tư trả cho phần **chưa đem thế chấp** thì chưa tự trừ vào
+> khoản phải thu cấp hợp đồng — muốn số đó đúng, vẫn phải thêm một dòng
+> ở tab **Thanh toán của CĐT**.
 >
-> Trên bản demo có thể thấy đúng tình huống này: 382,7 tỷ đã về qua đối
-> soát ngân hàng, nhưng tab *Thanh toán của CĐT* chưa có dòng nào nên
-> khoản phải thu vẫn hiển thị đủ 2.060,55 tỷ.
+> Thói quen an toàn: **mỗi lần chủ đầu tư trả tiền, ghi một dòng ở tab
+> "Thanh toán của CĐT"** dù đã đối soát ngân hàng. Đối soát lo phần tài
+> sản bảo đảm; dòng này lo phần công nợ của hợp đồng.
 
 ## 26.7. Dashboard Doanh thu — hai chiều trên một màn
 
@@ -201,11 +204,13 @@ hợp đồng `HĐ-TC/2026/ABC-BVABC`, giá trị 3.456 tỷ:
    *Giữ lại bảo hành 5% (hoàn 2031)* 172,8 tỷ — khoản mà không có lịch
    thì thường bị quên.
 4. **→ Dashboard Doanh thu**: xem lãi gộp và dòng tiền ròng cạnh nhau.
-5. Mở **Realty Project → Doanh thu → HĐ với Chủ đầu tư**, vào tab
-   **Thanh toán của CĐT**: đang **trống**.
-   Đối chiếu với mục 25 (đối soát ngân hàng) đã ghi nhận 382,7 tỷ về tài
-   khoản — đây chính là tình huống §26.6 cảnh báo, xem trực tiếp trên số
-   liệu thật.
+5. Kiểm chứng §26.6 trên số thật: mục 25 (đối soát ngân hàng) đã ghi
+   nhận **382,7 tỷ** chủ đầu tư trả vào ba IPC đang thế chấp, và tài sản
+   bảo đảm từ IPC đã tự giảm đúng 382,7 tỷ (1.343,3 → 960,6 tỷ). Mở
+   **Vốn & Ngân quỹ → HĐ tín dụng → Tài sản thế chấp**, xem lịch sử định
+   giá của từng IPC — mỗi lần tiền về là một dòng định giá mới, có ghi
+   lý do. Trong khi đó tab **Thanh toán của CĐT** trên hợp đồng vẫn
+   trống: đó là khoảng hở §26.6 nêu.
 
 ## 26.9. Lưu ý
 

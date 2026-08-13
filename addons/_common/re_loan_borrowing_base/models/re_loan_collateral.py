@@ -68,9 +68,21 @@ class ReLoanCollateral(models.Model):
         """Tạo bản ghi định giá = khoản phải thu hiện hành (floor 0).
 
         HAI CẤP, loại trừ nhau:
-        - cấp IPC  → giá trị = quyền đòi nợ của IPC đó;
+        - cấp IPC  → giá trị = quyền đòi nợ của IPC đó, TRỪ phần chủ đầu
+                     tư đã trả cho chính IPC đó (đối soát ngân hàng);
         - cấp HĐ   → giá trị = phải thu CHƯA cầm cố theo IPC
                      (`receivable_unpledged`), để không thế chấp trùng.
+
+        VÌ SAO TRỪ PHẦN ĐÃ THU: tiền đã về tài khoản thì không còn là
+        khoản phải thu nữa — không thể đem thế chấp một khoản mình đã
+        được trả. Giữ nguyên giá trị sau khi thu làm borrowing base cao
+        hơn thực tế, tức hệ thống báo còn dư địa vay trong khi tài sản
+        bảo đảm đã tiêu biến. Đây là sai về phía nguy hiểm (rút vượt),
+        nên trừ ngay tại nguồn định giá.
+
+        CHỈ trừ ở CẤP IPC, cố ý. Cấp hợp đồng lấy `receivable_unpledged`
+        = phải thu − Σ phần đã cầm cố; nếu trừ tiếp ở đó nữa thì một
+        khoản thu bị trừ HAI LẦN và borrowing base tụt sai chiều ngược.
 
         Bỏ qua nếu giá trị không đổi so với định giá mới nhất (tránh
         spam record khi không có biến động thực).
@@ -80,13 +92,16 @@ class ReLoanCollateral(models.Model):
         for col in self:
             if col.owner_ipc_id:
                 ipc = col.owner_ipc_id
-                value = max(0.0, ipc.amount_certified)
+                got = ipc.amount_received or 0.0
+                value = max(0.0, (ipc.amount_certified or 0.0) - got)
                 detail = _(
                     'IPC %(i)s (CĐT ký %(d)s, VB %(r)s): quyền đòi nợ '
-                    '%(q)s.',
+                    '%(q)s − CĐT đã trả %(g)s = %(v)s.',
                     i=ipc.name, d=ipc.date_signed or '—',
                     r=ipc.sign_ref or '—',
-                    q='{:,.0f}'.format(ipc.amount_certified))
+                    q='{:,.0f}'.format(ipc.amount_certified or 0.0),
+                    g='{:,.0f}'.format(got),
+                    v='{:,.0f}'.format(value))
             elif col.owner_contract_id:
                 value = max(0.0, col.owner_contract_id.receivable_unpledged)
                 detail = _(

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.1.32.8',
+    'version': '19.0.1.32.9',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '

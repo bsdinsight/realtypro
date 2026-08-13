@@ -135,7 +135,12 @@ class RpOwnerIpc(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        # CĐT ký / huỷ ký → giá trị TSBĐ của IPC đổi theo
+        # CĐT ký / huỷ ký → giá trị TSBĐ của IPC đổi theo.
+        #
+        # KHÔNG bắt `amount_received` ở đây: nó là field compute STORE,
+        # Odoo ghi lại khi tính lại mà KHÔNG đi qua write() của model —
+        # đã thử và test đỏ. Biến động tiền về bắt ở chính giao dịch
+        # ngân hàng, xem ReBankTransactionCollateral bên dưới.
         if {'state', 'acceptance_ids'} & set(vals):
             cols = self.env['re.loan.collateral'].search(
                 [('owner_ipc_id', 'in', self.ids)])
@@ -144,4 +149,56 @@ class RpOwnerIpc(models.Model):
             # phần cầm cố theo IPC đổi → TSBĐ cấp HĐ phải tính lại
             self.mapped('contract_id')._sync_receivable_collaterals(
                 reason=_('Biến động IPC'))
+        return res
+
+
+class ReBankTransactionCollateral(models.Model):
+    """Tiền CĐT về IPC → định giá lại TSBĐ quyền đòi nợ NGAY.
+
+    Không đợi ai nhập tay: khoản phải thu đã thu thì không còn đem thế
+    chấp được, giữ nguyên giá trị là báo dư địa vay cao hơn thực tế.
+
+    Bắt ở ĐÂY chứ không ở `rp.owner.ipc.write` vì `amount_received` là
+    field compute STORE — Odoo tính lại và ghi thẳng, không qua write()
+    của model, nên hook bên đó không bao giờ nổ.
+    """
+    _inherit = 're.bank.transaction'
+
+    def _sync_ipc_collateral(self, reason, extra_ipcs=None):
+        ipcs = self.mapped('ipc_id')
+        if extra_ipcs:
+            ipcs |= extra_ipcs
+        if not ipcs:
+            return
+        self.env.flush_all()      # để amount_received kịp tính lại
+        cols = self.env['re.loan.collateral'].search(
+            [('owner_ipc_id', 'in', ipcs.ids)])
+        cols._sync_receivable_valuation(reason=reason)
+        ipcs.mapped('contract_id')._sync_receivable_collaterals(reason=reason)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        recs._sync_ipc_collateral(_('CĐT trả tiền (đối soát ngân hàng)'))
+        return recs
+
+    def write(self, vals):
+        # gỡ khớp / khớp sang IPC khác: IPC CŨ cũng phải định giá lại,
+        # nếu không nó giữ mãi phần trừ của một giao dịch đã rời đi
+        old = self.mapped('ipc_id') if 'ipc_id' in vals else None
+        res = super().write(vals)
+        if {'state', 'amount', 'ipc_id', 'direction'} & set(vals):
+            self._sync_ipc_collateral(
+                _('Đối soát ngân hàng thay đổi'), extra_ipcs=old)
+        return res
+
+    def unlink(self):
+        ipcs = self.mapped('ipc_id')
+        res = super().unlink()
+        if ipcs:
+            cols = self.env['re.loan.collateral'].search(
+                [('owner_ipc_id', 'in', ipcs.ids)])
+            cols._sync_receivable_valuation(reason=_('Xoá giao dịch NH'))
+            ipcs.mapped('contract_id')._sync_receivable_collaterals(
+                reason=_('Xoá giao dịch NH'))
         return res

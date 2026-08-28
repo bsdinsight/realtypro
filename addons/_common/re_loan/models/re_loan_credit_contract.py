@@ -173,6 +173,25 @@ class ReLoanCreditContract(models.Model):
     # ------------------------------------------------------------------
     # Constraints
     # ------------------------------------------------------------------
+    # Ngưỡng an toàn hiển thị của nền tảng. Trên mức này, hàm làm tròn
+    # của Odoo (web/core/utils/numbers.roundPrecision) cộng epsilon
+    # 2^(log2(v)-50) — với số lớn epsilon chạm 0,5 nên Math.round đẩy
+    # kết quả lên thêm 1. Đo trên chính bản demo: số nguyên đầu tiên bị
+    # lệch là 527.765.581.332.481. Từ đó trở lên, ô nhập hiện sai so với
+    # số đã lưu, và mỗi lần lưu lại người dùng vô tình đẩy sai số đi tiếp.
+    # Không sửa được ở tầng máy chủ — chỉ chặn không cho chạm tới.
+    AMOUNT_DISPLAY_LIMIT = 500000000000000.0
+
+    @api.constrains('amount_total')
+    def _check_amount_sane(self):
+        for rec in self:
+            if (rec.amount_total or 0.0) >= self.AMOUNT_DISPLAY_LIMIT:
+                raise ValidationError(_(
+                    'Tổng hạn mức HĐTD đang là %(v)s đ — vượt ngưỡng '
+                    '500.000 tỷ mà giao diện hiển thị chính xác được. '
+                    'Số này gần như chắc chắn do gõ thừa chữ số: kiểm '
+                    'lại rồi nhập lại.', v='{:,.0f}'.format(rec.amount_total)))
+
     @api.constrains('amount_total', 'facility_ids')
     def _check_facility_total(self):
         # HARD RULE: Σ limit của tất cả facility ≤ tổng HĐTD. Luôn áp

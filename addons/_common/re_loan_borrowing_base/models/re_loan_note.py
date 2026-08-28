@@ -8,12 +8,11 @@ class ReLoanNote(models.Model):
     _inherit = 're.loan.note'
 
     exceeds_available = fields.Boolean(
-        string='Vượt khả dụng thực tế',
+        string='Vượt hạn mức khả dụng',
         compute='_compute_exceeds_available',
-        help='Số tiền KW vượt Khả dụng thực tế của facility (theo '
-             'borrowing base). CHỈ CẢNH BÁO — NH là bên quyết định '
-             'cuối; muốn tăng khả dụng cần nghiệm thu thêm sản lượng '
-             'với CĐT hoặc bổ sung TSBĐ.')
+        help='Số tiền khế ước vượt hạn mức khả dụng của mục đích — tức '
+             'là TSĐB đã phân bổ cho mục đích đó chưa đỡ đủ. CHỈ CẢNH '
+             'BÁO, không chặn: ngân hàng mới là bên quyết định cuối.')
 
     @api.depends('amount', 'facility_id', 'state')
     def _compute_exceeds_available(self):

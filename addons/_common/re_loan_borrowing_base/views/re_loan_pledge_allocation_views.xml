@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      ===== Phân bổ TSBĐ xuống mục đích =====
+
+      Ba nơi chạm vào cùng một bảng dữ liệu:
+
+        · Form văn bản thế chấp → nhập chính (thế chấp xong thì chia ngay)
+        · Tab "Phân bổ TSBĐ" trên HĐTD → soi và sửa toàn bộ một chỗ
+        · Tab TSBĐ trên mục đích  → CHỈ ĐỌC, xem mục đích này được đỡ
+          lưng bằng những tài sản nào
+
+      Không dựng bảng riêng cho từng nơi: cùng một `re.loan.pledge.
+      allocation`, nên sửa ở đâu cũng đồng bộ tức thì, không cần cơ chế
+      đồng bộ nào cả.
+    -->
+
+    <record id="view_pledge_allocation_list" model="ir.ui.view">
+        <field name="name">re.loan.pledge.allocation.list</field>
+        <field name="model">re.loan.pledge.allocation</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" sample="1"
+                  decoration-muted="pledge_state == 'released'">
+                <field name="credit_contract_id" optional="hide"/>
+                <field name="collateral_id" readonly="1"/>
+                <field name="pledge_id" string="Số VB thế chấp" optional="show"
+                       readonly="1"/>
+                <field name="date_pledge" optional="hide" readonly="1"/>
+                <field name="facility_id" string="Mục đích"
+                       options="{'no_create': True}"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="secured_amount" string="Đem thế chấp"
+                       width="185px" readonly="1" optional="show"/>
+                <field name="advance_rate" string="Tỷ lệ CV (%)"
+                       readonly="1" optional="show"/>
+                <field name="base_contribution" string="Đóng góp base"
+                       width="185px" readonly="1" optional="hide"/>
+                <field name="amount" string="Giá trị phân bổ"
+                       width="185px" sum="Σ"/>
+                <field name="pledge_state" widget="badge"
+                       decoration-info="pledge_state == 'active'"
+                       decoration-muted="pledge_state == 'released'"
+                       readonly="1"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pledge_allocation_search" model="ir.ui.view">
+        <field name="name">re.loan.pledge.allocation.search</field>
+        <field name="model">re.loan.pledge.allocation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="collateral_id"/>
+                <field name="facility_id"/>
+                <field name="credit_contract_id"/>
+                <filter name="f_active" string="Đang hiệu lực"
+                        domain="[('pledge_state', '=', 'active')]"/>
+                <filter name="f_released" string="Đã giải chấp"
+                        domain="[('pledge_state', '=', 'released')]"/>
+                <group>
+                    <filter name="g_col" string="Tài sản"
+                            context="{'group_by': 'collateral_id'}"/>
+                    <filter name="g_fac" string="Mục đích"
+                            context="{'group_by': 'facility_id'}"/>
+                    <filter name="g_cc" string="HĐTD"
+                            context="{'group_by': 'credit_contract_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_pledge_allocation_pivot" model="ir.ui.view">
+        <field name="name">re.loan.pledge.allocation.pivot</field>
+        <field name="model">re.loan.pledge.allocation</field>
+        <field name="arch" type="xml">
+            <!-- Ma trận Tài sản × Mục đích, ô là tiền phân bổ. -->
+            <pivot string="Tài sản × Mục đích">
+                <field name="collateral_id" type="row"/>
+                <field name="facility_id" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_pledge_allocation" model="ir.actions.act_window">
+        <field name="name">Phân bổ TSBĐ</field>
+        <field name="res_model">re.loan.pledge.allocation</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa phân bổ TSBĐ nào</p>
+            <p>Thế chấp tài sản ở màn hình <b>Tài sản bảo đảm</b>, sau đó
+               chia giá trị đóng góp của nó cho từng <b>mục đích</b> của
+               HĐTD. Chưa chia thì không mục đích nào tăng khả dụng.</p>
+        </field>
+    </record>
+
+    <!--
+      ===== Tab "Tài sản thế chấp" trên HĐTD: mở dialog để chia =====
+
+      `re.loan.collateral.pledge` KHÔNG có form riêng trong re_loan —
+      nó chỉ tồn tại dưới dạng dòng sửa tại chỗ. Muốn có lưới phân bổ
+      thì phải bỏ sửa-tại-chỗ và dựng một form dialog. Đó là việc dưới
+      đây: bấm vào một dòng thế chấp sẽ mở ra bảng các mục đích của
+      HĐTD kèm cột số tiền phân bổ.
+    -->
+    <record id="view_credit_contract_form_pledge_dialog" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.pledge.dialog</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='pledge']/field[@name='pledge_ids']/list"
+                   position="attributes">
+                <attribute name="editable"/>
+            </xpath>
+            <xpath expr="//page[@name='pledge']/field[@name='pledge_ids']"
+                   position="inside">
+                <form string="Thế chấp tài sản">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="collateral_id"
+                                       options="{'no_create': True}"/>
+                                <field name="name"/>
+                                <field name="date_pledge"/>
+                                <field name="pledge_target"/>
+                            </group>
+                            <group>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="secured_amount"/>
+                                <field name="advance_rate"/>
+                                <field name="base_contribution" readonly="1"/>
+                                <field name="state" readonly="1"/>
+                            </group>
+                        </group>
+                        <div class="alert alert-info small" role="alert">
+                            <i class="fa fa-info-circle"/>
+                            <b>Giá trị đem thế chấp</b> không vượt quá phần
+                            còn lại chưa thế chấp của tài sản — tính trên mọi
+                            HĐTD, không riêng HĐTD này.
+                            <b>Đóng góp base</b> = giá trị đem thế chấp ×
+                            tỷ lệ cho vay; đó mới là số được chia xuống các
+                            mục đích bên dưới.
+                        </div>
+                        <group>
+                            <group>
+                                <field name="amount_allocated" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="amount_unallocated" readonly="1"/>
+                                <field name="over_allocated" invisible="1"/>
+                            </group>
+                        </group>
+                        <div class="alert alert-warning small" role="alert"
+                             invisible="not amount_unallocated or state != 'active'">
+                            Còn phần <b>chưa phân bổ</b> — phần đó không làm
+                            tăng khả dụng của mục đích nào.
+                        </div>
+                        <div class="alert alert-danger small" role="alert"
+                             invisible="not over_allocated">
+                            Tổng phân bổ đang <b>vượt</b> đóng góp base, thường
+                            do định giá lại làm giá trị tài sản giảm sau khi đã
+                            chia. Sửa lại các dòng bên dưới.
+                        </div>
+                        <div class="alert alert-info small" role="alert"
+                             invisible="pledge_target != 'facility'">
+                            <i class="fa fa-info-circle"/>
+                            Cấp bảo đảm là <b>Facility</b> nên khi lưu, hệ
+                            thống <b>tự phân bổ toàn bộ đóng góp base</b> về
+                            mục đích đã chọn — không cần thêm dòng bên dưới.
+                            Muốn chia cho nhiều mục đích thì sửa lại các dòng
+                            này sau khi lưu.
+                        </div>
+                        <field name="allocation_ids"
+                               context="{'default_pledge_id': id}">
+                            <list editable="bottom">
+                                <field name="credit_contract_id"
+                                       column_invisible="1"/>
+                                <field name="facility_id" string="Mục đích"
+                                       options="{'no_create': True}"/>
+                                <field name="currency_id" column_invisible="1"/>
+                                <field name="amount" string="Số tiền phân bổ"
+                                       width="185px" sum="Σ"/>
+                                <field name="note"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== HĐTD: tab Phân bổ TSBĐ ===== -->
+    <record id="view_credit_contract_form_alloc" model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.alloc</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='facilities']" position="after">
+                <page string="Phân bổ TSBĐ" name="pledge_alloc">
+                    <div class="alert alert-info small" role="alert">
+                        <i class="fa fa-info-circle"/>
+                        Toàn bộ TSBĐ của HĐTD này chia xuống từng mục đích.
+                        Giá trị phân bổ là phần <b>đã nhân tỷ lệ cho vay</b> —
+                        tài sản 100 tỷ, tỷ lệ 70% thì chia tối đa 70 tỷ.
+                        Sửa ở đây hay ở form văn bản thế chấp đều được, cùng
+                        một bảng dữ liệu.
+                    </div>
+                    <field name="pledge_allocation_ids" nolabel="1">
+                        <list editable="bottom"
+                              decoration-muted="pledge_state == 'released'">
+                            <field name="collateral_id" readonly="1"/>
+                            <!-- PHẢI chọn được: đây là tab gom của cả
+                                 HĐTD, thêm dòng mới mà không chỉ ra văn bản
+                                 thế chấp nào thì pledge_id rỗng và Odoo chặn
+                                 ngay lúc lưu. Các cột còn lại ăn theo văn
+                                 bản này nên tự điền sau khi chọn. -->
+                            <field name="pledge_id" string="Số VB thế chấp"
+                                   options="{'no_create': True}"
+                                   domain="[('credit_contract_id', '=', parent.id)]"
+                                   optional="show"/>
+                            <field name="facility_id" string="Mục đích"
+                                   options="{'no_create': True}"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="secured_amount" string="Đem thế chấp"
+                                   width="185px" readonly="1" optional="show"/>
+                            <field name="advance_rate" string="Tỷ lệ CV (%)"
+                                   readonly="1" optional="show"/>
+                            <field name="amount" string="Giá trị phân bổ"
+                                   width="185px" sum="Σ"/>
+                            <field name="pledge_state" widget="badge"
+                                   readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Mục đích: tab TSBĐ thành CHỈ ĐỌC ===== -->
+    <record id="view_facility_form_alloc" model="ir.ui.view">
+        <field name="name">re.loan.facility.form.alloc</field>
+        <field name="model">re.loan.facility</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
+        <field name="arch" type="xml">
+            <!--
+              Thay hẳn nội dung tab: trước đây là bảng pledge sửa được,
+              tạo ra lối thứ hai để khai thế chấp — hai lối khai cùng một
+              thứ thì sớm muộn hai bên lệch số. Nay khai ở màn hình Tài
+              sản bảo đảm, ở đây chỉ xem.
+            -->
+            <xpath expr="//page[@name='pledge']" position="attributes">
+                <attribute name="string">TSBĐ đã phân bổ</attribute>
+            </xpath>
+            <xpath expr="//page[@name='pledge']/div" position="replace">
+                <div class="alert alert-info small" role="alert">
+                    <i class="fa fa-info-circle"/>
+                    Danh sách TSBĐ đang đỡ lưng cho mục đích này và giá trị
+                    phân bổ của từng tài sản. <b>Chỉ xem</b> — thế chấp khai
+                    ở màn hình <b>Tài sản bảo đảm</b>, chia giá trị ở tab
+                    <b>Phân bổ TSBĐ</b> của HĐTD.
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='pledge']/field[@name='pledge_ids']"
+                   position="replace">
+                <field name="pledge_allocation_ids" nolabel="1" readonly="1">
+                    <list decoration-muted="pledge_state == 'released'">
+                        <field name="pledge_id" string="Số VB thế chấp"/>
+                        <field name="collateral_id" string="Tài sản"/>
+                        <field name="date_pledge"/>
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="secured_amount" string="Giá trị đảm bảo"
+                               width="185px"/>
+                        <field name="advance_rate" string="Tỷ lệ CV (%)"/>
+                        <field name="amount" string="Giá trị phân bổ"
+                               width="185px" sum="Σ phân bổ"/>
+                        <field name="pledge_state" widget="badge"
+                               decoration-info="pledge_state == 'active'"
+                               decoration-muted="pledge_state == 'released'"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -148,11 +148,14 @@
                 <field name="exceeds_available" invisible="1"/>
                 <div class="alert alert-warning" role="alert"
                      invisible="not exceeds_available">
-                    ⚠ Số tiền KW <b>vượt Khả dụng thực tế</b> của hạn mức
-                    (theo borrowing base — TSBĐ hiện hữu chưa gánh đủ).
-                    NH nhiều khả năng chưa duyệt rút phần vượt. Tăng khả
-                    dụng: nghiệm thu thêm sản lượng với CĐT / bổ sung
-                    TSBĐ / trả bớt dư nợ.
+                    ⚠ Số tiền khế ước <b>vượt hạn mức khả dụng của mục
+                    đích</b> <b><field name="facility_id" readonly="1"
+                    nolabel="1" class="oe_inline"/></b> — tài sản bảo đảm
+                    đã phân bổ cho mục đích này chưa đỡ đủ.
+                    Ngân hàng nhiều khả năng chưa duyệt rút phần vượt.
+                    Muốn tăng khả dụng: phân bổ thêm TSĐB cho mục đích,
+                    nghiệm thu thêm sản lượng với chủ đầu tư, hoặc trả bớt
+                    dư nợ.
                 </div>
             </xpath>
         </field>

@@ -239,6 +239,18 @@ class ReLoanFacility(models.Model):
                 rec.amount_available = rec.amount_limit - rec.amount_used
 
     @api.constrains('amount_limit')
+    def _check_amount_limit_sane(self):
+        """Chặn cùng ngưỡng với HĐTD — xem chú thích ở re_loan_credit_contract."""
+        Contract = self.env['re.loan.credit.contract']
+        for rec in self:
+            if (rec.amount_limit or 0.0) >= Contract.AMOUNT_DISPLAY_LIMIT:
+                raise ValidationError(_(
+                    'Số tiền hạn mức đang là %(v)s đ — vượt ngưỡng 500.000 '
+                    'tỷ mà giao diện hiển thị chính xác được. Kiểm lại số '
+                    'chữ số rồi nhập lại.',
+                    v='{:,.0f}'.format(rec.amount_limit)))
+
+    @api.constrains('amount_limit')
     def _check_amount_limit(self):
         for rec in self:
             if rec.amount_limit < 0:

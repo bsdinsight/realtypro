@@ -21,6 +21,12 @@ class ReLoanCreditContract(models.Model):
         string='Tổng dư nợ đã dùng',
         compute='_compute_used_total',
         help='Σ đã sử dụng của các facility dưới HĐTD.')
+    pledge_allocation_ids = fields.One2many(
+        're.loan.pledge.allocation', 'credit_contract_id',
+        string='Phân bổ TSBĐ',
+        help='Ma trận Tài sản × Mục đích của cả HĐTD. Sửa ở đây hay ở '
+             'form văn bản thế chấp đều được — cùng một bảng dữ liệu.')
+
     amount_available_effective = fields.Monetary(
         string='Khả dụng thực tế (HĐTD)',
         compute='_compute_available_effective',

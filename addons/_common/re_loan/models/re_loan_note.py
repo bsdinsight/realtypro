@@ -35,7 +35,19 @@ class ReLoanNote(models.Model):
     # external: rút trong hạn mức ngân hàng
     facility_id = fields.Many2one(
         're.loan.facility', string='Hạn mức', ondelete='restrict',
-        tracking=True, help='Bắt buộc với khoản vay ngân hàng.')
+        tracking=True,
+        # Chỉ hạn mức thuộc HĐTD ĐANG HIỆU LỰC và CÒN THỜI HẠN. Domain
+        # đặt ở model chứ không ở từng view: KW được tạo từ nhiều chỗ
+        # (form, danh sách, wizard, import), khai ở view thì sót chỗ nào
+        # là chỗ đó lọt.
+        domain="[('credit_contract_id.state', '=', 'active'),"
+               " '|', ('credit_contract_id.date_end', '=', False),"
+               " ('credit_contract_id.date_end', '>=',"
+               " context_today().strftime('%Y-%m-%d'))]",
+        help='Bắt buộc với khoản vay ngân hàng.\n'
+             'Danh sách chỉ hiện hạn mức thuộc HĐTD đang HIỆU LỰC và CÒN '
+             'THỜI HẠN. Không thấy HĐTD cần tìm thì kiểm lại trạng thái '
+             'và ngày hết hạn của HĐTD đó.')
     facility_type = fields.Selection(
         related='facility_id.facility_type', store=True, readonly=True,
         string='Loại facility')
@@ -429,6 +441,35 @@ class ReLoanNote(models.Model):
     # ------------------------------------------------------------------
     # Constraints
     # ------------------------------------------------------------------
+    @api.constrains('facility_id')
+    def _check_contract_open(self):
+        """Không nhận nợ trên HĐTD chưa hiệu lực hoặc đã hết hạn.
+
+        Domain trên trường chỉ lọc danh sách chọn — nó không chặn được
+        import, gọi API, hay bản ghi chép lại từ KW cũ. Ràng buộc này
+        mới là chỗ chặn thật.
+
+        CỐ Ý chỉ kiểm khi `facility_id` được ghi. KW đã ký hợp lệ mà sau
+        đó HĐTD hết hạn thì vẫn phải sửa được (ghi nhận trả nợ, tất
+        toán) — chặn cả những thao tác đó là khoá luôn phần đóng KW.
+        """
+        today = fields.Date.context_today(self)
+        for rec in self:
+            cc = rec.facility_id.credit_contract_id
+            if not cc:
+                continue
+            if cc.state != 'active':
+                raise ValidationError(_(
+                    'HĐTD "%(c)s" đang ở trạng thái "%(s)s" — chỉ nhận nợ '
+                    'được trên HĐTD đang Hiệu lực.',
+                    c=cc.display_name,
+                    s=dict(cc._fields['state'].selection).get(cc.state)))
+            if cc.date_end and cc.date_end < today:
+                raise ValidationError(_(
+                    'HĐTD "%(c)s" đã hết hạn ngày %(d)s — không nhận nợ '
+                    'thêm được. Cần ký phụ lục gia hạn, hoặc dùng HĐTD '
+                    'khác.', c=cc.display_name, d=cc.date_end))
+
     @api.constrains('amount', 'state')
     def _check_amount(self):
         """KW state='draft' cho phép amount=0 (user mới tạo, chưa

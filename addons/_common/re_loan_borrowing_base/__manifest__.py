@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.1.32.9',
+    'version': '19.0.1.32.15',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '
@@ -55,6 +55,7 @@ HĐTD/facility KHÔNG có pledge nào → bỏ ràng buộc base tương ứng
         # file kia parse trước sẽ đổ (bẫy đã dính khi tách §8 ra riêng).
         'views/re_loan_note_checklist_views.xml',
         'views/re_loan_borrowing_views.xml',
+        'views/re_loan_pledge_allocation_views.xml',
         'views/re_loan_facility_reallocate_views.xml',
         'views/re_loan_dashboard_views.xml',
         'views/rp_owner_ipc_pledge_views.xml',

@@ -67,6 +67,14 @@
                         </group>
                         <group>
                             <field name="amount_total"/>
+                            <!-- Bản sao VÔ ĐIỀU KIỆN của currency_id. Trường hiển thị bên
+                         dưới bị khoá theo nhóm Đa tiền tệ; người dùng không ở
+                         nhóm đó thì currency_id KHÔNG có trong form, widget
+                         monetary mất tiền tệ và rơi về định dạng float mặc
+                         định — 2 số lẻ, dù VND khai 0 số lẻ. Đó là lý do
+                         "5.500.000.000.000" hiện ra thành
+                         "5.500.000.000.000,01". -->
+                    <field name="currency_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="sign_date"/>
                             <field name="date_start"/>
@@ -99,7 +107,7 @@
                         của pool).
                     </div>
                     <notebook>
-                        <page string="Hạn mức (Facility)" name="facilities">
+                        <page string="Mục đích" name="facilities">
                             <button name="action_add_facility"
                                     type="object" class="btn-primary"
                                     icon="fa-plus"

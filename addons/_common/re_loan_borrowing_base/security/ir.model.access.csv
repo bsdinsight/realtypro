@@ -13,3 +13,5 @@ access_re_loan_weekly_review_user,re.loan.weekly.review.user,model_re_loan_weekl
 access_re_loan_weekly_review_manager,re.loan.weekly.review.manager,model_re_loan_weekly_review,re_loan.group_loan_manager,1,1,1,1
 access_re_loan_weekly_exception_user,re.loan.weekly.exception.user,model_re_loan_weekly_exception,re_loan.group_loan_user,1,1,1,0
 access_re_loan_weekly_exception_manager,re.loan.weekly.exception.manager,model_re_loan_weekly_exception,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_pledge_allocation_user,re.loan.pledge.allocation.user,model_re_loan_pledge_allocation,re_loan.group_loan_user,1,0,0,0
+access_re_loan_pledge_allocation_manager,re.loan.pledge.allocation.manager,model_re_loan_pledge_allocation,re_loan.group_loan_manager,1,1,1,1

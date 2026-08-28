@@ -43,3 +43,5 @@ access_re_loan_collateral_revalue_wizard_user,re.loan.collateral.revalue.wizard 
 access_re_loan_facility_reallocate_wizard,re.loan.facility.reallocate.wizard,model_re_loan_facility_reallocate_wizard,group_loan_manager,1,1,1,1
 access_re_loan_facility_reallocate_line,re.loan.facility.reallocate.line,model_re_loan_facility_reallocate_line,group_loan_manager,1,1,1,1
 access_re_loan_revalue_facility_line,re.loan.collateral.revalue.facility.line,model_re_loan_collateral_revalue_facility_line,group_loan_user,1,1,1,1
+access_re_loan_rate_delta_line_user,re.loan.rate.delta.line user,model_re_loan_rate_delta_line,group_loan_user,1,0,0,0
+access_re_loan_rate_delta_line_manager,re.loan.rate.delta.line manager,model_re_loan_rate_delta_line,group_loan_manager,1,1,1,1

@@ -425,6 +425,8 @@
                                             <field name="new_interest_rate"
                                                    invisible="amendment_type != 'rate'"
                                                    required="amendment_type == 'rate'"/>
+                                            <field name="is_retroactive"
+                                                   invisible="amendment_type != 'rate'"/>
                                             <field name="new_repayment_plan"
                                                    invisible="amendment_type != 'schedule'"
                                                    required="amendment_type == 'schedule'"/>
@@ -440,6 +442,104 @@
                                         <field name="value_old"/>
                                         <field name="value_new"/>
                                     </group>
+
+                                    <!--
+                                      Chênh lệch hồi tố. Chỉ hiện với phụ
+                                      lục lãi suất đã đánh dấu hồi tố —
+                                      với phụ lục áp dụng từ ngày hiệu lực
+                                      trở đi thì không có kỳ nào phải tính
+                                      lại, bày ra chỉ gây phân vân.
+                                    -->
+                                    <div invisible="amendment_type != 'rate' or not is_retroactive">
+                                        <div class="btn-group mb-2" role="group">
+                                            <button name="action_compute_delta"
+                                                    type="object"
+                                                    class="btn btn-primary"
+                                                    icon="fa-calculator"
+                                                    string="Tính chênh lệch"
+                                                    invisible="delta_state == 'approved'"/>
+                                            <button name="action_approve_delta"
+                                                    type="object"
+                                                    class="btn btn-secondary"
+                                                    icon="fa-check"
+                                                    string="Duyệt chênh lệch"
+                                                    invisible="delta_state != 'computed'"/>
+                                            <button name="action_reset_delta"
+                                                    type="object"
+                                                    class="btn btn-secondary"
+                                                    string="Huỷ duyệt"
+                                                    invisible="delta_state != 'approved'"/>
+                                        </div>
+                                        <group>
+                                            <group string="Chênh lệch hồi tố">
+                                                <field name="delta_state"/>
+                                                <field name="delta_count"/>
+                                                <field name="delta_total"/>
+                                                <field name="delta_skipped"
+                                                       invisible="delta_skipped == 0"/>
+                                            </group>
+                                            <group string="Vết kiểm toán">
+                                                <field name="delta_computed_uid"
+                                                       invisible="not delta_computed_uid"/>
+                                                <field name="delta_computed_on"
+                                                       invisible="not delta_computed_on"/>
+                                                <field name="delta_approved_uid"
+                                                       invisible="not delta_approved_uid"/>
+                                                <field name="delta_approved_on"
+                                                       invisible="not delta_approved_on"/>
+                                            </group>
+                                        </group>
+                                        <field name="delta_line_ids" nolabel="1"
+                                               readonly="1"
+                                               invisible="delta_state == 'none'">
+                                            <list decoration-muted="skipped"
+                                                  decoration-danger="delta_amount &gt; 0"
+                                                  decoration-success="delta_amount &lt; 0">
+                                                <field name="period_no"/>
+                                                <field name="date_from"/>
+                                                <field name="date_to"/>
+                                                <field name="period_state"/>
+                                                <field name="days_old_rate"
+                                                       optional="show"/>
+                                                <field name="days_new_rate"
+                                                       optional="show"/>
+                                                <field name="rate_old"/>
+                                                <field name="rate_new"/>
+                                                <field name="currency_id"
+                                                       column_invisible="1"/>
+                                                <field name="principal_base"
+                                                       width="185px"
+                                                       optional="hide"/>
+                                                <field name="interest_old"
+                                                       sum="Σ" width="185px"/>
+                                                <field name="interest_new"
+                                                       sum="Σ" width="185px"/>
+                                                <field name="delta_amount"
+                                                       sum="Σ" width="200px"/>
+                                                <field name="skipped"
+                                                       optional="hide"/>
+                                                <field name="note"
+                                                       optional="hide"/>
+                                            </list>
+                                        </field>
+                                        <div class="alert alert-info small"
+                                             role="alert"
+                                             invisible="delta_state == 'none'">
+                                            Bảng này <b>chỉ tính và ghi vết</b> —
+                                            không sửa lịch lãi, không sinh bút
+                                            toán, không cấn trừ. Kỳ đã thanh
+                                            toán thường đã khoá sổ, và việc đưa
+                                            phần lệch vào đâu là quyết định
+                                            chính sách, không phải hệ quả của
+                                            phép trừ.
+                                            <br/>
+                                            Kỳ <b>vắt ngang ngày hiệu lực</b>
+                                            được chẻ hai đoạn: phần trước giữ
+                                            lãi suất cũ, phần sau tính lãi suất
+                                            mới. Kỳ có số lãi <b>sửa tay</b>
+                                            giữ nguyên và để Δ bằng 0.
+                                        </div>
+                                    </div>
                                 </form>
                             </field>
                         </page>

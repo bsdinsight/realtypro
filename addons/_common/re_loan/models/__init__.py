@@ -7,6 +7,7 @@ from . import re_loan_note_disbursement
 from . import re_loan_note_repayment
 from . import re_loan_note_interest_line
 from . import re_loan_note_amendment
+from . import re_loan_rate_delta
 from . import re_loan_collateral
 from . import re_loan_collateral_valuation
 from . import re_loan_collateral_pledge

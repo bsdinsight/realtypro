@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      ===== Dự thầu — app root cho phía NHÀ THẦU =====
+
+      FILE NÀY PHẢI NẠP ĐẦU TIÊN. Menu gốc và ba nhóm nằm riêng ra đây vì
+      mọi file view khác đều gắn menu con vào chúng; Odoo giải xmlid ngay
+      lúc đọc, nên cha phải có trước con. (Trước đây cả cụm nằm chung một
+      file nạp CUỐI — chạy được trên máy đã cài sẵn, nhưng cài mới từ đầu
+      sẽ chết vì con tìm cha chưa tồn tại.)
+
+      TÊN "DỰ THẦU", KHÔNG PHẢI "NHÀ THẦU": trong Realty Project chữ
+      "nhà thầu" đã có nghĩa ngược lại — `rp_contractor` dùng nó cho
+      THẦU PHỤ MÀ TA THUÊ (HĐ nhà thầu, Hồ sơ năng lực nhà thầu, Công nợ
+      nhà thầu). Đặt trùng thì người dùng mở ra sẽ tưởng là danh sách
+      thầu phụ, tức là hiểu ngược hẳn chiều nghiệp vụ.
+
+      ĐỂ Ở ROOT, KHÔNG NẰM DƯỚI REALTY PROJECT. Nó từng là menu con ở
+      đó, nhưng sau khi Dự án / Gói thầu chuyển hẳn về sổ của nhà thầu
+      thì cấp menu không còn phản ánh cấp dữ liệu nào nữa: ngoài nút
+      "Chuyển sang dự án thi công" (một lần một gói, sau khi trúng), cụm
+      này không chạm vào bảng nào của bên mời thầu. Thêm nữa đây là việc
+      của phòng đấu thầu — làm TRƯỚC khi dự án tồn tại, và không bao giờ
+      mở tới nghiệm thu hay thanh toán.
+
+      LƯU Ý: `rp_bid` VẪN depends `rp_estimate` / `rp_progress`, nên root
+      menu chỉ là chuyện giao diện — chưa cài riêng cho nhà thầu thuần
+      được. Muốn tách bán riêng thì phải đẩy `action_convert_to_project`
+      sang một module cầu nối.
+
+      PHẠM VI CỤM NÀY DỪNG Ở TRƯỚC HỢP ĐỒNG. Sau khi trúng thầu và ký,
+      mọi việc đi tiếp bằng các menu đã có (Hợp đồng, Xây dựng, Tài
+      chính). Nhét lại phần thi công vào đây sẽ tạo hai cửa vào cùng một
+      thứ, và sớm muộn hai cửa sẽ hiện hai con số khác nhau.
+    -->
+    <menuitem id="menu_bid_root"
+              name="Dự thầu"
+              web_icon="rp_bid,static/description/icon.png"
+              sequence="21"
+              groups="re_base.group_re_user"/>
+
+    <!--
+      BA NHÓM = BA GIAI ĐOẠN CỦA MỘT LẦN ĐI THẦU.
+
+        ① Hồ sơ thầu    thứ NHẬN VÀO   — mời ai, gói nào, hồ sơ nào
+        ② Bóc tách & Làm giá  việc TỰ LÀM — hạng mục → BoQ → bóc khối
+                              lượng → chi phí → giá → bảng chào
+        ③ Thư viện giá  dữ liệu NỀN     — dùng lại cho mọi gói
+
+      Tên nhóm đặt theo THỨ CHỨA BÊN TRONG, không theo thời điểm. "Chuẩn
+      bị" nghe thì gọn nhưng sáu tháng sau không ai đoán được Bảng giá
+      chào nằm ở "Chuẩn bị" hay ở "Báo giá" — tên mô tả giai đoạn chỉ có
+      nghĩa với người đã thuộc quy trình.
+    -->
+    <menuitem id="menu_bid_grp_intake"
+              name="Hồ sơ thầu"
+              parent="menu_bid_root"
+              sequence="10"/>
+
+    <menuitem id="menu_bid_grp_boq"
+              name="Bóc tách &amp; Làm giá"
+              parent="menu_bid_root"
+              sequence="20"/>
+
+    <menuitem id="menu_bid_grp_lib"
+              name="Thư viện giá"
+              parent="menu_bid_root"
+              sequence="30"/>
+
+</odoo>

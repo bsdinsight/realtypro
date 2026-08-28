@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ Hạng mục nhà thầu ============ -->
+    <record id="view_rp_bid_structure_form" model="ir.ui.view">
+        <field name="name">rp.bid.structure.form</field>
+        <field name="model">rp.bid.structure</field>
+        <field name="arch" type="xml">
+            <form string="Hạng mục nhà thầu">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Tên hạng mục"/></h1>
+                        <h3><field name="code" placeholder="Mã"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="bid_id" options="{'no_create': True}"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group string="Chi phí">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="cost_material"/>
+                            <field name="cost_labor"/>
+                            <field name="cost_machine"/>
+                            <field name="direct_cost"
+                                   class="oe_subtotal_footer_separator"/>
+                            <field name="client_supplied_cost"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="BoQ nhà thầu" name="boq">
+                            <field name="line_ids" nolabel="1">
+                                <!-- Mui ten cuoi dong mo tab Boc tach khoi
+                                     luong / Chi phi — xem chu thich cung
+                                     kieu o `rp_bid_views.xml`. -->
+                                <list editable="bottom" open_form_view="True">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="norm_set_id" column_invisible="1"/>
+                                    <field name="norm_id" optional="show"
+                                           options="{'no_create': True}"
+                                           readonly="not norm_set_id"
+                                           domain="[('set_id', '=', norm_set_id), ('is_leaf', '=', True)]"/>
+                                    <field name="norm_code"/>
+                                    <field name="description"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                    <field name="takeoff_count" optional="hide"/>
+                                    <field name="quantity_matches"
+                                           optional="show" widget="boolean_toggle"
+                                           readonly="1"/>
+                                    <field name="supplied_by"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="material_price" width="185px"/>
+                                    <field name="labor_price" width="185px"/>
+                                    <field name="machine_price" width="185px"/>
+                                    <field name="subtotal" sum="Σ" width="200px"/>
+                                    <field name="client_supplied_amount"
+                                           sum="Σ" width="185px" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_structure_list" model="ir.ui.view">
+        <field name="name">rp.bid.structure.list</field>
+        <field name="model">rp.bid.structure</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="not allocation_done">
+                                <field name="code"/>
+                <field name="name"/>
+                <field name="bid_id"/>
+                <field name="allocation_mode" string="Đưa vào bảng chào"
+                       optional="show"/>
+                <field name="item_id" optional="show"
+                       readonly="allocation_mode != 'item'"/>
+                <field name="allocation_done" column_invisible="1"/>
+                <field name="line_count"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="direct_cost" sum="Σ" width="185px"/>
+                <field name="client_supplied_cost" sum="Σ" width="185px"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_structure_search" model="ir.ui.view">
+        <field name="name">rp.bid.structure.search</field>
+        <field name="model">rp.bid.structure</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="bid_id"/>
+                <field name="package_id"/>
+                <field name="item_id"/>
+                <filter name="f_no_item" string="Chưa xử lý phân bổ"
+                        domain="[('allocation_done', '=', False)]"/>
+                <group>
+                    <filter name="g_alloc" string="Cách đưa vào bảng chào"
+                            context="{'group_by': 'allocation_mode'}"/>
+                </group>
+                <separator/>
+                <filter name="f_has_boq" string="Có BoQ"
+                        domain="[('line_count', '&gt;', 0)]"/>
+                <group>
+                    <filter name="g_package" string="Gói thầu"
+                            context="{'group_by': 'package_id'}"/>
+                    <filter name="g_bid" string="Hồ sơ dự thầu"
+                            context="{'group_by': 'bid_id'}"/>
+                </group>
+                <!-- Trục panel là DANH MỤC CÓ BIÊN: dự án (ít, ổn định) và
+                     trạng thái hồ sơ (6 giá trị). Lấy hồ sơ dự thầu làm trục
+                     thì panel dài thêm mãi theo số hồ sơ đã lập — bài học
+                     đã ghi từ các màn hình trước. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                    <field name="bid_state" string="Trạng thái hồ sơ"
+                           icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_structure" model="ir.actions.act_window">
+        <field name="name">Hạng mục nhà thầu</field>
+        <field name="res_model">rp.bid.structure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============ Dòng BoQ nhà thầu ============ -->
+    <record id="view_rp_bid_boq_line_form" model="ir.ui.view">
+        <field name="name">rp.bid.boq.line.form</field>
+        <field name="model">rp.bid.boq.line</field>
+        <field name="arch" type="xml">
+            <form string="Dòng BoQ nhà thầu">
+                <header>
+                    <button name="action_pull_takeoff" type="object"
+                            string="Lấy KL từ bóc tách" class="btn-primary"
+                            invisible="takeoff_count == 0"/>
+                    <button name="action_pull_norm" type="object"
+                            string="Lấy chi phí từ định mức"
+                            class="btn-secondary"
+                            invisible="not norm_id or norm_pulled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Công việc">
+                            <field name="bid_structure_id"
+                                   options="{'no_create': True}"/>
+                            <field name="norm_set_id" invisible="1"/>
+                            <field name="norm_pulled" invisible="1"/>
+                            <field name="norm_id"
+                                   options="{'no_create': True}"
+                                   readonly="not norm_set_id"
+                                   domain="[('set_id', '=', norm_set_id), ('is_leaf', '=', True)]"/>
+                            <field name="norm_line_count"
+                                   invisible="not norm_id"/>
+                            <field name="norm_code"/>
+                            <field name="description"/>
+                            <field name="uom_id"/>
+                            <field name="supplied_by"/>
+                        </group>
+                        <group string="Khối lượng &amp; đơn giá">
+                            <field name="quantity"/>
+                            <field name="takeoff_quantity"/>
+                            <field name="quantity_matches"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="price_from_resources"/>
+                            <field name="material_price"
+                                   readonly="price_from_resources"/>
+                            <field name="labor_price"
+                                   readonly="price_from_resources"/>
+                            <field name="machine_price"
+                                   readonly="price_from_resources"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info small" role="alert"
+                         invisible="norm_set_id">
+                        Hồ sơ chưa chọn <b>Bộ định mức áp dụng</b> nên ô
+                        <b>Định mức</b> đang khoá. Mở hồ sơ dự thầu, chọn bộ
+                        định mức ở nhóm <b>Thư viện áp dụng</b> — sau đó
+                        chọn mã hiệu ở đây rồi bấm <b>Lấy chi phí từ định
+                        mức</b> là hao phí và đơn giá tự bung ra.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="quantity_matches">
+                        Khối lượng đang dùng <b>không khớp</b> tổng các dòng
+                        bóc tách bên dưới. Hoặc bấm <b>Lấy KL từ bóc tách</b>,
+                        hoặc ghi rõ vì sao cố ý để lệch.
+                    </div>
+                    <div class="alert alert-success small" role="alert"
+                         invisible="not price_from_resources">
+                        Ba đơn giá bên trên <b>được tính từ tab Chi phí</b>
+                        (Σ chi phí × giá, cộng thêm phần khai theo %), nên
+                        không nhập tay. Muốn đổi giá thì sửa ở
+                        <b>Bảng giá gói thầu</b> — giá dự thầu sẽ đổi theo.
+                    </div>
+                    <div class="alert alert-info small" role="alert"
+                         invisible="supplied_by != 'client'">
+                        Vật tư do <b>bên mời thầu cấp</b>: phần vật liệu của
+                        dòng này không vào giá chào; nhân công và máy vẫn tính
+                        vì ta vẫn phải thi công.
+                    </div>
+                    <group>
+                        <group string="Thành tiền">
+                            <field name="material_amount"/>
+                            <field name="labor_amount"/>
+                            <field name="machine_amount"/>
+                            <field name="subtotal"
+                                   class="oe_subtotal_footer_separator"/>
+                            <field name="client_supplied_amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bóc tách khối lượng" name="takeoff">
+                            <field name="takeoff_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="bid_id" column_invisible="1"/>
+                                    <field name="element_id"
+                                           options="{'no_quick_create': True}"/>
+                                    <field name="name"/>
+                                    <field name="count"/>
+                                    <field name="length"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                    <field name="factor"/>
+                                    <field name="quantity" sum="Σ"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Cột <b>Cấu kiện</b> chỉ ra cọc/panel mà dòng
+                                này đo — nhiều đầu việc cùng trỏ về một cấu
+                                kiện, nhờ vậy tra ngược được "một cây cọc ngốn
+                                hết những gì". Mã cấu kiện tự sinh theo tiền tố
+                                khai ở hồ sơ.
+                                <br/>
+                                Dòng <b>trừ</b> khối lượng (trừ thể tích ống
+                                siêu âm, trừ con kê…) nhập <b>Số bộ phận âm</b>.
+                                Cột <b>Hệ số</b> để riêng cho π, hệ số hao hụt,
+                                hệ số quy đổi — nhân sẵn vào kích thước thì sau
+                                này không ai đọc lại được vì sao ra con số đó.
+                            </div>
+                        </page>
+                        <page string="Chi phí" name="resources">
+                            <field name="resource_line_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="resource_id"/>
+                                    <field name="resource_type"/>
+                                    <field name="categ_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="norm_qty"/>
+                                    <field name="is_percent"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="unit_price" width="185px"/>
+                                    <field name="amount" sum="Σ" width="185px"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Chi phí cho <b>một đơn vị</b> khối lượng của
+                                dòng BoQ. Dòng khai theo <b>%</b> (vật liệu
+                                khác, máy khác) giữ nguyên là % — không quy
+                                đổi sẵn, vì quy đổi là mất dấu vết.
+                            </div>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_boq_line_list" model="ir.ui.view">
+        <field name="name">rp.bid.boq.line.list</field>
+        <field name="model">rp.bid.boq.line</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="not quantity_matches">
+                <field name="bid_structure_id" optional="show"/>
+                <field name="norm_id" optional="hide"/>
+                <field name="norm_code"/>
+                <field name="description"/>
+                <field name="uom_id"/>
+                <field name="quantity"/>
+                <field name="quantity_matches" optional="hide"/>
+                <field name="resource_count" string="Số dòng chi phí"
+                       optional="show"/>
+                <field name="price_from_resources" string="ĐG từ chi phí"
+                       optional="hide"/>
+                <field name="supplied_by"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="material_price" width="185px" optional="show"/>
+                <field name="labor_price" width="185px" optional="show"/>
+                <field name="machine_price" width="185px" optional="show"/>
+                <field name="subtotal" sum="Σ" width="200px"/>
+                <field name="client_supplied_amount" sum="Σ" width="185px"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_boq_line_search" model="ir.ui.view">
+        <field name="name">rp.bid.boq.line.search</field>
+        <field name="model">rp.bid.boq.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="description"/>
+                <field name="norm_code"/>
+                <field name="bid_structure_id"/>
+                <field name="bid_id"/>
+                <filter name="f_client" string="Bên mời thầu cấp vật tư"
+                        domain="[('supplied_by', '=', 'client')]"/>
+                <filter name="f_mismatch" string="Lệch bóc tách"
+                        domain="[('quantity_matches', '=', False)]"/>
+                <field name="package_id"/>
+                <filter name="f_no_takeoff" string="Chưa bóc tách"
+                        domain="[('takeoff_count', '=', 0)]"/>
+                <filter name="f_no_resource" string="Chưa có chi phí"
+                        domain="[('resource_count', '=', 0)]"/>
+                <group>
+                    <filter name="group_structure" string="Hạng mục nhà thầu"
+                            context="{'group_by': 'bid_structure_id'}"/>
+                    <filter name="g_supplied" string="Ai cấp vật tư"
+                            context="{'group_by': 'supplied_by'}"/>
+                    <filter name="g_uom" string="Đơn vị tính"
+                            context="{'group_by': 'uom_id'}"/>
+                    <filter name="g_package" string="Gói thầu"
+                            context="{'group_by': 'package_id'}"/>
+                    <filter name="g_bid" string="Hồ sơ dự thầu"
+                            context="{'group_by': 'bid_id'}"/>
+                </group>
+                <!-- Trục lọc theo đúng đường đi của người làm giá:
+                     Dự án → Gói thầu → Hạng mục, rồi tới tài nguyên.
+                     Ba trục tài nguyên lấy từ tầng chi phí, không phải
+                     từ một ô "loại vật tư" trên dòng — một đầu việc dùng
+                     nhiều thứ cùng lúc, ép một ô là lọc ra thiếu. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                    <field name="bid_structure_id" string="Hạng mục"
+                           icon="fa-sitemap" enable_counters="1"/>
+                    <field name="material_categ_ids" string="Nhóm vật tư"
+                           icon="fa-cubes" select="multi" enable_counters="1"/>
+                    <field name="labor_categ_ids" string="Nhóm nhân công"
+                           icon="fa-users" select="multi" enable_counters="1"/>
+                    <field name="machine_categ_ids" string="Nhóm thiết bị"
+                           icon="fa-truck" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_boq_line" model="ir.actions.act_window">
+        <field name="name">BoQ nhà thầu</field>
+        <field name="res_model">rp.bid.boq.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

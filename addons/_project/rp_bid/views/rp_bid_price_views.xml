@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_bid_price_list" model="ir.ui.view">
+        <field name="name">rp.bid.price.list</field>
+        <field name="model">rp.bid.price</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" sample="1"
+                  decoration-danger="price_conflict"
+                  decoration-warning="variance_pct &gt; 10"
+                  decoration-success="variance_pct &lt; -10">
+                <field name="bid_id" optional="hide"/>
+                <field name="package_id" optional="hide"/>
+                <field name="resource_id"/>
+                <field name="resource_type"/>
+                <field name="categ_id" optional="show"/>
+                <field name="uom_id"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="price" width="185px"/>
+                <field name="library_price" width="185px" readonly="1"/>
+                <field name="variance" width="185px" readonly="1"
+                       optional="show"/>
+                <field name="variance_pct" readonly="1" optional="show"/>
+                <field name="source"/>
+                <field name="line_count" readonly="1" optional="show"/>
+                <field name="hp_levels" string="Mức giá trong chi phí"
+                       readonly="1" optional="hide"/>
+                <field name="hp_min" string="HP thấp nhất" width="185px"
+                       readonly="1" optional="hide"/>
+                <field name="hp_max" string="HP cao nhất" width="185px"
+                       readonly="1" optional="hide"/>
+                <field name="price_conflict" string="Lệch giá" readonly="1"
+                       optional="show"/>
+                <field name="note" optional="hide"/>
+                <button name="action_apply" type="object" icon="fa-arrow-down"
+                        title="Áp giá này xuống các dòng chi phí"/>
+                <button name="action_take_library_price" type="object"
+                        icon="fa-book" title="Lấy giá thư viện công ty"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_price_search" model="ir.ui.view">
+        <field name="name">rp.bid.price.search</field>
+        <field name="model">rp.bid.price</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="resource_id"/>
+                <field name="categ_id"/>
+                <field name="bid_id"/>
+                <filter name="f_over" string="Cao hơn thư viện &gt;10%"
+                        domain="[('variance_pct', '&gt;', 10)]"/>
+                <filter name="f_under" string="Thấp hơn thư viện &gt;10%"
+                        domain="[('variance_pct', '&lt;', -10)]"/>
+                <filter name="f_nolib" string="Thư viện chưa có giá"
+                        domain="[('library_price', '=', 0)]"/>
+                <group>
+                    <filter name="g_type" string="Loại"
+                            context="{'group_by': 'resource_type'}"/>
+                    <filter name="g_cat" string="Nhóm"
+                            context="{'group_by': 'categ_id'}"/>
+                    <filter name="g_src" string="Nguồn giá"
+                            context="{'group_by': 'source'}"/>
+                </group>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                    <field name="resource_type" string="Loại"
+                           icon="fa-tags" enable_counters="1"/>
+                    <field name="categ_id" string="Nhóm"
+                           icon="fa-cubes" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_price" model="ir.actions.act_window">
+        <field name="name">Bảng giá theo gói thầu</field>
+        <field name="res_model">rp.bid.price</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có bảng giá nào</p>
+            <p>Mở hồ sơ dự thầu và bấm <b>Dựng bảng giá</b>. Giá ở đây chỉ
+               áp dụng cho <b>đúng gói thầu đó</b> — cùng một loại thép, gói
+               này 16.000 đ, gói kia 16.500 đ, và thư viện công ty vẫn giữ
+               nguyên 15.000 đ để làm thước đo.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_bid_price_bid"
+              name="Bảng giá theo gói thầu"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_price"
+              sequence="50"/>
+
+    <menuitem id="menu_bid_lib_resource"
+              name="Danh mục Item"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_resource"
+              sequence="10"/>
+    <menuitem id="menu_bid_lib_price_line"
+              name="Giá Item (toàn kho)"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_price_line"
+              sequence="20"/>
+    <menuitem id="menu_bid_lib_publication"
+              name="Công bố giá"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_price_publication"
+              sequence="30"/>
+    <menuitem id="menu_bid_lib_norm"
+              name="Định mức"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_norm"
+              sequence="40"/>
+    <menuitem id="menu_bid_lib_unit_price"
+              name="Đơn giá tổng hợp"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_unit_price"
+              sequence="50"/>
+    <menuitem id="menu_bid_lib_categ"
+              name="Nhóm Item"
+              parent="menu_bid_grp_lib"
+              action="rp_cost_library.action_rp_resource_category"
+              sequence="60"/>
+
+</odoo>

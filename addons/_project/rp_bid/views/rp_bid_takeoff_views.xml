@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      ===== Bóc tách khối lượng — màn hình phẳng =====
+
+      Trước đây `rp.bid.takeoff` KHÔNG có view nào: nó chỉ tồn tại dưới
+      dạng <list> nhúng trong form Dòng BoQ và form Cấu kiện. Hệ quả là
+      nút "Dòng bóc tách" trên Cấu kiện mở ra view Odoo tự sinh — đổ hết
+      field ra, không thứ tự.
+
+      Nhưng lý do chính phải có màn hình phẳng không phải để nút đó đẹp
+      hơn. Bóc tách là BẢNG NỐI giữa BoQ và Cấu kiện, nên mọi câu hỏi cắt
+      ngang chỉ hỏi được ở đây:
+
+        · dòng nào chưa gắn cấu kiện          (31/302 trong hồ sơ demo)
+        · toàn bộ dòng TRỪ, soát xem trừ đúng chưa
+        · pivot Cấu kiện × Đầu việc — cách duy nhất thấy một cấu kiện
+          bị sót đầu việc, với 28 cấu kiện × 100 dòng BoQ
+    -->
+    <record id="view_rp_bid_takeoff_list" model="ir.ui.view">
+        <field name="name">rp.bid.takeoff.list</field>
+        <field name="model">rp.bid.takeoff</field>
+        <field name="arch" type="xml">
+            <list sample="1" decoration-danger="quantity &lt; 0"
+                  decoration-muted="not element_id">
+                <field name="bid_id" optional="hide"/>
+                <field name="bid_structure_id" string="Hạng mục"/>
+                <field name="line_id" string="Đầu việc"/>
+                <field name="element_id" string="Cấu kiện"
+                       options="{'no_quick_create': True}"/>
+                <field name="name" string="Diễn giải"/>
+                <field name="count" optional="show"/>
+                <field name="length" optional="show"/>
+                <field name="width" optional="show"/>
+                <field name="height" optional="show"/>
+                <field name="factor" optional="show"/>
+                <!--
+                  Có Σ vì màn hình này gần như luôn được LỌC hoặc NHÓM về
+                  một đầu việc trước khi đọc, và khi đó tổng nhóm là con
+                  số cần. Tổng toàn bảng thì trộn m³ với cái với 100m —
+                  nên cột ĐVT để ngay cạnh, nhìn là biết đang trộn.
+                -->
+                <field name="quantity" sum="Σ"/>
+                <field name="uom_id" string="ĐVT"/>
+                <field name="norm_code" optional="hide"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_takeoff_form" model="ir.ui.view">
+        <field name="name">rp.bid.takeoff.form</field>
+        <field name="model">rp.bid.takeoff</field>
+        <field name="arch" type="xml">
+            <form string="Dòng bóc tách">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Cọc đại trà Ca / Trừ thể tích ống siêu âm D60"/></h1>
+                    </div>
+                    <group>
+                        <group string="Thuộc về">
+                            <field name="line_id"
+                                   options="{'no_create': True}"/>
+                            <field name="bid_structure_id" readonly="1"/>
+                            <field name="bid_id" readonly="1"/>
+                            <field name="element_id"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+                        <group string="Phép tính khối lượng">
+                            <field name="count"/>
+                            <field name="length"/>
+                            <field name="width"/>
+                            <field name="height"/>
+                            <field name="factor"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info small" role="alert">
+                        Khối lượng = số bộ phận × dài × rộng × cao × hệ số.
+                        <b>Chiều nào bỏ trống thì bỏ qua</b>, nên nhập được
+                        cả khối lượng theo mét dài hay theo cái. Dòng trừ để
+                        <b>số âm</b> ở "Số bộ phận" hoặc "Hệ số" — đừng trừ
+                        ngoài giấy rồi gõ kết quả vào.
+                    </div>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_takeoff_pivot" model="ir.ui.view">
+        <field name="name">rp.bid.takeoff.pivot</field>
+        <field name="model">rp.bid.takeoff</field>
+        <field name="arch" type="xml">
+            <!--
+              Cấu kiện × Đầu việc, ô là khối lượng. Ô TRỐNG là thứ đáng
+              đọc nhất: một panel có đào, có đổ bê tông, mà trống ô "bơm
+              vữa lấp ống siêu âm" thì hoặc bóc sót, hoặc đúng thiết kế —
+              đằng nào cũng phải biết.
+            -->
+            <pivot string="Cấu kiện × Đầu việc">
+                <field name="element_id" type="row"/>
+                <field name="line_id" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_takeoff_search" model="ir.ui.view">
+        <field name="name">rp.bid.takeoff.search</field>
+        <field name="model">rp.bid.takeoff</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Diễn giải"/>
+                <field name="line_id" string="Đầu việc"/>
+                <field name="element_id" string="Cấu kiện"/>
+                <field name="norm_code"/>
+                <filter name="f_no_element" string="Chưa gắn cấu kiện"
+                        domain="[('element_id', '=', False)]"/>
+                <filter name="f_minus" string="Dòng trừ (khối lượng âm)"
+                        domain="[('quantity', '&lt;', 0)]"/>
+                <group>
+                    <filter name="g_struct" string="Hạng mục"
+                            context="{'group_by': 'bid_structure_id'}"/>
+                    <filter name="g_line" string="Đầu việc"
+                            context="{'group_by': 'line_id'}"/>
+                    <filter name="g_element" string="Cấu kiện"
+                            context="{'group_by': 'element_id'}"/>
+                </group>
+                <!--
+                  Trục panel chỉ nhận danh mục CÓ BIÊN: 3 dự án, 6 gói,
+                  13 hạng mục. Cấu kiện (28 và còn tăng theo từng hồ sơ)
+                  để làm ô tìm kiếm và nhóm, không đưa lên panel.
+                -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                    <field name="bid_structure_id" string="Hạng mục"
+                           icon="fa-cubes" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_takeoff" model="ir.actions.act_window">
+        <field name="name">Bóc tách khối lượng</field>
+        <field name="res_model">rp.bid.takeoff</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có dòng bóc tách nào</p>
+            <p>Bóc tách nằm dưới từng <b>dòng BoQ</b> — mở BoQ nhà thầu, vào
+               tab Bóc tách khối lượng để nhập. Màn hình này để nhìn ngang:
+               soát dòng trừ, tìm dòng chưa gắn cấu kiện, và xem pivot
+               <b>Cấu kiện × Đầu việc</b>.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_bid_takeoff"
+              name="Bóc tách khối lượng"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_takeoff"
+              sequence="25"/>
+
+</odoo>

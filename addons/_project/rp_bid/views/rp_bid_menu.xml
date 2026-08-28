@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Menu lá. Nạp CUỐI vì mỗi mục trỏ tới một action nằm rải trong các
+      file view. Menu gốc và ba nhóm ở `rp_bid_menu_root.xml`, nạp đầu.
+    -->
+
+    <!-- ===== ① Hồ sơ thầu — thứ nhận vào ===== -->
+    <menuitem id="menu_rp_bid_project"
+              name="Dự án (nhà thầu)"
+              parent="menu_bid_grp_intake"
+              action="action_rp_bid_project"
+              sequence="10"/>
+
+    <menuitem id="menu_rp_bid_package"
+              name="Gói thầu được mời"
+              parent="menu_bid_grp_intake"
+              action="action_rp_bid_package"
+              sequence="20"/>
+
+    <menuitem id="menu_rp_bid"
+              name="Hồ sơ dự thầu"
+              parent="menu_bid_grp_intake"
+              action="action_rp_bid"
+              sequence="30"/>
+
+    <!--
+      ===== ② Bóc tách & Làm giá =====
+
+      Thứ tự đi đúng đường làm giá, và KẾT THÚC ở thứ nộp đi:
+
+          Hạng mục → BoQ → Cấu kiện → Chi phí → Giá vật tư → Bảng chào
+
+      Bảng giá chào để cuối chứ không để đầu cùng Hồ sơ, dù nó cũng là
+      chỗ NẠP bảng mời thầu vào. Nó là sản phẩm cuối: mọi con số trong
+      đó được phân bổ ngược từ chi phí trực tiếp của hạng mục.
+    -->
+    <menuitem id="menu_rp_bid_structure"
+              name="Hạng mục nhà thầu"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_structure"
+              sequence="10"/>
+
+    <menuitem id="menu_rp_bid_boq_line"
+              name="BoQ nhà thầu"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_boq_line"
+              sequence="20"/>
+
+    <menuitem id="menu_rp_bid_item"
+              name="Bảng giá chào"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_item"
+              sequence="60"/>
+
+    <!--
+      KHÔNG có menu "Gói thầu của bên mời thầu".
+
+      Nó từng ở đây và đã gỡ: menu tên là "được mời" nhưng mở ra danh
+      sách gói thầu của BÊN MỜI THẦU, không lọc — 13/14 gói đã huỷ hoặc
+      đã ký với nhà thầu khác. Nay gói thầu đã là sổ của chính nhà thầu
+      (`rp.bid.package`), nên chuyện này khép lại hẳn.
+    -->
+
+</odoo>

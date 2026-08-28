@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Màn hình CHI PHÍ đứng riêng. Trước đây chi phí chỉ xem được bằng
+      cách mở từng dòng BoQ — 163 lần mở để trả lời "gói này dùng hết
+      bao nhiêu thép". Ở đây nhìn thẳng, lọc thẳng, cộng thẳng.
+    -->
+    <record id="view_rp_bid_resource_line_list" model="ir.ui.view">
+        <field name="name">rp.bid.resource.line.list</field>
+        <field name="model">rp.bid.resource.line</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="is_percent" sample="1">
+                <field name="bid_structure_id" string="Hạng mục"
+                       optional="show"/>
+                <field name="norm_code" string="Mã ĐM" optional="show"/>
+                <field name="work_name" string="Đầu việc"/>
+                <field name="work_qty" string="KL đầu việc" optional="hide"/>
+                <field name="work_uom_id" string="ĐVT đầu việc"
+                       optional="hide"/>
+                <field name="resource_type" string="Loại"/>
+                <field name="categ_id" string="Nhóm"/>
+                <field name="resource_id" string="Vật tư / NC / Máy"/>
+                <field name="uom_id" string="ĐVT"/>
+                <field name="norm_qty" string="Định mức"/>
+                <field name="is_percent" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="unit_price" width="185px"/>
+                <field name="amount" sum="Σ" width="200px"/>
+                <field name="bid_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_resource_line_search" model="ir.ui.view">
+        <field name="name">rp.bid.resource.line.search</field>
+        <field name="model">rp.bid.resource.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="resource_id"/>
+                <field name="categ_id"/>
+                <field name="work_name" string="Đầu việc"/>
+                <field name="norm_code"/>
+                <field name="bid_structure_id"/>
+                <field name="bid_id"/>
+                <filter name="f_mat" string="Vật tư"
+                        domain="[('resource_type', '=', 'material')]"/>
+                <filter name="f_lab" string="Nhân công"
+                        domain="[('resource_type', '=', 'labor')]"/>
+                <filter name="f_mac" string="Máy thi công"
+                        domain="[('resource_type', '=', 'machine')]"/>
+                <separator/>
+                <filter name="f_real" string="Bỏ dòng tính %"
+                        domain="[('is_percent', '=', False)]"/>
+                <group>
+                    <filter name="g_res" string="Tài nguyên"
+                            context="{'group_by': 'resource_id'}"/>
+                    <filter name="g_cat" string="Nhóm"
+                            context="{'group_by': 'categ_id'}"/>
+                    <filter name="g_type" string="Loại"
+                            context="{'group_by': 'resource_type'}"/>
+                    <filter name="g_line" string="Đầu việc"
+                            context="{'group_by': 'line_id'}"/>
+                    <filter name="g_struct" string="Hạng mục"
+                            context="{'group_by': 'bid_structure_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                    <field name="bid_structure_id" string="Hạng mục"
+                           icon="fa-sitemap" enable_counters="1"/>
+                    <field name="resource_type" string="Loại"
+                           icon="fa-tags" enable_counters="1"/>
+                    <field name="categ_id" string="Nhóm"
+                           icon="fa-cubes" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_resource_line" model="ir.actions.act_window">
+        <field name="name">Chi phí (Vật tư · Nhân công · Máy)</field>
+        <field name="res_model">rp.bid.resource.line</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có chi phí nào</p>
+            <p>Chi phí là chi tiết bên trong mỗi dòng BoQ: đầu việc đó ăn
+               những vật tư nào, thợ bậc mấy, máy gì. Nhóm theo <b>Tài
+               nguyên</b> để biết cả gói cần bao nhiêu thép, bao nhiêu ca
+               cần cẩu.</p>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_resource_line_pivot" model="ir.ui.view">
+        <field name="name">rp.bid.resource.line.pivot</field>
+        <field name="model">rp.bid.resource.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Chi phí">
+                <field name="categ_id" type="row"/>
+                <field name="resource_type" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_bid_resource_line"
+              name="Chi phí (Vật tư · NC · Máy)"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_resource_line"
+              sequence="40"/>
+
+</odoo>

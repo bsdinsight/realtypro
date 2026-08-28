@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_bid_list" model="ir.ui.view">
+        <field name="name">rp.bid.list</field>
+        <field name="model">rp.bid</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'won'"
+                  decoration-muted="state in ('lost', 'cancelled')"
+                  decoration-danger="price_gap &lt; 0"
+                  sample="1">
+                <field name="code" optional="show"/>
+                <field name="name"/>
+                <field name="package_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="date_due" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="direct_cost" width="185px" optional="hide"/>
+                <field name="client_supplied_cost" width="185px" optional="hide"/>
+                <field name="pre_tax_total" width="185px" optional="hide"/>
+                <field name="bid_total" sum="Σ" width="200px"/>
+                <field name="max_approved_price" width="185px" optional="show"/>
+                <field name="price_gap" width="185px" optional="show"
+                       decoration-danger="price_gap &lt; 0"
+                       decoration-success="price_gap &gt;= 0"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'won'"
+                       decoration-info="state == 'submitted'"
+                       decoration-warning="state == 'pricing'"
+                       decoration-muted="state in ('lost', 'cancelled')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_form" model="ir.ui.view">
+        <field name="name">rp.bid.form</field>
+        <field name="model">rp.bid</field>
+        <field name="arch" type="xml">
+            <form string="Hồ sơ dự thầu">
+                <header>
+                    <button name="action_pricing" type="object"
+                            string="Bắt đầu tính giá" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_submit" type="object"
+                            string="Nộp thầu" class="btn-primary"
+                            invisible="state != 'pricing'"/>
+                    <button name="action_won" type="object"
+                            string="Trúng thầu" class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_lost" type="object"
+                            string="Trượt thầu"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_convert_to_project" type="object"
+                            string="Chuyển BoQ sang dự án" class="btn-primary"
+                            invisible="state != 'won'"
+                            confirm="Đổ toàn bộ BoQ của hồ sơ này vào các hạng mục dự án đã map. Tiếp tục?"/>
+                    <button name="action_export_offer" type="object"
+                            string="Xuất bảng chào giá"
+                            invisible="state in ('draft', 'cancelled')"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state in ('draft', 'won')"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('won', 'lost', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pricing,submitted,won"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_package" type="object"
+                                class="oe_stat_button" icon="fa-gavel"
+                                invisible="not package_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Gói thầu</span>
+                                <span class="o_stat_text">được mời</span>
+                            </div>
+                        </button>
+                        <button name="action_open_elements" type="object"
+                                class="oe_stat_button" icon="fa-cubes">
+                            <field name="element_count" widget="statinfo"
+                                   string="Cấu kiện"/>
+                        </button>
+                        <button name="action_open_prices" type="object"
+                                class="oe_stat_button" icon="fa-money">
+                            <field name="price_count" widget="statinfo"
+                                   string="Dòng giá"/>
+                        </button>
+                        <button name="action_open_lines" type="object"
+                                class="oe_stat_button" icon="fa-list-ol">
+                            <field name="line_count" widget="statinfo"
+                                   string="Dòng BoQ"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Tên hồ sơ dự thầu"/></h1>
+                        <h3><field name="code" placeholder="Mã hồ sơ"/></h3>
+                    </div>
+                    <group>
+                        <group string="Gói thầu được mời">
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="package_id"
+                                   options="{'no_create': True}"
+                                   placeholder="Chọn dự án trước để lọc danh sách gói"/>
+                            <field name="invited_by_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Thời hạn">
+                            <field name="date_received"/>
+                            <field name="date_due"/>
+                            <field name="date_submitted"
+                                   invisible="not date_submitted"/>
+                            <field name="element_prefix"/>
+                        </group>
+                    </group>
+
+                    <!--
+                      Chon MOT LAN cho ca goi. Bo dinh muc quyet dinh o
+                      "Dinh muc" cua tung dong BoQ duoc chon tu dau; cong
+                      bo gia quyet dinh don gia keo ve tu dau.
+                    -->
+                    <group string="Thư viện áp dụng (định mức &amp; công bố giá)"
+                           name="library">
+                        <field name="norm_set_id"
+                               options="{'no_create': True}"
+                               placeholder="VD: TT 12/2021 — chọn thì mới khai được Định mức ở dòng BoQ"/>
+                        <field name="price_publication_id"
+                               options="{'no_create': True}"
+                               placeholder="Văn bản công bố giá dùng làm mốc cho gói này"/>
+                        <field name="price_region_id"
+                               options="{'no_create': True}"
+                               invisible="not price_publication_id"/>
+                        <field name="price_publication_stale" invisible="1"/>
+                    </group>
+                    <div class="alert alert-warning small" role="alert"
+                         invisible="not price_publication_stale">
+                        Công bố giá đang chọn <b>đã bị văn bản khác thay
+                        thế</b>. Chào theo giá đã hết hiệu lực là chỗ dễ bị
+                        bắt bẻ nhất khi xét thầu.
+                    </div>
+
+                    <notebook>
+                        <page string="Bảng giá chào (khuôn khách)" name="items">
+                            <div class="btn-group mb-2" role="group"
+                                 invisible="state not in ('draft', 'pricing')">
+                                <button name="%(action_rp_bid_import)d"
+                                        type="action" class="btn btn-primary"
+                                        icon="fa-upload"
+                                        string="Nhập BoQ mời thầu (Excel)"
+                                        context="{'default_bid_id': id}"/>
+                            </div>
+                            <field name="item_ids" nolabel="1"
+                                   context="{'default_bid_id': id}">
+                                <list editable="bottom"
+                                      decoration-bf="is_section"
+                                      decoration-muted="is_section"
+                                      decoration-warning="structure_count == 0 and not is_section">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="uom_text"/>
+                                    <field name="quantity_client"/>
+                                    <field name="is_section" optional="hide"/>
+                                    <field name="structure_count" readonly="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="unit_price_offer"
+                                           width="185px" readonly="1"/>
+                                    <field name="amount_offer" sum="Σ"
+                                           width="200px" readonly="1"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Bảng này phải giữ <b>đúng khuôn file khách
+                                gửi</b> — cùng mã, cùng chữ, cùng đơn vị, cùng
+                                thứ tự. Đơn giá chào được tính ngược từ giá
+                                thành: chi phí của các hạng mục cuộn vào dòng
+                                nào thì gánh markup theo tỷ trọng của dòng đó.
+                            </div>
+                        </page>
+
+                        <page string="Hạng mục" name="structures">
+                            <div class="btn-group mb-2" role="group"
+                                 invisible="state not in ('draft', 'pricing')">
+                                <button name="action_split_from_items"
+                                        type="object" class="btn btn-primary"
+                                        icon="fa-sitemap"
+                                        string="Chia hạng mục từ bảng chào giá"/>
+                            </div>
+                            <field name="structure_ids" nolabel="1"
+                                   context="{'default_bid_id': id}">
+                                <list editable="bottom"
+                                      open_form_view="True"
+                                      decoration-warning="not item_id">
+                                                                        <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="item_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="line_count" string="Số dòng BoQ"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="cost_material" width="185px" optional="hide"/>
+                                    <field name="cost_labor" width="185px" optional="hide"/>
+                                    <field name="cost_machine" width="185px" optional="hide"/>
+                                    <field name="direct_cost" width="185px"/>
+                                    <field name="client_supplied_cost"
+                                           width="185px" optional="show"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                <b>Cách chẻ nhỏ:</b> đặt <b>Hạng mục cha</b> cho
+                                một dòng là nó thành cấp con. Chi phí cuộn từ
+                                con lên cha, nên <b>chỉ hạng mục không có con</b>
+                                mới gắn được <b>Dòng chào giá</b> — gắn cả cha
+                                lẫn con sẽ đếm tiền hai lần.
+                                <br/>
+                                Dòng <span class="text-warning"><b>tô vàng</b></span>
+                                là hạng mục chưa gắn dòng chào giá: chi phí vẫn
+                                nằm trong giá dự thầu nhưng không có ô nào trong
+                                file khách để ghi.
+                            </div>
+                        </page>
+
+                        <page string="BoQ nhà thầu" name="boq">
+                            <div class="btn-group mb-2" role="group"
+                                 invisible="state not in ('draft', 'pricing')">
+                                <button name="action_pull_norm_all"
+                                        type="object" class="btn btn-secondary"
+                                        icon="fa-download"
+                                        string="Lấy chi phí từ định mức"
+                                        confirm="Bung hao phí của định mức thành dòng chi phí cho mọi dòng BoQ đã chọn định mức. Chỉ thêm dòng còn thiếu, không ghi đè dòng đang có. Tiếp tục?"/>
+                            </div>
+                            <field name="line_ids" nolabel="1"
+                                   context="{'default_bid_id': id}">
+                                <!--
+                                  `open_form_view` la thu mo ra tab Boc tach
+                                  khoi luong va tab Chi phi cua dong BoQ.
+                                  List `editable` an han form di: bam vao
+                                  dong la sua tai cho, khong co duong nao mo
+                                  form ra ca. Doi lai la mot mui ten o cuoi
+                                  moi dong.
+                                -->
+                                <list editable="bottom"
+                                      open_form_view="True"
+                                      decoration-warning="not quantity_matches"
+                                      decoration-info="supplied_by == 'client'">
+                                    <!-- Lọc theo ĐÚNG hồ sơ đang mở. Không có
+                                         domain này thì ô chọn đổ ra hạng mục
+                                         của mọi hồ sơ, rất dễ gắn nhầm dòng
+                                         BoQ sang hồ sơ khác. -->
+                                    <field name="bid_structure_id"
+                                           options="{'no_create': True}"
+                                           domain="[('bid_id', '=', parent.id)]"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="norm_set_id" column_invisible="1"/>
+                                    <field name="norm_id" optional="show"
+                                           options="{'no_create': True}"
+                                           readonly="not norm_set_id"
+                                           domain="[('set_id', '=', norm_set_id), ('is_leaf', '=', True)]"/>
+                                    <field name="norm_code"/>
+                                    <field name="description"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                    <field name="takeoff_quantity" optional="show"
+                                           readonly="1"/>
+                                    <field name="takeoff_count" optional="hide"/>
+                                    <field name="quantity_matches" optional="hide"/>
+                                    <field name="supplied_by"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="material_price" width="185px"/>
+                                    <field name="labor_price" width="185px"/>
+                                    <field name="machine_price" width="185px"/>
+                                    <field name="subtotal" sum="Σ" width="200px"/>
+                                    <field name="client_supplied_amount"
+                                           sum="Σ" width="185px" optional="show"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Bấm <b>mũi tên ở cuối dòng</b> để mở dòng BoQ
+                                ra — trong đó có tab <b>Bóc tách khối lượng</b>
+                                (số bộ phận × dài × rộng × cao × hệ số, dòng trừ
+                                nhập số bộ phận âm, cột <b>Cấu kiện</b> chỉ ra
+                                cọc/panel mà dòng đó đo) và tab <b>Chi phí</b>.
+                                <br/>
+                                Chọn <b>Định mức</b> rồi bấm <b>Lấy chi phí từ
+                                định mức</b> thì hao phí và đơn giá tự bung ra
+                                theo bộ định mức và công bố giá đã chọn ở trên.
+                                <br/>
+                                Dòng <span class="text-warning"><b>tô vàng</b></span>
+                                là khối lượng không khớp tổng bóc tách;
+                                <span class="text-info"><b>tô xanh</b></span> là
+                                vật tư bên mời thầu cấp — phần vật liệu không
+                                vào giá chào.
+                            </div>
+                        </page>
+
+                        <page string="Bảng giá gói thầu" name="prices">
+                            <div class="btn-group mb-2" role="group"
+                                 invisible="state not in ('draft', 'pricing')">
+                                <button name="action_build_price_list"
+                                        type="object" class="btn btn-primary"
+                                        icon="fa-magic"
+                                        string="Dựng bảng giá từ chi phí"/>
+                                <button name="action_apply_price_list"
+                                        type="object" class="btn btn-secondary"
+                                        icon="fa-arrow-down"
+                                        string="Áp giá xuống chi phí"
+                                        confirm="Ghi đè đơn giá của mọi dòng chi phí theo bảng giá này. Tiếp tục?"/>
+                            </div>
+                            <field name="price_ids" nolabel="1"
+                                   context="{'default_bid_id': id}">
+                                <list editable="bottom"
+                                      decoration-warning="variance_pct &gt; 10"
+                                      decoration-success="variance_pct &lt; -10">
+                                    <field name="resource_id"/>
+                                    <field name="resource_type"/>
+                                    <field name="categ_id" optional="show"/>
+                                    <field name="uom_id"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="price" width="185px"/>
+                                    <field name="library_price" width="185px"
+                                           readonly="1"/>
+                                    <field name="variance_pct" readonly="1"/>
+                                    <field name="source"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Giá ở đây <b>chỉ áp dụng cho gói thầu này</b>.
+                                Cùng một loại thép: thư viện công ty 15.000 đ,
+                                gói này 16.000 đ, gói khác 16.500 đ — ba con số
+                                cùng tồn tại, không cái nào ghi đè cái nào.
+                                <br/>
+                                Dòng <span class="text-warning"><b>vàng</b></span>
+                                là cao hơn thư viện &gt;10%,
+                                <span class="text-success"><b>xanh</b></span> là
+                                thấp hơn &gt;10% — hai chỗ đáng rà lại trước khi
+                                nộp.
+                            </div>
+                        </page>
+
+                        <page string="Tính giá" name="pricing">
+                            <group>
+                                <group string="Tỷ lệ (%)">
+                                    <field name="overhead_pct"/>
+                                    <field name="temp_facility_pct"/>
+                                    <field name="undefined_work_pct"/>
+                                    <field name="profit_pct"/>
+                                    <field name="vat_pct"/>
+                                    <field name="contingency_pct"/>
+                                </group>
+                                <group string="Chi phí trực tiếp">
+                                    <field name="cost_material"/>
+                                    <field name="cost_labor"/>
+                                    <field name="cost_machine"/>
+                                    <field name="direct_cost"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Cộng dồn">
+                                    <field name="overhead_amount"/>
+                                    <field name="temp_facility_amount"/>
+                                    <field name="undefined_work_amount"/>
+                                    <field name="indirect_cost"/>
+                                    <field name="profit_amount"/>
+                                    <field name="pre_tax_total"/>
+                                    <field name="vat_amount"/>
+                                    <field name="contingency_amount"/>
+                                    <field name="bid_total"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                                <group string="Đối chiếu bảng chào">
+                                    <field name="outside_cost"/>
+                                    <field name="offer_total"/>
+                                    <field name="offer_gap"
+                                           class="oe_subtotal_footer_separator"/>
+                                    <field name="offer_balanced"
+                                           invisible="1"/>
+                                    <field name="unallocated_cost"/>
+                                    <field name="unallocated_pct"/>
+                                    <field name="spread_cost"/>
+                                </group>
+                                <group string="Đối chiếu khác">
+                                    <field name="max_approved_price"/>
+                                    <field name="price_gap"/>
+                                    <field name="client_supplied_cost"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-danger" role="alert"
+                                 invisible="price_gap &gt;= 0 or not max_approved_price">
+                                Giá dự thầu <b>vượt giá trần</b> của gói thầu.
+                            </div>
+                            <div class="alert alert-danger" role="alert"
+                                 invisible="offer_balanced">
+                                <b>Bảng chào giá đang thiếu
+                                <field name="offer_gap" readonly="1"
+                                       nolabel="1" class="oe_inline"/></b>
+                                so với tổng phải chào. Nguyên nhân là hạng mục
+                                chưa có chỗ đứng trong khuôn của bên mời thầu —
+                                để nguyên thì hồ sơ nộp đi thiếu đúng số đó.
+                                <div class="mt-2">
+                                    <button name="action_open_unallocated"
+                                            type="object"
+                                            class="btn btn-danger btn-sm"
+                                            icon="fa-wrench"
+                                            string="Xử lý phân bổ"/>
+                                </div>
+                            </div>
+                            <div class="alert alert-success" role="alert"
+                                 invisible="not offer_balanced">
+                                Bảng chào giá <b>đã khớp</b> tổng phải chào.
+                            </div>
+                            <div class="alert alert-warning" role="alert"
+                                 invisible="not client_supplied_cost">
+                                Có vật tư do bên mời thầu cấp — phần này
+                                <b>đã được loại</b> khỏi giá chào. Kiểm lại
+                                điều kiện mời thầu xem đúng phạm vi chưa:
+                                bóc nhầm chiều là chào lệch nhiều lần.
+                            </div>
+                        </page>
+
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Điều kiện đặc thù, giả định khi chào giá, rủi ro đã lường…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_search" model="ir.ui.view">
+        <field name="name">rp.bid.search</field>
+        <field name="model">rp.bid</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="package_id"/>
+                <field name="project_id"/>
+                <filter name="f_open" string="Đang làm"
+                        domain="[('state', 'in', ['draft', 'pricing'])]"/>
+                <filter name="f_submitted" string="Đã nộp"
+                        domain="[('state', '=', 'submitted')]"/>
+                <filter name="f_won" string="Trúng thầu"
+                        domain="[('state', '=', 'won')]"/>
+                <separator/>
+                <filter name="f_over" string="Vượt giá trần"
+                        domain="[('price_gap', '&lt;', 0)]"/>
+                <filter name="f_due" string="Sắp tới hạn nộp"
+                        domain="[('date_due', '&lt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')), ('state', 'in', ['draft', 'pricing'])]"/>
+                <group>
+                    <filter name="g_project" string="Dự án"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter name="g_package" string="Gói thầu"
+                            context="{'group_by': 'package_id'}"/>
+                    <filter name="g_state" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid" model="ir.actions.act_window">
+        <field name="name">Hồ sơ dự thầu</field>
+        <field name="res_model">rp.bid</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Lập hồ sơ dự thầu đầu tiên</p>
+            <p>Chọn gói thầu được mời, chia hạng mục của mình rồi dựng BoQ
+               cho từng hạng mục. Hệ thống cộng lên chi phí trực tiếp, áp
+               markup và ra giá dự thầu.</p>
+        </field>
+    </record>
+
+</odoo>

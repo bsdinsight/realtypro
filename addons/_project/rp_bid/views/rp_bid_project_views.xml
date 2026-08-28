@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== Dự án (nhà thầu) ==================== -->
+    <record id="view_rp_bid_project_list" model="ir.ui.view">
+        <field name="name">rp.bid.project.list</field>
+        <field name="model">rp.bid.project</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="sequence" column_invisible="1"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="owner_id"/>
+                <field name="location" optional="show"/>
+                <field name="scale" optional="hide"/>
+                <field name="package_count" string="Số gói"/>
+                <field name="bid_count" string="Số hồ sơ"/>
+                <field name="won_count" string="Đã trúng" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="bid_total" width="200px"/>
+                <field name="exec_project_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_project_form" model="ir.ui.view">
+        <field name="name">rp.bid.project.form</field>
+        <field name="model">rp.bid.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_packages" type="object"
+                                class="oe_stat_button" icon="fa-gavel">
+                            <field name="package_count" widget="statinfo"
+                                   string="Gói thầu"/>
+                        </button>
+                        <button name="action_open_bids" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="bid_count" widget="statinfo"
+                                   string="Hồ sơ"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Tên dự án"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="owner_id"/>
+                            <field name="location"/>
+                            <field name="scale"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="bid_total" readonly="1"/>
+                            <field name="won_count" readonly="1"/>
+                            <field name="exec_project_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info small" role="alert"
+                         invisible="exec_project_id">
+                        Dự án ở đây là <b>một cơ hội đang theo</b> — chỉ để
+                        gom gói thầu và hồ sơ chào giá. Khi trúng thầu và
+                        bắt đầu thi công thì gắn thêm một
+                        <b>Dự án thi công</b> để chạy tiến độ, nghiệm thu,
+                        thanh toán.
+                    </div>
+                    <notebook>
+                        <page string="Gói thầu được mời" name="packages">
+                            <field name="package_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="sequence" column_invisible="1"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="invited_by_id"/>
+                                    <field name="date_due"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                    <field name="max_approved_price"
+                                           width="200px"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="bid_count" string="Hồ sơ"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_project_search" model="ir.ui.view">
+        <field name="name">rp.bid.project.search</field>
+        <field name="model">rp.bid.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner_id"/>
+                <field name="location"/>
+                <!-- Không lọc theo won_count / bid_total: hai trường đó
+                     là compute không store, Odoo chỉ cho domain trên cột
+                     có thật. Muốn lọc thì nhóm theo trạng thái gói thầu. -->
+                <filter name="f_exec" string="Đã có dự án thi công"
+                        domain="[('exec_project_id', '!=', False)]"/>
+                <separator/>
+                <filter name="f_archived" string="Đã lưu trữ"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="g_owner" string="Chủ đầu tư / Tổng thầu"
+                            context="{'group_by': 'owner_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="owner_id" string="Chủ đầu tư / Tổng thầu"
+                           icon="fa-building" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_project" model="ir.actions.act_window">
+        <field name="name">Dự án (nhà thầu)</field>
+        <field name="res_model">rp.bid.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa theo dự án nào</p>
+            <p>Đây là <b>sổ của nhà thầu</b>, không phải danh sách dự án của
+               chủ đầu tư. Nhận được thư mời thầu thì tạo dự án ở đây, thêm
+               gói thầu được mời, rồi lập hồ sơ dự thầu.</p>
+        </field>
+    </record>
+
+    <!-- ==================== Gói thầu được mời ==================== -->
+    <record id="view_rp_bid_package_list" model="ir.ui.view">
+        <field name="name">rp.bid.package.list</field>
+        <field name="model">rp.bid.package</field>
+        <field name="arch" type="xml">
+            <list sample="1" decoration-muted="state in ('lost', 'dropped')"
+                  decoration-success="state == 'won'">
+                <field name="sequence" column_invisible="1"/>
+                <field name="project_id"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="invited_by_id" optional="show"/>
+                <field name="date_received" optional="hide"/>
+                <field name="date_due"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="max_approved_price" width="200px"/>
+                <field name="state" widget="badge"/>
+                <field name="bid_count" string="Hồ sơ"/>
+                <button name="action_create_bid" type="object"
+                        icon="fa-file-text-o" title="Lập hồ sơ dự thầu"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_package_form" model="ir.ui.view">
+        <field name="name">rp.bid.package.form</field>
+        <field name="model">rp.bid.package</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_bid" type="object"
+                            string="Lập hồ sơ dự thầu" class="btn-primary"
+                            invisible="bid_count &gt; 0"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="invited,bidding,submitted,won"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_bids" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="bid_count == 0">
+                            <field name="bid_count" widget="statinfo"
+                                   string="Hồ sơ"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Tên gói thầu theo thư mời"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="code"/>
+                            <field name="invited_by_id"/>
+                            <field name="owner_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date_received"/>
+                            <field name="date_due"/>
+                            <field name="currency_id"/>
+                            <field name="max_approved_price"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Phạm vi công việc" name="scope">
+                            <field name="scope" nolabel="1"
+                                   placeholder="Chép phần phạm vi trong thư mời / HSMT vào đây — sau này cãi việc nào trong giá, việc nào ngoài thì bám vào chỗ này."/>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_package_search" model="ir.ui.view">
+        <field name="name">rp.bid.package.search</field>
+        <field name="model">rp.bid.package</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <field name="invited_by_id"/>
+                <filter name="f_open" string="Đang theo"
+                        domain="[('state', 'in', ['invited', 'bidding'])]"/>
+                <filter name="f_due" string="Còn hạn nộp"
+                        domain="[('date_due', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="f_archived" string="Đã lưu trữ"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="g_project" string="Dự án"
+                            context="{'group_by': 'project_id'}"/>
+                    <filter name="g_state" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                </group>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           icon="fa-flag" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_package" model="ir.actions.act_window">
+        <field name="name">Gói thầu được mời</field>
+        <field name="res_model">rp.bid.package</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có gói thầu nào</p>
+            <p>Gói thầu ở đây là <b>gói ta được mời dự</b>, do nhà thầu tự
+               nhập theo thư mời — không phải gói thầu do chủ đầu tư phát
+               hành trong hệ thống của họ. Bảng khối lượng mời thầu nạp
+               vào <b>Bảng giá chào</b> của hồ sơ.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_bid_element_list" model="ir.ui.view">
+        <field name="name">rp.bid.element.list</field>
+        <field name="model">rp.bid.element</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" sample="1">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="bid_id" optional="hide"/>
+                <field name="package_id" optional="hide"/>
+                <field name="takeoff_count" string="Số dòng bóc tách"
+                       readonly="1"/>
+                <field name="line_count" readonly="1"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_element_form" model="ir.ui.view">
+        <field name="name">rp.bid.element.form</field>
+        <field name="model">rp.bid.element</field>
+        <field name="arch" type="xml">
+            <form string="Cấu kiện">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_takeoffs" type="object"
+                                class="oe_stat_button" icon="fa-cubes">
+                            <field name="takeoff_count" widget="statinfo"
+                                   string="Dòng bóc tách"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="code" placeholder="Để trống = tự sinh"/></h1>
+                        <h2><field name="name" placeholder="Cọc thí nghiệm số 2, D1200"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="bid_id" options="{'no_create': True}"/>
+                            <field name="project_id"/>
+                            <field name="package_id"/>
+                        </group>
+                        <group>
+                            <field name="line_count"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info small" role="alert">
+                        Cấu kiện là <b>đối tượng vật lý</b> được bóc — một cây
+                        cọc, một panel tường vây. Nhiều dòng bóc tách ở nhiều
+                        đầu việc khác nhau cùng trỏ về đây, nên nhìn vào là
+                        biết cấu kiện này đi qua bao nhiêu công việc.
+                        <br/>
+                        Sau này muốn quản thi công tới từng cọc (ngày khoan,
+                        cao trình thực, kết quả siêu âm, toạ độ tim cọc) thì
+                        thêm trường vào đây — phần bóc tách không phải sửa.
+                    </div>
+                    <notebook>
+                        <page string="Dòng bóc tách" name="takeoffs">
+                            <field name="takeoff_ids" nolabel="1" readonly="1">
+                                <list>
+                                    <field name="bid_structure_id"
+                                           string="Hạng mục"/>
+                                    <field name="line_id" string="Đầu việc"/>
+                                    <field name="name" string="Diễn giải"/>
+                                    <field name="count"/>
+                                    <field name="length"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                    <field name="factor"/>
+                                    <field name="quantity"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_element_search" model="ir.ui.view">
+        <field name="name">rp.bid.element.search</field>
+        <field name="model">rp.bid.element</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="bid_id"/>
+                <filter name="f_unused" string="Chưa dùng ở dòng nào"
+                        domain="[('takeoff_count', '=', 0)]"/>
+                <group>
+                    <filter name="g_bid" string="Hồ sơ dự thầu"
+                            context="{'group_by': 'bid_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-building" enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-gavel" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_element" model="ir.actions.act_window">
+        <field name="name">Cấu kiện bóc tách</field>
+        <field name="res_model">rp.bid.element</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai cấu kiện nào</p>
+            <p>Cấu kiện là cọc, panel tường vây… — thứ mà nhiều dòng bóc tách
+               cùng trỏ về. Mã tự sinh theo tiền tố khai ở hồ sơ dự thầu.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_bid_element"
+              name="Cấu kiện bóc tách"
+              parent="menu_bid_grp_boq"
+              action="action_rp_bid_element"
+              sequence="30"/>
+
+</odoo>

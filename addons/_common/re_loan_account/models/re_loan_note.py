@@ -96,6 +96,75 @@ class ReLoanNote(models.Model):
         return journal
 
     # ------------------------------------------------------------------
+    # Quy đổi ngoại tệ khi ghi sổ
+    # ------------------------------------------------------------------
+    # SỔ CÁI LUÔN GHI BẰNG ĐỒNG TIỀN HẠCH TOÁN CỦA CÔNG TY.
+    #
+    # Trước đây ba chỗ post bút toán (giải ngân / lãi / trả nợ) đưa
+    # THẲNG số tiền của khế ước vào cột debit-credit. Với khế ước VND
+    # thì đúng, vì hai đồng tiền trùng nhau. Với khế ước USD thì con số
+    # USD nằm trong sổ cái dưới nhãn VND — sai gấp hơn hai vạn lần và
+    # không có gì báo động, vì bút toán vẫn cân.
+    #
+    # Không ai gặp lỗi này chỉ vì chưa có khế ước ngoại tệ nào. Đánh giá
+    # lại tỷ giá (TT 200 Điều 69) là nghiệp vụ đầu tiên bắt buộc phải có
+    # khế ước ngoại tệ, nên phải vá nền trước khi xây nó.
+    def _fx(self, amount, date):
+        """Quy đổi số tiền của KW sang đồng tiền hạch toán.
+
+        Trả về `(số tiền ghi sổ, số tiền nguyên tệ, id đồng tiền)`.
+        Id đồng tiền là False khi KW cùng đồng tiền với công ty — khi đó
+        KHÔNG gắn currency_id vào dòng bút toán, giữ nguyên hành vi cũ.
+        """
+        self.ensure_one()
+        comp_cur = self.company_id.currency_id
+        cur = self.currency_id or comp_cur
+        if cur == comp_cur:
+            return comp_cur.round(amount), 0.0, False
+        return (cur._convert(amount, comp_cur, self.company_id,
+                             date or fields.Date.context_today(self)),
+                amount, cur.id)
+
+    def _fx_line(self, account, label, amount, date, debit=True):
+        """Một dòng bút toán đã quy đổi, kèm nguyên tệ để còn đối chiếu."""
+        self.ensure_one()
+        book, fc, cur_id = self._fx(amount, date)
+        vals = {
+            'account_id': account.id,
+            'name': label,
+            'debit': book if debit else 0.0,
+            'credit': 0.0 if debit else book,
+            'partner_id': self.partner_id.id or False,
+        }
+        if cur_id:
+            vals['currency_id'] = cur_id
+            vals['amount_currency'] = fc if debit else -fc
+        return (0, 0, vals)
+
+    def _fx_balance_line(self, account, label, others, date, debit=False):
+        """Dòng đối ứng lấy ĐÚNG tổng các dòng kia, không quy đổi lại.
+
+        Quy đổi riêng từng vế rồi cộng lại có thể lệch một đồng do làm
+        tròn, và Odoo sẽ chặn bút toán không cân. Nên vế đối ứng luôn
+        bằng tổng vế bên kia thay vì tự tính lại từ số nguyên tệ.
+        """
+        self.ensure_one()
+        book = sum(l[2].get('debit', 0.0) + l[2].get('credit', 0.0)
+                   for l in others)
+        fc = sum(abs(l[2].get('amount_currency', 0.0)) for l in others)
+        vals = {
+            'account_id': account.id,
+            'name': label,
+            'debit': book if debit else 0.0,
+            'credit': 0.0 if debit else book,
+            'partner_id': self.partner_id.id or False,
+        }
+        if self.currency_id and self.currency_id != self.company_id.currency_id:
+            vals['currency_id'] = self.currency_id.id
+            vals['amount_currency'] = fc if debit else -fc
+        return (0, 0, vals)
+
+    # ------------------------------------------------------------------
     # Capitalization helper
     # ------------------------------------------------------------------
     def _capitalization_ratio(self):

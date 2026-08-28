@@ -36,18 +36,10 @@ class ReLoanNoteDisbursement(models.Model):
                 'company_id': note.company_id.id,
                 'loan_note_id': note.id,
                 'line_ids': [
-                    (0, 0, {
-                        'account_id': bank_acc.id,
-                        'name': _('GN %s', note.name),
-                        'debit': rec.amount, 'credit': 0.0,
-                        'partner_id': note.partner_id.id or False,
-                    }),
-                    (0, 0, {
-                        'account_id': loan_acc.id,
-                        'name': _('Vay %s', note.name),
-                        'debit': 0.0, 'credit': rec.amount,
-                        'partner_id': note.partner_id.id or False,
-                    }),
+                    note._fx_line(bank_acc, _('GN %s', note.name),
+                                  rec.amount, rec.date, debit=True),
+                    note._fx_line(loan_acc, _('Vay %s', note.name),
+                                  rec.amount, rec.date, debit=False),
                 ],
             })
             move.action_post()

@@ -17,5 +17,11 @@ class ResConfigSettings(models.TransientModel):
     loan_account_interest_capitalized_id = fields.Many2one(
         related='company_id.loan_account_interest_capitalized_id',
         readonly=False)
+    loan_account_fx_diff_id = fields.Many2one(
+        related='company_id.loan_account_fx_diff_id', readonly=False)
+    loan_account_fx_loss_id = fields.Many2one(
+        related='company_id.loan_account_fx_loss_id', readonly=False)
+    loan_account_fx_gain_id = fields.Many2one(
+        related='company_id.loan_account_fx_gain_id', readonly=False)
     loan_journal_id = fields.Many2one(
         related='company_id.loan_journal_id', readonly=False)

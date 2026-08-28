@@ -33,27 +33,20 @@ class ReLoanNoteRepayment(models.Model):
             if rec.amount_principal > 0:
                 loan_acc = note._get_loan_account(
                     'loan_account_principal_id')
-                lines.append((0, 0, {
-                    'account_id': loan_acc.id,
-                    'name': _('Trả gốc %s', note.name),
-                    'debit': rec.amount_principal, 'credit': 0.0,
-                    'partner_id': note.partner_id.id or False,
-                }))
+                lines.append(note._fx_line(
+                    loan_acc, _('Trả gốc %s', note.name),
+                    rec.amount_principal, rec.date, debit=True))
             if rec.amount_interest > 0:
                 payable_acc = note._get_loan_account(
                     'loan_account_interest_payable_id')
-                lines.append((0, 0, {
-                    'account_id': payable_acc.id,
-                    'name': _('Trả lãi %s', note.name),
-                    'debit': rec.amount_interest, 'credit': 0.0,
-                    'partner_id': note.partner_id.id or False,
-                }))
-            lines.append((0, 0, {
-                'account_id': bank_acc.id,
-                'name': _('Trả nợ %s', note.name),
-                'debit': 0.0, 'credit': rec.amount_total,
-                'partner_id': note.partner_id.id or False,
-            }))
+                lines.append(note._fx_line(
+                    payable_acc, _('Trả lãi %s', note.name),
+                    rec.amount_interest, rec.date, debit=True))
+            # Phí nằm trong amount_total nhưng không có dòng riêng ở bản
+            # gốc; vế tiền lấy đúng tổng các vế trên nên không lệch.
+            lines.append(note._fx_balance_line(
+                bank_acc, _('Trả nợ %s', note.name),
+                lines, rec.date, debit=False))
             move = rec.env['account.move'].create({
                 'journal_id': journal.id,
                 'date': rec.date,

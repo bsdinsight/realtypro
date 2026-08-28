@@ -6,3 +6,4 @@ from . import re_loan_note
 from . import re_loan_note_disbursement
 from . import re_loan_note_interest_line
 from . import re_loan_note_repayment
+from . import re_loan_fx_revaluation

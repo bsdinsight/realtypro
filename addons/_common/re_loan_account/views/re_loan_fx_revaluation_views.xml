@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_fx_reval_list" model="ir.ui.view">
+        <field name="name">re.loan.fx.revaluation.list</field>
+        <field name="model">re.loan.fx.revaluation</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'"
+                  decoration-success="state == 'closed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="line_count" string="Số KW"/>
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="amount_loss" sum="Σ" width="185px"/>
+                <field name="amount_gain" sum="Σ" width="185px"/>
+                <field name="amount_net" sum="Σ" width="200px"/>
+                <field name="warn_no_gl" string="KW thiếu bút toán"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'closed'"
+                       decoration-warning="state == 'posted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_fx_reval_form" model="ir.ui.view">
+        <field name="name">re.loan.fx.revaluation.form</field>
+        <field name="model">re.loan.fx.revaluation</field>
+        <field name="arch" type="xml">
+            <form string="Đánh giá lại tỷ giá">
+                <header>
+                    <button name="action_collect_notes" type="object"
+                            string="Nạp khế ước ngoại tệ"
+                            class="btn-primary" icon="fa-download"
+                            invisible="state != 'draft'"/>
+                    <button name="action_post" type="object"
+                            string="Ghi sổ" class="btn-primary"
+                            invisible="state != 'draft' or line_count == 0"
+                            confirm="Ghi sổ bút toán chênh lệch tỷ giá cho từng khế ước. Bút toán đã ghi chỉ đảo được, không xoá được. Tiếp tục?"/>
+                    <button name="action_close_to_pl" type="object"
+                            string="Kết chuyển 635 / 515"
+                            class="btn-secondary"
+                            invisible="state != 'posted'"
+                            confirm="Kết chuyển toàn bộ chênh lệch tỷ giá sang chi phí / doanh thu tài chính. Tiếp tục?"/>
+                    <button name="action_cancel" type="object" string="Huỷ"
+                            invisible="state in ('draft', 'cancelled')"
+                            confirm="Sẽ ĐẢO toàn bộ bút toán đã ghi sổ. Tiếp tục?"/>
+                    <button name="action_draft" type="object"
+                            string="Về Nháp"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_moves" type="object"
+                                class="oe_stat_button" icon="fa-book"
+                                invisible="move_count == 0">
+                            <field name="move_count" widget="statinfo"
+                                   string="Bút toán"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Kỳ đánh giá">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   readonly="state != 'draft'"/>
+                            <field name="company_currency_id"/>
+                            <field name="journal_id"
+                                   readonly="state != 'draft'"
+                                   placeholder="Bỏ trống thì dùng Sổ Nhật ký Vay"/>
+                        </group>
+                        <group string="Kết quả">
+                            <field name="amount_loss"/>
+                            <field name="amount_gain"/>
+                            <field name="amount_net"/>
+                            <field name="close_move_id"
+                                   invisible="not close_move_id"/>
+                            <field name="line_count" invisible="1"/>
+                            <field name="warn_no_gl" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning" role="alert"
+                         invisible="warn_no_gl == 0">
+                        Có <field name="warn_no_gl" readonly="1"
+                                  class="oe_inline"/> khế ước
+                        <b>chưa có bút toán nào trên tài khoản vay</b> nên
+                        không có số ghi sổ để so sánh. Các dòng đó bị loại
+                        khỏi bút toán đánh giá lại — post bút toán giải ngân
+                        cho chúng trước, rồi nạp lại.
+                    </div>
+
+                    <notebook>
+                        <page string="Chi tiết theo khế ước" name="lines">
+                            <field name="line_ids" nolabel="1"
+                                   readonly="state != 'draft'">
+                                <list editable="bottom" create="0"
+                                      decoration-muted="gl_missing"
+                                      decoration-danger="direction == 'loss'"
+                                      decoration-success="direction == 'gain'">
+                                    <field name="note_id" readonly="1"/>
+                                    <field name="partner_id" readonly="1"
+                                           optional="show"/>
+                                    <field name="term_class" readonly="1"/>
+                                    <field name="date_maturity" readonly="1"
+                                           optional="hide"/>
+                                    <field name="currency_id" readonly="1"/>
+                                    <field name="amount_fc" width="185px"/>
+                                    <field name="rate"/>
+                                    <field name="rate_source"/>
+                                    <field name="rate_booked" readonly="1"
+                                           optional="show"/>
+                                    <field name="company_currency_id"
+                                           column_invisible="1"/>
+                                    <field name="amount_booked" readonly="1"
+                                           sum="Σ" width="200px"/>
+                                    <field name="amount_revalued" readonly="1"
+                                           sum="Σ" width="200px"/>
+                                    <field name="diff_amount" readonly="1"
+                                           sum="Σ" width="200px"/>
+                                    <field name="direction" readonly="1"/>
+                                    <field name="gl_missing" optional="hide"
+                                           readonly="1"/>
+                                    <field name="move_id" readonly="1"
+                                           optional="hide"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                <b>Chênh lệch = Giá trị đánh giá lại − Số
+                                đang ghi sổ.</b> Dương là nghĩa vụ trả nợ
+                                tăng, tức là <b>lỗ</b> tỷ giá — ghi
+                                <b>Nợ TK chênh lệch tỷ giá / Có TK vay</b>.
+                                Âm là lãi, ghi ngược lại.
+                                <br/>
+                                <b>Số đang ghi sổ</b> đọc thẳng từ sổ cái
+                                (Σ Có − Σ Nợ trên tài khoản vay của khế ước),
+                                không quy đổi lại từ sổ vay — nhờ vậy lần
+                                đánh giá sau không tính trùng phần chênh lệch
+                                của lần trước.
+                            </div>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Căn cứ tỷ giá, quyết định phê duyệt…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_fx_reval_search" model="ir.ui.view">
+        <field name="name">re.loan.fx.revaluation.search</field>
+        <field name="model">re.loan.fx.revaluation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="f_posted" string="Đã ghi sổ"
+                        domain="[('state', '=', 'posted')]"/>
+                <filter name="f_closed" string="Đã kết chuyển"
+                        domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter name="f_warn" string="Còn KW thiếu bút toán"
+                        domain="[('warn_no_gl', '>', 0)]"/>
+                <separator/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_date" string="Ngày đánh giá"
+                        context="{'group_by': 'date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_fx_revaluation" model="ir.actions.act_window">
+        <field name="name">Đánh giá lại tỷ giá</field>
+        <field name="res_model">re.loan.fx.revaluation</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">
+                Chưa có phiếu đánh giá lại tỷ giá nào
+            </p>
+            <p>
+                Cuối kỳ, số dư khoản vay có gốc ngoại tệ phải được đánh giá
+                lại theo tỷ giá cuối kỳ (TT 200 Điều 69). Tạo phiếu, bấm
+                <b>Nạp khế ước ngoại tệ</b>, kiểm tỷ giá rồi ghi sổ.
+            </p>
+        </field>
+    </record>
+
+    <!--
+      Nằm cùng nhóm "Trích thu & Thanh toán" với Giấy báo ngân hàng: đây
+      là việc cuối kỳ của người theo dõi nợ, không phải cấu hình.
+    -->
+    <menuitem id="menu_re_loan_fx_revaluation"
+              name="Đánh giá lại tỷ giá"
+              parent="re_loan.menu_grp_payment"
+              action="action_re_loan_fx_revaluation"
+              sequence="80"
+              groups="re_loan.group_loan_manager"/>
+
+</odoo>

@@ -47,30 +47,21 @@ class ReLoanNoteInterestLine(models.Model):
             if capitalized > 0:
                 cap_acc = note._get_loan_account(
                     'loan_account_interest_capitalized_id')
-                lines.append((0, 0, {
-                    'account_id': cap_acc.id,
-                    'name': _('Lãi capitalize %(kw)s — kỳ %(p)s',
-                              kw=note.name, p=rec.period_no),
-                    'debit': capitalized, 'credit': 0.0,
-                    'partner_id': note.partner_id.id or False,
-                }))
+                lines.append(note._fx_line(
+                    cap_acc, _('Lãi capitalize %(kw)s — kỳ %(p)s',
+                               kw=note.name, p=rec.period_no),
+                    capitalized, rec.date_to, debit=True))
             if expense > 0:
                 exp_acc = note._get_loan_account(
                     'loan_account_interest_expense_id')
-                lines.append((0, 0, {
-                    'account_id': exp_acc.id,
-                    'name': _('CP lãi %(kw)s — kỳ %(p)s',
-                              kw=note.name, p=rec.period_no),
-                    'debit': expense, 'credit': 0.0,
-                    'partner_id': note.partner_id.id or False,
-                }))
-            lines.append((0, 0, {
-                'account_id': payable_acc.id,
-                'name': _('Lãi phải trả %(kw)s — kỳ %(p)s',
-                          kw=note.name, p=rec.period_no),
-                'debit': 0.0, 'credit': total,
-                'partner_id': note.partner_id.id or False,
-            }))
+                lines.append(note._fx_line(
+                    exp_acc, _('CP lãi %(kw)s — kỳ %(p)s',
+                               kw=note.name, p=rec.period_no),
+                    expense, rec.date_to, debit=True))
+            lines.append(note._fx_balance_line(
+                payable_acc, _('Lãi phải trả %(kw)s — kỳ %(p)s',
+                               kw=note.name, p=rec.period_no),
+                lines, rec.date_to, debit=False))
             move = rec.env['account.move'].create({
                 'journal_id': journal.id,
                 'date': rec.date_to,

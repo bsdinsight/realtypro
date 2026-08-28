@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_loan_fx_reval_user,re.loan.fx.revaluation user,model_re_loan_fx_revaluation,re_loan.group_loan_user,1,0,0,0
+access_re_loan_fx_reval_manager,re.loan.fx.revaluation manager,model_re_loan_fx_revaluation,re_loan.group_loan_manager,1,1,1,1
+access_re_loan_fx_reval_line_user,re.loan.fx.revaluation.line user,model_re_loan_fx_revaluation_line,re_loan.group_loan_user,1,0,0,0
+access_re_loan_fx_reval_line_manager,re.loan.fx.revaluation.line manager,model_re_loan_fx_revaluation_line,re_loan.group_loan_manager,1,1,1,1

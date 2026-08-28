@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_re_loan_fx_revaluation" model="ir.sequence">
+            <field name="name">Phiếu đánh giá lại tỷ giá</field>
+            <field name="code">re.loan.fx.revaluation</field>
+            <field name="prefix">DGTG/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

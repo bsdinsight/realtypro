@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Soạn thảo template ngay trong Odoo bằng giao diện Word (OnlyOffice) -->
+    <record id="view_re_doc_template_form_onlyoffice" model="ir.ui.view">
+        <field name="name">re.doc.template.form.onlyoffice</field>
+        <field name="model">re.doc.template</field>
+        <field name="inherit_id" ref="re_doc.view_re_doc_template_form"/>
+        <field name="arch" type="xml">
+            <!-- Ô upload cũ nhường chỗ cho tên tệp; soạn thảo nằm ở tab riêng -->
+            <xpath expr="//field[@name='docx_file']" position="replace">
+                <field name="docx_filename" string="Tệp Word" readonly="1"
+                       placeholder="Chưa có tệp — mở tab Soạn thảo Word"/>
+            </xpath>
+            <xpath expr="//page[@name='help']" position="before">
+                <page string="Soạn thảo Word" name="editor">
+                    <field name="docx_file" filename="docx_filename"
+                           widget="re_onlyoffice_editor" nolabel="1"
+                           class="w-100"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

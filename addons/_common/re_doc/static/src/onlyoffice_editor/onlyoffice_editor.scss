@@ -1,0 +1,295 @@
+// OnlyOffice editor field — styling với field-picker sidebar.
+// Layout: editor pane 70% + sidebar 30%, full width của form section.
+
+.parkone_oo_editor_field,
+.o_field_widget.o_field_re_onlyoffice_editor {
+    display: block !important;
+    width: 100% !important;
+
+    .parkone_oo_toolbar {
+        gap: 8px;
+    }
+
+    // ── Split layout: editor + sidebar ──
+    .parkone_oo_split {
+        display: flex;
+        gap: 12px;
+        align-items: stretch;
+        min-height: 700px;
+
+        @media (max-width: 1199px) {
+            flex-direction: column; // stack vertically trên màn hẹp
+        }
+    }
+
+    .parkone_oo_editor_pane {
+        flex: 1 1 70%;
+        min-width: 0; // cho phép shrink
+    }
+
+    .parkone_oo_editor_container {
+        width: 100%;
+        height: 700px;
+        min-height: 500px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        position: relative;
+        transition: opacity 0.2s ease;
+
+        &:empty::before {
+            content: "Đang nạp OnlyOffice editor (~5-10 giây lần đầu)...";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            inset: 0;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        iframe {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 700px;
+            border: 0;
+        }
+    }
+
+    // ── Field picker sidebar ──
+    .parkone_oo_sidebar {
+        flex: 0 0 320px;
+        max-width: 320px;
+        background: #fafbfc;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        max-height: 700px;
+        overflow: hidden;
+
+        @media (max-width: 1199px) {
+            flex: 1 1 auto;
+            max-width: 100%;
+            max-height: 400px;
+        }
+    }
+
+    .parkone_oo_sidebar_header {
+        font-size: 0.95em;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .parkone_oo_sidebar_tip {
+        background: #fff8e6;
+        border-left: 3px solid #f0b429;
+        padding: 6px 8px;
+        font-size: 0.78em;
+        line-height: 1.4;
+        color: #5c4a1a;
+        margin-bottom: 10px;
+        border-radius: 2px;
+
+        code {
+            background: rgba(0,0,0,0.05);
+            padding: 0 3px;
+            border-radius: 2px;
+            font-size: 0.95em;
+        }
+
+        kbd {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 0 4px;
+            font-size: 0.9em;
+        }
+    }
+
+    .parkone_oo_fields_tree {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        min-height: 0; // cho phép scroll inside flex
+        margin-bottom: 8px;
+    }
+
+    .parkone_oo_field_row {
+        margin-bottom: 2px;
+    }
+
+    .parkone_oo_field_main {
+        display: flex;
+        align-items: center;
+        padding: 4px 6px;
+        border-radius: 3px;
+        font-size: 0.85em;
+
+        &:hover {
+            background: #eef2f7;
+        }
+    }
+
+    .parkone_oo_child_row {
+        padding-left: 18px;  // indent dưới parent
+        font-size: 0.82em;
+        background: rgba(0,0,0,0.02);
+    }
+
+    .parkone_oo_chevron {
+        width: 16px;
+        font-size: 0.75em;
+        color: #6c757d;
+        flex-shrink: 0;
+    }
+
+    .parkone_oo_chevron_spacer {
+        display: inline-block;
+        width: 16px;
+        flex-shrink: 0;
+    }
+
+    .parkone_oo_field_icon {
+        width: 16px;
+        text-align: center;
+        color: #6c757d;
+        margin-right: 6px;
+        font-size: 0.85em;
+        flex-shrink: 0;
+    }
+
+    .parkone_oo_field_label {
+        flex: 1 1 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+    }
+
+    .parkone_oo_field_actions {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        opacity: 0.6;
+        transition: opacity 0.15s ease;
+
+        .btn-sm {
+            padding: 1px 6px;
+            font-size: 0.75em;
+            line-height: 1.3;
+
+            code {
+                color: inherit;
+                background: transparent;
+                padding: 0;
+                font-size: 0.95em;
+            }
+        }
+    }
+
+    .parkone_oo_field_main:hover .parkone_oo_field_actions {
+        opacity: 1;
+    }
+
+    .parkone_oo_field_children {
+        margin-left: 4px;
+        margin-top: 2px;
+        border-left: 2px solid #e5e7eb;
+    }
+
+    // ── Curated group field picker (Đại's nghiệp vụ-driven layout) ──
+    .parkone_oo_group_row {
+        margin-bottom: 4px;
+    }
+
+    .parkone_oo_group_header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 8px;
+        background: #f3e8ff;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.88em;
+        user-select: none;
+        transition: background 0.15s ease;
+
+        &:hover {
+            background: #e9d5ff;
+        }
+
+        strong {
+            color: #4c1d95;
+        }
+    }
+
+    .parkone_oo_group_chevron {
+        width: 12px;
+        font-size: 0.7em;
+        color: #7c3aed;
+    }
+
+    .parkone_oo_group_fields {
+        padding: 4px 0 4px 8px;
+        margin-left: 4px;
+        border-left: 2px solid #e5e7eb;
+    }
+
+    .parkone_oo_curated_field {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px 10px;
+        margin: 2px 0;
+        font-size: 0.85em;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.12s ease;
+
+        &:hover {
+            background: #eef2f7;
+            padding-left: 12px;
+
+            .parkone_oo_curated_arrow {
+                opacity: 1;
+                transform: translateX(2px);
+            }
+        }
+    }
+
+    .parkone_oo_curated_label {
+        color: #374151;
+    }
+
+    .parkone_oo_curated_arrow {
+        font-size: 0.75em;
+        color: #7c3aed;
+        opacity: 0;
+        transition: all 0.15s ease;
+    }
+
+    .parkone_oo_snippets {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 8px;
+
+        .btn-sm {
+            padding: 2px 8px;
+            font-size: 0.78em;
+
+            code {
+                color: inherit;
+                background: transparent;
+                padding: 0;
+            }
+        }
+    }
+}
+
+// Override Odoo's default form field width constraint for our editor field
+.o_form_view .o_field_re_onlyoffice_editor {
+    grid-column: 1 / -1 !important;  // span tất cả columns
+    max-width: 100% !important;
+}

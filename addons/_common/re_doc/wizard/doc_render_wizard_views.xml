@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_doc_render_wizard_form" model="ir.ui.view">
+        <field name="name">re.doc.render.wizard.form</field>
+        <field name="model">re.doc.render.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tạo tài liệu">
+                <group>
+                    <field name="target_model" invisible="1"/>
+                    <field name="target_id" invisible="1"/>
+                    <field name="target_name" readonly="1"/>
+                    <field name="template_id"
+                           options="{'no_create': True}"/>
+                    <field name="attach_to_record"/>
+                </group>
+                <div class="text-muted">
+                    Tài liệu sẽ được trộn dữ liệu từ hồ sơ này và tải về máy.
+                </div>
+                <footer>
+                    <button name="action_render" type="object"
+                            string="Tạo &amp; tải về" class="btn-primary"/>
+                    <button string="Hủy" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_doc_render_wizard" model="ir.actions.act_window">
+        <field name="name">Tạo tài liệu</field>
+        <field name="res_model">re.doc.render.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

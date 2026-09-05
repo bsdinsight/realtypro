@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="re_doc.OnlyofficeEditorField">
+    <div class="parkone_oo_editor_field">
+
+      <!-- Toolbar — upload mới + status -->
+      <div class="parkone_oo_toolbar d-flex align-items-center mb-2">
+        <button type="button" class="btn btn-secondary btn-sm me-2"
+                t-on-click="onUploadClick">
+          <i class="fa fa-upload me-1"/> Tải file Word mới
+        </button>
+        <input type="file" class="d-none" accept=".docx"
+               t-on-change="onFileChange"/>
+
+        <span t-if="state.loading" class="text-muted">
+          <i class="fa fa-spin fa-spinner me-1"/> Đang nạp editor...
+        </span>
+        <span t-elif="state.ready" class="text-success">
+          <i class="fa fa-check-circle me-1"/> Editor sẵn sàng — chỉnh sửa xong save trong editor để lưu về Odoo
+        </span>
+      </div>
+
+      <!-- Error display -->
+      <div t-if="state.error" class="alert alert-danger mb-2" role="alert">
+        <strong>Lỗi:</strong> <t t-out="state.error"/>
+      </div>
+
+      <!-- Hint khi record chưa save (create mode) -->
+      <div t-if="!props.record.resId" class="alert alert-info" role="alert">
+        <strong>💡 Cách bắt đầu</strong> — điền <b>Name</b> + <b>Target Model</b>
+        ở trên, click nút <b>"Lưu"</b> (hoặc icon ☁️ trên cùng). Editor
+        OnlyOffice với trang trắng sẽ tự load để Đại bắt đầu soạn ngay.
+        Có sẵn file Word? Click <b>"Tải file Word mới"</b> ở trên để import.
+      </div>
+
+      <!-- Split layout: editor + field picker sidebar -->
+      <div t-if="props.record.resId" class="parkone_oo_split">
+        <!-- Editor (left) -->
+        <div class="parkone_oo_editor_pane">
+          <div t-ref="editorContainer"
+               class="parkone_oo_editor_container"/>
+        </div>
+
+        <!-- Field picker sidebar (right) -->
+        <div class="parkone_oo_sidebar">
+          <div class="parkone_oo_sidebar_header">
+            <i class="fa fa-magic me-1"/>
+            <strong>Chèn placeholder</strong>
+            <small t-if="state.modelLabel" class="text-muted ms-1">
+              (<t t-out="state.modelLabel"/>)
+            </small>
+          </div>
+
+          <!-- Tips -->
+          <div class="parkone_oo_sidebar_tip">
+            <b>Click</b> nút <code><t t-out="jinjaBraces"/></code> → chèn placeholder vào vị trí con trỏ trong editor.
+            Hoặc click nút icon khác → chèn variants (vòng lặp, điều kiện).
+          </div>
+
+          <!-- Search box -->
+          <input type="search" class="form-control form-control-sm mb-2"
+                 placeholder="🔍 Tìm field (vd: customer, code)"
+                 t-model="state.searchQuery"/>
+
+          <!-- Copied/Inserted confirm flash -->
+          <div t-if="state.copiedHint"
+               t-attf-class="alert py-1 px-2 mb-2 {{ state.feedbackMode === 'inserted' ? 'alert-success' : 'alert-warning' }}"
+               style="font-size: 0.85em;">
+            <t t-if="state.feedbackMode === 'inserted'">
+              <i class="fa fa-check me-1"/> Đã chèn vào editor
+            </t>
+            <t t-else="">
+              <i class="fa fa-clipboard me-1"/> Đã copy — Ctrl+V vào editor
+            </t>
+          </div>
+
+          <!-- Loading / error -->
+          <div t-if="state.fieldsLoading" class="text-muted small">
+            <i class="fa fa-spin fa-spinner me-1"/> Đang nạp fields...
+          </div>
+          <div t-if="state.fieldsError" class="alert alert-warning small">
+            <t t-out="state.fieldsError"/>
+          </div>
+
+          <!-- Curated groups (5 nhóm nghiệp vụ theo xlsx Đại) -->
+          <div class="parkone_oo_fields_tree">
+            <t t-foreach="filteredGroups" t-as="group" t-key="group_index">
+              <div class="parkone_oo_group_row">
+                <!-- Group header (click toggle expand) -->
+                <div class="parkone_oo_group_header"
+                     t-on-click="() => this.toggleGroup(group_index)">
+                  <i t-attf-class="fa {{ state.expandedGroups[group_index] === false ? 'fa-chevron-right' : 'fa-chevron-down' }} parkone_oo_group_chevron"/>
+                  <strong t-out="group.label"/>
+                  <small class="text-muted ms-1">
+                    (<t t-out="group.fields.length"/>)
+                  </small>
+                </div>
+
+                <!-- Group fields (visible by default; collapse on click) -->
+                <div t-if="state.expandedGroups[group_index] !== false"
+                     class="parkone_oo_group_fields">
+                  <t t-foreach="group.fields" t-as="field" t-key="field.label">
+                    <div class="parkone_oo_curated_field"
+                         t-att-title="field.snippet"
+                         t-on-click="(e) => this.onClickInsert(e, () => this.insertCurated(field.snippet, field.label))">
+                      <span class="parkone_oo_curated_label" t-out="field.label"/>
+                      <i class="fa fa-arrow-right parkone_oo_curated_arrow"/>
+                    </div>
+                  </t>
+                </div>
+              </div>
+            </t>
+
+            <div t-if="!state.fieldsLoading and filteredGroups.length === 0"
+                 class="text-muted small p-2">
+              <em>Không có field nào khớp "<t t-out="state.searchQuery"/>"</em>
+            </div>
+          </div>
+
+          <!-- Quick-insert snippets footer -->
+          <div class="parkone_oo_snippets">
+            <small class="text-muted d-block mb-1">Snippet hay dùng (click để chèn):</small>
+            <button type="button" class="btn btn-sm btn-outline-secondary mb-1"
+                    title="Ngày hôm nay (dd/mm/yyyy)"
+                    t-on-click="(e) => this.onClickInsert(e, () => this.insertSnippet(snippetToday, 'today'))">
+              <code><t t-out="snippetTodayLabel"/></code>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mb-1 ms-1"
+                    title="Tên công ty hiện tại"
+                    t-on-click="(e) => this.onClickInsert(e, () => this.insertSnippet(snippetCompany, 'company'))">
+              <code><t t-out="snippetCompanyLabel"/></code>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary mb-1 ms-1"
+                    title="Tên user đang in"
+                    t-on-click="(e) => this.onClickInsert(e, () => this.insertSnippet(snippetUser, 'user'))">
+              <code><t t-out="snippetUserLabel"/></code>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>

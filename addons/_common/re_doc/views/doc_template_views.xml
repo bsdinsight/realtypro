@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_doc_template_form" model="ir.ui.view">
+        <field name="name">re.doc.template.form</field>
+        <field name="model">re.doc.template</field>
+        <field name="arch" type="xml">
+            <form string="Mẫu tài liệu">
+                <header>
+                    <button name="action_open_render_wizard" type="object"
+                            string="Tạo tài liệu thử" class="btn-primary"
+                            invisible="not docx_file"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Đã lưu trữ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="VD: Hợp đồng mua bán căn hộ"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="target_model"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="docx_file" filename="docx_filename"/>
+                            <field name="docx_filename" invisible="1"/>
+                            <field name="output_pdf"/>
+                        </group>
+                    </group>
+                    <group string="Mô tả">
+                        <field name="description" nolabel="1"
+                               placeholder="Dùng cho loại sản phẩm nào, ai duyệt, ghi chú pháp lý…"/>
+                    </group>
+                    <notebook>
+                        <page string="Placeholder dùng được" name="help">
+                            <field name="placeholder_help" nolabel="1"
+                                   readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_doc_template_list" model="ir.ui.view">
+        <field name="name">re.doc.template.list</field>
+        <field name="model">re.doc.template</field>
+        <field name="arch" type="xml">
+            <list string="Mẫu tài liệu">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="target_model"/>
+                <field name="docx_filename"/>
+                <field name="output_pdf"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_doc_template_search" model="ir.ui.view">
+        <field name="name">re.doc.template.search</field>
+        <field name="model">re.doc.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="target_model"/>
+                <filter string="Đã lưu trữ" name="inactive"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Loại hồ sơ" name="gb_model"
+                            context="{'group_by': 'target_model'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_doc_template" model="ir.actions.act_window">
+        <field name="name">Mẫu tài liệu</field>
+        <field name="res_model">re.doc.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo mẫu tài liệu đầu tiên
+            </p>
+            <p>
+                Soạn hợp đồng, phụ lục, biên bản bằng Word rồi tải lên đây.
+                Chỗ nào cần điền dữ liệu thì gõ placeholder — xem tab
+                "Placeholder dùng được" trên mẫu.
+            </p>
+        </field>
+    </record>
+</odoo>

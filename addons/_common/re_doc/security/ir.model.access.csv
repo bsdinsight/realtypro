@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_re_doc_template_user,re.doc.template.user,model_re_doc_template,re_base.group_re_user,1,0,0,0
+access_re_doc_template_manager,re.doc.template.manager,model_re_doc_template,re_base.group_re_manager,1,1,1,1
+access_re_doc_render_wizard_user,re.doc.render.wizard.user,model_re_doc_render_wizard,re_base.group_re_user,1,1,1,1
+access_re_doc_render_wizard_manager,re.doc.render.wizard.manager,model_re_doc_render_wizard,re_base.group_re_manager,1,1,1,1

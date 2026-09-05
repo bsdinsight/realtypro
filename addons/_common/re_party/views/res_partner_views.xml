@@ -21,6 +21,17 @@
                                    placeholder="0123456789 or 0123456789-001"/>
                             <field name="phone_secondary"/>
                         </group>
+                        <!-- Lối thoát cho trường hợp trùng có chủ ý. Không
+                             có nó thì ràng buộc mã số thuế là cấm tuyệt
+                             đối, và người dùng sẽ gõ sai mã số thuế để lách
+                             — phá đúng cái khoá mà ràng buộc muốn giữ. -->
+                        <group string="Duplicate handling">
+                            <field name="identity_dup_ack"/>
+                            <field name="identity_dup_reason"
+                                   invisible="not identity_dup_ack"
+                                   required="identity_dup_ack"
+                                   placeholder="Vì sao vẫn giữ bản ghi trùng này"/>
+                        </group>
                     </group>
                     <group string="Permanent Address (Thường trú)">
                         <field name="vn_permanent_address" nolabel="1"

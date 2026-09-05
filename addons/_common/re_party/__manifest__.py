@@ -1,6 +1,6 @@
 {
     'name': 'Realty - Party',
-    'version': '19.0.0.5.0',
+    'version': '19.0.0.6.0',
     'category': 'Realty',
     'summary': 'Vietnam-specific identity fields on res.partner '
                '(tax code, national ID, household registration) shared '
@@ -18,6 +18,8 @@ Vietnamese real-estate workflows:
 * Permanent address (Nơi thường trú) for HĐMB legal documents
 * Family / personal relationships (vợ/chồng, cha, mẹ, con, …) declared
   inline on the partner form — required by Vietnamese HĐMB workflow
+* Canonical identity keys (national ID / tax code with separators
+  stripped) used for duplicate detection and cross-database matching
 
 Across the three sub-suites (Project, Sales, Living) a single legal
 person can play several roles. The role tags are flags rather than a

@@ -49,6 +49,39 @@ class ResPartner(models.Model):
         help='Vietnamese tax code. 10 digits for primary entity; '
              'add a 3-digit suffix (e.g. 0123456789-001) for branches.',
     )
+
+    # ------------------------------------------------------------------
+    # Canonical identity keys — never shown, never typed
+    # ------------------------------------------------------------------
+    # Users type "079 123 456 789" and "079123456789" for the same person.
+    # Comparing the raw strings finds nothing, so every duplicate check and
+    # every cross-database sync must run on a canonical value instead.
+    # Phone and email already have Odoo's `phone_sanitized` /
+    # `email_normalized`; these two close the remaining gap. Indexed
+    # because they are the join key, not a display field.
+    vn_national_id_norm = fields.Char(
+        string='National ID (canonical)', compute='_compute_identity_norm',
+        store=True, index=True, copy=False, readonly=True,
+        help='Digits only, generated from National ID. Used for duplicate '
+             'detection and cross-database matching.',
+    )
+    vn_tax_code_norm = fields.Char(
+        string='Tax Code (canonical)', compute='_compute_identity_norm',
+        store=True, index=True, copy=False, readonly=True,
+        help='Tax code with separators stripped, branch suffix kept.',
+    )
+
+    # Set when a duplicate was created ON PURPOSE, with a reason. Only this
+    # exempts a record from the tax-code uniqueness guard below — two
+    # ordinary records still cannot collide.
+    identity_dup_ack = fields.Boolean(
+        string='Duplicate accepted', copy=False, tracking=True,
+        help='Ticked when someone deliberately kept a record that matches '
+             'an existing partner. Requires a reason.',
+    )
+    identity_dup_reason = fields.Char(
+        string='Reason for duplicate', copy=False, tracking=True,
+    )
     phone_secondary = fields.Char(
         string='Secondary Phone',
         help='Spouse / household contact / alternate number.',
@@ -129,7 +162,7 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------------
     # Distinct from Odoo's native parent_id (contact hierarchy). This is
     # the GROUP parent used by intercompany lending: a parent company
-    # (e.g. CC1) borrows from a bank and on-lends to its subsidiaries.
+    # borrows from a bank and on-lends to its subsidiaries.
     parent_company_id = fields.Many2one(
         'res.partner', string='Parent Company (Group)',
         domain="[('is_company', '=', True), ('id', '!=', id)]",
@@ -142,12 +175,41 @@ class ResPartner(models.Model):
     )
 
     # ------------------------------------------------------------------
+    # Normalization
+    # ------------------------------------------------------------------
+    @staticmethod
+    def norm_national_id(value):
+        """Digits only. Keeps leading zeros, so it must stay a string."""
+        return re.sub(r'\D', '', value or '') or False
+
+    @staticmethod
+    def norm_tax_code(value):
+        """Strip spaces and dots; keep the dash of a branch code.
+
+        `0123456789-001` and `0123456789 - 001` are the same tax code, but
+        `0123456789` (parent) and `0123456789-001` (branch) are NOT — the
+        dash carries meaning and must survive.
+        """
+        v = re.sub(r'[^\d-]', '', (value or '').strip())
+        return v or False
+
+    @api.depends('vn_national_id', 'vn_tax_code')
+    def _compute_identity_norm(self):
+        for rec in self:
+            rec.vn_national_id_norm = self.norm_national_id(rec.vn_national_id)
+            rec.vn_tax_code_norm = self.norm_tax_code(rec.vn_tax_code)
+
+    # ------------------------------------------------------------------
     # Constraints
     # ------------------------------------------------------------------
     @api.constrains('vn_national_id')
     def _check_vn_national_id(self):
+        # Kiểm tra trên giá trị ĐÃ CHUẨN HOÁ, không phải chuỗi người gõ.
+        # Người dùng gõ "079 123 456 789" là chuyện bình thường; bắt lỗi
+        # cách gõ chỉ khiến họ bỏ trống ô CCCD — mà đó lại là khoá nhận
+        # diện chắc chắn nhất mình có.
         for rec in self:
-            v = (rec.vn_national_id or '').strip()
+            v = self.norm_national_id(rec.vn_national_id) or ''
             if v and not (RE_CMND.fullmatch(v) or RE_CCCD.fullmatch(v)):
                 raise ValidationError(_(
                     "National ID '%s' is not a valid Vietnamese CMND "
@@ -157,7 +219,7 @@ class ResPartner(models.Model):
     @api.constrains('vn_tax_code')
     def _check_vn_tax_code(self):
         for rec in self:
-            v = (rec.vn_tax_code or '').strip()
+            v = self.norm_tax_code(rec.vn_tax_code) or ''
             if v and not RE_TAX_CODE.fullmatch(v):
                 raise ValidationError(_(
                     "Tax code '%s' is invalid. Use 10 digits, or "
@@ -167,8 +229,19 @@ class ResPartner(models.Model):
     # Soft uniqueness scoped per company. Allow duplicates ACROSS
     # companies (a partner shared in multiple Odoo companies can repeat)
     # but disallow within a company.
+    #
+    # A record that carries `identity_dup_ack` is exempt: keeping the guard
+    # as an outright ban means there is no way to record the real-world
+    # cases where the same tax code legitimately appears twice, and people
+    # work around a ban by mistyping the tax code — which destroys the join
+    # key this constraint exists to protect. Two ordinary records still
+    # cannot collide; only a deliberate, reasoned exception can.
+    # So trên giá trị canonical, không so chuỗi thô: "0123456789" và
+    # "0123456789 " là cùng một mã số thuế, ràng buộc trên chuỗi thô cho
+    # cả hai cùng tồn tại và khoá định danh mất tác dụng.
     _vn_tax_code_company_uniq = models.Constraint(
-        'EXCLUDE (company_id WITH =, vn_tax_code WITH =) '
-        'WHERE (vn_tax_code IS NOT NULL AND vn_tax_code <> \'\')',
+        'EXCLUDE (company_id WITH =, vn_tax_code_norm WITH =) '
+        'WHERE (vn_tax_code_norm IS NOT NULL AND vn_tax_code_norm <> \'\' '
+        'AND identity_dup_ack IS NOT TRUE)',
         'A partner with this tax code already exists in this company.',
     )

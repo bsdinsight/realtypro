@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ReProject(models.Model):
@@ -108,6 +109,25 @@ class ReProject(models.Model):
     legal_doc_number = fields.Char(string='Legal Document Number')
     legal_doc_date = fields.Date(string='Legal Document Date')
 
+    # FOREIGN OWNERSHIP QUOTA — hạn mức sở hữu nước ngoài
+    #
+    # Đây là hạn mức PHÁP LÝ của dự án, không phải chính sách bán hàng: bán
+    # vượt hạn mức thì hợp đồng không cấp được giấy chứng nhận, và cái giá
+    # trả sau khi đã thu tiền của khách là rất đắt.
+    foreign_ownership_allowed = fields.Boolean(
+        string='Sold to Foreigners (Bán cho người nước ngoài)', tracking=True,
+        help='Dự án có được bán cho tổ chức, cá nhân nước ngoài hay không.')
+    foreign_ownership_pct = fields.Float(
+        string='Foreign Ownership Cap % (Tỉ lệ tối đa)', digits=(5, 2),
+        tracking=True,
+        help='Tỉ lệ tối đa được bán cho người nước ngoài, theo văn bản chấp '
+             'thuận của chính dự án.\n\n'
+             'Luật Nhà ở giới hạn không quá 30% số căn hộ của MỘT TOÀ chung '
+             'cư; nhà ở riêng lẻ tính theo số căn trong một khu vực dân cư. '
+             'Con số khai ở đây là hạn mức của dự án và thường thấp hơn trần '
+             'luật định. Hệ thống KHÔNG tự chặn theo trần 30% vì trần đó '
+             'tính trên từng toà chứ không trên cả dự án.')
+
     # DEVELOPERS
     master_developer_id = fields.Many2one(
         'res.partner', string='Master Developer',
@@ -177,6 +197,26 @@ class ReProject(models.Model):
     active = fields.Boolean(default=True)
 
     _unique_code = models.Constraint('UNIQUE(code)', 'Project code must be unique!')
+
+    @api.constrains('foreign_ownership_allowed', 'foreign_ownership_pct')
+    def _check_foreign_ownership_pct(self):
+        for rec in self:
+            if not rec.foreign_ownership_allowed:
+                continue
+            if not 0 < rec.foreign_ownership_pct <= 100:
+                raise ValidationError(_(
+                    'Dự án "%(ten)s" đang bật bán cho người nước ngoài nên '
+                    'phải khai tỉ lệ tối đa, và tỉ lệ phải nằm trong khoảng '
+                    'lớn hơn 0 tới 100. Bật cờ mà để 0 thì màn hình nói được '
+                    'phép bán trong khi hạn mức là không căn nào.',
+                    ten=rec.name))
+
+    @api.onchange('foreign_ownership_allowed')
+    def _onchange_foreign_ownership_allowed(self):
+        # Tắt cờ thì xoá luôn tỉ lệ. Giữ lại một con số cũ dưới ô đã tắt là
+        # cách chắc chắn để sau này có người đọc nhầm là dự án còn hạn mức.
+        if not self.foreign_ownership_allowed:
+            self.foreign_ownership_pct = 0.0
 
     @api.depends('subzone_ids', 'building_ids', 'unit_ids', 'unit_ids.state')
     def _compute_counts(self):

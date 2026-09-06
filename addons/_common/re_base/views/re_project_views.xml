@@ -176,9 +176,17 @@
                         </page>
                         <page string="Legal" name="legal">
                             <group>
-                                <field name="legal_status"/>
-                                <field name="legal_doc_number"/>
-                                <field name="legal_doc_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                <group string="Legal Documents">
+                                    <field name="legal_status"/>
+                                    <field name="legal_doc_number"/>
+                                    <field name="legal_doc_date" options="{'format': 'dd/MM/yyyy'}"/>
+                                </group>
+                                <group string="Foreign Ownership (Sở hữu nước ngoài)">
+                                    <field name="foreign_ownership_allowed"/>
+                                    <field name="foreign_ownership_pct"
+                                           invisible="not foreign_ownership_allowed"
+                                           required="foreign_ownership_allowed"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Marketing" name="marketing">

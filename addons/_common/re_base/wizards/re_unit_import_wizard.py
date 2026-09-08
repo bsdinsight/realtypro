@@ -45,9 +45,9 @@ class ReUnitImportWizard(models.TransientModel):
     file_name = fields.Char(string='File Name')
 
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('validated', 'Validated'),
-        ('done', 'Done'),
+        ('draft', 'Nháp'),
+        ('validated', 'Đã kiểm'),
+        ('done', 'Hoàn tất'),
     ], default='draft')
     log_text = fields.Text(string='Import Log', readonly=True)
     validation_log = fields.Text(string='Validation Log', readonly=True)

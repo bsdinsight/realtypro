@@ -22,7 +22,7 @@ class ReFloorImportWizard(models.TransientModel):
     file_name = fields.Char(string='File Name')
     update_existing = fields.Boolean(string='Update Existing Floors', default=True)
 
-    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft')
+    state = fields.Selection([('draft', 'Nháp'), ('done', 'Hoàn tất')], default='draft')
     log_text = fields.Text(string='Log', readonly=True)
     success_count = fields.Integer(readonly=True)
     error_count = fields.Integer(readonly=True)

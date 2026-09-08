@@ -37,7 +37,7 @@ LIFECYCLE_STATES = [
     ('product_handover',     'Product Handover'),
     ('certificate_handover', 'Certificate Handover'),
     ('operation',            'Operation'),
-    ('closed',               'Closed'),
+    ('closed', 'Đã đóng'),
 ]
 """The eight lifecycle phases for a Vietnamese real-estate project.
 

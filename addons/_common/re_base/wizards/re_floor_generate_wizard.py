@@ -41,7 +41,7 @@ class ReFloorGenerateWizard(models.TransientModel):
 
     preview_text = fields.Text(string='Preview', compute='_compute_preview', readonly=True)
 
-    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft')
+    state = fields.Selection([('draft', 'Nháp'), ('done', 'Hoàn tất')], default='draft')
     log_text = fields.Text(string='Log', readonly=True)
     created_count = fields.Integer(readonly=True)
     updated_count = fields.Integer(readonly=True)

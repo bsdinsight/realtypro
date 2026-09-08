@@ -18,7 +18,7 @@
 
     <record id="unit_type_1br" model="re.unit.type">
         <field name="code">1BR</field>
-        <field name="name">1 Bedroom</field>
+        <field name="name">Căn 1 phòng ngủ</field>
         <field name="category">apartment</field>
         <field name="default_bedroom_count">1</field>
         <field name="default_bathroom_count">1</field>
@@ -33,7 +33,7 @@
 
     <record id="unit_type_1br_plus" model="re.unit.type">
         <field name="code">1BR_PLUS</field>
-        <field name="name">1 Bedroom Plus</field>
+        <field name="name">Căn 1 phòng ngủ +</field>
         <field name="category">apartment</field>
         <field name="default_bedroom_count">1</field>
         <field name="default_bathroom_count">1</field>
@@ -48,7 +48,7 @@
 
     <record id="unit_type_2br" model="re.unit.type">
         <field name="code">2BR</field>
-        <field name="name">2 Bedroom</field>
+        <field name="name">Căn 2 phòng ngủ</field>
         <field name="category">apartment</field>
         <field name="default_bedroom_count">2</field>
         <field name="default_bathroom_count">2</field>
@@ -63,7 +63,7 @@
 
     <record id="unit_type_3br" model="re.unit.type">
         <field name="code">3BR</field>
-        <field name="name">3 Bedroom</field>
+        <field name="name">Căn 3 phòng ngủ</field>
         <field name="category">apartment</field>
         <field name="default_bedroom_count">3</field>
         <field name="default_bathroom_count">2</field>
@@ -78,7 +78,7 @@
 
     <record id="unit_type_4br" model="re.unit.type">
         <field name="code">4BR</field>
-        <field name="name">4 Bedroom</field>
+        <field name="name">Căn 4 phòng ngủ</field>
         <field name="category">apartment</field>
         <field name="default_bedroom_count">4</field>
         <field name="default_bathroom_count">3</field>
@@ -93,7 +93,7 @@
 
     <record id="unit_type_duplex" model="re.unit.type">
         <field name="code">DUPLEX</field>
-        <field name="name">Duplex</field>
+        <field name="name">Căn Duplex</field>
         <field name="category">duplex</field>
         <field name="default_bedroom_count">3</field>
         <field name="default_bathroom_count">3</field>
@@ -138,7 +138,7 @@
 
     <record id="unit_type_villa" model="re.unit.type">
         <field name="code">VILLA</field>
-        <field name="name">Villa</field>
+        <field name="name">Biệt thự</field>
         <field name="category">villa</field>
         <field name="default_bedroom_count">4</field>
         <field name="default_bathroom_count">4</field>
@@ -168,7 +168,7 @@
 
     <record id="unit_type_townhouse" model="re.unit.type">
         <field name="code">TH</field>
-        <field name="name">Townhouse</field>
+        <field name="name">Nhà phố</field>
         <field name="category">townhouse</field>
         <field name="default_bedroom_count">4</field>
         <field name="default_bathroom_count">4</field>

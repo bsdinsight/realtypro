@@ -160,11 +160,11 @@ class ReUnit(models.Model):
     )
 
     state = fields.Selection(
-        [('draft', 'Draft'), ('available', 'Available'),
-         ('on_hold', 'On Hold'), ('booked', 'Booked'),
-         ('deposited', 'Deposited'), ('contracted', 'Contracted'),
-         ('handed_over', 'Handed Over'), ('locked', 'Locked'),
-         ('cancelled', 'Cancelled')],
+        [('draft', 'Nháp'), ('available', 'Sẵn bán'),
+         ('on_hold', 'Tạm giữ'), ('booked', 'Đã giữ chỗ'),
+         ('deposited', 'Đã đặt cọc'), ('contracted', 'Đã ký HĐMB'),
+         ('handed_over', 'Đã bàn giao'), ('locked', 'Đã khoá'),
+         ('cancelled', 'Đã huỷ')],
         string='Status', default='draft', tracking=True, required=True,
     )
 

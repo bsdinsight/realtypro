@@ -294,7 +294,14 @@ class ReUnit(models.Model):
     def _compute_pricing_breakdown(self):
         for rec in self:
             rec.vat_amount = rec.original_price * (rec.vat_rate or 0) / 100
-            rec.maintenance_fee_amount = rec.original_price * (rec.maintenance_fee_rate or 0) / 100
+            # Kinh phí bảo trì tính trên giá ĐÃ GỒM VAT — cùng quy tắc
+            # với phiếu tính giá và phiếu cọc (`re.sale.deposit`). Nếu
+            # hai chỗ tính khác nhau thì cùng một căn chưa chiết khấu sẽ
+            # ra hai con số: một trên thẻ Giỏ hàng, một trên phiếu đưa
+            # khách.
+            rec.maintenance_fee_amount = (
+                (rec.original_price + rec.vat_amount)
+                * (rec.maintenance_fee_rate or 0) / 100)
             rec.total_price = rec.original_price + rec.vat_amount + rec.maintenance_fee_amount
 
     @api.depends('unit_code', 'project_id.code')

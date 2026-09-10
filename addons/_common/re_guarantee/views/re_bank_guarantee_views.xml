@@ -165,6 +165,10 @@
                             <field name="date_issue"/>
                             <field name="date_activation"/>
                             <field name="date_expiry"/>
+                            <field name="pic_user_id"/>
+                            <field name="pic_department_id"/>
+                            <field name="last_expiry_reminder"
+                                   invisible="not last_expiry_reminder"/>
                             <field name="days_remaining" readonly="1"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>

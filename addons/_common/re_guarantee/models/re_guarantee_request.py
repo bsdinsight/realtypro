@@ -299,19 +299,37 @@ class ReGuaranteeRequest(models.Model):
 
     @api.depends('payment_ids.amount', 'payment_ids.payment_kind',
                  'payment_ids.state',
+                 'bank_guarantee_id',
+                 'bank_guarantee_id.payment_ids.amount',
+                 'bank_guarantee_id.payment_ids.payment_kind',
+                 'bank_guarantee_id.payment_ids.state',
                  'guarantee_fee_amount', 'deposit_amount', 'penalty_amount')
     def _compute_paid_totals(self):
+        """Số đã trả gộp cả hai nơi: đề nghị và chứng thư sinh ra từ nó.
+
+        Sau khi phát hành, mọi khoản phí, ký quỹ, phạt đều ghi trên
+        CHỨNG THƯ. Nếu đề nghị chỉ đếm dòng thanh toán của chính nó thì
+        từ lúc phát hành trở đi nó đứng im ở con số cũ — mở đề nghị ra
+        thấy "còn phải trả" nguyên vẹn trong khi tiền đã nộp xong.
+        Người dùng đọc hai màn hình ra hai câu trả lời khác nhau cho
+        cùng một câu hỏi.
+        """
+        def _by_kind(records, kind):
+            return sum(
+                records.filtered(
+                    lambda p: p.state == 'posted'
+                    and p.payment_kind == kind).mapped('amount'))
+
         for rec in self:
-            posted = rec.payment_ids.filtered(lambda p: p.state == 'posted')
-            fee_paid = sum(
-                posted.filtered(lambda p: p.payment_kind == 'fee')
-                .mapped('amount'))
-            dep_paid = sum(
-                posted.filtered(lambda p: p.payment_kind == 'deposit')
-                .mapped('amount'))
-            pen_paid = sum(
-                posted.filtered(lambda p: p.payment_kind == 'penalty')
-                .mapped('amount'))
+            own = rec.payment_ids
+            cert_pays = (rec.bank_guarantee_id.payment_ids
+                         if rec.bank_guarantee_id
+                         else self.env['re.bank.guarantee.payment'])
+            fee_paid = _by_kind(own, 'fee') + _by_kind(cert_pays, 'fee')
+            dep_paid = (_by_kind(own, 'deposit')
+                        + _by_kind(cert_pays, 'deposit'))
+            pen_paid = (_by_kind(own, 'penalty')
+                        + _by_kind(cert_pays, 'penalty'))
             rec.guarantee_fee_paid = fee_paid
             rec.deposit_paid = dep_paid
             rec.penalty_paid = pen_paid
@@ -384,13 +402,31 @@ class ReGuaranteeRequest(models.Model):
                 },
             }
 
-    @api.constrains('date_expiry', 'date_request')
+    @api.constrains('date_expiry', 'date_request', 'date_issue')
     def _check_dates(self):
+        """Ba mốc phải đi đúng thứ tự đời thực: đề nghị → phát hành →
+        hết hạn.
+
+        Gõ ngược thì phí bảo lãnh tính theo số ngày âm, và chứng thư
+        sinh ra từ đề nghị mang luôn ngày sai sang.
+        """
         for rec in self:
             if rec.date_expiry and rec.date_request and (
                     rec.date_expiry <= rec.date_request):
                 raise ValidationError(_(
                     "Ngày hết hạn phải sau ngày đề nghị."))
+            if (rec.date_issue and rec.date_request
+                    and rec.date_issue < rec.date_request):
+                raise ValidationError(_(
+                    'Ngày phát hành thực tế (%(i)s) không được sớm hơn '
+                    'Ngày đề nghị (%(r)s).',
+                    i=rec.date_issue, r=rec.date_request))
+            if (rec.date_expiry and rec.date_issue
+                    and rec.date_expiry < rec.date_issue):
+                raise ValidationError(_(
+                    'Ngày hết hạn (%(e)s) không được sớm hơn Ngày phát '
+                    'hành thực tế (%(i)s).',
+                    e=rec.date_expiry, i=rec.date_issue))
 
     # ------------------------------------------------------------------
     # Create — auto sequence
@@ -426,12 +462,10 @@ class ReGuaranteeRequest(models.Model):
             rec.state = 'active'
             if not rec.date_issue:
                 rec.date_issue = fields.Date.context_today(rec)
-            # Trigger recompute facility usage
-            rec.facility_id._compute_amount_used()
-            rec.facility_id._compute_amount_available()
             rec.message_post(body=_(
-                "Kích hoạt BL %(a)s, chiếm hạn mức %(f)s. Bắt đầu "
-                "tính phí BL.",
+                "Kích hoạt đề nghị BL %(a)s trên hạn mức %(f)s. CHƯA "
+                "chiếm hạn mức — hạn mức chỉ bị trừ khi phát hành "
+                "chứng thư.",
                 a=rec.amount, f=rec.facility_id.name))
 
     def action_issue(self):
@@ -451,6 +485,17 @@ class ReGuaranteeRequest(models.Model):
         if self.bank_guarantee_id:
             raise UserError(_(
                 "Đề nghị này đã có chứng thư BL — không phát hành mới."))
+        # Phát hành mới là lúc thật sự chiếm hạn mức nên kiểm ở đây,
+        # không chỉ ở bước kích hoạt: giữa hai bước có thể đã có chứng
+        # thư khác phát hành và ăn mất phần còn lại.
+        if self.facility_id:
+            available = self.facility_id.amount_available
+            if available + 0.01 < self.amount:
+                raise UserError(_(
+                    "Hạn mức %(f)s chỉ còn %(a)s, không đủ phát hành "
+                    "chứng thư %(b)s — đã bị chứng thư khác chiếm sau "
+                    "khi đề nghị này được kích hoạt.",
+                    f=self.facility_id.name, a=available, b=self.amount))
         today = fields.Date.context_today(self)
         cert_vals = self._prepare_bank_guarantee_vals()
         cert = self.env['re.bank.guarantee'].create(cert_vals)
@@ -531,14 +576,38 @@ class ReGuaranteeRequest(models.Model):
                 "(Legacy) Tất toán đề nghị — khôi phục hạn mức."))
 
     def action_cancel(self):
+        """Huỷ đề nghị thì huỷ luôn chứng thư sinh ra từ nó.
+
+        Chứng thư là hệ quả của đề nghị chứ không phải hồ sơ độc lập.
+        Để đề nghị "Huỷ" mà chứng thư vẫn "Đã phát hành" là hai văn bản
+        nói ngược nhau — và chứng thư đó vẫn âm thầm chiếm hạn mức.
+        """
         for rec in self:
-            if rec.state not in ('draft', 'active'):
+            if rec.state not in ('draft', 'active', 'issued'):
                 raise UserError(_(
-                    "Chỉ huỷ được BL ở Nháp hoặc Đã kích hoạt."))
+                    "Chỉ huỷ được BL ở Nháp, Đã kích hoạt hoặc Đã "
+                    "phát hành."))
+            cert = rec.bank_guarantee_id
+            if cert and cert.state not in ('draft', 'issued', 'extended'):
+                raise UserError(_(
+                    "Chứng thư %(c)s đang ở trạng thái '%(s)s' — không "
+                    "huỷ đề nghị được. Xử lý chứng thư trước.",
+                    c=cert.name,
+                    s=dict(cert._fields['state'].selection).get(
+                        cert.state)))
             if rec.state == 'active' and rec.total_paid > 0:
                 raise UserError(_(
                     "Đã phát sinh thanh toán trên BL này — không huỷ "
                     "được. Tất toán thay vì huỷ."))
+            cert = rec.bank_guarantee_id
+            if cert and cert.state != 'released':
+                cert.write({
+                    'state': 'released',
+                    'date_released': fields.Date.context_today(rec),
+                    'release_reason': _('Huỷ theo đề nghị %s') % rec.name,
+                })
+                cert.message_post(body=_(
+                    'Chứng thư huỷ theo đề nghị phát hành %s.', rec.name))
             rec.state = 'cancelled'
             if rec.facility_id:
                 rec.facility_id._compute_amount_used()

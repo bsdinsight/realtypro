@@ -21,9 +21,11 @@ class ReLoanFacility(models.Model):
         string='Chứng thư BL')
     guarantee_count = fields.Integer(compute='_compute_guarantee_stats')
     guarantee_total_outstanding = fields.Monetary(
-        string='Tổng BL đang hiệu lực',
+        string='Tổng BL đang chiếm hạn mức',
         compute='_compute_guarantee_stats', store=True,
-        help='Σ giá trị BL state ∈ (issued, extended). Chiếm hạn mức.')
+        help='Σ giá trị chứng thư BL ở trạng thái Đã phát hành, Đã gia '
+             'hạn hoặc BỊ THU. Chứng thư bị thu vẫn chiếm hạn mức cho '
+             'tới khi tất toán.')
 
     guarantee_request_ids = fields.One2many(
         're.guarantee.request', 'facility_id',
@@ -31,17 +33,24 @@ class ReLoanFacility(models.Model):
     guarantee_request_count = fields.Integer(
         compute='_compute_guarantee_request_stats')
     guarantee_request_outstanding = fields.Monetary(
-        string='Tổng Đề nghị BL đang hiệu lực',
+        string='Tổng Đề nghị BL đã kích hoạt',
         compute='_compute_guarantee_request_stats', store=True,
-        help='Σ giá trị đề nghị BL state=active. Chiếm hạn mức.')
+        help='Σ giá trị đề nghị BL đã kích hoạt nhưng CHƯA phát hành '
+             'chứng thư. Chỉ để theo dõi — KHÔNG chiếm hạn mức.')
 
     @api.depends('guarantee_ids', 'guarantee_ids.state',
                  'guarantee_ids.amount')
     def _compute_guarantee_stats(self):
         for rec in self:
             rec.guarantee_count = len(rec.guarantee_ids)
+            # 'forfeited' PHẢI nằm trong danh sách này. Bị thu nghĩa
+            # là ngân hàng đã trả thay cho bên thụ hưởng — nghĩa vụ
+            # không biến mất mà đổi thành khoản doanh nghiệp nợ lại
+            # ngân hàng. Thả hạn mức ra lúc đó là cho rút thêm đúng vào
+            # lúc rủi ro tín dụng vừa hiện thực hoá. Chỉ khi TẤT TOÁN
+            # xong mới khôi phục.
             active = rec.guarantee_ids.filtered(
-                lambda g: g.state in ('issued', 'extended'))
+                lambda g: g.state in ('issued', 'extended', 'forfeited'))
             rec.guarantee_total_outstanding = sum(active.mapped('amount'))
 
     @api.depends('guarantee_request_ids', 'guarantee_request_ids.state',
@@ -64,17 +73,25 @@ class ReLoanFacility(models.Model):
     # double-count vì request_outstanding chỉ filter state=active).
     # ------------------------------------------------------------------
     @api.depends('purpose',
-                 'guarantee_request_ids',
-                 'guarantee_request_ids.state',
-                 'guarantee_request_ids.amount',
                  'guarantee_ids',
                  'guarantee_ids.state',
                  'guarantee_ids.amount')
     def _compute_amount_used(self):
+        """Chỉ CHỨNG THƯ chiếm hạn mức, đề nghị thì không.
+
+        Trước đây đề nghị vừa kích hoạt là đã trừ hạn mức. Nhưng kích
+        hoạt mới là bước nội bộ — hồ sơ chuẩn bị xong, chưa gửi hoặc
+        ngân hàng chưa duyệt. Ngân hàng chỉ trừ hạn mức khi thực sự
+        phát hành chứng thư, nên số trên phần mềm phải khớp với số của
+        ngân hàng, không phải khớp với tiến độ giấy tờ nội bộ.
+
+        Đánh đổi: giữa lúc kích hoạt và lúc phát hành, hạn mức không
+        còn được giữ chỗ. Bù lại bằng kiểm tra lúc phát hành ở
+        `action_issue`, và cảnh báo lúc kích hoạt.
+        """
         super()._compute_amount_used()
         for rec in self:
             if rec.purpose == 'bank_guarantee':
-                rec.amount_used += rec.guarantee_request_outstanding
                 rec.amount_used += rec.guarantee_total_outstanding
 
     def action_view_guarantees(self):

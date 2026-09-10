@@ -221,6 +221,17 @@ class ReBankGuarantee(models.Model):
          ('forfeited', 'Bị thu (NH trả thay)')],
         string='Trạng thái', default='draft', required=True, tracking=True)
 
+    # ── Người phụ trách ───────────────────────────────────────────
+    # Không có PIC thì cảnh báo sắp hết hạn không biết gửi cho ai —
+    # gửi cả nhóm quản trị thì thành thư rác, ai cũng tưởng người khác
+    # lo. Một cái tên trên chứng thư là điều kiện để nhắc có địa chỉ.
+    pic_user_id = fields.Many2one(
+        'res.users', string='Người phụ trách (PIC)', tracking=True,
+        index=True,
+        help='Người nhận thư nhắc khi bảo lãnh sắp hết hạn.')
+    pic_department_id = fields.Many2one(
+        'hr.department', string='Phòng ban', tracking=True)
+
     date_settled = fields.Date(string='Ngày tất toán', readonly=True)
     date_released = fields.Date(string='Ngày giải tỏa', readonly=True)
     release_reason = fields.Char(string='Lý do giải tỏa')
@@ -886,3 +897,60 @@ class ReBankGuaranteePayment(models.Model):
         res = super().write(vals)
         self.guarantee_id._check_auto_settle()
         return res
+
+
+class ReBankGuaranteeExpiryReminder(models.Model):
+    """Nhắc người phụ trách khi chứng thư bảo lãnh sắp hết hạn.
+
+    Số ngày nhắc trước và khoảng lặp lại để CẤU HÌNH chứ không chôn
+    cứng: bảo lãnh thực hiện hợp đồng hai năm và bảo lãnh tạm ứng ba
+    tháng không thể cùng một nhịp nhắc, và mỗi doanh nghiệp có thói
+    quen xử lý gia hạn sớm muộn khác nhau.
+    """
+    _inherit = 're.bank.guarantee'
+
+    last_expiry_reminder = fields.Date(
+        string='Lần nhắc hết hạn gần nhất', readonly=True, copy=False)
+
+    @api.model
+    def _cron_expiry_reminder(self):
+        Param = self.env['ir.config_parameter'].sudo()
+        try:
+            lead = int(Param.get_param('re_guarantee.expiry_lead_days', 30))
+        except (TypeError, ValueError):
+            lead = 30
+        try:
+            repeat = int(Param.get_param('re_guarantee.expiry_repeat_days', 7))
+        except (TypeError, ValueError):
+            repeat = 7
+
+        today = fields.Date.context_today(self)
+        limit = today + timedelta(days=lead)
+        due = self.search([
+            ('state', 'in', ('issued', 'extended')),
+            ('date_expiry', '!=', False),
+            ('date_expiry', '<=', limit),
+            ('pic_user_id', '!=', False),
+        ])
+        template = self.env.ref(
+            're_guarantee.mail_template_guarantee_expiry',
+            raise_if_not_found=False)
+        sent = 0
+        for rec in due:
+            # Đã nhắc rồi thì chờ hết khoảng lặp mới nhắc lại. Không có
+            # chốt này thì mỗi sáng một thư cho tới ngày hết hạn.
+            if rec.last_expiry_reminder:
+                if (today - rec.last_expiry_reminder).days < repeat:
+                    continue
+            if template:
+                template.send_mail(rec.id, force_send=False)
+            rec.message_post(
+                body=_('Bảo lãnh hết hạn ngày %(d)s — còn %(n)s ngày. '
+                       'Đã gửi thư nhắc cho %(u)s.',
+                       d=rec.date_expiry,
+                       n=(rec.date_expiry - today).days,
+                       u=rec.pic_user_id.name),
+                partner_ids=rec.pic_user_id.partner_id.ids)
+            rec.last_expiry_reminder = today
+            sent += 1
+        return sent

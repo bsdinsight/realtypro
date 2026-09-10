@@ -103,9 +103,33 @@ class ReLoanNoteAmendmentDelta(models.Model):
             lambda l: l.date_to and l.date_to > eff
             and l.state in ('accrued', 'partial_paid', 'paid'))
         if not affected:
-            raise UserError(_(
-                'Không có kỳ lãi nào đã ghi nhận từ ngày %s trở đi. '
-                'Phụ lục này không phát sinh chênh lệch hồi tố.', eff))
+            # KHÔNG phải lỗi, nên không dựng hộp thoại đỏ (backlog 737):
+            # "không có gì để tính" là một kết quả hợp lệ của phép tính,
+            # người dùng chỉ cần biết vì sao. Hộp đỏ khiến họ tưởng phần
+            # mềm hỏng và đi báo lỗi.
+            planned = len(note.interest_line_ids.filtered(
+                lambda l: l.date_to and l.date_to > eff
+                and l.state == 'planned'))
+            msg = _(
+                'Không có chênh lệch hồi tố để tính.\n'
+                'Từ ngày hiệu lực %(d)s trở đi, khế ước chưa có kỳ lãi '
+                'nào ở trạng thái đã ghi nhận / đã thanh toán — mà chỉ '
+                'những kỳ đó mới phải tính lại.', d=eff)
+            if planned:
+                msg += _(
+                    '\n%(n)s kỳ còn Dự kiến đã được ghi thẳng lãi suất '
+                    'mới khi áp dụng phụ lục, nên không có gì hồi tố.',
+                    n=planned)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Không phát sinh chênh lệch'),
+                    'message': msg,
+                    'type': 'info',
+                    'sticky': True,
+                },
+            }
         self.delta_line_ids.unlink()
         vals = []
         for line in affected.sorted('period_no'):

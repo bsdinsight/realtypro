@@ -100,4 +100,50 @@
               action="action_re_loan_bank"
               sequence="20"/>
 
+    <!--
+      Chi nhánh ngân hàng (res.bank). Ô "Chi nhánh / Mã NH" trên HĐTD
+      vốn đã trỏ vào bảng này, nhưng không có màn hình nào để khai nên
+      danh sách luôn rỗng và người dùng không chọn được gì.
+    -->
+    <record id="view_re_loan_bank_branch_list" model="ir.ui.view">
+        <field name="name">res.bank.branch.list</field>
+        <field name="model">res.bank</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="partner_id" string="Ngân hàng"
+                       options="{'no_create': True}"/>
+                <field name="name" string="Tên chi nhánh"/>
+                <field name="bic" string="Mã SWIFT/BIC" optional="show"/>
+                <field name="street" optional="show"/>
+                <field name="city" optional="show"/>
+                <field name="phone" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_re_loan_bank_branch" model="ir.actions.act_window">
+        <field name="name">Chi nhánh ngân hàng</field>
+        <field name="res_model">res.bank</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_re_loan_bank_branch_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">
+                Khai chi nhánh ngân hàng
+            </p>
+            <p>
+                Mỗi dòng là một chi nhánh của một ngân hàng. Khai xong thì
+                ô <b>Chi nhánh / Mã NH</b> trên Hợp đồng tín dụng mới có
+                dữ liệu để chọn — ô đó chỉ hiện chi nhánh thuộc đúng ngân
+                hàng đã chọn ở trên.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_bank_branch"
+              name="Chi nhánh ngân hàng"
+              parent="menu_re_loan_config"
+              action="action_re_loan_bank_branch"
+              sequence="21"/>
+
 </odoo>

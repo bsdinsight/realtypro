@@ -58,6 +58,11 @@ class ReLoanCreditContract(models.Model):
 
     facility_ids = fields.One2many(
         're.loan.facility', 'credit_contract_id', string='Hạn mức')
+    note_ids = fields.One2many(
+        're.loan.note', 'credit_contract_id', string='Khế ước nhận nợ',
+        help='Mọi khế ước rút trên các hạn mức của HĐTD này.')
+    note_count = fields.Integer(
+        string='Số khế ước', compute='_compute_note_count')
     pledge_ids = fields.One2many(
         're.loan.collateral.pledge', 'credit_contract_id',
         string='Tài sản thế chấp',
@@ -206,13 +211,24 @@ class ReLoanCreditContract(models.Model):
                     "phần thừa trong pool, không cho phép vượt total.",
                     fac=rec.amount_facility_total, total=rec.amount_total))
 
-    @api.constrains('date_start', 'date_end')
+    @api.constrains('date_start', 'date_end', 'sign_date')
     def _check_dates(self):
+        """Ba mốc của hợp đồng tín dụng: ký → hiệu lực → hết hạn.
+
+        Hiệu lực trước ngày ký nghĩa là hợp đồng có giá trị trước khi
+        tồn tại. Thường là gõ nhầm năm, nhưng để lọt thì mọi khế ước
+        rút trong khoảng đó trông như hợp lệ.
+        """
         for rec in self:
             if rec.date_start and rec.date_end \
                     and rec.date_end < rec.date_start:
                 raise ValidationError(_(
                     "Ngày hết hạn không được trước ngày hiệu lực."))
+            if rec.sign_date and rec.date_start \
+                    and rec.date_start < rec.sign_date:
+                raise ValidationError(_(
+                    'Ngày hiệu lực (%(s)s) không được trước Ngày ký '
+                    '(%(k)s).', s=rec.date_start, k=rec.sign_date))
 
     def action_open_reallocate_wizard(self):
         """Mở wizard phân bổ lại hạn mức xuống các facility."""
@@ -294,3 +310,52 @@ class ReLoanCreditContract(models.Model):
                     "Không thể xoá HĐTD '%s' khi còn hạn mức. Huỷ thay vì "
                     "xoá để giữ vết.", rec.name))
         return super().unlink()
+
+    @api.depends('note_ids')
+    def _compute_note_count(self):
+        for rec in self:
+            rec.note_count = len(rec.note_ids)
+
+    def action_add_note(self):
+        """Khai khế ước mới ngay từ HĐTD.
+
+        Vào bằng đường menu thì phải tự nhớ mình đang làm HĐTD nào rồi
+        dò lại trong danh sách hạn mức của mọi hợp đồng. Vào từ đây thì
+        ô Hạn mức đã lọc sẵn theo đúng HĐTD này.
+        """
+        self.ensure_one()
+        if self.state != 'active':
+            raise UserError(_(
+                'HĐTD "%(n)s" đang ở trạng thái "%(s)s" — chỉ nhận nợ '
+                'được trên HĐTD đang Hiệu lực.',
+                n=self.name,
+                s=dict(self._fields['state'].selection).get(self.state)))
+        if not self.facility_ids:
+            raise UserError(_(
+                'HĐTD "%s" chưa khai hạn mức nào. Khai mục đích sử dụng '
+                'vốn trước rồi mới nhận nợ được.', self.name))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Khế ước nhận nợ mới — %s', self.name),
+            'res_model': 're.loan.note',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_credit_contract_id': self.id,
+                'default_facility_id': (
+                    self.facility_ids[0].id
+                    if len(self.facility_ids) == 1 else False),
+                'search_default_credit_contract_id': self.id,
+            },
+        }
+
+    def action_view_notes(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Khế ước — %s', self.name),
+            'res_model': 're.loan.note',
+            'view_mode': 'list,form',
+            'domain': [('credit_contract_id', '=', self.id)],
+            'context': {'default_credit_contract_id': self.id},
+        }

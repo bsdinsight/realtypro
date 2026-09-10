@@ -6,39 +6,13 @@ Mỗi facility có loại (revolving / term / thấu chi / hạn mức BL / hạ
 số tiền hạn mức, phương pháp tính lãi mặc định. Khế ước nhận nợ (L1b) rút vốn
 trong facility; amount_used / amount_available sẽ được nối vào note ở L1b.
 """
+import re
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class ReLoanFacility(models.Model):
-    _name = 're.loan.facility'
-    _description = 'Hạn mức tín dụng (Facility)'
-    _inherit = ['mail.thread']
-    _order = 'credit_contract_id, id'
-
-    name = fields.Char(string='Tên hạn mức', required=True)
-    credit_contract_id = fields.Many2one(
-        're.loan.credit.contract', string='HĐTD', required=True,
-        ondelete='cascade', tracking=True)
-    partner_id = fields.Many2one(
-        'res.partner', string='Ngân hàng',
-        related='credit_contract_id.partner_id', store=True, index=True,
-        help='Suy từ HĐTD. Lưu lại để lọc/nhóm hạn mức theo ngân hàng — '
-             'số ngân hàng có BIÊN (vài nhà tài trợ, gần như không đổi), '
-             'khác với số HĐTD tăng dần theo năm.')
-
-    facility_type = fields.Selection(
-        [('revolving', 'Tuần hoàn (Revolving)'),
-         ('term', 'Có kỳ hạn (Term)'),
-         ('overdraft', 'Thấu chi (Overdraft)'),
-         ('guarantee_line', 'Hạn mức bảo lãnh'),
-         ('lc_line', 'Hạn mức L/C')],
-        string='Loại hạn mức', required=True, default='revolving',
-        tracking=True,
-        help='Cấu trúc kỹ thuật của hạn mức (cách hoàn lại/cam kết). '
-             'Khác với Mục đích — chỉ "cái này hoạt động thế nào".')
-    purpose = fields.Selection(
-        [
+BUILTIN_PURPOSES = [
          # ── A. VỐN LƯU ĐỘNG THI CÔNG (tổng thầu / thầu phụ) ──────────
          # Đặt nhãn theo NGHIỆP VỤ thi công (mẫu OCB: vật tư · nhân công ·
          # máy móc · thanh toán thầu phụ), không theo tên sản phẩm NH.
@@ -97,7 +71,104 @@ class ReLoanFacility(models.Model):
          ('refinance', 'Khác · Tái cấp vốn / cơ cấu nợ'),
          ('reimbursement', 'Khác · Bù đắp tài chính'),
          ('other', 'Khác'),
-        ],
+        ]
+
+
+class ReLoanPurpose(models.Model):
+    """Mục đích sử dụng vốn do người dùng khai thêm.
+
+    25 mục đích dựng sẵn phủ nghiệp vụ tổng thầu Việt Nam, nhưng mỗi
+    ngân hàng gọi tên sản phẩm một kiểu và thỉnh thoảng có gói không
+    khớp mục nào. Không cho khai thêm thì người dùng nhét đại vào
+    "Khác", và mọi báo cáo theo mục đích mất nghĩa.
+
+    GIỮ NGUYÊN KIỂU TRƯỜNG Selection, không đổi sang liên kết bảng.
+    Mã mục đích được so sánh bằng chuỗi ở 43 chỗ trong mã và 24 chỗ
+    trong giao diện — riêng `bank_guarantee` là trục chịu lực của
+    toàn bộ phân hệ bảo lãnh. Đổi kiểu trường là phải sửa hết chừng
+    đó chỗ, đổi lấy một tính năng khai danh mục.
+    """
+    _name = 're.loan.purpose'
+    _description = 'Mục đích sử dụng vốn (khai thêm)'
+    _order = 'kind, name'
+
+    name = fields.Char(string='Tên mục đích', required=True, translate=True)
+    code = fields.Char(
+        string='Mã', required=True,
+        help='Mã kỹ thuật, chỉ chữ thường và gạch dưới. Đã dùng rồi thì '
+             'đừng đổi — dữ liệu cũ tham chiếu theo mã này.')
+    kind = fields.Selection(
+        [('loan', 'Vay'),
+         ('guarantee', 'Bảo lãnh')],
+        string='Phân loại', required=True, default='loan',
+        help='Khế ước nhận nợ chỉ chọn được hạn mức có mục đích phân '
+             'loại là Vay; bảo lãnh thì ngược lại.')
+    note = fields.Char(string='Ghi chú')
+    active = fields.Boolean(default=True)
+
+    _uniq_code = models.Constraint('unique(code)', 'Mã mục đích đã tồn tại.')
+
+    @api.constrains('code')
+    def _check_code(self):
+        builtin = {c for c, _n in BUILTIN_PURPOSES}
+        for rec in self:
+            code = (rec.code or '').strip()
+            if not code or not re.fullmatch(r'[a-z][a-z0-9_]*', code):
+                raise ValidationError(_(
+                    'Mã "%s" không hợp lệ — chỉ dùng chữ thường, số và '
+                    'gạch dưới, bắt đầu bằng chữ.', rec.code or ''))
+            if code in builtin:
+                raise ValidationError(_(
+                    'Mã "%s" trùng với một mục đích dựng sẵn.', code))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        # Danh sách lựa chọn được nhớ đệm theo registry — thêm mục mới
+        # mà không xoá đệm thì ô chọn vẫn hiện danh sách cũ.
+        self.env.registry.clear_cache()
+        return recs
+
+    def write(self, vals):
+        res = super().write(vals)
+        self.env.registry.clear_cache()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
+
+class ReLoanFacility(models.Model):
+    _name = 're.loan.facility'
+    _description = 'Hạn mức tín dụng (Facility)'
+    _inherit = ['mail.thread']
+    _order = 'credit_contract_id, id'
+
+    name = fields.Char(string='Tên hạn mức', required=True)
+    credit_contract_id = fields.Many2one(
+        're.loan.credit.contract', string='HĐTD', required=True,
+        ondelete='cascade', tracking=True)
+    partner_id = fields.Many2one(
+        'res.partner', string='Ngân hàng',
+        related='credit_contract_id.partner_id', store=True, index=True,
+        help='Suy từ HĐTD. Lưu lại để lọc/nhóm hạn mức theo ngân hàng — '
+             'số ngân hàng có BIÊN (vài nhà tài trợ, gần như không đổi), '
+             'khác với số HĐTD tăng dần theo năm.')
+
+    facility_type = fields.Selection(
+        [('revolving', 'Tuần hoàn (Revolving)'),
+         ('term', 'Có kỳ hạn (Term)'),
+         ('overdraft', 'Thấu chi (Overdraft)'),
+         ('guarantee_line', 'Hạn mức bảo lãnh'),
+         ('lc_line', 'Hạn mức L/C')],
+        string='Loại hạn mức', required=True, default='revolving',
+        tracking=True,
+        help='Cấu trúc kỹ thuật của hạn mức (cách hoàn lại/cam kết). '
+             'Khác với Mục đích — chỉ "cái này hoạt động thế nào".')
+    purpose = fields.Selection(
+        selection='_selection_purpose',
         string='Mục đích sử dụng vốn', required=True, default='other',
         tracking=True,
         help='Mục đích sử dụng vốn theo HĐTD. NH VN thường chia hạn mức '
@@ -190,6 +261,49 @@ class ReLoanFacility(models.Model):
 
     note = fields.Text(string='Ghi chú')
     active = fields.Boolean(default=True)
+
+    @api.model
+    def _selection_purpose(self):
+        """25 mục đích dựng sẵn + những mục người dùng khai thêm."""
+        extra = self.env['re.loan.purpose'].sudo().search([])
+        return BUILTIN_PURPOSES + [(p.code, p.name) for p in extra]
+
+    @api.model
+    def _purpose_kind(self, code):
+        """Mục đích này thuộc nhóm Vay hay Bảo lãnh.
+
+        Mục dựng sẵn: chỉ `bank_guarantee` là bảo lãnh. Mục khai thêm:
+        đọc theo cờ người dùng chọn.
+        """
+        if not code:
+            return False
+        if code in {c for c, _n in BUILTIN_PURPOSES}:
+            return 'guarantee' if code == 'bank_guarantee' else 'loan'
+        rec = self.env['re.loan.purpose'].sudo().search(
+            [('code', '=', code)], limit=1)
+        return rec.kind or 'loan'
+
+    purpose_kind = fields.Selection(
+        [('loan', 'Vay'), ('guarantee', 'Bảo lãnh')],
+        string='Nhóm mục đích', compute='_compute_purpose_kind', store=True,
+        help='Suy từ Mục đích sử dụng vốn. Dùng để lọc: khế ước nhận nợ '
+             'chỉ chọn được hạn mức nhóm Vay.')
+
+    @api.depends('purpose')
+    def _compute_purpose_kind(self):
+        for rec in self:
+            rec.purpose_kind = self._purpose_kind(rec.purpose)
+
+    project_names = fields.Char(
+        string='Dự án được phân bổ', compute='_compute_project_names',
+        help='Danh sách dự án mà hạn mức này đã phân bổ tới — để nhìn '
+             'lưới là biết hạn mức phục vụ công trình nào.')
+
+    @api.depends('project_allocation_ids.project_id')
+    def _compute_project_names(self):
+        for rec in self:
+            names = rec.project_allocation_ids.mapped('project_id.name')
+            rec.project_names = ', '.join(n for n in names if n)
 
     @api.depends('project_allocation_ids.amount', 'amount_limit')
     def _compute_project_allocation(self):

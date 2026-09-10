@@ -135,16 +135,20 @@
                                      dialog (khai Dự án + Hợp đồng, TSBĐ riêng,
                                      lãi suất). Sửa nhanh trên lưới không còn
                                      cần thiết — anh Đại 2026-08-10. -->
-                                <list create="false">
+                                <list create="false"
+                                      decoration-danger="amount_limit &lt; amount_used">
                                     <field name="name"/>
                                     <field name="purpose"/>
                                     <field name="facility_type"/>
-                                    <field name="amount_limit" width="185px" sum="Tổng"/>
+                                    <field name="amount_limit" width="185px"
+                                           sum="Tổng hạn mức"/>
                                     <field name="flexible_limits"
                                            widget="boolean_toggle"
                                            optional="show"/>
-                                    <field name="amount_used" width="185px"/>
-                                    <field name="amount_available" width="185px"/>
+                                    <field name="amount_used" width="185px"
+                                           sum="Tổng đã sử dụng"/>
+                                    <field name="amount_available" width="185px"
+                                           sum="Tổng HM khả dụng"/>
                                     <field name="amount_allocated_to_projects" width="185px"
                                            string="Đã phân bổ dự án"
                                            optional="show"/>
@@ -159,6 +163,32 @@
                                     <field name="day_count" optional="hide"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Khế ước" name="notes">
+                            <button name="action_add_note" type="object"
+                                    class="btn-primary" icon="fa-plus"
+                                    string="Khai khế ước mới"
+                                    style="margin-bottom:6px;"
+                                    invisible="state != 'active'"/>
+                            <field name="note_ids" nolabel="1" readonly="1">
+                                <list decoration-danger="state == 'overdue'"
+                                      decoration-muted="state in ('fully_paid', 'cancelled')">
+                                    <field name="name"/>
+                                    <field name="facility_id"/>
+                                    <field name="date_note"/>
+                                    <field name="date_maturity"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" width="185px"
+                                           sum="Tổng nhận nợ"/>
+                                    <field name="principal_outstanding"
+                                           width="185px" sum="Tổng dư nợ gốc"/>
+                                    <field name="interest_rate"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'fully_paid'"
+                                           decoration-danger="state == 'overdue'"
+                                           decoration-info="state == 'active'"/>
                                 </list>
                             </field>
                         </page>

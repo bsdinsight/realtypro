@@ -22,9 +22,12 @@ class TestBankGuarantee(TransactionCase):
             'name': 'HĐTD-BL', 'partner_id': cls.bank.id,
             'amount_total': 30_000_000_000.0})
         cls.contract.action_activate()
+        # Hạn mức bảo lãnh khai bằng MỤC ĐÍCH, không bằng Loại — loại
+        # 'guarantee_line' đã ngưng dùng (backlog 755). Fixture dựng
+        # theo đúng cách hiện hành.
         cls.facility = cls.env['re.loan.facility'].create({
             'name': 'F-BL', 'credit_contract_id': cls.contract.id,
-            'facility_type': 'guarantee_line',
+            'facility_type': 'revolving',
             'purpose': 'bank_guarantee',
             'amount_limit': 30_000_000_000.0})
 

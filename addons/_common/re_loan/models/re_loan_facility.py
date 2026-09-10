@@ -297,17 +297,6 @@ class ReLoanFacility(models.Model):
              'trả gốc 1 tỷ → đã dùng giảm còn 1 tỷ → còn lại tăng thêm 1 tỷ).\n'
              '• Có kỳ hạn / Bảo lãnh / L/C: = Σ SỐ TIỀN KW đã cam kết '
              '(không hoàn — đã rút là chiếm hạn mức đến hết kỳ).')
-    amount_limit_purpose = fields.Monetary(
-        string='Tổng HM khả dụng',
-        compute='_compute_amount_limit_purpose', store=True,
-        help='Tổng hạn mức mà mục đích này được rút tới, CHƯA trừ phần '
-             'đã sử dụng.\n'
-             '• Hạn mức LIÊN THÔNG: Σ hạn mức của cả bể liên thông — '
-             'đó mới là số dòng này thực sự rút được, chứ không phải '
-             'riêng ô "Số tiền hạn mức" của nó.\n'
-             '• Hạn mức khoá cứng: Σ hạn mức của các dòng cùng mục '
-             'đích trong HĐTD này (một HĐTD được phép khai nhiều dòng '
-             'cùng một mục đích).')
     amount_available = fields.Monetary(
         string='Còn lại', compute='_compute_amount_available', store=True,
         help='Hạn mức còn có thể rút thêm. Tự động cập nhật khi:\n'
@@ -475,35 +464,6 @@ class ReLoanFacility(models.Model):
                 rec.amount_used = sum(live.mapped('principal_outstanding'))
             else:
                 rec.amount_used = sum(live.mapped('amount'))
-
-    @api.depends('amount_limit', 'flexible_limits', 'purpose',
-                 'credit_contract_id',
-                 'credit_contract_id.facility_ids.amount_limit',
-                 'credit_contract_id.facility_ids.flexible_limits',
-                 'credit_contract_id.facility_ids.purpose')
-    def _compute_amount_limit_purpose(self):
-        """Tổng hạn mức được cấp cho mục đích này (backlog 718).
-
-        Khác cột "Còn lại" ở chỗ KHÔNG trừ phần đã dùng: người đọc cần
-        biết mục đích này được cấp bao nhiêu, tách khỏi câu hỏi đã tiêu
-        hết bao nhiêu.
-        Gom theo đúng cách hạn mức thực sự vận hành: liên thông thì cả
-        bể chung một túi tiền, khoá cứng thì gom các dòng cùng mục đích
-        (một HĐTD được phép khai nhiều dòng cùng mục đích).
-        """
-        for rec in self:
-            siblings = rec.credit_contract_id.facility_ids
-            if not siblings:
-                rec.amount_limit_purpose = rec.amount_limit
-                continue
-            if rec.flexible_limits:
-                pool = siblings.filtered('flexible_limits')
-            else:
-                pool = siblings.filtered(
-                    lambda f: not f.flexible_limits
-                    and f.purpose == rec.purpose)
-            rec.amount_limit_purpose = (
-                sum(pool.mapped('amount_limit')) or rec.amount_limit)
 
     @api.depends('amount_limit', 'amount_used', 'flexible_limits',
                  'credit_contract_id.facility_ids.amount_limit',

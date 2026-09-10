@@ -542,11 +542,17 @@ class ReLoanNote(models.Model):
         """KW state='draft' cho phép amount=0 (user mới tạo, chưa
         nhập giải ngân). State khác bắt buộc amount > 0.
         Mọi state không cho phép amount âm.
+
+        ĐÃ HUỶ cũng được phép = 0 (backlog 741): KW bỏ dở từ lúc chưa
+        kịp điền số tiền là chuyện thường, và huỷ chính là cách bỏ dở
+        cho đúng. Ràng buộc này nói "trước khi gửi NH / kích hoạt" —
+        một KW đã huỷ thì không đi tới hai mốc đó nữa, chặn nó chỉ làm
+        người dùng kẹt lại với một bản ghi rác không xoá được.
         """
         for rec in self:
             if rec.amount < 0:
                 raise ValidationError(_("Số tiền KW không được âm."))
-            if rec.state != 'draft' and rec.amount == 0:
+            if rec.state not in ('draft', 'cancelled') and rec.amount == 0:
                 raise ValidationError(_(
                     "Số tiền KW phải lớn hơn 0 trước khi gửi NH / "
                     "kích hoạt."))

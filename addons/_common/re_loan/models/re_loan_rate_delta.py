@@ -42,9 +42,12 @@ class ReLoanNoteAmendmentDelta(models.Model):
 
     is_retroactive = fields.Boolean(
         string='Hiệu lực hồi tố',
-        help='Đánh dấu khi ngày hiệu lực rơi vào giai đoạn ĐÃ ghi nhận '
-             'hoặc ĐÃ thanh toán lãi. Bật cờ này rồi bấm "Tính chênh '
-             'lệch" để ra bảng Δ từng kỳ.')
+        compute='_compute_is_retroactive', store=True, readonly=False,
+        help='Ngày hiệu lực rơi vào giai đoạn ĐÃ ghi nhận hoặc ĐÃ '
+             'thanh toán lãi — khi đó phải tính lại chênh lệch cho các '
+             'kỳ đó. Hệ thống TỰ bật cờ này; vẫn sửa tay được nếu '
+             'nghiệp vụ khác với suy đoán.')
+
     delta_line_ids = fields.One2many(
         're.loan.rate.delta.line', 'amendment_id', string='Chênh lệch lãi')
     delta_count = fields.Integer(
@@ -72,6 +75,30 @@ class ReLoanNoteAmendmentDelta(models.Model):
     delta_approved_on = fields.Datetime(
         string='Thời điểm duyệt', readonly=True, copy=False, tracking=True)
 
+    @api.depends('amendment_type', 'date_effective', 'note_id',
+                 'note_id.interest_line_ids.state',
+                 'note_id.interest_line_ids.date_to')
+    def _compute_is_retroactive(self):
+        """Tự suy ra cờ hồi tố (backlog 737).
+
+        Trước đây đây là ô tick TAY. Người dùng không tick thì nút
+        "Tính chênh lệch" bị ẩn; tick rồi mà ngày hiệu lực chưa chạm
+        kỳ nào đã ghi nhận thì lại nhận thông báo chặn — mà câu thông
+        báo cũ nói về NGÀY HIỆU LỰC, nên ai đọc cũng đi xoay ngày thay
+        vì xoay cờ. Cả hai đường đều dẫn tới bế tắc.
+
+        Điều kiện hồi tố hoàn toàn suy được: có kỳ lãi ĐÃ GHI NHẬN /
+        ĐÃ TRẢ nằm sau ngày hiệu lực. Tự bật thì nút chỉ hiện đúng lúc
+        có việc để làm, và người dùng không phải đoán gì cả.
+        """
+        for rec in self:
+            if rec.amendment_type != 'rate' or not rec.date_effective:
+                rec.is_retroactive = False
+                continue
+            eff = rec.date_effective
+            rec.is_retroactive = bool(rec.note_id.interest_line_ids.filtered(
+                lambda l: l.date_to and l.date_to > eff
+                and l.state in ('accrued', 'partial_paid', 'paid')))
     @api.depends('delta_line_ids.delta_amount', 'delta_line_ids.skipped')
     def _compute_delta(self):
         for am in self:
@@ -89,8 +116,15 @@ class ReLoanNoteAmendmentDelta(models.Model):
                 'Chỉ phụ lục đổi lãi suất mới có chênh lệch hồi tố.'))
         if not self.is_retroactive:
             raise UserError(_(
-                'Phụ lục chưa đánh dấu "Hiệu lực hồi tố". Nếu ngày hiệu '
-                'lực nằm ở tương lai thì không có kỳ nào phải tính lại.'))
+                'Phụ lục này không phát sinh hồi tố nên không có gì để '
+                'tính.\n'
+                'Ô "Hiệu lực hồi tố" tự bật khi ngày hiệu lực (%(d)s) '
+                'rơi vào giai đoạn đã có kỳ lãi ĐƯỢC GHI NHẬN hoặc ĐÃ '
+                'THANH TOÁN. Khế ước này chưa có kỳ nào như vậy sau '
+                'ngày đó.\n'
+                'Nếu nghiệp vụ thực tế khác, tick tay ô "Hiệu lực hồi '
+                'tố" rồi bấm lại.',
+                d=self.date_effective or _('(chưa nhập)')))
         if self.delta_state == 'approved':
             raise UserError(_(
                 'Bảng chênh lệch đã được duyệt. Muốn tính lại thì phải '

@@ -56,6 +56,17 @@
                        decoration-danger="margin_call"/>
                 <field name="margin_call" optional="hide"/>
             </xpath>
+            <!-- "Tổng HM khả dụng" = cơ sở bảo đảm của mục đích TRƯỚC
+                 khi trừ phần đã dùng. Quan hệ do khách chốt:
+                     Tổng HM khả dụng − Đã sử dụng = Khả dụng thực tế
+                 Đặt ngay trước "Đã sử dụng" để đọc được cả ba số theo
+                 hàng ngang. KHÔNG phải Σ hạn mức được NGÂN HÀNG CẤP —
+                 số đó đã nằm ở cột "Số tiền hạn mức". -->
+            <xpath expr="//field[@name='facility_ids']/list/field[@name='amount_used']"
+                   position="before">
+                <field name="borrowing_base_effective" width="200px"
+                       string="Tổng HM khả dụng"/>
+            </xpath>
             <xpath expr="//sheet" position="inside">
                 <group string="Borrowing base — khả dụng theo TSBĐ">
                     <group>

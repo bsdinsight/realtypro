@@ -386,6 +386,33 @@ class ReGuaranteeRequest(models.Model):
             if rec.amount <= 0:
                 raise ValidationError(_("Giá trị BL phải > 0."))
 
+    def _facility_room(self):
+        """Phần hạn mức thật sự còn phát hành bảo lãnh được.
+
+        Ưu tiên "Khả dụng thực tế" (khả dụng theo TÀI SẢN BẢO ĐẢM) thay
+        vì "Còn lại (theo HM)" — backlog 732. Hạn mức được cấp chỉ là
+        TRẦN ngân hàng cam kết; số bảo lãnh phát hành được thật sự phụ
+        thuộc bảo đảm đang có. Chặn theo trần là cho phát hành nhiều
+        hơn mức tài sản đỡ nổi.
+
+        Trường "Khả dụng thực tế" do re_loan_borrowing_base bổ sung.
+        Chưa cài module đó thì rơi về hạn mức còn lại như trước — đây
+        là phụ thuộc mềm, re_guarantee không depends vào nó.
+        """
+        self.ensure_one()
+        fac = self.facility_id
+        if not fac:
+            return 0.0
+        # CHỈ siết theo bảo đảm KHI ĐÃ KHAI bảo đảm. Hạn mức chưa phân
+        # bổ TSBĐ nào thì "khả dụng thực tế" bằng 0 — chặn theo số đó
+        # là khoá sạch mọi bảo lãnh của đơn vị chưa nhập xong TSBĐ.
+        # Cùng nguyên tắc mà re_loan_borrowing_base đang áp cho khoản
+        # vay: thiếu dữ liệu bảo đảm thì CẢNH BÁO, không chặn.
+        if 'borrowing_base_effective' in fac._fields \
+                and fac.borrowing_base_effective > 0:
+            return fac.amount_available_effective
+        return fac.amount_available
+
     @api.constrains('amount', 'facility_id', 'state')
     def _check_amount_within_facility(self):
         """Chặn nhập giá trị BL > hạn mức còn lại của facility.
@@ -399,7 +426,7 @@ class ReGuaranteeRequest(models.Model):
                 continue
             if rec.state in ('settled', 'cancelled'):
                 continue
-            available = rec.facility_id.amount_available
+            available = rec._facility_room()
             # Active / issued: request đang nằm trong used → cộng lại
             # để check thực sự là "muốn bump lên bao nhiêu so với
             # mức trống thực".
@@ -407,8 +434,10 @@ class ReGuaranteeRequest(models.Model):
                 available += rec.amount
             if available + 0.01 < rec.amount:
                 raise ValidationError(_(
-                    "Giá trị BL (%(b)s) vượt hạn mức còn lại của "
-                    "'%(f)s' (%(a)s).",
+                    "Giá trị BL (%(b)s) vượt khả dụng thực tế của "
+                    "'%(f)s' (%(a)s) — số bảo lãnh phát hành được phụ "
+                    "thuộc tài sản bảo đảm đang có, không phải trần "
+                    "hạn mức được cấp.",
                     b=rec.amount, f=rec.facility_id.name,
                     a=available))
 
@@ -417,15 +446,15 @@ class ReGuaranteeRequest(models.Model):
         """Cảnh báo sớm trên UI khi user nhập amount > available."""
         if (self.facility_id and self.amount
                 and self.state == 'draft'
-                and self.amount > self.facility_id.amount_available + 0.01):
+                and self.amount > self._facility_room() + 0.01):
             return {
                 'warning': {
                     'title': _("Vượt hạn mức bảo lãnh"),
                     'message': _(
-                        "Giá trị BL %(b)s lớn hơn hạn mức còn lại "
-                        "%(a)s của facility '%(f)s'. Sẽ không lưu "
+                        "Giá trị BL %(b)s lớn hơn khả dụng thực tế "
+                        "%(a)s của hạn mức '%(f)s'. Sẽ không lưu "
                         "được nếu không giảm xuống.",
-                        b=self.amount, a=self.facility_id.amount_available,
+                        b=self.amount, a=self._facility_room(),
                         f=self.facility_id.name),
                 },
             }
@@ -517,7 +546,7 @@ class ReGuaranteeRequest(models.Model):
         # không chỉ ở bước kích hoạt: giữa hai bước có thể đã có chứng
         # thư khác phát hành và ăn mất phần còn lại.
         if self.facility_id:
-            available = self.facility_id.amount_available
+            available = self._facility_room()
             if available + 0.01 < self.amount:
                 raise UserError(_(
                     "Hạn mức %(f)s chỉ còn %(a)s, không đủ phát hành "

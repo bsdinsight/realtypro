@@ -41,13 +41,17 @@ class ReLoanNote(models.Model):
         # (form, danh sách, wizard, import), khai ở view thì sót chỗ nào
         # là chỗ đó lọt.
         domain="[('credit_contract_id.state', '=', 'active'),"
+               " ('purpose_kind', '=', 'loan'),"
                " '|', ('credit_contract_id.date_end', '=', False),"
                " ('credit_contract_id.date_end', '>=',"
                " context_today().strftime('%Y-%m-%d'))]",
         help='Bắt buộc với khoản vay ngân hàng.\n'
-             'Danh sách chỉ hiện hạn mức thuộc HĐTD đang HIỆU LỰC và CÒN '
-             'THỜI HẠN. Không thấy HĐTD cần tìm thì kiểm lại trạng thái '
-             'và ngày hết hạn của HĐTD đó.')
+             'Danh sách chỉ hiện hạn mức thuộc HĐTD đang HIỆU LỰC, CÒN '
+             'THỜI HẠN, và có mục đích thuộc nhóm VAY. Hạn mức mục đích '
+             'bảo lãnh không nhận nợ được — nó dành cho chứng thư bảo '
+             'lãnh.\n'
+             'Không thấy HĐTD cần tìm thì kiểm lại trạng thái, ngày hết '
+             'hạn và nhóm mục đích của HĐTD đó.')
     facility_type = fields.Selection(
         related='facility_id.facility_type', store=True, readonly=True,
         string='Loại facility')
@@ -294,6 +298,26 @@ class ReLoanNote(models.Model):
                     months=rec.tenor_months)
             elif not rec.date_maturity:
                 rec.date_maturity = False
+
+    @api.constrains('date_maturity', 'facility_id')
+    def _check_maturity_within_contract(self):
+        """Khế ước không được đáo hạn sau ngày HĐTD hết hạn.
+
+        Hạn mức hết hiệu lực từ ngày đó; một khế ước còn dư nợ vắt qua
+        mốc ấy là khoản vay không còn hợp đồng đứng sau. Ngân hàng
+        không cho, và trên phần mềm nó làm hạn mức đã dùng treo lại
+        trên một HĐTD đã đóng.
+        """
+        for rec in self:
+            end = rec.facility_id.credit_contract_id.date_end
+            if rec.date_maturity and end and rec.date_maturity > end:
+                raise ValidationError(_(
+                    'Ngày đáo hạn khế ước (%(m)s) vượt quá ngày hết hạn '
+                    'của HĐTD %(c)s (%(e)s). Gia hạn HĐTD trước, hoặc '
+                    'rút ngắn kỳ hạn khế ước.',
+                    m=rec.date_maturity,
+                    c=rec.facility_id.credit_contract_id.name or '',
+                    e=end))
 
     @api.depends('amount', 'disbursement_ids.amount',
                  'repayment_ids.amount_principal',
@@ -562,7 +586,12 @@ class ReLoanNote(models.Model):
     # State machine
     # ------------------------------------------------------------------
     def action_send_to_bank(self):
-        """Gửi hồ sơ KW lên NH duyệt. draft → sent_to_bank."""
+        """Gửi hồ sơ KW lên NH duyệt. draft → sent_to_bank.
+
+        Kéo theo các dòng giải ngân: cả bộ hồ sơ đi cùng nhau lên ngân
+        hàng, để khế ước "Đã gửi NH" mà từng đợt giải ngân vẫn "Nháp"
+        thì người xem tưởng còn thiếu bước nào đó chưa làm.
+        """
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_(
@@ -571,9 +600,14 @@ class ReLoanNote(models.Model):
                 raise UserError(_(
                     "Số tiền KW phải > 0 trước khi gửi NH."))
             rec.state = 'sent_to_bank'
+            draft_disb = rec.disbursement_ids.filtered(
+                lambda d: d.state == 'draft')
+            if draft_disb:
+                draft_disb.write({'state': 'submitted'})
             rec.message_post(body=_(
-                "Đã gửi hồ sơ KW '%(n)s' lên NH chờ duyệt.",
-                n=rec.name or ''))
+                "Đã gửi hồ sơ KW '%(n)s' lên NH chờ duyệt — kèm %(d)s "
+                "đợt giải ngân.",
+                n=rec.name or '', d=len(draft_disb)))
 
     def action_activate(self):
         for rec in self:

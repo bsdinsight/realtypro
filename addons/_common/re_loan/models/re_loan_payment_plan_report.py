@@ -1,16 +1,27 @@
 # -*- coding: utf-8 -*-
 """Báo cáo: Kế hoạch thanh toán khế ước theo năm.
 
-UNION của 4 nguồn — TẤT CẢ đều lấy từ re.loan.note.interest.line
+UNION của 6 nguồn — TẤT CẢ đều lấy từ re.loan.note.interest.line
 (tab "Lịch lãi"), KHÔNG dùng re.loan.note.repayment trực tiếp:
   - interest_line × principal × kế hoạch (kind='plan', pg='principal')
     = amount_principal_remaining (số gốc CÒN PHẢI TRẢ kỳ đó)
   - interest_line × interest × kế hoạch (kind='plan', pg='interest')
     = amount_interest_remaining (số lãi CÒN PHẢI TRẢ kỳ đó)
+  - interest_line × fee × kế hoạch (kind='plan', pg='fee')
+    = amount_fee_remaining (phí CÒN PHẢI TRẢ kỳ đó)
   - interest_line × principal × đã trả (kind='paid', pg='principal')
     = amount_principal_paid (gốc thực trả allocate vào kỳ đó)
   - interest_line × interest × đã trả (kind='paid', pg='interest')
     = amount_interest_paid (lãi thực trả allocate vào kỳ đó)
+  - interest_line × fee × đã trả (kind='paid', pg='fee')
+    = amount_fee_paid (phí thực trả allocate vào kỳ đó)
+
+*** Vì sao phí đứng thành dòng riêng, không cộng vào lãi ***
+Phí (fee_amount) là dòng tiền phải chi thật, đến hạn cùng kỳ với
+lãi, nhưng bản chất kế toán khác lãi vay (không phải chi phí lãi)
+và người theo dõi nợ cần thấy nó tách bạch để đối chiếu với giấy
+báo phí của ngân hàng. Gộp vào lãi thì tổng dòng tiền vẫn đúng
+nhưng không đối chiếu được với chứng từ.
 
 *** Tại sao dùng interest_line cho cả 4 nguồn ***
 Các field paid trên interest_line đã được compute từ
@@ -56,9 +67,11 @@ class ReLoanPaymentPlanReport(models.Model):
              'Đã trả = số thực tế đã trả từ trả nợ thực tế.')
     pg_kind = fields.Selection(
         [('principal', 'Tiền gốc'),
-         ('interest',  'Tiền lãi')],
-        string='Gốc/Lãi', readonly=True,
-        help='Tách dòng gốc/lãi → pivot xem riêng từng cấu phần.')
+         ('interest',  'Tiền lãi'),
+         ('fee',       'Tiền phí')],
+        string='Gốc/Lãi/Phí', readonly=True,
+        help='Tách dòng gốc / lãi / phí → pivot xem riêng từng cấu '
+             'phần dòng tiền.')
     period_state = fields.Selection(
         [('planned',      'Dự kiến'),
          ('accrued',      'Đã ghi nhận'),
@@ -77,6 +90,10 @@ class ReLoanPaymentPlanReport(models.Model):
         string='Lãi', readonly=True,
         help='Backward compat — số tiền lãi của row này. = amount '
              'khi pg_kind=interest, = 0 khi pg_kind=principal.')
+    amount_fee = fields.Monetary(
+        string='Phí', readonly=True,
+        help='Số tiền phí của row này. = amount khi pg_kind=fee, '
+             '= 0 với các cấu phần khác.')
     currency_id = fields.Many2one(
         'res.currency', readonly=True)
     company_id = fields.Many2one(
@@ -106,6 +123,7 @@ class ReLoanPaymentPlanReport(models.Model):
                   il.amount_principal_remaining AS amount,
                   il.amount_principal_remaining AS amount_principal,
                   0.0 AS amount_interest,
+                  0.0 AS amount_fee,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
@@ -132,12 +150,41 @@ class ReLoanPaymentPlanReport(models.Model):
                   il.amount_interest_remaining AS amount,
                   0.0 AS amount_principal,
                   il.amount_interest_remaining AS amount_interest,
+                  0.0 AS amount_fee,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
                 JOIN re_loan_note n ON n.id = il.note_id
                 WHERE n.state NOT IN ('draft', 'cancelled')
                   AND il.amount_interest_remaining > 0
+
+                UNION ALL
+
+                -- Kế hoạch - Tiền phí CÒN PHẢI TRẢ (= phí kỳ - đã trả)
+                -- Chỉ có dòng khi khế ước khai fee_mode ≠ none.
+                SELECT
+                  'il_f'::varchar AS src,
+                  il.id AS src_id,
+                  il.note_id,
+                  n.credit_contract_id,
+                  n.facility_id,
+                  n.partner_id,
+                  date_trunc('month', il.date_to)::date
+                    AS period_month,
+                  to_char(il.date_to, 'YYYY') AS period_year,
+                  'plan'::varchar AS kind,
+                  'fee'::varchar AS pg_kind,
+                  il.state::varchar AS period_state,
+                  il.amount_fee_remaining AS amount,
+                  0.0 AS amount_principal,
+                  0.0 AS amount_interest,
+                  il.amount_fee_remaining AS amount_fee,
+                  n.currency_id,
+                  n.company_id
+                FROM re_loan_note_interest_line il
+                JOIN re_loan_note n ON n.id = il.note_id
+                WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.amount_fee_remaining > 0
 
                 UNION ALL
 
@@ -159,6 +206,7 @@ class ReLoanPaymentPlanReport(models.Model):
                   il.amount_principal_paid AS amount,
                   il.amount_principal_paid AS amount_principal,
                   0.0 AS amount_interest,
+                  0.0 AS amount_fee,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
@@ -186,12 +234,41 @@ class ReLoanPaymentPlanReport(models.Model):
                   il.amount_interest_paid AS amount,
                   0.0 AS amount_principal,
                   il.amount_interest_paid AS amount_interest,
+                  0.0 AS amount_fee,
                   n.currency_id,
                   n.company_id
                 FROM re_loan_note_interest_line il
                 JOIN re_loan_note n ON n.id = il.note_id
                 WHERE n.state NOT IN ('draft', 'cancelled')
                   AND il.amount_interest_paid > 0
+
+                UNION ALL
+
+                -- Đã trả - Tiền phí (từ interest_line.amount_fee_paid)
+                -- = Σ repayment.amount_fee allocate vào kỳ này
+                SELECT
+                  'il_f_paid'::varchar AS src,
+                  il.id AS src_id,
+                  il.note_id,
+                  n.credit_contract_id,
+                  n.facility_id,
+                  n.partner_id,
+                  date_trunc('month', il.date_to)::date
+                    AS period_month,
+                  to_char(il.date_to, 'YYYY') AS period_year,
+                  'paid'::varchar AS kind,
+                  'fee'::varchar AS pg_kind,
+                  NULL::varchar AS period_state,
+                  il.amount_fee_paid AS amount,
+                  0.0 AS amount_principal,
+                  0.0 AS amount_interest,
+                  il.amount_fee_paid AS amount_fee,
+                  n.currency_id,
+                  n.company_id
+                FROM re_loan_note_interest_line il
+                JOIN re_loan_note n ON n.id = il.note_id
+                WHERE n.state NOT IN ('draft', 'cancelled')
+                  AND il.amount_fee_paid > 0
               ) u
             )
         """)

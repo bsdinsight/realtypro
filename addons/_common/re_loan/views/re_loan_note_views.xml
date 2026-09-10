@@ -8,9 +8,6 @@
         <field name="arch" type="xml">
             <form string="Giải ngân khế ước">
                 <header>
-                    <button name="action_submit" type="object"
-                            string="Gửi NH duyệt" class="btn-primary"
-                            invisible="state != 'draft'"/>
                     <button name="action_approve" type="object"
                             string="NH duyệt" class="btn-primary"
                             invisible="state != 'submitted'"/>
@@ -233,8 +230,13 @@
                     </group>
                     <group>
                         <group string="Lãi suất">
+                            <!-- Khoá từ lúc KÍCH HOẠT, không phải từ
+                                 lúc gửi NH: giữa hai mốc đó ngân hàng
+                                 còn mặc cả lãi suất, và hồ sơ vẫn phải
+                                 sửa được theo. Sau kích hoạt thì lãi
+                                 suất là số đã ký — đổi bằng phụ lục. -->
                             <field name="interest_rate"
-                                   readonly="state != 'draft'"/>
+                                   readonly="state not in ('draft', 'sent_to_bank')"/>
                             <field name="interest_method"/>
                             <field name="day_count"/>
                             <field name="repayment_plan"/>
@@ -293,11 +295,18 @@
                         </page>
                         <page string="Trả nợ" name="repayment">
                             <field name="repayment_ids">
-                                <list editable="bottom">
+                                <list editable="bottom"
+                                      decoration-info="is_net_off">
                                     <field name="date"/>
                                     <field name="amount_principal" width="185px" sum="Tổng gốc"/>
                                     <field name="amount_interest" width="185px" sum="Tổng lãi"/>
                                     <field name="amount_total" width="185px" sum="Tổng trả"/>
+                                    <field name="is_net_off"
+                                           string="Net-off" widget="boolean_toggle"
+                                           readonly="1"/>
+                                    <field name="amount_net_off" width="185px"
+                                           string="Tiền net-off" sum="Σ net-off"
+                                           readonly="1" optional="show"/>
                                     <field name="reference"/>
                                     <field name="currency_id" column_invisible="1"/>
                                 </list>
@@ -308,8 +317,14 @@
                                 <list decoration-success="state == 'paid'"
                                       decoration-info="state == 'planned'"
                                       decoration-warning="state in ('accrued','partial_paid')"
-                                      decoration-danger="line_type == 'adjustment'">
+                                      decoration-danger="is_overdue or line_type == 'adjustment'">
                                     <field name="period_no"/>
+                                    <field name="is_overdue"
+                                           string="Quá hạn" widget="boolean_toggle"
+                                           readonly="1"/>
+                                    <field name="days_overdue"
+                                           string="Ngày trễ" optional="show"
+                                           readonly="1"/>
                                     <field name="line_type"
                                            string="Loại"
                                            optional="show"/>
@@ -336,6 +351,12 @@
                                            string="Lãi đã trả"
                                            sum="Σ trả lãi"
                                            optional="show"/>
+                                    <field name="has_net_off"
+                                           string="Net-off" widget="boolean_toggle"
+                                           readonly="1" optional="show"/>
+                                    <field name="amount_net_off" width="185px"
+                                           string="Tiền net-off" sum="Σ net-off"
+                                           readonly="1" optional="show"/>
                                     <field name="fee_amount" width="185px"
                                            string="Phí kỳ" sum="Σ phí"
                                            optional="show"/>
@@ -588,8 +609,17 @@
                         domain="[('state','=','partial_paid')]"/>
                 <filter name="f_outstanding" string="Còn dư nợ"
                         domain="[('principal_outstanding','>',0)]"/>
+                <!-- Quá hạn gồm CẢ hai loại: khế ước quá ngày đáo
+                     hạn, VÀ khế ước còn trong hạn nhưng có kỳ lịch lãi
+                     đã trễ chưa trả. Chỉ lọc theo tuổi nợ của khế ước
+                     thì bỏ sót đúng nhóm thứ hai — nhóm mà nhắc sớm
+                     còn kịp xử lý. -->
                 <filter name="f_overdue" string="Quá hạn"
-                        domain="[('aging_bucket','in',('b1_30','b31_60','b61_90','b91_180','b181_365','b365'))]"/>
+                        domain="['|',
+                                 ('aging_bucket','in',('b1_30','b31_60','b61_90','b91_180','b181_365','b365')),
+                                 ('interest_line_ids.is_overdue','=',True)]"/>
+                <filter name="f_overdue_period" string="Có kỳ lãi quá hạn"
+                        domain="[('interest_line_ids.is_overdue','=',True)]"/>
                 <separator/>
                 <filter name="f_due_30" string="Đáo hạn ≤ 30 ngày"
                         domain="[('principal_outstanding','>',0),('date_maturity','&gt;=',context_today().strftime('%Y-%m-%d')),('date_maturity','&lt;=',(context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>

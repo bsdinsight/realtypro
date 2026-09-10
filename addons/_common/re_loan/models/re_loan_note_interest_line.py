@@ -7,6 +7,7 @@ theo phương pháp tính lãi của KW. Cho phép override từng dòng khi ng�
 tính lệch do quy ước ngày.
 """
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ReLoanNoteInterestLine(models.Model):
@@ -121,6 +122,19 @@ class ReLoanNoteInterestLine(models.Model):
     amount_paid_total = fields.Monetary(
         string='Tổng đã trả',
         compute='_compute_paid_amounts', store=True)
+
+    is_overdue = fields.Boolean(
+        string='Quá hạn chưa trả', compute='_compute_overdue_flag',
+        store=True,
+        help='Kỳ đã qua ngày đến hạn mà vẫn còn gốc hoặc lãi chưa trả.')
+    days_overdue = fields.Integer(
+        string='Số ngày quá hạn', compute='_compute_overdue_flag',
+        store=True)
+    amount_net_off = fields.Monetary(
+        string='Số tiền net-off', compute='_compute_net_off', store=True,
+        help='Phần chênh lệch được bù trừ vào kỳ này thay vì thu thêm.')
+    has_net_off = fields.Boolean(
+        string='Có net-off', compute='_compute_net_off', store=True)
 
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
@@ -410,3 +424,60 @@ class ReLoanNoteInterestLine(models.Model):
             'context': {'default_interest_line_id': self.id,
                         'default_note_id': self.note_id.id},
         }
+
+    @api.depends('date_to', 'amount_principal_remaining',
+                 'amount_interest_remaining', 'state')
+    def _compute_overdue_flag(self):
+        """Kỳ quá hạn = đã qua ngày đến hạn mà còn nợ.
+
+        Tách khỏi trạng thái kỳ vì hai thứ trả lời hai câu khác nhau:
+        trạng thái nói ĐÃ TRẢ ĐƯỢC BAO NHIÊU, cờ này nói CÓ TRỄ KHÔNG.
+        Một kỳ "Trả một phần" có thể còn trong hạn, một kỳ khác cùng
+        trạng thái thì đã trễ ba tháng.
+        """
+        today = fields.Date.context_today(self)
+        for line in self:
+            con_no = ((line.amount_principal_remaining or 0.0) > 0.01
+                      or (line.amount_interest_remaining or 0.0) > 0.01)
+            late = bool(line.date_to and line.date_to < today and con_no)
+            line.is_overdue = late
+            line.days_overdue = (today - line.date_to).days if late else 0
+
+    @api.depends('repayment_ids.bank_advice_line_id',
+                 'repayment_ids.bank_advice_line_id.amount_net_off')
+    def _compute_net_off(self):
+        """Số net-off của kỳ, lấy từ dòng giấy báo ngân hàng đã bù trừ.
+
+        Net-off nằm trên dòng giấy báo chứ không nằm trên kỳ, nên nhìn
+        lịch lãi không biết kỳ nào đã được bù chênh lệch — mà đó đúng
+        là thứ người đối chiếu cần thấy trước tiên khi số không khớp.
+        """
+        for line in self:
+            total = 0.0
+            for rep in line.repayment_ids:
+                adv = rep.bank_advice_line_id
+                if adv:
+                    total += adv.amount_net_off or 0.0
+            line.amount_net_off = total
+            line.has_net_off = abs(total) > 0.01
+
+    @api.constrains('principal_due', 'note_id')
+    def _check_principal_not_over_note(self):
+        """Tổng gốc theo lịch không được vượt số tiền khế ước.
+
+        Sửa tay một kỳ là chuyện thường, nhưng sửa xong tổng vượt số
+        đã nhận nợ thì lịch trả nợ đòi nhiều hơn số đã vay — và dư nợ
+        gốc tính từ đó sẽ âm ở kỳ cuối.
+        """
+        for line in self:
+            note = line.note_id
+            if not note or not note.amount:
+                continue
+            total = sum(note.interest_line_ids.mapped('principal_due'))
+            if total > note.amount + 0.01:
+                raise ValidationError(_(
+                    'Tổng tiền gốc theo lịch (%(t)s) vượt số tiền khế '
+                    'ước %(n)s (%(a)s). Chênh %(d)s.',
+                    t='{:,.0f}'.format(total), n=note.name or '',
+                    a='{:,.0f}'.format(note.amount),
+                    d='{:,.0f}'.format(total - note.amount)))

@@ -42,6 +42,23 @@ class ReLoanNoteRepayment(models.Model):
     is_auto_debit = fields.Boolean(
         string='Trích thu tự động', readonly=True,
         compute='_compute_is_auto_debit', store=True)
+    amount_net_off = fields.Monetary(
+        related='bank_advice_line_id.amount_net_off',
+        string='Tiền net-off', readonly=True,
+        help='Phần chênh lệch được bù trừ trên dòng giấy báo ngân hàng '
+             'gắn với lần trả nợ này.')
+    is_net_off = fields.Boolean(
+        string='Là net-off', compute='_compute_is_net_off', store=True,
+        help='Dòng phát sinh từ bù trừ chênh lệch, không phải một lần '
+             'thu tiền thật. Đối chiếu sổ quỹ phải tách hai loại này.')
+
+    @api.depends('bank_advice_line_id.amount_net_off')
+    def _compute_is_net_off(self):
+        for rec in self:
+            adv = rec.bank_advice_line_id
+            rec.is_net_off = bool(
+                adv and abs(adv.amount_net_off or 0.0) > 0.01)
+
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(

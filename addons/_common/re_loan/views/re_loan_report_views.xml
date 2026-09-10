@@ -40,7 +40,10 @@
         <field name="name">Khế ước đến hạn</field>
         <field name="res_model">re.loan.note</field>
         <field name="view_mode">list,form,pivot</field>
-        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <!-- Loại trừ KW đã huỷ: chúng không còn nghĩa vụ trả nợ nên
+             lọt vào báo cáo đến hạn chỉ làm sai con số phải chuẩn bị. -->
+        <field name="domain">[('principal_outstanding','>',0),
+                              ('state','!=','cancelled')]</field>
         <field name="context">{'search_default_f_due_90': 1}</field>
         <field name="search_view_id" ref="view_re_loan_note_search"/>
     </record>
@@ -50,7 +53,8 @@
         <field name="name">Nợ quá hạn (Aging)</field>
         <field name="res_model">re.loan.note</field>
         <field name="view_mode">pivot,list,form</field>
-        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <field name="domain">[('principal_outstanding','>',0),
+                              ('state','!=','cancelled')]</field>
         <field name="context">{'search_default_f_overdue': 1, 'search_default_g_aging': 1}</field>
         <field name="search_view_id" ref="view_re_loan_note_search"/>
     </record>
@@ -341,7 +345,8 @@
                 <field name="kind" widget="badge"/>
                 <field name="pg_kind" widget="badge"
                        decoration-info="pg_kind == 'principal'"
-                       decoration-warning="pg_kind == 'interest'"/>
+                       decoration-warning="pg_kind == 'interest'"
+                       decoration-muted="pg_kind == 'fee'"/>
                 <field name="amount" width="185px" sum="Σ"/>
                 <field name="period_state" widget="badge"
                        optional="show"/>
@@ -391,6 +396,8 @@
                         domain="[('pg_kind','=','principal')]"/>
                 <filter name="f_interest" string="Tiền lãi"
                         domain="[('pg_kind','=','interest')]"/>
+                <filter name="f_fee" string="Tiền phí"
+                        domain="[('pg_kind','=','fee')]"/>
                 <separator/>
                 <filter name="f_unpaid_periods" string="Kỳ chưa trả đủ"
                         domain="[('period_state','in',
@@ -402,7 +409,7 @@
                         context="{'group_by': 'credit_contract_id'}"/>
                 <filter name="g_note" string="Khế ước"
                         context="{'group_by': 'note_id'}"/>
-                <filter name="g_pg_kind" string="Gốc/Lãi"
+                <filter name="g_pg_kind" string="Gốc/Lãi/Phí"
                         context="{'group_by': 'pg_kind'}"/>
                 <filter name="g_partner" string="NH"
                         context="{'group_by': 'partner_id'}"/>
@@ -435,15 +442,20 @@
                 Báo cáo kế hoạch thanh toán KW theo năm
             </p>
             <p>
-                Pivot 3 cấp: <b>HĐTD → Khế ước → Gốc/Lãi</b> (hàng) ×
+                Pivot 3 cấp: <b>HĐTD → Khế ước → Gốc/Lãi/Phí</b> (hàng) ×
                 <b>Tháng × {Kế hoạch / Đã trả}</b> (cột).
             </p>
             <p>
-                <b>Kế hoạch</b> lấy từ lịch lãi (mỗi kỳ tách thành 2
-                dòng tiền gốc + tiền lãi). <b>Đã trả</b> lấy từ trả
-                nợ thực tế (cũng tách gốc/lãi). <b>Trạng thái kỳ</b>
+                <b>Kế hoạch</b> lấy từ lịch lãi (mỗi kỳ tách thành 3
+                dòng tiền gốc + tiền lãi + tiền phí). <b>Đã trả</b> lấy
+                từ trả nợ thực tế (cũng tách gốc/lãi/phí).
+                <b>Trạng thái kỳ</b>
                 (Dự kiến / Đã ghi nhận / Trả một phần / Đã trả đủ) →
                 view List để xem chi tiết từng kỳ + filter quick.
+            </p>
+            <p>
+                Khế ước không khai phí (<i>Cách tính phí</i> = Không)
+                thì không phát sinh dòng phí — báo cáo giữ nguyên như cũ.
             </p>
         </field>
     </record>

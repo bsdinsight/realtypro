@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Form cấu hình rút gọn của phân hệ Vay & Khế ước.             -->
+    <!-- Dùng form riêng thay vì chèn block vào Settings chung: người  -->
+    <!-- theo dõi nợ vào thẳng menu Vay > Cấu hình, không phải đi qua  -->
+    <!-- trang Settings toàn hệ thống mà họ thường không có quyền.     -->
+    <!-- ============================================================ -->
+    <record id="res_config_settings_view_form_re_loan" model="ir.ui.view">
+        <field name="name">res.config.settings.form.re_loan</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Cấu hình Vay &amp; Khế ước"
+                  class="o_base_settings">
+                <header>
+                    <button string="Lưu" type="object" name="execute"
+                            class="oe_highlight"/>
+                    <button string="Bỏ" type="object" name="cancel"
+                            class="oe_link"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Cấu hình Vay &amp; Khế ước</h1>
+                    </div>
+                    <group>
+                        <group string="Bù trừ chênh lệch (Net-off)">
+                            <field name="re_loan_net_off_threshold"
+                                   widget="float"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <h5><i class="fa fa-info-circle"
+                               title="Thông tin"/> Ngưỡng net-off
+                        dùng ở đâu</h5>
+                        <p style="margin-bottom: 0;">
+                            Trên tab <b>Lịch lãi</b> của khế ước, nút
+                            <b>Net-off chênh lệch</b> chỉ chạy khi số còn
+                            phải trả của kỳ (gốc + lãi) <b>không vượt</b>
+                            ngưỡng này. Vượt ngưỡng thì bắt buộc tạo
+                            <b>trả nợ chính thức</b> để giữ vết kiểm toán.
+                            Đặt ngưỡng <b>= 0</b> nghĩa là tắt hẳn tính
+                            năng net-off.
+                        </p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_loan_config_settings"
+            model="ir.actions.act_window">
+        <field name="name">Cấu hình Vay &amp; Khế ước</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id"
+               ref="res_config_settings_view_form_re_loan"/>
+        <field name="target">current</field>
+        <field name="context">{'module': 're_loan'}</field>
+    </record>
+
+    <menuitem id="menu_re_loan_config_settings"
+              name="Tham số phân hệ Vay"
+              parent="menu_re_loan_config"
+              action="action_re_loan_config_settings"
+              sequence="95"
+              groups="re_loan.group_loan_manager"/>
+
+</odoo>

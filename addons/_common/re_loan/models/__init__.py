@@ -16,3 +16,4 @@ from . import re_loan_bank_advice
 from . import re_loan_adjustment_note
 from . import res_partner
 from . import re_loan_weighted_rate
+from . import res_config_settings

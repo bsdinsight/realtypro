@@ -368,11 +368,13 @@ class ReLoanNoteInterestLine(models.Model):
         do làm tròn. KTT click button trên kỳ → kỳ về 'paid' không
         cần tạo trích thu khác cho con số bé.
 
-        Threshold mặc định 100,000 ₫. Vượt → UserError, KTT phải
-        tạo repayment chính thức.
+        Ngưỡng lấy từ Vay > Cấu hình > Tham số phân hệ Vay (mặc
+        định 100.000 ₫).
+        Vượt → UserError, KTT phải tạo repayment chính thức.
         """
         from odoo.exceptions import UserError
-        THRESHOLD = 100_000.0
+        THRESHOLD = self.env['res.config.settings'].sudo(
+        ).get_net_off_threshold()
         Repayment = self.env['re.loan.note.repayment']
         for line in self:
             if line.state == 'paid':
@@ -386,6 +388,12 @@ class ReLoanNoteInterestLine(models.Model):
                 raise UserError(_(
                     "Kỳ %s không có chênh lệch — đã khớp 100%%.",
                     line.period_no))
+            if THRESHOLD <= 0:
+                raise UserError(_(
+                    "Ngưỡng net-off đang đặt bằng 0 — tính năng bù "
+                    "trừ chênh lệch lẻ đã tắt. Vào Vay > Cấu hình > "
+                    "Tham số phân hệ Vay để bật lại, hoặc tạo trả nợ "
+                    "chính thức cho chênh lệch này."))
             if total_diff > THRESHOLD:
                 raise UserError(_(
                     "Chênh lệch kỳ %(p)s = %(d)s ₫ vượt ngưỡng "

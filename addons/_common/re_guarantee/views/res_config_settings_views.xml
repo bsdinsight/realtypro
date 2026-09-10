@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Chèn khối Bảo lãnh vào chính màn hình cấu hình của phân hệ Vay:
+      hai phân hệ dùng chung một trang, người dùng chỉ phải nhớ một chỗ.
+      Menu bên dưới trỏ tới cùng action đó, để vào từ nhánh Bảo lãnh NH
+      cũng ra đúng trang này.
+    -->
+    <record id="res_config_settings_view_form_re_guarantee"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.form.re_guarantee</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="re_loan.res_config_settings_view_form_re_loan"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='net_off']" position="after">
+                <group name="guarantee_reminder"
+                       string="Nhắc bảo lãnh sắp hết hạn">
+                    <field name="re_guarantee_expiry_lead_days"/>
+                    <field name="re_guarantee_expiry_repeat_days"/>
+                </group>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <div class="alert alert-info" role="alert">
+                    <h5><i class="fa fa-envelope-o"
+                           title="Thư nhắc"/> Thư nhắc bảo lãnh</h5>
+                    <p style="margin-bottom: 0;">
+                        Mỗi sáng hệ thống rà các chứng thư sắp hết hạn và
+                        gửi thư cho <b>Người phụ trách (PIC)</b> ghi trên
+                        chứng thư. Chứng thư <b>chưa khai PIC thì không
+                        được nhắc</b> — không biết gửi cho ai, mà gửi cả
+                        nhóm thì thành thư rác.
+                    </p>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_guarantee_config_settings"
+              name="Tham số Bảo lãnh"
+              parent="menu_re_guarantee_root"
+              action="re_loan.action_re_loan_config_settings"
+              sequence="90"
+              groups="re_loan.group_loan_manager"/>
+
+</odoo>

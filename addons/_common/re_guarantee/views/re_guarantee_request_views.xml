@@ -83,9 +83,14 @@
                             string="Phát hành" class="btn-primary"
                             invisible="state != 'active'"
                             confirm="Xác nhận phát hành chứng thư BL? Hệ thống sẽ tạo chứng thư BL chi tiết và đề nghị chuyển trạng thái Đã phát hành."/>
+                    <!-- Vẫn hiện ở trạng thái "Đã phát hành": huỷ đề
+                         nghị đã phát hành là chính việc mà backlog 762
+                         yêu cầu (huỷ kèm chứng thư). Ẩn ở đó thì tính
+                         năng không có đường vào. -->
                     <button name="action_cancel" type="object"
                             string="Huỷ"
-                            invisible="state in ('issued','settled','cancelled')"/>
+                            invisible="state in ('settled','cancelled')"
+                            confirm="Huỷ đề nghị này? Chứng thư bảo lãnh sinh ra từ nó sẽ được giải toả và hạn mức trả lại."/>
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
                             invisible="state != 'cancelled'"/>
@@ -145,8 +150,13 @@
                             <field name="beneficiary_partner_id"/>
                             <field name="project_id"
                                    options="{'no_create': True}"/>
+                            <!-- Khoá từ lúc đã phát hành: chứng thư
+                                 do hệ thống sinh ra khi bấm Phát hành,
+                                 gán tay sang chứng thư khác là cắt đứt
+                                 liên kết giữa hai văn bản (backlog 762). -->
                             <field name="bank_guarantee_id"
                                    options="{'no_create': True}"
+                                   readonly="state in ('issued', 'settled', 'cancelled')"
                                    invisible="not bank_guarantee_id and state == 'draft'"/>
                         </group>
                     </group>

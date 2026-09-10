@@ -25,7 +25,7 @@
                         <h1>Cấu hình Vay &amp; Khế ước</h1>
                     </div>
                     <group>
-                        <group string="Bù trừ chênh lệch (Net-off)">
+                        <group name="net_off" string="Bù trừ chênh lệch (Net-off)">
                             <field name="re_loan_net_off_threshold"
                                    widget="float"/>
                         </group>

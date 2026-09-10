@@ -55,6 +55,40 @@ class ReLoanNote(models.Model):
     facility_type = fields.Selection(
         related='facility_id.facility_type', store=True, readonly=True,
         string='Loại facility')
+    allowed_facility_ids = fields.Many2many(
+        're.loan.facility', string='Hạn mức được phép chọn',
+        compute='_compute_allowed_facilities',
+        help='Danh sách hạn mức hợp lệ cho khế ước này. Form dùng nó '
+             'làm bộ lọc cho ô Hạn mức — nhờ vậy khi khai khế ước từ '
+             'một HĐTD cụ thể, hộp thoại "Tìm thêm" chỉ liệt kê hạn '
+             'mức của đúng HĐTD đó.')
+
+    @api.depends_context('force_credit_contract_id')
+    def _compute_allowed_facilities(self):
+        """Cùng điều kiện với domain khai ở facility_id, cộng thêm một
+        vế: nếu vào form từ nút "Khai khế ước mới" của một HĐTD thì chỉ
+        hiện hạn mức của HĐTD đó.
+
+        Vì sao không nhét thẳng vào domain của trường: domain khai ở
+        model là chuỗi tĩnh, không đọc được ngữ cảnh mở form. Trước đây
+        nút truyền `search_default_...` — thứ chỉ tác dụng lên bộ lọc
+        của danh sách khế ước, không lọc hộp thoại chọn hạn mức, nên
+        hộp thoại vẫn liệt kê hạn mức của mọi HĐTD (backlog 763).
+        """
+        today = fields.Date.context_today(self)
+        dom = [('credit_contract_id.state', '=', 'active'),
+               ('purpose_kind', '=', 'loan'),
+               '|', ('credit_contract_id.date_end', '=', False),
+               ('credit_contract_id.date_end', '>=', today)]
+        contract_id = self.env.context.get('force_credit_contract_id')
+        if contract_id:
+            dom.append(('credit_contract_id', '=', contract_id))
+        facilities = self.env['re.loan.facility'].search(dom)
+        for rec in self:
+            # Giữ lại hạn mức bản ghi đang mang, kể cả khi nó không còn
+            # thoả điều kiện (HĐTD hết hạn) — không thì mở khế ước cũ ra
+            # là ô Hạn mức hiện trống.
+            rec.allowed_facility_ids = facilities | rec.facility_id
 
     # onlending: cho công ty con vay lại từ một KW vay ngân hàng
     source_note_id = fields.Many2one(

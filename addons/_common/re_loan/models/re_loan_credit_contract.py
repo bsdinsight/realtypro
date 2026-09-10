@@ -356,13 +356,18 @@ class ReLoanCreditContract(models.Model):
             'name': _('Khế ước nhận nợ mới — %s', self.name),
             'res_model': 're.loan.note',
             'view_mode': 'form',
-            'target': 'new',
+            # Màn hình đầy đủ chứ không phải hộp thoại: khế ước có
+            # giải ngân, lịch lãi, phân bổ dự án — nhét vào hộp thoại
+            # thì phải cuộn trong cuộn.
+            'target': 'current',
             'context': {
                 'default_credit_contract_id': self.id,
                 'default_facility_id': (
                     self.facility_ids[0].id
                     if len(self.facility_ids) == 1 else False),
-                'search_default_credit_contract_id': self.id,
+                # Khoá ô Hạn mức về đúng HĐTD này — xem
+                # re.loan.note._compute_allowed_facilities.
+                'force_credit_contract_id': self.id,
             },
         }
 

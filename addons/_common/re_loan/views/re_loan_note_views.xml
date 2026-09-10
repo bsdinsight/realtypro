@@ -198,9 +198,12 @@
                     <group>
                         <group>
                             <field name="loan_type"/>
+                            <field name="allowed_facility_ids"
+                                   invisible="1"/>
                             <field name="facility_id"
                                    invisible="loan_type != 'external'"
-                                   required="loan_type == 'external'"/>
+                                   required="loan_type == 'external'"
+                                   domain="[('id', 'in', allowed_facility_ids)]"/>
                             <field name="source_note_id"
                                    invisible="loan_type != 'onlending'"
                                    required="loan_type == 'onlending'"/>

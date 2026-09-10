@@ -95,6 +95,14 @@
                             class="btn-danger"
                             invisible="state not in ('issued','extended')"
                             confirm="Xác nhận BL bị thu? NH sẽ phải trả tiền cho beneficiary."/>
+                    <!-- Huỷ chứng thư = giải toả: hạn mức được trả
+                         lại ngay. Trước đây phương thức có sẵn nhưng
+                         không có nút nào gọi tới, nên trên màn hình
+                         không có đường huỷ chứng thư (backlog 762). -->
+                    <button name="action_release" type="object"
+                            string="Huỷ / Giải toả"
+                            invisible="state not in ('issued','extended')"
+                            confirm="Huỷ chứng thư bảo lãnh này? Hạn mức bảo lãnh sẽ được trả lại ngay."/>
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
                             invisible="state in ('draft','released','forfeited','settled')"/>

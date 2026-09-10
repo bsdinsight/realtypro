@@ -216,7 +216,7 @@ class ReBankGuarantee(models.Model):
          ('issued',    'Đã phát hành'),
          ('extended',  'Đã gia hạn'),
          ('settled',   'Đã tất toán'),
-         ('released',  'Đã giải tỏa (legacy)'),
+         ('released',  'Đã huỷ / giải toả'),
          ('expired',   'Hết hạn'),
          ('forfeited', 'Bị thu (NH trả thay)')],
         string='Trạng thái', default='draft', required=True, tracking=True)
@@ -440,12 +440,29 @@ class ReBankGuarantee(models.Model):
                 a=rec.amount, d=rec.date_expiry))
 
     def action_release(self):
+        """Huỷ / giải toả chứng thư — hạn mức được trả lại ngay.
+
+        Ghi thêm một dòng sang ĐỀ NGHỊ đã sinh ra chứng thư này: huỷ
+        chứng thư mà đề nghị vẫn đứng "Đã phát hành" thì hai văn bản
+        nói ngược nhau, người mở đề nghị ra không hiểu vì sao hạn mức
+        đã được trả lại.
+        """
         for rec in self:
             if rec.state not in ('issued', 'extended'):
                 raise UserError(_(
                     "Chỉ BL Đã phát hành / Đã gia hạn mới giải tỏa được."))
             rec.state = 'released'
             rec.date_released = fields.Date.context_today(rec)
+            request = self.env['re.guarantee.request'].search(
+                [('bank_guarantee_id', '=', rec.id)], limit=1)
+            if request and request.state not in ('cancelled', 'settled'):
+                request.message_post(body=_(
+                    "Chứng thư %(c)s đã huỷ/giải toả — hạn mức bảo lãnh "
+                    "đã được trả lại. Đề nghị này vẫn đang ở trạng thái "
+                    "\"%(s)s\"; huỷ nốt đề nghị nếu không phát hành lại.",
+                    c=rec.name,
+                    s=dict(request._fields['state'].selection).get(
+                        request.state)))
             rec.message_post(body=_(
                 "Giải tỏa BL — beneficiary trả lại chứng thư cho NH."))
 

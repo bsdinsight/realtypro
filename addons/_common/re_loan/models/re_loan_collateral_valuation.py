@@ -61,3 +61,21 @@ class ReLoanCollateralValuation(models.Model):
         for rec in self:
             if rec.amount < 0:
                 raise ValidationError(_("Giá trị định giá không được âm."))
+
+    @api.constrains('date')
+    def _check_date_not_future(self):
+        """Định giá là việc ĐÃ LÀM, không phải việc sẽ làm.
+
+        Ngày tương lai gần như luôn là gõ nhầm năm hoặc nhầm ô với
+        'Ngày hết hạn định giá' ngay bên cạnh. Để lọt thì giá trị hiện
+        hành của tài sản nhảy theo một chứng thư chưa tồn tại, và hạn
+        mức khả dụng tính từ đó cũng sai theo.
+        """
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.date and rec.date > today:
+                raise ValidationError(_(
+                    'Ngày định giá (%(d)s) không được lớn hơn hôm nay '
+                    '(%(t)s). Nếu định nhập hạn hiệu lực của chứng thư '
+                    'thì dùng ô "Ngày hết hạn định giá".',
+                    d=rec.date, t=today))

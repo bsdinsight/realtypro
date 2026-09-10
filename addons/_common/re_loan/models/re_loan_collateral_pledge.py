@@ -200,12 +200,49 @@ class ReLoanCollateralPledge(models.Model):
     # ------------------------------------------------------------------
     # State machine
     # ------------------------------------------------------------------
+    def unlink(self):
+        """Văn bản thế chấp ĐÃ GIẢI CHẤP thì không xoá được.
+
+        Giải chấp là một sự kiện đã xảy ra với ngân hàng, có ngày và
+        có lý do. Xoá dòng đó đi thì hồ sơ đọc như thể tài sản chưa
+        bao giờ được đem thế chấp cho HĐTD này — mất đúng đoạn lịch sử
+        mà kiểm toán hỏi tới.
+
+        Nhập nhầm thì sửa bằng nút "Đặt lại hiệu lực", không phải xoá.
+        """
+        for rec in self:
+            if rec.state == 'released':
+                raise UserError(_(
+                    'Không xoá được văn bản thế chấp đã giải chấp '
+                    '(%(c)s, giải chấp ngày %(d)s). Giữ lại để truy vết; '
+                    'nếu nhập nhầm thì dùng nút "Đặt lại hiệu lực".',
+                    c=rec.collateral_id.name or '',
+                    d=rec.release_date or '—'))
+        return super().unlink()
+
     def action_release(self):
+        """Mở màn hình nhập ngày và lý do giải chấp."""
         for rec in self:
             if rec.state != 'active':
-                raise UserError(_("Thế chấp này đã được giải chấp."))
+                raise UserError(_('Thế chấp này đã được giải chấp.'))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Giải chấp tài sản'),
+            'res_model': 're.loan.pledge.release.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_pledge_ids': self.ids},
+        }
+
+    def _do_release(self, release_date, reason):
+        """Ghi giải chấp thật — gọi từ wizard."""
+        for rec in self:
+            if rec.state != 'active':
+                raise UserError(_('Thế chấp này đã được giải chấp.'))
             rec.state = 'released'
-            rec.release_date = fields.Date.context_today(rec)
+            rec.release_date = release_date or fields.Date.context_today(rec)
+            if reason:
+                rec.release_reason = reason
             # Cảnh báo (ghi chatter) nếu còn KW thuộc HĐTD có dư nợ.
             contract = rec.credit_contract_id
             if contract:

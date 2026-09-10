@@ -8,7 +8,7 @@
             <list decoration-success="state == 'available'"
                   decoration-info="state == 'partial_pledged'"
                   decoration-warning="state == 'fully_pledged'"
-                  decoration-danger="state == 'over_pledged'"
+                  decoration-danger="state == 'over_pledged' or valuation_expired"
                   decoration-muted="state == 'disposed'">
                 <field name="name"/>
                 <field name="code"/>
@@ -25,6 +25,9 @@
                        decoration-warning="state == 'fully_pledged'"
                        decoration-danger="state == 'over_pledged'"
                        decoration-muted="state == 'disposed'"/>
+                <field name="valuation_expiry_date" optional="show"
+                       string="Hạn định giá"/>
+                <field name="valuation_expired" column_invisible="1"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
@@ -35,10 +38,40 @@
         <field name="model">re.loan.collateral</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_dispose" type="object"
+                            string="Thanh lý" class="btn-secondary"
+                            icon="fa-archive"
+                            invisible="disposed or active_pledge_count > 0"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="available,partial_pledged,fully_pledged"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="Tên tài sản..."/></h1>
+                    </div>
+
+                    <field name="disposed" invisible="1"/>
+                    <field name="valuation_expired" invisible="1"/>
+
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not valuation_expired or disposed">
+                        Chứng thư định giá <b>đã hết hiệu lực</b> ngày
+                        <field name="valuation_expiry_date" readonly="1"
+                               class="oe_inline"/>. Ngân hàng sẽ yêu cầu
+                        định giá lại trước khi cho rút thêm — thêm một
+                        dòng ở tab <b>Định giá</b>.
+                    </div>
+
+                    <div class="alert alert-info" role="alert"
+                         invisible="not disposed">
+                        Tài sản <b>đã thanh lý</b> ngày
+                        <field name="disposal_date" readonly="1"
+                               class="oe_inline"/> —
+                        <field name="disposal_reason" readonly="1"
+                               class="oe_inline"/>.
+                        Không đem thế chấp tiếp được.
                     </div>
                     <group>
                         <group>
@@ -202,6 +235,11 @@
                 <filter name="f_has_room" string="Còn giá trị thế chấp"
                         domain="[('value_available','&gt;', 0),
                                  ('state','!=','disposed')]"/>
+                <filter name="f_val_expired" string="Định giá đã hết hạn"
+                        domain="[('valuation_expired','=',True),
+                                 ('disposed','=',False)]"/>
+                <filter name="f_disposed" string="Đã thanh lý"
+                        domain="[('disposed','=',True)]"/>
                 <separator/>
                 <filter name="g_type" string="Loại tài sản"
                         context="{'group_by': 'type_id'}"/>

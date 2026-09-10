@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_pledge_release_wizard_form" model="ir.ui.view">
+        <field name="name">re.loan.pledge.release.wizard.form</field>
+        <field name="model">re.loan.pledge.release.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Giải chấp tài sản">
+                <group>
+                    <field name="pledge_ids" invisible="1"/>
+                    <field name="release_date"/>
+                    <field name="release_reason"
+                           placeholder="VD: đã tất toán khoản vay, thay bằng tài sản khác…"/>
+                </group>
+                <field name="warn_outstanding" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not warn_outstanding">
+                    <field name="warn_outstanding" readonly="1" nolabel="1"/>
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Giải chấp" class="btn-primary"/>
+                    <button string="Huỷ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_loan_collateral_dispose_wizard_form"
+            model="ir.ui.view">
+        <field name="name">re.loan.collateral.dispose.wizard.form</field>
+        <field name="model">re.loan.collateral.dispose.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Thanh lý tài sản bảo đảm">
+                <group>
+                    <field name="collateral_ids" invisible="1"/>
+                    <field name="disposal_date"/>
+                    <field name="disposal_reason"
+                           placeholder="VD: đã bán, chuyển nhượng, hết giá trị sử dụng"/>
+                </group>
+                <div class="alert alert-info small" role="alert">
+                    Tài sản đã thanh lý <b>vẫn hiển thị</b> trong danh sách
+                    để tra cứu lịch sử, nhưng không đem thế chấp tiếp được
+                    và không tính vào giá trị bảo đảm.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Thanh lý" class="btn-primary"/>
+                    <button string="Huỷ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

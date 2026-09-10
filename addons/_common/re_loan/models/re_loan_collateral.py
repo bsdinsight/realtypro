@@ -6,7 +6,8 @@ Tài sản thuộc công ty thành viên (hoặc bên thứ ba) dùng đảm b�
 Có nhiều lần định giá; giá trị hiện hành lấy định giá mới nhất. Một tài sản có
 thể thế chấp cho nhiều khoản (multi-pledge).
 """
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ReLoanCollateral(models.Model):
@@ -86,6 +87,33 @@ class ReLoanCollateral(models.Model):
 
     active = fields.Boolean(default=True)
 
+    # ── Thanh lý ──────────────────────────────────────────────────
+    # KHÔNG dùng `active` làm cờ thanh lý. Trước đây trạng thái
+    # 'disposed' suy ra từ `active = False`, nhưng `active = False`
+    # trong Odoo nghĩa là LƯU TRỮ: bản ghi biến mất khỏi mọi danh sách.
+    # Tài sản đã thanh lý thì ngược lại — phải còn nhìn thấy được, vì
+    # nó từng bảo đảm cho những khoản vay còn dư nợ và kiểm toán sẽ
+    # hỏi tới. Hai khái niệm khác nhau nên tách làm hai trường.
+    disposed = fields.Boolean(
+        string='Đã thanh lý', readonly=True, copy=False, index=True,
+        help='Tài sản đã bán hoặc không còn dùng làm bảo đảm. Vẫn hiển '
+             'thị trong danh sách để tra cứu lịch sử.')
+    disposal_date = fields.Date(
+        string='Ngày thanh lý', readonly=True, copy=False)
+    disposal_reason = fields.Char(
+        string='Lý do thanh lý', readonly=True, copy=False)
+
+    # ── Hết hạn định giá (việc "Thông báo khi TSDB hết hạn định giá")
+    valuation_expiry_date = fields.Date(
+        string='Hạn hiệu lực định giá',
+        compute='_compute_valuation_expiry', store=True,
+        help='Ngày hết hạn của lần định giá MỚI NHẤT.')
+    valuation_expired = fields.Boolean(
+        string='Định giá hết hạn',
+        compute='_compute_valuation_expiry', store=True,
+        help='Định giá mới nhất đã quá hạn hiệu lực. Ngân hàng sẽ yêu '
+             'cầu định giá lại trước khi cho rút thêm.')
+
     @api.depends('valuation_ids.date', 'valuation_ids.amount')
     def _compute_value_current(self):
         # Tie-break theo id khi 2 định giá cùng ngày (vd định giá tay +
@@ -121,10 +149,10 @@ class ReLoanCollateral(models.Model):
                 rec.coverage_percent = 0.0
 
     @api.depends('total_secured', 'value_current', 'active_pledge_count',
-                 'active')
+                 'disposed')
     def _compute_state(self):
         for rec in self:
-            if not rec.active:
+            if rec.disposed:
                 rec.state = 'disposed'
                 continue
             if rec.active_pledge_count == 0:
@@ -135,3 +163,126 @@ class ReLoanCollateral(models.Model):
                 rec.state = 'fully_pledged'
             else:
                 rec.state = 'partial_pledged'
+
+    @api.depends('valuation_ids.date', 'valuation_ids.date_valid_until')
+    def _compute_valuation_expiry(self):
+        """Hạn hiệu lực lấy theo lần định giá MỚI NHẤT, không phải lần
+        có hạn xa nhất — một chứng thư cũ còn hạn dài không cứu được
+        việc chứng thư mới nhất đã hết hiệu lực."""
+        today = fields.Date.context_today(self)
+        date_min = fields.Date.to_date('1900-01-01')
+
+        def _key(v):
+            vid = v.id if isinstance(v.id, int) else float('inf')
+            return (v.date or date_min, vid)
+
+        for rec in self:
+            latest = rec.valuation_ids.sorted(key=_key, reverse=True)[:1]
+            exp = latest.date_valid_until if latest else False
+            rec.valuation_expiry_date = exp
+            rec.valuation_expired = bool(exp and exp < today)
+
+    # ------------------------------------------------------------------
+    def action_dispose(self):
+        """Thanh lý tài sản — chỉ khi chưa đem thế chấp gì.
+
+        Tài sản đang bảo đảm cho một khoản vay mà bị đánh dấu thanh lý
+        thì hạn mức khả dụng của khoản vay đó tụt xuống mà không ai
+        biết vì sao. Muốn thanh lý thì giải chấp trước.
+        """
+        for rec in self:
+            if rec.disposed:
+                raise UserError(_('Tài sản "%s" đã thanh lý rồi.', rec.name))
+            if rec.active_pledge_count:
+                raise UserError(_(
+                    'Tài sản "%(n)s" đang có %(c)s văn bản thế chấp còn '
+                    'hiệu lực. Giải chấp hết rồi mới thanh lý được.',
+                    n=rec.name, c=rec.active_pledge_count))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Thanh lý tài sản bảo đảm'),
+            'res_model': 're.loan.collateral.dispose.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_collateral_ids': self.ids},
+        }
+
+    def unlink(self):
+        """Chỉ xoá được tài sản chưa từng thế chấp và chưa thanh lý.
+
+        Tài sản đã từng đem thế chấp là một mắt xích của hồ sơ tín
+        dụng: xoá đi thì văn bản thế chấp mất tài sản, và không ai trả
+        lời được HĐTD ngày đó được bảo đảm bằng gì.
+        """
+        for rec in self:
+            if rec.pledge_ids:
+                raise UserError(_(
+                    'Không xoá được tài sản "%(n)s": đã có %(c)s văn bản '
+                    'thế chấp gắn vào (kể cả đã giải chấp). Chỉ xoá được '
+                    'tài sản ở trạng thái "Sẵn sàng — chưa thế chấp".',
+                    n=rec.name, c=len(rec.pledge_ids)))
+            if rec.disposed:
+                raise UserError(_(
+                    'Không xoá được tài sản "%s" đã thanh lý — giữ lại '
+                    'để tra cứu lịch sử.', rec.name))
+        return super().unlink()
+
+    # ------------------------------------------------------------------
+    @api.model
+    def _cron_valuation_expiry_reminder(self):
+        """Nhắc mỗi ngày các tài sản có định giá đã hết hạn.
+
+        Chỉ nhắc tài sản ĐANG THẾ CHẤP: tài sản chưa đem thế chấp mà
+        chứng thư hết hạn thì không ai thiệt gì, đến lúc dùng sẽ định
+        giá lại. Nhắc cả hai loại là mỗi sáng gửi một danh sách dài
+        không ai đọc.
+
+        Không nhắc lại tài sản đã nhắc và chưa ai xử — hoạt động cũ vẫn
+        còn treo, thêm cái nữa chỉ làm nhiễu.
+        """
+        today = fields.Date.context_today(self)
+        stale = self.search([
+            ('disposed', '=', False),
+            ('valuation_expired', '=', True),
+            ('active_pledge_count', '>', 0),
+        ])
+        if not stale:
+            return True
+        act_type = self.env.ref('mail.mail_activity_data_todo',
+                                raise_if_not_found=False)
+        managers = self.env.ref('re_loan.group_loan_manager',
+                                raise_if_not_found=False)
+        users = self.env['res.users']
+        if managers:
+            users = (managers.all_user_ids
+                     if 'all_user_ids' in managers._fields
+                     else managers.user_ids)
+        Activity = self.env['mail.activity']
+        model_id = self.env['ir.model']._get_id(self._name)
+        made = 0
+        for rec in stale:
+            existing = Activity.search_count([
+                ('res_model_id', '=', model_id),
+                ('res_id', '=', rec.id),
+                ('activity_type_id', '=', act_type.id if act_type else False),
+            ])
+            if existing:
+                continue
+            for user in users:
+                Activity.create({
+                    'res_model_id': model_id,
+                    'res_id': rec.id,
+                    'activity_type_id': act_type.id if act_type else False,
+                    'user_id': user.id,
+                    'date_deadline': today,
+                    'summary': _('Định giá hết hạn — cần định giá lại'),
+                    'note': _(
+                        'Chứng thư định giá của "%(n)s" hết hiệu lực ngày '
+                        '%(d)s. Tài sản đang bảo đảm cho %(c)s văn bản thế '
+                        'chấp, ngân hàng sẽ yêu cầu định giá lại trước khi '
+                        'cho rút thêm.',
+                        n=rec.name, d=rec.valuation_expiry_date,
+                        c=rec.active_pledge_count),
+                })
+                made += 1
+        return made

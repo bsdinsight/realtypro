@@ -351,7 +351,13 @@ class ReLoanFacility(models.Model):
         `_check_facility_type` chặn không cho chọn mới.
         """
         still_used = set()
-        if self.env.registry.ready:
+        if self.env.context.get('allow_discontinued_facility_type'):
+            # Cửa thoát cho nhập liệu chuyển đổi phải mở CẢ danh sách
+            # chọn, không chỉ mở ràng buộc: giá trị không nằm trong
+            # danh sách thì Odoo chặn ngay ở tầng ghi trường, chưa tới
+            # lượt ràng buộc chạy.
+            still_used = set(DISCONTINUED_FACILITY_TYPES)
+        elif self.env.registry.ready:
             self.env.cr.execute("""
                 SELECT DISTINCT facility_type
                 FROM re_loan_facility

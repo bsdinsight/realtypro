@@ -65,7 +65,8 @@ class ReLoanNote(models.Model):
         'res.partner', string='Bên vay (công ty con)',
         domain="[('is_company','=',True)]")
     onlending_ids = fields.One2many(
-        're.loan.note', 'source_note_id', string='Khoản cho vay lại')
+        're.loan.note', 'source_note_id', string='Khoản cho vay lại',
+        copy=False)
     amount_onlent = fields.Monetary(
         string='Đã cho vay lại', compute='_compute_amount_onlent', store=True,
         help='Tổng số tiền các khoản cho vay lại từ KW này.')
@@ -161,17 +162,25 @@ class ReLoanNote(models.Model):
          ('cancelled', 'Đã huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True)
 
+    # copy=False trên toàn bộ dòng phát sinh: nhân bản một khế ước là
+    # để lấy lại ĐIỀU KIỆN VAY (hạn mức, số tiền, lãi suất, kỳ hạn),
+    # không phải để chép lại tiền đã giải ngân và đã trả. Chép sang
+    # bản mới thì hạn mức bị chiếm hai lần và sổ nợ nhân đôi.
     disbursement_ids = fields.One2many(
-        're.loan.note.disbursement', 'note_id', string='Giải ngân')
+        're.loan.note.disbursement', 'note_id', string='Giải ngân',
+        copy=False)
     repayment_ids = fields.One2many(
-        're.loan.note.repayment', 'note_id', string='Trả nợ')
+        're.loan.note.repayment', 'note_id', string='Trả nợ',
+        copy=False)
     interest_line_ids = fields.One2many(
-        're.loan.note.interest.line', 'note_id', string='Lịch lãi')
+        're.loan.note.interest.line', 'note_id', string='Lịch lãi',
+        copy=False)
     interest_total_planned = fields.Monetary(
         string='Tổng lãi dự kiến', compute='_compute_interest_total',
         store=True)
     amendment_ids = fields.One2many(
-        're.loan.note.amendment', 'note_id', string='Phụ lục')
+        're.loan.note.amendment', 'note_id', string='Phụ lục',
+        copy=False)
     amendment_count = fields.Integer(
         string='Số phụ lục', compute='_compute_amendment_count')
     # Pledge gắn DIRECTLY vào KW này (target='note', hiếm)
@@ -609,6 +618,20 @@ class ReLoanNote(models.Model):
                 "đợt giải ngân.",
                 n=rec.name or '', d=len(draft_disb)))
 
+    def copy_data(self, default=None):
+        """Nhân bản KW: đặt sẵn số khế ước tạm cho bản sao.
+
+        Số khế ước là số ngân hàng cấp nên khai copy=False, nhưng nó
+        lại required — nên nhân bản trước đây nổ NotNullViolation ngay
+        ở tầng CSDL (backlog 734). Điền một số tạm để bản sao mở lên
+        được, người dùng sửa lại theo số NH cấp.
+        """
+        vals_list = super().copy_data(default=default)
+        for rec, vals in zip(self, vals_list):
+            if not vals.get('name'):
+                vals['name'] = _("%s (bản sao)", rec.name or '')
+        return vals_list
+
     def action_open_activation_date_wizard(self):
         """Mở wizard sửa ngày kích hoạt của KW đã kích hoạt."""
         self.ensure_one()
@@ -722,6 +745,17 @@ class ReLoanNote(models.Model):
                 raise UserError(_(
                     "Không thể huỷ KW đã có phát sinh trả gốc."))
             rec.state = 'cancelled'
+            # Huỷ KW là huỷ cả các đợt giải ngân chưa chuyển tiền —
+            # đối xứng với việc Gửi NH đẩy chúng sang "Đã gửi NH".
+            # Đợt đã chuyển tiền thì giữ nguyên: tiền đã ra khỏi NH,
+            # không xoá được bằng một cái bấm nút.
+            pending = rec.disbursement_ids.filtered(
+                lambda d: d.state not in ('disbursed', 'cancelled'))
+            if pending:
+                pending.write({'state': 'cancelled'})
+                rec.message_post(body=_(
+                    "Huỷ KW — huỷ theo %(n)s đợt giải ngân chưa chuyển "
+                    "tiền.", n=len(pending)))
 
     def action_reset_draft(self):
         for rec in self:
@@ -803,7 +837,17 @@ class ReLoanNote(models.Model):
 
     def action_generate_interest_schedule(self):
         """(Re)sinh lịch lãi dự kiến. Giữ lại dòng đã ghi nhận/đã trả,
-        chỉ thay thế các dòng còn 'planned'."""
+        chỉ thay thế các dòng còn 'planned'.
+
+        *** Không sinh trùng kỳ đã giữ lại (backlog 731) ***
+        Bản cũ xoá các kỳ 'planned' rồi dựng lại TOÀN BỘ lịch từ đầu —
+        các kỳ đã ghi nhận / đã trả (kể cả trả một phần) được giữ lại
+        thì lập tức có thêm một bản sinh mới trùng kỳ, thành hai dòng
+        cho cùng một kỳ và tổng phải trả nhân đôi.
+        Nay bỏ khỏi lịch mới mọi kỳ đã có dòng giữ lại — nhận diện
+        theo số kỳ và theo khoảng ngày, vì đổi ngày kích hoạt làm số
+        kỳ vẫn thế nhưng khoảng ngày dịch đi (và ngược lại).
+        """
         for note in self:
             if note.state == 'cancelled':
                 raise UserError(_(
@@ -814,8 +858,21 @@ class ReLoanNote(models.Model):
             note.interest_line_ids.filtered(
                 lambda l: l.state == 'planned'
                 and l.line_type == 'period').unlink()
-            vals = note._build_interest_schedule_lines()
+            kept = note.interest_line_ids.filtered(
+                lambda l: l.line_type == 'period')
+            kept_periods = set(kept.mapped('period_no'))
+            kept_ranges = {(l.date_from, l.date_to) for l in kept}
+            vals = [
+                v for v in note._build_interest_schedule_lines()
+                if v['period_no'] not in kept_periods
+                and (v['date_from'], v['date_to']) not in kept_ranges
+            ]
             note.interest_line_ids = [(0, 0, v) for v in vals]
+            if kept:
+                note.message_post(body=_(
+                    "Tạo lại lịch lãi: giữ nguyên %(k)s kỳ đã ghi nhận/"
+                    "đã thanh toán, sinh mới %(m)s kỳ.",
+                    k=len(kept), m=len(vals)))
         return True
 
     def _effective_rate_at(self, dt):

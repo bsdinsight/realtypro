@@ -120,6 +120,11 @@
                     <sheet>
                         <group>
                             <group>
+                                <!-- Nạp sẵn (ẩn) để lưới phân bổ bên
+                                     dưới lọc mục đích theo HĐTD ngay khi
+                                     văn bản thế chấp CHƯA lưu. -->
+                                <field name="credit_contract_id"
+                                       invisible="1"/>
                                 <field name="collateral_id"
                                        options="{'no_create': True}"/>
                                 <field name="name"/>
@@ -177,8 +182,16 @@
                             <list editable="bottom">
                                 <field name="credit_contract_id"
                                        column_invisible="1"/>
+                                <!-- Domain đọc HĐTD từ VĂN BẢN THẾ CHẤP
+                                     (parent), không đọc từ chính dòng này:
+                                     dòng mới chưa có pledge_id nên
+                                     credit_contract_id của nó còn rỗng, và
+                                     danh sách mục đích ra rỗng theo. Đó là
+                                     lý do trước đây phải lưu rồi mở lại
+                                     form mới chọn được (backlog 717). -->
                                 <field name="facility_id" string="Mục đích"
-                                       options="{'no_create': True}"/>
+                                       options="{'no_create': True}"
+                                       domain="[('credit_contract_id', '=', parent.credit_contract_id)]"/>
                                 <field name="currency_id" column_invisible="1"/>
                                 <field name="amount" string="Số tiền phân bổ"
                                        width="185px" sum="Σ"/>
@@ -221,7 +234,8 @@
                                    domain="[('credit_contract_id', '=', parent.id)]"
                                    optional="show"/>
                             <field name="facility_id" string="Mục đích"
-                                   options="{'no_create': True}"/>
+                                   options="{'no_create': True}"
+                                   domain="[('credit_contract_id', '=', parent.id)]"/>
                             <field name="currency_id" column_invisible="1"/>
                             <field name="secured_amount" string="Đem thế chấp"
                                    width="185px" readonly="1" optional="show"/>

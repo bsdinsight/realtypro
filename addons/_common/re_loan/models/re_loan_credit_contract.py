@@ -56,8 +56,12 @@ class ReLoanCreditContract(models.Model):
          ('cancelled', 'Đã huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True)
 
+    # copy=False: nhân bản HĐTD chỉ lấy phần đầu hợp đồng. Hạn mức
+    # mang theo liên kết HĐ nhà thầu vốn phải DUY NHẤT (mỗi hợp đồng
+    # ứng đúng một hạn mức), chép sang bản mới là vi phạm ngay.
     facility_ids = fields.One2many(
-        're.loan.facility', 'credit_contract_id', string='Hạn mức')
+        're.loan.facility', 'credit_contract_id', string='Hạn mức',
+        copy=False)
     note_ids = fields.One2many(
         're.loan.note', 'credit_contract_id', string='Khế ước nhận nợ',
         help='Mọi khế ước rút trên các hạn mức của HĐTD này.')
@@ -229,6 +233,19 @@ class ReLoanCreditContract(models.Model):
                 raise ValidationError(_(
                     'Ngày hiệu lực (%(s)s) không được trước Ngày ký '
                     '(%(k)s).', s=rec.date_start, k=rec.sign_date))
+
+    def copy_data(self, default=None):
+        """Nhân bản HĐTD: đặt sẵn số hợp đồng tạm cho bản sao.
+
+        Số HĐTD là số ngân hàng cấp (copy=False) nhưng required, nên
+        nhân bản trước đây nổ NotNullViolation ở tầng CSDL (backlog
+        734). Điền số tạm để bản sao mở lên được rồi sửa lại.
+        """
+        vals_list = super().copy_data(default=default)
+        for rec, vals in zip(self, vals_list):
+            if not vals.get('name'):
+                vals['name'] = _("%s (bản sao)", rec.name or '')
+        return vals_list
 
     def action_open_reallocate_wizard(self):
         """Mở wizard phân bổ lại hạn mức xuống các facility."""

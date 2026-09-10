@@ -6,8 +6,26 @@ Lịch lãi là DỰ KIẾN (forecast) tiền lãi phải trả theo từng kỳ
 theo phương pháp tính lãi của KW. Cho phép override từng dòng khi ngân hàng
 tính lệch do quy ước ngày.
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+
+# Các ô người dùng sửa được tay trên tab Lịch lãi. Sửa một trong số
+# này là sửa NGHĨA VỤ TRẢ NỢ, nên phải để lại vết ở Nhật ký khế ước
+# (backlog 746). Các cột "đã trả" không nằm đây: chúng do chứng từ
+# trả nợ tính ra, không ai gõ tay được.
+LOGGED_LINE_FIELDS = {
+    'date_from': 'Từ ngày',
+    'date_to': 'Đến ngày',
+    'principal_base': 'Gốc tính lãi',
+    'interest_rate': 'Lãi suất (%/năm)',
+    'principal_due': 'Gốc kỳ',
+    'interest_amount': 'Tiền lãi',
+    'interest_amount_manual': 'Tiền lãi (sửa tay)',
+    'is_overridden': 'Sửa tay tiền lãi',
+    'fee_amount': 'Phí kỳ',
+}
 
 
 class ReLoanNoteInterestLine(models.Model):
@@ -304,14 +322,78 @@ class ReLoanNoteInterestLine(models.Model):
     # ------------------------------------------------------------------
     # Action: Thanh toán kỳ này → tạo Repayment tương ứng
     # ------------------------------------------------------------------
-    def action_create_repayment(self):
-        """Tạo 1 dòng re.loan.note.repayment từ dòng lịch lãi này:
-          - amount_principal = principal_due
-          - amount_interest = interest_amount (hoặc manual nếu sửa tay)
-          - date = ngày hôm nay
-          - reference = "Trả kỳ N của KW X"
+    # ------------------------------------------------------------------
+    # Vết sửa tay trên lịch lãi (backlog 746)
+    # ------------------------------------------------------------------
+    def write(self, vals):
+        watched = [f for f in vals if f in LOGGED_LINE_FIELDS]
+        before = {}
+        if watched and not self.env.context.get('skip_interest_line_log'):
+            before = {rec.id: {f: rec[f] for f in watched} for rec in self}
+        res = super().write(vals)
+        if before:
+            self._log_line_changes(before, watched)
+        return res
 
-        Trả về action mở form repayment vừa tạo cho user review/edit.
+    def _fmt_line_value(self, fname, value):
+        field = self._fields[fname]
+        if value in (False, None) and field.type != 'boolean':
+            return '—'
+        if field.type == 'boolean':
+            return _('Có') if value else _('Không')
+        if field.type == 'monetary':
+            return '{:,.0f}'.format(value or 0.0)
+        if field.type == 'float':
+            return '{:,.2f}'.format(value or 0.0)
+        return str(value)
+
+    def _log_line_changes(self, before, watched):
+        """Gộp thay đổi theo khế ước rồi ghi một mẩu vào Nhật ký.
+
+        Ghi lên khế ước chứ không lên dòng lịch lãi: dòng lịch lãi
+        nằm trong lưới nhúng, không có chỗ để đọc nhật ký của riêng
+        nó, mà người kiểm tra cũng đọc theo khế ước chứ không theo kỳ.
+        """
+        by_note = {}
+        for line in self:
+            old = before.get(line.id) or {}
+            rows = []
+            for fname in watched:
+                old_val, new_val = old.get(fname), line[fname]
+                field = self._fields[fname]
+                if field.type in ('monetary', 'float'):
+                    if abs((old_val or 0.0) - (new_val or 0.0)) < 0.005:
+                        continue
+                elif old_val == new_val:
+                    continue
+                rows.append('%s: %s → <b>%s</b>' % (
+                    LOGGED_LINE_FIELDS[fname],
+                    line._fmt_line_value(fname, old_val),
+                    line._fmt_line_value(fname, new_val)))
+            if rows:
+                by_note.setdefault(line.note_id, []).append(
+                    (line.period_no, rows))
+        for note, entries in by_note.items():
+            if not note:
+                continue
+            body = [_('Sửa tay Lịch lãi:')]
+            for period_no, rows in sorted(entries,
+                                          key=lambda e: e[0] or 0):
+                body.append('<b>%s %s</b> — %s' % (
+                    _('Kỳ'), period_no or '?', '; '.join(rows)))
+            note.message_post(body=Markup('<br/>'.join(body)))
+
+    def action_create_repayment(self):
+        """Mở form trả nợ đã điền sẵn số của kỳ này.
+
+        *** KHÔNG tạo bản ghi trước khi mở hộp thoại ***
+        Bản cũ create() rồi mới mở form bản ghi đó. Người dùng bấm
+        "Huỷ" trên hộp thoại thì chỉ đóng cửa sổ — bản ghi trả nợ vẫn
+        nằm lại và kỳ đã bị đánh dấu ĐÃ TRẢ. Nghĩa là bấm Huỷ mà tiền
+        vẫn được ghi nhận (backlog 747).
+
+        Bản này chỉ truyền giá trị mặc định vào form trống: Lưu mới
+        tạo bản ghi, Huỷ thì không còn gì lại.
         """
         from odoo.exceptions import UserError
         self.ensure_one()
@@ -322,41 +404,32 @@ class ReLoanNoteInterestLine(models.Model):
         if self.total_due <= 0:
             raise UserError(_(
                 "Tổng phải trả kỳ này = 0, không cần tạo thanh toán."))
-        repayment = self.env['re.loan.note.repayment'].create({
-            'note_id': self.note_id.id,
-            'date': fields.Date.context_today(self),
-            'amount_principal': max(
-                0, self.principal_due - self.amount_principal_paid),
-            'amount_interest': max(
-                0, self.interest_amount - self.amount_interest_paid),
-            # Bug #20 tài liệu nghiệp vụ: gợi ý sẵn phí còn lại của kỳ (user sửa
-            # được trên form trước khi Save).
-            'amount_fee': max(
-                0, self.fee_amount - self.amount_fee_paid),
-            'reference': _("Trả kỳ %(p)s của KW %(n)s",
-                           p=self.period_no,
-                           n=self.note_id.name or ''),
-            'interest_line_id': self.id,
-            'bank_account_id': (
-                self.note_id.company_id.partner_id.bank_ids[:1].id
-                if self.note_id.company_id.partner_id.bank_ids else False),
-        })
-        # State sẽ auto = 'paid' qua _compute_paid_amounts
-        self.note_id.message_post(body=_(
-            "Tạo thanh toán từ Lịch lãi kỳ %(p)s: gốc %(g)s, lãi %(l)s, "
-            "phí %(f)s.",
-            p=self.period_no,
-            g=self.principal_due,
-            l=self.interest_amount,
-            f=self.fee_amount))
-        # Mở form repayment vừa tạo cho user xem/sửa
+        bank = self.note_id.company_id.partner_id.bank_ids[:1]
         return {
             'type': 'ir.actions.act_window',
             'name': _('Trả nợ kỳ %s') % self.period_no,
             'res_model': 're.loan.note.repayment',
-            'res_id': repayment.id,
             'view_mode': 'form',
             'target': 'new',  # Dialog mode
+            'context': {
+                'default_note_id': self.note_id.id,
+                'default_date': fields.Date.context_today(self),
+                'default_amount_principal': max(
+                    0, self.principal_due - self.amount_principal_paid),
+                'default_amount_interest': max(
+                    0, self.interest_amount - self.amount_interest_paid),
+                # Gợi ý sẵn phí còn lại của kỳ (user sửa được trước Lưu).
+                'default_amount_fee': max(
+                    0, self.fee_amount - self.amount_fee_paid),
+                'default_reference': _(
+                    "Trả kỳ %(p)s của KW %(n)s",
+                    p=self.period_no, n=self.note_id.name or ''),
+                'default_interest_line_id': self.id,
+                'default_bank_account_id': bank.id if bank else False,
+                # Đánh dấu để bản ghi trả nợ ghi vết vào Nhật ký KW —
+                # chỉ khi người dùng thật sự Lưu.
+                'repayment_from_period': True,
+            },
         }
 
     def action_auto_net_off_period(self):

@@ -111,13 +111,32 @@ class ReLoanNoteDisbursement(models.Model):
                 # KHÔNG phân bổ (hoặc chưa pick facility) → tất cả dự án
                 rec.allowed_project_ids = all_projects
 
-    @api.constrains('amount', 'note_id')
+    @api.constrains('amount', 'note_id', 'state')
     def _check_amount(self):
+        """Số tiền đợt giải ngân.
+
+        BỎ QUA dòng đã huỷ và dòng thuộc KW đã huỷ (backlog 741): một
+        đợt giải ngân bị huỷ thì số tiền của nó không còn nghĩa lý gì
+        để kiểm, mà ràng buộc cũ vẫn nổ — khiến bấm Huỷ khế ước lại
+        nhận thông báo "Số tiền giải ngân phải lớn hơn 0".
+
+        Tổng giải ngân cũng chỉ cộng các dòng CÒN HIỆU LỰC. Bản cũ
+        cộng cả dòng đã huỷ, nên huỷ một đợt rồi tạo đợt khác thay thế
+        là bị chặn oan.
+        """
         for rec in self:
-            if rec.amount <= 0:
-                raise ValidationError(_("Số tiền giải ngân phải lớn hơn 0."))
             note = rec.note_id
-            total = sum(note.disbursement_ids.mapped('amount'))
+            if rec.state == 'cancelled' or note.state == 'cancelled':
+                continue
+            if rec.amount <= 0:
+                raise ValidationError(_(
+                    "Đợt giải ngân %(r)s của KW '%(n)s': số tiền phải "
+                    "lớn hơn 0.",
+                    r=rec.name or rec.beneficiary_partner_id.name or '/',
+                    n=note.name or ''))
+            live = note.disbursement_ids.filtered(
+                lambda d: d.state != 'cancelled')
+            total = sum(live.mapped('amount'))
             if total > note.amount:
                 raise ValidationError(_(
                     "Tổng giải ngân (%(t)s) vượt số tiền KW '%(n)s' (%(a)s).",

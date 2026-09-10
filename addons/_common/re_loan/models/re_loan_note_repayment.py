@@ -110,6 +110,18 @@ class ReLoanNoteRepayment(models.Model):
         recs.note_id._update_payment_state()
         # Trigger recompute interest_line paid/state nếu có link
         recs.mapped('interest_line_id')._compute_paid_amounts()
+        # Ghi vết cho trả nợ tạo từ nút "Thanh toán" trên một kỳ lịch
+        # lãi. Đặt ở đây chứ không ở nút, vì chỉ tới lúc này bản ghi
+        # mới thật sự tồn tại — bấm nút rồi Huỷ thì không ghi gì.
+        if self.env.context.get('repayment_from_period'):
+            for rec in recs.filtered('interest_line_id'):
+                rec.note_id.message_post(body=_(
+                    "Ghi nhận trả nợ từ Lịch lãi kỳ %(p)s: gốc %(g)s, "
+                    "lãi %(l)s, phí %(f)s.",
+                    p=rec.interest_line_id.period_no,
+                    g='{:,.0f}'.format(rec.amount_principal or 0),
+                    l='{:,.0f}'.format(rec.amount_interest or 0),
+                    f='{:,.0f}'.format(rec.amount_fee or 0)))
         return recs
 
     def write(self, vals):

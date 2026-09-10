@@ -111,12 +111,14 @@
                                     <field name="amount_unallocated" width="185px"
                                            string="Chưa allocate"
                                            readonly="1" optional="hide"/>
+                                    <field name="net_off_allowed"
+                                           column_invisible="1"/>
                                     <button name="action_auto_net_off"
                                             type="object"
                                             string="Net-off"
                                             icon="fa-balance-scale"
                                             class="btn-link"
-                                            invisible="state != 'posted' or amount_diff_period &lt;= 0 or amount_diff_period &gt; 100000"/>
+                                            invisible="state != 'posted' or not net_off_allowed"/>
                                     <field name="state" column_invisible="1"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
@@ -145,12 +147,14 @@
                                             <field name="amount_unallocated"
                                                    readonly="1"
                                                    decoration-warning="amount_unallocated > 0"/>
+                                            <field name="net_off_allowed"
+                                                   invisible="1"/>
                                             <button name="action_auto_net_off"
                                                     type="object"
                                                     string="Tự net-off chênh lệch lẻ"
                                                     icon="fa-balance-scale"
                                                     class="btn-secondary"
-                                                    invisible="state != 'posted' or amount_diff_period &lt;= 0 or amount_diff_period &gt; 100000"/>
+                                                    invisible="state != 'posted' or not net_off_allowed"/>
                                         </group>
                                     </group>
                                     <separator string="Repayments đã allocate"/>

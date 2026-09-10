@@ -220,18 +220,57 @@
     </record>
 
 
-    <!-- Danh mục mục đích sử dụng vốn khai thêm -->
+    <!-- Danh mục mục đích sử dụng vốn — GỒM CẢ 25 mục dựng sẵn -->
     <record id="view_re_loan_purpose_list" model="ir.ui.view">
         <field name="name">re.loan.purpose.list</field>
         <field name="model">re.loan.purpose</field>
         <field name="arch" type="xml">
-            <list editable="bottom">
+            <list editable="bottom" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="code" placeholder="vd: wc_special"/>
-                <field name="kind"/>
+                <!-- Mã của mục dựng sẵn khoá cứng: mã nguồn và dữ liệu
+                     cũ tham chiếu theo nó. Mục tự khai thì mở, nhưng
+                     khoá lại ngay khi đã có hạn mức dùng tới. -->
+                <field name="is_builtin" column_invisible="1"/>
+                <field name="facility_count" column_invisible="1"/>
+                <field name="code" placeholder="vd: wc_special"
+                       readonly="is_builtin or facility_count &gt; 0"/>
+                <field name="kind" readonly="code == 'bank_guarantee'"/>
+                <field name="facility_count" string="Hạn mức đang dùng"
+                       optional="show"/>
+                <field name="is_builtin" string="Dựng sẵn"
+                       widget="boolean_toggle" readonly="1"
+                       optional="show"/>
                 <field name="note" optional="show"/>
-                <field name="active" widget="boolean_toggle" optional="hide"/>
+                <field name="active" widget="boolean_toggle"
+                       string="Đang dùng" optional="show"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_purpose_search" model="ir.ui.view">
+        <field name="name">re.loan.purpose.search</field>
+        <field name="model">re.loan.purpose</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <filter name="f_loan" string="Nhóm Vay"
+                        domain="[('kind', '=', 'loan')]"/>
+                <filter name="f_guarantee" string="Nhóm Bảo lãnh"
+                        domain="[('kind', '=', 'guarantee')]"/>
+                <separator/>
+                <filter name="f_builtin" string="Dựng sẵn"
+                        domain="[('is_builtin', '=', True)]"/>
+                <filter name="f_custom" string="Tự khai thêm"
+                        domain="[('is_builtin', '=', False)]"/>
+                <separator/>
+                <filter name="f_inactive" string="Đã ẩn"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="g_kind" string="Phân loại"
+                        context="{'group_by': 'kind'}"/>
+            </search>
         </field>
     </record>
 
@@ -239,15 +278,23 @@
         <field name="name">Mục đích sử dụng vốn</field>
         <field name="res_model">re.loan.purpose</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_loan_purpose_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiley_face">
-                Khai thêm mục đích sử dụng vốn
+                Danh mục mục đích sử dụng vốn
             </p>
             <p>
-                Hệ thống đã có sẵn 25 mục đích phủ nghiệp vụ tổng thầu.
-                Khai thêm ở đây khi ngân hàng có gói không khớp mục nào.
+                Màn hình này liệt kê <b>toàn bộ</b> mục đích đang có —
+                gồm 25 mục <b>dựng sẵn</b> phủ nghiệp vụ tổng thầu và
+                các mục do đơn vị tự khai thêm. Sửa được <b>tên</b> của
+                mọi mục; riêng <b>mã</b> của mục dựng sẵn thì khoá, vì
+                dữ liệu cũ tham chiếu theo mã.
+            </p>
+            <p>
                 Nhớ chọn đúng <b>Phân loại</b>: khế ước nhận nợ chỉ chọn
-                được hạn mức thuộc nhóm <b>Vay</b>.
+                được hạn mức thuộc nhóm <b>Vay</b>. Không dùng mục nào
+                nữa thì bỏ tick <b>Đang dùng</b> để ẩn khỏi ô chọn —
+                đừng xoá, hạn mức cũ còn tham chiếu tới.
             </p>
         </field>
     </record>

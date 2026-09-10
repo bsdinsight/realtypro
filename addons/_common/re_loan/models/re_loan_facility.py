@@ -9,7 +9,7 @@ trong facility; amount_used / amount_available sẽ được nối vào note ở
 import re
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 FACILITY_TYPES = [
@@ -89,28 +89,41 @@ BUILTIN_PURPOSES = [
 
 
 class ReLoanPurpose(models.Model):
-    """Mục đích sử dụng vốn do người dùng khai thêm.
+    """Danh mục Mục đích sử dụng vốn — gồm CẢ 25 mục dựng sẵn.
 
-    25 mục đích dựng sẵn phủ nghiệp vụ tổng thầu Việt Nam, nhưng mỗi
-    ngân hàng gọi tên sản phẩm một kiểu và thỉnh thoảng có gói không
-    khớp mục nào. Không cho khai thêm thì người dùng nhét đại vào
-    "Khác", và mọi báo cáo theo mục đích mất nghĩa.
+    25 mục dựng sẵn phủ nghiệp vụ tổng thầu Việt Nam, nhưng mỗi ngân
+    hàng gọi tên sản phẩm một kiểu và thỉnh thoảng có gói không khớp
+    mục nào. Không cho khai thêm thì người dùng nhét đại vào "Khác",
+    và mọi báo cáo theo mục đích mất nghĩa.
 
-    GIỮ NGUYÊN KIỂU TRƯỜNG Selection, không đổi sang liên kết bảng.
-    Mã mục đích được so sánh bằng chuỗi ở 43 chỗ trong mã và 24 chỗ
-    trong giao diện — riêng `bank_guarantee` là trục chịu lực của
-    toàn bộ phân hệ bảo lãnh. Đổi kiểu trường là phải sửa hết chừng
-    đó chỗ, đổi lấy một tính năng khai danh mục.
+    Bản đầu chỉ chứa mục người dùng khai thêm, nên mở màn hình Cấu
+    hình ra thấy trống trơn và không sửa được tên mục dựng sẵn
+    (backlog 730). Nay 25 mục đó nằm luôn trong bảng này qua data
+    file, sửa TÊN được, còn MÃ thì khoá.
+
+    GIỮ NGUYÊN KIỂU TRƯỜNG Selection trên hạn mức, không đổi sang liên
+    kết bảng. Mã mục đích được so sánh bằng chuỗi ở 43 chỗ trong mã và
+    24 chỗ trong giao diện — riêng `bank_guarantee` là trục chịu lực
+    của toàn bộ phân hệ bảo lãnh. Đổi kiểu trường là phải sửa hết
+    chừng đó chỗ, đổi lấy một tính năng khai danh mục.
     """
     _name = 're.loan.purpose'
-    _description = 'Mục đích sử dụng vốn (khai thêm)'
-    _order = 'kind, name'
+    _description = 'Mục đích sử dụng vốn'
+    _order = 'sequence, kind, name'
 
     name = fields.Char(string='Tên mục đích', required=True, translate=True)
     code = fields.Char(
         string='Mã', required=True,
         help='Mã kỹ thuật, chỉ chữ thường và gạch dưới. Đã dùng rồi thì '
              'đừng đổi — dữ liệu cũ tham chiếu theo mã này.')
+    sequence = fields.Integer(string='Thứ tự', default=1000)
+    is_builtin = fields.Boolean(
+        string='Dựng sẵn', compute='_compute_is_builtin', store=True,
+        help='Mục nằm trong bộ 25 mục dựng sẵn. Sửa được TÊN và ghi '
+             'chú; không đổi được MÃ và không xoá được, vì dữ liệu cũ '
+             'lẫn mã nguồn đều tham chiếu theo mã.')
+    facility_count = fields.Integer(
+        string='Số hạn mức đang dùng', compute='_compute_facility_count')
     kind = fields.Selection(
         [('loan', 'Vay'),
          ('guarantee', 'Bảo lãnh')],
@@ -122,18 +135,26 @@ class ReLoanPurpose(models.Model):
 
     _uniq_code = models.Constraint('unique(code)', 'Mã mục đích đã tồn tại.')
 
+    @api.depends('code')
+    def _compute_is_builtin(self):
+        builtin = {c for c, _n in BUILTIN_PURPOSES}
+        for rec in self:
+            rec.is_builtin = (rec.code or '') in builtin
+
+    def _compute_facility_count(self):
+        Facility = self.env['re.loan.facility']
+        for rec in self:
+            rec.facility_count = Facility.search_count(
+                [('purpose', '=', rec.code)]) if rec.code else 0
+
     @api.constrains('code')
     def _check_code(self):
-        builtin = {c for c, _n in BUILTIN_PURPOSES}
         for rec in self:
             code = (rec.code or '').strip()
             if not code or not re.fullmatch(r'[a-z][a-z0-9_]*', code):
                 raise ValidationError(_(
                     'Mã "%s" không hợp lệ — chỉ dùng chữ thường, số và '
                     'gạch dưới, bắt đầu bằng chữ.', rec.code or ''))
-            if code in builtin:
-                raise ValidationError(_(
-                    'Mã "%s" trùng với một mục đích dựng sẵn.', code))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -144,11 +165,43 @@ class ReLoanPurpose(models.Model):
         return recs
 
     def write(self, vals):
+        if 'code' in vals:
+            for rec in self:
+                if rec.is_builtin and vals['code'] != rec.code:
+                    raise UserError(_(
+                        'Không đổi được MÃ của mục đích dựng sẵn "%(n)s". '
+                        'Mã này được mã nguồn và dữ liệu cũ tham chiếu '
+                        'tới — đổi là mất liên kết của các hạn mức đang '
+                        'dùng nó. Sửa TÊN thì được.', n=rec.name))
+                if not rec.is_builtin and rec.facility_count:
+                    raise UserError(_(
+                        'Mục đích "%(n)s" đang được %(c)s hạn mức sử '
+                        'dụng — đổi mã sẽ làm các hạn mức đó mất mục '
+                        'đích. Sửa TÊN thì được.',
+                        n=rec.name, c=rec.facility_count))
+        if 'kind' in vals:
+            for rec in self:
+                if rec.code == 'bank_guarantee' \
+                        and vals['kind'] != 'guarantee':
+                    raise UserError(_(
+                        'Mục đích "Bảo lãnh ngân hàng" phải giữ phân '
+                        'loại Bảo lãnh — toàn bộ cơ chế chiếm và khôi '
+                        'phục hạn mức bảo lãnh chạy theo nó.'))
         res = super().write(vals)
         self.env.registry.clear_cache()
         return res
 
     def unlink(self):
+        for rec in self:
+            if rec.is_builtin:
+                raise UserError(_(
+                    'Không xoá được mục đích dựng sẵn "%(n)s". Bỏ tick '
+                    '"Đang dùng" để ẩn nó khỏi ô chọn.', n=rec.name))
+            if rec.facility_count:
+                raise UserError(_(
+                    'Mục đích "%(n)s" đang được %(c)s hạn mức sử dụng — '
+                    'không xoá được. Bỏ tick "Đang dùng" để ẩn.',
+                    n=rec.name, c=rec.facility_count))
         res = super().unlink()
         self.env.registry.clear_cache()
         return res
@@ -244,6 +297,17 @@ class ReLoanFacility(models.Model):
              'trả gốc 1 tỷ → đã dùng giảm còn 1 tỷ → còn lại tăng thêm 1 tỷ).\n'
              '• Có kỳ hạn / Bảo lãnh / L/C: = Σ SỐ TIỀN KW đã cam kết '
              '(không hoàn — đã rút là chiếm hạn mức đến hết kỳ).')
+    amount_limit_purpose = fields.Monetary(
+        string='Tổng HM khả dụng',
+        compute='_compute_amount_limit_purpose', store=True,
+        help='Tổng hạn mức mà mục đích này được rút tới, CHƯA trừ phần '
+             'đã sử dụng.\n'
+             '• Hạn mức LIÊN THÔNG: Σ hạn mức của cả bể liên thông — '
+             'đó mới là số dòng này thực sự rút được, chứ không phải '
+             'riêng ô "Số tiền hạn mức" của nó.\n'
+             '• Hạn mức khoá cứng: Σ hạn mức của các dòng cùng mục '
+             'đích trong HĐTD này (một HĐTD được phép khai nhiều dòng '
+             'cùng một mục đích).')
     amount_available = fields.Monetary(
         string='Còn lại', compute='_compute_amount_available', store=True,
         help='Hạn mức còn có thể rút thêm. Tự động cập nhật khi:\n'
@@ -325,9 +389,17 @@ class ReLoanFacility(models.Model):
 
     @api.model
     def _selection_purpose(self):
-        """25 mục đích dựng sẵn + những mục người dùng khai thêm."""
-        extra = self.env['re.loan.purpose'].sudo().search([])
-        return BUILTIN_PURPOSES + [(p.code, p.name) for p in extra]
+        """Đọc thẳng từ danh mục Mục đích sử dụng vốn.
+
+        25 mục dựng sẵn nay nằm trong chính danh mục đó (data file),
+        nên người dùng sửa tên là ô chọn đổi theo. Chỉ khi danh mục
+        chưa được nạp (DB mới, ngay trước khi data file chạy) mới rơi
+        về danh sách cứng — để ô chọn không bao giờ rỗng.
+        """
+        rows = self.env['re.loan.purpose'].sudo().search([])
+        if not rows:
+            return BUILTIN_PURPOSES
+        return [(p.code, p.name) for p in rows]
 
     @api.model
     def _purpose_kind(self, code):
@@ -338,11 +410,14 @@ class ReLoanFacility(models.Model):
         """
         if not code:
             return False
-        if code in {c for c, _n in BUILTIN_PURPOSES}:
-            return 'guarantee' if code == 'bank_guarantee' else 'loan'
         rec = self.env['re.loan.purpose'].sudo().search(
             [('code', '=', code)], limit=1)
-        return rec.kind or 'loan'
+        if rec:
+            return rec.kind
+        # Danh mục chưa nạp → suy theo bộ dựng sẵn.
+        if code in {c for c, _n in BUILTIN_PURPOSES}:
+            return 'guarantee' if code == 'bank_guarantee' else 'loan'
+        return 'loan'
 
     purpose_kind = fields.Selection(
         [('loan', 'Vay'), ('guarantee', 'Bảo lãnh')],
@@ -399,6 +474,35 @@ class ReLoanFacility(models.Model):
                  'credit_contract_id.facility_ids.amount_limit',
                  'credit_contract_id.facility_ids.amount_used',
                  'credit_contract_id.facility_ids.flexible_limits')
+    @api.depends('amount_limit', 'flexible_limits', 'purpose',
+                 'credit_contract_id',
+                 'credit_contract_id.facility_ids.amount_limit',
+                 'credit_contract_id.facility_ids.flexible_limits',
+                 'credit_contract_id.facility_ids.purpose')
+    def _compute_amount_limit_purpose(self):
+        """Tổng hạn mức được cấp cho mục đích này (backlog 718).
+
+        Khác cột "Còn lại" ở chỗ KHÔNG trừ phần đã dùng: người đọc cần
+        biết mục đích này được cấp bao nhiêu, tách khỏi câu hỏi đã tiêu
+        hết bao nhiêu.
+        Gom theo đúng cách hạn mức thực sự vận hành: liên thông thì cả
+        bể chung một túi tiền, khoá cứng thì gom các dòng cùng mục đích
+        (một HĐTD được phép khai nhiều dòng cùng mục đích).
+        """
+        for rec in self:
+            siblings = rec.credit_contract_id.facility_ids
+            if not siblings:
+                rec.amount_limit_purpose = rec.amount_limit
+                continue
+            if rec.flexible_limits:
+                pool = siblings.filtered('flexible_limits')
+            else:
+                pool = siblings.filtered(
+                    lambda f: not f.flexible_limits
+                    and f.purpose == rec.purpose)
+            rec.amount_limit_purpose = (
+                sum(pool.mapped('amount_limit')) or rec.amount_limit)
+
     def _compute_amount_available(self):
         for rec in self:
             if rec.flexible_limits and rec.credit_contract_id:

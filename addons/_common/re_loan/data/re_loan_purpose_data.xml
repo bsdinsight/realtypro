@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+      25 mục đích dựng sẵn, đưa vào DANH MỤC để người dùng nhìn thấy
+      và sửa được tên (backlog 730). Trước đây chúng nằm cứng trong mã
+      nên màn hình Cấu hình chỉ hiện những mục khai thêm — mở ra thấy
+      trống trơn.
+
+      noupdate="1": đổi tên một mục rồi thì lần nâng cấp sau KHÔNG ghi
+      đè lại. MÃ thì không đổi được (xem _check_builtin_code) vì mã là
+      thứ dữ liệu cũ tham chiếu tới.
+    -->
+
+    <record id="purpose_wc_construction" model="re.loan.purpose">
+        <field name="name">VLĐ thi công · Theo hợp đồng/gói thầu</field>
+        <field name="code">wc_construction</field>
+        <field name="kind">loan</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="purpose_wc_material" model="re.loan.purpose">
+        <field name="name">VLĐ thi công · Mua vật tư, nguyên vật liệu</field>
+        <field name="code">wc_material</field>
+        <field name="kind">loan</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="purpose_wc_labor" model="re.loan.purpose">
+        <field name="name">VLĐ thi công · Chi phí nhân công</field>
+        <field name="code">wc_labor</field>
+        <field name="kind">loan</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="purpose_wc_subcontractor" model="re.loan.purpose">
+        <field name="name">VLĐ thi công · Thanh toán nhà thầu phụ</field>
+        <field name="code">wc_subcontractor</field>
+        <field name="kind">loan</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="purpose_working_capital" model="re.loan.purpose">
+        <field name="name">VLĐ · Bổ sung vốn lưu động chung</field>
+        <field name="code">working_capital</field>
+        <field name="kind">loan</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="purpose_ar_ipc_loan" model="re.loan.purpose">
+        <field name="name">Khoản phải thu · Vay bảo đảm bằng quyền đòi nợ KL hoàn thành (IPC)</field>
+        <field name="code">ar_ipc_loan</field>
+        <field name="kind">loan</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="purpose_factoring_seller" model="re.loan.purpose">
+        <field name="name">Khoản phải thu · Bao thanh toán bên bán (chiết khấu phải thu)</field>
+        <field name="code">factoring_seller</field>
+        <field name="kind">loan</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="purpose_factoring_buyer" model="re.loan.purpose">
+        <field name="name">Khoản phải thu · Bao thanh toán bên mua (tài trợ chuỗi cung ứng)</field>
+        <field name="code">factoring_buyer</field>
+        <field name="kind">loan</field>
+        <field name="sequence">80</field>
+    </record>
+
+    <record id="purpose_bank_guarantee" model="re.loan.purpose">
+        <field name="name">Bảo lãnh ngân hàng</field>
+        <field name="code">bank_guarantee</field>
+        <field name="kind">guarantee</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="purpose_equip_purchase" model="re.loan.purpose">
+        <field name="name">Thiết bị · Vay mua máy móc, thiết bị thi công</field>
+        <field name="code">equip_purchase</field>
+        <field name="kind">loan</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="purpose_equip_finlease" model="re.loan.purpose">
+        <field name="name">Thiết bị · Thuê tài chính thiết bị thi công</field>
+        <field name="code">equip_finlease</field>
+        <field name="kind">loan</field>
+        <field name="sequence">110</field>
+    </record>
+
+    <record id="purpose_investment_short" model="re.loan.purpose">
+        <field name="name">Đầu tư · Ngắn hạn</field>
+        <field name="code">investment_short</field>
+        <field name="kind">loan</field>
+        <field name="sequence">120</field>
+    </record>
+
+    <record id="purpose_investment_medium" model="re.loan.purpose">
+        <field name="name">Đầu tư · Trung hạn</field>
+        <field name="code">investment_medium</field>
+        <field name="kind">loan</field>
+        <field name="sequence">130</field>
+    </record>
+
+    <record id="purpose_investment_long" model="re.loan.purpose">
+        <field name="name">Đầu tư · Dài hạn / dự án</field>
+        <field name="code">investment_long</field>
+        <field name="kind">loan</field>
+        <field name="sequence">140</field>
+    </record>
+
+    <record id="purpose_lc_import_equipment" model="re.loan.purpose">
+        <field name="name">Thương mại · L/C nhập khẩu thiết bị, vật tư công trình</field>
+        <field name="code">lc_import_equipment</field>
+        <field name="kind">loan</field>
+        <field name="sequence">150</field>
+    </record>
+
+    <record id="purpose_letter_of_credit" model="re.loan.purpose">
+        <field name="name">Thương mại · Tín dụng chứng từ (L/C)</field>
+        <field name="code">letter_of_credit</field>
+        <field name="kind">loan</field>
+        <field name="sequence">160</field>
+    </record>
+
+    <record id="purpose_trade_finance" model="re.loan.purpose">
+        <field name="name">Thương mại · Tài trợ thương mại khác</field>
+        <field name="code">trade_finance</field>
+        <field name="kind">loan</field>
+        <field name="sequence">170</field>
+    </record>
+
+    <record id="purpose_dev_project" model="re.loan.purpose">
+        <field name="name">Dự án BĐS · Phát triển dự án (tiền SDĐ, GPMB, xây dựng, hạ tầng)</field>
+        <field name="code">dev_project</field>
+        <field name="kind">loan</field>
+        <field name="sequence">180</field>
+    </record>
+
+    <record id="purpose_dev_acquisition" model="re.loan.purpose">
+        <field name="name">Dự án BĐS · Mua/nhận chuyển nhượng, M&amp;A dự án</field>
+        <field name="code">dev_acquisition</field>
+        <field name="kind">loan</field>
+        <field name="sequence">190</field>
+    </record>
+
+    <record id="purpose_dev_cooperation" model="re.loan.purpose">
+        <field name="name">Dự án BĐS · Góp vốn, hợp tác đầu tư kinh doanh dự án</field>
+        <field name="code">dev_cooperation</field>
+        <field name="kind">loan</field>
+        <field name="sequence">200</field>
+    </record>
+
+    <record id="purpose_dev_restructure" model="re.loan.purpose">
+        <field name="name">Dự án BĐS · Tái cấu trúc nợ dự án / trái phiếu DN BĐS</field>
+        <field name="code">dev_restructure</field>
+        <field name="kind">loan</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <record id="purpose_overdraft" model="re.loan.purpose">
+        <field name="name">Khác · Thấu chi</field>
+        <field name="code">overdraft</field>
+        <field name="kind">loan</field>
+        <field name="sequence">220</field>
+    </record>
+
+    <record id="purpose_refinance" model="re.loan.purpose">
+        <field name="name">Khác · Tái cấp vốn / cơ cấu nợ</field>
+        <field name="code">refinance</field>
+        <field name="kind">loan</field>
+        <field name="sequence">230</field>
+    </record>
+
+    <record id="purpose_reimbursement" model="re.loan.purpose">
+        <field name="name">Khác · Bù đắp tài chính</field>
+        <field name="code">reimbursement</field>
+        <field name="kind">loan</field>
+        <field name="sequence">240</field>
+    </record>
+
+    <record id="purpose_other" model="re.loan.purpose">
+        <field name="name">Khác</field>
+        <field name="code">other</field>
+        <field name="kind">loan</field>
+        <field name="sequence">250</field>
+    </record>
+
+</odoo>

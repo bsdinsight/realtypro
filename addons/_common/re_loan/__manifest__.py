@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Loan Management',
-    'version': '19.0.1.92.2',
+    'version': '19.0.1.92.3',
     'category': 'Realty/Finance',
     'summary': 'Quản lý vay: HĐTD, hạn mức, khế ước nhận nợ, thế chấp, '
                'vay nội bộ (foundation dùng chung cho mọi suite Realty Pro)',
@@ -55,6 +55,7 @@ Các phase sau (L1+) bổ sung credit contract, facility, note, collateral, ...
         'views/re_loan_collateral_views.xml',
         'views/re_loan_collateral_type_views.xml',
         'data/re_loan_collateral_type_data.xml',
+        'data/re_loan_purpose_data.xml',
         'data/ir_cron_data.xml',
         'views/res_config_settings_views.xml',
     ],

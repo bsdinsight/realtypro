@@ -142,13 +142,22 @@
                                     <field name="facility_type"/>
                                     <field name="amount_limit" width="185px"
                                            sum="Tổng hạn mức"/>
+                                    <!-- Cột này KHÔNG trừ phần đã dùng: nó
+                                         trả lời "mục đích này được cấp bao
+                                         nhiêu", gồm cả phần dùng chung nếu
+                                         là hạn mức liên thông. Cột "Còn
+                                         lại" bên phải mới là số đã trừ. -->
+                                    <field name="amount_limit_purpose"
+                                           width="200px"
+                                           string="Tổng HM khả dụng"/>
                                     <field name="flexible_limits"
                                            widget="boolean_toggle"
                                            optional="show"/>
                                     <field name="amount_used" width="185px"
                                            sum="Tổng đã sử dụng"/>
                                     <field name="amount_available" width="185px"
-                                           sum="Tổng HM khả dụng"/>
+                                           string="Còn lại"
+                                           sum="Tổng còn lại"/>
                                     <field name="amount_allocated_to_projects" width="185px"
                                            string="Đã phân bổ dự án"
                                            optional="show"/>

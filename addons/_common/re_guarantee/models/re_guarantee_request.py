@@ -234,9 +234,17 @@ class ReGuaranteeRequest(models.Model):
     # Computes
     # ------------------------------------------------------------------
     @api.depends('amount', 'guarantee_fee_rate',
-                 'date_issue', 'date_expiry', 'date_request')
+                 'date_issue', 'date_expiry', 'date_request',
+                 'bank_guarantee_id.guarantee_fee_amount')
     def _compute_guarantee_fee(self):
         """Phí BL = giá trị × tỷ lệ × số ngày hiệu lực / 365.
+
+        ĐÃ PHÁT HÀNH thì lấy thẳng số trên CHỨNG THƯ (backlog 727).
+        Sau khi phát hành, chứng thư mới là chứng từ gốc: ngân hàng có
+        thể tính phí khác dự kiến, và mọi khoản nộp đều ghi ở đó. Đề
+        nghị mà vẫn giữ con số tự tính của mình thì "còn phải trả" trên
+        đề nghị và trên chứng thư ra hai số khác nhau cho cùng một
+        nghĩa vụ.
 
         start = date_issue (nếu hợp lệ, tức ≤ date_expiry),
                 fallback date_request nếu date_issue trống/đảo ngược.
@@ -245,6 +253,10 @@ class ReGuaranteeRequest(models.Model):
         date_request → date_expiry thay vì rơi về 0.
         """
         for rec in self:
+            cert = rec.bank_guarantee_id
+            if cert:
+                rec.guarantee_fee_amount = cert.guarantee_fee_amount
+                continue
             end = rec.date_expiry
             start = rec.date_issue
             if not start or (end and start > end):
@@ -257,13 +269,20 @@ class ReGuaranteeRequest(models.Model):
             else:
                 rec.guarantee_fee_amount = 0.0
 
-    @api.depends('amount', 'deposit_rate')
+    @api.depends('amount', 'deposit_rate',
+                 'bank_guarantee_id.deposit_amount')
     def _compute_deposit_amount(self):
         for rec in self:
+            # Đã phát hành → theo chứng thư (xem _compute_guarantee_fee).
+            if rec.bank_guarantee_id:
+                rec.deposit_amount = rec.bank_guarantee_id.deposit_amount
+                continue
             rec.deposit_amount = (
                 rec.amount * (rec.deposit_rate or 0) / 100.0)
 
-    @api.depends('date_expiry', 'amount', 'penalty_rate', 'state')
+    @api.depends('date_expiry', 'amount', 'penalty_rate', 'state',
+                 'bank_guarantee_id.penalty_amount',
+                 'bank_guarantee_id.penalty_days')
     def _compute_penalty(self):
         """Công thức chuẩn NH:
             penalty = giá trị BL × tỷ lệ phạt × số ngày quá hạn / 365
@@ -271,6 +290,11 @@ class ReGuaranteeRequest(models.Model):
         """
         today = fields.Date.context_today(self)
         for rec in self:
+            # Đã phát hành → theo chứng thư (xem _compute_guarantee_fee).
+            if rec.bank_guarantee_id:
+                rec.penalty_days = rec.bank_guarantee_id.penalty_days
+                rec.penalty_amount = rec.bank_guarantee_id.penalty_amount
+                continue
             if rec.state not in ('active',) or not rec.date_expiry:
                 rec.penalty_days = 0
                 rec.penalty_amount = 0.0

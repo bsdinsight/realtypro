@@ -149,10 +149,32 @@ class ReLoanNoteInterestLine(models.Model):
         string='Số ngày quá hạn', compute='_compute_overdue_flag',
         store=True)
     amount_net_off = fields.Monetary(
-        string='Số tiền net-off', compute='_compute_net_off', store=True,
-        help='Phần chênh lệch được bù trừ vào kỳ này thay vì thu thêm.')
+        string='Tiền net-off', compute='_compute_net_off', store=True,
+        help='Σ phần chênh lệch đã bù trừ vào kỳ này — cộng từ các '
+             'dòng trả nợ do nút "Net-off chênh lệch" sinh ra, dù bấm '
+             'ở kỳ lịch lãi hay ở dòng trích thu tự động.')
     has_net_off = fields.Boolean(
-        string='Có net-off', compute='_compute_net_off', store=True)
+        string='Có net-off', compute='_compute_net_off', store=True,
+        help='Kỳ có tiền net-off khác 0.')
+    net_off_allowed = fields.Boolean(
+        string='Được net-off', compute='_compute_net_off_allowed',
+        help='Kỳ còn chênh lệch trong ngưỡng cho phép. Vượt ngưỡng '
+             'thì nút Net-off bị ẩn — phải tạo trả nợ chính thức.')
+
+    def _compute_net_off_allowed(self):
+        """Ẩn nút Net-off ở những kỳ không net-off được (backlog 758).
+
+        Trước đây nút luôn hiện, bấm vào mới báo vượt ngưỡng. Với kỳ
+        lệch cả trăm triệu thì cái nút đó chỉ là một cái bẫy bấm nhầm.
+        """
+        threshold = self.env['res.config.settings'].sudo(
+        ).get_net_off_threshold()
+        for line in self:
+            diff = ((line.amount_principal_remaining or 0.0)
+                    + (line.amount_interest_remaining or 0.0))
+            line.net_off_allowed = bool(
+                threshold > 0 and line.state != 'paid'
+                and 0.01 < diff <= threshold)
 
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
@@ -483,6 +505,8 @@ class ReLoanNoteInterestLine(models.Model):
                 'reference': _(
                     "Net-off chênh lệch lẻ kỳ %s") % line.period_no,
                 'interest_line_id': line.id,
+                'is_net_off': True,
+                'amount_net_off': total_diff,
             })
             line.note_id.message_post(body=_(
                 "Auto net-off chênh lệch lẻ kỳ %(p)s: gốc %(g)s ₫, "
@@ -524,21 +548,23 @@ class ReLoanNoteInterestLine(models.Model):
             line.is_overdue = late
             line.days_overdue = (today - line.date_to).days if late else 0
 
-    @api.depends('repayment_ids.bank_advice_line_id',
-                 'repayment_ids.bank_advice_line_id.amount_net_off')
+    @api.depends('repayment_ids.amount_net_off',
+                 'repayment_ids.is_net_off')
     def _compute_net_off(self):
-        """Số net-off của kỳ, lấy từ dòng giấy báo ngân hàng đã bù trừ.
+        """Số net-off của kỳ = Σ các dòng trả nợ được đánh dấu net-off.
 
-        Net-off nằm trên dòng giấy báo chứ không nằm trên kỳ, nên nhìn
-        lịch lãi không biết kỳ nào đã được bù chênh lệch — mà đó đúng
-        là thứ người đối chiếu cần thấy trước tiên khi số không khớp.
+        Đọc thẳng từ dòng trả nợ chứ không đi vòng qua giấy báo ngân
+        hàng: nút "Net-off chênh lệch" trên kỳ lịch lãi tạo một dòng
+        trả nợ và KHÔNG dựng phiếu giấy báo nào. Bản trước đọc qua
+        giấy báo nên bấm nút xong cột này vẫn bằng 0, muốn thấy số
+        phải đi lập thêm một phiếu — việc không ai cần làm.
+        Đường trích thu tự động cũng gọi chính nút đó nên vào chung
+        một chỗ.
         """
         for line in self:
-            total = 0.0
-            for rep in line.repayment_ids:
-                adv = rep.bank_advice_line_id
-                if adv:
-                    total += adv.amount_net_off or 0.0
+            total = sum(
+                r.amount_net_off or 0.0
+                for r in line.repayment_ids if r.is_net_off)
             line.amount_net_off = total
             line.has_net_off = abs(total) > 0.01
 

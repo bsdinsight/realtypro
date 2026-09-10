@@ -227,8 +227,29 @@ class ReLoanBankAdviceLine(models.Model):
         help='Số tiền của KỲ này CÒN PHẢI TRẢ sau khi NH đã trích '
              '(= gốc còn + lãi còn của kỳ). > 0 = kỳ thiếu, NH '
              'trích bớt vài đồng do làm tròn. Click "Net-off" để '
-             'tự absorb nếu ≤ 100,000 ₫. Chỉ tính khi phiếu đã '
-             'được đăng (state=posted) + dòng có chỉ định kỳ.')
+             'tự absorb nếu còn trong ngưỡng cấu hình. Chỉ tính khi '
+             'phiếu đã được đăng (state=posted) + dòng có chỉ định kỳ.')
+    net_off_allowed = fields.Boolean(
+        string='Được net-off', compute='_compute_net_off_allowed',
+        help='Chênh lệch của kỳ còn nằm trong ngưỡng cấu hình ở Vay > '
+             'Cấu hình > Tham số phân hệ Vay. Vượt ngưỡng thì nút '
+             'Net-off bị ẩn.')
+
+    @api.depends('amount_diff_period', 'interest_line_id')
+    def _compute_net_off_allowed(self):
+        """Ngưỡng đọc từ cấu hình, không còn là 100.000 cứng trong view.
+
+        Trước đây view ẩn nút theo con số 100000 viết thẳng vào điều
+        kiện, còn phép kiểm lúc bấm lại đọc hằng số trong mã — hai chỗ
+        rời nhau. Nay cả hai cùng đọc một tham số (việc 758).
+        """
+        threshold = self.env['res.config.settings'].sudo(
+        ).get_net_off_threshold()
+        for rec in self:
+            diff = rec.amount_diff_period or 0.0
+            rec.net_off_allowed = bool(
+                threshold > 0 and rec.interest_line_id
+                and 0.01 < diff <= threshold)
 
     # Net-off chênh lệch giữa số NH trích (amount) và số allocate
     # vào các kỳ. Signed: + = NH dư (write off, ghi credit), - = NH

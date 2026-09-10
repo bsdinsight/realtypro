@@ -78,7 +78,7 @@
                     <button name="action_activate" type="object"
                             string="Kích hoạt" class="btn-primary"
                             invisible="state != 'draft'"
-                            confirm="Xác nhận kích hoạt BL? Sẽ chiếm hạn mức facility và bắt đầu tính phí BL."/>
+                            confirm="Xác nhận kích hoạt đề nghị? Bắt đầu tính phí BL. Hạn mức CHƯA bị chiếm ở bước này — chỉ bị chiếm khi bấm Phát hành và chứng thư ra đời."/>
                     <button name="action_issue" type="object"
                             string="Phát hành" class="btn-primary"
                             invisible="state != 'active'"
@@ -267,8 +267,10 @@
                 Tạo đề nghị phát hành BL mới
             </p>
             <p>
-                Đề nghị phát hành BL chiếm hạn mức facility loại
-                "Hạn mức bảo lãnh" trong HĐTD. Khi tất toán đủ
+                Đề nghị phát hành BL chỉ chiếm hạn mức khi đã
+                <b>phát hành</b> và chứng thư ra đời — kích hoạt đề
+                nghị thì chưa. Hạn mức bị chiếm là hạn mức có mục đích
+                "Bảo lãnh ngân hàng" trong HĐTD. Khi tất toán đủ
                 (phí + ký quỹ + phạt) → tự khôi phục hạn mức.
             </p>
         </field>

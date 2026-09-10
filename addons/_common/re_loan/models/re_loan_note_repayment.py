@@ -42,22 +42,20 @@ class ReLoanNoteRepayment(models.Model):
     is_auto_debit = fields.Boolean(
         string='Trích thu tự động', readonly=True,
         compute='_compute_is_auto_debit', store=True)
+    # Hai ô này do NƠI TẠO ghi thẳng vào, không suy ra từ giấy báo
+    # ngân hàng. Bản trước lấy qua `bank_advice_line_id.amount_net_off`
+    # nên muốn thấy số net-off thì phải dựng một phiếu giấy báo — trong
+    # khi nút "Net-off chênh lệch" trên chính kỳ lịch lãi không dựng
+    # phiếu nào cả, và đó mới là đường dùng thường xuyên.
     amount_net_off = fields.Monetary(
-        related='bank_advice_line_id.amount_net_off',
-        string='Tiền net-off', readonly=True,
-        help='Phần chênh lệch được bù trừ trên dòng giấy báo ngân hàng '
-             'gắn với lần trả nợ này.')
+        string='Tiền net-off', readonly=True, copy=False,
+        help='Phần chênh lệch được bù trừ ở lần trả nợ này. Do nút '
+             '"Net-off chênh lệch" (trên kỳ lịch lãi hoặc trên dòng '
+             'trích thu tự động) ghi vào.')
     is_net_off = fields.Boolean(
-        string='Là net-off', compute='_compute_is_net_off', store=True,
+        string='Là net-off', readonly=True, copy=False, default=False,
         help='Dòng phát sinh từ bù trừ chênh lệch, không phải một lần '
              'thu tiền thật. Đối chiếu sổ quỹ phải tách hai loại này.')
-
-    @api.depends('bank_advice_line_id.amount_net_off')
-    def _compute_is_net_off(self):
-        for rec in self:
-            adv = rec.bank_advice_line_id
-            rec.is_net_off = bool(
-                adv and abs(adv.amount_net_off or 0.0) > 0.01)
 
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)

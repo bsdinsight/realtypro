@@ -9,6 +9,8 @@ Logic mới:
 """
 import logging
 
+from markupsafe import Markup
+
 from odoo import _, models
 
 _logger = logging.getLogger(__name__)
@@ -33,6 +35,45 @@ class ReLoanNote(models.Model):
                     inv_amounts.setdefault(dossier.invoice_id, 0.0)
                     inv_amounts[dossier.invoice_id] += dossier.amount
         return inv_amounts
+
+    def _activation_date_impact_note(self):
+        base = super()._activation_date_impact_note()
+        n = len(self._dossier_advances().filtered(
+            lambda a: a.date_paid))
+        if n:
+            base += _(" %s tạm ứng sẽ được ghi lại ngày thanh toán.", n)
+        return base
+
+    def _after_activation_date_changed(self, old_date, new_date):
+        """Ngày kích hoạt đổi → ngày thanh toán tạm ứng đổi theo.
+
+        Tạm ứng không đi qua bút toán nào nên chỉ là ghi lại một ô
+        ngày — không có đối trừ để gỡ như phía hoá đơn.
+        """
+        res = super()._after_activation_date_changed(old_date, new_date)
+        for rec in self:
+            advances = rec._dossier_advances().filtered(
+                lambda a: a.date_paid and a.date_paid != new_date)
+            if not advances:
+                continue
+            advances.write({'date_paid': new_date})
+            for adv in advances:
+                adv.message_post(body=Markup(_(
+                    "Ngày thanh toán đổi theo ngày kích hoạt mới của "
+                    "KW <b>%(n)s</b>: %(o)s → <b>%(d)s</b>.")) % {
+                        'n': rec.name or '', 'o': old_date or '—',
+                        'd': new_date})
+            rec.message_post(body=Markup(_(
+                "Đã ghi lại ngày thanh toán <b>%(d)s</b> cho %(n)s "
+                "tạm ứng.")) % {'d': new_date, 'n': len(advances)})
+        return res
+
+    def _dossier_advances(self):
+        """Tạm ứng của KW — chỉ ĐỌC, không tạo back-link như
+        _collect_dossier_advances (hàm kia ghi dữ liệu, không gọi được
+        từ trong compute)."""
+        self.ensure_one()
+        return self._dossier_lines().mapped('advance_payment_id')
 
     def _collect_dossier_advances(self):
         """Gom các Tạm ứng cần mark 'paid' từ dossier của KW này.
@@ -73,7 +114,11 @@ class ReLoanNote(models.Model):
                 "duyệt Tạm ứng trước.",
                 n=advance.name, s=advance.state))
         if eligible:
-            eligible._update_paid_state()
+            # Ngày thanh toán tạm ứng = ngày kích hoạt KW, không phải
+            # ngày bấm nút (xem _paid_date của rp.advance.payment).
+            eligible.with_context(
+                advance_paid_date=self._get_interest_start_date()
+            )._update_paid_state()
             full = eligible.filtered(lambda a: a.state == 'paid')
             partial = eligible.filtered(
                 lambda a: a.state == 'partial_paid')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Loan Management',
-    'version': '19.0.1.91.0',
+    'version': '19.0.1.92.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý vay: HĐTD, hạn mức, khế ước nhận nợ, thế chấp, '
                'vay nội bộ (foundation dùng chung cho mọi suite Realty Pro)',
@@ -15,11 +15,11 @@ chủ đầu tư. Viết MỚI 100% (clean-room), là IP của BSDInsight.
 Cấu trúc nghiệp vụ:
   Hợp đồng tín dụng (HĐTD) → Hạn mức (Facility) → Khế ước nhận nợ (KW)
     → Giải ngân / Lãi / Trả nợ / Phụ lục
-  + Tài sản thế chấp (multi-pledge) + Phân bổ công trình + Vay nội bộ
+  + Tài sản đảm bảo (multi-pledge) + Phân bổ công trình + Vay nội bộ
 
 Xem thiết kế: docs/loan_brd.md, docs/loan_sdd.md.
 
-**Phase L0 (skeleton)**: groups, ACL, root menu, master loại tài sản thế chấp.
+**Phase L0 (skeleton)**: groups, ACL, root menu, master loại tài sản đảm bảo.
 Các phase sau (L1+) bổ sung credit contract, facility, note, collateral, ...
     """,
     'author': 'BSDInsight',
@@ -47,6 +47,7 @@ Các phase sau (L1+) bổ sung credit contract, facility, note, collateral, ...
         'wizards/re_loan_collateral_revalue_wizard_views.xml',
         'wizards/re_loan_facility_reallocate_wizard_views.xml',
         'wizards/re_loan_collateral_action_wizards_views.xml',
+        'wizards/re_loan_note_activation_date_wizard_views.xml',
         'views/re_loan_bank_advice_views.xml',
         'views/re_loan_adjustment_note_views.xml',
         'views/res_partner_views.xml',

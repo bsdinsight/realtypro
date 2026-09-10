@@ -609,6 +609,46 @@ class ReLoanNote(models.Model):
                 "đợt giải ngân.",
                 n=rec.name or '', d=len(draft_disb)))
 
+    def action_open_activation_date_wizard(self):
+        """Mở wizard sửa ngày kích hoạt của KW đã kích hoạt."""
+        self.ensure_one()
+        if self.state in ('draft', 'sent_to_bank'):
+            raise UserError(_(
+                "KW chưa kích hoạt — sửa thẳng ô Ngày kích hoạt trên "
+                "form."))
+        if self.state == 'cancelled':
+            raise UserError(_("KW đã huỷ, không điều chỉnh được."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Điều chỉnh ngày kích hoạt'),
+            'res_model': 're.loan.note.activation.date.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_note_id': self.id,
+                'default_new_date': self.date_activation or self.date_note,
+            },
+        }
+
+    def _activation_date_impact_note(self):
+        """Một dòng mô tả những gì sẽ đổi theo ngày kích hoạt mới.
+
+        Bản thân re_loan chỉ biết lịch lãi. Module cầu nối (hoá đơn,
+        tạm ứng) nối thêm phần của mình vào chuỗi này.
+        """
+        self.ensure_one()
+        n = len(self.interest_line_ids.filtered(
+            lambda l: l.state == 'planned'))
+        return _("%s kỳ lịch lãi dự kiến sẽ được tính lại.", n)
+
+    def _after_activation_date_changed(self, old_date, new_date):
+        """Hook: gọi sau khi ngày kích hoạt đổi qua wizard.
+
+        Để trống ở đây. Module cầu nối override để cập nhật ngày thanh
+        toán của các chứng từ mà KW đã trả (hoá đơn, tạm ứng).
+        """
+        return True
+
     def action_activate(self):
         for rec in self:
             # Cho phép kích hoạt từ Nháp (workflow rút gọn cũ) hoặc
@@ -636,6 +676,10 @@ class ReLoanNote(models.Model):
                         r=rec.interest_rate, n=src.name,
                         sr=src.interest_rate))
             rec.state = 'active'
+            # KHÔNG tự điền date_activation ở đây: bỏ trống thì gốc
+            # tính lãi rơi về Ngày nhận nợ (xem _get_interest_start_date),
+            # điền today sẽ dời lãi của mọi KW nhập bù hồ sơ sang ngày
+            # bấm nút. Ai cần mốc riêng thì khai tay trước khi kích hoạt.
             # Tự sinh lịch lãi dự kiến nếu chưa có.
             if not rec.interest_line_ids:
                 rec.action_generate_interest_schedule()

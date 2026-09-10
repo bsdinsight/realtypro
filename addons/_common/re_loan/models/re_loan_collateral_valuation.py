@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Định giá tài sản thế chấp — nhiều lần theo thời gian."""
+"""Định giá tài sản đảm bảo — nhiều lần theo thời gian."""
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
 class ReLoanCollateralValuation(models.Model):
     _name = 're.loan.collateral.valuation'
-    _description = 'Định giá tài sản thế chấp'
+    _description = 'Định giá tài sản đảm bảo'
     _order = 'date desc, id desc'
 
     collateral_id = fields.Many2one(

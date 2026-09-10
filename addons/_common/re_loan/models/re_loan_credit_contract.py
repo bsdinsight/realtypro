@@ -65,7 +65,7 @@ class ReLoanCreditContract(models.Model):
         string='Số khế ước', compute='_compute_note_count')
     pledge_ids = fields.One2many(
         're.loan.collateral.pledge', 'credit_contract_id',
-        string='Tài sản thế chấp',
+        string='Tài sản đảm bảo',
         domain="[('pledge_target', '=', 'contract')]")
     pledge_count = fields.Integer(
         compute='_compute_pledge_count')

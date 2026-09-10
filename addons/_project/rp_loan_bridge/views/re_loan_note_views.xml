@@ -6,6 +6,20 @@
         <field name="model">re.loan.note</field>
         <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
         <field name="arch" type="xml">
+            <!-- Nút đếm nhanh: KW này đã giải ngân cho bao nhiêu hoá
+                 đơn/tạm ứng, bấm vào ra danh sách phiếu chi. -->
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
+                <div class="oe_button_box" name="bridge_button_box">
+                    <button name="action_view_dossier_payments"
+                            type="object" class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="dossier_doc_count == 0">
+                        <field name="dossier_doc_count" widget="statinfo"
+                               string="Hoá đơn/Tạm ứng"/>
+                    </button>
+                </div>
+            </xpath>
+
             <!-- Disbursement list: thêm cost_category, contract, structure -->
             <xpath expr="//page[@name='disbursement']//field[@name='description']"
                    position="after">

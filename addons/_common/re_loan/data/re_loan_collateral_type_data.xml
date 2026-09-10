@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Seed loại tài sản thế chấp phổ biến của DN xây dựng VN -->
+    <!-- Seed loại tài sản đảm bảo phổ biến của DN xây dựng VN -->
     <record id="collateral_type_real_estate" model="re.loan.collateral.type">
         <field name="name">Bất động sản</field>
         <field name="code">BDS</field>

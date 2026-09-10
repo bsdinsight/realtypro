@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Tests L3 — tài sản thế chấp (collateral + valuation + pledge).
+Tests L3 — tài sản đảm bảo (collateral + valuation + pledge).
 """
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged

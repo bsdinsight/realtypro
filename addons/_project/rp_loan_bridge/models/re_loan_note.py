@@ -3,6 +3,8 @@
 auto-pay hóa đơn HĐ nhà thầu khi KW kích hoạt."""
 import logging
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -13,6 +15,19 @@ class ReLoanNote(models.Model):
 
     allocation_ids = fields.One2many(
         'rp.loan.allocation', 'note_id', string='Phân bổ công trình')
+    # Phiếu chi do CHÍNH khế ước này sinh ra khi kích hoạt. Ghi thẳng
+    # quan hệ thay vì dò ngược từ hoá đơn: một hoá đơn có thể được trả
+    # bởi nhiều nguồn, dò ngược sẽ gom nhầm phiếu chi của người khác —
+    # mà đây là danh sách dùng để SỬA NGÀY, gom nhầm là sửa nhầm sổ.
+    dossier_payment_ids = fields.Many2many(
+        'account.payment', 'rp_loan_note_dossier_payment_rel',
+        'note_id', 'payment_id',
+        string='Phiếu chi từ hồ sơ giải ngân', copy=False)
+    dossier_payment_count = fields.Integer(
+        compute='_compute_dossier_stats')
+    dossier_doc_count = fields.Integer(
+        string='Số hoá đơn/tạm ứng đã giải ngân',
+        compute='_compute_dossier_stats')
     allocation_count = fields.Integer(compute='_compute_allocation_stats')
     allocation_total_principal = fields.Monetary(
         string='Σ phân bổ gốc', compute='_compute_allocation_stats',
@@ -20,6 +35,43 @@ class ReLoanNote(models.Model):
     allocation_total_interest = fields.Monetary(
         string='Σ phân bổ lãi', compute='_compute_allocation_stats',
         store=True)
+
+    def _dossier_lines(self):
+        """Các hồ sơ giải ngân của KW, bỏ đợt giải ngân đã huỷ."""
+        self.ensure_one()
+        return self.disbursement_ids.filtered(
+            lambda d: d.state != 'cancelled').mapped('dossier_line_ids')
+
+    @api.depends('dossier_payment_ids',
+                 'disbursement_ids.state',
+                 'disbursement_ids.dossier_line_ids.invoice_id')
+    def _compute_dossier_stats(self):
+        Dossier = self.env['rp.loan.disbursement.dossier']
+        has_advance = 'advance_payment_id' in Dossier._fields
+        for rec in self:
+            lines = rec._dossier_lines()
+            docs = set(lines.mapped('invoice_id').ids)
+            if has_advance:
+                docs |= {('a', i) for i in
+                         lines.mapped('advance_payment_id').ids}
+            rec.dossier_doc_count = len(docs)
+            rec.dossier_payment_count = len(rec.dossier_payment_ids)
+
+    def action_view_dossier_payments(self):
+        """Danh sách phiếu chi các hoá đơn/tạm ứng KW này đã giải ngân.
+
+        Trên từng phiếu chi, nút "Hoá đơn" sẵn có của Odoo dẫn tới hoá
+        đơn được đối trừ.
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phiếu chi — KW %s') % (self.name or ''),
+            'res_model': 'account.payment',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.dossier_payment_ids.ids)],
+            'context': {'create': False},
+        }
 
     def _outstanding_by_contract(self):
         """Trả {contract_id: dư nợ gốc}; khoá 0 = không gắn hợp đồng.
@@ -76,6 +128,96 @@ class ReLoanNote(models.Model):
             rec._mark_dossier_invoices_paid()
         return res
 
+    # ------------------------------------------------------------------
+    # Điều chỉnh ngày kích hoạt → kéo theo ngày thanh toán chứng từ
+    # ------------------------------------------------------------------
+    def _activation_date_impact_note(self):
+        base = super()._activation_date_impact_note()
+        n = len(self.dossier_payment_ids)
+        if n:
+            base += _(" %s phiếu chi hoá đơn sẽ được ghi lại ngày.", n)
+        return base
+
+    def _after_activation_date_changed(self, old_date, new_date):
+        res = super()._after_activation_date_changed(old_date, new_date)
+        for rec in self:
+            rec._redate_dossier_payments(new_date)
+        return res
+
+    def _redate_dossier_payments(self, new_date):
+        """Ghi lại ngày cho các phiếu chi KW này đã sinh.
+
+        Bút toán đã ghi sổ không đổi ngày được, nên phải đưa về nháp
+        rồi ghi sổ lại. Ngày ghi vào CHÍNH phiếu chi (`payment.date`),
+        không ghi vào bút toán: trong Odoo 19 đây là hai cột riêng, ghi
+        vào bút toán thì phiếu chi vẫn giữ ngày cũ và hai chỗ lệch nhau.
+        Phiếu chi tự đẩy ngày xuống bút toán.
+
+        Đối trừ với hoá đơn thực tế SỐNG SÓT qua vòng nháp → ghi sổ,
+        nhưng vẫn đối chiếu lại trước/sau và chỉ nối lại phần bị mất —
+        không nối mù, vì nối nhầm tài khoản còn tệ hơn lệch ngày.
+        Kỳ kế toán đã khoá thì bước về nháp hỏng: KHÔNG nuốt lỗi, ghi
+        rõ phiếu nào còn giữ ngày cũ để kế toán xử lý riêng.
+        """
+        self.ensure_one()
+        done, failed = [], []
+        for pay in self.dossier_payment_ids:
+            move = pay.move_id
+            if not move or pay.date == new_date:
+                continue
+            linked_before = (pay.reconciled_bill_ids
+                             | pay.reconciled_invoice_ids)
+            try:
+                was_posted = move.state == 'posted'
+                if was_posted:
+                    move.button_draft()
+                pay.date = new_date
+                if was_posted:
+                    move.action_post()
+                lost = linked_before - (pay.reconciled_bill_ids
+                                        | pay.reconciled_invoice_ids)
+                if lost:
+                    self._reconcile_payment_with(pay, lost)
+                done.append(pay.display_name)
+            except Exception as e:          # noqa: BLE001 - báo, không nuốt
+                _logger.warning(
+                    "Không đổi được ngày phiếu chi %s của KW %s: %s",
+                    pay.display_name, self.name, e)
+                failed.append((pay.display_name, str(e)))
+        if done:
+            self.message_post(body=Markup(_(
+                "Đã ghi lại ngày <b>%(d)s</b> cho %(n)s phiếu chi: "
+                "%(l)s.")) % {
+                    'd': new_date, 'n': len(done), 'l': ', '.join(done)})
+        for name, err in failed:
+            self.message_post(body=Markup(_(
+                "<b>Chưa đổi được</b> ngày phiếu chi %(p)s (vẫn giữ "
+                "ngày cũ). Lý do: %(e)s. Kiểm tra khoá sổ kỳ kế toán "
+                "rồi sửa tay phiếu này.")) % {'p': name, 'e': err})
+
+    @api.model
+    def _reconcile_payment_with(self, payment, invoices):
+        """Nối lại đối trừ phiếu chi ↔ hoá đơn sau khi ghi sổ lại.
+
+        Chỉ đụng tới tài khoản CÓ MẶT Ở CẢ HAI bên và thuộc nhóm phải
+        thu/phải trả — đủ để loại các dòng chi phí, tài sản… tình cờ
+        cũng đang mở đối trừ.
+        """
+        def _open(move):
+            return move.line_ids.filtered(
+                lambda l: not l.reconciled and l.account_id.reconcile
+                and l.account_id.account_type in (
+                    'asset_receivable', 'liability_payable'))
+
+        pay_lines = _open(payment.move_id)
+        if not pay_lines:
+            return
+        for inv in invoices:
+            inv_lines = _open(inv)
+            for account in pay_lines.account_id & inv_lines.account_id:
+                (pay_lines + inv_lines).filtered(
+                    lambda l: l.account_id == account).reconcile()
+
     def _collect_dossier_invoice_amounts(self):
         """Map {invoice: Σ dossier.amount} qua chuỗi:
         re.loan.note → disbursement_ids → dossier_line_ids → invoice_id.
@@ -124,9 +266,14 @@ class ReLoanNote(models.Model):
                     "Cần điền đủ thông tin rồi thanh toán tay sau.",
                     n=inv.display_name, err=str(e)))
 
-        # Register payment riêng từng invoice với amount đúng số dossier
-        today = fields.Date.context_today(self)
+        # Register payment riêng từng invoice với amount đúng số dossier.
+        # NGÀY THANH TOÁN = ngày kích hoạt KW, không phải ngày bấm nút:
+        # tiền về tay nhà thầu vào ngày ngân hàng kích hoạt, và nhập bù
+        # hồ sơ của tuần trước là chuyện thường ngày.
+        pay_date = self._get_interest_start_date() \
+            or fields.Date.context_today(self)
         paid_count = 0
+        created_payments = self.env['account.payment']
         for inv, dossier_amount in inv_amounts.items():
             if inv.state != 'posted':
                 continue
@@ -141,11 +288,11 @@ class ReLoanNote(models.Model):
                     active_model='account.move',
                     active_ids=[inv.id],
                 ).create({
-                    'payment_date': today,
+                    'payment_date': pay_date,
                     'amount': pay_amount,
                     'group_payment': True,
                 })
-                wizard.action_create_payments()
+                created_payments |= wizard._create_payments()
                 paid_count += 1
                 inv.message_post(body=_(
                     "Tự động thanh toán %(amt)s khi KW <b>%(n)s</b> "
@@ -165,8 +312,10 @@ class ReLoanNote(models.Model):
                     inv=inv.display_name,
                     amt='{:,.0f}'.format(pay_amount),
                     err=str(e)))
+        if created_payments:
+            self.dossier_payment_ids = [(4, p.id) for p in created_payments]
         if paid_count:
             self.message_post(body=_(
                 "Đã thanh toán %(n)s hóa đơn HĐ nhà thầu theo số tiền "
-                "dossier khi KW kích hoạt.",
-                n=paid_count))
+                "dossier khi KW kích hoạt (ngày thanh toán %(d)s).",
+                n=paid_count, d=pay_date))

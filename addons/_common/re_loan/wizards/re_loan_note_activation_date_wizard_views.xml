@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_note_activation_date_wizard_form"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.activation.date.wizard.form</field>
+        <field name="model">re.loan.note.activation.date.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Điều chỉnh ngày kích hoạt khế ước">
+                <group>
+                    <field name="note_id" readonly="1"/>
+                    <field name="date_note"/>
+                    <field name="current_date"/>
+                    <field name="new_date"/>
+                    <field name="reason"
+                           placeholder="VD: nhập nhầm ngày, NH báo lại ngày giải ngân thực tế"/>
+                </group>
+                <field name="impact_note" invisible="1"/>
+                <div class="alert alert-warning" role="alert">
+                    Ngày kích hoạt là <b>gốc tính lãi</b>.
+                    <field name="impact_note" readonly="1" nolabel="1"
+                           class="oe_inline"/>
+                    Các kỳ đã ghi nhận hoặc đã thanh toán giữ nguyên.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Xác nhận điều chỉnh"
+                            class="btn-primary"/>
+                    <button string="Huỷ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

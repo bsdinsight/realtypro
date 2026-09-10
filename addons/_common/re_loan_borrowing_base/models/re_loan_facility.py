@@ -18,15 +18,31 @@ class ReLoanFacility(models.Model):
         compute='_compute_borrowing_base', store=True,
         help='Σ giá trị TSBĐ (đã nhân tỷ lệ cho vay) phân bổ cho mục '
              'đích này, chỉ tính văn bản thế chấp đang hiệu lực.')
+    borrowing_base_opening = fields.Monetary(
+        string='Bảo đảm khai ban đầu',
+        tracking=True,
+        help='Giá trị bảo đảm đỡ lưng cho mục đích này mà KHÔNG tách '
+             'được theo từng tài sản — thường là hạn mức ngân hàng cấp '
+             'ban đầu trên một rổ tài sản chung, hồ sơ không ghi tài '
+             'sản nào đóng góp bao nhiêu.\n'
+             'Khai tay ở đây, hệ thống CỘNG THÊM vào phần TSBĐ đã phân '
+             'bổ chi tiết. Về sau tách được tài sản nào thì khai phân '
+             'bổ cho tài sản đó rồi trừ bớt số này xuống, tránh đếm '
+             'trùng.')
     has_own_pledges = fields.Boolean(
         compute='_compute_borrowing_base', store=True)
+    borrowing_base_effective = fields.Monetary(
+        string='Cơ sở bảo đảm của mục đích',
+        compute='_compute_available_effective',
+        help='= Bảo đảm khai ban đầu + Σ TSBĐ đã phân bổ. Mục đích '
+             'LIÊN THÔNG thì cộng cả bể.')
     amount_available_effective = fields.Monetary(
         string='Khả dụng thực tế',
         compute='_compute_available_effective',
-        help='= Σ TSBĐ (kể cả IPC) đã PHÂN BỔ cho mục đích này − số tiền '
-             'đã sử dụng. Floor 0.\n'
-             'Mục đích LIÊN THÔNG thì tính trên cả bể: Σ TSBĐ phân bổ của '
-             'nhóm liên thông − Σ đã sử dụng của nhóm.\n'
+        help='= Bảo đảm khai ban đầu + Σ TSBĐ (kể cả IPC) đã PHÂN BỔ '
+             'cho mục đích này − số tiền đã sử dụng. Floor 0.\n'
+             'Mục đích LIÊN THÔNG thì tính trên cả bể: Σ cơ sở bảo đảm '
+             'của nhóm liên thông − Σ đã sử dụng của nhóm.\n'
              'TSBĐ đã thế chấp nhưng CHƯA phân bổ thì không làm tăng khả '
              'dụng của mục đích nào.')
     margin_call = fields.Boolean(
@@ -50,13 +66,20 @@ class ReLoanFacility(models.Model):
             rec.borrowing_base_own = sum(live.mapped('amount'))
             rec.has_own_pledges = bool(live)
 
-    @api.depends('borrowing_base_own', 'amount_used', 'has_own_pledges',
-                 'flexible_limits',
+    @api.depends('borrowing_base_own', 'borrowing_base_opening',
+                 'amount_used', 'has_own_pledges', 'flexible_limits',
                  'credit_contract_id.facility_ids.borrowing_base_own',
+                 'credit_contract_id.facility_ids.borrowing_base_opening',
                  'credit_contract_id.facility_ids.amount_used',
                  'credit_contract_id.facility_ids.flexible_limits')
     def _compute_available_effective(self):
-        """Khả dụng thực tế = TSBĐ phân bổ riêng cho facility − đã dùng.
+        """Khả dụng thực tế = (khai ban đầu + TSBĐ phân bổ) − đã dùng.
+
+        Phần KHAI BAN ĐẦU có mặt vì hồ sơ đời thật thường không truy
+        được: ngân hàng cấp một mức khả dụng dựa trên cả rổ tài sản,
+        không ghi tài sản nào đóng bao nhiêu. Bắt người dùng phải phân
+        bổ từng tài sản mới ra được con số đó là bắt họ bịa ra dữ liệu
+        không có trong hồ sơ.
 
         BẢN CŨ LẤY min BA VẾ và sai ở vế thứ ba: nó đưa
         `base toàn HĐTD − dư nợ toàn HĐTD` vào, tức là **cùng một bể TSBĐ
@@ -88,7 +111,12 @@ class ReLoanFacility(models.Model):
             if rec.flexible_limits and rec.credit_contract_id:
                 pool = rec.credit_contract_id.facility_ids.filtered(
                     'flexible_limits') or rec
-            base = sum(pool.mapped('borrowing_base_own'))
+            # Hai nguồn bảo đảm cộng vào nhau: phần khai tay ban đầu
+            # (rổ tài sản chung, không tách được) + phần đã phân bổ chi
+            # tiết theo từng tài sản.
+            base = (sum(pool.mapped('borrowing_base_own'))
+                    + sum(pool.mapped('borrowing_base_opening')))
             used = sum(pool.mapped('amount_used'))
+            rec.borrowing_base_effective = base
             rec.amount_available_effective = max(0.0, base - used)
             rec.margin_call = bool(base) and used > base + 0.01

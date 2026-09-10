@@ -177,6 +177,9 @@
                     <button name="action_generate_interest_schedule" type="object"
                             string="Tạo lại lịch lãi"
                             invisible="state in ('draft','sent_to_bank','cancelled')"/>
+                    <button name="action_open_activation_date_wizard"
+                            type="object" string="Điều chỉnh ngày kích hoạt"
+                            invisible="state in ('draft','sent_to_bank','cancelled')"/>
                     <button name="action_release_guarantee" type="object"
                             string="Giải tỏa BL / L-C"
                             class="btn-warning"
@@ -220,7 +223,13 @@
                     <field name="currency_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="date_note"/>
-                            <field name="date_activation"/>
+                            <!-- Sau khi kích hoạt, ngày này chỉ đổi qua
+                                 nút "Điều chỉnh ngày kích hoạt": nó là
+                                 gốc tính lãi và là ngày thanh toán ghi
+                                 trên các chứng từ KW đã trả, nên phải
+                                 có lý do và phải kéo theo chứng từ. -->
+                            <field name="date_activation"
+                                   readonly="state not in ('draft', 'sent_to_bank')"/>
                             <field name="tenor_months"/>
                             <field name="date_maturity"/>
                             <field name="is_overdue" invisible="1"/>

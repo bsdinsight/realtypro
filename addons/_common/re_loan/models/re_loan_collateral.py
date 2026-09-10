@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Tài sản thế chấp (collateral) — master.
+Tài sản đảm bảo (collateral) — master.
 
 Tài sản thuộc công ty thành viên (hoặc bên thứ ba) dùng đảm bảo cho khoản vay.
 Có nhiều lần định giá; giá trị hiện hành lấy định giá mới nhất. Một tài sản có
@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 
 class ReLoanCollateral(models.Model):
     _name = 're.loan.collateral'
-    _description = 'Tài sản thế chấp'
+    _description = 'Tài sản đảm bảo'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name'
 

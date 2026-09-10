@@ -49,3 +49,4 @@ access_re_loan_pledge_release_wizard,re.loan.pledge.release.wizard,model_re_loan
 access_re_loan_collateral_dispose_wizard,re.loan.collateral.dispose.wizard,model_re_loan_collateral_dispose_wizard,group_loan_manager,1,1,1,1
 access_re_loan_purpose_user,re.loan.purpose user,model_re_loan_purpose,group_loan_user,1,0,0,0
 access_re_loan_purpose_manager,re.loan.purpose manager,model_re_loan_purpose,group_loan_manager,1,1,1,1
+access_re_loan_note_activation_date_wizard,re.loan.note.activation.date.wizard,model_re_loan_note_activation_date_wizard,group_loan_manager,1,1,1,1

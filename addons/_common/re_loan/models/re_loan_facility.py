@@ -12,6 +12,20 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
+FACILITY_TYPES = [
+    ('revolving', 'Tuần hoàn (Revolving)'),
+    ('term', 'Có kỳ hạn (Term)'),
+    ('overdraft', 'Thấu chi (Overdraft)'),
+    ('guarantee_line', 'Hạn mức bảo lãnh'),
+    ('lc_line', 'Hạn mức L/C'),
+]
+
+# Hai loại khách hàng không dùng nữa. KHÔNG xoá khỏi danh sách: dữ liệu
+# cũ đang mang giá trị này, và 'overdraft' còn chịu lực trong
+# _compute_amount_used (thấu chi tính dư nợ theo cách khác). Cơ chế ẩn
+# ở _selection_facility_type + chặn chọn mới ở _check_facility_type.
+DISCONTINUED_FACILITY_TYPES = ('overdraft', 'guarantee_line')
+
 BUILTIN_PURPOSES = [
          # ── A. VỐN LƯU ĐỘNG THI CÔNG (tổng thầu / thầu phụ) ──────────
          # Đặt nhãn theo NGHIỆP VỤ thi công (mẫu OCB: vật tư · nhân công ·
@@ -158,15 +172,13 @@ class ReLoanFacility(models.Model):
              'khác với số HĐTD tăng dần theo năm.')
 
     facility_type = fields.Selection(
-        [('revolving', 'Tuần hoàn (Revolving)'),
-         ('term', 'Có kỳ hạn (Term)'),
-         ('overdraft', 'Thấu chi (Overdraft)'),
-         ('guarantee_line', 'Hạn mức bảo lãnh'),
-         ('lc_line', 'Hạn mức L/C')],
+        selection='_selection_facility_type',
         string='Loại hạn mức', required=True, default='revolving',
         tracking=True,
         help='Cấu trúc kỹ thuật của hạn mức (cách hoàn lại/cam kết). '
-             'Khác với Mục đích — chỉ "cái này hoạt động thế nào".')
+             'Khác với Mục đích — chỉ "cái này hoạt động thế nào".\n'
+             'Thấu chi và Hạn mức bảo lãnh đã ngưng dùng: không chọn '
+             'mới được, bản ghi cũ giữ nguyên.')
     purpose = fields.Selection(
         selection='_selection_purpose',
         string='Mục đích sử dụng vốn', required=True, default='other',
@@ -220,7 +232,7 @@ class ReLoanFacility(models.Model):
         're.loan.note', 'facility_id', string='Khế ước nhận nợ')
     pledge_ids = fields.One2many(
         're.loan.collateral.pledge', 'facility_id',
-        string='Tài sản thế chấp (riêng facility)',
+        string='Tài sản đảm bảo (riêng facility)',
         domain="[('pledge_target', '=', 'facility')]")
     note_count = fields.Integer(
         string='Số khế ước', compute='_compute_note_count')
@@ -261,6 +273,55 @@ class ReLoanFacility(models.Model):
 
     note = fields.Text(string='Ghi chú')
     active = fields.Boolean(default=True)
+
+    @api.model
+    def _selection_facility_type(self):
+        """Loại hạn mức, đã bỏ các loại ngưng dùng.
+
+        Odoo không lọc được dropdown theo từng bản ghi: nhãn hiển thị
+        của một giá trị lấy từ chính danh sách này, nên gỡ hẳn hai loại
+        ngưng dùng sẽ làm ô "Loại hạn mức" của bản ghi cũ hiện TRỐNG.
+        Vì vậy chúng chỉ biến mất khi trong dữ liệu KHÔNG còn bản ghi
+        nào dùng tới — lúc đó không còn gì để mất nhãn. Chừng nào còn
+        bản ghi cũ, giá trị vẫn nằm trong danh sách nhưng
+        `_check_facility_type` chặn không cho chọn mới.
+        """
+        still_used = set()
+        if self.env.registry.ready:
+            self.env.cr.execute("""
+                SELECT DISTINCT facility_type
+                FROM re_loan_facility
+                WHERE facility_type IN %s
+            """, (tuple(DISCONTINUED_FACILITY_TYPES),))
+            still_used = {row[0] for row in self.env.cr.fetchall()}
+        else:
+            # Đang cài/nâng cấp: bảng có thể chưa có cột. Trả đủ danh
+            # sách cho an toàn — validate view không cần lọc.
+            still_used = set(DISCONTINUED_FACILITY_TYPES)
+        return [(code, name) for code, name in FACILITY_TYPES
+                if code not in DISCONTINUED_FACILITY_TYPES
+                or code in still_used]
+
+    @api.constrains('facility_type')
+    def _check_facility_type(self):
+        """Chặn chọn MỚI loại đã ngưng dùng (backlog 755).
+
+        Chỉ nổ khi có ai đó ghi vào chính trường này — sửa các trường
+        khác của một hạn mức thấu chi cũ vẫn lưu bình thường.
+        Nhập liệu chuyển đổi có thể bỏ qua bằng context
+        `allow_discontinued_facility_type`.
+        """
+        if self.env.context.get('allow_discontinued_facility_type'):
+            return
+        labels = dict(FACILITY_TYPES)
+        for rec in self:
+            if rec.facility_type in DISCONTINUED_FACILITY_TYPES:
+                raise ValidationError(_(
+                    "Loại hạn mức \"%(t)s\" đã ngưng dùng, không chọn "
+                    "mới được. Hạn mức bảo lãnh khai bằng Mục đích sử "
+                    "dụng vốn = \"Bảo lãnh ngân hàng\", không phải bằng "
+                    "Loại hạn mức.",
+                    t=labels.get(rec.facility_type, rec.facility_type)))
 
     @api.model
     def _selection_purpose(self):

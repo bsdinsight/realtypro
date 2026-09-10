@@ -97,7 +97,7 @@
     </record>
 
     <!--
-      ===== Tab "Tài sản thế chấp" trên HĐTD: mở dialog để chia =====
+      ===== Tab "Tài sản đảm bảo" trên HĐTD: mở dialog để chia =====
 
       `re.loan.collateral.pledge` KHÔNG có form riêng trong re_loan —
       nó chỉ tồn tại dưới dạng dòng sửa tại chỗ. Muốn có lưới phân bổ

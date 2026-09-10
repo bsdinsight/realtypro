@@ -143,6 +143,22 @@ class RpAdvancePayment(models.Model):
             rec.amount_paid = paid
             rec.amount_unpaid = max(0.0, rec.amount - paid)
 
+    def _paid_date(self):
+        """Ngày thanh toán tạm ứng.
+
+        Ưu tiên ngày do bên gọi truyền vào (KW giải ngân truyền ngày
+        kích hoạt của nó), rồi tới ngày kích hoạt của KW đã giải ngân
+        tạm ứng này, cuối cùng mới là hôm nay. Lấy hôm nay làm mặc
+        định đầu tiên là sai với thực tế nhập bù hồ sơ.
+        """
+        self.ensure_one()
+        forced = self.env.context.get('advance_paid_date')
+        if forced:
+            return forced
+        if self.note_id:
+            return self.note_id._get_interest_start_date()
+        return fields.Date.context_today(self)
+
     def _update_paid_state(self):
         """Recompute state theo tiền đã thanh toán thực tế (bug #19).
 
@@ -155,7 +171,7 @@ class RpAdvancePayment(models.Model):
             if rec.amount_paid >= rec.amount - 0.01:
                 if rec.state != 'paid':
                     rec.state = 'paid'
-                    rec.date_paid = fields.Date.context_today(rec)
+                    rec.date_paid = rec._paid_date()
                     rec.message_post(body=_(
                         "Đã thanh toán ĐỦ Tạm ứng (%(p)s/%(t)s ₫) — "
                         "sẵn sàng cấn trừ vào hóa đơn.",
@@ -302,7 +318,7 @@ class RpAdvancePayment(models.Model):
                     "Chỉ Tạm ứng Đã duyệt mới chuyển 'Đã thanh toán' "
                     "được. Hiện %s.", rec.state))
             rec.state = 'paid'
-            rec.date_paid = fields.Date.context_today(rec)
+            rec.date_paid = rec._paid_date()
             rec.message_post(body=_(
                 "Đã thanh toán Tạm ứng — sẵn sàng cấn trừ vào hóa đơn."))
 

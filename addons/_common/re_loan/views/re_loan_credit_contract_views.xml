@@ -192,7 +192,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Tài sản thế chấp" name="pledge">
+                        <page string="Tài sản đảm bảo" name="pledge">
                             <field name="pledge_ids"
                                    context="{'default_credit_contract_id': id,
                                              'default_pledge_target': 'contract'}">

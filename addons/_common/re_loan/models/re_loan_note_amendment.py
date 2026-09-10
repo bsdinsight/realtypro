@@ -3,7 +3,7 @@
 Phụ lục khế ước (amendment) — văn bản sửa đổi một KW.
 
 6 loại: gia hạn, đổi số tiền, đổi lãi suất, đổi mục đích, đổi lịch trả gốc,
-đổi tài sản thế chấp. Khi áp dụng, ghi giá trị cũ (audit) và ghi giá trị mới
+đổi tài sản đảm bảo. Khi áp dụng, ghi giá trị cũ (audit) và ghi giá trị mới
 vào KW; với thay đổi trọng yếu (số tiền/lãi suất/kỳ hạn/lịch trả) sẽ sinh lại
 lịch lãi dự kiến.
 """
@@ -29,7 +29,7 @@ class ReLoanNoteAmendment(models.Model):
          ('rate', 'Đổi lãi suất'),
          ('purpose', 'Đổi mục đích'),
          ('schedule', 'Đổi lịch trả gốc'),
-         ('collateral', 'Đổi tài sản thế chấp')],
+         ('collateral', 'Đổi tài sản đảm bảo')],
         string='Loại phụ lục', required=True, tracking=True)
     date_effective = fields.Date(
         string='Ngày hiệu lực', required=True,

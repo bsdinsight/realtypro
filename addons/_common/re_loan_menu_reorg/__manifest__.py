@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Menu Reorganization',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Realty/Loan',
     'summary': 'Gom 11+ top-level menu Quản lý Vay thành 7 group (HĐTD '
                '/ KW / Thanh toán / BL / Báo cáo / Cấu hình + Dashboard) '
@@ -15,7 +15,7 @@ Pattern: override parent_id của các menuitem trong re_loan + re_guarantee
     ├── HĐ tín dụng (group)
     │     ├── Hợp đồng tín dụng
     │     ├── Hạn mức tín dụng
-    │     └── Tài sản thế chấp
+    │     └── Tài sản đảm bảo
     ├── Khế ước (group)
     │     ├── Khế ước nhận nợ
     │     ├── Vay nội bộ

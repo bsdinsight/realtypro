@@ -77,7 +77,7 @@
                     chưa khai "Tỷ lệ cho vay (%)"</b> — các TS này CHƯA
                     tham gia cơ sở bảo đảm, định giá lại chúng sẽ không
                     làm đổi Khả dụng thực tế. Khai tỷ lệ ở tab
-                    <b>Tài sản thế chấp</b> (cột "Tỷ lệ cho vay") hoặc
+                    <b>Tài sản đảm bảo</b> (cột "Tỷ lệ cho vay") hoặc
                     cấu hình mặc định theo <b>Loại TSBĐ</b>.
                 </div>
                 <div class="alert alert-danger" role="alert"
@@ -102,15 +102,26 @@
                 <group string="Borrowing base — khả dụng thực tế">
                     <group>
                         <field name="has_own_pledges" invisible="1"/>
+                        <field name="borrowing_base_opening"/>
                         <field name="borrowing_base_own"
+                               invisible="not has_own_pledges"/>
+                        <field name="borrowing_base_effective"
                                invisible="not has_own_pledges"/>
                         <field name="amount_available_effective"/>
                     </group>
                     <group>
                         <field name="margin_call" widget="boolean"
-                               invisible="not has_own_pledges"/>
+                               invisible="not borrowing_base_effective"/>
                     </group>
                 </group>
+                <div class="alert alert-info small" role="alert"
+                     invisible="not borrowing_base_opening">
+                    <b>Bảo đảm khai ban đầu</b> là số khai tay, cộng
+                    THÊM vào phần TSBĐ đã phân bổ chi tiết. Khi tách
+                    được tài sản nào ra khai phân bổ riêng, nhớ trừ bớt
+                    số khai tay xuống tương ứng — không thì cùng một
+                    tài sản được đếm hai lần.
+                </div>
                 <div class="alert alert-danger" role="alert"
                      invisible="not margin_call">
                     ⚠ <b>Margin call:</b> dư nợ facility vượt base riêng

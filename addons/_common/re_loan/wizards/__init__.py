@@ -3,3 +3,4 @@ from . import re_loan_rate_mass_wizard
 from . import re_loan_collateral_revalue_wizard
 from . import re_loan_facility_reallocate_wizard
 from . import re_loan_collateral_action_wizards
+from . import re_loan_note_activation_date_wizard

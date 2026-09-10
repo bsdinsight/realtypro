@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Bank Sync (SePay)',
-    'version': '19.0.1.0.2',
+    'version': '19.0.1.0.3',
     'category': 'Realty/Finance',
     'summary': 'Sổ đệm giao dịch ngân hàng + webhook SePay + đối soát. '
                'Nguồn-bất-khả-tri: SePay / file / AI / thủ công.',
@@ -21,7 +21,7 @@ Tầng đệm nhận giao dịch ngân hàng và đối soát vào chứng từ 
 """,
     'author': 'BSDInsight',
     'website': 'https://realtypro.vn',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     'depends': ['base', 'mail', 're_integration_hub'],
     'data': [
         'security/ir.model.access.csv',

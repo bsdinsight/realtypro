@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Dashboard',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Realty/Loan',
     'summary': 'Dashboard KPI cho Quản lý Vay — HĐTD, KW, Bảo lãnh, '
                'pending workflow, cảnh báo. Override menu top "Quản lý '
@@ -26,7 +26,7 @@ menu "Quản lý Vay" vào dashboard TRƯỚC khi xem submenu.
 """,
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     'depends': [
         'base',
         're_loan',

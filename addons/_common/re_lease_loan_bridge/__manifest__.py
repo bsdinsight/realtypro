@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bridge Thuê tài sản ↔ Dashboard Vay',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Realty/Lease',
     'summary': 'Hiện dư nợ thuê tài chính trên dashboard Quản lý Vay — '
                'bức tranh tổng nghĩa vụ tín dụng.',
@@ -13,7 +13,7 @@ với Quản lý Vay (quyết định kiến trúc theo yêu cầu khách hàng)
 """,
     'author': 'BSDInsight',
     'website': 'https://bsdinsight.com',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     'depends': ['re_lease', 're_loan_dashboard'],
     'data': ['views/re_loan_dashboard_views.xml'],
     'auto_install': True,

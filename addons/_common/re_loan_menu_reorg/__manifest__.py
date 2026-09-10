@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Menu Reorganization',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.0.2',
     'category': 'Realty/Loan',
     'summary': 'Gom 11+ top-level menu Quản lý Vay thành 7 group (HĐTD '
                '/ KW / Thanh toán / BL / Báo cáo / Cấu hình + Dashboard) '
@@ -29,7 +29,7 @@ Pattern: override parent_id của các menuitem trong re_loan + re_guarantee
 """,
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     'depends': [
         're_loan',
         're_guarantee',

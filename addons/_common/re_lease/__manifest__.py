@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Thuê tài sản (Lease)',
-    'version': '19.0.1.4.1',
+    'version': '19.0.1.4.2',
     'category': 'Realty/Lease',
     'summary': 'Quản lý thuê tài sản 2 chiều × 2 loại: Đi thuê / Cho thuê '
                'lại × Hoạt động / Tài chính. Lịch gốc+lãi, kế toán tích '
@@ -43,7 +43,7 @@ Phase 2 (sau): khấu hao tự động tài sản thuê TC, dashboard SVG, docs.
 """,
     'author': 'BSDInsight',
     'website': 'https://bsdinsight.com',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     'depends': [
         're_base',
         'account',

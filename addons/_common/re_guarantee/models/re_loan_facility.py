@@ -91,7 +91,11 @@ class ReLoanFacility(models.Model):
         """
         super()._compute_amount_used()
         for rec in self:
-            if rec.purpose == 'bank_guarantee':
+            # Theo PHÂN LOẠI chứ không theo mã: mục đích tự khai
+            # thuộc nhóm Bảo lãnh cũng phải bị chiếm hạn mức, không
+            # thì chọn được mà không bao giờ trừ — một lỗ thủng im
+            # lặng trong hạn mức bảo lãnh.
+            if rec.purpose_kind == 'guarantee':
                 rec.amount_used += rec.guarantee_total_outstanding
 
     def action_view_guarantees(self):

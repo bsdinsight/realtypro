@@ -203,9 +203,9 @@ class ReBankGuarantee(models.Model):
     # --- Link với facility (chiếm hạn mức) ---
     facility_id = fields.Many2one(
         're.loan.facility', string='Hạn mức BL',
-        domain="[('purpose', '=', 'bank_guarantee')]",
-        help='Facility có Mục đích = "Bảo lãnh" mà BL này dùng. '
-             'Khi state=issued, BL chiếm hạn mức = giá trị BL.')
+        domain="[('purpose_kind', '=', 'guarantee')]",
+        help='Hạn mức có Mục đích thuộc nhóm "Bảo lãnh" mà BL này '
+             'dùng. Khi state=issued, BL chiếm hạn mức = giá trị BL.')
     credit_contract_id = fields.Many2one(
         're.loan.credit.contract', string='HĐTD',
         related='facility_id.credit_contract_id', store=True, readonly=True)

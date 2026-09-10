@@ -154,15 +154,15 @@ class ReLoanCreditContract(models.Model):
                 rec.amount_total - rec.amount_pool_used)
 
     @api.depends('facility_ids.amount_limit', 'facility_ids.amount_used',
-                 'facility_ids.purpose')
+                 'facility_ids.purpose', 'facility_ids.purpose_kind')
     def _compute_split_stats(self):
-        """Tách hạn mức + đã dùng theo 2 nhóm:
-           - bảo lãnh: facility.purpose = 'bank_guarantee'
-           - cho vay: facility.purpose != 'bank_guarantee'
+        """Tách hạn mức + đã dùng theo 2 nhóm, dựa trên PHÂN LOẠI mục
+        đích chứ không trên mã 'bank_guarantee' cứng — mục đích tự khai
+        thuộc nhóm Bảo lãnh (backlog 730) phải rơi vào đúng cột.
         """
         for rec in self:
             bg = rec.facility_ids.filtered(
-                lambda f: f.purpose == 'bank_guarantee')
+                lambda f: f.purpose_kind == 'guarantee')
             loan = rec.facility_ids - bg
             rec.amount_loan_limit = sum(loan.mapped('amount_limit'))
             rec.amount_loan_used = sum(loan.mapped('amount_used'))

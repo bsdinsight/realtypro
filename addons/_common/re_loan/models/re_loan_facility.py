@@ -470,10 +470,6 @@ class ReLoanFacility(models.Model):
             else:
                 rec.amount_used = sum(live.mapped('amount'))
 
-    @api.depends('amount_limit', 'amount_used', 'flexible_limits',
-                 'credit_contract_id.facility_ids.amount_limit',
-                 'credit_contract_id.facility_ids.amount_used',
-                 'credit_contract_id.facility_ids.flexible_limits')
     @api.depends('amount_limit', 'flexible_limits', 'purpose',
                  'credit_contract_id',
                  'credit_contract_id.facility_ids.amount_limit',
@@ -503,6 +499,10 @@ class ReLoanFacility(models.Model):
             rec.amount_limit_purpose = (
                 sum(pool.mapped('amount_limit')) or rec.amount_limit)
 
+    @api.depends('amount_limit', 'amount_used', 'flexible_limits',
+                 'credit_contract_id.facility_ids.amount_limit',
+                 'credit_contract_id.facility_ids.amount_used',
+                 'credit_contract_id.facility_ids.flexible_limits')
     def _compute_amount_available(self):
         for rec in self:
             if rec.flexible_limits and rec.credit_contract_id:

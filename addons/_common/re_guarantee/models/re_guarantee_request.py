@@ -60,11 +60,15 @@ class ReGuaranteeRequest(models.Model):
     facility_id = fields.Many2one(
         're.loan.facility', string='Hạn mức bảo lãnh',
         required=True, tracking=True,
-        domain="[('purpose', '=', 'bank_guarantee'),"
+        # Lọc theo PHÂN LOẠI mục đích, không theo mã 'bank_guarantee'
+        # cứng: từ backlog 730 người dùng khai thêm được mục đích và
+        # chọn phân loại Bảo lãnh cho nó — khoá theo mã thì những mục
+        # tự khai đó không bao giờ chọn được.
+        domain="[('purpose_kind', '=', 'guarantee'),"
                " ('credit_contract_id.state', '=', 'active')]",
-        help='Chỉ chọn được facility có Mục đích = "Bảo lãnh" thuộc '
-             'HĐTD đã kích hoạt. BL active sẽ chiếm hạn mức = giá '
-             'trị BL; settled/cancelled không chiếm.')
+        help='Chỉ chọn được hạn mức có Mục đích thuộc nhóm "Bảo lãnh" '
+             'và thuộc HĐTD đã kích hoạt. BL active sẽ chiếm hạn mức '
+             '= giá trị BL; settled/cancelled không chiếm.')
     credit_contract_id = fields.Many2one(
         're.loan.credit.contract', string='HĐTD',
         related='facility_id.credit_contract_id',

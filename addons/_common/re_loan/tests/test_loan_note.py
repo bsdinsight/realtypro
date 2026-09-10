@@ -197,7 +197,10 @@ class TestGuaranteeRelease(TransactionCase):
             'name': 'HĐTD-BL', 'partner_id': cls.bank.id,
             'amount_total': 30_000_000_000.0})
         cls.contract.action_activate()
-        cls.fac_bl = cls.env['re.loan.facility'].create({
+        # Xem chú thích ở test_credit_contract: loại này đã ngưng dùng,
+        # fixture dựng lại dữ liệu cũ nên dùng cửa thoát.
+        cls.fac_bl = cls.env['re.loan.facility'].with_context(
+            allow_discontinued_facility_type=True).create({
             'name': 'Hạn mức BL',
             'credit_contract_id': cls.contract.id,
             'facility_type': 'guarantee_line',

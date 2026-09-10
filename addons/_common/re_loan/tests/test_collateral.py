@@ -2,6 +2,7 @@
 """
 Tests L3 — tài sản đảm bảo (collateral + valuation + pledge).
 """
+from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
@@ -118,7 +119,14 @@ class TestCollateral(TransactionCase):
             'secured_amount': 800_000_000.0})
         self.col.invalidate_recordset(['state'])
         self.assertEqual(self.col.state, 'partial_pledged')
-        pledge.action_release()
+        # action_release chỉ MỞ WIZARD (cần khai ngày + lý do giải
+        # chấp); nghiệp vụ nằm ở _do_release.
+        act = pledge.action_release()
+        self.assertEqual(act['res_model'],
+                         're.loan.pledge.release.wizard')
+        self.assertEqual(pledge.state, 'active')
+        pledge._do_release(fields.Date.context_today(pledge),
+                           'Tất toán khoản vay')
         self.assertEqual(pledge.state, 'released')
         self.assertTrue(pledge.release_date)
         self.col.invalidate_recordset(
@@ -132,9 +140,10 @@ class TestCollateral(TransactionCase):
             'collateral_id': self.col.id, 'note_id': self.note.id,
             'pledge_target': 'note',
             'secured_amount': 800_000_000.0})
-        pledge.action_release()
+        today = fields.Date.context_today(pledge)
+        pledge._do_release(today, 'Lần 1')
         with self.assertRaises(UserError):
-            pledge.action_release()
+            pledge._do_release(today, 'Lần 2')
 
     def test_pledge_at_contract_level(self):
         # Cấp HĐTD (default) — chuẩn nghiệp vụ VN

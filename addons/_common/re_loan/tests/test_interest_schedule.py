@@ -118,8 +118,13 @@ class TestInterestSchedule(TransactionCase):
         first = note.interest_line_ids.sorted('period_no')[0]
         first.state = 'accrued'
         note.action_generate_interest_schedule()
-        # dòng accrued giữ lại + 12 dòng planned mới = 13
-        self.assertEqual(len(note.interest_line_ids), 13)
+        # Kỳ đã ghi nhận được GIỮ, và lịch mới KHÔNG sinh lại chính kỳ
+        # đó nữa → vẫn đúng 12 dòng, không phải 13 (backlog 731).
+        # Bản cũ trả 13 vì kỳ 1 bị nhân đôi — tổng phải trả gấp đôi.
+        self.assertEqual(len(note.interest_line_ids), 12)
+        periods = note.interest_line_ids.mapped('period_no')
+        self.assertEqual(len(periods), len(set(periods)),
+                         'không kỳ nào được sinh trùng')
         self.assertEqual(
             len(note.interest_line_ids.filtered(
                 lambda l: l.state == 'accrued')), 1)
@@ -216,18 +221,46 @@ class TestInterestSchedule(TransactionCase):
 
         action = line.action_create_repayment()
 
-        # 1 repayment mới được tạo
-        self.assertEqual(len(note.repayment_ids), before_count + 1)
-        new_rep = note.repayment_ids.sorted('id')[-1]
-        # Số tiền pre-fill đúng từ line
-        self.assertEqual(new_rep.amount_principal, line.principal_due)
-        self.assertEqual(new_rep.amount_interest, line.interest_amount)
-        # State line chuyển sang paid
-        self.assertEqual(line.state, 'paid')
-        # Action trả về form repayment để user review
+        # Nút chỉ MỞ FORM, chưa tạo gì. Người dùng bấm Huỷ trên hộp
+        # thoại thì không được để lại dòng trả nợ nào — trước đây nút
+        # create() trước rồi mới mở form, nên bấm Huỷ vẫn ghi nhận đã
+        # thanh toán (backlog 747).
+        self.assertEqual(len(note.repayment_ids), before_count)
+        self.assertNotEqual(line.state, 'paid')
         self.assertEqual(action['res_model'], 're.loan.note.repayment')
-        self.assertEqual(action['res_id'], new_rep.id)
+        self.assertFalse(action.get('res_id'))
         self.assertEqual(action['target'], 'new')
+
+        # Số của kỳ được điền sẵn vào form
+        ctx = action['context']
+        self.assertEqual(ctx['default_interest_line_id'], line.id)
+        self.assertEqual(ctx['default_amount_principal'],
+                         line.principal_due)
+        self.assertEqual(ctx['default_amount_interest'],
+                         line.interest_amount)
+
+        # Bấm Lưu (client create theo default_) mới ghi nhận
+        self.env['re.loan.note.repayment'].with_context(**ctx).create({
+            'note_id': note.id,
+            'date': line.date_to,
+            'amount_principal': ctx['default_amount_principal'],
+            'amount_interest': ctx['default_amount_interest'],
+            'interest_line_id': line.id,
+        })
+        self.assertEqual(len(note.repayment_ids), before_count + 1)
+        self.assertEqual(line.state, 'paid')
+
+    def _pay_period(self, line):
+        """Mô phỏng người dùng bấm Thanh toán rồi Lưu."""
+        ctx = line.action_create_repayment()['context']
+        return self.env['re.loan.note.repayment'].with_context(
+            **ctx).create({
+                'note_id': line.note_id.id,
+                'date': line.date_to,
+                'amount_principal': ctx['default_amount_principal'],
+                'amount_interest': ctx['default_amount_interest'],
+                'interest_line_id': line.id,
+            })
 
     def test_action_create_repayment_blocked_on_paid_line(self):
         from odoo.exceptions import UserError
@@ -238,7 +271,31 @@ class TestInterestSchedule(TransactionCase):
             'note_id': note.id, 'amount': 1_200_000_000.0,
             'date': '2026-01-01'})
         line = note.interest_line_ids.sorted('period_no')[0]
-        line.action_create_repayment()
-        # Lần 2 → UserError "đã ghi nhận"
+        self._pay_period(line)
+        self.assertEqual(line.state, 'paid')
+        # Kỳ đã trả đủ → UserError "đã ghi nhận"
         with self.assertRaises(UserError):
             line.action_create_repayment()
+
+    def test_regenerate_keeps_paid_period_once(self):
+        """Tạo lại lịch lãi KHÔNG nhân đôi kỳ đã thanh toán (747/731)."""
+        note = self._note(plan='equal_principal', tenor=12,
+                          amount=1_200_000_000.0, rate=12.0)
+        note.action_generate_interest_schedule()
+        self.env['re.loan.note.disbursement'].create({
+            'note_id': note.id, 'amount': 1_200_000_000.0,
+            'date': '2026-01-01'})
+        first = note.interest_line_ids.sorted('period_no')[0]
+        self._pay_period(first)
+
+        before = len(note.interest_line_ids)
+        note.action_generate_interest_schedule()
+        periods = note.interest_line_ids.filtered(
+            lambda l: l.line_type == 'period').mapped('period_no')
+        self.assertEqual(len(note.interest_line_ids), before,
+                         'regen không được sinh thêm dòng')
+        self.assertEqual(len(periods), len(set(periods)),
+                         'không kỳ nào bị trùng')
+        self.assertTrue(first.exists())
+        self.assertEqual(first.state, 'paid',
+                         'kỳ đã trả giữ nguyên trạng thái')

@@ -156,7 +156,11 @@ class TestFlexibleLimits(TransactionCase):
             'facility_type': 'revolving',
             'amount_limit': 600_000_000.0,
             'flexible_limits': True})
-        cls.fac_bg = cls.env['re.loan.facility'].create({
+        # Loại 'guarantee_line' đã ngưng dùng (backlog 755) — fixture
+        # cố ý dựng lại dữ liệu cũ nên đi qua cửa thoát dành cho nhập
+        # liệu chuyển đổi.
+        cls.fac_bg = cls.env['re.loan.facility'].with_context(
+            allow_discontinued_facility_type=True).create({
             'name': 'Bảo lãnh',
             'credit_contract_id': cls.contract.id,
             'facility_type': 'guarantee_line',
@@ -263,17 +267,27 @@ class TestFacilityProjectAllocation(TransactionCase):
                          40_000_000_000.0)
         self.assertEqual(self.fac_gpmb.amount_unallocated, 0.0)
 
-    def test_allocate_exceed_facility_blocked(self):
+    def test_allocate_exceed_facility_is_soft_warning(self):
+        """Vượt hạn mức khi phân bổ dự án là CẢNH BÁO, không chặn.
+
+        Chốt 2026-07-29: thực tế cần phân bổ tạm rồi điều chỉnh, và
+        hạn mức hay được cấp trước khi ký đủ hợp đồng. Cảnh báo hiện
+        bằng `amount_unallocated` ÂM (tô đỏ trên form + list).
+        Test cũ khẳng định có chặn — mâu thuẫn với quyết định đó và đã
+        đỏ từ hôm gỡ chặn.
+        """
         self.env['re.loan.facility.project.allocation'].create({
             'facility_id': self.fac_gpmb.id,
             'project_id': self.proj_a.id,
             'amount': 35_000_000_000.0})
-        # B muốn 10 → tổng 45 > 40, bị chặn
-        with self.assertRaises(ValidationError):
-            self.env['re.loan.facility.project.allocation'].create({
-                'facility_id': self.fac_gpmb.id,
-                'project_id': self.proj_b.id,
-                'amount': 10_000_000_000.0})
+        # B thêm 10 → tổng 45 > hạn mức 40: vẫn lưu được
+        self.env['re.loan.facility.project.allocation'].create({
+            'facility_id': self.fac_gpmb.id,
+            'project_id': self.proj_b.id,
+            'amount': 10_000_000_000.0})
+        self.fac_gpmb.invalidate_recordset()
+        self.assertLess(self.fac_gpmb.amount_unallocated, 0.0,
+                        'phần chưa phân bổ phải âm để tô cảnh báo')
 
     def test_negative_amount_blocked(self):
         with self.assertRaises(ValidationError):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.1.32.18',
+    'version': '19.0.1.32.19',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '
@@ -42,6 +42,10 @@ HĐTD/facility KHÔNG có pledge nào → bỏ ràng buộc base tương ứng
     'depends': [
         're_loan',
         're_loan_dashboard',
+        # TK kiểm soát dòng tiền trỏ tới account.account (backlog 754).
+        # Vốn đã có sẵn qua rp_loan_bridge, khai thẳng cho khỏi phụ
+        # thuộc bắc cầu.
+        'account',
         'rp_owner_contract', 'rp_evm',
         # phân bổ hạn mức tới HỢP ĐỒNG nhà thầu (dự án tự suy ra) —
         # contract_id trên dòng phân bổ + _outstanding_by_contract()

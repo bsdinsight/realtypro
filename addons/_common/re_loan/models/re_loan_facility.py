@@ -347,12 +347,16 @@ class ReLoanFacility(models.Model):
             # lượt ràng buộc chạy.
             still_used = set(DISCONTINUED_FACILITY_TYPES)
         elif self.env.registry.ready:
-            self.env.cr.execute("""
-                SELECT DISTINCT facility_type
-                FROM re_loan_facility
-                WHERE facility_type IN %s
-            """, (tuple(DISCONTINUED_FACILITY_TYPES),))
-            still_used = {row[0] for row in self.env.cr.fetchall()}
+            # Dùng ORM chứ KHÔNG dùng SQL thô: Odoo giữ phép ghi trong
+            # bộ đệm rồi mới đẩy xuống CSDL: SQL thô đọc trước lúc đẩy
+            # sẽ thấy giá trị cũ. Hệ quả đã gặp thật: đổi nốt bản ghi
+            # cuối cùng sang loại khác mà dropdown vẫn còn loại cũ.
+            Facility = self.env['re.loan.facility'].sudo()
+            still_used = {
+                code for code in DISCONTINUED_FACILITY_TYPES
+                if Facility.search_count([('facility_type', '=', code)],
+                                         limit=1)
+            }
         else:
             # Đang cài/nâng cấp: bảng có thể chưa có cột. Trả đủ danh
             # sách cho an toàn — validate view không cần lọc.
@@ -360,6 +364,39 @@ class ReLoanFacility(models.Model):
         return [(code, name) for code, name in FACILITY_TYPES
                 if code not in DISCONTINUED_FACILITY_TYPES
                 or code in still_used]
+
+    # ------------------------------------------------------------------
+    # Danh sách "Loại hạn mức" phụ thuộc DỮ LIỆU, nên phải xoá bộ nhớ
+    # đệm mỗi khi dữ liệu đổi (backlog 755).
+    #
+    # Odoo nhớ đệm kết quả nạp view theo registry. Danh sách chọn của
+    # facility_type lại tính từ chính bảng này ("còn bản ghi nào dùng
+    # loại đã ngưng dùng không"). Không xoá đệm thì sau khi đổi nốt bản
+    # ghi cuối cùng sang loại khác, dropdown VẪN còn loại cũ cho tới
+    # lần khởi động lại — đúng hiện tượng team báo.
+    # ------------------------------------------------------------------
+    def _clear_type_selection_cache(self):
+        self.env.registry.clear_cache()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        if any('facility_type' in v for v in vals_list):
+            recs._clear_type_selection_cache()
+        return recs
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'facility_type' in vals:
+            self._clear_type_selection_cache()
+        return res
+
+    def unlink(self):
+        types = set(self.mapped('facility_type'))
+        res = super().unlink()
+        if types & set(DISCONTINUED_FACILITY_TYPES):
+            self._clear_type_selection_cache()
+        return res
 
     @api.constrains('facility_type')
     def _check_facility_type(self):

@@ -31,11 +31,19 @@ from odoo.exceptions import UserError
 class ReLoanCreditContractControlledAccount(models.Model):
     _inherit = 're.loan.credit.contract'
 
-    controlled_account = fields.Char(
-        string='TK kiểm soát dòng tiền (NH)',
-        help='Số tài khoản ngân hàng chỉ định nhận tiền CĐT thanh toán. '
-             'Khai vào đây để hệ thống TỰ ĐỐI CHIẾU giao dịch tiền về '
-             '(đối soát ngân hàng) với điều kiện giải ngân số 7.')
+    controlled_account_id = fields.Many2one(
+        'account.account', string='TK kiểm soát dòng tiền',
+        # Không khai domain: Odoo 19 đã bỏ account.account.deprecated
+        # (thay bằng active) và company_id (thay bằng company_ids),
+        # mà bản thân cờ active đã tự lọc tài khoản ngừng dùng rồi.
+        help='Tài khoản kế toán dùng theo dõi dòng tiền chủ đầu tư '
+             'thanh toán về theo HĐTD này.\n'
+             'LƯU Ý: từ backlog 754, ô này là TÀI KHOẢN KẾ TOÁN (COA) '
+             'chứ không còn là số tài khoản ngân hàng. Vì vậy điều '
+             'kiện giải ngân số 7 không tự chấm được nữa — số hiệu tài '
+             'khoản kế toán không so được với số tài khoản trên sao kê '
+             '— và chuyển sang ô tick tay "7. Tiền về đúng TK (xác '
+             'nhận tay)".')
 
 
 class ReLoanNoteChecklist(models.Model):
@@ -125,19 +133,14 @@ class ReLoanNoteChecklist(models.Model):
             c6 = not Note.search_count(
                 [('state', '=', 'overdue'),
                  ('company_id', '=', rec.company_id.id)])
-            # 7. tiền về đúng TK kiểm soát
-            cc = rec.facility_id.credit_contract_id
-            acct = (cc.controlled_account or '').strip() if cc else ''
-            if acct and has_bank_sync:
-                Txn = self.env['re.bank.transaction']
-                wrong = Txn.search_count(
-                    [('direction', '=', 'in'),
-                     ('state', '=', 'reconciled'),
-                     ('ipc_id.project_id', '=', proj.id),
-                     ('account_number', '!=', acct)])
-                c7 = 'mismatch' if wrong else 'ok'
-            else:
-                c7 = 'manual'
+            # 7. tiền về đúng TK kiểm soát — TICK TAY (backlog 754).
+            # Trước đây tự chấm bằng cách so số tài khoản ngân hàng khai
+            # trên HĐTD với số tài khoản trên giao dịch đối soát. Khách
+            # chốt đổi ô đó sang TÀI KHOẢN KẾ TOÁN (COA), mà số hiệu
+            # COA không so được với sao kê, nên phép tự chấm không còn
+            # cơ sở. Luôn trả 'manual' để người duyệt tự xác nhận ở ô
+            # "7. Tiền về đúng TK (xác nhận tay)".
+            c7 = 'manual'
             # 8. chống trùng — ràng buộc máy đang bật
             c8 = True
 

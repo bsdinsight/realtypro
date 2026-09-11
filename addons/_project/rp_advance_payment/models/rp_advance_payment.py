@@ -123,25 +123,47 @@ class RpAdvancePayment(models.Model):
     dossier_ids = fields.One2many(
         'rp.loan.disbursement.dossier', 'advance_payment_id',
         string='Các hồ sơ giải ngân')
+    # Phiếu chi trả bằng tiền công ty, KHÔNG qua khế ước (backlog 969).
+    # Đường này trước đây không có: tạm ứng hoặc đi qua KW, hoặc chỉ
+    # được bấm "Đã thanh toán" một lần mà không có chứng từ nào.
+    payment_ids = fields.One2many(
+        'account.payment', 'advance_payment_id', string='Phiếu chi',
+        copy=False)
+    payment_count = fields.Integer(compute='_compute_amount_paid')
+    amount_paid_direct = fields.Monetary(
+        string='Đã trả bằng tiền công ty',
+        compute='_compute_amount_paid', store=True,
+        help='Σ các phiếu chi ghi nhận thẳng trên phiếu tạm ứng này '
+             '(không qua khế ước). Bỏ phiếu đã huỷ.')
     amount_paid = fields.Monetary(
         string='Đã thanh toán',
         compute='_compute_amount_paid', store=True,
         help='Σ số tiền các hồ sơ giải ngân ĐÃ GIẢI NGÂN của Tạm ứng '
-             'này (dossier.amount, disbursement state = disbursed).')
+             'này (dossier.amount, disbursement state = disbursed) '
+             'CỘNG các phiếu chi trả thẳng bằng tiền công ty.')
     amount_unpaid = fields.Monetary(
         string='Chưa thanh toán',
         compute='_compute_amount_paid', store=True,
         help='= Giá trị tạm ứng − Đã thanh toán.')
 
     @api.depends('dossier_ids.amount',
-                 'dossier_ids.disbursement_id.state', 'amount')
+                 'dossier_ids.disbursement_id.state', 'amount',
+                 'payment_ids.amount', 'payment_ids.state')
     def _compute_amount_paid(self):
         for rec in self:
             paid = sum(rec.dossier_ids.filtered(
                 lambda d: d.disbursement_id.state == 'disbursed'
             ).mapped('amount'))
-            rec.amount_paid = paid
-            rec.amount_unpaid = max(0.0, rec.amount - paid)
+            # Phiếu chi đã huỷ thì tiền không ra — chỉ cộng phiếu còn
+            # sống. Odoo 19 đưa phiếu về 'in_process' cho tới khi khớp
+            # sao kê, nên KHÔNG lọc theo 'paid' (sẽ không bao giờ khớp).
+            direct = sum(rec.payment_ids.filtered(
+                lambda p: p.state not in ('draft', 'canceled', 'rejected')
+            ).mapped('amount'))
+            rec.amount_paid_direct = direct
+            rec.payment_count = len(rec.payment_ids)
+            rec.amount_paid = paid + direct
+            rec.amount_unpaid = max(0.0, rec.amount - paid - direct)
 
     def _paid_date(self):
         """Ngày thanh toán tạm ứng.
@@ -321,6 +343,17 @@ class RpAdvancePayment(models.Model):
             rec.date_paid = rec._paid_date()
             rec.message_post(body=_(
                 "Đã thanh toán Tạm ứng — sẵn sàng cấn trừ vào hóa đơn."))
+
+    def action_view_payments(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Phiếu chi — %s") % (self.name or ''),
+            'res_model': 'account.payment',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.payment_ids.ids)],
+            'context': {'create': False},
+        }
 
     def action_cancel(self):
         for rec in self:

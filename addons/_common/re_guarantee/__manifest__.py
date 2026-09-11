@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bank Guarantee Management',
-    'version': '19.0.1.18.7',
+    'version': '19.0.1.19.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý chứng thư bảo lãnh ngân hàng: dự thầu, thực hiện HĐ, '
                'tạm ứng, bảo hành, thanh toán — phí + ký quỹ + lifecycle.',
@@ -51,6 +51,10 @@ Tuỳ chọn cài — chỉ KH cần quản lý chi tiết chứng thư BL mới
         're_party',
         're_loan',
         'hr',
+        # Các đợt thanh toán chứng thư BL sinh phiếu chi thật
+        # (account.payment) thay vì chỉ ghi vào bảng riêng — backlog
+        # 969. Tiền ra khỏi công ty thì sổ cái phải biết.
+        'account',
     ],
     'data': [
         'security/re_guarantee_groups.xml',

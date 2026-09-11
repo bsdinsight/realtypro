@@ -20,8 +20,40 @@
                     <field name="re_guarantee_expiry_lead_days"/>
                     <field name="re_guarantee_expiry_repeat_days"/>
                 </group>
+                <group name="guarantee_accounting"
+                       string="Kế toán thanh toán bảo lãnh">
+                    <field name="re_guarantee_journal_id"
+                           options="{'no_create': True}"/>
+                    <field name="re_guarantee_fee_account_id"
+                           options="{'no_create': True}"/>
+                    <field name="re_guarantee_penalty_account_id"
+                           options="{'no_create': True}"/>
+                    <field name="re_guarantee_deposit_account_id"
+                           options="{'no_create': True}"/>
+                    <field name="re_guarantee_principal_account_id"
+                           options="{'no_create': True}"/>
+                </group>
             </xpath>
             <xpath expr="//sheet" position="inside">
+                <div class="alert alert-warning" role="alert">
+                    <h5><i class="fa fa-calculator"
+                           title="Kế toán"/> Bốn tài khoản này bắt buộc
+                    khai</h5>
+                    <p style="margin-bottom: 0;">
+                        Mỗi đợt thanh toán chứng thư BL sinh một
+                        <b>phiếu chi thật</b>. Đối ứng phụ thuộc bản
+                        chất khoản trả nên không đoán được:
+                        <b>phí BL</b> và <b>phạt</b> là chi phí (642 /
+                        811), <b>ký quỹ</b> là <b>tài sản</b> (244 — NH
+                        trả lại khi giải toả, nên có nút
+                        <b>Ghi nhận thu hoàn ký quỹ</b> trên chứng thư),
+                        còn <b>tiền gốc</b> là khoản đi vay khi NH trả
+                        thay cho beneficiary (3411).
+                        Chưa khai thì đợt thanh toán vẫn ghi nhận được,
+                        nhưng <b>chưa có phiếu chi</b> — hệ thống nhắc
+                        trong nhật ký chứng thư.
+                    </p>
+                </div>
                 <div class="alert alert-info" role="alert">
                     <h5><i class="fa fa-envelope-o"
                            title="Thư nhắc"/> Thư nhắc bảo lãnh</h5>

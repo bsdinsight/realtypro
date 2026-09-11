@@ -52,11 +52,22 @@
                             invisible="state != 'to_approve'"
                             groups="rp_advance_payment.group_advance_manager"
                             confirm="Từ chối Tạm ứng? Sẽ về trạng thái Nháp."/>
+                    <!-- Ghi nhận từng đợt trả bằng tiền công ty, mỗi
+                         đợt sinh một phiếu chi thật (backlog 969).
+                         Nút "Đánh dấu Đã thanh toán" bên dưới giữ lại
+                         cho trường hợp trả bằng tiền mặt không cần
+                         chứng từ ngân hàng — nó KHÔNG sinh bút toán. -->
+                    <button name="%(action_rp_advance_register_payment)d" type="action"
+                            string="Ghi nhận thanh toán"
+                            class="btn-primary"
+                            icon="fa-money"
+                            invisible="state not in ('approved','partial_paid') or amount_unpaid &lt;= 0"/>
                     <button name="action_mark_paid" type="object"
                             string="Đánh dấu Đã thanh toán"
                             invisible="state != 'approved'"
-                            help="Dùng nếu Tạm ứng thanh toán bằng tiền mặt,
-                                  KHÔNG qua KW. Nếu qua KW thì hệ thống auto."/>
+                            help="Đánh dấu đã trả mà KHÔNG sinh phiếu chi —
+                                  chỉ dùng khi không cần chứng từ kế toán.
+                                  Có chứng từ thì dùng Ghi nhận thanh toán."/>
                     <button name="action_cancel" type="object"
                             string="Huỷ"
                             invisible="state in ('settled', 'cancelled')"
@@ -74,6 +85,12 @@
                                 invisible="state not in ('paid', 'settled')">
                             <field name="settlement_count" widget="statinfo"
                                    string="Cấn trừ"/>
+                        </button>
+                        <button name="action_view_payments" type="object"
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="payment_count == 0">
+                            <field name="payment_count" widget="statinfo"
+                                   string="Phiếu chi"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -120,6 +137,8 @@
                            invisible="state in ('draft', 'to_approve', 'approved')">
                         <group>
                             <field name="amount_paid" readonly="1"/>
+                            <field name="amount_paid_direct" readonly="1"
+                                   invisible="amount_paid_direct == 0"/>
                             <field name="amount_unpaid" readonly="1"
                                    decoration-warning="amount_unpaid &gt; 0"/>
                             <field name="amount_settled" readonly="1"/>

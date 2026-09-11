@@ -167,3 +167,106 @@ class TestBankGuarantee(TransactionCase):
         after = len(bl.activity_ids)
         self.assertGreater(after, before,
                            "Cron phải tạo activity nhắc BL sắp hết hạn")
+
+    # ----- Phiếu chi kế toán (backlog 969) --------------------------------
+    def _configure_accounts(self):
+        """Khai 4 TK + sổ nhật ký như khách hàng sẽ khai trên hệ thật."""
+        Account = self.env['account.account']
+        company = self.env.company
+
+        def _acc(code, name, atype):
+            acc = Account.search(
+                [('code', '=', code), ('company_ids', 'in', company.id)],
+                limit=1)
+            return acc or Account.create({
+                'code': code, 'name': name, 'account_type': atype})
+
+        journal = self.env['account.journal'].search(
+            [('type', '=', 'bank'), ('company_id', '=', company.id)],
+            limit=1)
+        if not journal:
+            journal = self.env['account.journal'].create({
+                'name': 'NH Test 969', 'type': 'bank', 'code': 'BNK969'})
+        Param = self.env['ir.config_parameter'].sudo()
+        accounts = {
+            'fee': _acc('6425969', 'Phí BL', 'expense'),
+            'penalty': _acc('811969', 'Phạt', 'expense'),
+            'deposit': _acc('244969', 'Ký quỹ', 'asset_non_current'),
+            'principal': _acc('3411969', 'Vay', 'liability_non_current'),
+        }
+        Param.set_param('re_guarantee.fee_account_id', accounts['fee'].id)
+        Param.set_param('re_guarantee.penalty_account_id',
+                        accounts['penalty'].id)
+        Param.set_param('re_guarantee.deposit_account_id',
+                        accounts['deposit'].id)
+        Param.set_param('re_guarantee.principal_account_id',
+                        accounts['principal'].id)
+        Param.set_param('re_guarantee.payment_journal_id', journal.id)
+        return accounts
+
+    def _issued_bl(self):
+        bl = self._bl()
+        bl.facility_id = self.facility
+        bl.action_issue()
+        return bl
+
+    def test_fee_payment_creates_outgoing_payment(self):
+        accounts = self._configure_accounts()
+        bl = self._issued_bl()
+        pay = self.env['re.bank.guarantee.payment'].create({
+            'guarantee_id': bl.id, 'payment_kind': 'fee',
+            'date': '2026-02-01', 'amount': 3_000_000.0})
+        self.assertTrue(pay.payment_id, 'đợt phí phải sinh phiếu chi')
+        self.assertEqual(pay.payment_id.payment_type, 'outbound')
+        debit = pay.payment_id.move_id.line_ids.filtered(lambda l: l.debit)
+        self.assertEqual(debit.account_id, accounts['fee'],
+                         'ghi Nợ đúng TK chi phí phí BL')
+
+    def test_deposit_goes_to_asset_not_expense(self):
+        accounts = self._configure_accounts()
+        bl = self._issued_bl()
+        pay = self.env['re.bank.guarantee.payment'].create({
+            'guarantee_id': bl.id, 'payment_kind': 'deposit',
+            'date': '2026-02-01', 'amount': 5_000_000.0})
+        debit = pay.payment_id.move_id.line_ids.filtered(lambda l: l.debit)
+        self.assertEqual(debit.account_id, accounts['deposit'])
+        self.assertNotEqual(debit.account_id, accounts['fee'],
+                            'ký quỹ KHÔNG phải chi phí')
+
+    def test_deposit_refund_on_release(self):
+        accounts = self._configure_accounts()
+        bl = self._issued_bl()
+        self.env['re.bank.guarantee.payment'].create({
+            'guarantee_id': bl.id, 'payment_kind': 'deposit',
+            'date': '2026-02-01', 'amount': 5_000_000.0})
+        bl.invalidate_recordset()
+        self.assertEqual(bl.deposit_paid_amount, 5_000_000.0)
+        bl.action_release()
+        bl.action_refund_deposit()
+        bl.invalidate_recordset()
+        refund = bl.deposit_refund_payment_id
+        self.assertTrue(refund)
+        self.assertEqual(refund.payment_type, 'inbound',
+                         'NH trả lại tiền -> phiếu THU')
+        credit = refund.move_id.line_ids.filtered(lambda l: l.credit)
+        self.assertEqual(credit.account_id, accounts['deposit'],
+                         'ghi Có TK ký quỹ -> tất toán số dư 244')
+        with self.assertRaises(UserError):
+            bl.action_refund_deposit()
+
+    def test_payment_without_config_does_not_block(self):
+        """Chưa khai TK thì vẫn ghi nhận được đợt thanh toán.
+
+        Người nhập liệu đang ghi một giao dịch ĐÃ XẢY RA ở ngân hàng;
+        chặn họ vì kế toán chưa khai tài khoản là mất luôn bản ghi.
+        """
+        Param = self.env['ir.config_parameter'].sudo()
+        Param.set_param('re_guarantee.fee_account_id', False)
+        bl = self._issued_bl()
+        pay = self.env['re.bank.guarantee.payment'].create({
+            'guarantee_id': bl.id, 'payment_kind': 'fee',
+            'date': '2026-02-01', 'amount': 1_000_000.0})
+        self.assertFalse(pay.payment_id)
+        self.assertEqual(pay.amount, 1_000_000.0, 'bản ghi vẫn còn')
+        with self.assertRaises(UserError):
+            pay.action_create_payment()

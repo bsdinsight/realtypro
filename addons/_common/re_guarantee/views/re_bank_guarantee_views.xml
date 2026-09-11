@@ -106,6 +106,16 @@
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
                             invisible="state in ('draft','released','forfeited','settled')"/>
+                    <!-- Ký quỹ là TÀI SẢN (TK 244), NH trả lại khi
+                         chứng thư kết thúc. Không ghi nhận thu hoàn
+                         thì số dư 244 treo vĩnh viễn dù BL đã đóng
+                         (backlog 969). -->
+                    <button name="action_refund_deposit" type="object"
+                            string="Ghi nhận thu hoàn ký quỹ"
+                            class="btn-primary"
+                            icon="fa-undo"
+                            invisible="state not in ('released','expired','settled') or deposit_paid_amount &lt;= 0 or deposit_refund_payment_id"/>
+                    <field name="deposit_refund_payment_id" invisible="1"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,issued,settled"/>
                 </header>
@@ -225,6 +235,9 @@
                             <field name="deposit_paid_amount" readonly="1"/>
                             <field name="deposit_remaining" readonly="1"
                                    decoration-danger="deposit_remaining &gt; 0"/>
+                            <field name="deposit_refund_payment_id"
+                                   readonly="1"
+                                   invisible="not deposit_refund_payment_id"/>
                         </group>
                         <group string="Phạt">
                             <field name="penalty_paid_amount" readonly="1"/>
@@ -341,6 +354,18 @@
                                     <field name="reference"/>
                                     <field name="name"/>
                                     <field name="state" widget="badge"/>
+                                    <!-- Phiếu chi thật trong sổ kế toán
+                                         (backlog 969). Trống = đợt này
+                                         chưa vào sổ cái, thường do chưa
+                                         khai tài khoản đối ứng. -->
+                                    <field name="payment_id" readonly="1"
+                                           optional="show"/>
+                                    <button name="action_create_payment"
+                                            type="object"
+                                            string="Tạo phiếu chi"
+                                            icon="fa-money"
+                                            class="btn-link"
+                                            invisible="payment_id or state != 'posted'"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>

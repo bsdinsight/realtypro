@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_advance_register_payment_form" model="ir.ui.view">
+        <field name="name">rp.advance.register.payment.form</field>
+        <field name="model">rp.advance.register.payment</field>
+        <field name="arch" type="xml">
+            <form string="Ghi nhận thanh toán Tạm ứng">
+                <group>
+                    <group>
+                        <field name="advance_id" invisible="1"/>
+                        <field name="partner_id"/>
+                        <field name="amount_total"/>
+                        <field name="amount_unpaid"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="amount"/>
+                        <field name="date"/>
+                        <field name="journal_id"
+                               options="{'no_create': True}"/>
+                        <field name="memo"/>
+                    </group>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-info-circle" title="Thông tin"/>
+                    Hệ thống sinh một <b>phiếu chi</b> hạch toán vào tài
+                    khoản trả trước người bán đã khai ở cấu hình. Khi hoá
+                    đơn nhà thầu về, phiếu chi này <b>cấn trừ thẳng</b>
+                    vào hoá đơn bằng cơ chế đối trừ của Odoo.
+                </div>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Ghi nhận" class="btn-primary"/>
+                    <button string="Huỷ bỏ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_advance_register_payment"
+            model="ir.actions.act_window">
+        <field name="name">Ghi nhận thanh toán Tạm ứng</field>
+        <field name="res_model">rp.advance.register.payment</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id"
+               ref="view_rp_advance_register_payment_form"/>
+    </record>
+
+</odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Tạm ứng (Advance Payment)',
-    'version': '19.0.1.2.1',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý Tạm ứng cho HĐ nhà thầu / NCC với workflow '
                'phê duyệt + giải ngân bằng KW + cấn trừ thủ công vào hóa đơn',
@@ -44,7 +44,9 @@ Models:
         'security/rp_advance_groups.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
+        'wizards/rp_advance_register_payment_views.xml',
         'views/rp_advance_payment_views.xml',
+        'views/res_config_settings_views.xml',
         'views/rp_contract_inherit_views.xml',
         'views/purchase_order_inherit_views.xml',
         'views/account_move_inherit_views.xml',

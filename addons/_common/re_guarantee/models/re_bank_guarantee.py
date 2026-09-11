@@ -145,6 +145,12 @@ class ReBankGuarantee(models.Model):
     guarantee_fee_remaining = fields.Monetary(
         string='Phí BL còn phải trả',
         compute='_compute_paid_totals', store=True)
+    deposit_refund_payment_id = fields.Many2one(
+        'account.payment', string='Phiếu thu hoàn ký quỹ',
+        readonly=True, copy=False, ondelete='set null',
+        help='Phiếu thu ghi nhận ngân hàng trả lại tiền ký quỹ khi '
+             'chứng thư kết thúc. Chưa có phiếu này thì số dư ký quỹ '
+             '(TK 244) còn treo dù chứng thư đã đóng.')
     deposit_paid_amount = fields.Monetary(
         string='Ký quỹ đã nộp',
         compute='_compute_paid_totals', store=True, readonly=True,
@@ -465,6 +471,70 @@ class ReBankGuarantee(models.Model):
                         request.state)))
             rec.message_post(body=_(
                 "Giải tỏa BL — beneficiary trả lại chứng thư cho NH."))
+            if rec.deposit_paid_amount > 0.01:
+                rec.message_post(body=_(
+                    "Còn %(a)s ₫ ký quỹ tại ngân hàng. Khi NH chuyển "
+                    "trả, bấm <b>Ghi nhận thu hoàn ký quỹ</b> để ghi "
+                    "phiếu thu và tất toán khoản ký quỹ.",
+                    a='{:,.0f}'.format(rec.deposit_paid_amount)))
+
+    def action_refund_deposit(self):
+        """Ghi nhận NH hoàn lại tiền ký quỹ khi BL được giải toả.
+
+        Ký quỹ là TÀI SẢN (TK 244), không phải chi phí — nộp đi thì
+        treo ở đó cho tới khi chứng thư kết thúc và ngân hàng trả lại.
+        Không có bước này thì số dư 244 nằm lại vĩnh viễn dù chứng thư
+        đã đóng (backlog 969).
+        """
+        self.ensure_one()
+        if self.state not in ('released', 'expired', 'settled'):
+            raise UserError(_(
+                "Chỉ hoàn ký quỹ khi chứng thư đã kết thúc (giải toả / "
+                "hết hạn / tất toán)."))
+        if self.deposit_refund_payment_id:
+            raise UserError(_(
+                "Đã ghi nhận hoàn ký quỹ bằng phiếu thu %s.",
+                self.deposit_refund_payment_id.name))
+        amount = self.deposit_paid_amount
+        if amount <= 0.01:
+            raise UserError(_(
+                "Chứng thư này không có tiền ký quỹ đã nộp."))
+        Settings = self.env['res.config.settings'].sudo()
+        account = Settings._require_guarantee_account(
+            'deposit', _('Ký quỹ'))
+        journal = self.env['account.journal'].search([
+            ('type', '=', 'bank'), ('company_id', '=', self.company_id.id),
+        ], limit=1)
+        cfg_journal = Settings._guarantee_payment_journal()
+        if cfg_journal and cfg_journal.company_id == self.company_id:
+            journal = cfg_journal
+        if not journal:
+            raise UserError(_(
+                "Chưa có sổ nhật ký ngân hàng để ghi phiếu thu."))
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'supplier',
+            'partner_id': self.issuing_bank_partner_id.id,
+            'amount': amount,
+            'date': self.date_released or fields.Date.context_today(self),
+            'journal_id': journal.id,
+            'destination_account_id': account.id,
+            'memo': _("Hoàn ký quỹ — BL %s", self.name or ''),
+        })
+        payment.action_post()
+        self.deposit_refund_payment_id = payment
+        self.message_post(body=_(
+            "Đã ghi nhận NH hoàn %(a)s ₫ ký quỹ — phiếu thu %(p)s, "
+            "tất toán số dư %(acc)s.",
+            a='{:,.0f}'.format(amount), p=payment.name,
+            acc=account.display_name))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phiếu thu hoàn ký quỹ'),
+            'res_model': 'account.payment',
+            'res_id': payment.id,
+            'view_mode': 'form',
+        }
 
     def action_forfeit(self):
         for rec in self:
@@ -857,6 +927,15 @@ class ReBankGuaranteePayment(models.Model):
          ('posted', 'Đã xác nhận')],
         string='Trạng thái', default='posted', required=True)
 
+    # Phiếu chi thật trong sổ kế toán (backlog 969). Trước đây mỗi lần
+    # trả tiền cho NH chỉ nằm ở bảng riêng này — tiền ra khỏi công ty
+    # mà sổ cái không biết gì.
+    payment_id = fields.Many2one(
+        'account.payment', string='Phiếu chi', readonly=True, copy=False,
+        ondelete='set null',
+        help='Phiếu chi (outgoing payment) sinh từ đợt thanh toán này. '
+             'Bấm vào để xem bút toán.')
+
     currency_id = fields.Many2one(
         related='guarantee_id.currency_id', store=True, readonly=True)
     company_id = fields.Many2one(
@@ -907,13 +986,135 @@ class ReBankGuaranteePayment(models.Model):
                 vals['guarantee_id'] = Schedule.browse(
                     vals['schedule_id']).guarantee_id.id
         recs = super().create(vals_list)
+        recs._sync_account_payment()
         recs.guarantee_id._check_auto_settle()
         return recs
 
     def write(self, vals):
         res = super().write(vals)
+        if 'state' in vals:
+            self._sync_account_payment()
         self.guarantee_id._check_auto_settle()
         return res
+
+    # ------------------------------------------------------------------
+    # Phiếu chi kế toán (backlog 969)
+    # ------------------------------------------------------------------
+    def _payment_journal(self):
+        """Sổ nhật ký cho phiếu chi.
+
+        Ưu tiên sổ gắn đúng TÀI KHOẢN CHUYỂN TIỀN đã khai trên đợt
+        thanh toán — đó là thông tin cụ thể nhất và người dùng đã khai
+        sẵn. Không tìm được mới rơi về sổ mặc định trong cấu hình.
+        """
+        self.ensure_one()
+        Journal = self.env['account.journal']
+        if self.bank_account_id:
+            journal = Journal.search([
+                ('type', '=', 'bank'),
+                ('bank_account_id', '=', self.bank_account_id.id),
+                ('company_id', '=', self.company_id.id),
+            ], limit=1)
+            if journal:
+                return journal
+        journal = self.env['res.config.settings'].sudo(
+        )._guarantee_payment_journal()
+        if journal and journal.company_id == self.company_id:
+            return journal
+        return Journal.search([
+            ('type', '=', 'bank'), ('company_id', '=', self.company_id.id),
+        ], limit=1)
+
+    def _sync_account_payment(self):
+        """Sinh phiếu chi cho các đợt ĐÃ XÁC NHẬN chưa có phiếu.
+
+        Chỉ chạy khi state='posted': đợt còn Nháp là hồ sơ đang soạn,
+        chưa có tiền ra.
+
+        KHÔNG chặn nếu chưa cấu hình tài khoản — ghi một dòng nhắc vào
+        nhật ký chứng thư rồi thôi. Người nhập liệu đang ghi nhận một
+        giao dịch ĐÃ XẢY RA ở ngân hàng; chặn họ lại vì kế toán chưa
+        khai tài khoản chỉ làm mất luôn cả bản ghi.
+        """
+        Settings = self.env['res.config.settings'].sudo()
+        kinds = dict(self._fields['payment_kind'].selection)
+        for rec in self:
+            if rec.state != 'posted' or rec.payment_id:
+                continue
+            account = Settings._guarantee_payment_account(rec.payment_kind)
+            journal = rec._payment_journal()
+            if not account or not journal:
+                rec.guarantee_id.message_post(body=_(
+                    "Đợt thanh toán %(k)s %(a)s ₫ ngày %(d)s CHƯA sinh "
+                    "được phiếu chi: %(why)s. Khai xong rồi bấm \"Tạo "
+                    "phiếu chi\" trên dòng đó.",
+                    k=kinds.get(rec.payment_kind, rec.payment_kind),
+                    a='{:,.0f}'.format(rec.amount or 0.0),
+                    d=rec.date,
+                    why=_("chưa khai tài khoản đối ứng") if not account
+                    else _("chưa có sổ nhật ký chi")))
+                continue
+            rec._create_account_payment(account, journal)
+
+    def _create_account_payment(self, account, journal):
+        self.ensure_one()
+        kinds = dict(self._fields['payment_kind'].selection)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.guarantee_id.issuing_bank_partner_id.id
+            or self.guarantee_id.bank_partner_id.id,
+            'amount': self.amount,
+            'date': self.date,
+            'journal_id': journal.id,
+            'destination_account_id': account.id,
+            'memo': _("%(k)s — BL %(g)s%(r)s",
+                      k=kinds.get(self.payment_kind, self.payment_kind),
+                      g=self.guarantee_id.name or '',
+                      r=' · %s' % self.reference if self.reference else ''),
+        })
+        payment.action_post()
+        self.payment_id = payment
+        self.guarantee_id.message_post(body=_(
+            "Đã sinh phiếu chi %(p)s — %(k)s %(a)s ₫, hạch toán vào "
+            "%(acc)s.",
+            p=payment.name, k=kinds.get(self.payment_kind,
+                                        self.payment_kind),
+            a='{:,.0f}'.format(self.amount or 0.0),
+            acc=account.display_name))
+        return payment
+
+    def action_create_payment(self):
+        """Tạo phiếu chi cho dòng chưa có (vd lúc ghi nhận chưa khai TK)."""
+        for rec in self:
+            if rec.payment_id:
+                raise UserError(_(
+                    "Đợt thanh toán này đã có phiếu chi %s.",
+                    rec.payment_id.name))
+            if rec.state != 'posted':
+                raise UserError(_(
+                    "Đợt thanh toán còn Nháp — xác nhận trước đã."))
+            kinds = dict(rec._fields['payment_kind'].selection)
+            account = self.env['res.config.settings'].sudo(
+            )._require_guarantee_account(
+                rec.payment_kind, kinds.get(rec.payment_kind, ''))
+            journal = rec._payment_journal()
+            if not journal:
+                raise UserError(_(
+                    "Chưa có sổ nhật ký ngân hàng để ghi phiếu chi. "
+                    "Khai \"Tài khoản chuyển tiền\" trên đợt thanh "
+                    "toán, hoặc đặt sổ mặc định ở Vay > Cấu hình."))
+            rec._create_account_payment(account, journal)
+
+    def action_view_payment(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phiếu chi'),
+            'res_model': 'account.payment',
+            'res_id': self.payment_id.id,
+            'view_mode': 'form',
+        }
 
 
 class ReBankGuaranteeExpiryReminder(models.Model):

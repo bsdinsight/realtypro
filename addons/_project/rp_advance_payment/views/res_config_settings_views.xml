@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Chèn khối Tạm ứng vào chính màn hình cấu hình của phân hệ Vay —
+      cùng chỗ với ngưỡng net-off và tài khoản bảo lãnh, người dùng chỉ
+      phải nhớ một trang.
+    -->
+    <record id="res_config_settings_view_form_rp_advance"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.form.rp_advance</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="re_loan.res_config_settings_view_form_re_loan"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='net_off']" position="after">
+                <group name="advance_accounting"
+                       string="Kế toán Tạm ứng">
+                    <field name="rp_advance_journal_id"
+                           options="{'no_create': True}"/>
+                    <field name="rp_advance_account_id"
+                           options="{'no_create': True}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

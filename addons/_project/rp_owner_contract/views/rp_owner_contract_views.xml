@@ -49,11 +49,28 @@
                            statusbar_visible="draft,signed,executing,completed"/>
                 </header>
                 <sheet>
+                    <!--
+                      Hộp nút thống kê DUY NHẤT của form. Bắt buộc mang
+                      name="button_box": trình dựng form của Odoo nhận
+                      diện hộp nút bằng ĐÚNG tên đó
+                      (`div[name='button_box']`), không phải bằng lớp
+                      `oe_button_box`. Hộp đặt tên khác chỉ ra một thẻ
+                      div trơn — nút nằm trong đó KHÔNG BAO GIỜ hiện
+                      lên, mà cũng không báo lỗi gì (backlog 744). Nút
+                      IPC dưới đây từng nằm trong hộp riêng "ipc_box"
+                      giữa thân form nên chưa từng hiện. Module bổ sung
+                      nút thì xpath vào ĐÂY, đừng tự khai hộp mới.
+                    -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_acceptances" type="object"
                                 class="oe_stat_button" icon="fa-check-square-o">
                             <field name="acceptance_count" widget="statinfo"
                                    string="Hồ sơ NT"/>
+                        </button>
+                        <button name="action_open_ipc" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="ipc_count" widget="statinfo"
+                                   string="IPC"/>
                         </button>
                         <button name="action_view_milestones" type="object"
                                 class="oe_stat_button" icon="fa-calendar">
@@ -88,14 +105,13 @@
                             <field name="company_id" invisible="1"/>
                         </group>
                     </group>
-                    <div class="oe_button_box" name="ipc_box">
-                        <button name="action_open_ipc" type="object"
-                                class="oe_stat_button" icon="fa-file-text-o">
-                            <field name="ipc_count" widget="statinfo"
-                                   string="IPC"/>
-                        </button>
-                    </div>
-                    <group string="Điều khoản thanh toán (dùng để tính giảm trừ mỗi BBNT)">
+                    <!-- name="payment_terms": mốc neo cho module khác
+                         xpath vào (re_loan_borrowing_base chèn nhóm
+                         "Nguồn thanh toán của CĐT" ngay trước đây).
+                         Trước đây họ neo vào hộp nút "ipc_box" — hộp
+                         đó đã bỏ, neo vào nhóm có tên thì bền hơn. -->
+                    <group name="payment_terms"
+                           string="Điều khoản thanh toán (dùng để tính giảm trừ mỗi BBNT)">
                         <group>
                             <field name="retention_percent"/>
                             <field name="retention_cap_percent"/>

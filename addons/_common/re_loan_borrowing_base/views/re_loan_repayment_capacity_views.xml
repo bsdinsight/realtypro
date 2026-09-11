@@ -9,7 +9,12 @@
         <field name="inherit_id"
                ref="rp_owner_contract.view_rp_owner_contract_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='ipc_box']" position="before">
+            <!-- Neo vào nhóm Điều khoản thanh toán. Mốc cũ là hộp nút
+                 "ipc_box" — hộp đó đã bỏ vì sai tên nên nút bên trong
+                 không bao giờ hiện (backlog 744); nút IPC nay nằm
+                 trong hộp button_box dùng chung ở đầu form. Vị trí
+                 hiển thị của nhóm này không đổi. -->
+            <xpath expr="//group[@name='payment_terms']" position="before">
                 <group string="Nguồn thanh toán của CĐT (§8 ②)">
                     <field name="owner_funding_source"/>
                     <field name="owner_funding_note"

@@ -6,26 +6,31 @@
         <field name="model">re.project</field>
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
-            <!-- Smart buttons trên header -->
-            <xpath expr="//sheet" position="before">
-                <div class="oe_button_box" name="button_box_progress">
-                    <button name="action_view_acceptances" type="object"
-                            class="oe_stat_button" icon="fa-check-square-o">
-                        <field name="acceptance_count" widget="statinfo"
-                               string="BBN Nghiệm thu"/>
-                    </button>
-                    <button name="action_view_structures" type="object"
-                            class="oe_stat_button" icon="fa-cubes">
-                        <field name="completed_structure_count"
-                               widget="statinfo"
-                               string="Hạng mục hoàn thành"/>
-                    </button>
-                    <button name="action_open_gantt" type="object"
-                            class="oe_stat_button" icon="fa-bar-chart">
-                        <span class="o_stat_text">Gantt</span>
-                        <span class="o_stat_text">Tiến độ</span>
-                    </button>
-                </div>
+            <!-- Nút thống kê: vào hộp nút DÙNG CHUNG khai ở re_base.
+                 Trước đây module này tự dựng hộp riêng tên
+                 "button_box_progress" đặt trước <sheet> — trình dựng
+                 form của Odoo chỉ nhận hộp nút bằng ĐÚNG selector
+                 `div[name='button_box']`, không phải bằng lớp
+                 `oe_button_box`. Hộp tên khác chỉ ra một thẻ div trơn,
+                 nút bên trong KHÔNG BAO GIỜ hiện lên mà cũng không báo
+                 lỗi gì (backlog 744). -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_acceptances" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o">
+                    <field name="acceptance_count" widget="statinfo"
+                           string="BBN Nghiệm thu"/>
+                </button>
+                <button name="action_view_structures" type="object"
+                        class="oe_stat_button" icon="fa-cubes">
+                    <field name="completed_structure_count"
+                           widget="statinfo"
+                           string="Hạng mục hoàn thành"/>
+                </button>
+                <button name="action_open_gantt" type="object"
+                        class="oe_stat_button" icon="fa-bar-chart">
+                    <span class="o_stat_text">Gantt</span>
+                    <span class="o_stat_text">Tiến độ</span>
+                </button>
             </xpath>
             <xpath expr="//notebook" position="before">
                 <group string="Tiến độ tổng dự án">

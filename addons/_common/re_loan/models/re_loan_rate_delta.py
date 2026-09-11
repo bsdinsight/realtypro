@@ -187,6 +187,46 @@ class ReLoanNoteAmendmentDelta(models.Model):
             d='{:,.0f}'.format(self.delta_total)))
         return True
 
+    # ------------------------------------------------------------------
+    # Tự dựng bảng Δ ngay khi phụ lục được lưu (backlog 737 vòng 3)
+    #
+    # Nút "Tính chênh lệch" chỉ bấm được khi phụ lục ĐÃ nằm trong sổ:
+    # bảng Δ trỏ tới từng kỳ lãi nên cần một bản ghi phụ lục thật. Mà
+    # phụ lục được khai bằng cách mở HỘP THOẠI một dòng one2many mới
+    # trên khế ước — dòng đó chưa có `note_id`, nên Odoo lưu trước khi
+    # chạy nút và nổ "Missing required value for the field 'Khế ước'".
+    # Người dùng không có cách nào đoán ra là phải lưu khế ước trước.
+    #
+    # Vá ở hai lớp: view giấu nút khi bản ghi chưa lưu (kèm câu nhắc),
+    # và ở đây tự dựng bảng ngay lúc lưu — nên đường thường không cần
+    # bấm nút nữa. Tự chạy được vì tính Δ KHÔNG sửa gì ngoài chính
+    # bảng Δ (xem chú thích đầu tệp); nút vẫn còn để tính lại.
+    # ------------------------------------------------------------------
+    AUTO_DELTA_TRIGGERS = {'date_effective', 'new_interest_rate',
+                           'amendment_type', 'is_retroactive'}
+
+    def _autocompute_delta(self):
+        for am in self:
+            if (am.amendment_type == 'rate' and am.is_retroactive
+                    and am.note_id and am.delta_state != 'approved'):
+                am.with_context(
+                    re_loan_delta_auto=True).action_compute_delta()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        recs._autocompute_delta()
+        return recs
+
+    def write(self, vals):
+        res = super().write(vals)
+        # Cờ ngữ cảnh chặn đệ quy: chính action_compute_delta ghi
+        # delta_state / delta_line_ids bằng write.
+        if (not self.env.context.get('re_loan_delta_auto')
+                and self.AUTO_DELTA_TRIGGERS & set(vals)):
+            self._autocompute_delta()
+        return res
+
     def action_approve_delta(self):
         self.ensure_one()
         if self.delta_state != 'computed':

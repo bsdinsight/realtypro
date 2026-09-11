@@ -2,6 +2,8 @@
 """
 Tests L2b — phụ lục khế ước (re.loan.note.amendment).
 """
+from datetime import timedelta
+
 from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
@@ -177,3 +179,64 @@ class TestAmendment(TransactionCase):
             'amendment_type': 'rate', 'new_interest_rate': 9.0})
         with self.assertRaises(UserError):
             am.action_apply()
+
+    # ----- Chênh lệch hồi tố (backlog 737) --------------------------------
+    def _accrue_first_periods(self, n=2):
+        """Đưa n kỳ lãi đầu về 'đã ghi nhận' — điều kiện để có hồi tố."""
+        lines = self.note.interest_line_ids.sorted('period_no')[:n]
+        lines.write({'state': 'accrued'})
+        return lines
+
+    def test_retroactive_flag_auto_on(self):
+        """Cờ hồi tố tự bật khi ngày hiệu lực nằm trước kỳ đã ghi nhận."""
+        lines = self._accrue_first_periods(2)
+        eff = min(lines.mapped('date_to')) - timedelta(days=1)
+        am = self._amend('rate', new_interest_rate=15.0, date_effective=eff)
+        self.assertTrue(am.is_retroactive)
+        # Ngày hiệu lực sau mọi kỳ đã ghi nhận -> không hồi tố
+        later = max(self.note.interest_line_ids.mapped('date_to'))
+        am2 = self.env['re.loan.note.amendment'].create({
+            'name': 'PL-not-retro', 'note_id': self.note.id,
+            'amendment_type': 'rate', 'new_interest_rate': 15.0,
+            'date_effective': later})
+        self.assertFalse(am2.is_retroactive)
+
+    def test_delta_computed_on_save(self):
+        """Lưu phụ lục hồi tố là có bảng Δ ngay — không phải bấm nút.
+
+        Backlog 737: phụ lục được khai bằng hộp thoại dòng one2many
+        trên khế ước. Bản ghi chưa lưu thì nút "Tính chênh lệch" chạy
+        không nổi (thiếu note_id), nên bảng phải tự dựng lúc lưu.
+        """
+        lines = self._accrue_first_periods(2)
+        eff = min(lines.mapped('date_to')) - timedelta(days=1)
+        am = self._amend('rate', new_interest_rate=15.0, date_effective=eff)
+        self.assertEqual(am.delta_state, 'computed')
+        self.assertEqual(am.delta_count, 2)
+        self.assertTrue(am.delta_total)
+
+    def test_delta_recomputed_when_effective_date_moves(self):
+        lines = self._accrue_first_periods(2)
+        eff = max(lines.mapped('date_to')) - timedelta(days=1)
+        am = self._amend('rate', new_interest_rate=15.0, date_effective=eff)
+        self.assertEqual(am.delta_count, 1)
+        am.date_effective = min(lines.mapped('date_to')) - timedelta(days=1)
+        self.assertEqual(am.delta_count, 2, 'Δ phải tính lại theo ngày mới')
+
+    def test_delta_not_touched_once_approved(self):
+        lines = self._accrue_first_periods(2)
+        eff = min(lines.mapped('date_to')) - timedelta(days=1)
+        am = self._amend('rate', new_interest_rate=15.0, date_effective=eff)
+        am.action_approve_delta()
+        self.assertEqual(am.delta_state, 'approved')
+        am.new_interest_rate = 16.0
+        self.assertEqual(am.delta_state, 'approved',
+                         'số đã duyệt không được tự ghi đè')
+        with self.assertRaises(UserError):
+            am.action_compute_delta()
+
+    def test_non_rate_amendment_has_no_delta(self):
+        self._accrue_first_periods(2)
+        am = self._amend('extension', new_date_maturity='2027-06-01')
+        self.assertFalse(am.is_retroactive)
+        self.assertEqual(am.delta_state, 'none')

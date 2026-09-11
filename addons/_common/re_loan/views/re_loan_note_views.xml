@@ -491,7 +491,28 @@
                                       lại, bày ra chỉ gây phân vân.
                                     -->
                                     <div invisible="amendment_type != 'rate' or not is_retroactive">
-                                        <div class="btn-group mb-2" role="group">
+                                        <!--
+                                          Phụ lục chưa lưu thì KHÔNG có
+                                          nút: bảng chênh lệch trỏ tới
+                                          từng kỳ lãi nên cần bản ghi
+                                          thật. Bấm khi dòng one2many
+                                          còn mới sẽ nổ "thiếu Khế ước"
+                                          — người dùng không đoán ra
+                                          được là phải lưu trước
+                                          (backlog 737).
+                                        -->
+                                        <field name="id" invisible="1"/>
+                                        <div class="alert alert-info small"
+                                             role="alert" invisible="id">
+                                            <i class="fa fa-info-circle"
+                                               title="Thông tin"/>
+                                            Bấm <b>Lưu &amp; Đóng</b> rồi
+                                            <b>lưu khế ước</b> — chênh lệch
+                                            hồi tố sẽ được tính sẵn, mở lại
+                                            phụ lục này là thấy bảng.
+                                        </div>
+                                        <div class="btn-group mb-2" role="group"
+                                             invisible="not id">
                                             <button name="action_compute_delta"
                                                     type="object"
                                                     class="btn btn-primary"

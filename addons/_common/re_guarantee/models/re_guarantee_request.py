@@ -446,25 +446,46 @@ class ReGuaranteeRequest(models.Model):
                 f=fac.name or '')
         return head
 
+    def _own_room_contribution(self):
+        """Phần hạn mức mà CHÍNH đề nghị này đang chiếm.
+
+        Phải là ĐẢO NGƯỢC ĐÚNG của phần cộng thêm trong
+        re.loan.facility._compute_amount_used (module re_guarantee),
+        không được lệch một trạng thái nào:
+
+          - 'active'  → đề nghị đang chiếm `amount` (backlog 732)
+          - 'issued'  → đề nghị thôi chiếm, CHỨNG THƯ chiếm thay nên
+                        lấy số của chứng thư (có thể khác số đề nghị
+                        nếu ngân hàng phát hành số khác)
+          - còn lại   → không chiếm gì
+
+        Dùng để cộng ngược vào "khả dụng" khi kiểm chính bản ghi này:
+        thiếu thì đề nghị chiếm trọn hạn mức sẽ tự chặn chính mình.
+        """
+        self.ensure_one()
+        if self.state == 'active':
+            return self.amount or 0.0
+        if self.state == 'issued':
+            cert = self.bank_guarantee_id
+            if cert and cert.state in ('issued', 'extended', 'forfeited'):
+                return cert.amount or 0.0
+        return 0.0
+
     @api.constrains('amount', 'facility_id', 'state')
     def _check_amount_within_facility(self):
-        """Chặn nhập giá trị BL > hạn mức còn lại của facility.
+        """Chặn nhập giá trị BL > khả dụng thực tế của hạn mức.
 
-        Cho draft: available = limit - used (request này chưa chiếm).
-        Cho active/issued: cộng lại own amount để tránh double-count
-        (request đang chiếm rec.amount, muốn so với "available + own").
+        Draft: chưa chiếm gì, so thẳng với khả dụng.
+        Active / issued: đã nằm trong `amount_used` rồi nên cộng ngược
+        phần đang chiếm, bằng không phép kiểm sẽ so bản ghi với phần
+        trống ĐÃ TRỪ chính nó.
         """
         for rec in self:
             if not rec.facility_id or rec.amount <= 0:
                 continue
             if rec.state in ('settled', 'cancelled'):
                 continue
-            available = rec._facility_room()
-            # Active / issued: request đang nằm trong used → cộng lại
-            # để check thực sự là "muốn bump lên bao nhiêu so với
-            # mức trống thực".
-            if rec.state in ('active', 'issued'):
-                available += rec.amount
+            available = rec._facility_room() + rec._own_room_contribution()
             if available + 0.01 < rec.amount:
                 raise ValidationError(
                     rec._msg_over_room(available))
@@ -535,23 +556,23 @@ class ReGuaranteeRequest(models.Model):
             if not rec.facility_id:
                 raise UserError(_(
                     "Cần chọn hạn mức bảo lãnh trước khi kích hoạt."))
-            # Check room trên facility (loại trừ chính rec đang draft)
-            available = rec.facility_id.amount_available
+            # Kích hoạt LÀ lúc chiếm hạn mức (backlog 732), nên phép
+            # kiểm ở đây phải căn theo KHẢ DỤNG THỰC TẾ — cùng thước
+            # với lúc phát hành. Trước đây bước này đo bằng "Còn lại
+            # theo trần hạn mức" còn bước phát hành đo bằng khả dụng
+            # thực tế: kích hoạt lọt, tới lúc phát hành mới chặn.
+            available = rec._facility_room()
             if available + 0.01 < rec.amount:
-                raise UserError(_(
-                    "Hạn mức %(f)s còn lại %(a)s, không đủ phát hành "
-                    "BL %(b)s.",
-                    f=rec.facility_id.name,
-                    a=available,
-                    b=rec.amount))
+                raise UserError(rec._msg_over_room(available))
             rec.state = 'active'
             if not rec.date_issue:
                 rec.date_issue = fields.Date.context_today(rec)
             rec.message_post(body=_(
-                "Kích hoạt đề nghị BL %(a)s trên hạn mức %(f)s. CHƯA "
-                "chiếm hạn mức — hạn mức chỉ bị trừ khi phát hành "
+                "Kích hoạt đề nghị BL %(a)s trên hạn mức %(f)s — hạn "
+                "mức bị chiếm TỪ BÂY GIỜ, không chờ tới lúc phát hành "
                 "chứng thư.",
-                a=rec.amount, f=rec.facility_id.name))
+                a='{:,.0f}'.format(rec.amount or 0.0),
+                f=rec.facility_id.name))
 
     def action_issue(self):
         """Phát hành chứng thư BL từ đề nghị này.
@@ -570,11 +591,17 @@ class ReGuaranteeRequest(models.Model):
         if self.bank_guarantee_id:
             raise UserError(_(
                 "Đề nghị này đã có chứng thư BL — không phát hành mới."))
-        # Phát hành mới là lúc thật sự chiếm hạn mức nên kiểm ở đây,
-        # không chỉ ở bước kích hoạt: giữa hai bước có thể đã có chứng
-        # thư khác phát hành và ăn mất phần còn lại.
+        # Vẫn kiểm lại lúc phát hành: giữa kích hoạt và phát hành có
+        # thể hạn mức đã hụt đi (tài sản bảo đảm được định giá lại,
+        # hoặc phần bảo đảm khai ban đầu bị sửa xuống).
+        #
+        # PHẢI cộng ngược phần đề nghị này đang chiếm: từ lúc kích
+        # hoạt nó đã nằm trong `amount_used`, nên `_facility_room()`
+        # đã trừ chính nó rồi. Không cộng lại thì đề nghị chiếm trọn
+        # hạn mức tự chặn chính mình — đúng lỗi đếm hai lần đã gặp ở
+        # khế ước (backlog 716).
         if self.facility_id:
-            available = self._facility_room()
+            available = self._facility_room() + self._own_room_contribution()
             if available + 0.01 < self.amount:
                 raise UserError(self._msg_over_room(available))
         today = fields.Date.context_today(self)

@@ -36,7 +36,10 @@ class ReLoanFacility(models.Model):
         string='Tổng Đề nghị BL đã kích hoạt',
         compute='_compute_guarantee_request_stats', store=True,
         help='Σ giá trị đề nghị BL đã kích hoạt nhưng CHƯA phát hành '
-             'chứng thư. Chỉ để theo dõi — KHÔNG chiếm hạn mức.')
+             'chứng thư. Phần này ĐÃ CHIẾM hạn mức (backlog 732): '
+             'kích hoạt là giữ chỗ, không chờ tới lúc ngân hàng phát '
+             'hành chứng thư. Phát hành xong thì chứng thư chiếm thay, '
+             'tổng không đổi.')
 
     @api.depends('guarantee_ids', 'guarantee_ids.state',
                  'guarantee_ids.amount')
@@ -63,31 +66,38 @@ class ReLoanFacility(models.Model):
             rec.guarantee_request_outstanding = sum(active.mapped('amount'))
 
     # ------------------------------------------------------------------
-    # Override amount_used: với facility purpose=bank_guarantee, cộng
-    # thêm:
-    #   - guarantee_request_outstanding: đề nghị BL state=active
-    #     (chưa phát hành chứng thư)
+    # Override amount_used: với mục đích thuộc nhóm Bảo lãnh, cộng thêm
+    #   - guarantee_request_outstanding: đề nghị BL state='active'
+    #     (đã kích hoạt, chưa phát hành chứng thư)
     #   - guarantee_total_outstanding: chứng thư BL state ∈
-    #     (issued, extended) — chứng thư settled không chiếm.
-    # Đề nghị state=issued đã có chứng thư → chứng thư chiếm thay (không
-    # double-count vì request_outstanding chỉ filter state=active).
+    #     (issued, extended, forfeited) — chứng thư settled không chiếm.
     # ------------------------------------------------------------------
     @api.depends('purpose',
                  'guarantee_ids',
                  'guarantee_ids.state',
-                 'guarantee_ids.amount')
+                 'guarantee_ids.amount',
+                 'guarantee_request_ids',
+                 'guarantee_request_ids.state',
+                 'guarantee_request_ids.amount')
     def _compute_amount_used(self):
-        """Chỉ CHỨNG THƯ chiếm hạn mức, đề nghị thì không.
+        """Đề nghị ĐÃ KÍCH HOẠT chiếm hạn mức ngay (backlog 732).
 
-        Trước đây đề nghị vừa kích hoạt là đã trừ hạn mức. Nhưng kích
-        hoạt mới là bước nội bộ — hồ sơ chuẩn bị xong, chưa gửi hoặc
-        ngân hàng chưa duyệt. Ngân hàng chỉ trừ hạn mức khi thực sự
-        phát hành chứng thư, nên số trên phần mềm phải khớp với số của
-        ngân hàng, không phải khớp với tiến độ giấy tờ nội bộ.
+        Đã đổi hai lần, lần này là chốt của người dùng cuối: kích hoạt
+        là chiếm. Lý do nghiệp vụ: giữa kích hoạt và phát hành có thể
+        vài ngày, không giữ chỗ thì trong khoảng đó hạn mức trông còn
+        trống và người khác kích hoạt đè lên — đến lúc ngân hàng phát
+        hành mới vỡ ra là không đủ.
 
-        Đánh đổi: giữa lúc kích hoạt và lúc phát hành, hạn mức không
-        còn được giữ chỗ. Bù lại bằng kiểm tra lúc phát hành ở
-        `action_issue`, và cảnh báo lúc kích hoạt.
+        KHÔNG đếm hai lần: đề nghị chỉ tính khi state='active'. Phát
+        hành xong đề nghị sang 'issued' và chứng thư chiếm thay, nên
+        tổng không đổi qua bước phát hành.
+
+        Hệ quả phải xử ở nơi khác: từ lúc kích hoạt, phần hạn mức đó
+        đã nằm trong `amount_used`, nên mọi phép kiểm "còn đủ chỗ
+        không" cho CHÍNH đề nghị/chứng thư đó phải cộng ngược phần nó
+        đang chiếm — xem `_own_room_contribution` ở re.guarantee.request.
+        Thiếu bước đó thì đề nghị chiếm trọn hạn mức sẽ tự chặn chính
+        mình lúc phát hành.
         """
         super()._compute_amount_used()
         for rec in self:
@@ -96,7 +106,8 @@ class ReLoanFacility(models.Model):
             # thì chọn được mà không bao giờ trừ — một lỗ thủng im
             # lặng trong hạn mức bảo lãnh.
             if rec.purpose_kind == 'guarantee':
-                rec.amount_used += rec.guarantee_total_outstanding
+                rec.amount_used += (rec.guarantee_total_outstanding
+                                    + rec.guarantee_request_outstanding)
 
     def action_view_guarantees(self):
         self.ensure_one()

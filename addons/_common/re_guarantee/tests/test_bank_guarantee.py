@@ -270,3 +270,90 @@ class TestBankGuarantee(TransactionCase):
         self.assertEqual(pay.amount, 1_000_000.0, 'bản ghi vẫn còn')
         with self.assertRaises(UserError):
             pay.action_create_payment()
+
+    # ----- Đề nghị kích hoạt chiếm hạn mức (backlog 732 vòng 4) -----------
+    def _bl_facility_with_room(self, room):
+        """Hạn mức nhóm Bảo lãnh có khả dụng thực tế đúng bằng `room`.
+
+        Dựng trên HĐTD RIÊNG: Σ hạn mức các mục đích không được vượt
+        tổng HĐTD, mà HĐTD của fixture lớp đã dùng hết cho F-BL.
+
+        Không cài re_loan_borrowing_base thì khả dụng thực tế rơi về
+        "còn lại theo trần" — fixture đặt trần bằng room cho cả hai ca.
+        """
+        contract = self.env['re.loan.credit.contract'].create({
+            'name': 'HĐTD-732-%s' % int(room), 'partner_id': self.bank.id,
+            'amount_total': room})
+        contract.action_activate()
+        fac = self.env['re.loan.facility'].create({
+            'name': 'F-BL-732', 'credit_contract_id': contract.id,
+            'facility_type': 'revolving', 'purpose': 'bank_guarantee',
+            'amount_limit': room})
+        if 'borrowing_base_opening' in fac._fields:
+            fac.borrowing_base_opening = room
+        return fac
+
+    def _request(self, facility, amount):
+        return self.env['re.guarantee.request'].create({
+            'guarantee_type': 'performance',
+            'facility_id': facility.id,
+            'issuing_bank_partner_id': self.bank.id,
+            'applicant_partner_id': self.applicant.id,
+            'beneficiary_partner_id': self.beneficiary.id,
+            'date_expiry': '2027-12-31',
+            'amount': amount,
+        })
+
+    def test_activated_request_consumes_limit(self):
+        fac = self._bl_facility_with_room(10_000_000_000.0)
+        req = self._request(fac, 4_000_000_000.0)
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_used, 0.0, 'nháp chưa chiếm')
+        req.action_activate()
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_used, 4_000_000_000.0,
+                         'kích hoạt là chiếm ngay')
+        self.assertEqual(fac.amount_available, 6_000_000_000.0)
+
+    def test_issue_does_not_double_count(self):
+        fac = self._bl_facility_with_room(10_000_000_000.0)
+        req = self._request(fac, 4_000_000_000.0)
+        req.action_activate()
+        req.action_issue()
+        fac.invalidate_recordset()
+        self.assertEqual(req.state, 'issued')
+        self.assertEqual(fac.amount_used, 4_000_000_000.0,
+                         'phát hành: chứng thư chiếm THAY đề nghị, '
+                         'tổng không đổi')
+
+    def test_full_room_request_can_still_issue(self):
+        """Đề nghị chiếm TRỌN hạn mức vẫn phát hành được.
+
+        Hồi quy cho lỗi đếm hai lần: từ lúc kích hoạt đề nghị đã nằm
+        trong amount_used, nên nếu phép kiểm lúc phát hành không cộng
+        ngược phần nó đang chiếm thì nó tự chặn chính mình.
+        """
+        fac = self._bl_facility_with_room(5_000_000_000.0)
+        req = self._request(fac, 5_000_000_000.0)
+        req.action_activate()
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_available, 0.0)
+        req.action_issue()
+        self.assertEqual(req.state, 'issued')
+
+    def test_second_request_blocked_after_first_activated(self):
+        fac = self._bl_facility_with_room(5_000_000_000.0)
+        self._request(fac, 3_000_000_000.0).action_activate()
+        fac.invalidate_recordset()
+        with self.assertRaises(ValidationError):
+            self._request(fac, 3_000_000_000.0)
+
+    def test_cancelled_request_releases_limit(self):
+        fac = self._bl_facility_with_room(5_000_000_000.0)
+        req = self._request(fac, 3_000_000_000.0)
+        req.action_activate()
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_used, 3_000_000_000.0)
+        req.action_cancel()
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_used, 0.0, 'huỷ là trả lại hạn mức')

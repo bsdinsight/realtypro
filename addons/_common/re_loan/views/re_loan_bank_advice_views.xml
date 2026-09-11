@@ -16,6 +16,11 @@
                 <field name="line_count"/>
                 <field name="amount_total" width="185px" sum="Σ"/>
                 <field name="state" widget="badge"/>
+                <field name="allocation_state" widget="badge"
+                       decoration-warning="allocation_state == 'over'"
+                       decoration-success="allocation_state == 'done'"
+                       optional="show"/>
+                <field name="is_reallocation" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
@@ -40,6 +45,16 @@
                     <button name="action_reset_draft" type="object"
                             string="Về Nháp"
                             invisible="state != 'cancelled'"/>
+                    <!-- Chỉ hiện khi còn tiền treo VƯỢT ngưỡng net-off.
+                         Trong ngưỡng thì dùng nút Net-off ở từng dòng,
+                         không phải đẻ thêm một phiếu cho vài nghìn
+                         đồng (backlog 988). -->
+                    <button name="action_allocate_remainder" type="object"
+                            string="Phân bổ tiếp"
+                            class="btn-primary"
+                            icon="fa-share"
+                            invisible="allocation_state != 'over'"
+                            confirm="Tạo một giấy báo NHÁP mới để rót tiếp phần tiền còn treo sang các kỳ khác? Số tiền này KHÔNG phải ngân hàng trích thêm — nó là phần chưa phân bổ của chính phiếu này."/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,posted"/>
                 </header>
@@ -53,6 +68,15 @@
                                    widget="statinfo"
                                    string="Repayments"/>
                         </button>
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not is_reallocation">
+                        <i class="fa fa-share" title="Phân bổ tiếp"/>
+                        <b>Phiếu phân bổ tiếp.</b> Số tiền ở đây
+                        <b>không phải</b> ngân hàng trích thêm — nó là
+                        phần tiền còn treo của một giấy báo trước, nay
+                        rót sang kỳ khác. Đừng cộng vào tổng tiền NH đã
+                        trích.
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
@@ -71,6 +95,10 @@
                         <group>
                             <field name="date_advice"/>
                             <field name="amount_total" readonly="1"/>
+                            <field name="allocation_state" widget="badge"
+                                   decoration-warning="allocation_state == 'over'"
+                                   decoration-success="allocation_state == 'done'"/>
+                            <field name="is_reallocation" invisible="1"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>
                         </group>
@@ -110,8 +138,15 @@
                                            decoration-warning="amount_diff_period > 0"/>
                                     <field name="amount_unallocated" width="185px"
                                            string="Chưa allocate"
+                                           readonly="1" optional="show"
+                                           decoration-warning="amount_unallocated > 0"/>
+                                    <field name="amount_carried_forward" width="185px"
+                                           readonly="1" optional="hide"/>
+                                    <field name="source_line_id"
                                            readonly="1" optional="hide"/>
                                     <field name="net_off_allowed"
+                                           column_invisible="1"/>
+                                    <field name="net_off_kind"
                                            column_invisible="1"/>
                                     <button name="action_auto_net_off"
                                             type="object"
@@ -147,8 +182,17 @@
                                             <field name="amount_unallocated"
                                                    readonly="1"
                                                    decoration-warning="amount_unallocated > 0"/>
+                                            <field name="amount_carried_forward"
+                                                   readonly="1"
+                                                   invisible="amount_carried_forward == 0"/>
+                                            <field name="source_line_id"
+                                                   readonly="1"
+                                                   invisible="not source_line_id"/>
                                             <field name="net_off_allowed"
                                                    invisible="1"/>
+                                            <field name="net_off_kind"
+                                                   readonly="1"
+                                                   invisible="not net_off_kind"/>
                                             <button name="action_auto_net_off"
                                                     type="object"
                                                     string="Tự net-off chênh lệch lẻ"
@@ -192,6 +236,12 @@
                 <field name="name"/>
                 <field name="reference"/>
                 <field name="partner_id"/>
+                <!-- Lọc việc-phải-làm: phiếu đã đăng mà còn tiền treo
+                     vượt ngưỡng net-off. Đây là lý do allocation_state
+                     phải CÓ LƯU chứ không tính tại chỗ (backlog 988). -->
+                <filter name="f_over" string="Còn phân bổ dư"
+                        domain="[('allocation_state','=','over')]"/>
+                <separator/>
                 <filter name="f_draft" string="Nháp"
                         domain="[('state','=','draft')]"/>
                 <filter name="f_posted" string="Đã xác nhận"

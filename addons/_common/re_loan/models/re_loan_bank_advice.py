@@ -84,6 +84,28 @@ class ReLoanBankAdvice(models.Model):
          ('cancelled', 'Đã huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True)
 
+    # Trục thứ hai, ĐỘC LẬP với `state` (backlog 988). `state` nói về
+    # chứng từ (đã đăng hay chưa); trục này nói về TIỀN: số ngân hàng
+    # trích đã được rót hết vào các kỳ chưa. Một phiếu "Đã xác nhận"
+    # hoàn toàn có thể còn tiền treo — đó chính là ca phải xử.
+    allocation_state = fields.Selection(
+        [('pending', 'Chưa phân bổ'),
+         ('done',    'Đã phân bổ đủ'),
+         ('over',    'Phân bổ dư')],
+        string='Trạng thái phân bổ', compute='_compute_allocation_state',
+        store=True, tracking=True,
+        help='Chưa phân bổ: phiếu chưa đăng.\n'
+             'Đã phân bổ đủ: tiền NH trích đã vào hết các kỳ (phần lẻ '
+             'còn lại nằm trong ngưỡng net-off).\n'
+             'Phân bổ dư: NH trích NHIỀU HƠN số các kỳ cần, phần thừa '
+             'vượt ngưỡng net-off nên phải phân bổ tiếp sang kỳ khác.')
+    is_reallocation = fields.Boolean(
+        string='Phiếu phân bổ tiếp', compute='_compute_is_reallocation',
+        store=True,
+        help='Phiếu này KHÔNG phải một lần ngân hàng trích mới — nó '
+             'rót tiếp phần tiền còn treo của một phiếu trước. Đừng '
+             'cộng số tiền của nó vào tổng tiền NH đã trích.')
+
     currency_id = fields.Many2one(
         'res.currency', string='Tiền tệ', required=True,
         default=lambda self: self.env.company.currency_id)
@@ -102,6 +124,87 @@ class ReLoanBankAdvice(models.Model):
         for rec in self:
             rec.repayment_count = sum(
                 len(l.repayment_ids) for l in rec.line_ids)
+
+    @api.depends('line_ids.source_line_id')
+    def _compute_is_reallocation(self):
+        for rec in self:
+            rec.is_reallocation = any(
+                l.source_line_id for l in rec.line_ids)
+
+    @api.depends('state', 'line_ids.amount_unallocated')
+    def _compute_allocation_state(self):
+        """Còn tiền treo vượt ngưỡng net-off → "Phân bổ dư".
+
+        Ngưỡng đọc từ cấu hình. Trường CÓ LƯU để lọc/nhóm được, nên
+        khi ngưỡng đổi phải tính lại — res.config.settings.set_values
+        gọi `_recompute_allocation_state` lo việc đó.
+        """
+        threshold = self.env['res.config.settings'].sudo(
+        ).get_net_off_threshold()
+        for rec in self:
+            if rec.state != 'posted':
+                rec.allocation_state = 'pending'
+                continue
+            rec.allocation_state = 'over' if any(
+                (l.amount_unallocated or 0.0) > threshold + 0.01
+                for l in rec.line_ids) else 'done'
+
+    def action_allocate_remainder(self):
+        """Rót tiếp phần tiền NH trích còn treo sang các kỳ khác.
+
+        Sinh một phiếu NHÁP mới chép theo phiếu gốc, mỗi dòng còn treo
+        thành một dòng mới với:
+          - Số tiền trích thu = phần chưa allocate của dòng gốc
+          - KHÔNG chép "Kỳ thanh toán (chỉ định)" — để trống thì thuật
+            toán tự rót từ kỳ cũ sang kỳ mới, đúng mục đích ở đây là
+            tìm kỳ khác để nhận tiền.
+          - Ghi liên kết về dòng gốc, nhờ đó phần đã chuyển đi bị TRỪ
+            khỏi "Chưa allocate" của dòng gốc. Không có liên kết này
+            thì nút "Phân bổ tiếp" không bao giờ tắt và tiền bị đếm
+            hai lần.
+
+        Ngày giữ nguyên NGÀY NH TRÍCH của phiếu gốc: vẫn là số tiền đó,
+        ngân hàng trừ vào ngày đó — đổi sang hôm nay là làm sai ngày
+        trả nợ của các kỳ nhận tiền.
+        """
+        self.ensure_one()
+        threshold = self.env['res.config.settings'].sudo(
+        ).get_net_off_threshold()
+        src_lines = self.line_ids.filtered(
+            lambda l: (l.amount_unallocated or 0.0) > threshold + 0.01)
+        if not src_lines:
+            raise UserError(_(
+                "Phiếu này không còn tiền treo vượt ngưỡng net-off "
+                "(%(t)s ₫) — không có gì để phân bổ tiếp.",
+                t='{:,.0f}'.format(threshold)))
+        new = self.copy({
+            'name': _('/'),
+            'line_ids': [],
+            'state': 'draft',
+            'description': _(
+                "Phân bổ tiếp phần tiền còn treo của giấy báo %s.",
+                self.name or ''),
+        })
+        Line = self.env['re.loan.bank.advice.line']
+        for line in src_lines:
+            Line.create({
+                'advice_id': new.id,
+                'note_id': line.note_id.id,
+                'interest_line_id': False,
+                'amount': line.amount_unallocated,
+                'description': _("Phân bổ tiếp từ %s", self.name or ''),
+                'source_line_id': line.id,
+            })
+        self.message_post(body=_(
+            "Đã tạo phiếu phân bổ tiếp %(n)s cho %(c)s dòng còn treo.",
+            n=new.name, c=len(src_lines)))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Phân bổ tiếp — %s') % (new.name or ''),
+            'res_model': 're.loan.bank.advice',
+            'res_id': new.id,
+            'view_mode': 'form',
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -215,8 +318,24 @@ class ReLoanBankAdviceLine(models.Model):
         string='Chưa allocate',
         compute='_compute_stats', store=True,
         help='Số tiền NH trích chưa allocate vào kỳ nào '
-             '(= amount - allocated - net_off). DIFFER với chênh '
-             'lệch kỳ — xem amount_diff_period.')
+             '(= amount - allocated - net_off - đã chuyển phân bổ '
+             'tiếp). DIFFER với chênh lệch kỳ — xem amount_diff_period.')
+
+    # Chuỗi phân bổ tiếp (backlog 988). Dòng con KHÔNG phải tiền mới
+    # ngân hàng trích — nó rót tiếp phần còn treo của dòng này, nên
+    # phần đã chuyển đi phải bị trừ khỏi "Chưa allocate" ở đây.
+    source_line_id = fields.Many2one(
+        're.loan.bank.advice.line', string='Phân bổ tiếp từ dòng',
+        ondelete='set null', copy=False, index=True,
+        help='Dòng trích thu gốc mà dòng này rót tiếp phần còn treo.')
+    child_line_ids = fields.One2many(
+        're.loan.bank.advice.line', 'source_line_id',
+        string='Các dòng phân bổ tiếp', copy=False)
+    amount_carried_forward = fields.Monetary(
+        string='Đã chuyển phân bổ tiếp',
+        compute='_compute_stats', store=True,
+        help='Σ số tiền đã chuyển sang các phiếu phân bổ tiếp (bỏ '
+             'phiếu đã huỷ). Huỷ phiếu con thì tiền quay lại đây.')
 
     # Chênh lệch CỦA KỲ — sau khi post: số kỳ còn phải trả
     # (= principal_remaining + interest_remaining)
@@ -229,27 +348,53 @@ class ReLoanBankAdviceLine(models.Model):
              'trích bớt vài đồng do làm tròn. Click "Net-off" để '
              'tự absorb nếu còn trong ngưỡng cấu hình. Chỉ tính khi '
              'phiếu đã được đăng (state=posted) + dòng có chỉ định kỳ.')
+    net_off_kind = fields.Selection(
+        [('short', 'NH trích thiếu'),
+         ('over',  'NH trích dư')],
+        string='Kiểu chênh lệch', compute='_compute_net_off_allowed',
+        help='NH trích thiếu: kỳ chỉ định còn phải trả — net-off sẽ '
+             'ghi bù cho kỳ đó về "Đã thanh toán".\n'
+             'NH trích dư: tiền NH trích nhiều hơn số các kỳ cần — '
+             'net-off sẽ ghi nhận phần thừa là chênh lệch, không treo '
+             'nữa.')
     net_off_allowed = fields.Boolean(
         string='Được net-off', compute='_compute_net_off_allowed',
-        help='Chênh lệch của kỳ còn nằm trong ngưỡng cấu hình ở Vay > '
-             'Cấu hình > Tham số phân hệ Vay. Vượt ngưỡng thì nút '
-             'Net-off bị ẩn.')
+        help='Chênh lệch (thiếu HOẶC dư) còn nằm trong ngưỡng cấu '
+             'hình ở Vay > Cấu hình > Tham số phân hệ Vay. Vượt '
+             'ngưỡng thì nút Net-off bị ẩn.')
 
-    @api.depends('amount_diff_period', 'interest_line_id')
+    @api.depends('amount_diff_period', 'interest_line_id',
+                 'amount_unallocated')
     def _compute_net_off_allowed(self):
         """Ngưỡng đọc từ cấu hình, không còn là 100.000 cứng trong view.
 
         Trước đây view ẩn nút theo con số 100000 viết thẳng vào điều
         kiện, còn phép kiểm lúc bấm lại đọc hằng số trong mã — hai chỗ
         rời nhau. Nay cả hai cùng đọc một tham số (việc 758).
+
+        Backlog 988: net-off cho CẢ HAI chiều lệch, không chỉ chiều
+        thiếu. Ngân hàng trích dư vài nghìn cũng là chênh lệch làm
+        tròn như trích thiếu — mà trước đây chiều dư không có cách nào
+        đóng, tiền cứ treo ở "Chưa allocate" mãi.
+
+        Hai chiều loại trừ nhau trên thực tế: kỳ còn thiếu thì không
+        thể đồng thời thừa tiền. Ưu tiên chiều thiếu để giữ nguyên
+        hành vi cũ.
         """
         threshold = self.env['res.config.settings'].sudo(
         ).get_net_off_threshold()
         for rec in self:
             diff = rec.amount_diff_period or 0.0
+            over = rec.amount_unallocated or 0.0
+            kind = False
+            if rec.interest_line_id and diff > 0.01:
+                kind = 'short'
+            elif over > 0.01:
+                kind = 'over'
+            rec.net_off_kind = kind
+            amount = diff if kind == 'short' else over
             rec.net_off_allowed = bool(
-                threshold > 0 and rec.interest_line_id
-                and 0.01 < diff <= threshold)
+                threshold > 0 and kind and 0.01 < amount <= threshold)
 
     # Net-off chênh lệch giữa số NH trích (amount) và số allocate
     # vào các kỳ. Signed: + = NH dư (write off, ghi credit), - = NH
@@ -278,7 +423,8 @@ class ReLoanBankAdviceLine(models.Model):
     @api.depends('repayment_ids.amount_total',
                  'repayment_ids.amount_principal',
                  'repayment_ids.amount_interest',
-                 'amount', 'amount_net_off')
+                 'amount', 'amount_net_off',
+                 'child_line_ids.amount', 'child_line_ids.state')
     def _compute_stats(self):
         for rec in self:
             rec.repayment_count = len(rec.repayment_ids)
@@ -288,10 +434,14 @@ class ReLoanBankAdviceLine(models.Model):
                 rec.repayment_ids.mapped('amount_principal'))
             rec.amount_allocated_interest = sum(
                 rec.repayment_ids.mapped('amount_interest'))
+            carried = sum(rec.child_line_ids.filtered(
+                lambda c: c.state != 'cancelled').mapped('amount'))
+            rec.amount_carried_forward = carried
             # Sau net-off: unallocated = amount - allocated - net_off
+            # - phần đã chuyển sang phiếu phân bổ tiếp.
             # Có thể âm nếu user net-off quá lớn → clamp 0
             rec.amount_unallocated = max(
-                0, rec.amount - allocated - rec.amount_net_off)
+                0, rec.amount - allocated - rec.amount_net_off - carried)
 
     @api.depends('interest_line_id.amount_principal_remaining',
                  'interest_line_id.amount_interest_remaining',
@@ -329,6 +479,34 @@ class ReLoanBankAdviceLine(models.Model):
             if rec.amount <= 0:
                 raise ValidationError(_(
                     "Số tiền trích thu phải > 0."))
+
+    @api.constrains('amount', 'source_line_id')
+    def _check_carry_within_source(self):
+        """Phân bổ tiếp không được rót nhiều hơn phần dòng gốc còn treo.
+
+        Không chặn thì người dùng sửa tay số tiền lên cao hơn là sinh
+        ra tiền: sổ nợ ghi nhận nhiều hơn số ngân hàng thực trích.
+        """
+        for rec in self:
+            src = rec.source_line_id
+            if not src:
+                continue
+            if src == rec:
+                raise ValidationError(_(
+                    "Dòng phân bổ tiếp không thể trỏ về chính nó."))
+            pool = (src.amount - src.amount_allocated
+                    - (src.amount_net_off or 0.0))
+            carried = sum(src.child_line_ids.filtered(
+                lambda c: c.state != 'cancelled').mapped('amount'))
+            if carried > pool + 0.01:
+                raise ValidationError(_(
+                    "Phân bổ tiếp %(c)s ₫ vượt phần còn treo của dòng "
+                    "gốc (%(p)s ₫) trên giấy báo %(a)s. Giảm số tiền "
+                    "xuống — không thì sổ nợ ghi nhiều hơn số ngân "
+                    "hàng thực trích.",
+                    c='{:,.0f}'.format(carried),
+                    p='{:,.0f}'.format(max(0.0, pool)),
+                    a=src.advice_id.name or ''))
 
     @api.onchange('interest_line_id')
     def _onchange_interest_line_suggest_amount(self):
@@ -456,26 +634,52 @@ class ReLoanBankAdviceLine(models.Model):
         }
 
     def action_auto_net_off(self):
-        """Net-off chênh lệch CỦA KỲ chỉ định sau khi phiếu posted.
+        """Net-off chênh lệch lẻ sau khi phiếu posted — cả hai chiều.
 
-        Delegate sang interest_line.action_auto_net_off_period — tạo
-        1 repayment write-off cho kỳ với amount = remaining → kỳ về
-        'paid'. Threshold 100,000 ₫.
+        Chiều THIẾU (kỳ chỉ định còn phải trả): delegate sang
+        interest_line.action_auto_net_off_period — tạo 1 repayment
+        write-off cho kỳ → kỳ về 'paid'.
 
-        Conditions (khách hàng #3 thêm):
-          - state phải = 'posted' (phiếu đã đăng)
-          - dòng phải chỉ định kỳ (interest_line_id)
-          - chênh lệch > 0 và ≤ 100,000 ₫
+        Chiều DƯ (NH trích nhiều hơn số các kỳ cần, backlog 988): ghi
+        phần thừa vào `amount_net_off` của chính dòng này → "Chưa
+        allocate" về 0. KHÔNG tạo repayment: không có kỳ nào nhận số
+        tiền đó cả, ghi vào một kỳ bất kỳ là bịa ra một khoản trả nợ
+        không có thật.
+
+        Điều kiện chung: phiếu đã đăng, và chênh lệch nằm trong ngưỡng
+        cấu hình (xem _compute_net_off_allowed).
         """
-        from odoo.exceptions import UserError
         for rec in self:
             if rec.state != 'posted':
                 raise UserError(_(
                     "Phiếu trích thu chưa được đăng. Net-off chỉ "
                     "khả dụng sau khi đăng phiếu."))
-            if not rec.interest_line_id:
+            if rec.net_off_kind == 'short':
+                rec.interest_line_id.action_auto_net_off_period()
+                continue
+            if rec.net_off_kind != 'over':
                 raise UserError(_(
-                    "Dòng không chỉ định kỳ thanh toán — không "
-                    "net-off theo kỳ được. Tạo trả nợ riêng cho "
-                    "chênh lệch nếu cần."))
-            rec.interest_line_id.action_auto_net_off_period()
+                    "Dòng này không có chênh lệch để net-off — số NH "
+                    "trích đã khớp với số các kỳ cần."))
+            threshold = self.env['res.config.settings'].sudo(
+            ).get_net_off_threshold()
+            over = rec.amount_unallocated
+            if threshold <= 0:
+                raise UserError(_(
+                    "Ngưỡng net-off đang đặt bằng 0 — tính năng bù "
+                    "trừ chênh lệch lẻ đã tắt. Vào Vay > Cấu hình > "
+                    "Tham số phân hệ Vay để bật lại."))
+            if over > threshold:
+                raise UserError(_(
+                    "Tiền NH trích dư %(o)s ₫ vượt ngưỡng net-off "
+                    "%(t)s ₫ — số này quá lớn để bỏ qua. Dùng nút "
+                    "\"Phân bổ tiếp\" trên phiếu để rót sang kỳ khác.",
+                    o='{:,.0f}'.format(over),
+                    t='{:,.0f}'.format(threshold)))
+            rec.amount_net_off = (rec.amount_net_off or 0.0) + over
+            if not rec.net_off_reason:
+                rec.net_off_reason = _("Chênh lệch NH trích dư")
+            rec.advice_id.message_post(body=_(
+                "Net-off %(o)s ₫ tiền NH trích dư trên KW %(n)s — "
+                "phần thừa không còn treo ở \"Chưa allocate\".",
+                o='{:,.0f}'.format(over), n=rec.note_id.name or ''))

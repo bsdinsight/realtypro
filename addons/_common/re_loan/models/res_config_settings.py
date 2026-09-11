@@ -55,8 +55,29 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
+        old = self.get_net_off_threshold()
         res = super().set_values()
+        new = max(0.0, self.re_loan_net_off_threshold or 0.0)
         self.env['ir.config_parameter'].sudo().set_param(
-            PARAM_NET_OFF_THRESHOLD,
-            repr(max(0.0, self.re_loan_net_off_threshold or 0.0)))
+            PARAM_NET_OFF_THRESHOLD, repr(new))
+        if abs(new - old) > 0.001:
+            self._recompute_net_off_dependents()
         return res
+
+    def _recompute_net_off_dependents(self):
+        """Tính lại những trường CÓ LƯU phụ thuộc ngưỡng net-off.
+
+        `re.loan.bank.advice.allocation_state` lưu xuống bảng để lọc và
+        nhóm được. Đổi ngưỡng mà không ép tính lại thì phiếu cũ giữ
+        nguyên trạng thái theo ngưỡng cũ — nút "Phân bổ tiếp" hiện
+        hoặc ẩn sai, mà không có dấu hiệu gì báo là đang sai.
+        """
+        Advice = self.env['re.loan.bank.advice'].sudo()
+        field = Advice._fields.get('allocation_state')
+        if field is None or not (field.store and field.compute):
+            return
+        advices = Advice.search([('state', '=', 'posted')])
+        if not advices:
+            return
+        self.env.add_to_compute(field, advices)
+        advices.flush_recordset()

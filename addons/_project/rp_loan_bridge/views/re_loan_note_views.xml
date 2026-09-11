@@ -7,17 +7,25 @@
         <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
         <field name="arch" type="xml">
             <!-- Nút đếm nhanh: KW này đã giải ngân cho bao nhiêu hoá
-                 đơn/tạm ứng, bấm vào ra danh sách phiếu chi. -->
-            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
-                <div class="oe_button_box" name="bridge_button_box">
-                    <button name="action_view_dossier_payments"
-                            type="object" class="oe_stat_button"
-                            icon="fa-file-text-o"
-                            invisible="dossier_doc_count == 0">
-                        <field name="dossier_doc_count" widget="statinfo"
-                               string="Hoá đơn/Tạm ứng"/>
-                    </button>
-                </div>
+                 đơn/tạm ứng, bấm vào ra danh sách phiếu chi.
+
+                 Vào hộp nút DÙNG CHUNG khai ở re_loan. Trước đây khai
+                 hộp riêng tên "bridge_button_box" — trình dựng form
+                 chỉ nhận hộp có đúng name="button_box", nên nút dựng
+                 ra thành div trơn và KHÔNG BAO GIỜ hiện, cũng không
+                 báo lỗi (backlog 744).
+
+                 KHÔNG ẩn khi đếm = 0: người dùng cần phân biệt "khế
+                 ước này chưa giải ngân cho hoá đơn nào" với "phần mềm
+                 không có tính năng đó" — ẩn đi thì hai thứ giống hệt
+                 nhau, và đó chính là chỗ team báo lỗi. -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_dossier_payments"
+                        type="object" class="oe_stat_button"
+                        icon="fa-file-text-o">
+                    <field name="dossier_doc_count" widget="statinfo"
+                           string="Hoá đơn/Tạm ứng"/>
+                </button>
             </xpath>
 
             <!-- Disbursement list: thêm cost_category, contract, structure -->

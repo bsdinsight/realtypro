@@ -16,17 +16,22 @@
         <field name="model">re.loan.facility</field>
         <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
+            <!-- Vào hộp nút dùng chung của re_loan. Hộp riêng tên
+                 "button_box_guarantee" trước đây KHÔNG BAO GIỜ dựng ra
+                 nút: trình dựng form nhận diện hộp bằng đúng
+                 name="button_box" (backlog 744) — nên nút này chưa
+                 từng hiện lên dù đã khai từ lâu. -->
+            <xpath expr="//div[@name='button_box']" position="before">
                 <field name="purpose_kind" invisible="1"/>
-                <div class="oe_button_box" name="button_box_guarantee"
-                     invisible="purpose_kind != 'guarantee'">
-                    <button name="action_view_guarantees" type="object"
-                            class="oe_stat_button"
-                            icon="fa-file-text-o">
-                        <field name="guarantee_count" widget="statinfo"
-                               string="Chứng thư BL"/>
-                    </button>
-                </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_guarantees" type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        invisible="purpose_kind != 'guarantee'">
+                    <field name="guarantee_count" widget="statinfo"
+                           string="Chứng thư BL"/>
+                </button>
             </xpath>
             <xpath expr="//page[@name='note']" position="before">
                 <page string="Chứng thư BL" name="guarantee"

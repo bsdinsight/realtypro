@@ -189,6 +189,18 @@
                            statusbar_visible="draft,sent_to_bank,active,partial_paid,fully_paid"/>
                 </header>
                 <sheet>
+                    <!--
+                      Hộp nút thống kê DÙNG CHUNG. Bắt buộc đặt ở đây và
+                      bắt buộc mang name="button_box": trình dựng form
+                      của Odoo nhận diện hộp nút bằng ĐÚNG tên đó
+                      (`div[name='button_box']`), không phải bằng lớp
+                      `oe_button_box`. Hộp đặt tên khác sẽ dựng ra một
+                      thẻ div trơn — nút nằm trong đó KHÔNG BAO GIỜ hiện
+                      lên, mà cũng không báo lỗi gì (backlog 744).
+                      Module bổ sung nút thì xpath vào ĐÂY, đừng tự khai
+                      hộp mới.
+                    -->
+                    <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Quá hạn" bg_color="text-bg-danger"
                             invisible="not is_overdue"/>
                     <div class="oe_title">

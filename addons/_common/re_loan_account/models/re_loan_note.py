@@ -13,7 +13,11 @@ class ReLoanNote(models.Model):
     move_ids = fields.One2many(
         'account.move', 'loan_note_id', string='Bút toán kế toán')
     move_count = fields.Integer(
-        string='Số chứng từ', compute='_compute_move_count')
+        string='Số bút toán', compute='_compute_move_count',
+        help='Số bút toán kế toán do CHÍNH khế ước này sinh ra (giải '
+             'ngân, ghi nhận lãi, trả nợ).\n'
+             'KHÔNG gồm phiếu chi trả hoá đơn/tạm ứng của nhà thầu — '
+             'những thứ đó nằm ở nút "Hoá đơn/Tạm ứng".')
 
     @api.depends('move_ids')
     def _compute_move_count(self):

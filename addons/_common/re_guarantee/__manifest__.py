@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bank Guarantee Management',
-    'version': '19.0.1.20.1',
+    'version': '19.0.1.21.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý chứng thư bảo lãnh ngân hàng: dự thầu, thực hiện HĐ, '
                'tạm ứng, bảo hành, thanh toán — phí + ký quỹ + lifecycle.',
@@ -69,6 +69,7 @@ Tuỳ chọn cài — chỉ KH cần quản lý chi tiết chứng thư BL mới
         'views/re_guarantee_request_views.xml',
         'views/menu.xml',
         'views/res_config_settings_views.xml',
+        'views/account_payment_views.xml',
     ],
     'installable': True,
     'application': False,

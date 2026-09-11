@@ -146,6 +146,17 @@ class ReBankGuarantee(models.Model):
     guarantee_fee_remaining = fields.Monetary(
         string='Phí BL còn phải trả',
         compute='_compute_paid_totals', store=True)
+    account_payment_count = fields.Integer(
+        string='Số phiếu chi', compute='_compute_payment_missing',
+        help='Số phiếu chi / phiếu thu thật trong sổ kế toán sinh từ '
+             'chứng thư này. Khác với "Đợt thanh toán" — đó là bảng '
+             'theo dõi nghĩa vụ của chứng thư.')
+    payment_missing_count = fields.Integer(
+        string='Đợt chưa có phiếu chi',
+        compute='_compute_payment_missing',
+        help='Số đợt thanh toán ĐÃ xác nhận nhưng chưa sinh phiếu chi. '
+             'Thường là đợt ghi nhận trước khi có tính năng này, hoặc '
+             'ghi lúc chưa khai tài khoản kế toán.')
     deposit_refund_payment_id = fields.Many2one(
         'account.payment', string='Phiếu thu hoàn ký quỹ',
         readonly=True, copy=False, ondelete='set null',
@@ -479,6 +490,58 @@ class ReBankGuarantee(models.Model):
                     "phiếu thu và tất toán khoản ký quỹ.",
                     a='{:,.0f}'.format(rec.deposit_paid_amount)))
 
+    @api.depends('payment_ids.state', 'payment_ids.payment_id',
+                 'deposit_refund_payment_id')
+    def _compute_payment_missing(self):
+        for rec in self:
+            rec.payment_missing_count = len(rec._pending_payments())
+            pays = rec.payment_ids.mapped('payment_id')
+            if rec.deposit_refund_payment_id:
+                pays |= rec.deposit_refund_payment_id
+            rec.account_payment_count = len(pays)
+
+    def _pending_payments(self):
+        """Đợt thanh toán đã xác nhận mà chưa có phiếu chi."""
+        self.ensure_one()
+        return self.payment_ids.filtered(
+            lambda p: p.state == 'posted' and not p.payment_id)
+
+    def action_create_missing_payments(self):
+        """Sinh bù phiếu chi cho các đợt đã ghi nhận (backlog 969).
+
+        Phiếu chi chỉ sinh Ở LÚC ghi nhận đợt thanh toán, nên mọi đợt
+        ghi trước khi có tính năng này không có phiếu nào và không có
+        đường nào sinh lại. Nút này là đường đó.
+        """
+        self.ensure_one()
+        pending = self._pending_payments()
+        if not pending:
+            raise UserError(_(
+                "Mọi đợt thanh toán của chứng thư này đã có phiếu chi."))
+        Settings = self.env['res.config.settings'].sudo()
+        kinds = dict(self.env['re.bank.guarantee.payment']
+                     ._fields['payment_kind'].selection)
+        # Kiểm ĐỦ tài khoản cho mọi loại đang có trước khi sinh, để
+        # không sinh được một nửa rồi dừng giữa chừng.
+        for kind in set(pending.mapped('payment_kind')):
+            Settings._require_guarantee_account(kind, kinds.get(kind, ''))
+        pending._sync_account_payment()
+        return True
+
+    def action_view_account_payments(self):
+        self.ensure_one()
+        payments = self.payment_ids.mapped('payment_id')
+        if self.deposit_refund_payment_id:
+            payments |= self.deposit_refund_payment_id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Phiếu chi / thu — %s") % (self.name or ''),
+            'res_model': 'account.payment',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', payments.ids)],
+            'context': {'create': False},
+        }
+
     def action_refund_deposit(self):
         """Ghi nhận NH hoàn lại tiền ký quỹ khi BL được giải toả.
 
@@ -522,6 +585,7 @@ class ReBankGuarantee(models.Model):
             'journal_id': journal.id,
             'destination_account_id': account.id,
             'memo': _("Hoàn ký quỹ — BL %s", self.name or ''),
+            'guarantee_refund_id': self.id,
         })
         payment.action_post()
         self.deposit_refund_payment_id = payment
@@ -1080,6 +1144,7 @@ class ReBankGuaranteePayment(models.Model):
                       k=kinds.get(self.payment_kind, self.payment_kind),
                       g=self.guarantee_id.name or '',
                       r=' · %s' % self.reference if self.reference else ''),
+            'guarantee_payment_id': self.id,
         })
         payment.action_post()
         self.payment_id = payment

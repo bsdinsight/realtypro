@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Đường quay lại từ phiếu chi tạm ứng. Team báo: mở phiếu chi ra
+      "không có liên kết để mở xem tạm ứng" — câu ghi chú có nói tên
+      tạm ứng và khế ước nhưng là chữ, không bấm được (backlog 969).
+    -->
+    <record id="view_account_payment_form_inherit_advance"
+            model="ir.ui.view">
+        <field name="name">account.payment.form.advance</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <group invisible="not advance_payment_id">
+                    <group string="Nguồn gốc">
+                        <field name="advance_payment_id" readonly="1"/>
+                        <field name="advance_dossier_id" readonly="1"
+                               invisible="not advance_dossier_id"/>
+                        <field name="advance_note_id" readonly="1"
+                               invisible="not advance_note_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

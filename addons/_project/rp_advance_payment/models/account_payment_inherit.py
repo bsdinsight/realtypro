@@ -24,3 +24,9 @@ class AccountPayment(models.Model):
              'ước, không phải doanh nghiệp tự chi. Phần tiền này đã '
              'được đếm qua hồ sơ giải ngân nên KHÔNG cộng lại vào "Đã '
              'trả bằng tiền công ty".')
+    advance_note_id = fields.Many2one(
+        're.loan.note', string='Khế ước giải ngân',
+        related='advance_dossier_id.disbursement_id.note_id',
+        store=True, readonly=True,
+        help='Khế ước mà ngân hàng giải ngân theo đó. Trống nếu doanh '
+             'nghiệp tự chi.')

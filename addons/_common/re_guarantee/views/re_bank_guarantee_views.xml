@@ -110,6 +110,16 @@
                          chứng thư kết thúc. Không ghi nhận thu hoàn
                          thì số dư 244 treo vĩnh viễn dù BL đã đóng
                          (backlog 969). -->
+                    <!-- Sinh bù phiếu chi cho đợt ghi nhận bằng bản
+                         trước (chưa có tính năng sinh phiếu) hoặc ghi
+                         lúc chưa khai tài khoản — backlog 969. -->
+                    <button name="action_create_missing_payments"
+                            type="object"
+                            string="Sinh phiếu chi còn thiếu"
+                            icon="fa-money"
+                            invisible="payment_missing_count == 0"
+                            confirm="Sinh phiếu chi cho các đợt thanh toán chưa có? Đối ứng lấy theo tài khoản đã khai cho từng loại (phí / ký quỹ / phạt / gốc)."/>
+                    <field name="payment_missing_count" invisible="1"/>
                     <button name="action_refund_deposit" type="object"
                             string="Ghi nhận thu hoàn ký quỹ"
                             class="btn-primary"
@@ -121,6 +131,16 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <!-- Phiếu chi THẬT trong sổ kế toán, khác
+                             với nút "Đợt thanh toán" bên cạnh (bảng
+                             theo dõi của chứng thư). -->
+                        <button name="action_view_account_payments"
+                                type="object" class="oe_stat_button"
+                                icon="fa-money"
+                                invisible="account_payment_count == 0">
+                            <field name="account_payment_count"
+                                   widget="statinfo" string="Phiếu chi"/>
+                        </button>
                         <button name="action_view_payments" type="object"
                                 class="oe_stat_button" icon="fa-money">
                             <field name="payment_count" widget="statinfo"

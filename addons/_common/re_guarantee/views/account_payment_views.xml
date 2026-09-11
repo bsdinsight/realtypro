@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Đường quay lại từ phiếu chi. Mở một phiếu ra mà chỉ thấy câu ghi
+      chú thì người dùng phải tự đoán nó thuộc chứng thư nào — câu đó
+      là chữ, không bấm được (backlog 969).
+    -->
+    <record id="view_account_payment_form_inherit_guarantee"
+            model="ir.ui.view">
+        <field name="name">account.payment.form.guarantee</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="before">
+                <group invisible="not guarantee_id and not guarantee_refund_id">
+                    <group string="Nguồn gốc">
+                        <field name="guarantee_id" readonly="1"
+                               invisible="not guarantee_id"/>
+                        <field name="guarantee_payment_id" readonly="1"
+                               invisible="not guarantee_payment_id"/>
+                        <field name="guarantee_refund_id" readonly="1"
+                               invisible="not guarantee_refund_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

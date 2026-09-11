@@ -4,3 +4,4 @@ from . import re_loan_facility
 from . import re_loan_credit_contract
 from . import re_guarantee_request
 from . import res_config_settings
+from . import account_payment

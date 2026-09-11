@@ -19,6 +19,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import clean_context
 
 
 GUARANTEE_TYPES = [
@@ -511,7 +512,8 @@ class ReBankGuarantee(models.Model):
         if not journal:
             raise UserError(_(
                 "Chưa có sổ nhật ký ngân hàng để ghi phiếu thu."))
-        payment = self.env['account.payment'].create({
+        payment = self.env['account.payment'].with_context(
+            clean_context(self.env.context)).create({
             'payment_type': 'inbound',
             'partner_type': 'supplier',
             'partner_id': self.issuing_bank_partner_id.id,
@@ -1059,7 +1061,13 @@ class ReBankGuaranteePayment(models.Model):
     def _create_account_payment(self, account, journal):
         self.ensure_one()
         kinds = dict(self._fields['payment_kind'].selection)
-        payment = self.env['account.payment'].create({
+        # clean_context: ngữ cảnh đang mang các khoá `default_*` của
+        # CHÍNH bản ghi đợt thanh toán (vd default_name = "TT Đợt 4 —
+        # Phí BL ..."). Không lọc thì Odoo áp luôn default_name lên
+        # account.payment, và SỐ PHIẾU CHI thành câu diễn giải đó thay
+        # vì số theo sổ nhật ký — sổ quỹ mất số chứng từ.
+        payment = self.env['account.payment'].with_context(
+            clean_context(self.env.context)).create({
             'payment_type': 'outbound',
             'partner_type': 'supplier',
             'partner_id': self.guarantee_id.issuing_bank_partner_id.id

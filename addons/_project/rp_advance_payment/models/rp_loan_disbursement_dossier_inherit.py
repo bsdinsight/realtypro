@@ -34,6 +34,16 @@ class RpLoanDisbursementDossier(models.Model):
         related='advance_payment_id.amount',
         store=False, readonly=True)
 
+    # Phiếu chi sinh khi KW kích hoạt (backlog 969). Giữ liên kết ở
+    # ĐÂY chứ không ở tạm ứng: một tạm ứng có thể được trả qua nhiều
+    # hồ sơ giải ngân, mỗi hồ sơ một lần tiền ra — và liên kết này
+    # cũng là khoá chống sinh trùng khi kích hoạt lại KW.
+    payment_id = fields.Many2one(
+        'account.payment', string='Phiếu chi', readonly=True,
+        copy=False, ondelete='set null',
+        help='Phiếu chi ngân hàng trả thẳng cho nhà cung cấp theo hồ '
+             'sơ giải ngân này.')
+
     is_advance_payment = fields.Boolean(
         string='Là thanh toán tạm ứng',
         compute='_compute_is_advance_payment',

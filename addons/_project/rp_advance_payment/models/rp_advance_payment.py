@@ -148,7 +148,8 @@ class RpAdvancePayment(models.Model):
 
     @api.depends('dossier_ids.amount',
                  'dossier_ids.disbursement_id.state', 'amount',
-                 'payment_ids.amount', 'payment_ids.state')
+                 'payment_ids.amount', 'payment_ids.state',
+                 'payment_ids.advance_dossier_id')
     def _compute_amount_paid(self):
         for rec in self:
             paid = sum(rec.dossier_ids.filtered(
@@ -157,8 +158,12 @@ class RpAdvancePayment(models.Model):
             # Phiếu chi đã huỷ thì tiền không ra — chỉ cộng phiếu còn
             # sống. Odoo 19 đưa phiếu về 'in_process' cho tới khi khớp
             # sao kê, nên KHÔNG lọc theo 'paid' (sẽ không bao giờ khớp).
+            # CHỈ phiếu chi doanh nghiệp tự chi. Phiếu chi do ngân
+            # hàng giải ngân theo khế ước đã được đếm qua hồ sơ giải
+            # ngân ở `paid` — cộng cả hai là đếm hai lần.
             direct = sum(rec.payment_ids.filtered(
-                lambda p: p.state not in ('draft', 'canceled', 'rejected')
+                lambda p: not p.advance_dossier_id
+                and p.state not in ('draft', 'canceled', 'rejected')
             ).mapped('amount'))
             rec.amount_paid_direct = direct
             rec.payment_count = len(rec.payment_ids)

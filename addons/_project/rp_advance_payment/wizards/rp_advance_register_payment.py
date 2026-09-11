@@ -8,6 +8,7 @@ một phiếu chi thật.
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import clean_context
 
 
 class RpAdvanceRegisterPayment(models.TransientModel):
@@ -84,7 +85,8 @@ class RpAdvanceRegisterPayment(models.TransientModel):
                 "cho ai."))
         account = self.env['res.config.settings'].sudo(
         )._require_advance_account()
-        payment = self.env['account.payment'].create({
+        payment = self.env['account.payment'].with_context(
+            clean_context(self.env.context)).create({
             'payment_type': 'outbound',
             'partner_type': 'supplier',
             'partner_id': advance.partner_id.id,

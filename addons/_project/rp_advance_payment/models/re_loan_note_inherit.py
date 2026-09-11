@@ -11,7 +11,8 @@ import logging
 
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import _, fields, models
+from odoo.tools import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -126,3 +127,88 @@ class ReLoanNote(models.Model):
                 "Cập nhật thanh toán Tạm ứng từ KW giải ngân: "
                 "%(f)s đủ, %(p)s một phần.",
                 f=len(full), p=len(partial)))
+        self._create_advance_dossier_payments()
+
+    def _create_advance_dossier_payments(self):
+        """Sinh phiếu chi cho phần tạm ứng ngân hàng giải ngân (969).
+
+        Team khách hàng chốt 2026-09-11: "ngân hàng giải ngân thẳng
+        vào tài khoản của NCC để tránh doanh nghiệp nhận tiền rồi
+        chiếm dụng vốn mà không thanh toán cho NCC như khế ước".
+
+        Vì sao cần: bút toán giải ngân của khế ước chỉ ghi
+        Nợ Ngân hàng / Có 3411 — mới là chặng tiền ngân hàng rót vào.
+        Chặng tiền đi tiếp tới nhà cung cấp không có chứng từ nào. Hai
+        bút toán ghép lại mới ra đúng bản chất: Nợ 331 / Có 3411.
+
+        Một hồ sơ giải ngân → một phiếu chi. Liên kết giữ ở
+        `dossier.payment_id`, vừa là khoá chống sinh trùng khi kích
+        hoạt lại khế ước.
+
+        KHÔNG chặn kích hoạt khế ước nếu chưa cấu hình tài khoản: kích
+        hoạt là nghiệp vụ tín dụng, không phải nghiệp vụ kế toán. Ghi
+        một dòng nhắc rồi thôi.
+        """
+        self.ensure_one()
+        Settings = self.env['res.config.settings'].sudo()
+        account = Settings._advance_payment_account()
+        journal = Settings._advance_payment_journal()
+        pay_date = self._get_interest_start_date() \
+            or fields.Date.context_today(self)
+        pending = self.env['rp.loan.disbursement.dossier']
+        for disb in self.disbursement_ids.filtered(
+                lambda d: d.state == 'disbursed'):
+            pending |= disb.dossier_line_ids.filtered(
+                lambda dl: dl.advance_payment_id and dl.amount > 0
+                and not dl.payment_id)
+        if not pending:
+            return
+        if not account or not journal:
+            self.message_post(body=_(
+                "%(n)s hồ sơ giải ngân tạm ứng CHƯA sinh được phiếu "
+                "chi: %(why)s. Khai ở Vay > Cấu hình > Tham số phân hệ "
+                "Vay, mục \"Kế toán Tạm ứng\", rồi kích hoạt lại hoặc "
+                "ghi nhận tay.",
+                n=len(pending),
+                why=_("chưa khai TK trả trước người bán")
+                if not account else _("chưa có sổ nhật ký chi")))
+            return
+        created = self.env['account.payment']
+        for dl in pending:
+            advance = dl.advance_payment_id
+            partner = advance.partner_id or dl.disbursement_id \
+                .beneficiary_partner_id
+            if not partner:
+                continue
+            # clean_context: xem chú thích cùng loại ở re_guarantee —
+            # `default_*` của bản ghi đang mở sẽ đè lên account.payment
+            # và làm số phiếu chi thành câu diễn giải.
+            payment = self.env['account.payment'].with_context(
+                clean_context(self.env.context)).create({
+                'payment_type': 'outbound',
+                'partner_type': 'supplier',
+                'partner_id': partner.id,
+                'amount': dl.amount,
+                'date': pay_date,
+                'journal_id': journal.id,
+                'destination_account_id': account.id,
+                'memo': _("Tạm ứng %(a)s — NH giải ngân theo KW %(n)s",
+                          a=advance.name or '', n=self.name or ''),
+                'advance_payment_id': advance.id,
+                'advance_dossier_id': dl.id,
+            })
+            payment.action_post()
+            dl.payment_id = payment
+            created |= payment
+            advance.message_post(body=_(
+                "Ngân hàng giải ngân %(amt)s ₫ thẳng cho %(p)s theo "
+                "KW %(n)s — phiếu chi %(pay)s.",
+                amt='{:,.0f}'.format(dl.amount),
+                p=partner.display_name, n=self.name or '',
+                pay=payment.name))
+        if created:
+            self.message_post(body=_(
+                "Đã sinh %(n)s phiếu chi tạm ứng (NH trả thẳng cho nhà "
+                "cung cấp), tổng %(t)s ₫.",
+                n=len(created),
+                t='{:,.0f}'.format(sum(created.mapped('amount')))))

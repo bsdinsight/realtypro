@@ -389,29 +389,62 @@ class ReGuaranteeRequest(models.Model):
     def _facility_room(self):
         """Phần hạn mức thật sự còn phát hành bảo lãnh được.
 
-        Ưu tiên "Khả dụng thực tế" (khả dụng theo TÀI SẢN BẢO ĐẢM) thay
-        vì "Còn lại (theo HM)" — backlog 732. Hạn mức được cấp chỉ là
-        TRẦN ngân hàng cam kết; số bảo lãnh phát hành được thật sự phụ
-        thuộc bảo đảm đang có. Chặn theo trần là cho phát hành nhiều
-        hơn mức tài sản đỡ nổi.
+        Căn theo "Khả dụng thực tế" (khả dụng theo TÀI SẢN BẢO ĐẢM)
+        chứ không theo "Còn lại (theo HM)" — backlog 732. Hạn mức được
+        cấp chỉ là TRẦN ngân hàng cam kết; số bảo lãnh phát hành được
+        thật sự phụ thuộc bảo đảm đang có. Chặn theo trần là cho phát
+        hành nhiều hơn mức tài sản đỡ nổi.
 
-        Trường "Khả dụng thực tế" do re_loan_borrowing_base bổ sung.
-        Chưa cài module đó thì rơi về hạn mức còn lại như trước — đây
-        là phụ thuộc mềm, re_guarantee không depends vào nó.
+        CHẶN CỨNG, KỂ CẢ KHI KHẢ DỤNG THỰC TẾ = 0. Khách chốt như vậy,
+        và chốt kèm đường đi cho trường hợp chưa phân bổ được tài sản:
+        khai số vào ô "Bảo đảm khai ban đầu" trên hạn mức (xem
+        re_loan_borrowing_base.borrowing_base_opening). Nhờ đó
+        "chưa khai gì cả" và "đã khai nhưng hết chỗ" không còn lẫn
+        nhau — cả hai đều bằng 0 nhưng cái đầu là thiếu dữ liệu, và
+        người dùng có cách tự sửa.
+
+        Vế `in fac._fields` chỉ để đỡ trường hợp CHƯA CÀI
+        re_loan_borrowing_base (re_guarantee không depends vào nó).
+        Đó là kiểm module có mặt hay không, KHÔNG phải kiểm dữ liệu.
         """
         self.ensure_one()
         fac = self.facility_id
         if not fac:
             return 0.0
-        # CHỈ siết theo bảo đảm KHI ĐÃ KHAI bảo đảm. Hạn mức chưa phân
-        # bổ TSBĐ nào thì "khả dụng thực tế" bằng 0 — chặn theo số đó
-        # là khoá sạch mọi bảo lãnh của đơn vị chưa nhập xong TSBĐ.
-        # Cùng nguyên tắc mà re_loan_borrowing_base đang áp cho khoản
-        # vay: thiếu dữ liệu bảo đảm thì CẢNH BÁO, không chặn.
-        if 'borrowing_base_effective' in fac._fields \
-                and fac.borrowing_base_effective > 0:
+        if 'amount_available_effective' in fac._fields:
             return fac.amount_available_effective
         return fac.amount_available
+
+    def _msg_over_room(self, available):
+        """Thông báo chặn — phải nói được ĐƯỜNG RA, không chỉ nói không.
+
+        Khả dụng thực tế bằng 0 gần như luôn là do CHƯA KHAI bảo đảm
+        chứ không phải đã dùng hết. Báo mỗi câu "vượt khả dụng" thì
+        người dùng bế tắc: nhìn thấy ngân hàng cấp hạn mức đầy đủ mà
+        phần mềm không cho phát hành, không biết phải làm gì.
+        """
+        self.ensure_one()
+        fac = self.facility_id
+        head = _(
+            "Giá trị BL (%(b)s) vượt khả dụng thực tế của hạn mức "
+            "'%(f)s' (%(a)s). Số bảo lãnh phát hành được căn theo tài "
+            "sản bảo đảm đang có, không phải theo trần hạn mức ngân "
+            "hàng cấp.",
+            b='{:,.0f}'.format(self.amount or 0),
+            f=fac.name or '',
+            a='{:,.0f}'.format(available or 0))
+        if (available or 0) <= 0.01:
+            head += _(
+                "\n\nHạn mức này chưa khai bảo đảm nào nên khả dụng "
+                "thực tế đang bằng 0. Mở hạn mức '%(f)s' rồi làm MỘT "
+                "trong hai cách:\n"
+                "• Khai số vào ô \"Bảo đảm khai ban đầu\" — dùng khi "
+                "ngân hàng cấp trên cả rổ tài sản mà hồ sơ không tách "
+                "được từng tài sản;\n"
+                "• Hoặc phân bổ tài sản bảo đảm cho mục đích này ở tab "
+                "Phân bổ TSBĐ.",
+                f=fac.name or '')
+        return head
 
     @api.constrains('amount', 'facility_id', 'state')
     def _check_amount_within_facility(self):
@@ -433,13 +466,8 @@ class ReGuaranteeRequest(models.Model):
             if rec.state in ('active', 'issued'):
                 available += rec.amount
             if available + 0.01 < rec.amount:
-                raise ValidationError(_(
-                    "Giá trị BL (%(b)s) vượt khả dụng thực tế của "
-                    "'%(f)s' (%(a)s) — số bảo lãnh phát hành được phụ "
-                    "thuộc tài sản bảo đảm đang có, không phải trần "
-                    "hạn mức được cấp.",
-                    b=rec.amount, f=rec.facility_id.name,
-                    a=available))
+                raise ValidationError(
+                    rec._msg_over_room(available))
 
     @api.onchange('amount', 'facility_id')
     def _onchange_amount_warning(self):
@@ -548,11 +576,7 @@ class ReGuaranteeRequest(models.Model):
         if self.facility_id:
             available = self._facility_room()
             if available + 0.01 < self.amount:
-                raise UserError(_(
-                    "Hạn mức %(f)s chỉ còn %(a)s, không đủ phát hành "
-                    "chứng thư %(b)s — đã bị chứng thư khác chiếm sau "
-                    "khi đề nghị này được kích hoạt.",
-                    f=self.facility_id.name, a=available, b=self.amount))
+                raise UserError(self._msg_over_room(available))
         today = fields.Date.context_today(self)
         cert_vals = self._prepare_bank_guarantee_vals()
         cert = self.env['re.bank.guarantee'].create(cert_vals)

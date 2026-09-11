@@ -29,6 +29,8 @@ trả lời "dự án này rút TỐI ĐA được bao nhiêu ngay bây giờ".
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 
 class ReLoanFacilityProjectAllocation(models.Model):
@@ -134,7 +136,7 @@ class ReLoanFacilityProjectAllocation(models.Model):
         if not contract_ids:
             return {}
         live = fac.note_ids.filtered(
-            lambda n: n.state not in ('draft', 'cancelled', 'fully_paid'))
+            lambda n: n.state not in NOTE_STATES_NO_EXPOSURE)
         res = {}
         for n in live:
             for cid, amt in n._outstanding_by_contract().items():
@@ -179,7 +181,7 @@ class ReLoanFacilityProjectAllocation(models.Model):
         used = {}
         notes = self.env['re.loan.note'].search([
             ('facility_id.credit_contract_id', '=', contract.id),
-            ('state', 'not in', ('draft', 'cancelled', 'fully_paid'))])
+            ('state', 'not in', NOTE_STATES_NO_EXPOSURE)])
         for n in notes:
             for pid, amt in n._outstanding_by_project().items():
                 key = (n.facility_id.id, pid)
@@ -213,7 +215,7 @@ class ReLoanFacilityProjectAllocation(models.Model):
         used_by = {}
         notes = self.env['re.loan.note'].search([
             ('facility_id.credit_contract_id', '=', contract.id),
-            ('state', 'not in', ('draft', 'cancelled', 'fully_paid'))])
+            ('state', 'not in', NOTE_STATES_NO_EXPOSURE)])
         for n in notes:
             # KW khai dự án đầu phiếu HOẶC chỉ khai ở dòng giải ngân —
             # cả hai đều được quy về dự án qua helper.

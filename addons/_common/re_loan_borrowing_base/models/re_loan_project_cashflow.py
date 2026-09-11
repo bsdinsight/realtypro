@@ -20,6 +20,8 @@ quân: vỡ nợ xảy ra ở kỳ xấu nhất.
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 
 class ReLoanProjectCashflow(models.Model):
@@ -127,7 +129,7 @@ class ReLoanProjectCashflow(models.Model):
             # dự án nên phải chia, không lọc cứng note_id.project_id
             shares = {}
             for note in Note.search([('state', 'not in',
-                                      ('draft', 'cancelled', 'fully_paid'))]):
+                                      NOTE_STATES_NO_EXPOSURE)]):
                 sh = note._project_share(rec.project_id)
                 if sh:
                     shares[note.id] = sh

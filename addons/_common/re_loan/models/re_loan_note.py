@@ -15,6 +15,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from .re_loan_facility import NOTE_STATES_NO_EXPOSURE
+
 
 class ReLoanNote(models.Model):
     _name = 're.loan.note'
@@ -474,7 +476,7 @@ class ReLoanNote(models.Model):
         today = fields.Date.context_today(self)
         for rec in self:
             if rec.principal_outstanding <= 0 \
-                    or rec.state in ('draft', 'cancelled', 'fully_paid'):
+                    or rec.state in NOTE_STATES_NO_EXPOSURE:
                 rec.aging_bucket = False
             elif not rec.date_maturity or rec.date_maturity >= today:
                 rec.aging_bucket = 'current'
@@ -560,12 +562,19 @@ class ReLoanNote(models.Model):
     def _facility_contribution(self):
         """Phần KW này hiện đang chiếm 'amount_used' của facility.
 
-        - Draft/Cancelled: 0 (chưa tính vào used)
+        Phải là ĐẢO NGƯỢC ĐÚNG của _compute_amount_used, không được lệch
+        một trạng thái nào: hàm này dùng để cộng ngược phần KW tự chiếm
+        vào 'hạn mức tối đa KW được phép', nên lệch là ràng buộc nới ra
+        đúng bằng phần lệch — KW tất toán hay mới gửi NH lại được phép
+        vượt hạn mức.
+
+        - Nháp / Đã gửi NH / Đã huỷ / Đã tất toán: 0 (chưa hoặc không
+          còn chiếm — xem NOTE_STATES_NO_EXPOSURE)
         - Revolving / Overdraft: dư nợ gốc còn lại
         - Term / Bảo lãnh / L/C: số tiền KW cam kết
         """
         self.ensure_one()
-        if self.state in ('draft', 'cancelled') or not self.facility_id:
+        if self.state in NOTE_STATES_NO_EXPOSURE or not self.facility_id:
             return 0.0
         if self.facility_id.facility_type in ('revolving', 'overdraft'):
             return self.principal_outstanding
@@ -657,6 +666,36 @@ class ReLoanNote(models.Model):
                 "Đã gửi hồ sơ KW '%(n)s' lên NH chờ duyệt — kèm %(d)s "
                 "đợt giải ngân.",
                 n=rec.name or '', d=len(draft_disb)))
+            rec._warn_pipeline_over_room()
+
+    def _warn_pipeline_over_room(self):
+        """Nhắc khi tổng hồ sơ đang chờ NH đã vượt phần hạn mức còn lại.
+
+        Gửi NH không chiếm hạn mức nữa (backlog 716), nên gửi bao nhiêu
+        hồ sơ cũng không bị chặn — chỗ chặn duy nhất là lúc kích hoạt.
+        Cái giá của cách đó là người làm hồ sơ chỉ phát hiện thiếu chỗ
+        vào lúc muộn nhất: NH đã duyệt xong. Ghi một dòng ngay lúc gửi
+        để biết trước.
+
+        Chỉ nhắc, không chặn: gửi hồ sơ vượt hạn mức hiện có là việc
+        bình thường (chờ HĐTD tăng hạn mức, chờ KW khác tất toán).
+        """
+        self.ensure_one()
+        fac = self.facility_id
+        if self.loan_type != 'external' or not fac:
+            return
+        self.flush_recordset()
+        pending = fac.amount_pending_bank or 0.0
+        room = fac.amount_available or 0.0
+        if pending > room + 1:
+            self.message_post(body=_(
+                "Lưu ý: hạn mức '%(f)s' còn %(r)s đ, nhưng tổng hồ sơ "
+                "đang chờ NH duyệt đã là %(p)s đ. Gửi NH không chiếm "
+                "hạn mức — phần vượt sẽ không kích hoạt được cho tới "
+                "khi có thêm chỗ.",
+                f=fac.name or '',
+                r='{:,.0f}'.format(room),
+                p='{:,.0f}'.format(pending)))
 
     def copy_data(self, default=None):
         """Nhân bản KW: đặt sẵn số khế ước tạm cho bản sao.

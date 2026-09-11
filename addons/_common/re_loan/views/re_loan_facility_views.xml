@@ -20,6 +20,8 @@
                 <field name="flexible_limits" widget="boolean_toggle"
                        optional="show"/>
                 <field name="amount_used" width="185px" sum="Tổng đã dùng"/>
+                <field name="amount_pending_bank" width="185px"
+                       optional="hide" sum="Tổng đang chờ NH"/>
                 <field name="interest_rate_weighted" optional="show"/>
                 <field name="amount_available" width="185px" sum="Tổng còn lại"/>
                 <field name="interest_rate_default" width="185px"/>
@@ -73,6 +75,24 @@
                             <field name="amount_used"/>
                             <field name="interest_rate_weighted"/>
                             <field name="amount_available"/>
+                            <field name="amount_pending_bank"/>
+                            <div colspan="2" class="alert alert-warning small"
+                                 role="alert"
+                                 style="margin-top:4px; padding:6px 10px;"
+                                 invisible="amount_pending_bank &lt;= amount_available">
+                                <i class="fa fa-hourglass-half"/>
+                                Hồ sơ <b>đang chờ NH duyệt</b> đã vượt phần
+                                <b>còn lại</b> của hạn mức. Gửi NH chưa chiếm
+                                hạn mức — nhưng đến lúc kích hoạt, phần vượt
+                                sẽ không đủ chỗ.
+                            </div>
+                            <div colspan="2" class="text-muted small"
+                                 style="margin-top:4px;"
+                                 invisible="amount_pending_bank &lt;= 0">
+                                <i class="fa fa-info-circle"/>
+                                KW <b>Đã gửi NH</b> chưa chiếm hạn mức. Hạn
+                                mức chỉ bị chiếm khi KW được <b>kích hoạt</b>.
+                            </div>
                             <div colspan="2" class="alert alert-success small"
                                  role="alert"
                                  style="margin-top:4px; padding:6px 10px;"
@@ -177,8 +197,11 @@
                 <field name="credit_contract_id"/>
                 <field name="partner_id"/>
                 <field name="purpose"/>
+                <!-- Lọc theo NHÓM MỤC ĐÍCH: loại "Hạn mức bảo lãnh" đã
+                     ngưng dùng (backlog 755) nên lọc theo nó sẽ ra
+                     rỗng đúng vào lúc hạn mức bảo lãnh nhiều nhất. -->
                 <filter name="f_guarantee" string="Hạn mức bảo lãnh"
-                        domain="[('facility_type','=','guarantee_line')]"/>
+                        domain="[('purpose_kind','=','guarantee')]"/>
                 <filter name="f_revolving" string="Tuần hoàn"
                         domain="[('facility_type','=','revolving')]"/>
                 <separator/>

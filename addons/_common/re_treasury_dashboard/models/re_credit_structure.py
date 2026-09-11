@@ -22,6 +22,8 @@ chú thích chỉ sang chỗ có con số đúng.
 from markupsafe import Markup, escape
 
 from odoo import _, api, fields, models
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 from . import dc_render as R
 
@@ -94,7 +96,7 @@ class ReCreditStructure(models.TransientModel):
         contracts = env['re.loan.credit.contract'].search(
             [('state', '=', 'active')])
         notes = env['re.loan.note'].search(
-            [('state', 'not in', ('draft', 'cancelled', 'fully_paid'))])
+            [('state', 'not in', NOTE_STATES_NO_EXPOSURE)])
         G = env['re.bank.guarantee'] if 're.bank.guarantee' in env else None
         bgs = (G.search([('state', 'in', ('issued', 'extended'))])
                if G is not None else None)

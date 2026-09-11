@@ -17,6 +17,8 @@ Chiều của chỉ tiêu khác nhau: 1,2,3 CÀNG CAO CÀNG XẤU; 4,5,6,7 CÀNG
 CÀNG XẤU. Vì vậy so ngưỡng phải theo chiều, không so máy móc.
 """
 from odoo import _, api, fields, models
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 GREEN, YELLOW, RED, NA = 'green', 'yellow', 'red', 'na'
 STATUS_SEL = [(GREEN, 'Xanh'), (YELLOW, 'Vàng'), (RED, 'Đỏ'),
@@ -153,7 +155,7 @@ class ReLoanProjectFundingKpi(models.Model):
             od = 0.0
             if p:
                 for n in Note.search([('state', 'not in',
-                                       ('draft', 'cancelled', 'fully_paid'))]):
+                                       NOTE_STATES_NO_EXPOSURE)]):
                     if n.is_overdue:
                         od += n._outstanding_by_project().get(p.id, 0.0)
             r.kpi_overdue = ((od / r.limit_used * 100.0)

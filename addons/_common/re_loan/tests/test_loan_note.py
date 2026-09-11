@@ -67,6 +67,49 @@ class TestLoanNote(TransactionCase):
         note.action_activate()
         self.assertEqual(note.state, 'active')
 
+    def test_sent_to_bank_does_not_use_limit(self):
+        """Backlog 716 — gửi NH chưa chiếm hạn mức, kích hoạt mới chiếm.
+
+        Gửi hồ sơ lên ngân hàng là bước nội bộ: NH chưa ký nhận nợ,
+        chưa có đồng nào ra. Chiếm hạn mức ngay lúc gửi làm số trên
+        phần mềm lệch với số của ngân hàng.
+        """
+        fac = self.fac_term
+        note = self._make_note(fac, 400_000_000.0)
+        note.action_send_to_bank()
+        self.assertEqual(note.state, 'sent_to_bank')
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_used, 0.0)
+        self.assertEqual(fac.amount_available, 400_000_000.0)
+        self.assertEqual(fac.amount_pending_bank, 400_000_000.0)
+        # ... và kích hoạt thì chiếm. Đây cũng là hồi quy cho lỗi
+        # đếm hai lần: KW gửi NH chiếm sẵn hạn mức thì chính nó không
+        # kích hoạt nổi vì "còn lại" đã về 0.
+        note.action_activate()
+        fac.invalidate_recordset()
+        self.assertEqual(note.state, 'active')
+        self.assertEqual(fac.amount_used, 400_000_000.0)
+        self.assertEqual(fac.amount_available, 0.0)
+        self.assertEqual(fac.amount_pending_bank, 0.0)
+
+    def test_second_pending_note_blocked_at_activation(self):
+        """Hai hồ sơ cùng chờ NH thì chặn ở bước kích hoạt cái thứ hai.
+
+        Vì gửi NH không giữ chỗ, cả hai đều gửi được. Chỗ chặn duy
+        nhất là action_activate — phải còn nguyên, không thì hạn mức
+        bị rút quá.
+        """
+        fac = self.fac_term
+        n1 = self._make_note(fac, 300_000_000.0)
+        n1.action_send_to_bank()
+        n2 = self._make_note(fac, 300_000_000.0)
+        n2.action_send_to_bank()
+        fac.invalidate_recordset()
+        self.assertEqual(fac.amount_pending_bank, 600_000_000.0)
+        n1.action_activate()
+        with self.assertRaises(UserError):
+            n2.action_activate()
+
     def test_create_exceeds_limit_blocked(self):
         # Bug #17: constraint _check_amount_within_facility chặn NGAY
         # lúc tạo KW (trước đó chỉ chặn ở action_activate).

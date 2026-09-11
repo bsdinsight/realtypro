@@ -22,6 +22,8 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup, escape
 
 from odoo import _, api, fields, models
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 from . import dc_render as R
 
@@ -162,7 +164,7 @@ class ReTreasuryDashboard(models.TransientModel):
         contracts = CC.search([('state', '=', 'active')])
         facs = Fac.search([('credit_contract_id', 'in', contracts.ids)])
         notes = Note.search([('state', 'not in',
-                              ('draft', 'cancelled', 'fully_paid'))])
+                              NOTE_STATES_NO_EXPOSURE)])
         total_limit = sum(contracts.mapped('amount_total'))
         used = sum(notes.mapped('principal_outstanding'))
         # KHÔNG cộng thẳng khả dụng từng facility: các facility dưới cùng
@@ -524,7 +526,7 @@ class ReTreasuryDashboard(models.TransientModel):
         today = fields.Date.context_today(self)
         Note = env['re.loan.note']
         IL = env['re.loan.note.interest.line']
-        live = [('state', 'not in', ('draft', 'cancelled', 'fully_paid'))]
+        live = [('state', 'not in', NOTE_STATES_NO_EXPOSURE)]
 
         m30 = Note.search(live + [
             ('date_maturity', '>=', today),
@@ -679,7 +681,7 @@ class ReTreasuryDashboard(models.TransientModel):
             cf = Cashflow.search([('project_id', '=', p.id)], limit=1)
             note = Note.search([('project_id', '=', p.id),
                                 ('state', 'not in',
-                                 ('draft', 'cancelled', 'fully_paid'))],
+                                 NOTE_STATES_NO_EXPOSURE)],
                                limit=1)
             rows.append({
                 'sheet': s, 'project': p, 'allocs': allocs, 'cf': cf,

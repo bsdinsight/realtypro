@@ -147,6 +147,13 @@
                                            optional="show"/>
                                     <field name="amount_used" width="185px"
                                            sum="Tổng đã sử dụng"/>
+                                    <!-- KW "Đã gửi NH" KHÔNG nằm trong "Đã
+                                         sử dụng" (backlog 716) — cột này để
+                                         thấy phần đang nằm ở ngân hàng. -->
+                                    <field name="amount_pending_bank"
+                                           width="185px" optional="show"
+                                           sum="Tổng đang chờ NH"
+                                           decoration-warning="amount_pending_bank &gt; amount_available"/>
                                     <field name="amount_available" width="185px"
                                            string="Còn lại"
                                            sum="Tổng còn lại"/>

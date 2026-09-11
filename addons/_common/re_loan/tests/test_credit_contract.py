@@ -156,9 +156,9 @@ class TestFlexibleLimits(TransactionCase):
             'facility_type': 'revolving',
             'amount_limit': 600_000_000.0,
             'flexible_limits': True})
-        # Loại 'guarantee_line' đã ngưng dùng (backlog 755) — fixture
-        # cố ý dựng lại dữ liệu cũ nên đi qua cửa thoát dành cho nhập
-        # liệu chuyển đổi.
+        # Loại 'guarantee_line' và 'lc_line' đã ngưng dùng (backlog
+        # 755) — fixture cố ý dựng lại dữ liệu cũ nên đi qua cửa thoát
+        # dành cho nhập liệu chuyển đổi.
         cls.fac_bg = cls.env['re.loan.facility'].with_context(
             allow_discontinued_facility_type=True).create({
             'name': 'Bảo lãnh',
@@ -166,7 +166,8 @@ class TestFlexibleLimits(TransactionCase):
             'facility_type': 'guarantee_line',
             'amount_limit': 300_000_000.0,
             'flexible_limits': True})
-        cls.fac_lc = cls.env['re.loan.facility'].create({
+        cls.fac_lc = cls.env['re.loan.facility'].with_context(
+            allow_discontinued_facility_type=True).create({
             'name': 'L/C',
             'credit_contract_id': cls.contract.id,
             'facility_type': 'lc_line',

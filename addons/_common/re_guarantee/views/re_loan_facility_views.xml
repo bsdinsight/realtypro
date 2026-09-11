@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Smart button "Chứng thư BL" trên Facility form (guarantee_line) -->
+    <!-- Smart button + tab "Chứng thư BL" trên Facility form.
+
+         Gate theo NHÓM MỤC ĐÍCH, không theo Loại hạn mức: loại
+         "Hạn mức bảo lãnh" đã ngưng dùng (backlog 755), hạn mức bảo
+         lãnh nay khai bằng Mục đích = "Bảo lãnh ngân hàng" trên loại
+         Tuần hoàn / Có kỳ hạn. Gate cũ theo facility_type sẽ giấu mất
+         chứng thư của mọi hạn mức bảo lãnh tạo sau bản 755 — trong
+         khi chính chúng mới là hạn mức đang chiếm/khôi phục hạn mức
+         bảo lãnh (xem _compute_amount_used ở re_guarantee). -->
     <record id="view_re_loan_facility_form_inherit_guarantee"
             model="ir.ui.view">
         <field name="name">re.loan.facility.form.guarantee</field>
@@ -9,8 +17,9 @@
         <field name="inherit_id" ref="re_loan.view_re_loan_facility_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
+                <field name="purpose_kind" invisible="1"/>
                 <div class="oe_button_box" name="button_box_guarantee"
-                     invisible="facility_type != 'guarantee_line'">
+                     invisible="purpose_kind != 'guarantee'">
                     <button name="action_view_guarantees" type="object"
                             class="oe_stat_button"
                             icon="fa-file-text-o">
@@ -21,7 +30,7 @@
             </xpath>
             <xpath expr="//page[@name='note']" position="before">
                 <page string="Chứng thư BL" name="guarantee"
-                      invisible="facility_type != 'guarantee_line'">
+                      invisible="purpose_kind != 'guarantee'">
                     <group>
                         <group>
                             <field name="guarantee_count"/>

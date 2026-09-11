@@ -20,11 +20,29 @@ FACILITY_TYPES = [
     ('lc_line', 'Hạn mức L/C'),
 ]
 
-# Hai loại khách hàng không dùng nữa. KHÔNG xoá khỏi danh sách: dữ liệu
-# cũ đang mang giá trị này, và 'overdraft' còn chịu lực trong
-# _compute_amount_used (thấu chi tính dư nợ theo cách khác). Cơ chế ẩn
-# ở _selection_facility_type + chặn chọn mới ở _check_facility_type.
-DISCONTINUED_FACILITY_TYPES = ('overdraft', 'guarantee_line')
+# Ba loại khách hàng không dùng nữa. KHÔNG xoá khỏi danh sách: dữ liệu
+# cũ đang mang giá trị này, 'overdraft' còn chịu lực trong
+# _compute_amount_used (thấu chi tính dư nợ theo cách khác), và
+# 'guarantee_line'/'lc_line' còn gate nút Giải toả BL trên khế ước
+# (_release_guarantee). Cơ chế ẩn ở _selection_facility_type + chặn
+# chọn mới ở _check_facility_type.
+DISCONTINUED_FACILITY_TYPES = ('overdraft', 'guarantee_line', 'lc_line')
+
+# Trạng thái KW KHÔNG tạo dư nợ, do đó KHÔNG chiếm hạn mức của mục
+# đích. Một nguồn duy nhất cho mọi phép tính "đang dùng bao nhiêu" —
+# hạn mức, dư nợ theo dự án, KPI, dòng tiền, bảng điều khiển.
+#
+# 'sent_to_bank' nằm ở đây theo backlog 716: gửi hồ sơ lên NH mới là
+# bước nội bộ, NH chưa ký nhận nợ nên chưa có đồng nào ra. Chỉ KÍCH
+# HOẠT mới chiếm hạn mức. Cùng nguyên tắc đã áp cho bảo lãnh: chỉ
+# CHỨNG THƯ chiếm hạn mức, đề nghị thì không.
+#
+# Đánh đổi: giữa lúc gửi NH và lúc kích hoạt, hạn mức không được giữ
+# chỗ — gửi nhiều hồ sơ cùng lúc có thể vượt tổng hạn mức. Bù lại
+# bằng kiểm tra lúc kích hoạt (action_activate) và ô "Đang chờ NH
+# duyệt" trên hạn mức.
+NOTE_STATES_NO_EXPOSURE = ('draft', 'sent_to_bank', 'cancelled',
+                           'fully_paid')
 
 BUILTIN_PURPOSES = [
          # ── A. VỐN LƯU ĐỘNG THI CÔNG (tổng thầu / thầu phụ) ──────────
@@ -303,6 +321,16 @@ class ReLoanFacility(models.Model):
              '• Tạo / huỷ KW (mọi loại)\n'
              '• Giải ngân thêm trên KW (mọi loại)\n'
              '• Trả gốc KW (CHỈ với revolving / overdraft — hoàn hạn mức)')
+    amount_pending_bank = fields.Monetary(
+        string='Đang chờ NH duyệt', compute='_compute_amount_pending_bank',
+        store=True,
+        help='Σ số tiền các KW đang ở trạng thái "Đã gửi NH" — hồ sơ đã '
+             'gửi nhưng ngân hàng chưa ký nhận nợ.\n'
+             'Phần này CHƯA trừ vào "Đã sử dụng": chỉ khi KW được KÍCH '
+             'HOẠT mới chiếm hạn mức.\n'
+             'Nhìn ô này để biết còn bao nhiêu hồ sơ đang nằm ở ngân '
+             'hàng — nếu "Đang chờ NH duyệt" lớn hơn "Còn lại" thì đến '
+             'lúc duyệt sẽ có hồ sơ không kích hoạt được.')
 
     flexible_limits = fields.Boolean(
         string='Hạn mức liên thông',
@@ -410,14 +438,26 @@ class ReLoanFacility(models.Model):
         if self.env.context.get('allow_discontinued_facility_type'):
             return
         labels = dict(FACILITY_TYPES)
+        # Cả ba loại ngưng dùng đều có mục đích tương ứng: trục "Loại
+        # hạn mức" chỉ còn nói CÁCH VẬN HÀNH (tuần hoàn hay có kỳ hạn),
+        # còn BẢN CHẤT nghiệp vụ nằm ở trục "Mục đích sử dụng vốn".
+        # Nêu đúng mục đích thay thế cho từng loại, chứ chỉ nói "đã
+        # ngưng dùng" thì người dùng không biết khai vào đâu.
+        instead = {
+            'guarantee_line': 'Bảo lãnh ngân hàng',
+            'lc_line': 'Thương mại · Tín dụng chứng từ (L/C)',
+            'overdraft': 'Khác · Thấu chi',
+        }
         for rec in self:
             if rec.facility_type in DISCONTINUED_FACILITY_TYPES:
                 raise ValidationError(_(
                     "Loại hạn mức \"%(t)s\" đã ngưng dùng, không chọn "
-                    "mới được. Hạn mức bảo lãnh khai bằng Mục đích sử "
-                    "dụng vốn = \"Bảo lãnh ngân hàng\", không phải bằng "
-                    "Loại hạn mức.",
-                    t=labels.get(rec.facility_type, rec.facility_type)))
+                    "mới được.\nChọn Loại hạn mức = \"Tuần hoàn\" hoặc "
+                    "\"Có kỳ hạn\" theo cách ngân hàng cho rút vốn, rồi "
+                    "khai bản chất ở ô Mục đích sử dụng vốn = "
+                    "\"%(p)s\".",
+                    t=labels.get(rec.facility_type, rec.facility_type),
+                    p=instead.get(rec.facility_type, '')))
 
     @api.model
     def _selection_purpose(self):
@@ -489,18 +529,24 @@ class ReLoanFacility(models.Model):
                  'note_ids.principal_outstanding')
     def _compute_amount_used(self):
         for rec in self:
-            # Bỏ qua KW nháp/huỷ/đã tất toán hoặc giải tỏa.
+            # Bỏ qua KW nháp / đã gửi NH / huỷ / đã tất toán hoặc giải
+            # tỏa — xem NOTE_STATES_NO_EXPOSURE ở đầu tệp.
             # 'fully_paid' = KW đã đóng:
             #   - Vay term/revolving: đã trả hết gốc
             #   - Bảo lãnh / L/C: BL đã giải tỏa, NH trả lại chứng thư
             # Sau khi fully_paid, hạn mức được khôi phục (không chiếm nữa).
             live = rec.note_ids.filtered(
-                lambda n: n.state not in
-                ('draft', 'cancelled', 'fully_paid'))
+                lambda n: n.state not in NOTE_STATES_NO_EXPOSURE)
             if rec.facility_type in ('revolving', 'overdraft'):
                 rec.amount_used = sum(live.mapped('principal_outstanding'))
             else:
                 rec.amount_used = sum(live.mapped('amount'))
+
+    @api.depends('note_ids.state', 'note_ids.amount')
+    def _compute_amount_pending_bank(self):
+        for rec in self:
+            rec.amount_pending_bank = sum(rec.note_ids.filtered(
+                lambda n: n.state == 'sent_to_bank').mapped('amount'))
 
     @api.depends('amount_limit', 'amount_used', 'flexible_limits',
                  'credit_contract_id.facility_ids.amount_limit',

@@ -22,6 +22,8 @@ thì không bị chặn (không phá dữ liệu cũ).
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons.re_loan.models.re_loan_facility import \
+    NOTE_STATES_NO_EXPOSURE
 
 
 class ReLoanProjectFunding(models.Model):
@@ -335,7 +337,7 @@ class ReLoanProjectFunding(models.Model):
             if r.project_id:
                 notes = self.env['re.loan.note'].search(
                     [('state', 'not in',
-                      ('draft', 'cancelled', 'fully_paid'))])
+                      NOTE_STATES_NO_EXPOSURE)])
                 for n in notes:
                     used += n._outstanding_by_project().get(
                         r.project_id.id, 0.0)

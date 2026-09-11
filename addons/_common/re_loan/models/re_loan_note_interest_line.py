@@ -161,7 +161,12 @@ class ReLoanNoteInterestLine(models.Model):
              'dư không hiện ra ở đâu.')
     has_net_off = fields.Boolean(
         string='Có net-off', compute='_compute_net_off', store=True,
-        help='Kỳ có tiền net-off khác 0.')
+        help='Kỳ có chênh lệch đã được ghi nhận — một trong hai:\n'
+             '• có dòng trả nợ net-off (bù cho đủ khi ngân hàng trích '
+             'thiếu), hoặc\n'
+             '• bị TRÍCH DƯ (xem ô "Trích dư").\n'
+             'Dùng để lọc nhanh trên Lịch lãi những kỳ không khớp '
+             'tròn với nghĩa vụ.')
     net_off_allowed = fields.Boolean(
         string='Được net-off', compute='_compute_net_off_allowed',
         help='Kỳ còn chênh lệch trong ngưỡng cho phép. Vượt ngưỡng '
@@ -564,7 +569,8 @@ class ReLoanNoteInterestLine(models.Model):
             line.days_overdue = (today - line.date_to).days if late else 0
 
     @api.depends('repayment_ids.amount_net_off',
-                 'repayment_ids.is_net_off')
+                 'repayment_ids.is_net_off',
+                 'amount_overpaid')
     def _compute_net_off(self):
         """Số net-off của kỳ = Σ các dòng trả nợ được đánh dấu net-off.
 
@@ -581,7 +587,17 @@ class ReLoanNoteInterestLine(models.Model):
                 r.amount_net_off or 0.0
                 for r in line.repayment_ids if r.is_net_off)
             line.amount_net_off = total
-            line.has_net_off = abs(total) > 0.01
+            # Kỳ bị TRÍCH DƯ cũng được đánh dấu (backlog 988). Team
+            # chốt KHÔNG xử ở cấp kỳ — chỉ cần nhìn ra kỳ nào có
+            # chênh lệch, còn muốn sửa thì sửa thẳng dòng trả nợ.
+            #
+            # Cờ bật nhưng "Tiền net-off" vẫn để nguyên: ô đó chỉ đếm
+            # dòng trả nợ net-off THẬT. Cộng số trả dư vào đó là trộn
+            # hai thứ NGƯỢC CHIỀU nhau — tiền mình ghi thêm cho đủ kỳ
+            # với tiền ngân hàng thu thừa — rồi tổng net-off của khế
+            # ước thành một con số không đọc được.
+            line.has_net_off = (abs(total) > 0.01
+                                or (line.amount_overpaid or 0.0) > 0.01)
 
     @api.constrains('principal_due', 'note_id')
     def _check_principal_not_over_note(self):

@@ -171,3 +171,47 @@ class TestBankAdvice(TransactionCase):
         adv = self._advice(self._total_due() + self.threshold / 2)
         with self.assertRaises(UserError):
             adv.line_ids.action_auto_net_off()
+
+    # ----- Kỳ bị trích dư (backlog 988 vòng 3) ----------------------------
+    def test_overpaid_period_is_flagged(self):
+        """Kỳ ngân hàng trích DƯ phải hiện ra và được đánh dấu.
+
+        Ba ô "còn lại" của kỳ đều kẹp sàn 0 nên trước đây kỳ trả dư
+        đọc y hệt kỳ trả vừa đủ — không có chỗ nào nhìn ra.
+        """
+        period = self.note.interest_line_ids.sorted('period_no')[0]
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        excess = 500_000.0
+        adv = self._advice(due + excess, interest_line=period)
+        adv.action_post()
+        # Case A chặn đúng nghĩa vụ của kỳ: phần thừa nằm ở giấy báo
+        period.invalidate_recordset()
+        self.assertEqual(period.amount_overpaid, 0.0,
+                         'giấy báo chỉ định kỳ thì không rót quá kỳ')
+        self.assertAlmostEqual(adv.line_ids.amount_unallocated, excess,
+                               delta=1)
+        # Trả nợ nhập tay vượt nghĩa vụ -> kỳ trích dư
+        self.env['re.loan.note.repayment'].create({
+            'note_id': self.note.id, 'date': '2027-01-03',
+            'interest_line_id': period.id,
+            'amount_interest': excess})
+        period.invalidate_recordset()
+        self.assertAlmostEqual(period.amount_overpaid, excess, delta=1)
+        self.assertTrue(period.has_net_off,
+                        'kỳ trích dư phải được đánh dấu có net-off')
+        self.assertEqual(period.amount_net_off, 0.0,
+                         'nhưng KHÔNG cộng số trả dư vào "Tiền net-off" '
+                         '— hai thứ ngược chiều nhau')
+
+    def test_period_without_difference_is_not_flagged(self):
+        period = self.note.interest_line_ids.sorted('period_no')[0]
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        adv = self._advice(due, interest_line=period)
+        adv.action_post()
+        period.invalidate_recordset()
+        self.assertEqual(period.amount_overpaid, 0.0)
+        self.assertFalse(period.has_net_off)

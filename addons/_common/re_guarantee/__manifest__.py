@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bank Guarantee Management',
-    'version': '19.0.1.21.0',
+    'version': '19.0.1.21.1',
     'category': 'Realty/Finance',
     'summary': 'Quản lý chứng thư bảo lãnh ngân hàng: dự thầu, thực hiện HĐ, '
                'tạm ứng, bảo hành, thanh toán — phí + ký quỹ + lifecycle.',
@@ -37,7 +37,9 @@ Tính năng:
   - Cron tự cảnh báo BL sắp hết hạn (30 ngày) và tự đặt expired
 
   - Integration:
-    + Link với re.loan.facility (loại guarantee_line) — BL chiếm hạn mức
+    + Link với re.loan.facility có Mục đích thuộc nhóm "Bảo lãnh" —
+      hạn mức bị chiếm từ lúc đề nghị được KÍCH HOẠT, chứng thư chiếm
+      thay khi phát hành
     + Link với rp.contract (HĐ thầu) — BL phục vụ HĐ nào
 
 Tuỳ chọn cài — chỉ KH cần quản lý chi tiết chứng thư BL mới cài.

@@ -78,7 +78,7 @@
                     <button name="action_activate" type="object"
                             string="Kích hoạt" class="btn-primary"
                             invisible="state != 'draft'"
-                            confirm="Xác nhận kích hoạt đề nghị? Bắt đầu tính phí BL. Hạn mức CHƯA bị chiếm ở bước này — chỉ bị chiếm khi bấm Phát hành và chứng thư ra đời."/>
+                            confirm="Xác nhận kích hoạt đề nghị? Bắt đầu tính phí BL, và hạn mức bảo lãnh BỊ CHIẾM NGAY TỪ BƯỚC NÀY — không chờ tới lúc phát hành chứng thư. Huỷ đề nghị thì hạn mức được trả lại."/>
                     <button name="action_issue" type="object"
                             string="Phát hành" class="btn-primary"
                             invisible="state != 'active'"

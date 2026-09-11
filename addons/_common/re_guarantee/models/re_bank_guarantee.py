@@ -223,7 +223,10 @@ class ReBankGuarantee(models.Model):
         're.loan.facility', string='Hạn mức BL',
         domain="[('purpose_kind', '=', 'guarantee')]",
         help='Hạn mức có Mục đích thuộc nhóm "Bảo lãnh" mà BL này '
-             'dùng. Khi state=issued, BL chiếm hạn mức = giá trị BL.')
+             'dùng.\n'
+             'Hạn mức bị chiếm TỪ LÚC ĐỀ NGHỊ ĐƯỢC KÍCH HOẠT (backlog '
+             '732), không chờ tới lúc phát hành chứng thư. Phát hành '
+             'xong thì chứng thư chiếm THAY đề nghị — tổng không đổi.')
     credit_contract_id = fields.Many2one(
         're.loan.credit.contract', string='HĐTD',
         related='facility_id.credit_contract_id', store=True, readonly=True)

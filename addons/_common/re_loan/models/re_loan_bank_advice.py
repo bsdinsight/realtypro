@@ -519,8 +519,16 @@ class ReLoanBankAdviceLine(models.Model):
         _compute_paid_amounts() — tránh stale cache trong onchange
         context (compute store=True dùng giá trị cache từ trước, không
         refresh kịp).
+
+        KHÔNG gợi ý trên dòng PHÂN BỔ TIẾP (backlog 988): số tiền ở đó
+        đã được điền bằng đúng phần còn treo của dòng gốc, và bị ràng
+        buộc chặn không cho vượt. Ghi đè bằng "số kỳ còn phải trả" vừa
+        xoá mất con số đúng, vừa hay lớn hơn phần còn treo nên lưu là
+        báo lỗi — người dùng phải gõ lại số cũ mà không hiểu vì sao.
+        Ở dòng phân bổ tiếp, việc chọn kỳ là ĐỂ RÓT SỐ ĐÃ CÓ vào kỳ đó,
+        không phải để lấy số của kỳ.
         """
-        if not self.interest_line_id:
+        if not self.interest_line_id or self.source_line_id:
             return
         line = self.interest_line_id
         paid_p = sum(line.repayment_ids.mapped('amount_principal'))

@@ -400,6 +400,9 @@
                                            sum="Σ gốc còn"
                                            optional="show"
                                            decoration-warning="amount_principal_remaining > 0"/>
+                                    <field name="amount_overpaid" width="185px"
+                                           optional="show"
+                                           decoration-warning="amount_overpaid > 0"/>
                                     <field name="amount_interest_remaining" width="185px"
                                            string="Lãi còn"
                                            sum="Σ lãi còn"

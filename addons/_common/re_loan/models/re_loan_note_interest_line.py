@@ -153,6 +153,12 @@ class ReLoanNoteInterestLine(models.Model):
         help='Σ phần chênh lệch đã bù trừ vào kỳ này — cộng từ các '
              'dòng trả nợ do nút "Net-off chênh lệch" sinh ra, dù bấm '
              'ở kỳ lịch lãi hay ở dòng trích thu tự động.')
+    amount_overpaid = fields.Monetary(
+        string='Trích dư', compute='_compute_paid_amounts', store=True,
+        help='Số tiền đã trả VƯỢT nghĩa vụ của kỳ (gốc + lãi + phí). '
+             'Thường do ngân hàng trích dư hoặc dòng trả nợ nhập thừa. '
+             'Các ô "còn lại" kẹp sàn 0 nên nếu không có ô này thì trả '
+             'dư không hiện ra ở đâu.')
     has_net_off = fields.Boolean(
         string='Có net-off', compute='_compute_net_off', store=True,
         help='Kỳ có tiền net-off khác 0.')
@@ -201,6 +207,15 @@ class ReLoanNoteInterestLine(models.Model):
             line.amount_interest_paid = paid_i
             line.amount_fee_paid = paid_f
             line.amount_paid_total = paid_p + paid_i + paid_f
+            # Phần NGÂN HÀNG TRÍCH DƯ so với nghĩa vụ của kỳ. Ba ô
+            # "còn lại" đều kẹp sàn 0 nên trả dư trước đây KHÔNG hiện
+            # ra ở đâu cả: kỳ chỉ đọc là "Đã trả", còn bao nhiêu tiền
+            # thừa thì màn hình Lịch lãi im lặng (backlog 988).
+            due_total = ((line.principal_due or 0.0)
+                         + (line.interest_amount or 0.0)
+                         + (line.fee_amount or 0.0))
+            line.amount_overpaid = max(
+                0.0, (paid_p + paid_i + paid_f) - due_total)
             line.amount_principal_remaining = max(
                 0, line.principal_due - paid_p)
             line.amount_interest_remaining = max(

@@ -11,7 +11,8 @@ import logging
 
 from markupsafe import Markup
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import clean_context
 
 _logger = logging.getLogger(__name__)
@@ -129,6 +130,79 @@ class ReLoanNote(models.Model):
                 f=len(full), p=len(partial)))
         self._create_advance_dossier_payments()
 
+    advance_payment_missing_count = fields.Integer(
+        string='Tạm ứng chưa có phiếu chi',
+        compute='_compute_advance_payment_missing',
+        help='Số hồ sơ giải ngân tạm ứng ĐÃ giải ngân nhưng chưa có '
+             'phiếu chi. Thường là khế ước kích hoạt trước khi có tính '
+             'năng này, hoặc lúc kích hoạt chưa khai tài khoản kế toán.')
+
+    @api.depends('disbursement_ids.state',
+                 'disbursement_ids.dossier_line_ids.advance_payment_id',
+                 'disbursement_ids.dossier_line_ids.payment_id',
+                 'dossier_payment_ids')
+    def _compute_advance_payment_missing(self):
+        for rec in self:
+            rec.advance_payment_missing_count = (
+                len(rec._pending_advance_dossiers())
+                + len(rec._unlinked_advance_payments()))
+
+    def _advance_dossiers(self):
+        """Hồ sơ giải ngân tạm ứng ĐÃ giải ngân của khế ước này."""
+        self.ensure_one()
+        res = self.env['rp.loan.disbursement.dossier']
+        for disb in self.disbursement_ids.filtered(
+                lambda d: d.state == 'disbursed'):
+            res |= disb.dossier_line_ids.filtered(
+                lambda dl: dl.advance_payment_id and dl.amount > 0)
+        return res
+
+    def _pending_advance_dossiers(self):
+        """Hồ sơ giải ngân tạm ứng chưa có phiếu chi."""
+        self.ensure_one()
+        return self._advance_dossiers().filtered(lambda dl: not dl.payment_id)
+
+    def _unlinked_advance_payments(self):
+        """Phiếu chi tạm ứng ĐÃ có nhưng chưa nằm trong danh sách của KW.
+
+        Có thật trên dữ liệu: phiếu sinh bởi bản trước khi bản này nối
+        `dossier_payment_ids`. Nút thống kê đếm theo chứng từ nhưng
+        liệt kê theo danh sách, nên thiếu liên kết là đếm 4 mà mở ra
+        chỉ thấy 2.
+        """
+        self.ensure_one()
+        have = self._advance_dossiers().mapped('payment_id')
+        return have - self.dossier_payment_ids
+
+    def action_create_missing_advance_payments(self):
+        """Sinh bù phiếu chi cho tạm ứng đã giải ngân (backlog 969).
+
+        Cần vì phiếu chi chỉ sinh Ở LÚC kích hoạt khế ước: khế ước
+        kích hoạt trước khi có tính năng này, hoặc kích hoạt lúc chưa
+        khai tài khoản kế toán, thì không có đường nào sinh lại. Nút
+        này là đường đó — chính là việc mà dòng nhắc trong nhật ký
+        khế ước bảo người dùng làm.
+        """
+        self.ensure_one()
+        missing = self._pending_advance_dossiers()
+        unlinked = self._unlinked_advance_payments()
+        if not missing and not unlinked:
+            raise UserError(_(
+                "Mọi hồ sơ giải ngân tạm ứng của khế ước này đã có "
+                "phiếu chi và đã nằm trong danh sách."))
+        if unlinked:
+            # Nối lại phiếu đã có trước — không sinh thêm phiếu nào.
+            self.dossier_payment_ids = [(4, p.id) for p in unlinked]
+            self.message_post(body=_(
+                "Đã nối %(n)s phiếu chi tạm ứng có sẵn vào danh sách "
+                "của khế ước: %(l)s.",
+                n=len(unlinked), l=', '.join(unlinked.mapped('name'))))
+        if missing:
+            self.env['res.config.settings'].sudo(
+            )._require_advance_account()
+            self._create_advance_dossier_payments()
+        return True
+
     def _create_advance_dossier_payments(self):
         """Sinh phiếu chi cho phần tạm ứng ngân hàng giải ngân (969).
 
@@ -155,12 +229,7 @@ class ReLoanNote(models.Model):
         journal = Settings._advance_payment_journal()
         pay_date = self._get_interest_start_date() \
             or fields.Date.context_today(self)
-        pending = self.env['rp.loan.disbursement.dossier']
-        for disb in self.disbursement_ids.filtered(
-                lambda d: d.state == 'disbursed'):
-            pending |= disb.dossier_line_ids.filtered(
-                lambda dl: dl.advance_payment_id and dl.amount > 0
-                and not dl.payment_id)
+        pending = self._pending_advance_dossiers()
         if not pending:
             return
         if not account or not journal:
@@ -199,6 +268,13 @@ class ReLoanNote(models.Model):
             })
             payment.action_post()
             dl.payment_id = payment
+            # Vào CHUNG danh sách phiếu chi của khế ước: nút thống kê
+            # "Hoá đơn/Tạm ứng" (việc 744) đếm cả hoá đơn lẫn tạm ứng
+            # nhưng chỉ liệt kê từ danh sách này — thiếu chỗ này thì
+            # đếm 4 mà mở ra chỉ thấy 2 phiếu chi của hoá đơn.
+            # Cũng nhờ vậy phiếu chi tạm ứng được ghi lại ngày khi đổi
+            # ngày kích hoạt khế ước (việc 743), y như phiếu hoá đơn.
+            self.dossier_payment_ids = [(4, payment.id)]
             created |= payment
             advance.message_post(body=_(
                 "Ngân hàng giải ngân %(amt)s ₫ thẳng cho %(p)s theo "

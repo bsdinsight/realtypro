@@ -135,7 +135,8 @@ class ReLoanNote(models.Model):
         base = super()._activation_date_impact_note()
         n = len(self.dossier_payment_ids)
         if n:
-            base += _(" %s phiếu chi hoá đơn sẽ được ghi lại ngày.", n)
+            base += _(" %s phiếu chi (hoá đơn + tạm ứng) sẽ được ghi "
+                      "lại ngày.", n)
         return base
 
     def _after_activation_date_changed(self, old_date, new_date):

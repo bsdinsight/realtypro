@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Nút sinh bù phiếu chi tạm ứng. Phiếu chi chỉ sinh Ở LÚC kích hoạt
+      khế ước, nên khế ước kích hoạt trước khi có tính năng này (hoặc
+      kích hoạt lúc chưa khai tài khoản kế toán) sẽ không có phiếu nào
+      và không có đường nào sinh lại — backlog 969.
+    -->
+    <record id="view_re_loan_note_form_inherit_advance"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.form.advance.payment</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="advance_payment_missing_count" invisible="1"/>
+                <button name="action_create_missing_advance_payments"
+                        type="object"
+                        string="Sinh phiếu chi tạm ứng còn thiếu"
+                        icon="fa-money"
+                        invisible="advance_payment_missing_count == 0"
+                        confirm="Sinh phiếu chi cho các hồ sơ giải ngân tạm ứng chưa có phiếu? Phiếu chi ghi Nợ tài khoản trả trước người bán đã khai ở cấu hình, ngày lấy theo ngày kích hoạt khế ước."/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

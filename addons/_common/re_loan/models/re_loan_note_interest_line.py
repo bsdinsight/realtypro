@@ -153,12 +153,19 @@ class ReLoanNoteInterestLine(models.Model):
         help='Σ phần chênh lệch đã bù trừ vào kỳ này — cộng từ các '
              'dòng trả nợ do nút "Net-off chênh lệch" sinh ra, dù bấm '
              'ở kỳ lịch lãi hay ở dòng trích thu tự động.')
+    bank_advice_line_ids = fields.One2many(
+        're.loan.bank.advice.line', 'interest_line_id',
+        string='Dòng trích thu chỉ định kỳ này')
     amount_overpaid = fields.Monetary(
         string='Trích dư', compute='_compute_paid_amounts', store=True,
-        help='Số tiền đã trả VƯỢT nghĩa vụ của kỳ (gốc + lãi + phí). '
-             'Thường do ngân hàng trích dư hoặc dòng trả nợ nhập thừa. '
-             'Các ô "còn lại" kẹp sàn 0 nên nếu không có ô này thì trả '
-             'dư không hiện ra ở đâu.')
+        help='Tiền ĐÃ THU vượt nghĩa vụ của kỳ (gốc + lãi + phí), gồm '
+             'hai nguồn:\n'
+             '• dòng trả nợ nhập thừa cho kỳ; và\n'
+             '• phần ngân hàng trích cho kỳ này nhưng KHÔNG rót hết '
+             'vào kỳ (giấy báo chỉ rót tối đa bằng nghĩa vụ, phần thừa '
+             'nằm lại ở "Chưa allocate" của giấy báo).\n'
+             'Con số này KHÔNG mất đi sau khi net-off — nó ghi nhận là '
+             'đã từng thu dư bao nhiêu.')
     has_net_off = fields.Boolean(
         string='Có net-off', compute='_compute_net_off', store=True,
         help='Kỳ có chênh lệch đã được ghi nhận — một trong hai:\n'
@@ -177,15 +184,30 @@ class ReLoanNoteInterestLine(models.Model):
 
         Trước đây nút luôn hiện, bấm vào mới báo vượt ngưỡng. Với kỳ
         lệch cả trăm triệu thì cái nút đó chỉ là một cái bẫy bấm nhầm.
+
+        Backlog 988: nút hiện cho CẢ HAI chiều. Chiều DƯ trước đây chỉ
+        bấm được ở màn "Trích thu tự động" — người theo dõi khế ước
+        đang đứng ở Lịch lãi phải bỏ màn hình đi tìm giấy báo, mà
+        không có gì trên Lịch lãi nói cho họ biết là phải đi đâu.
         """
         threshold = self.env['res.config.settings'].sudo(
         ).get_net_off_threshold()
         for line in self:
             diff = ((line.amount_principal_remaining or 0.0)
                     + (line.amount_interest_remaining or 0.0))
+            short_ok = (line.state != 'paid' and 0.01 < diff <= threshold)
+            over = line._pending_advice_over()
+            over_ok = bool(over) and 0.01 < sum(
+                al.amount_unallocated for al in over) <= threshold
             line.net_off_allowed = bool(
-                threshold > 0 and line.state != 'paid'
-                and 0.01 < diff <= threshold)
+                threshold > 0 and (short_ok or over_ok))
+
+    def _pending_advice_over(self):
+        """Dòng trích thu của kỳ này còn tiền treo, chưa net-off."""
+        self.ensure_one()
+        return self.bank_advice_line_ids.filtered(
+            lambda al: al.state == 'posted'
+            and (al.amount_unallocated or 0.0) > 0.01)
 
     currency_id = fields.Many2one(
         related='note_id.currency_id', store=True, readonly=True)
@@ -195,7 +217,10 @@ class ReLoanNoteInterestLine(models.Model):
     @api.depends('repayment_ids.amount_principal',
                  'repayment_ids.amount_interest',
                  'repayment_ids.amount_fee',
-                 'principal_due', 'interest_amount', 'fee_amount')
+                 'principal_due', 'interest_amount', 'fee_amount',
+                 'bank_advice_line_ids.amount',
+                 'bank_advice_line_ids.amount_allocated',
+                 'bank_advice_line_ids.state')
     def _compute_paid_amounts(self):
         """Tổng từ repayment_ids → paid/remaining + auto-state.
 
@@ -219,8 +244,24 @@ class ReLoanNoteInterestLine(models.Model):
             due_total = ((line.principal_due or 0.0)
                          + (line.interest_amount or 0.0)
                          + (line.fee_amount or 0.0))
+            # Phần ngân hàng trích CHO KỲ NÀY mà không rót hết vào kỳ.
+            # Giấy báo chỉ định kỳ chỉ rót tối đa bằng nghĩa vụ, nên
+            # kỳ luôn đọc là "trả vừa đủ" còn tiền thừa nằm lại ở giấy
+            # báo — nhìn ở Lịch lãi không thấy gì (backlog 988).
+            # Lấy `amount − đã allocate` chứ không lấy "chưa allocate":
+            # số này KHÔNG đổi sau khi net-off hay phân bổ tiếp, nên
+            # cột giữ được ý nghĩa "đã từng thu dư bao nhiêu".
+            advice_over = sum(
+                max(0.0, (al.amount or 0.0) - (al.amount_allocated or 0.0))
+                for al in line.bank_advice_line_ids
+                if al.state == 'posted')
+            # Kẹp nghĩa vụ ở 0 trước khi trừ: gặp thật trên dữ liệu
+            # một kỳ có `principal_due` ÂM (nhập tay sai). Không kẹp
+            # thì kỳ chưa trả đồng nào cũng đọc ra "trích dư" đúng
+            # bằng phần âm đó — một con số ma để người dùng đi tìm.
             line.amount_overpaid = max(
-                0.0, (paid_p + paid_i + paid_f) - due_total)
+                0.0, (paid_p + paid_i + paid_f) - max(0.0, due_total)
+            ) + advice_over
             line.amount_principal_remaining = max(
                 0, line.principal_due - paid_p)
             line.amount_interest_remaining = max(
@@ -492,6 +533,14 @@ class ReLoanNoteInterestLine(models.Model):
         ).get_net_off_threshold()
         Repayment = self.env['re.loan.note.repayment']
         for line in self:
+            # Chiều DƯ: tiền thừa không nằm ở kỳ mà nằm ở dòng trích
+            # thu (giấy báo chỉ rót tối đa bằng nghĩa vụ của kỳ). Uỷ
+            # quyền sang đúng dòng đó — CÙNG một thao tác với bấm ở
+            # màn "Trích thu tự động", chỉ là bấm được từ Lịch lãi.
+            over = line._pending_advice_over()
+            if over:
+                over.action_auto_net_off()
+                continue
             if line.state == 'paid':
                 raise UserError(_(
                     "Kỳ %s đã trả đủ — không có gì net-off.",

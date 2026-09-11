@@ -186,19 +186,19 @@ class TestBankAdvice(TransactionCase):
         excess = 500_000.0
         adv = self._advice(due + excess, interest_line=period)
         adv.action_post()
-        # Case A chặn đúng nghĩa vụ của kỳ: phần thừa nằm ở giấy báo
+        # Giấy báo chỉ định kỳ chỉ rót tối đa bằng nghĩa vụ: phần thừa
+        # nằm lại ở giấy báo — nhưng KỲ vẫn phải thấy nó (vòng 4).
         period.invalidate_recordset()
-        self.assertEqual(period.amount_overpaid, 0.0,
-                         'giấy báo chỉ định kỳ thì không rót quá kỳ')
         self.assertAlmostEqual(adv.line_ids.amount_unallocated, excess,
                                delta=1)
-        # Trả nợ nhập tay vượt nghĩa vụ -> kỳ trích dư
+        self.assertAlmostEqual(period.amount_overpaid, excess, delta=1)
+        # Trả nợ nhập tay vượt nghĩa vụ -> cộng dồn vào cùng cột
         self.env['re.loan.note.repayment'].create({
             'note_id': self.note.id, 'date': '2027-01-03',
             'interest_line_id': period.id,
             'amount_interest': excess})
         period.invalidate_recordset()
-        self.assertAlmostEqual(period.amount_overpaid, excess, delta=1)
+        self.assertAlmostEqual(period.amount_overpaid, excess * 2, delta=1)
         self.assertTrue(period.has_net_off,
                         'kỳ trích dư phải được đánh dấu có net-off')
         self.assertEqual(period.amount_net_off, 0.0,
@@ -215,3 +215,74 @@ class TestBankAdvice(TransactionCase):
         period.invalidate_recordset()
         self.assertEqual(period.amount_overpaid, 0.0)
         self.assertFalse(period.has_net_off)
+
+    def test_period_shows_advice_side_excess(self):
+        """Kỳ phải hiện phần NH trích dư đang treo ở giấy báo.
+
+        Backlog 988 vòng 4. Giấy báo chỉ định kỳ chỉ rót tối đa bằng
+        nghĩa vụ của kỳ, nên kỳ luôn đọc "trả vừa đủ" còn tiền thừa
+        nằm lại ở giấy báo — đứng ở Lịch lãi không thấy gì, cũng không
+        có gì chỉ cho biết phải sang giấy báo.
+        """
+        period = self.note.interest_line_ids.sorted('period_no')[0]
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        excess = self.threshold / 2
+        adv = self._advice(due + excess, interest_line=period)
+        adv.action_post()
+        period.invalidate_recordset()
+        self.assertAlmostEqual(period.amount_overpaid, excess, delta=1,
+                               msg='kỳ phải thấy phần treo ở giấy báo')
+        self.assertTrue(period.has_net_off)
+        self.assertTrue(period.net_off_allowed,
+                        'và net-off được ngay từ Lịch lãi')
+
+    def test_period_net_off_clears_advice_remainder(self):
+        period = self.note.interest_line_ids.sorted('period_no')[0]
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        excess = self.threshold / 2
+        adv = self._advice(due + excess, interest_line=period)
+        adv.action_post()
+        period.invalidate_recordset()
+        period.action_auto_net_off_period()
+        adv.line_ids.invalidate_recordset()
+        period.invalidate_recordset()
+        self.assertAlmostEqual(adv.line_ids.amount_unallocated, 0.0,
+                               delta=1, msg='bấm ở Lịch lãi phải xử '
+                                            'đúng dòng trích thu')
+        self.assertAlmostEqual(adv.line_ids.amount_net_off, excess, delta=1)
+        # Cột "Trích dư" GIỮ số — nó ghi nhận đã từng thu dư bao nhiêu
+        self.assertAlmostEqual(period.amount_overpaid, excess, delta=1)
+        self.assertFalse(period.net_off_allowed, 'hết chỗ để net-off')
+
+    def test_period_over_beyond_threshold_hides_button(self):
+        period = self.note.interest_line_ids.sorted('period_no')[0]
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        adv = self._advice(due + self.threshold * 5, interest_line=period)
+        adv.action_post()
+        period.invalidate_recordset()
+        self.assertGreater(period.amount_overpaid, self.threshold)
+        self.assertFalse(period.net_off_allowed,
+                         'vượt ngưỡng thì không net-off, phải phân bổ tiếp')
+
+    def test_negative_due_is_not_reported_as_overpaid(self):
+        """Kỳ có nghĩa vụ ÂM (nhập tay sai) không được đọc là trích dư.
+
+        Gặp thật trên dữ liệu: một kỳ có principal_due âm. Không kẹp
+        sàn thì kỳ chưa trả đồng nào cũng hiện "trích dư" đúng bằng
+        phần âm — một con số ma để người dùng đi tìm.
+        """
+        period = self.note.interest_line_ids.sorted('period_no')[-1]
+        period.write({'principal_due': 0.0, 'interest_amount': 0.0,
+                      'fee_amount': 0.0})
+        period.invalidate_recordset()
+        self.assertEqual(period.amount_overpaid, 0.0)
+        period.write({'interest_amount': -100_000.0})
+        period.invalidate_recordset()
+        self.assertEqual(period.amount_overpaid, 0.0,
+                         'nghĩa vụ âm + chưa trả gì = không trích dư')

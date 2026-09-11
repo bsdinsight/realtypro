@@ -357,3 +357,33 @@ class TestBankGuarantee(TransactionCase):
         req.action_cancel()
         fac.invalidate_recordset()
         self.assertEqual(fac.amount_used, 0.0, 'huỷ là trả lại hạn mức')
+
+    def test_payment_number_follows_journal_sequence(self):
+        """Số phiếu chi phải theo sổ nhật ký, KHÔNG lấy câu diễn giải.
+
+        Hồi quy cho việc 1043. Hộp thoại ghi nhận thanh toán mang
+        `default_name` = tên đợt; nếu không lọc ngữ cảnh thì Odoo áp
+        luôn lên bút toán, số chứng từ thành câu diễn giải. Tệ hơn:
+        Odoo suy số kế tiếp từ số CUỐI CÙNG của sổ, nên một bút toán
+        tên rác làm hỏng số của mọi bút toán sau đó trong cùng sổ —
+        kể cả bút toán không liên quan gì tới bảo lãnh.
+        """
+        self._configure_accounts()
+        bl = self._issued_bl()
+        desc = 'TT Đợt 4 - Phí BL (01/11/2026 → 01/12/2026, 30 ngày)'
+        pay = self.env['re.bank.guarantee.payment'].with_context(
+            default_name=desc, default_guarantee_id=bl.id).create({
+                'guarantee_id': bl.id, 'payment_kind': 'fee',
+                'date': '2026-02-01', 'amount': 1_000_000.0,
+                'name': desc})
+        self.assertTrue(pay.payment_id)
+        self.assertNotEqual(pay.payment_id.name, desc)
+        self.assertNotEqual(pay.payment_id.move_id.name, desc)
+        self.assertRegex(pay.payment_id.name or '',
+                         r'^[A-Za-z]{2,8}\d*/\d{4}/\d+$')
+        # Bút toán kế tiếp trong cùng sổ vẫn đánh số bình thường
+        pay2 = self.env['re.bank.guarantee.payment'].create({
+            'guarantee_id': bl.id, 'payment_kind': 'fee',
+            'date': '2026-02-02', 'amount': 2_000_000.0})
+        self.assertRegex(pay2.payment_id.name or '',
+                         r'^[A-Za-z]{2,8}\d*/\d{4}/\d+$')

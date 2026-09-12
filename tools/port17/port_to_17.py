@@ -30,7 +30,9 @@ NHỮNG GÌ ODOO 17 KHÁC 19 (theo thứ tự gặp phải khi cài thật)
     và lưới lồng tính riêng).
  8. view_mode 'list' → 'tree' (cả XML lẫn Python).
  9. res.users.group_ids → groups_id
-10. Một số chỗ lẻ: xem PATCHES_LE cuối file.
+10. account.payment: `memo` (Odoo 18+) vốn tên là `ref` ở 17. Sai
+    khoá này KHÔNG lộ ở bước kiểm cú pháp — chỉ nổ lúc create.
+11. Một số chỗ lẻ: xem PATCHES_LE cuối file.
 """
 import ast
 import io
@@ -279,6 +281,23 @@ def step_misc_py(dst):
     ], 'aggregator / group_ids / view_mode (py)')
 
 
+def step_account_payment_api(dst):
+    """account.payment: `memo` (Odoo 18+) trở lại `ref` (Odoo 17).
+
+    Odoo 18 đổi tên `account.payment.ref` thành `memo`. Trên 17 tạo
+    phiếu chi với khoá `memo` thì nổ KeyError NGAY LÚC CREATE, không
+    phải lỗi cú pháp nên `step_check_syntax` không bắt được — chỉ lộ
+    ra khi chạy test hoặc khi người dùng bấm nút.
+
+    Chỉ đổi khoá trong dict truyền vào create(), không đụng chữ "memo"
+    ở chỗ khác.
+    """
+    sub_in_files(dst, '.py', [
+        (re.compile(r"(\n\s*)'memo':"), r"\1'ref':"),
+        (re.compile(r'(\n\s*)"memo":'), r'\1"ref":'),
+    ], "account.payment: 'memo' -> 'ref'")
+
+
 def step_view_mode_xml(dst):
     sub_in_files(dst, '.xml', [
         (re.compile(r'(<field name="view_mode">)([^<]*)list([^<]*)(</field>)'),
@@ -491,6 +510,7 @@ def main():
     step_company_groups(dst)
     step_constraints(dst)
     step_misc_py(dst)
+    step_account_payment_api(dst)
     step_view_mode_xml(dst)
     step_security(dst)
     step_inject_fields(dst)

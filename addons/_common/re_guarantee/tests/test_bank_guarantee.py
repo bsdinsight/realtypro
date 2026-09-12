@@ -175,9 +175,11 @@ class TestBankGuarantee(TransactionCase):
         company = self.env.company
 
         def _acc(code, name, atype):
-            acc = Account.search(
-                [('code', '=', code), ('company_ids', 'in', company.id)],
-                limit=1)
+            # Lọc theo MÃ thôi, không lọc theo công ty: Odoo 19 dùng
+            # `company_ids` còn Odoo 17 dùng `company_id`, mà bộ này
+            # phải chạy được trên cả hai (bản 17 là bản bàn giao). Quy
+            # tắc ghi bản ghi theo công ty đã lọc sẵn rồi.
+            acc = Account.search([('code', '=', code)], limit=1)
             return acc or Account.create({
                 'code': code, 'name': name, 'account_type': atype})
 

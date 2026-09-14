@@ -23,8 +23,12 @@
                 <button name="action_view_dossier_payments"
                         type="object" class="oe_stat_button"
                         icon="fa-file-text-o">
-                    <field name="dossier_doc_count" widget="statinfo"
-                           string="Hoá đơn/Tạm ứng"/>
+                    <!-- Nhãn "Phiếu thanh toán" (backlog 1085) thì con
+                         số cũng phải đếm PHIẾU, không đếm hoá đơn/tạm
+                         ứng — hai số lệch nhau đúng lúc có chứng từ
+                         chưa sinh phiếu, và nhãn mới sẽ nói sai. -->
+                    <field name="dossier_payment_count" widget="statinfo"
+                           string="Phiếu thanh toán"/>
                 </button>
             </xpath>
 

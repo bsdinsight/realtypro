@@ -94,7 +94,10 @@
                         </group>
                         <group>
                             <field name="date_advice"/>
-                            <field name="amount_total" readonly="1"/>
+                            <!-- Ẩn theo backlog 1089: tổng đã hiện ngay ở
+                                 dòng cộng dưới cột "Số tiền trích thu". -->
+                            <field name="amount_total" readonly="1"
+                                   invisible="1"/>
                             <field name="allocation_state" widget="badge"
                                    decoration-warning="allocation_state == 'over'"
                                    decoration-success="allocation_state == 'done'"/>
@@ -123,6 +126,7 @@
                                            optional="show"/>
                                     <field name="amount_allocated" width="185px"
                                            readonly="1"
+                                           sum="Σ đã allocate"
                                            optional="show"/>
                                     <field name="amount_allocated_principal" width="185px"
                                            readonly="1"
@@ -135,13 +139,16 @@
                                     <field name="amount_diff_period" width="185px"
                                            string="Chênh lệch cần net-off"
                                            readonly="1" optional="show"
+                                           sum="Σ chênh lệch"
                                            decoration-warning="amount_diff_period > 0"/>
                                     <field name="amount_unallocated" width="185px"
                                            string="Chưa allocate"
                                            readonly="1" optional="show"
+                                           sum="Σ chưa allocate"
                                            decoration-warning="amount_unallocated > 0"/>
                                     <field name="amount_carried_forward" width="185px"
-                                           readonly="1" optional="hide"/>
+                                           readonly="1" optional="hide"
+                                           sum="Σ đã chuyển"/>
                                     <field name="source_line_id"
                                            readonly="1" optional="hide"/>
                                     <field name="net_off_allowed"

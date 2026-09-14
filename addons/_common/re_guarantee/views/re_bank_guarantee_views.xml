@@ -141,8 +141,13 @@
                             <field name="account_payment_count"
                                    widget="statinfo" string="Phiếu chi"/>
                         </button>
+                        <!-- Ẩn theo backlog 1088: đếm "đợt thanh toán" nằm
+                             cạnh nút "Phiếu chi" gây lẫn — hai nút cùng
+                             mang chữ thanh toán, cùng một con số. Các đợt
+                             vẫn xem ở tab "Lịch sử thanh toán". -->
                         <button name="action_view_payments" type="object"
-                                class="oe_stat_button" icon="fa-money">
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="1">
                             <field name="payment_count" widget="statinfo"
                                    string="Thanh toán"/>
                         </button>

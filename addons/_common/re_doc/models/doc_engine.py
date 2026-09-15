@@ -152,7 +152,10 @@ class ReDocEngine(models.AbstractModel):
             from jinja2 import Environment
         except ImportError:
             raise UserError(_('Thiếu thư viện jinja2 trong container Odoo.'))
-        env = Environment()
+        # autoescape BẮT BUỘC: docxtpl chèn giá trị thẳng vào XML của .docx.
+        # Không escape thì "Công ty A & B", "shell & core" để lại một '&' trần
+        # trong XML — ký tự bị nuốt mất, có bản Word báo tệp hỏng.
+        env = Environment(autoescape=True)
         env.filters['money'] = _vn_money
         env.filters['num'] = _vn_num
         env.filters['date'] = _vn_date

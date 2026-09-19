@@ -62,7 +62,6 @@ Tuỳ chọn cài — chỉ KH cần quản lý chi tiết chứng thư BL mới
         'security/re_guarantee_groups.xml',
         'security/ir.model.access.csv',
         'data/re_guarantee_reminder_data.xml',
-        'data/re_guarantee_reminder_data.xml',
         'data/ir_sequence_data.xml',
         'data/ir_cron_data.xml',
         'views/re_bank_guarantee_views.xml',

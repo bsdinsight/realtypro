@@ -74,7 +74,7 @@ class ReLoanFxRevaluation(models.Model):
 
     line_ids = fields.One2many(
         're.loan.fx.revaluation.line', 'reval_id', string='Chi tiết')
-    line_count = fields.Integer(compute='_compute_totals')
+    line_count = fields.Integer(compute='_compute_line_count')
     move_ids = fields.One2many(
         'account.move', 'fx_revaluation_id', string='Bút toán')
     move_count = fields.Integer(compute='_compute_move_count')
@@ -98,11 +98,15 @@ class ReLoanFxRevaluation(models.Model):
     note = fields.Text(string='Ghi chú')
 
     # ==================================================================
+    @api.depends('line_ids')
+    def _compute_line_count(self):
+        for rec in self:
+            rec.line_count = len(rec.line_ids)
+
     @api.depends('line_ids.diff_amount', 'line_ids.gl_missing')
     def _compute_totals(self):
         for rec in self:
             live = rec.line_ids.filtered(lambda l: not l.gl_missing)
-            rec.line_count = len(rec.line_ids)
             rec.amount_loss = sum(
                 l.diff_amount for l in live if l.diff_amount > 0)
             rec.amount_gain = sum(

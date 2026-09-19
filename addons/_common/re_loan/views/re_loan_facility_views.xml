@@ -101,7 +101,7 @@
                                  role="alert"
                                  style="margin-top:4px; padding:6px 10px;"
                                  invisible="facility_type not in ('revolving','overdraft')">
-                                <i class="fa fa-refresh"/>
+                                <i class="fa fa-refresh" title="Tuần hoàn"/>
                                 <b>Tuần hoàn:</b> hạn mức được <b>KHÔI PHỤC
                                 tự động</b> khi KW trả gốc. Vd KW vay 2 tỷ,
                                 trả gốc 1 tỷ → "Đã sử dụng" giảm còn 1 tỷ,

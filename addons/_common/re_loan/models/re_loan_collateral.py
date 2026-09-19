@@ -48,7 +48,7 @@ class ReLoanCollateral(models.Model):
     pledge_ids = fields.One2many(
         're.loan.collateral.pledge', 'collateral_id', string='Thế chấp')
     pledge_count = fields.Integer(
-        string='Số lần thế chấp', compute='_compute_pledge_stats')
+        string='Số lần thế chấp', compute='_compute_pledge_count')
     active_pledge_count = fields.Integer(
         string='Số thế chấp đang hiệu lực',
         compute='_compute_pledge_stats', store=True)
@@ -131,12 +131,16 @@ class ReLoanCollateral(models.Model):
             latest = rec.valuation_ids.sorted(key=_key, reverse=True)[:1]
             rec.value_current = latest.amount if latest else 0.0
 
+    @api.depends('pledge_ids')
+    def _compute_pledge_count(self):
+        for rec in self:
+            rec.pledge_count = len(rec.pledge_ids)
+
     @api.depends('pledge_ids.state', 'pledge_ids.secured_amount',
                  'value_current')
     def _compute_pledge_stats(self):
         for rec in self:
             active = rec.pledge_ids.filtered(lambda p: p.state == 'active')
-            rec.pledge_count = len(rec.pledge_ids)
             rec.active_pledge_count = len(active)
             rec.total_secured = sum(active.mapped('secured_amount'))
             rec.value_available = rec.value_current - rec.total_secured

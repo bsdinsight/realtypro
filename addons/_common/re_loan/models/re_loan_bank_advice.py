@@ -70,10 +70,10 @@ class ReLoanBankAdvice(models.Model):
     line_ids = fields.One2many(
         're.loan.bank.advice.line', 'advice_id',
         string='Chi tiết các KW được trích thu')
-    line_count = fields.Integer(compute='_compute_stats')
+    line_count = fields.Integer(compute='_compute_line_count')
     amount_total = fields.Monetary(
         string='Tổng số tiền trích thu',
-        compute='_compute_stats', store=True)
+        compute='_compute_amount_total', store=True)
     repayment_count = fields.Integer(
         string='Số repayment đã tạo',
         compute='_compute_repayment_count')
@@ -113,10 +113,14 @@ class ReLoanBankAdvice(models.Model):
         'res.company', default=lambda self: self.env.company,
         required=True)
 
-    @api.depends('line_ids', 'line_ids.amount')
-    def _compute_stats(self):
+    @api.depends('line_ids')
+    def _compute_line_count(self):
         for rec in self:
             rec.line_count = len(rec.line_ids)
+
+    @api.depends('line_ids.amount')
+    def _compute_amount_total(self):
+        for rec in self:
             rec.amount_total = sum(rec.line_ids.mapped('amount'))
 
     @api.depends('line_ids.repayment_ids')
@@ -300,7 +304,7 @@ class ReLoanBankAdviceLine(models.Model):
     repayment_ids = fields.One2many(
         're.loan.note.repayment', 'bank_advice_line_id',
         string='Các repayment đã tạo (sau khi post)')
-    repayment_count = fields.Integer(compute='_compute_stats')
+    repayment_count = fields.Integer(compute='_compute_repayment_count')
     amount_allocated = fields.Monetary(
         string='Đã allocate',
         compute='_compute_stats', store=True)
@@ -420,6 +424,11 @@ class ReLoanBankAdviceLine(models.Model):
     company_id = fields.Many2one(
         related='advice_id.company_id', store=True, readonly=True)
 
+    @api.depends('repayment_ids')
+    def _compute_repayment_count(self):
+        for rec in self:
+            rec.repayment_count = len(rec.repayment_ids)
+
     @api.depends('repayment_ids.amount_total',
                  'repayment_ids.amount_principal',
                  'repayment_ids.amount_interest',
@@ -427,7 +436,6 @@ class ReLoanBankAdviceLine(models.Model):
                  'child_line_ids.amount', 'child_line_ids.state')
     def _compute_stats(self):
         for rec in self:
-            rec.repayment_count = len(rec.repayment_ids)
             allocated = sum(rec.repayment_ids.mapped('amount_total'))
             rec.amount_allocated = allocated
             rec.amount_allocated_principal = sum(

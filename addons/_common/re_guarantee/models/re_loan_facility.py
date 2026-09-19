@@ -19,7 +19,7 @@ class ReLoanFacility(models.Model):
     guarantee_ids = fields.One2many(
         're.bank.guarantee', 'facility_id',
         string='Chứng thư BL')
-    guarantee_count = fields.Integer(compute='_compute_guarantee_stats')
+    guarantee_count = fields.Integer(compute='_compute_guarantee_count')
     guarantee_total_outstanding = fields.Monetary(
         string='Tổng BL đang chiếm hạn mức',
         compute='_compute_guarantee_stats', store=True,
@@ -31,7 +31,7 @@ class ReLoanFacility(models.Model):
         're.guarantee.request', 'facility_id',
         string='Đề nghị BL')
     guarantee_request_count = fields.Integer(
-        compute='_compute_guarantee_request_stats')
+        compute='_compute_guarantee_request_count')
     guarantee_request_outstanding = fields.Monetary(
         string='Tổng Đề nghị BL đã kích hoạt',
         compute='_compute_guarantee_request_stats', store=True,
@@ -41,11 +41,15 @@ class ReLoanFacility(models.Model):
              'hành chứng thư. Phát hành xong thì chứng thư chiếm thay, '
              'tổng không đổi.')
 
+    @api.depends('guarantee_ids')
+    def _compute_guarantee_count(self):
+        for rec in self:
+            rec.guarantee_count = len(rec.guarantee_ids)
+
     @api.depends('guarantee_ids', 'guarantee_ids.state',
                  'guarantee_ids.amount')
     def _compute_guarantee_stats(self):
         for rec in self:
-            rec.guarantee_count = len(rec.guarantee_ids)
             # 'forfeited' PHẢI nằm trong danh sách này. Bị thu nghĩa
             # là ngân hàng đã trả thay cho bên thụ hưởng — nghĩa vụ
             # không biến mất mà đổi thành khoản doanh nghiệp nợ lại
@@ -56,11 +60,15 @@ class ReLoanFacility(models.Model):
                 lambda g: g.state in ('issued', 'extended', 'forfeited'))
             rec.guarantee_total_outstanding = sum(active.mapped('amount'))
 
+    @api.depends('guarantee_request_ids')
+    def _compute_guarantee_request_count(self):
+        for rec in self:
+            rec.guarantee_request_count = len(rec.guarantee_request_ids)
+
     @api.depends('guarantee_request_ids', 'guarantee_request_ids.state',
                  'guarantee_request_ids.amount')
     def _compute_guarantee_request_stats(self):
         for rec in self:
-            rec.guarantee_request_count = len(rec.guarantee_request_ids)
             active = rec.guarantee_request_ids.filtered(
                 lambda r: r.state == 'active')
             rec.guarantee_request_outstanding = sum(active.mapped('amount'))

@@ -98,7 +98,7 @@
                     </group>
                     <div class="alert alert-info" role="alert"
                          invisible="not has_flexible_facility">
-                        <i class="fa fa-info-circle"/>
+                        <i class="fa fa-info-circle" title="Hạn mức liên thông"/>
                         HĐTD này có facility tick <b>Hạn mức liên thông</b>.
                         Các facility liên thông sẽ chia sẻ phần thừa hạn
                         mức với nhau (vd: Vay đầu tư còn 200 tỷ + Bảo lãnh
@@ -120,7 +120,7 @@
                                     style="margin-bottom:6px;margin-left:6px;"/>
                             <div class="alert alert-info small"
                                  role="alert" style="margin-bottom:6px;">
-                                <i class="fa fa-info-circle"/>
+                                <i class="fa fa-info-circle" title="Hướng dẫn"/>
                                 <b>Thêm facility</b> → mở form khai đầy đủ
                                 (loại, mục đích, kỳ hạn, lãi suất, Dự án +
                                 Hợp đồng). <b>Bấm vào một dòng</b> để mở lại

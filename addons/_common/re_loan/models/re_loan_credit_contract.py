@@ -79,13 +79,13 @@ class ReLoanCreditContract(models.Model):
             rec.pledge_count = len(rec.pledge_ids.filtered(
                 lambda p: p.pledge_target == 'contract'))
     facility_count = fields.Integer(
-        string='Số hạn mức', compute='_compute_facility_stats')
+        string='Số hạn mức', compute='_compute_facility_count')
     amount_facility_total = fields.Monetary(
-        string='Tổng hạn mức đã cấp', compute='_compute_facility_stats',
+        string='Tổng hạn mức đã cấp', compute='_compute_amount_facility_total',
         store=True,
         help='Tổng hạn mức của các facility dưới HĐTD này.')
     amount_facility_available = fields.Monetary(
-        string='Hạn mức HĐTD còn lại', compute='_compute_facility_stats',
+        string='Hạn mức HĐTD còn lại', compute='_compute_amount_facility_available',
         help='Tổng hạn mức HĐTD trừ đi tổng hạn mức đã cấp cho các facility.')
     amount_pool_used = fields.Monetary(
         string='Tổng đã dùng (Σ facility)', compute='_compute_pool_stats',
@@ -136,12 +136,20 @@ class ReLoanCreditContract(models.Model):
     # ------------------------------------------------------------------
     # Compute
     # ------------------------------------------------------------------
-    @api.depends('facility_ids.amount_limit', 'amount_total')
-    def _compute_facility_stats(self):
+    @api.depends('facility_ids')
+    def _compute_facility_count(self):
         for rec in self:
             rec.facility_count = len(rec.facility_ids)
+
+    @api.depends('facility_ids.amount_limit')
+    def _compute_amount_facility_total(self):
+        for rec in self:
             rec.amount_facility_total = sum(
                 rec.facility_ids.mapped('amount_limit'))
+
+    @api.depends('amount_total', 'amount_facility_total')
+    def _compute_amount_facility_available(self):
+        for rec in self:
             rec.amount_facility_available = (
                 rec.amount_total - rec.amount_facility_total)
 

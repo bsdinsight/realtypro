@@ -11,7 +11,7 @@
         <field name="inherit_id"
                ref="re_loan.view_re_loan_credit_contract_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="before">
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
                 <div class="oe_button_box" name="button_box">
                     <button name="action_view_guarantee_requests"
                             type="object" class="oe_stat_button"

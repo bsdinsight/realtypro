@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Thuê tài sản (Lease)',
-    'version': '19.0.1.4.2',
+    'version': '19.0.1.4.3',
     'category': 'Realty/Lease',
     'summary': 'Quản lý thuê tài sản 2 chiều × 2 loại: Đi thuê / Cho thuê '
                'lại × Hoạt động / Tài chính. Lịch gốc+lãi, kế toán tích '

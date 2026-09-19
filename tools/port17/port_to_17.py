@@ -10,7 +10,13 @@ port xuống. Nếu port bằng tay thì sau vài tháng hai nhánh thành hai s
 phẩm khác nhau. Script này giữ cho việc port là một THAO TÁC LẶP LẠI
 ĐƯỢC: chạy lại trên mã 19 mới nhất là ra nhánh 17 mới.
 
-    python3 tools/port17/port_to_17.py <thư mục _common nguồn> <thư mục đích>
+    python3 tools/port17/port_to_17.py <thư mục _common nguồn> <thư mục đích> \
+        [--prev <thư mục addons của bản đã giao lần trước>]
+
+Luôn truyền --prev khi sinh bản giao: script dừng nếu có module đổi mã
+mà không tăng phiên bản (bên nhận sẽ bỏ sót nó khi nâng cấp).
+Và sinh từ COMMIT, không từ thư mục làm việc:
+    git archive HEAD addons/_common | tar -x -C /tmp/src19_head
 
 Script CHỈ ĐỌC thư mục nguồn; thư mục đích bị xoá và dựng lại.
 
@@ -681,10 +687,62 @@ def step_check_syntax(dst):
     return bad
 
 
+def _module_digest(root):
+    """Nội dung một module, bỏ __pycache__ và khoảng trắng cuối file."""
+    out = {}
+    for dp, dn, fn in os.walk(root):
+        dn[:] = [d for d in dn if d != '__pycache__']
+        for f in fn:
+            p = os.path.join(dp, f)
+            with open(p, 'rb') as fh:
+                out[os.path.relpath(p, root)] = fh.read().rstrip()
+    return out
+
+
+def _manifest_version(root):
+    s = io.open(os.path.join(root, '__manifest__.py'), encoding='utf-8').read()
+    m = re.search(r"'version'\s*:\s*'([^']+)'", s)
+    return m.group(1) if m else None
+
+
+def step_version_guard(dst, prev):
+    """Module đổi mã mà KHÔNG tăng phiên bản → dừng.
+
+    Odoo chỉ báo "cần nâng cấp" (và chỉ chạy migration) khi số phiên bản
+    trong manifest lớn hơn bản đang cài. Đổi mã mà giữ nguyên số thì bên
+    nhận bấm Nâng cấp theo danh sách Odoo gợi ý sẽ BỎ SÓT module đó — đã
+    dính ở bản 2026-09-19: re_lease đổi trường dự án sang project.project
+    mà vẫn 17.0.1.4.2, nên môi trường khách nâng cấp mọi module trừ nó.
+
+    `prev` = thư mục addons của bản đã giao lần trước (repo đối tác).
+    """
+    stale = []
+    for m in sorted(os.listdir(dst)):
+        a, b = os.path.join(prev, m), os.path.join(dst, m)
+        if not os.path.isdir(a) or not os.path.isfile(
+                os.path.join(b, '__manifest__.py')):
+            continue
+        if _module_digest(a) != _module_digest(b) and \
+                _manifest_version(a) == _manifest_version(b):
+            stale.append('%s (%s)' % (m, _manifest_version(b)))
+    if stale:
+        raise SystemExit(
+            'Module đổi mã mà KHÔNG tăng phiên bản so với bản đã giao: %s. '
+            'Tăng version trong manifest ở nguồn 19 rồi chạy lại.'
+            % ', '.join(stale))
+    note('  %-46s 0 module' % 'đổi mã mà không tăng phiên bản')
+
+
 def main():
-    if len(sys.argv) != 3:
+    args = sys.argv[1:]
+    prev = None
+    if '--prev' in args:
+        i = args.index('--prev')
+        prev = args[i + 1]
+        del args[i:i + 2]
+    if len(args) != 2:
         raise SystemExit(__doc__)
-    src, dst = sys.argv[1], sys.argv[2]
+    src, dst = args
     note('Port Odoo 19 -> 17')
     note('  nguồn: %s' % src)
     note('  đích : %s' % dst)
@@ -705,6 +763,8 @@ def main():
     step_partner_profile(dst)
     step_partner_project(dst)
     bad = step_check_syntax(dst)
+    if prev:
+        step_version_guard(dst, prev)
     note('XONG' if not bad else 'XONG (còn %s lỗi cú pháp)' % bad)
     return 1 if bad else 0
 

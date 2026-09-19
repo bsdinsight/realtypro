@@ -33,6 +33,11 @@ NHỮNG GÌ ODOO 17 KHÁC 19 (theo thứ tự gặp phải khi cài thật)
 10. account.payment: `memo` (Odoo 18+) vốn tên là `ref` ở 17. Sai
     khoá này KHÔNG lộ ở bước kiểm cú pháp — chỉ nổ lúc create.
 11. Một số chỗ lẻ: xem PATCHES_LE cuối file.
+12. File phải viết lại hẳn cho 17 (JS định dạng ngày): tools/port17/files17/.
+
+Sau đó là HỒ SƠ ĐỐI TÁC (đối tác xb_partner, dự án project.project) —
+khác biệt MÔI TRƯỜNG khách, không phải khác biệt phiên bản. Xem
+PARTNER_EDITS và step_partner_project.
 """
 import ast
 import io
@@ -477,6 +482,187 @@ def step_patches_le(dst):
     note('  %-46s %s chỗ' % ('vá lẻ', n))
 
 
+# ----------------------------------------------------------------------
+# FILE RIÊNG CHO ODOO 17 — ghi đè NGUYÊN FILE từ tools/port17/files17/.
+# Dùng khi khác biệt không vá được bằng thay chuỗi (viết lại cả logic).
+#
+#  - re_base/static/src/js/date_format_override.js: bản 19 vá
+#    DateTimeField.defaultProps.numeric — prop này KHÔNG có ở Odoo 17,
+#    OWL từ chối field và làm vỡ cả backend. Bản 17 vá cách hiển thị
+#    (getFormattedValue). Do đối tác phát hiện và sửa trên repo của họ
+#    (15/09/2026); bộ kiểm Python không bắt được lỗi JS này.
+FILES17 = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files17')
+
+
+def step_files17(dst):
+    n = 0
+    for dp, _dn, fn in os.walk(FILES17):
+        for f in fn:
+            src = os.path.join(dp, f)
+            rel = os.path.relpath(src, FILES17)
+            if not os.path.isdir(os.path.join(dst, rel.split(os.sep)[0])):
+                continue
+            target = os.path.join(dst, rel)
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            shutil.copyfile(src, target)
+            n += 1
+    note('  %-46s %s file' % ('ghi đè file riêng Odoo 17', n))
+
+
+# ----------------------------------------------------------------------
+# HỒ SƠ TRIỂN KHAI CỦA ĐỐI TÁC (bản Odoo 17 bàn giao)
+#
+# Khác các bước trên (khác biệt PHIÊN BẢN Odoo), phần này là khác biệt
+# MÔI TRƯỜNG của khách: khách chạy bộ module riêng của đối tác. Tách riêng để
+# còn biết chỗ nào là "Odoo 17", chỗ nào là "nhà đối tác".
+#
+#  1. Đối tác: Đối tác thay re_party bằng xb_partner_extend (có is_bank,
+#     parent_company_id, quan hệ đối tác) và vn_administrative_units bằng
+#     xb_partner (res.country.ward, res.bank.partner_id). Danh mục ngân
+#     hàng đã có sẵn ở môi trường của họ nên bỏ dữ liệu ngân hàng + demo
+#     (demo tham chiếu re_party). Chép đúng theo sửa của đối tác ở PR #2.
+#  2. Dự án: Khách quản lý dự án bằng Project của Odoo (project.project),
+#     không dùng re.project của re_base. Mọi trường dự án trỏ sang
+#     project.project (anh Đại chốt 19/09/2026).
+#
+# CHẶT: không tìm thấy đoạn cần thay là DỪNG. Nguồn 19 đổi mà bước này
+# lặng lẽ bỏ qua thì bản giao sẽ đè mất sửa của đối tác — đúng thứ phần
+# này sinh ra để tránh.
+PARTNER_EDITS = [
+    ('re_loan/__manifest__.py',
+     "        'mail',\n        're_party',\n        're_base',",
+     "        'mail',\n        'xb_partner_extend',\n        're_base',",
+     're_party → xb_partner_extend'),
+    ('re_loan/__manifest__.py',
+     "        'data/re_loan_vn_banks_data.xml',\n",
+     "        # data/re_loan_vn_banks_data.xml — bỏ ở bản đối tác: danh mục "
+     "ngân hàng đã có từ xb_partner\n",
+     'bỏ dữ liệu ngân hàng'),
+    ('re_loan/__manifest__.py',
+     re.compile(r"    'demo': \[\n(?:        '[^']+',\n)+    \],\n"),
+     "    # demo — bỏ ở bản đối tác: dữ liệu mẫu tham chiếu re_party\n",
+     'bỏ demo'),
+    ('re_guarantee/__manifest__.py',
+     "        'mail',\n        're_party',\n",
+     "        'mail',\n",
+     'bỏ phụ thuộc re_party'),
+    ('re_loan/views/res_partner_views.xml',
+     re.compile(r'    <!-- % phí KW theo NH.*?</record>', re.S),
+     '''    <!-- Phí KW / thẩm định giá trên form đối tác xb_partner_extend. -->
+    <record id="view_partner_form_re_loan_fee" model="ir.ui.view">
+        <field name="name">res.partner.form.re.loan.fee</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="xb_partner_extend.view_partner_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_bank']" position="after">
+                <field name="kw_fee_rate" invisible="not is_bank"/>
+                <field name="is_appraiser"/>
+            </xpath>
+        </field>
+    </record>''',
+     'form đối tác gắn vào xb_partner_extend'),
+    ('re_base/__manifest__.py',
+     "        'web',\n        'vn_administrative_units',\n",
+     "        'web',\n        'xb_partner',\n",
+     'vn_administrative_units → xb_partner'),
+    ('re_base/__manifest__.py',
+     "  Applied via JS patch on DateTimeField default props.",
+     "  Applied via ``res.lang`` data and a DateTimeField display patch\n"
+     "  (Odoo 17 has no ``numeric`` widget prop).",
+     'mô tả định dạng ngày (bản 17)'),
+    ('re_base/__manifest__.py',
+     "``vn_administrative_units`` dependency",
+     "``xb_partner`` dependency",
+     'mô tả địa chỉ'),
+    ('re_base/models/re_project.py',
+     """        'vau.ward', string='Ward / Phường-Xã',
+        domain="[('state_id', '=', state_id)]",""",
+     """        'res.country.ward', string='Ward / Phường-Xã',
+        domain="[('district_id.state_id', '=', state_id)]",""",
+     'phường/xã theo xb_partner'),
+    ('re_base/models/re_project.py',
+     "            if project.ward_id and project.ward_id.state_id != project.state_id:",
+     """            if (project.ward_id and project.state_id
+                    and project.ward_id.district_id.state_id != project.state_id):""",
+     'onchange phường/xã theo xb_partner'),
+]
+
+# Module có trường trỏ dự án — thêm phụ thuộc 'project' khi đổi sang
+# project.project. re_base giữ nguyên: nó ĐỊNH NGHĨA re.project.
+PROJECT_OWNER = 're_base'
+
+
+def step_partner_profile(dst):
+    n = 0
+    for rel, old, new, why in PARTNER_EDITS:
+        p = os.path.join(dst, rel)
+        s = io.open(p, encoding='utf-8').read()
+        if isinstance(old, str):
+            if s.count(old) != 1:
+                raise SystemExit(
+                    'HỒ SƠ ĐỐI TÁC: không tìm thấy (hoặc thấy nhiều lần) '
+                    'đoạn cần thay ở %s — %s. Nguồn 19 đã đổi: cập nhật '
+                    'PARTNER_EDITS trước khi giao.' % (rel, why))
+            s = s.replace(old, new)
+        else:
+            s, k = old.subn(new, s, count=1)
+            if k != 1:
+                raise SystemExit(
+                    'HỒ SƠ ĐỐI TÁC: không khớp mẫu ở %s — %s.' % (rel, why))
+        io.open(p, 'w', encoding='utf-8').write(s)
+        n += 1
+    note('  %-46s %s chỗ' % ('hồ sơ đối tác: đối tác / địa chỉ', n))
+
+
+def step_partner_project(dst):
+    fields_n = files_n = 0
+    touched = set()
+    for m in ISLAND:
+        if m == PROJECT_OWNER:
+            continue
+        root = os.path.join(dst, m)
+        for p in walk_files(root, '.py'):
+            s = io.open(p, encoding='utf-8').read()
+            o = s
+            k = s.count("'re.project'")
+            s = s.replace("'re.project'", "'project.project'")
+            if '/tests/' in p:
+                # project.project không có 'code' như re.project.
+                s = re.sub(
+                    r"(\['project\.project'\]\.create\(\{\s*'name':\s*"
+                    r"'[^']*'),\s*'code':\s*'[^']*'", r"\1", s)
+            if s != o:
+                io.open(p, 'w', encoding='utf-8').write(s)
+                fields_n += k
+                files_n += 1
+                touched.add(m)
+        for p in walk_files(root, '.csv'):
+            s = io.open(p, encoding='utf-8').read()
+            s2 = s.replace('re_base.model_re_project',
+                           'project.model_project_project')
+            if s2 != s:
+                io.open(p, 'w', encoding='utf-8').write(s2)
+                files_n += 1
+                touched.add(m)
+    for m in sorted(touched):
+        p = os.path.join(dst, m, '__manifest__.py')
+        s = io.open(p, encoding='utf-8').read()
+        if "'project'" in s:
+            continue
+        s2, k = re.subn(r"('depends'\s*:\s*\[\n)", r"\1        'project',\n",
+                        s, count=1)
+        if k != 1:
+            raise SystemExit('HỒ SƠ ĐỐI TÁC: không thêm được depends '
+                             'project cho %s' % m)
+        io.open(p, 'w', encoding='utf-8').write(s2)
+    if fields_n < 7:
+        raise SystemExit('HỒ SƠ ĐỐI TÁC: chỉ đổi được %s chỗ re.project '
+                         '(kỳ vọng ≥ 7) — kiểm lại nguồn.' % fields_n)
+    note('  %-46s %s chỗ / %s file (%s)' % (
+        'hồ sơ đối tác: dự án → project.project', fields_n, files_n,
+        ', '.join(sorted(touched))))
+
+
 def step_check_syntax(dst):
     bad = 0
     for p in walk_files(dst, '.py'):
@@ -515,6 +701,9 @@ def main():
     step_security(dst)
     step_inject_fields(dst)
     step_patches_le(dst)
+    step_files17(dst)
+    step_partner_profile(dst)
+    step_partner_project(dst)
     bad = step_check_syntax(dst)
     note('XONG' if not bad else 'XONG (còn %s lỗi cú pháp)' % bad)
     return 1 if bad else 0

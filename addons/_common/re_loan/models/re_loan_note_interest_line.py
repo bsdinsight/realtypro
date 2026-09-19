@@ -140,6 +140,13 @@ class ReLoanNoteInterestLine(models.Model):
     amount_paid_total = fields.Monetary(
         string='Tổng đã trả',
         compute='_compute_paid_amounts', store=True)
+    amount_remaining_total = fields.Monetary(
+        string='Tổng còn phải trả',
+        compute='_compute_amount_remaining_total', store=True,
+        help='= Gốc còn phải trả + Lãi còn phải trả + Phí còn phải trả '
+             '(báo cáo Lịch lãi quá hạn — backlog 1091).')
+    partner_id = fields.Many2one(
+        related='note_id.partner_id', store=True, string='Ngân hàng')
 
     is_overdue = fields.Boolean(
         string='Quá hạn chưa trả', compute='_compute_overdue_flag',
@@ -358,17 +365,33 @@ class ReLoanNoteInterestLine(models.Model):
         # act_365 (mặc định)
         return self.days / 365.0
 
+    def _formula_interest(self):
+        self.ensure_one()
+        return (self.principal_base * (self.interest_rate / 100.0)
+                * self._day_factor())
+
+    # is_overridden / interest_amount_manual CỐ Ý không nằm trong
+    # depends (backlog 1087). Nằm trong đó thì form tính lại ngay khi
+    # đang gõ: vừa bật "Sửa tay" tiền lãi đã nhảy về 0, gõ tới đâu tổng
+    # phải trả đổi tới đó, dù người dùng chưa bấm Lưu và có thể bỏ.
+    # Nay số chỉ đổi lúc lưu — write() bên dưới tự áp. Thân hàm vẫn tôn
+    # trọng cờ sửa tay, để khi lãi suất/dư nợ đổi thì kỳ sửa tay giữ số.
     @api.depends('principal_base', 'interest_rate', 'days',
-                 'is_overridden', 'interest_amount_manual',
                  'note_id.day_count')
     def _compute_interest_amount(self):
         for line in self:
             if line.is_overridden:
                 line.interest_amount = line.interest_amount_manual
             else:
-                line.interest_amount = (
-                    line.principal_base * (line.interest_rate / 100.0)
-                    * line._day_factor())
+                line.interest_amount = line._formula_interest()
+
+    @api.onchange('is_overridden')
+    def _onchange_is_overridden_prefill(self):
+        # Bật sửa tay → điền sẵn số đang có để người dùng chỉnh từ đó,
+        # thay vì bắt gõ lại từ con số 0.
+        for line in self:
+            if line.is_overridden and not line.interest_amount_manual:
+                line.interest_amount_manual = line.interest_amount
 
     @api.depends('note_id.repayment_plan', 'note_id.amount',
                  'note_id.tenor_months', 'period_no')
@@ -402,6 +425,34 @@ class ReLoanNoteInterestLine(models.Model):
             line.total_due = (line.principal_due + line.interest_amount
                               + line.fee_amount)
 
+    @api.depends('amount_principal_remaining', 'amount_interest_remaining',
+                 'amount_fee_remaining')
+    def _compute_amount_remaining_total(self):
+        for line in self:
+            line.amount_remaining_total = (
+                (line.amount_principal_remaining or 0.0)
+                + (line.amount_interest_remaining or 0.0)
+                + (line.amount_fee_remaining or 0.0))
+
+    @api.model
+    def _refresh_overdue_flags(self, today=None):
+        """Tính lại cờ/ số ngày quá hạn — hai thứ đi theo NGÀY HÔM NAY.
+
+        Hai trường này lưu vào DB nên chỉ tự tính lại khi dữ liệu kỳ
+        đổi; qua đêm mà không ai đụng vào khế ước thì kỳ vừa tới hạn hôm
+        qua vẫn chưa bị đánh dấu, và số ngày trễ đứng im. Cron hằng ngày
+        gọi hàm này (backlog 1091 — báo cáo Lịch lãi quá hạn đọc cờ đó).
+        """
+        today = today or fields.Date.context_today(self)
+        lines = self.search([
+            '|', ('is_overdue', '=', True),
+            '&', ('date_to', '<', today), ('state', '!=', 'paid')])
+        if lines:
+            self.env.add_to_compute(self._fields['is_overdue'], lines)
+            self.env.add_to_compute(self._fields['days_overdue'], lines)
+            lines.flush_recordset(['is_overdue', 'days_overdue'])
+        return lines
+
     # ------------------------------------------------------------------
     # Action: Thanh toán kỳ này → tạo Repayment tương ứng
     # ------------------------------------------------------------------
@@ -409,6 +460,26 @@ class ReLoanNoteInterestLine(models.Model):
     # Vết sửa tay trên lịch lãi (backlog 746)
     # ------------------------------------------------------------------
     def write(self, vals):
+        if (('is_overridden' in vals or 'interest_amount_manual' in vals)
+                and 'interest_amount' not in vals):
+            # Áp số sửa tay vào Tiền lãi ĐÚNG LÚC LƯU (backlog 1087) —
+            # xem chú thích ở _compute_interest_amount. Chia nhóm theo
+            # số lãi đích để mỗi nhóm một lần ghi, giữ một mẩu nhật ký.
+            groups = {}
+            for rec in self:
+                overridden = vals.get('is_overridden', rec.is_overridden)
+                manual = vals.get('interest_amount_manual',
+                                  rec.interest_amount_manual)
+                target = manual if overridden else rec._formula_interest()
+                groups.setdefault(target or 0.0, self.browse())
+                groups[target or 0.0] |= rec
+            res = True
+            for target, recs in groups.items():
+                # Gọi lại write() của chính model (có interest_amount
+                # trong vals nên không lặp) để phần ghi nhật ký bên
+                # dưới vẫn chạy.
+                res &= recs.write(dict(vals, interest_amount=target))
+            return res
         watched = [f for f in vals if f in LOGGED_LINE_FIELDS]
         before = {}
         if watched and not self.env.context.get('skip_interest_line_log'):

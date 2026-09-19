@@ -255,13 +255,11 @@
             <list editable="bottom" decoration-muted="not active">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <!-- Mã của mục dựng sẵn khoá cứng: mã nguồn và dữ liệu
-                     cũ tham chiếu theo nó. Mục tự khai thì mở, nhưng
-                     khoá lại ngay khi đã có hạn mức dùng tới. -->
-                <field name="is_builtin" column_invisible="1"/>
-                <field name="facility_count" column_invisible="1"/>
-                <field name="code" placeholder="vd: wc_special"
-                       readonly="is_builtin or facility_count &gt; 0"/>
+                <!-- Mã do hệ thống tự sinh từ tên khi lưu (backlog
+                     1084) — người dùng không khai, không sửa. Hạn mức
+                     tham chiếu mục đích theo mã này. -->
+                <field name="code" readonly="1" required="0"
+                       placeholder="Tự sinh khi lưu"/>
                 <field name="kind" readonly="code == 'bank_guarantee'"/>
                 <field name="facility_count" string="Hạn mức đang dùng"
                        optional="show"/>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan ↔ Accounting',
-    'version': '19.0.1.7.1',
+    'version': '19.0.1.8.0',
     'category': 'Realty/Finance',
     'summary': 'Tích hợp kế toán cho re_loan: post bút toán giải ngân / lãi / '
                'trả nợ; capitalize lãi vay theo công trình.',
@@ -36,6 +36,7 @@ KHÔNG depend l10n_vn. Customer dùng COA nào cũng map được.
         'account',
     ],
     'data': [
+        'security/re_loan_account_groups.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/res_config_settings_views.xml',

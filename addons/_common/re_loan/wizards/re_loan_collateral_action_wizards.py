@@ -51,6 +51,19 @@ class ReLoanPledgeReleaseWizard(models.TransientModel):
                 raise UserError(_(
                     'Ngày giải chấp không được ở tương lai.'))
 
+    @api.onchange('release_date', 'pledge_ids')
+    def _onchange_release_before_pledge(self):
+        """Báo ngay khi chọn ngày, không đợi tới lúc bấm Xác nhận
+        (backlog 1082). Chặn thật nằm ở _do_release của văn bản thế
+        chấp — đường nào gọi giải chấp cũng phải qua đó."""
+        early = self.pledge_ids._pledged_after(self.release_date)
+        if early:
+            return {'warning': {
+                'title': _('Ngày giải chấp sớm hơn ngày thế chấp'),
+                'message': early._msg_release_before_pledge(
+                    self.release_date),
+            }}
+
     def action_confirm(self):
         self.ensure_one()
         self.pledge_ids._do_release(self.release_date, self.release_reason)

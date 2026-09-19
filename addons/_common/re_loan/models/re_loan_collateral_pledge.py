@@ -234,8 +234,38 @@ class ReLoanCollateralPledge(models.Model):
             'context': {'default_pledge_ids': self.ids},
         }
 
+    def _pledged_after(self, release_date):
+        """Các văn bản có ngày thế chấp SAU ngày giải chấp định ghi."""
+        if not release_date:
+            return self.browse()
+        return self.filtered(
+            lambda p: p.date_pledge and p.date_pledge > release_date)
+
+    def _msg_release_before_pledge(self, release_date):
+        return _(
+            'Ngày giải chấp %(r)s sớm hơn ngày thế chấp của: %(l)s. '
+            'Không thể giải chấp một tài sản trước khi nó được thế chấp '
+            '— kiểm tra lại ngày trên hồ sơ ngân hàng.',
+            r=release_date.strftime('%d/%m/%Y'),
+            l=', '.join('%s (%s)' % (
+                p.collateral_id.display_name,
+                p.date_pledge.strftime('%d/%m/%Y')) for p in self))
+
+    @api.constrains('date_pledge', 'release_date')
+    def _check_release_after_pledge(self):
+        # Chốt cuối cho mọi đường ghi (wizard, sửa tay ngày thế chấp
+        # sau khi đã giải chấp, import) — backlog 1082.
+        for rec in self:
+            if rec.release_date and rec._pledged_after(rec.release_date):
+                raise ValidationError(
+                    rec._msg_release_before_pledge(rec.release_date))
+
     def _do_release(self, release_date, reason):
         """Ghi giải chấp thật — gọi từ wizard."""
+        release_date = release_date or fields.Date.context_today(self)
+        early = self._pledged_after(release_date)
+        if early:
+            raise UserError(early._msg_release_before_pledge(release_date))
         for rec in self:
             if rec.state != 'active':
                 raise UserError(_('Thế chấp này đã được giải chấp.'))

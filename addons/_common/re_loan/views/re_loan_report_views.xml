@@ -48,15 +48,27 @@
         <field name="search_view_id" ref="view_re_loan_note_search"/>
     </record>
 
-    <!-- ===== Báo cáo: Nợ quá hạn (Aging) ===== -->
+    <!-- ===== Báo cáo: Nợ quá hạn (Aging) =====
+         CHỈ khế ước đã quá ngày đáo hạn mà còn dư nợ (backlog 1090).
+         Khế ước còn trong hạn nhưng có kỳ lãi trễ KHÔNG vào đây — nhóm
+         đó có báo cáo riêng "Lịch lãi quá hạn" bên dưới. Điều kiện nằm ở
+         domain của action (không phải bộ lọc mặc định) để người dùng
+         không vô tình bỏ lọc rồi thấy lẫn khế ước trong hạn. -->
     <record id="action_re_loan_report_aging" model="ir.actions.act_window">
         <field name="name">Nợ quá hạn (Aging)</field>
         <field name="res_model">re.loan.note</field>
         <field name="view_mode">pivot,list,form</field>
         <field name="domain">[('principal_outstanding','>',0),
-                              ('state','!=','cancelled')]</field>
-        <field name="context">{'search_default_f_overdue': 1, 'search_default_g_aging': 1}</field>
+                              ('state','!=','cancelled'),
+                              ('aging_bucket','in',('b1_30','b31_60','b61_90','b91_180','b181_365','b365'))]</field>
+        <field name="context">{'search_default_g_aging': 1}</field>
         <field name="search_view_id" ref="view_re_loan_note_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có khế ước quá hạn</p>
+            <p>Chỉ gồm khế ước đã qua ngày đáo hạn mà còn dư nợ gốc.
+            Kỳ lãi trễ của khế ước còn trong hạn xem ở báo cáo
+            "Lịch lãi quá hạn".</p>
+        </field>
     </record>
 
     <!-- ===== Menu Báo cáo ===== -->
@@ -79,6 +91,100 @@
               parent="menu_re_loan_report"
               action="action_re_loan_report_aging"
               sequence="30"/>
+
+    <!-- ===== Báo cáo: Lịch lãi quá hạn (backlog 1091) =====
+         Các kỳ đã qua ngày đến hạn mà chưa trả đủ, nằm trong khế ước
+         CHƯA đáo hạn — đúng nhóm mà báo cáo Nợ quá hạn (Aging) không
+         còn lấy. Nhóm theo khế ước. Cột xếp theo thứ tự phải trả → đã
+         trả → còn lại cho cả gốc, lãi, phí. -->
+    <record id="view_re_loan_interest_overdue_list" model="ir.ui.view">
+        <field name="name">re.loan.note.interest.line.overdue.list</field>
+        <field name="model">re.loan.note.interest.line</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0"
+                  default_order="note_id, period_no">
+                <field name="note_id"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="period_no" string="Kỳ"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="days_overdue" string="Số ngày trễ"/>
+                <field name="line_type" string="Loại kỳ"/>
+                <field name="interest_rate" string="Lãi suất (%/năm)"/>
+                <field name="principal_due" width="185px"
+                       string="Gốc phải trả" sum="Σ"/>
+                <field name="amount_principal_paid" width="185px"
+                       string="Gốc đã trả" sum="Σ"/>
+                <field name="amount_principal_remaining" width="185px"
+                       string="Gốc còn lại" sum="Σ"/>
+                <field name="interest_amount" width="185px"
+                       string="Lãi phải trả" sum="Σ"/>
+                <field name="amount_interest_paid" width="185px"
+                       string="Lãi đã trả" sum="Σ"/>
+                <field name="amount_interest_remaining" width="185px"
+                       string="Lãi còn lại" sum="Σ"/>
+                <field name="fee_amount" width="185px"
+                       string="Phí phải trả" sum="Σ"/>
+                <field name="amount_fee_paid" width="185px"
+                       string="Phí đã trả" sum="Σ"/>
+                <field name="amount_fee_remaining" width="185px"
+                       string="Phí còn lại" sum="Σ"/>
+                <field name="amount_remaining_total" width="185px"
+                       string="Tổng còn phải trả (gốc + lãi + phí)" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_loan_interest_overdue_search" model="ir.ui.view">
+        <field name="name">re.loan.note.interest.line.overdue.search</field>
+        <field name="model">re.loan.note.interest.line</field>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="note_id"/>
+                <field name="partner_id"/>
+                <filter name="f_over_30" string="Trễ trên 30 ngày"
+                        domain="[('days_overdue','>',30)]"/>
+                <filter name="f_adjustment" string="Dòng điều chỉnh"
+                        domain="[('line_type','=','adjustment')]"/>
+                <separator/>
+                <filter name="g_note" string="Khế ước"
+                        context="{'group_by': 'note_id'}"/>
+                <filter name="g_partner" string="Ngân hàng"
+                        context="{'group_by': 'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_loan_report_interest_overdue" model="ir.actions.act_window">
+        <field name="name">Lịch lãi quá hạn</field>
+        <field name="res_model">re.loan.note.interest.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_re_loan_interest_overdue_list"/>
+        <field name="search_view_id" ref="view_re_loan_interest_overdue_search"/>
+        <!-- Khế ước "chưa đáo hạn" = chưa có ngày đáo hạn hoặc ngày đáo
+             hạn từ hôm nay trở đi. Khế ước đã đáo hạn nằm ở báo cáo
+             Nợ quá hạn (Aging). -->
+        <field name="domain">[('is_overdue','=',True),
+                              ('note_id.state','not in',('draft','sent_to_bank','cancelled','fully_paid')),
+                              '|', ('note_id.date_maturity','=',False),
+                                   ('note_id.date_maturity','&gt;=',context_today().strftime('%Y-%m-%d'))]</field>
+        <field name="context">{'search_default_g_note': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có kỳ lãi quá hạn</p>
+            <p>Các kỳ đã qua ngày đến hạn mà chưa trả đủ gốc/lãi, thuộc
+            khế ước chưa đáo hạn. Khế ước đã đáo hạn xem ở báo cáo
+            "Nợ quá hạn (Aging)".</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_re_loan_report_interest_overdue"
+              name="Lịch lãi quá hạn"
+              parent="menu_re_loan_report"
+              action="action_re_loan_report_interest_overdue"
+              sequence="35"/>
 
     <!-- ===== Báo cáo (5): Tiến độ thanh toán ===== -->
     <record id="view_re_loan_note_progress_list" model="ir.ui.view">

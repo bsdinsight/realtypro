@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hạch toán ngay trên khế ước (backlog 1086).
+
+         Nút Post / Ghi nhận, cột Bút toán và nút đếm bút toán trên form
+         khế ước chỉ hiện cho người thuộc nhóm này. Mặc định KHÔNG ai
+         thuộc nhóm — kể cả admin: khách hạch toán ở phần mềm kế toán
+         riêng thì các nút đó chỉ gây nhầm ("post" rồi mà sổ bên kia
+         không có gì). Khách nào hạch toán thẳng trong Odoo thì vào
+         Người dùng → Realty Loan → "Hạch toán trên khế ước" cấp quyền,
+         không phải sửa mã.
+
+         Ẩn giao diện thôi; mã hạch toán và dữ liệu bút toán cũ giữ
+         nguyên. Menu "Bảng kê chứng từ theo KW" không đổi. -->
+    <record id="privilege_loan_note_accounting" model="res.groups.privilege">
+        <field name="name">Hạch toán trên khế ước</field>
+        <field name="sequence">5</field>
+        <field name="category_id" ref="re_loan.module_category_realty_loan"/>
+    </record>
+
+    <record id="group_loan_note_accounting" model="res.groups">
+        <field name="name">Được ghi sổ từ khế ước</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_loan_note_accounting"/>
+        <field name="implied_ids" eval="[(4, ref('re_loan.group_loan_user'))]"/>
+        <field name="comment">Thấy nút Post / Ghi nhận, cột Bút toán và nút đếm bút toán trên khế ước.</field>
+    </record>
+</odoo>

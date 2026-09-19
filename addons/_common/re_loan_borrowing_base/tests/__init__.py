@@ -3,3 +3,4 @@ from . import test_project_availability
 from . import test_project_funding
 from . import test_cashflow_dscr
 from . import test_ipc_collected
+from . import test_account_display

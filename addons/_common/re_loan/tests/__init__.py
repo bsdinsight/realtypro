@@ -9,3 +9,4 @@ from . import test_revolving_restoration
 from . import test_amount_within_facility
 from . import test_multi_company
 from . import test_bank_advice
+from . import test_loan_purpose

@@ -112,7 +112,9 @@
                     <group>
                         <group string="Tiền phải trả">
                             <field name="principal_due"/>
-                            <field name="interest_amount" readonly="is_overridden == False"/>
+                            <!-- Chỉ đổi khi LƯU (backlog 1087): số sửa tay
+                                 nhập ở ô bên phải, lưu xong mới áp vào đây. -->
+                            <field name="interest_amount" readonly="1"/>
                             <field name="total_due" readonly="1"/>
                         </group>
                         <group string="Sửa tay tiền lãi (khi NH tính lệch)">
@@ -121,6 +123,11 @@
                             <field name="interest_amount_manual"
                                    invisible="not is_overridden"
                                    required="is_overridden"/>
+                            <div class="text-muted small" colspan="2"
+                                 invisible="not is_overridden">
+                                Tiền lãi và Tổng phải trả bên trái đổi
+                                theo số này khi bấm Lưu.
+                            </div>
                         </group>
                     </group>
                     <field name="currency_id" invisible="1"/>

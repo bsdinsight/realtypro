@@ -102,6 +102,92 @@ class TestInterestSchedule(TransactionCase):
                     'interest_amount_manual': 99_000_000.0})
         self.assertEqual(line.interest_amount, 99_000_000.0)
 
+    def test_override_applies_only_on_save(self):
+        """Backlog 1087: bật Sửa tay và gõ số lãi mới thì Tiền lãi và
+        Tổng phải trả CHƯA đổi; bấm Lưu mới đổi. Tắt Sửa tay rồi lưu
+        thì về lại số tính theo công thức."""
+        from odoo.tests import Form
+        note = self._note(tenor=12)
+        note.action_activate()
+        line = note.interest_line_ids.sorted('period_no')[0]
+        formula = line.interest_amount
+        total = line.total_due
+        self.assertTrue(formula)
+
+        f = Form(line)
+        f.is_overridden = True
+        # Điền sẵn số đang có, không nhảy về 0.
+        self.assertAlmostEqual(f.interest_amount_manual, formula, places=2)
+        self.assertAlmostEqual(f.interest_amount, formula, places=2)
+        f.interest_amount_manual = 77_000_000.0
+        self.assertAlmostEqual(f.interest_amount, formula, places=2)
+        self.assertAlmostEqual(f.total_due, total, places=2)
+        f.save()
+        self.assertEqual(line.interest_amount, 77_000_000.0)
+        self.assertAlmostEqual(
+            line.total_due,
+            line.principal_due + 77_000_000.0 + line.fee_amount, places=2)
+
+        f = Form(line)
+        f.is_overridden = False
+        self.assertEqual(f.interest_amount, 77_000_000.0)
+        f.save()
+        self.assertAlmostEqual(line.interest_amount, formula, places=2)
+
+        # Kỳ đã sửa tay giữ số khi lãi suất đổi.
+        line.write({'is_overridden': True,
+                    'interest_amount_manual': 55_000_000.0})
+        line.interest_rate = line.interest_rate + 1
+        self.assertEqual(line.interest_amount, 55_000_000.0)
+
+    def test_overdue_reports_split(self):
+        """Backlog 1090/1091 + cờ quá hạn đi theo ngày.
+
+        KW chưa đáo hạn có kỳ lãi trễ: KHÔNG nằm trong Nợ quá hạn
+        (Aging), CÓ trong Lịch lãi quá hạn. Cron hằng ngày tính lại cờ
+        quá hạn đã lưu của từng kỳ.
+        """
+        from odoo import fields
+        from odoo.tools.safe_eval import safe_eval
+        note = self._note(tenor=12)   # 01/01/2026 → đáo hạn 01/01/2027
+        note.action_activate()
+        today = fields.Date.context_today(note)
+        past = note.interest_line_ids.filtered(lambda l: l.date_to < today)
+        self.assertTrue(past, 'Cần ít nhất một kỳ đã tới hạn')
+        self.assertTrue(all(past.mapped('is_overdue')))
+
+        # Giả lập cờ lưu từ hôm trước mà chưa ai tính lại. Flush trước
+        # để không còn phép tính chờ nào ghi đè lên số giả lập.
+        self.env.flush_all()
+        self.env.cr.execute(
+            'UPDATE re_loan_note_interest_line '
+            'SET is_overdue = false, days_overdue = 0 WHERE id IN %s',
+            [tuple(past.ids)])
+        self.env.invalidate_all()
+        self.assertFalse(any(past.mapped('is_overdue')))
+        self.env['re.loan.note']._cron_update_loan_status()
+        past.invalidate_recordset(['is_overdue', 'days_overdue'])
+        self.assertTrue(all(past.mapped('is_overdue')))
+        self.assertTrue(all(d > 0 for d in past.mapped('days_overdue')))
+
+        line = past[0]
+        self.assertAlmostEqual(
+            line.amount_remaining_total,
+            line.amount_principal_remaining
+            + line.amount_interest_remaining + line.amount_fee_remaining,
+            places=2)
+
+        aging = safe_eval(
+            self.env.ref('re_loan.action_re_loan_report_aging').domain)
+        self.assertNotIn(note, self.env['re.loan.note'].search(aging))
+
+        overdue_dom = safe_eval(
+            self.env.ref(
+                're_loan.action_re_loan_report_interest_overdue').domain,
+            {'context_today': lambda: today})
+        found = self.env['re.loan.note.interest.line'].search(overdue_dom)
+        self.assertEqual(found & note.interest_line_ids, past)
+
     # ----- Single period (no tenor) --------------------------------------
     def test_single_period_when_no_tenor(self):
         note = self._note(tenor=0, maturity='2026-12-31')

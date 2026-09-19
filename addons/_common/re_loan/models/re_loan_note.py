@@ -1103,6 +1103,8 @@ class ReLoanNote(models.Model):
         # Refresh aging (phụ thuộc 'today' nên cần tính lại định kỳ).
         live._compute_aging_bucket()
         live.flush_recordset(['aging_bucket'])
+        # Cờ quá hạn từng kỳ lãi cũng đi theo 'today' (backlog 1091).
+        self.env['re.loan.note.interest.line']._refresh_overdue_flags(today)
         return True
 
     @api.model

@@ -145,6 +145,36 @@ class TestCollateral(TransactionCase):
         with self.assertRaises(UserError):
             pledge._do_release(today, 'Lần 2')
 
+    def test_release_date_not_before_pledge_date(self):
+        """Backlog 1082: ngày giải chấp phải ≥ ngày thế chấp — chặn ở
+        wizard (cảnh báo khi chọn ngày), khi ghi, và khi sửa ngày thế
+        chấp sau khi đã giải chấp."""
+        pledge_day = fields.Date.from_string('2026-03-10')
+        pledge = self.env['re.loan.collateral.pledge'].create({
+            'collateral_id': self.col.id, 'note_id': self.note.id,
+            'pledge_target': 'note', 'date_pledge': pledge_day,
+            'secured_amount': 800_000_000.0})
+        day_before = fields.Date.from_string('2026-03-09')
+
+        wiz = self.env['re.loan.pledge.release.wizard'].new({
+            'pledge_ids': [(6, 0, pledge.ids)],
+            'release_date': day_before})
+        res = wiz._onchange_release_before_pledge()
+        self.assertIn('warning', res)
+        wiz.release_date = pledge_day
+        self.assertFalse(wiz._onchange_release_before_pledge())
+
+        with self.assertRaises(UserError):
+            pledge._do_release(day_before, 'Nhập nhầm ngày')
+        self.assertEqual(pledge.state, 'active')
+
+        # Cùng ngày thế chấp thì được.
+        pledge._do_release(pledge_day, 'Tất toán trong ngày')
+        self.assertEqual(pledge.state, 'released')
+        # Đã giải chấp rồi thì không được lùi ngày thế chấp ra sau.
+        with self.assertRaises(ValidationError):
+            pledge.date_pledge = fields.Date.from_string('2026-03-11')
+
     def test_pledge_at_contract_level(self):
         # Cấp HĐTD (default) — chuẩn nghiệp vụ VN
         pledge = self.env['re.loan.collateral.pledge'].create({

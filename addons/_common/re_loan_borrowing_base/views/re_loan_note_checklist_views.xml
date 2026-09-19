@@ -90,8 +90,11 @@
                ref="re_loan.view_re_loan_credit_contract_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
+                <!-- context: hiện cả số hiệu tài khoản cho người không
+                     có quyền kế toán (backlog 1083). -->
                 <field name="controlled_account_id"
-                       options="{'no_create': True}"/>
+                       options="{'no_create': True}"
+                       context="{'re_show_account_code': True}"/>
             </xpath>
         </field>
     </record>

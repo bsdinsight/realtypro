@@ -7,6 +7,7 @@ số tiền hạn mức, phương pháp tính lãi mặc định. Khế ước n
 trong facility; amount_used / amount_available sẽ được nối vào note ở L1b.
 """
 import re
+import unicodedata
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -132,8 +133,9 @@ class ReLoanPurpose(models.Model):
     name = fields.Char(string='Tên mục đích', required=True, translate=True)
     code = fields.Char(
         string='Mã', required=True,
-        help='Mã kỹ thuật, chỉ chữ thường và gạch dưới. Đã dùng rồi thì '
-             'đừng đổi — dữ liệu cũ tham chiếu theo mã này.')
+        help='Mã kỹ thuật, hệ thống tự sinh từ tên khi tạo mới (bỏ dấu, '
+             'chữ thường, gạch dưới). Không sửa được — dữ liệu hạn mức '
+             'tham chiếu theo mã này.')
     sequence = fields.Integer(string='Thứ tự', default=1000)
     is_builtin = fields.Boolean(
         string='Dựng sẵn', compute='_compute_is_builtin', store=True,
@@ -174,8 +176,34 @@ class ReLoanPurpose(models.Model):
                     'Mã "%s" không hợp lệ — chỉ dùng chữ thường, số và '
                     'gạch dưới, bắt đầu bằng chữ.', rec.code or ''))
 
+    @api.model
+    def _code_from_name(self, name):
+        """Sinh mã kỹ thuật từ tên (backlog 1084): bỏ dấu, chữ thường,
+        nối bằng gạch dưới — "Vốn lưu động xây lắp" → von_luu_dong_xay_lap.
+
+        Lấy từ tên chứ không đánh số tuần tự: mã này còn nằm trong dữ
+        liệu hạn mức và file xuất, đọc lên phải hiểu được là mục nào.
+        Trùng thì thêm số đuôi _2, _3…
+        """
+        text = unicodedata.normalize(
+            'NFKD', (name or '').replace('đ', 'd').replace('Đ', 'D'))
+        text = ''.join(c for c in text if not unicodedata.combining(c))
+        base = re.sub(r'[^a-z0-9]+', '_', text.lower()).strip('_')[:40]
+        if not base or not base[0].isalpha():
+            base = 'md_' + base if base else 'muc_dich'
+        base = base.rstrip('_')
+        Purpose = self.with_context(active_test=False).sudo()
+        code, n = base, 1
+        while Purpose.search_count([('code', '=', code)]):
+            n += 1
+            code = '%s_%s' % (base, n)
+        return code
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if not (vals.get('code') or '').strip():
+                vals['code'] = self._code_from_name(vals.get('name'))
         recs = super().create(vals_list)
         # Danh sách lựa chọn được nhớ đệm theo registry — thêm mục mới
         # mà không xoá đệm thì ô chọn vẫn hiện danh sách cũ.

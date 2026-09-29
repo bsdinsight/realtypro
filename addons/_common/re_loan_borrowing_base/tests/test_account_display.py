@@ -18,7 +18,10 @@ class TestControlledAccountDisplay(TransactionCase):
         # chỉ bỏ qua quyền đọc bảng tài khoản — thứ không phải đối
         # tượng của phép thử này.
         acc = account.with_user(user).sudo()
-        self.assertEqual(acc.display_name, 'TK kiểm soát NH thử')
+        # Odoo 19 giấu số hiệu với người không có quyền xem sổ kế toán;
+        # Odoo 17 thì luôn hiện. Phần BẮT BUỘC của việc 1083 là: bật
+        # context thì CHẮC CHẮN có số hiệu — đúng trên cả hai bản.
+        self.assertIn('TK kiểm soát NH thử', acc.display_name)
         self.assertEqual(
             acc.with_context(re_show_account_code=True).display_name,
             '112199 TK kiểm soát NH thử')

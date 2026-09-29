@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- TK kiểm soát dòng tiền trên HĐTD (tách khỏi checklist giải
+         ngân: checklist cần dữ liệu hợp đồng thi công, ô này thì
+         không). -->
+    <record id="view_re_loan_credit_contract_form_ctrl_account"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.ctrl.account</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_credit_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <!-- context: hiện cả số hiệu tài khoản cho người không
+                     có quyền kế toán (backlog 1083). -->
+                <field name="controlled_account_id"
+                       options="{'no_create': True}"
+                       context="{'re_show_account_code': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

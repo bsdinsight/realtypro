@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Treasury — Gom menu Vốn & Ngân quỹ',
-    'version': '19.0.2.0.0',
+    'version': '19.0.2.0.1',
     'category': 'Realty/Loan',
     'summary': 'Gom Vay · Bảo lãnh · Dòng tiền · Đối soát ngân hàng về MỘT '
                'menu gốc "Vốn & Ngân quỹ (Treasury)".',
@@ -47,6 +47,10 @@ phía Enterprise.
         # phụ thuộc thêm để gom được menu của chúng vào nhóm nghiệp vụ
         're_guarantee',
         're_loan_borrowing_base',
+        # menu Nhu cầu vốn / dòng tiền dự án / năng lực trả nợ / chỉ
+        # tiêu / rà soát tuần nay do re_loan_bb_project khai (tách khỏi
+        # borrowing base ở 19.0.2.0.0) — gom menu thì phải thấy chúng.
+        're_loan_bb_project',
         're_loan_account',
     ],
     'data': [

@@ -41,7 +41,7 @@
         <field name="name">re.loan.project.funding.form.loss.plan</field>
         <field name="model">re.loan.project.funding</field>
         <field name="inherit_id"
-               ref="re_loan_borrowing_base.view_re_loan_project_funding_form"/>
+               ref="re_loan_bb_project.view_re_loan_project_funding_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='note']" position="before">
                 <page string="Phương án bù đắp lỗ (§8 ④)" name="loss_plan">
@@ -67,7 +67,7 @@
         <field name="name">re.loan.kpi.policy.form.capacity</field>
         <field name="model">re.loan.kpi.policy</field>
         <field name="inherit_id"
-               ref="re_loan_borrowing_base.view_re_loan_kpi_policy_form"/>
+               ref="re_loan_bb_project.view_re_loan_kpi_policy_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='company_id']" position="before">
                 <field name="owner_overdue_days"/>

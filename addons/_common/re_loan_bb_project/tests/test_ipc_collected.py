@@ -7,9 +7,12 @@ Hệ quả là borrowing base tính trên khoản phải thu ĐÃ THU RỒI — 
 thống báo còn dư địa vay trong khi tài sản bảo đảm đã tiêu biến. Sai
 về phía nguy hiểm: cho rút vượt.
 """
+from odoo.tests import tagged
+
 from .common import BorrowingBaseCommon
 
 
+@tagged('post_install', '-at_install', 're_loan_bb_project')
 class TestIpcCollected(BorrowingBaseCommon):
 
     def _signed_ipc(self, gross):

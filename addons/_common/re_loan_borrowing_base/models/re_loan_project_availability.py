@@ -126,6 +126,12 @@ class ReLoanFacilityProjectAllocation(models.Model):
         help='Dư nợ dự án đã vượt (BB riêng + phần bể chung) — cần thêm '
              'IPC được CĐT ký hoặc trả bớt nợ.')
 
+    def _bb_contract(self):
+        """Hợp đồng nhà thầu của dòng phân bổ — chỉ có khi cài bộ thi
+        công (re_loan_bb_project). Không có thì phân bổ chạy theo DỰ ÁN."""
+        self.ensure_one()
+        return self.contract_id if 'contract_id' in self._fields else False
+
     def _used_by_contract(self, fac, contract_ids):
         """{contract_id: dư nợ gốc} của các HĐ nhà thầu tại facility `fac`.
 
@@ -133,7 +139,8 @@ class ReLoanFacilityProjectAllocation(models.Model):
         2026-08-04): dòng phân bổ gắn hợp đồng thì chỉ gánh dư nợ của đúng
         hợp đồng đó, không gánh cả dự án.
         """
-        if not contract_ids:
+        if not contract_ids or not hasattr(
+                self.env['re.loan.note'], '_outstanding_by_contract'):
             return {}
         live = fac.note_ids.filtered(
             lambda n: n.state not in NOTE_STATES_NO_EXPOSURE)
@@ -223,8 +230,10 @@ class ReLoanFacilityProjectAllocation(models.Model):
                 used_by[pid] = used_by.get(pid, 0.0) + amt
         return bb_by, used_by
 
-    @api.depends('facility_id', 'project_id', 'amount', 'contract_id',
-                 'facility_id.note_ids.disbursement_ids.contract_id',
+    # KHÔNG khai contract_id ở đây: trường đó do re_loan_bb_project
+    # (bộ thi công) khai. Module đó ghi đè hàm này với depends đầy đủ —
+    # xem re_loan_bb_project/models/re_loan_project_availability.py.
+    @api.depends('facility_id', 'project_id', 'amount',
                  'facility_id.note_ids.principal_outstanding',
                  'facility_id.note_ids.state',
                  'facility_id.note_ids.project_id',
@@ -252,15 +261,17 @@ class ReLoanFacilityProjectAllocation(models.Model):
             # ① dư nợ TẠI facility này — theo HỢP ĐỒNG nếu dòng gắn hợp
             #    đồng, ngược lại theo dự án (trừ phần các hợp đồng đã có
             #    dòng riêng, nếu không sẽ trừ hai lần).
-            if rec.contract_id:
+            rec_ct = rec._bb_contract()
+            if rec_ct:
                 used_p_fac = self._used_by_contract(
-                    fac, {rec.contract_id.id}).get(rec.contract_id.id, 0.0)
+                    fac, {rec_ct.id}).get(rec_ct.id, 0.0)
             else:
                 used_p_fac = used_fac.get((fac.id, proj.id), 0.0)
                 siblings_ct = self.search([
                     ('facility_id', '=', fac.id),
                     ('project_id', '=', proj.id),
-                    ('contract_id', '!=', False)]).mapped('contract_id')
+                    ('contract_id', '!=', False)]).mapped('contract_id') \
+                    if 'contract_id' in self._fields else self.browse()
                 if siblings_ct:
                     taken = self._used_by_contract(fac, set(siblings_ct.ids))
                     used_p_fac = max(0.0, used_p_fac - sum(taken.values()))

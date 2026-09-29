@@ -78,10 +78,6 @@
                     <field name="project_allocation_all_ids" readonly="1">
                         <list default_order="project_id">
                             <field name="project_id"/>
-                            <field name="contract_id" optional="show"
-                                   string="HĐ nhà thầu"/>
-                            <field name="contract_partner_id" optional="hide"
-                                   string="Nhà thầu"/>
                             <field name="facility_id"/>
                             <field name="amount" width="185px"
                                    string="Phân bổ ở facility"/>
@@ -152,19 +148,6 @@
             <xpath expr="//filter[@name='g_state']" position="after">
                 <filter name="g_project" string="Dự án"
                         context="{'group_by': 'project_id'}"/>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Wizard đưa IPC vào HĐTD: hiện dự án + giải thích vì sao lọc -->
-    <record id="view_rp_owner_ipc_pledge_wizard_project" model="ir.ui.view">
-        <field name="name">rp.owner.ipc.pledge.wizard.project</field>
-        <field name="model">rp.owner.ipc.pledge.wizard</field>
-        <field name="inherit_id"
-               ref="re_loan_borrowing_base.view_rp_owner_ipc_pledge_wizard_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='owner_id']" position="after">
-                <field name="project_id"/>
             </xpath>
         </field>
     </record>

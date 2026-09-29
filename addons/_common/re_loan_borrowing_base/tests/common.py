@@ -4,7 +4,7 @@ from odoo.tests import TransactionCase
 
 
 class BorrowingBaseCommon(TransactionCase):
-    """Dựng sẵn: 1 dự án · 1 HĐTD · 2 facility · 1 HĐ với CĐT."""
+    """Dựng sẵn: 1 dự án · 1 HĐTD · 2 facility (không cần module thi công)."""
 
     @classmethod
     def setUpClass(cls):
@@ -29,10 +29,6 @@ class BorrowingBaseCommon(TransactionCase):
             'name': 'F-BB-2', 'credit_contract_id': cls.credit.id,
             'facility_type': 'revolving',
             'amount_limit': 40_000_000_000.0})
-        cls.owner_contract = cls.env['rp.owner.contract'].create({
-            'name': 'HĐ-CĐT-BB', 'project_id': cls.project.id,
-            'owner_id': cls.owner.id,
-            'contract_value_pretax': 200_000_000_000.0})
 
     # ------------------------------------------------------------------
     @classmethod

@@ -14,7 +14,7 @@ from odoo.tests import tagged
 from .common import BorrowingBaseCommon
 
 
-@tagged('post_install', '-at_install', 're_loan_borrowing_base')
+@tagged('post_install', '-at_install', 're_loan_bb_project')
 class TestCashflowDscr(BorrowingBaseCommon):
 
     def _cashflow(self, months=12):

@@ -85,7 +85,12 @@ class ReLoanCollateralPledge(models.Model):
             if p.pledge_target == 'facility' and p.facility_id:
                 target = p.facility_id
             else:
-                ipc = p.collateral_id.owner_ipc_id
+                # owner_ipc_id / owner_contract_id do
+                # re_loan_bb_project khai — lõi chạy được cả khi
+                # khách không mua bộ thi công.
+                col = p.collateral_id
+                ipc = (col.owner_ipc_id
+                       if 'owner_ipc_id' in col._fields else False)
                 facs = p.credit_contract_id.facility_ids
                 if ipc and facs and 'owner_contract_id' in facs._fields:
                     match = facs.filtered(

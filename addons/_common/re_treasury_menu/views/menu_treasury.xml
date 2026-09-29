@@ -86,7 +86,7 @@
         <field name="active" eval="False"/>
     </record>
 
-    <record id="re_loan_borrowing_base.menu_re_loan_project_funding"
+    <record id="re_loan_bb_project.menu_re_loan_project_funding"
             model="ir.ui.menu">
         <field name="sequence">40</field>
     </record>
@@ -139,19 +139,19 @@
         <field name="parent_id" ref="menu_rep_cash"/>
         <field name="sequence">10</field>
     </record>
-    <record id="re_loan_borrowing_base.menu_re_loan_project_cashflow" model="ir.ui.menu">
+    <record id="re_loan_bb_project.menu_re_loan_project_cashflow" model="ir.ui.menu">
         <field name="parent_id" ref="menu_rep_cash"/>
         <field name="sequence">20</field>
     </record>
-    <record id="re_loan_borrowing_base.menu_re_loan_note_capacity" model="ir.ui.menu">
+    <record id="re_loan_bb_project.menu_re_loan_note_capacity" model="ir.ui.menu">
         <field name="parent_id" ref="menu_rep_cash"/>
         <field name="sequence">30</field>
     </record>
-    <record id="re_loan_borrowing_base.menu_re_loan_kpi_board" model="ir.ui.menu">
+    <record id="re_loan_bb_project.menu_re_loan_kpi_board" model="ir.ui.menu">
         <field name="parent_id" ref="menu_rep_cash"/>
         <field name="sequence">40</field>
     </record>
-    <record id="re_loan_borrowing_base.menu_re_loan_weekly_review" model="ir.ui.menu">
+    <record id="re_loan_bb_project.menu_re_loan_weekly_review" model="ir.ui.menu">
         <field name="parent_id" ref="menu_rep_cash"/>
         <field name="sequence">50</field>
     </record>

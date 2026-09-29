@@ -28,24 +28,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class ReLoanCreditContractControlledAccount(models.Model):
-    _inherit = 're.loan.credit.contract'
-
-    controlled_account_id = fields.Many2one(
-        'account.account', string='TK kiểm soát dòng tiền',
-        # Không khai domain: Odoo 19 đã bỏ account.account.deprecated
-        # (thay bằng active) và company_id (thay bằng company_ids),
-        # mà bản thân cờ active đã tự lọc tài khoản ngừng dùng rồi.
-        help='Tài khoản kế toán dùng theo dõi dòng tiền chủ đầu tư '
-             'thanh toán về theo HĐTD này.\n'
-             'LƯU Ý: từ backlog 754, ô này là TÀI KHOẢN KẾ TOÁN (COA) '
-             'chứ không còn là số tài khoản ngân hàng. Vì vậy điều '
-             'kiện giải ngân số 7 không tự chấm được nữa — số hiệu tài '
-             'khoản kế toán không so được với số tài khoản trên sao kê '
-             '— và chuyển sang ô tick tay "7. Tiền về đúng TK (xác '
-             'nhận tay)".')
-
-
 class ReLoanNoteChecklist(models.Model):
     _inherit = 're.loan.note'
 

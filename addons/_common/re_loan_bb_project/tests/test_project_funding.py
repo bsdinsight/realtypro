@@ -13,7 +13,7 @@ from odoo.tests import tagged
 from .common import BorrowingBaseCommon
 
 
-@tagged('post_install', '-at_install', 're_loan_borrowing_base')
+@tagged('post_install', '-at_install', 're_loan_bb_project')
 class TestProjectFunding(BorrowingBaseCommon):
 
     def _sheet(self, **vals):

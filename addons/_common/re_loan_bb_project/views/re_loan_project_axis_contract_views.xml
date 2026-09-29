@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tab "Hạn mức theo dự án" của lõi không có cột hợp đồng nhà thầu
+         (trường contract_id do bộ thi công khai). Cài bộ thi công thì
+         chèn lại hai cột đó. -->
+    <record id="view_re_loan_credit_contract_form_project_limit_contract"
+            model="ir.ui.view">
+        <field name="name">re.loan.credit.contract.form.project.limit.contract</field>
+        <field name="model">re.loan.credit.contract</field>
+        <field name="inherit_id"
+               ref="re_loan_borrowing_base.view_re_loan_credit_contract_form_project_limit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='project_limits']//field[@name='project_allocation_all_ids']/list/field[@name='project_id']"
+                   position="after">
+                <field name="contract_id" optional="show"
+                       string="HĐ nhà thầu"/>
+                <field name="contract_partner_id" optional="hide"
+                       string="Nhà thầu"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

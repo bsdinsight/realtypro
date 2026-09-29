@@ -59,6 +59,11 @@ ISLAND = [
     're_bank_sync', 're_lease_loan_bridge', 're_loan_dashboard',
     're_loan_menu_reorg', 're_base', 're_party', 're_integration_hub',
     'vn_administrative_units',
+    # LÕI borrowing base (khả dụng thực tế theo tài sản bảo đảm, phân
+    # bổ TSBĐ, hạn mức theo dự án). Từ 19.0.2.0.0 lõi không còn phụ
+    # thuộc module thi công; phần cần hợp đồng CĐT/IPC/dự toán nằm ở
+    # re_loan_bb_project và KHÔNG bàn giao.
+    're_loan_borrowing_base',
 ]
 
 MOD_ATTRS = ('invisible', 'readonly', 'required', 'column_invisible',
@@ -635,7 +640,7 @@ def step_partner_project(dst):
             if '/tests/' in p:
                 # project.project không có 'code' như re.project.
                 s = re.sub(
-                    r"(\['project\.project'\]\.create\(\{\s*'name':\s*"
+                    r"(\['project\.project'\]\.create\(\s*\{\s*'name':\s*"
                     r"'[^']*'),\s*'code':\s*'[^']*'", r"\1", s)
             if s != o:
                 io.open(p, 'w', encoding='utf-8').write(s)

@@ -103,6 +103,10 @@
                             string="Tạo giấy báo"
                             class="btn-primary"
                             invisible="state != 'preview'"/>
+                    <!-- KHÔNG đặt required cho các ô ở bước upload: bấm
+                         nút là Odoo lưu bản ghi trước, ô bắt buộc sẽ chặn
+                         cả nút tải mẫu này (việc 1426). Thiếu gì thì
+                         Preview báo. -->
                     <button name="action_download_template"
                             type="object"
                             string="Tải template Excel"

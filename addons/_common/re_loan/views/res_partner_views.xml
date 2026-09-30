@@ -110,7 +110,10 @@
         <field name="model">res.bank</field>
         <field name="arch" type="xml">
             <list editable="bottom">
+                <!-- Chỉ liệt kê đối tác đã đánh dấu là ngân hàng (việc
+                     1422) — trước đây đổ ra toàn bộ danh bạ. -->
                 <field name="partner_id" string="Ngân hàng"
+                       domain="[('is_bank', '=', True)]"
                        options="{'no_create': True}"/>
                 <field name="name" string="Tên chi nhánh"/>
                 <field name="bic" string="Mã SWIFT/BIC" optional="show"/>

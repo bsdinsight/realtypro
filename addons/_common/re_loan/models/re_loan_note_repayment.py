@@ -2,6 +2,7 @@
 """Trả nợ (repayment) — một lần trả gốc và/hoặc lãi cho một KW."""
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 
 class ReLoanNoteRepayment(models.Model):
@@ -92,12 +93,22 @@ class ReLoanNoteRepayment(models.Model):
                 raise ValidationError(_(
                     "Phải nhập số tiền trả gốc, trả lãi hoặc trả phí."))
             note = rec.note_id
+            rounding = note.currency_id.rounding or 0.01
             total_principal = sum(note.repayment_ids.mapped('amount_principal'))
-            if total_principal > note.amount_disbursed:
+            # So với SỐ TIỀN KW, không so với số đã giải ngân (việc
+            # 1427). Dư nợ gốc của khế ước vốn tính theo cam kết —
+            # "KW ký là nhận nợ toàn bộ, giải ngân chỉ theo dõi dòng
+            # tiền thực" (xem help của principal_outstanding). Chặn
+            # theo số đã giải ngân là mâu thuẫn với chính con số dư nợ
+            # đang hiện trên màn hình: khách khai KW 100tr, chưa nhập
+            # dòng giải ngân nào, màn hình báo nợ 100tr mà trả thì bị
+            # chặn.
+            if float_compare(total_principal, note.amount,
+                             precision_rounding=rounding) > 0:
                 raise ValidationError(_(
-                    "Tổng trả gốc (%(t)s) vượt số đã giải ngân của KW "
+                    "Tổng trả gốc (%(t)s) vượt số tiền của KW "
                     "'%(n)s' (%(d)s).",
-                    t=total_principal, n=note.name, d=note.amount_disbursed))
+                    t=total_principal, n=note.name, d=note.amount))
 
     # ------------------------------------------------------------------
     # Cập nhật lifecycle KW

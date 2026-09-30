@@ -65,6 +65,13 @@ class ReLoanNote(models.Model):
              'một HĐTD cụ thể, hộp thoại "Tìm thêm" chỉ liệt kê hạn '
              'mức của đúng HĐTD đó.')
 
+    # PHẢI có depends trường thật, không chỉ depends_context: form khế
+    # ước mới hỏi máy chủ tính các trường phụ thuộc những gì đang có
+    # trên form. Chỉ khai depends_context thì ô này không được tính,
+    # danh sách rỗng, và bộ lọc `id in allowed_facility_ids` của ô Hạn
+    # mức không còn gì để chọn — người dùng tưởng phải tạo hạn mức mới
+    # (việc 1415, và là lý do 1424 không điền được hạn mức).
+    @api.depends('loan_type', 'facility_id', 'credit_contract_id')
     @api.depends_context('force_credit_contract_id')
     def _compute_allowed_facilities(self):
         """Cùng điều kiện với domain khai ở facility_id, cộng thêm một

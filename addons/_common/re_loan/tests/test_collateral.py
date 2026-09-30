@@ -175,6 +175,22 @@ class TestCollateral(TransactionCase):
         with self.assertRaises(ValidationError):
             pledge.date_pledge = fields.Date.from_string('2026-03-11')
 
+    def test_valuation_expiry_not_before_valuation_date(self):
+        """Việc 1421: ngày hết hạn định giá không được sớm hơn ngày
+        định giá."""
+        with self.assertRaises(ValidationError):
+            self.env['re.loan.collateral.valuation'].create({
+                'collateral_id': self.col.id,
+                'date': '2026-05-10',
+                'date_valid_until': '2026-05-09',
+                'amount': 1_000_000_000.0})
+        v = self.env['re.loan.collateral.valuation'].create({
+            'collateral_id': self.col.id,
+            'date': '2026-05-10',
+            'date_valid_until': '2027-05-10',
+            'amount': 1_000_000_000.0})
+        self.assertFalse(v.is_expired)
+
     def test_pledge_at_contract_level(self):
         # Cấp HĐTD (default) — chuẩn nghiệp vụ VN
         pledge = self.env['re.loan.collateral.pledge'].create({

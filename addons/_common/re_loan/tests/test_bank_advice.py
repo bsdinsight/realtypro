@@ -286,3 +286,16 @@ class TestBankAdvice(TransactionCase):
         period.invalidate_recordset()
         self.assertEqual(period.amount_overpaid, 0.0,
                          'nghĩa vụ âm + chưa trả gì = không trích dư')
+
+    def test_import_wizard_template_not_blocked_by_required(self):
+        """Việc 1426: nút Tải template không được đòi khai đủ hồ sơ.
+
+        Ba ô Ngân hàng / Ngày trích thu / File để KHÔNG bắt buộc ở model,
+        nên bấm nút trên form không bị chặn; thiếu thì bước Preview báo.
+        """
+        Wiz = self.env['re.loan.bank.advice.import.wizard']
+        for fname in ('partner_id', 'date_advice', 'file_data'):
+            self.assertFalse(Wiz._fields[fname].required, fname)
+        wiz = Wiz.create({'date_advice': False})
+        with self.assertRaises(UserError):
+            wiz.action_parse()

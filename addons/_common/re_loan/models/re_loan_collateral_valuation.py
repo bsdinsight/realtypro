@@ -56,6 +56,20 @@ class ReLoanCollateralValuation(models.Model):
     company_id = fields.Many2one(
         related='collateral_id.company_id', store=True, readonly=True)
 
+    @api.constrains('date', 'date_valid_until')
+    def _check_valid_until(self):
+        # Chứng thư định giá không thể hết hiệu lực trước ngày ký (việc
+        # 1421).
+        for rec in self:
+            if rec.date_valid_until and rec.date and \
+                    rec.date_valid_until < rec.date:
+                raise ValidationError(_(
+                    'Ngày hết hạn định giá (%(e)s) sớm hơn ngày định giá '
+                    '(%(d)s) của tài sản "%(c)s".',
+                    e=rec.date_valid_until.strftime('%d/%m/%Y'),
+                    d=rec.date.strftime('%d/%m/%Y'),
+                    c=rec.collateral_id.display_name or ''))
+
     @api.constrains('amount')
     def _check_amount(self):
         for rec in self:

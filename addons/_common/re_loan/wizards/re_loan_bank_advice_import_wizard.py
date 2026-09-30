@@ -45,15 +45,19 @@ class ReLoanBankAdviceImportWizard(models.TransientModel):
     _description = 'Import Giấy báo nợ NH'
 
     # --- Upload step ---
+    # KHÔNG đặt required ở ba ô dưới (việc 1426). Bấm nút trên form là
+    # Odoo lưu bản ghi trước, nên ô bắt buộc chặn luôn cả nút "Tải
+    # template Excel" — người dùng phải khai đủ hồ sơ mới tải được cái
+    # mẫu để khai. Thiếu thì chặn ở đúng bước cần: action_parse.
     file_data = fields.Binary(
-        string='File Excel/CSV', required=True,
+        string='File Excel/CSV',
         help='File xlsx hoặc csv theo template chuẩn (cột: Số HĐTD, '
              'Số khế ước, Số kỳ, Số tiền trích thu, Diễn giải).')
     file_name = fields.Char(string='Tên file')
 
     # --- Advice header ---
     partner_id = fields.Many2one(
-        'res.partner', string='Ngân hàng', required=True,
+        'res.partner', string='Ngân hàng',
         domain="[('is_bank', '=', True)]")
     bank_account_id = fields.Many2one(
         'res.partner.bank', string='TK trích thu',
@@ -88,7 +92,7 @@ class ReLoanBankAdviceImportWizard(models.TransientModel):
             if len(accounts) == 1:
                 self.bank_account_id = accounts
     date_advice = fields.Date(
-        string='Ngày NH trích thu', required=True,
+        string='Ngày NH trích thu',
         default=fields.Date.context_today)
     reference = fields.Char(string='Số chứng từ NH')
     description = fields.Text(string='Diễn giải')
@@ -109,8 +113,17 @@ class ReLoanBankAdviceImportWizard(models.TransientModel):
     def action_parse(self):
         """Parse file → fill preview_line_ids → state=preview."""
         self.ensure_one()
+        missing = []
+        if not self.partner_id:
+            missing.append(_('Ngân hàng'))
+        if not self.date_advice:
+            missing.append(_('Ngày NH trích thu'))
         if not self.file_data:
-            raise UserError(_("Vui lòng upload file."))
+            missing.append(_('File Excel/CSV'))
+        if missing:
+            raise UserError(_(
+                'Còn thiếu: %s. Khai đủ rồi bấm Preview lại.',
+                ', '.join(missing)))
 
         raw = base64.b64decode(self.file_data)
         rows = self._parse_file(raw, self.file_name or '')

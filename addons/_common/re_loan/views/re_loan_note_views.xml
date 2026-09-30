@@ -216,7 +216,10 @@
                     </div>
                     <group>
                         <group>
-                            <field name="loan_type"/>
+                            <!-- Ẩn với khách không dùng vay nội bộ
+                                 (việc 1433): không thấy ô này thì mọi
+                                 khế ước giữ mặc định "Vay ngân hàng". -->
+                            <field name="loan_type" groups="re_loan.group_loan_onlending"/>
                             <field name="allowed_facility_ids"
                                    invisible="1"/>
                             <field name="facility_id"
@@ -225,10 +228,12 @@
                                    domain="[('id', 'in', allowed_facility_ids)]"/>
                             <field name="source_note_id"
                                    invisible="loan_type != 'onlending'"
-                                   required="loan_type == 'onlending'"/>
+                                   required="loan_type == 'onlending'"
+                                   groups="re_loan.group_loan_onlending"/>
                             <field name="counterparty_id"
                                    invisible="loan_type != 'onlending'"
-                                   required="loan_type == 'onlending'"/>
+                                   required="loan_type == 'onlending'"
+                                   groups="re_loan.group_loan_onlending"/>
                             <field name="credit_contract_id"/>
                             <field name="partner_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -627,7 +632,8 @@
                             </field>
                         </page>
                         <page string="Cho vay lại" name="onlending"
-                              invisible="loan_type != 'external'">
+                              invisible="loan_type != 'external'"
+                              groups="re_loan.group_loan_onlending">
                             <group>
                                 <field name="amount_onlent"/>
                             </group>
@@ -691,7 +697,8 @@
                 <filter name="f_external" string="Vay ngân hàng"
                         domain="[('loan_type','=','external')]"/>
                 <filter name="f_onlending" string="Cho vay lại"
-                        domain="[('loan_type','=','onlending')]"/>
+                        domain="[('loan_type','=','onlending')]"
+                        groups="re_loan.group_loan_onlending"/>
                 <filter name="g_partner" string="Ngân hàng"
                         context="{'group_by': 'partner_id'}"/>
                 <filter name="g_facility" string="Hạn mức"
@@ -807,6 +814,7 @@
               name="Vay nội bộ"
               parent="menu_grp_note"
               action="action_re_loan_onlending"
+              groups="re_loan.group_loan_onlending"
               sequence="20"/>
 
 </odoo>

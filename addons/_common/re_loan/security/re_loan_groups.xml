@@ -63,4 +63,23 @@
         <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
+    <!-- Vay nội bộ (công ty mẹ vay NH rồi cho công ty con vay lại).
+         Không phải khách nào cũng có nghiệp vụ này; khách chỉ vay ngân
+         hàng mà thấy menu + ô "Loại khoản vay" thì chỉ tổ gây nhầm
+         (việc 1433). Mặc định KHÔNG ai thuộc nhóm → mọi khế ước là vay
+         ngân hàng. Cần dùng thì cấp quyền, không phải sửa mã. -->
+    <record id="privilege_loan_onlending" model="res.groups.privilege">
+        <field name="name">Vay nội bộ</field>
+        <field name="sequence">5</field>
+        <field name="category_id" ref="module_category_realty_loan"/>
+    </record>
+
+    <record id="group_loan_onlending" model="res.groups">
+        <field name="name">Được dùng vay nội bộ</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_loan_onlending"/>
+        <field name="implied_ids" eval="[(4, ref('group_loan_user'))]"/>
+        <field name="comment">Thấy menu Vay nội bộ, ô Loại khoản vay và tab Cho vay lại trên khế ước.</field>
+    </record>
+
 </odoo>

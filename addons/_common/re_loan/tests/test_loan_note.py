@@ -156,14 +156,37 @@ class TestLoanNote(TransactionCase):
         self.assertEqual(note.state, 'fully_paid')
         self.assertEqual(note.principal_outstanding, 0.0)
 
-    def test_repayment_cannot_exceed_disbursed(self):
+    def test_repayment_limited_by_note_amount_not_disbursed(self):
+        """Việc 1427: trả gốc chặn theo SỐ TIỀN KW, không theo số đã
+        giải ngân — vì dư nợ gốc của KW vốn tính theo cam kết."""
         note = self._make_note(self.fac_rev, 500_000_000.0)
         note.action_activate()
         self.env['re.loan.note.disbursement'].create({
             'note_id': note.id, 'amount': 200_000_000.0})
+        # Trả nhiều hơn số đã giải ngân: VẪN ĐƯỢC. Khế ước đang báo dư
+        # nợ 500tr thì phải trả được tới 500tr.
+        self.env['re.loan.note.repayment'].create({
+            'note_id': note.id, 'amount_principal': 300_000_000.0})
+        self.assertEqual(note.principal_outstanding, 200_000_000.0)
+        # Vượt số tiền KW thì chặn.
         with self.assertRaises(ValidationError):
             self.env['re.loan.note.repayment'].create({
-                'note_id': note.id, 'amount_principal': 300_000_000.0})
+                'note_id': note.id, 'amount_principal': 250_000_000.0})
+
+    def test_new_note_form_lists_facilities(self):
+        """Việc 1415: mở form khế ước mới thì ô Hạn mức phải có sẵn
+        danh sách để chọn, không bắt người dùng tạo hạn mức mới."""
+        from odoo.tests import Form
+        f = Form(self.env['re.loan.note'])
+        self.assertIn(self.fac_rev, f.allowed_facility_ids[:],
+                      'Ô Hạn mức không liệt kê được hạn mức nào')
+        # Vào từ một HĐTD cụ thể thì chỉ hiện hạn mức của HĐTD đó.
+        act = self.contract.action_add_note()
+        f2 = Form(self.env['re.loan.note'].with_context(**act['context']))
+        self.assertTrue(f2.allowed_facility_ids[:])
+        self.assertTrue(all(
+            fa.credit_contract_id == self.contract
+            for fa in f2.allowed_facility_ids[:]))
 
     # ----- Facility limit wiring -----------------------------------------
     def test_revolving_frees_limit_on_repay(self):

@@ -14,6 +14,33 @@
         </field>
     </record>
 
+    <!-- Tài sản bảo đảm: cột Tỷ lệ cho vay + Giá trị cho vay được
+         (việc 1414) — trước đây phải mở danh mục Loại tài sản mới thấy. -->
+    <record id="view_re_loan_collateral_list_bb" model="ir.ui.view">
+        <field name="name">re.loan.collateral.list.bb</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_collateral_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='value_current']" position="after">
+                <field name="advance_rate" optional="show"/>
+                <field name="value_lendable" width="185px"
+                       sum="Σ cho vay được" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_re_loan_collateral_form_bb" model="ir.ui.view">
+        <field name="name">re.loan.collateral.form.bb</field>
+        <field name="model">re.loan.collateral</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_collateral_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='value_current']" position="after">
+                <field name="advance_rate"/>
+                <field name="value_lendable"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- HĐTD: pledge list + tỷ lệ/đóng góp; group borrowing base -->
     <record id="view_re_loan_credit_contract_form_bb" model="ir.ui.view">
         <field name="name">re.loan.credit.contract.form.bb</field>

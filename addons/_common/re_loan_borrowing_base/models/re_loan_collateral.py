@@ -25,6 +25,28 @@ class ReLoanCollateralProjectAxis(models.Model):
     TSBĐ không gắn dự án (BĐS, tiền gửi...) = TSBĐ CHUNG, gánh cả gói."""
     _inherit = 're.loan.collateral'
 
+    # Việc 1414: người dùng cần thấy tỷ lệ cho vay NGAY trên danh sách
+    # tài sản, không phải mở sang danh mục loại tài sản mới biết. Số này
+    # lấy theo LOẠI tài sản; từng lần thế chấp vẫn sửa đè được (trường
+    # advance_rate trên re.loan.collateral.pledge).
+    advance_rate = fields.Float(
+        string='Tỷ lệ cho vay (%)',
+        related='type_id.advance_rate', readonly=True,
+        help='Tỷ lệ NH cho vay trên giá trị tài sản, theo loại tài sản. '
+             '0 = chưa khai → tài sản KHÔNG được tính vào cơ sở bảo '
+             'đảm. Khai ở Cấu hình → Loại tài sản bảo đảm.')
+    value_lendable = fields.Monetary(
+        string='Giá trị cho vay được',
+        compute='_compute_value_lendable',
+        help='= Giá trị hiện tại × Tỷ lệ cho vay. Phần ngân hàng chấp '
+             'nhận làm cơ sở bảo đảm, chưa trừ phần đã thế chấp.')
+
+    @api.depends('value_current', 'advance_rate')
+    def _compute_value_lendable(self):
+        for rec in self:
+            rec.value_lendable = (rec.value_current or 0.0) * \
+                (rec.advance_rate or 0.0) / 100.0
+
     project_id = fields.Many2one(
         're.project', string='Dự án (ring-fence)',
         compute='_compute_project_id', store=True, index=True,

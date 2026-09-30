@@ -721,6 +721,14 @@ def step_version_guard(dst, prev):
 
     `prev` = thư mục addons của bản đã giao lần trước (repo đối tác).
     """
+    # Đường dẫn sai thì DỪNG, không bỏ qua: bản giao cũ nằm ở thư mục
+    # tạm rất hay bị dọn, mà bỏ qua im lặng thì chốt chặn này thành vô
+    # dụng đúng lúc cần nhất (đã dính 30/09/2026).
+    if not os.path.isdir(prev) or not [
+            m for m in os.listdir(prev)
+            if os.path.isfile(os.path.join(prev, m, '__manifest__.py'))]:
+        raise SystemExit(
+            '--prev không phải thư mục addons của bản đã giao: %s' % prev)
     stale = []
     for m in sorted(os.listdir(dst)):
         a, b = os.path.join(prev, m), os.path.join(dst, m)

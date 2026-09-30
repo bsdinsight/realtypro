@@ -216,10 +216,18 @@
                     </div>
                     <group>
                         <group>
-                            <!-- Ẩn với khách không dùng vay nội bộ
-                                 (việc 1433): không thấy ô này thì mọi
-                                 khế ước giữ mặc định "Vay ngân hàng". -->
+                            <!-- Việc 1433: khách không dùng vay nội bộ
+                                 thì không thấy ô này, mọi khế ước giữ
+                                 mặc định "Vay ngân hàng".
+                                 PHẢI khai hai lần: các ô khác trong
+                                 form dùng loan_type trong điều kiện
+                                 ẩn/bắt buộc, mà Odoo 17 cấm tham chiếu
+                                 trường bị giới hạn nhóm — bản chỉ khai
+                                 một lần kèm groups làm VỠ cả form lúc
+                                 cài. -->
                             <field name="loan_type" groups="re_loan.group_loan_onlending"/>
+                            <field name="loan_type" invisible="1"
+                                   groups="!re_loan.group_loan_onlending"/>
                             <field name="allowed_facility_ids"
                                    invisible="1"/>
                             <field name="facility_id"

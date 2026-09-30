@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Hộp thoại một hồ sơ giải ngân. Chỗ nối biên bản nghiệm thu /
+         hợp đồng nhà thầu do module cầu nối chèn thêm vào form này. -->
+    <record id="view_rp_loan_disbursement_dossier_form"
+            model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.form</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="arch" type="xml">
+            <form string="Hồ sơ giải ngân">
+                <sheet>
+                    <group>
+                        <group name="source">
+                            <field name="contractor_id" readonly="1"/>
+                        </group>
+                        <group name="invoice">
+                            <field name="invoice_id"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="invoice_amount_total"
+                                   readonly="1"
+                                   invisible="not invoice_id"/>
+                            <field name="invoice_amount_remaining"
+                                   readonly="1"
+                                   invisible="not invoice_id"
+                                   decoration-danger="invoice_amount_remaining &lt;= 0"/>
+                            <field name="amount" width="185px"/>
+                            <field name="description"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <separator string="Tài liệu đính kèm"/>
+                    <field name="attachment_ids" widget="many2many_binary"
+                           options="{'no_create_edit': True}"/>
+                    <field name="disbursement_id" invisible="1"/>
+                    <field name="disbursement_beneficiary_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tab "Hồ sơ giải ngân" trên form giải ngân -->
+    <record id="view_re_loan_note_disbursement_form_inherit_dossier"
+            model="ir.ui.view">
+        <field name="name">re.loan.note.disbursement.form.dossier</field>
+        <field name="model">re.loan.note.disbursement</field>
+        <field name="inherit_id"
+               ref="re_loan.view_re_loan_note_disbursement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Hồ sơ giải ngân" name="dossier">
+                        <div class="alert alert-warning small" role="alert">
+                            <i class="fa fa-exclamation-circle"
+                               title="Bắt buộc"/>
+                            <b>Để gửi NH duyệt</b>: mỗi hồ sơ cần một hoá
+                            đơn của nhà thầu, và Σ giá trị hồ sơ phải bằng
+                            số tiền giải ngân.
+                        </div>
+                        <field name="dossier_line_ids"
+                               readonly="state not in ('draft','submitted')">
+                            <list>
+                                <field name="contractor_id" readonly="1"/>
+                                <field name="invoice_id" string="Hóa đơn"/>
+                                <field name="invoice_amount_total"
+                                       width="185px" string="Giá trị HĐ"
+                                       optional="show" readonly="1"/>
+                                <field name="invoice_amount_remaining"
+                                       width="185px" string="Còn lại HĐ"
+                                       optional="show" readonly="1"
+                                       decoration-danger="invoice_amount_remaining &lt;= 0"/>
+                                <field name="amount" width="185px"
+                                       string="Thanh toán kỳ này" sum="Σ"/>
+                                <field name="description"/>
+                                <field name="attachment_count"
+                                       string="File đính kèm"
+                                       optional="show"/>
+                                <field name="currency_id"
+                                       column_invisible="1"/>
+                            </list>
+                        </field>
+                        <group>
+                            <group>
+                                <field name="dossier_total" width="185px"/>
+                                <field name="dossier_balance" width="185px"
+                                       decoration-danger="dossier_balance != 0"/>
+                                <field name="dossier_count"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

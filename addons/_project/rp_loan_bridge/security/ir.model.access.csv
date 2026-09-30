@@ -3,8 +3,8 @@ access_rp_loan_allocation_loan_user,rp.loan.allocation loan user,model_rp_loan_a
 access_rp_loan_allocation_loan_manager,rp.loan.allocation loan manager,model_rp_loan_allocation,re_loan.group_loan_manager,1,1,1,1
 access_rp_loan_allocation_re_user,rp.loan.allocation re user,model_rp_loan_allocation,re_base.group_re_user,1,1,1,1
 access_rp_loan_allocation_re_manager,rp.loan.allocation re manager,model_rp_loan_allocation,re_base.group_re_manager,1,1,1,1
-access_rp_loan_dossier_loan_user,rp.loan.disbursement.dossier loan user,model_rp_loan_disbursement_dossier,re_loan.group_loan_user,1,1,1,1
-access_rp_loan_dossier_loan_manager,rp.loan.disbursement.dossier loan manager,model_rp_loan_disbursement_dossier,re_loan.group_loan_manager,1,1,1,1
+access_rp_loan_dossier_loan_user,rp.loan.disbursement.dossier loan user,re_loan_dossier.model_rp_loan_disbursement_dossier,re_loan.group_loan_user,1,1,1,1
+access_rp_loan_dossier_loan_manager,rp.loan.disbursement.dossier loan manager,re_loan_dossier.model_rp_loan_disbursement_dossier,re_loan.group_loan_manager,1,1,1,1
 access_re_subzone_loan_user,re.subzone loan read,re_base.model_re_subzone,re_loan.group_loan_user,1,0,0,0
 access_re_subzone_loan_manager,re.subzone loan read,re_base.model_re_subzone,re_loan.group_loan_manager,1,0,0,0
 access_re_building_loan_user,re.building loan read,re_base.model_re_building,re_loan.group_loan_user,1,0,0,0

@@ -59,6 +59,11 @@ ISLAND = [
     're_bank_sync', 're_lease_loan_bridge', 're_loan_dashboard',
     're_loan_menu_reorg', 're_base', 're_party', 're_integration_hub',
     'vn_administrative_units',
+    # Lõi hồ sơ giải ngân (hoá đơn) — tách khỏi rp_loan_bridge để
+    # khách chỉ mua phân hệ vay vẫn ghi được hồ sơ giải ngân. Chỗ nối
+    # biên bản nghiệm thu / hợp đồng nhà thầu để mở cho module riêng
+    # của khách.
+    're_loan_dossier',
     # LÕI borrowing base (khả dụng thực tế theo tài sản bảo đảm, phân
     # bổ TSBĐ, hạn mức theo dự án). Từ 19.0.2.0.0 lõi không còn phụ
     # thuộc module thi công; phần cần hợp đồng CĐT/IPC/dự toán nằm ở

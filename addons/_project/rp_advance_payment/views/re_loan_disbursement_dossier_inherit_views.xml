@@ -8,7 +8,7 @@
         <field name="name">rp.loan.disbursement.dossier.form.inherit.advance</field>
         <field name="model">rp.loan.disbursement.dossier</field>
         <field name="inherit_id"
-               ref="rp_loan_bridge.view_rp_loan_disbursement_dossier_form"/>
+               ref="re_loan_dossier.view_rp_loan_disbursement_dossier_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_id']" position="after">
                 <field name="advance_payment_id"
@@ -28,7 +28,7 @@
         <field name="name">re.loan.note.disbursement.form.inherit.advance</field>
         <field name="model">re.loan.note.disbursement</field>
         <field name="inherit_id"
-               ref="rp_loan_bridge.view_re_loan_note_disbursement_form_inherit_dossier"/>
+               ref="re_loan_dossier.view_re_loan_note_disbursement_form_inherit_dossier"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_id'][1]" position="after">
                 <field name="advance_payment_id"

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_loan_disbursement_dossier_user,rp.loan.disbursement.dossier user,model_rp_loan_disbursement_dossier,re_loan.group_loan_user,1,1,1,1
+access_rp_loan_disbursement_dossier_manager,rp.loan.disbursement.dossier manager,model_rp_loan_disbursement_dossier,re_loan.group_loan_manager,1,1,1,1

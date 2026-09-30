@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project ↔ Loan Bridge',
-    'version': '19.0.1.35.7',
+    'version': '19.0.1.36.0',
     'category': 'Realty/Project',
     'summary': 'Phân bổ vay/lãi vay theo công trình: Project / Khu vực / '
                'Hạng mục / Gói thầu / HĐ nhà thầu',
@@ -31,6 +31,9 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
     'license': 'AGPL-3',
     'depends': [
         're_loan',
+        # Lõi hồ sơ giải ngân (hoá đơn) — tách ra để khách chỉ mua
+        # phân hệ vay vẫn dùng được; ở đây chỉ thêm BBNT + HĐ nhà thầu.
+        're_loan_dossier',
         'account',
         'rp_cost_base',
         'rp_estimate',

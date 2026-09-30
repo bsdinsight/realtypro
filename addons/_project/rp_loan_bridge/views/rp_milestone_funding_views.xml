@@ -64,7 +64,7 @@
                       (0, 0, {'view_mode': 'list',
                               'view_id': ref('view_rp_loan_disbursement_dossier_list')}),
                       (0, 0, {'view_mode': 'form',
-                              'view_id': ref('view_rp_loan_disbursement_dossier_form')})]"/>
+                              'view_id': ref('re_loan_dossier.view_rp_loan_disbursement_dossier_form')})]"/>
     </record>
 
 

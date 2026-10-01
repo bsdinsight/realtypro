@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Gói thầu: thêm loại gói của ngành điện. Chỉ hiện khi dự án là dự
+         án năng lượng, để màn hình của dự án bất động sản không mọc thêm
+         ô vô nghĩa. -->
+    <record id="view_rp_tender_package_form_energy" model="ir.ui.view">
+        <field name="name">rp.tender.package.form.energy</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id"
+               ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <field name="selection_method" position="after">
+                <field name="project_is_energy" invisible="1"/>
+                <field name="energy_scope"
+                       invisible="not project_is_energy"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_rp_tender_package_list_energy" model="ir.ui.view">
+        <field name="name">rp.tender.package.list.energy</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id"
+               ref="rp_estimate.view_rp_tender_package_list"/>
+        <field name="arch" type="xml">
+            <field name="selection_method" position="after">
+                <field name="energy_scope" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Tìm kiếm: để ở bộ lọc và "nhóm theo", KHÔNG đưa vào pane lọc bên
+         trái — loại gói điện để trống ở mọi gói của dự án bất động sản,
+         mà pane chỉ gom bản ghi CÓ giá trị. -->
+    <record id="view_rp_tender_package_search_energy" model="ir.ui.view">
+        <field name="name">rp.tender.package.search.energy</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id"
+               ref="rp_estimate.view_rp_tender_package_search"/>
+        <field name="arch" type="xml">
+            <field name="contractor_id" position="after">
+                <field name="energy_scope"/>
+            </field>
+            <filter name="group_method" position="after">
+                <filter string="Loại gói (điện)" name="group_energy_scope"
+                        context="{'group_by': 'energy_scope'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form dự án: thêm khối Năng lượng, giấu phần bán bất động sản.
+
+         GIẤU chứ không xoá: dự án bất động sản vẫn thấy đủ như cũ, chỉ
+         dự án năng lượng mới ẩn. Điều kiện đọc từ is_energy (có lưu),
+         nên không nơi nào phải viết lại danh sách loại dự án. -->
+    <record id="view_re_project_form_energy" model="ir.ui.view">
+        <field name="name">re.project.form.energy</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+
+            <field name="project_type" position="after">
+                <field name="is_energy" invisible="1"/>
+            </field>
+
+            <!-- Phân khúc thị trường và Mở bán: chỉ có nghĩa khi bán căn. -->
+            <field name="segment" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="is_open_for_sale" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+
+            <!-- Cao tầng / thấp tầng và cấp theo dõi vòng đời là cách chia
+                 của dự án nhà ở. Ẩn đi, giá trị mặc định vẫn giữ nguyên
+                 để các phép tính cũ không đổi. -->
+            <xpath expr="//field[@name='development_type']/ancestor::group[2]"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='development_type']/ancestor::group[2]"
+                   position="after">
+                <group string="Nhà máy điện" invisible="not is_energy">
+                    <group>
+                        <field name="capacity_mw"/>
+                        <field name="turbine_count"
+                               invisible="project_type != 'wind'"/>
+                        <field name="ppa_partner_id"
+                               options="{'no_create': True}"/>
+                        <field name="ppa_tariff"/>
+                    </group>
+                    <group>
+                        <field name="date_grid_connection"
+                               options="{'format': 'dd/MM/yyyy'}"/>
+                        <field name="date_cod"
+                               options="{'format': 'dd/MM/yyyy'}"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//page[@name='marketing']" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sales_contact']" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_re_project_list_energy" model="ir.ui.view">
+        <field name="name">re.project.list.energy</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_list"/>
+        <field name="arch" type="xml">
+            <field name="project_type" position="after">
+                <field name="capacity_mw" optional="hide"
+                       string="MW" width="120px"/>
+                <field name="date_cod" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_re_project_search_energy" model="ir.ui.view">
+        <field name="name">re.project.search.energy</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <filter name="f_energy" string="Dự án năng lượng"
+                        domain="[('is_energy', '=', True)]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

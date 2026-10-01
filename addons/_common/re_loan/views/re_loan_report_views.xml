@@ -31,7 +31,10 @@
         <field name="name">Dư nợ vay</field>
         <field name="res_model">re.loan.note</field>
         <field name="view_mode">pivot,graph,list,form</field>
-        <field name="domain">[('principal_outstanding','>',0)]</field>
+        <!-- Bỏ KW đã huỷ: huỷ rồi thì không còn là dư nợ, để lọt vào
+             đây là thổi phồng số nợ phải trả ngân hàng (việc 1440). -->
+        <field name="domain">[('principal_outstanding','>',0),
+                              ('state','!=','cancelled')]</field>
         <field name="search_view_id" ref="view_re_loan_note_search"/>
     </record>
 

@@ -11,6 +11,15 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
+def _fmt_date(value):
+    """Ngày hiện theo kiểu Việt Nam trong ô "Giá trị cũ/mới".
+
+    Ô này là Char (giữ vết bằng chữ), nên nếu đổ thẳng `str(date)` thì
+    người dùng đọc phải 2026-10-01 — đúng dữ liệu nhưng sai cách đọc.
+    """
+    return value.strftime('%d/%m/%Y') if value else ''
+
+
 class ReLoanNoteAmendment(models.Model):
     _name = 're.loan.note.amendment'
     _description = 'Phụ lục khế ước'
@@ -88,8 +97,8 @@ class ReLoanNoteAmendment(models.Model):
             if t == 'extension':
                 if not am.new_date_maturity:
                     raise UserError(_("Cần nhập Ngày đáo hạn mới."))
-                am.value_old = str(note.date_maturity or '')
-                am.value_new = str(am.new_date_maturity)
+                am.value_old = _fmt_date(note.date_maturity)
+                am.value_new = _fmt_date(am.new_date_maturity)
                 note.date_maturity = am.new_date_maturity
                 material = True
             elif t == 'amount':
@@ -124,8 +133,14 @@ class ReLoanNoteAmendment(models.Model):
             elif t == 'schedule':
                 if not am.new_repayment_plan:
                     raise UserError(_("Cần chọn Lịch trả gốc mới."))
-                am.value_old = note.repayment_plan or ''
-                am.value_new = am.new_repayment_plan
+                # Ghi NHÃN tiếng Việt, không ghi mã kỹ thuật: ô "Giá
+                # trị cũ/mới" là chỗ người dùng đọc, mà 'equal_principal'
+                # thì chẳng ai đọc được (việc 1434).
+                plans = dict(self._fields['new_repayment_plan'].selection)
+                am.value_old = plans.get(
+                    note.repayment_plan, note.repayment_plan or '')
+                am.value_new = plans.get(
+                    am.new_repayment_plan, am.new_repayment_plan)
                 note.repayment_plan = am.new_repayment_plan
                 material = True
             elif t == 'collateral':

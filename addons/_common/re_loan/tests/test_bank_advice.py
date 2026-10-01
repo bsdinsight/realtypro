@@ -299,3 +299,77 @@ class TestBankAdvice(TransactionCase):
         wiz = Wiz.create({'date_advice': False})
         with self.assertRaises(UserError):
             wiz.action_parse()
+
+
+@tagged('post_install', '-at_install', 're_loan')
+class TestBankAdviceNoDisbursement(TransactionCase):
+    """Việc 1436 — giấy báo nợ cho kỳ CÓ TIỀN GỐC trên khế ước chưa
+    nhập dòng giải ngân nào.
+
+    Nghiệp vụ: khế ước ký là nhận nợ toàn bộ số tiền, bảng giải ngân
+    chỉ để theo dõi dòng tiền — nhiều khách không nhập. Trước đây phép
+    kiểm lúc trả nợ lại so với SỐ ĐÃ GIẢI NGÂN, nên kỳ nào có gốc là
+    giấy báo nợ nổ lỗi ngay lúc đăng.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bank = cls.env['res.partner'].create({
+            'name': 'NH 1436', 'is_company': True, 'is_bank': True})
+        cls.contract = cls.env['re.loan.credit.contract'].create({
+            'name': 'HĐTD-1436', 'partner_id': cls.bank.id,
+            'amount_total': 10_000_000_000.0})
+        cls.contract.action_activate()
+        cls.fac = cls.env['re.loan.facility'].create({
+            'name': 'F-1436', 'credit_contract_id': cls.contract.id,
+            'facility_type': 'term', 'amount_limit': 10_000_000_000.0,
+            'interest_rate_default': 10.0})
+        cls.note = cls.env['re.loan.note'].create({
+            'name': 'KW-1436', 'facility_id': cls.fac.id,
+            'amount': 1_200_000_000.0, 'date_note': '2026-01-01',
+            'tenor_months': 12, 'interest_rate': 10.0,
+            'interest_method': 'declining',
+            'repayment_plan': 'equal_principal'})
+        cls.note.action_activate()
+
+    def _period_with_principal(self):
+        lines = self.note.interest_line_ids.sorted('period_no')
+        return next(l for l in lines if (l.principal_due or 0.0) > 0)
+
+    def test_no_disbursement_recorded(self):
+        self.assertFalse(self.note.disbursement_ids,
+                         'kịch bản 1436: KW chưa nhập dòng giải ngân')
+
+    def test_advice_on_principal_period_posts(self):
+        period = self._period_with_principal()
+        due = ((period.principal_due or 0.0)
+               + (period.interest_amount or 0.0)
+               + (period.fee_amount or 0.0))
+        adv = self.env['re.loan.bank.advice'].create({
+            'date_advice': '2026-02-01',
+            'partner_id': self.bank.id,
+            'line_ids': [(0, 0, {
+                'note_id': self.note.id,
+                'amount': due,
+                'interest_line_id': period.id,
+            })],
+        })
+        adv.action_post()
+        self.assertEqual(adv.state, 'posted')
+        self.assertTrue(adv.line_ids.repayment_ids)
+        self.assertAlmostEqual(
+            sum(adv.line_ids.repayment_ids.mapped('amount_principal')),
+            period.principal_due, delta=1)
+
+    def test_repay_up_to_note_amount(self):
+        """Trả tới đúng số tiền khế ước thì được; vượt mới chặn."""
+        self.env['re.loan.note.repayment'].create({
+            'note_id': self.note.id, 'date': '2026-03-01',
+            'amount_principal': self.note.amount})
+        self.assertAlmostEqual(self.note.principal_outstanding, 0.0,
+                               delta=1)
+        with self.assertRaises(ValidationError):
+            self.env['re.loan.note.repayment'].create({
+                'note_id': self.note.id, 'date': '2026-04-01',
+                'amount_principal': 1_000_000.0})

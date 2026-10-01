@@ -99,8 +99,14 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <!-- Theo dõi thanh toán của BL nằm ở CHỨNG
+                             THƯ (phiếu chi thật, sổ cái biết). Bảng
+                             đợt thanh toán trên đề nghị chỉ còn phục
+                             vụ dữ liệu cũ, nên nút chỉ hiện khi đề
+                             nghị thật sự có đợt (việc 1438). -->
                         <button name="action_view_payments" type="object"
-                                class="oe_stat_button" icon="fa-money">
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="payment_count == 0">
                             <field name="payment_count" widget="statinfo"
                                    string="Thanh toán"/>
                         </button>

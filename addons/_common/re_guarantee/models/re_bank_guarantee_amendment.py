@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Phụ lục chứng thư BL — gia hạn, đổi giá trị, đổi beneficiary, huỷ."""
+"""Phụ lục chứng thư BL — gia hạn, đổi giá trị, đổi người thụ hưởng, huỷ."""
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 AMENDMENT_TYPES = [
     ('extension', 'Gia hạn'),
     ('amount',    'Đổi giá trị BL'),
-    ('beneficiary', 'Đổi beneficiary'),
+    ('beneficiary', 'Đổi người thụ hưởng'),
     ('cancel',    'Huỷ trước hạn'),
     ('other',     'Khác'),
 ]
@@ -36,7 +36,7 @@ class ReBankGuaranteeAmendment(models.Model):
     new_date_expiry = fields.Date(string='Ngày hết hạn mới')
     new_amount = fields.Monetary(string='Giá trị BL mới')
     new_beneficiary_partner_id = fields.Many2one(
-        'res.partner', string='Beneficiary mới')
+        'res.partner', string='Người thụ hưởng mới')
 
     description = fields.Text(string='Diễn giải')
     value_old = fields.Char(string='Giá trị cũ', readonly=True)

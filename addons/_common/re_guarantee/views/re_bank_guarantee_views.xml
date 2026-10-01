@@ -15,6 +15,7 @@
                 <field name="guarantee_type"/>
                 <field name="issuing_bank_partner_id"/>
                 <field name="beneficiary_partner_id"/>
+                <field name="project_id" optional="show"/>
                 <field name="date_issue"/>
                 <field name="date_expiry"/>
                 <field name="days_remaining"/>
@@ -57,7 +58,7 @@
                             <div>
                                 <field name="guarantee_type"/>
                             </div>
-                            <div>BE: <field name="beneficiary_partner_id"/></div>
+                            <div>Thụ hưởng: <field name="beneficiary_partner_id"/></div>
                             <div>Giá trị:
                                 <field name="amount" widget="monetary"/>
                             </div>
@@ -198,6 +199,9 @@
                             <field name="guarantee_type"/>
                             <field name="applicant_partner_id"/>
                             <field name="beneficiary_partner_id"/>
+                            <!-- Lấy từ đề nghị phát hành (việc 1439) -->
+                            <field name="project_id"
+                                   options="{'no_quick_create': True}"/>
                         </group>
                         <group>
                             <field name="issuing_bank_partner_id"/>
@@ -493,6 +497,7 @@
                 <field name="beneficiary_partner_id"/>
                 <field name="applicant_partner_id"/>
                 <field name="facility_id"/>
+                <field name="project_id"/>
                 <filter name="f_active" string="Đang hiệu lực"
                         domain="[('state','in',['issued','extended'])]"/>
                 <filter name="f_expiring" string="Sắp hết hạn (30 ngày)"
@@ -519,8 +524,10 @@
                         context="{'group_by': 'issuing_bank_partner_id'}"/>
                 <filter name="g_state" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
-                <filter name="g_beneficiary" string="Beneficiary"
+                <filter name="g_beneficiary" string="Người thụ hưởng"
                         context="{'group_by': 'beneficiary_partner_id'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
             </search>
         </field>
     </record>

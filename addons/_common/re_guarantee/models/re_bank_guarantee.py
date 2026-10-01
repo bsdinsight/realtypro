@@ -55,14 +55,22 @@ class ReBankGuarantee(models.Model):
         domain="[('partner_id', '=', issuing_bank_partner_id)]",
         help='Chi nhánh NH phát hành. Lọc theo NH ở trên.')
     applicant_partner_id = fields.Many2one(
-        'res.partner', string='Bên xin BL (Applicant)', required=True,
+        'res.partner', string='Bên xin BL', required=True,
         tracking=True,
         help='Người mua bảo lãnh — thường là tổng thầu hoặc nhà thầu phụ.')
     beneficiary_partner_id = fields.Many2one(
-        'res.partner', string='Bên thụ hưởng (Beneficiary)', required=True,
+        'res.partner', string='Người thụ hưởng', required=True,
         tracking=True,
         help='Bên nhận BL — vd CĐT (khi tổng thầu mua) hoặc tổng thầu (khi nhà thầu '
              'phụ mua đưa cho tổng thầu).')
+    # Chứng thư phục vụ dự án nào (việc 1439). Đề nghị phát hành đã
+    # khai dự án; chứng thư sinh ra từ đề nghị thì mang theo, không bắt
+    # người dùng khai lại — và nhờ đó lọc/nhóm chứng thư theo dự án
+    # được trên chính màn hình chứng thư.
+    project_id = fields.Many2one(
+        're.project', string='Dự án (áp dụng)', tracking=True,
+        help='Dự án mà BL này phục vụ. Tự lấy từ Đề nghị phát hành BL '
+             'khi phát hành chứng thư; sửa được.')
 
     # --- Thời gian ---
     date_issue = fields.Date(

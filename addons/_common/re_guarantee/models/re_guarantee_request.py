@@ -125,7 +125,7 @@ class ReGuaranteeRequest(models.Model):
     # Phí BL — auto compute từ amount × rate × days
     # ------------------------------------------------------------------
     guarantee_fee_rate = fields.Float(
-        string='Tỷ lệ phí BL (%/năm)', digits=(5, 2), default=2.0,
+        string='Tỷ lệ phí BL (%/năm)', digits=(5, 2), default=0.0,
         tracking=True,
         help='Phí BL NH thu trên giá trị BL, tính theo năm.')
     guarantee_fee_amount = fields.Monetary(
@@ -164,9 +164,10 @@ class ReGuaranteeRequest(models.Model):
     # Phạt trả chậm — tự compute từ overdue days
     # ------------------------------------------------------------------
     penalty_rate = fields.Float(
-        string='Tỷ lệ phạt trả chậm (%/năm)', digits=(5, 2), default=10.0,
+        string='Tỷ lệ phạt trả chậm (%/năm)', digits=(5, 2), default=0.0,
         help='Phạt trả chậm áp lên số phí + ký quỹ chưa trả khi quá '
-             'date_expiry. Mặc định 10%/năm — chỉnh theo HĐTD.')
+             'date_expiry. Mặc định 0 — khai theo đúng HĐTD, hệ '
+             'thống không tự đoán hộ (việc 1437).')
     penalty_days = fields.Integer(
         string='Số ngày quá hạn',
         compute='_compute_penalty', store=True)
@@ -651,6 +652,7 @@ class ReGuaranteeRequest(models.Model):
             'issuing_bank_partner_id': self.issuing_bank_partner_id.id,
             'applicant_partner_id': self.applicant_partner_id.id,
             'beneficiary_partner_id': self.beneficiary_partner_id.id,
+            'project_id': self.project_id.id,
             'facility_id': self.facility_id.id,
             'amount': self.amount,
             'currency_id': self.currency_id.id,

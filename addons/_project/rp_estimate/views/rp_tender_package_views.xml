@@ -41,6 +41,31 @@
                         context="{'group_by': 'contractor_id'}"/>
                 <filter string="Trạng thái" name="group_state"
                         context="{'group_by': 'state'}"/>
+
+                <!-- Pane lọc bên trái.
+                     Ba chiều người làm đấu thầu dùng hằng ngày: gói của dự
+                     án nào · đang ở bước nào · chọn thầu kiểu gì.
+
+                     KHÔNG đưa Khu vực, Nhà thầu trúng, Công ty, Tiền tệ vào:
+                     khu vực và nhà thầu để trống ở quá nửa số gói (pane chỉ
+                     gom bản ghi CÓ giá trị nên lọc theo chúng là giấu mất
+                     phần còn lại), còn công ty và tiền tệ chỉ có một giá trị.
+
+                     Dự án để dạng CHỌN MỘT (category). Many2one ở dạng chọn
+                     NHIỀU đi vào nhánh lõi đọc kwargs['group_domain'] — client
+                     gửi null thì lõi nổ 500; bản vá cho chỗ đó nằm ở bộ
+                     Enterprise, bản Community này không có. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="selection_method" select="multi"
+                           string="Hình thức chọn thầu" icon="fa-gavel"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

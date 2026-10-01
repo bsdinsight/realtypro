@@ -19,6 +19,11 @@ class TestAdvanceDossier(TransactionCase):
             'name': 'NH Test 1432', 'is_company': True, 'is_bank': True})
         cls.contractor = cls.env['res.partner'].create({
             'name': 'Nhà thầu 1432', 'is_company': True})
+        # Giải ngân đòi TK ngân hàng của bên nhận tiền (chuẩn NH VN
+        # chuyển thẳng cho nhà thầu).
+        cls.contractor_bank = cls.env['res.partner.bank'].create({
+            'acc_number': '0123456789-1432',
+            'partner_id': cls.contractor.id})
         cls.contract = cls.env['re.loan.credit.contract'].create({
             'name': 'HĐTD-1432', 'partner_id': cls.bank.id,
             'amount_total': 1_000_000_000.0})
@@ -39,6 +44,7 @@ class TestAdvanceDossier(TransactionCase):
             'date': '2026-02-01',
             'amount': amount,
             'beneficiary_partner_id': self.contractor.id,
+            'beneficiary_bank_account_id': self.contractor_bank.id,
         })
 
     def test_advance_dossier_submits_without_invoice(self):

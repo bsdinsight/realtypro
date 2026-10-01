@@ -21,8 +21,10 @@ class TestFacilitySingleProject(TransactionCase):
         cls.contract = cls.env['re.loan.credit.contract'].create({
             'name': 'HĐTD-1425', 'partner_id': cls.bank.id,
             'amount_total': 1_000_000_000.0})
-        cls.project_a = cls.env['re.project'].create({'name': 'Dự án A'})
-        cls.project_b = cls.env['re.project'].create({'name': 'Dự án B'})
+        cls.project_a = cls.env['re.project'].create(
+            {'name': 'Dự án A', 'code': 'DA-1425-A'})
+        cls.project_b = cls.env['re.project'].create(
+            {'name': 'Dự án B', 'code': 'DA-1425-B'})
 
     def _facility(self, **vals):
         base = {

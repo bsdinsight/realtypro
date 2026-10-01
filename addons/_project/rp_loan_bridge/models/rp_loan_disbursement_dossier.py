@@ -25,13 +25,18 @@ class RpLoanDisbursementDossier(models.Model):
 
     @api.depends('invoice_id', 'invoice_id.partner_id',
                  'invoice_id.payment_milestone_id.contract_id',
-                 'acceptance_id')
+                 'acceptance_id', 'dossier_kind', 'advance_partner_id')
     def _compute_dossier_source(self):
         """Ưu tiên hoá đơn (liên kết rõ qua đợt thanh toán), thiếu thì
-        lấy từ biên bản nghiệm thu."""
+        lấy từ biên bản nghiệm thu.
+
+        Hồ sơ loại Tạm ứng chưa có hoá đơn lẫn nghiệm thu — nhà thầu
+        lấy thẳng từ bên nhận tạm ứng (việc 1432)."""
         for rec in self:
             contract = False
             contractor = False
+            if rec.dossier_kind == 'advance':
+                contractor = rec.advance_partner_id
             if rec.invoice_id:
                 if rec.invoice_id.payment_milestone_id:
                     contract = rec.invoice_id.payment_milestone_id.contract_id

@@ -13,7 +13,7 @@
             <xpath expr="//field[@name='invoice_id']" position="after">
                 <field name="advance_payment_id"
                        options="{'no_create': True}"
-                       invisible="invoice_id"/>
+                       invisible="dossier_kind != 'advance'"/>
                 <field name="advance_amount_total"
                        readonly="1"
                        invisible="not advance_payment_id"/>

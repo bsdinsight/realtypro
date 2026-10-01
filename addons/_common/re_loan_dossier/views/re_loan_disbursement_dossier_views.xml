@@ -11,18 +11,33 @@
             <form string="Hồ sơ giải ngân">
                 <sheet>
                     <group>
+                        <group name="kind">
+                            <field name="dossier_kind" widget="radio"
+                                   options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                    <group>
                         <group name="source">
                             <field name="contractor_id" readonly="1"/>
+                            <!-- Hồ sơ tạm ứng: chưa có hoá đơn, chứng
+                                 từ là đề nghị tạm ứng + hợp đồng -->
+                            <field name="advance_partner_id"
+                                   invisible="dossier_kind != 'advance'"
+                                   required="dossier_kind == 'advance'"
+                                   options="{'no_quick_create': True}"/>
+                            <field name="advance_reference"
+                                   invisible="dossier_kind != 'advance'"/>
                         </group>
                         <group name="invoice">
                             <field name="invoice_id"
+                                   invisible="dossier_kind != 'invoice'"
                                    options="{'no_quick_create': True}"/>
                             <field name="invoice_amount_total"
                                    readonly="1"
-                                   invisible="not invoice_id"/>
+                                   invisible="dossier_kind != 'invoice' or not invoice_id"/>
                             <field name="invoice_amount_remaining"
                                    readonly="1"
-                                   invisible="not invoice_id"
+                                   invisible="dossier_kind != 'invoice' or not invoice_id"
                                    decoration-danger="invoice_amount_remaining &lt;= 0"/>
                             <field name="amount" width="185px"/>
                             <field name="description"/>
@@ -55,15 +70,25 @@
                         <div class="alert alert-warning small" role="alert">
                             <i class="fa fa-exclamation-circle"
                                title="Bắt buộc"/>
-                            <b>Để gửi NH duyệt</b>: mỗi hồ sơ cần một hoá
-                            đơn của nhà thầu, và Σ giá trị hồ sơ phải bằng
-                            số tiền giải ngân.
+                            <b>Để gửi NH duyệt</b>: hồ sơ loại
+                            <b>Hoá đơn</b> cần một hoá đơn của nhà thầu,
+                            hồ sơ loại <b>Tạm ứng</b> cần bên nhận tạm
+                            ứng (trả trước thì chưa có hoá đơn), và
+                            Σ giá trị hồ sơ phải bằng số tiền giải ngân.
                         </div>
                         <field name="dossier_line_ids"
                                readonly="state not in ('draft','submitted')">
                             <list>
+                                <field name="dossier_kind"
+                                       string="Loại hồ sơ"/>
                                 <field name="contractor_id" readonly="1"/>
                                 <field name="invoice_id" string="Hóa đơn"/>
+                                <field name="advance_partner_id"
+                                       string="Bên nhận tạm ứng"
+                                       optional="hide"/>
+                                <field name="advance_reference"
+                                       string="Chứng từ tạm ứng"
+                                       optional="hide"/>
                                 <field name="invoice_amount_total"
                                        width="185px" string="Giá trị HĐ"
                                        optional="show" readonly="1"/>

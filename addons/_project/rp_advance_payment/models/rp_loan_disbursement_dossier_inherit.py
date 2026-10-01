@@ -48,21 +48,28 @@ class RpLoanDisbursementDossier(models.Model):
         string='Là thanh toán tạm ứng',
         compute='_compute_is_advance_payment',
         store=True,
-        help='True nếu hồ sơ này pick Tạm ứng (chưa có hóa đơn).')
+        help='True nếu hồ sơ này là tạm ứng (chưa có hóa đơn) — gắn '
+             'phiếu Tạm ứng của bộ Thi công, hoặc khai tay loại hồ sơ '
+             'Tạm ứng ở phần lõi.')
 
-    @api.depends('advance_payment_id')
+    @api.depends('advance_payment_id', 'dossier_kind')
     def _compute_is_advance_payment(self):
         for rec in self:
-            rec.is_advance_payment = bool(rec.advance_payment_id)
+            rec.is_advance_payment = bool(
+                rec.advance_payment_id) or rec.dossier_kind == 'advance'
 
     @api.onchange('advance_payment_id')
     def _onchange_advance_fill_amount(self):
         """Pick Tạm ứng → auto-fill = phần CHƯA thanh toán (bug #19:
         thanh toán từng phần qua nhiều dossier — không fill full)."""
         if self.advance_payment_id:
+            self.dossier_kind = 'advance'
             self.amount = self.advance_payment_id.amount_unpaid
             # Clear invoice nếu đang pick (mutual exclusive)
             self.invoice_id = False
+            if not self.advance_partner_id:
+                self.advance_partner_id = (
+                    self.advance_payment_id.partner_id)
 
     @api.onchange('invoice_id')
     def _onchange_invoice_clear_advance(self):

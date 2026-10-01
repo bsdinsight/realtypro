@@ -40,13 +40,26 @@ class ReLoanNoteDisbursement(models.Model):
             if not rec.dossier_line_ids:
                 raise UserError(_(
                     'Cần ít nhất 1 hồ sơ giải ngân trước khi gửi NH.'))
+            # Hồ sơ loại Tạm ứng KHÔNG có hoá đơn — đó là cả lý do nó
+            # tồn tại: trả trước cho nhà thầu thì chưa ai xuất hoá đơn
+            # (việc 1432). Chỉ hồ sơ loại Hoá đơn mới bắt.
             missing_inv = rec.dossier_line_ids.filtered(
-                lambda d: not d.invoice_id)
+                lambda d: d.dossier_kind == 'invoice' and not d.invoice_id)
             if missing_inv:
                 raise UserError(_(
                     '%(n)s hồ sơ thiếu Hóa đơn. NH yêu cầu mỗi hồ sơ '
-                    'phải có hoá đơn của nhà thầu.',
+                    'phải có hoá đơn của nhà thầu — nếu đây là tiền '
+                    'trả trước khi có hoá đơn, đổi "Loại hồ sơ" sang '
+                    'Tạm ứng.',
                     n=len(missing_inv)))
+            missing_adv = rec.dossier_line_ids.filtered(
+                lambda d: d.dossier_kind == 'advance'
+                and not d.advance_partner_id)
+            if missing_adv:
+                raise UserError(_(
+                    '%(n)s hồ sơ tạm ứng chưa khai Bên nhận tạm ứng. '
+                    'NH cần biết tiền đi đâu.',
+                    n=len(missing_adv)))
             # Dung sai 1đ cho làm tròn VND.
             if abs(rec.dossier_balance) > 1:
                 raise UserError(_(

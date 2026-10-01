@@ -30,6 +30,15 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
+def _fmt_date(value):
+    """Ngày trong câu báo lỗi đọc theo kiểu Việt Nam.
+
+    Mặc định Python in ra 2026-10-01 — đúng dữ liệu nhưng người dùng
+    phải dịch trong đầu khi đối chiếu với ô trên màn hình.
+    """
+    return value.strftime('%d/%m/%Y') if value else ''
+
+
 GUARANTEE_TYPES = [
     ('bid',         'Bảo lãnh dự thầu (Bid Bond)'),
     ('performance', 'Bảo lãnh thực hiện HĐ (Performance Bond)'),
@@ -509,10 +518,11 @@ class ReGuaranteeRequest(models.Model):
                 },
             }
 
-    @api.constrains('date_expiry', 'date_request', 'date_issue')
+    @api.constrains('date_expiry', 'date_request', 'date_issue',
+                    'date_expected_issue')
     def _check_dates(self):
-        """Ba mốc phải đi đúng thứ tự đời thực: đề nghị → phát hành →
-        hết hạn.
+        """Bốn mốc phải đi đúng thứ tự đời thực: đề nghị → dự kiến phát
+        hành → phát hành thực tế → hết hạn.
 
         Gõ ngược thì phí bảo lãnh tính theo số ngày âm, và chứng thư
         sinh ra từ đề nghị mang luôn ngày sai sang.
@@ -522,18 +532,37 @@ class ReGuaranteeRequest(models.Model):
                     rec.date_expiry <= rec.date_request):
                 raise ValidationError(_(
                     "Ngày hết hạn phải sau ngày đề nghị."))
+            # Ngày DỰ KIẾN phát hành (việc 1441). Trước đây mốc này
+            # nằm ngoài dây chuyền kiểm, nên gõ dự kiến phát hành
+            # trước ngày đề nghị — hoặc sau cả ngày hết hạn — vẫn lưu.
+            if (rec.date_expected_issue and rec.date_request
+                    and rec.date_expected_issue < rec.date_request):
+                raise ValidationError(_(
+                    'Ngày dự kiến phát hành (%(x)s) không được sớm hơn '
+                    'Ngày đề nghị (%(r)s).',
+                    x=_fmt_date(rec.date_expected_issue),
+                    r=_fmt_date(rec.date_request)))
+            if (rec.date_expiry and rec.date_expected_issue
+                    and rec.date_expiry < rec.date_expected_issue):
+                raise ValidationError(_(
+                    'Ngày hết hạn (%(e)s) không được sớm hơn Ngày dự '
+                    'kiến phát hành (%(x)s).',
+                    e=_fmt_date(rec.date_expiry),
+                    x=_fmt_date(rec.date_expected_issue)))
             if (rec.date_issue and rec.date_request
                     and rec.date_issue < rec.date_request):
                 raise ValidationError(_(
                     'Ngày phát hành thực tế (%(i)s) không được sớm hơn '
                     'Ngày đề nghị (%(r)s).',
-                    i=rec.date_issue, r=rec.date_request))
+                    i=_fmt_date(rec.date_issue),
+                    r=_fmt_date(rec.date_request)))
             if (rec.date_expiry and rec.date_issue
                     and rec.date_expiry < rec.date_issue):
                 raise ValidationError(_(
                     'Ngày hết hạn (%(e)s) không được sớm hơn Ngày phát '
                     'hành thực tế (%(i)s).',
-                    e=rec.date_expiry, i=rec.date_issue))
+                    e=_fmt_date(rec.date_expiry),
+                    i=_fmt_date(rec.date_issue)))
 
     # ------------------------------------------------------------------
     # Create — auto sequence

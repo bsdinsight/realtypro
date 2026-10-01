@@ -389,3 +389,79 @@ class TestBankGuarantee(TransactionCase):
             'date': '2026-02-02', 'amount': 2_000_000.0})
         self.assertRegex(pay2.payment_id.name or '',
                          r'^[A-Za-z]{2,8}\d*/\d{4}/\d+$')
+
+
+@tagged('post_install', '-at_install', 're_guarantee')
+class TestGuaranteeRequestDates(TransactionCase):
+    """Việc 1441 — bốn mốc ngày của Đề nghị phát hành BL phải đi đúng
+    thứ tự: đề nghị → dự kiến phát hành → phát hành thực tế → hết hạn.
+
+    Ngày dự kiến phát hành trước nay nằm NGOÀI dây chuyền kiểm nên gõ
+    ngược vẫn lưu được.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bank = cls.env['res.partner'].create({
+            'name': 'NH 1441', 'is_company': True, 'is_bank': True})
+        cls.applicant = cls.env['res.partner'].create({
+            'name': 'Bên xin BL 1441', 'is_company': True})
+        cls.beneficiary = cls.env['res.partner'].create({
+            'name': 'Người thụ hưởng 1441', 'is_company': True})
+        contract = cls.env['re.loan.credit.contract'].create({
+            'name': 'HĐTD-1441', 'partner_id': cls.bank.id,
+            'amount_total': 10_000_000_000.0})
+        contract.action_activate()
+        cls.facility = cls.env['re.loan.facility'].create({
+            'name': 'F-BL-1441', 'credit_contract_id': contract.id,
+            'facility_type': 'revolving', 'purpose': 'bank_guarantee',
+            'amount_limit': 10_000_000_000.0})
+        if 'borrowing_base_opening' in cls.facility._fields:
+            cls.facility.borrowing_base_opening = 10_000_000_000.0
+
+    def _request(self, **vals):
+        base = {
+            'guarantee_type': 'performance',
+            'facility_id': self.facility.id,
+            'issuing_bank_partner_id': self.bank.id,
+            'applicant_partner_id': self.applicant.id,
+            'beneficiary_partner_id': self.beneficiary.id,
+            'amount': 1_000_000_000.0,
+            'date_request': '2026-01-10',
+            'date_expiry': '2026-12-31',
+        }
+        base.update(vals)
+        return self.env['re.guarantee.request'].create(base)
+
+    def test_full_chain_in_order_is_accepted(self):
+        req = self._request(date_expected_issue='2026-01-20',
+                            date_issue='2026-01-25')
+        self.assertTrue(req.id)
+
+    def test_expected_issue_before_request_blocked(self):
+        with self.assertRaises(ValidationError):
+            self._request(date_expected_issue='2026-01-05')
+
+    def test_expected_issue_after_expiry_blocked(self):
+        with self.assertRaises(ValidationError):
+            self._request(date_expected_issue='2027-01-05')
+
+    def test_issue_before_request_blocked(self):
+        with self.assertRaises(ValidationError):
+            self._request(date_issue='2026-01-05')
+
+    def test_issue_after_expiry_blocked(self):
+        with self.assertRaises(ValidationError):
+            self._request(date_issue='2027-01-05')
+
+    def test_expiry_before_request_blocked(self):
+        with self.assertRaises(ValidationError):
+            self._request(date_expiry='2026-01-05')
+
+    def test_write_is_checked_too(self):
+        """Sửa sau khi lưu cũng phải chặn — phần lớn ca gõ sai là sửa,
+        không phải tạo mới."""
+        req = self._request(date_expected_issue='2026-01-20')
+        with self.assertRaises(ValidationError):
+            req.date_expected_issue = '2025-12-31'

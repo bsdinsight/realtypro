@@ -370,6 +370,23 @@ class ReLoanFacility(models.Model):
              'Σ hạn mức các facility (tick hay không) đều KHÔNG được '
              'vượt tổng HĐTD.')
 
+    # Một mục đích — một dự án (việc 1425/1429).
+    #
+    # Phần lớn khách khai hạn mức theo kiểu "mục đích này là để làm dự
+    # án nào", chứ không chia một mục đích cho nhiều dự án. Khai ở ô
+    # này thì hệ thống tự giữ MỘT dòng phân bổ bằng trọn hạn mức cho
+    # dự án đó, nhờ vậy tab "Hạn mức theo dự án" trên HĐTD và toàn bộ
+    # phép tính theo trục dự án (dư nợ, khả dụng, borrowing base) vẫn
+    # chạy mà người dùng không phải nhập bảng phân bổ.
+    # Để trống ô này = quay lại kiểu chia nhiều dự án bằng tay.
+    project_id = fields.Many2one(
+        're.project', string='Dự án', tracking=True,
+        help='Dự án mà mục đích vay này phục vụ. Khai ở đây thì toàn '
+             'bộ hạn mức được coi là của dự án đó — không phải nhập '
+             'bảng "Phân bổ dự án" nữa (bảng đó chỉ dành cho mục đích '
+             'dùng chung cho nhiều dự án; để trống ô này thì bảng hiện '
+             'ra lại).')
+
     project_allocation_ids = fields.One2many(
         're.loan.facility.project.allocation', 'facility_id',
         string='Phân bổ dự án')
@@ -439,13 +456,66 @@ class ReLoanFacility(models.Model):
         recs = super().create(vals_list)
         if any('facility_type' in v for v in vals_list):
             recs._clear_type_selection_cache()
+        recs._sync_single_project_allocation()
         return recs
 
     def write(self, vals):
         res = super().write(vals)
         if 'facility_type' in vals:
             self._clear_type_selection_cache()
+        if {'project_id', 'amount_limit'} & set(vals):
+            self._sync_single_project_allocation()
         return res
+
+    # ------------------------------------------------------------------
+    # Một mục đích — một dự án
+    # ------------------------------------------------------------------
+    def _sync_single_project_allocation(self):
+        """Giữ đúng MỘT dòng phân bổ = trọn hạn mức cho `project_id`.
+
+        Trục dự án của cả phân hệ (dư nợ theo dự án, khả dụng theo dự
+        án, borrowing base, tab "Hạn mức theo dự án" trên HĐTD) đọc từ
+        bảng phân bổ. Nếu khai dự án ở đầu mục đích mà bảng rỗng thì
+        mọi báo cáo theo dự án đều trống — nên dòng phân bổ vẫn phải
+        có, chỉ là hệ thống tự ghi thay người dùng.
+
+        Không đụng tới hạn mức đang chia tay cho NHIỀU dự án: ở đó
+        người dùng mới là người biết chia thế nào (constrain bên dưới
+        chặn khai dự án đơn trong trường hợp này).
+        """
+        Allocation = self.env['re.loan.facility.project.allocation']
+        for rec in self:
+            if not rec.project_id:
+                continue
+            lines = rec.project_allocation_ids
+            if len(lines) > 1:
+                continue  # đã bị _check_single_project chặn
+            if not lines:
+                Allocation.create({
+                    'facility_id': rec.id,
+                    'project_id': rec.project_id.id,
+                    'amount': rec.amount_limit,
+                    'description': _('Tự sinh theo Dự án của mục đích.'),
+                })
+                continue
+            vals = {}
+            if lines.project_id != rec.project_id:
+                vals['project_id'] = rec.project_id.id
+            if lines.amount != rec.amount_limit:
+                vals['amount'] = rec.amount_limit
+            if vals:
+                lines.write(vals)
+
+    @api.constrains('project_id', 'project_allocation_ids')
+    def _check_single_project(self):
+        for rec in self:
+            if rec.project_id and len(rec.project_allocation_ids) > 1:
+                raise ValidationError(_(
+                    "Mục đích \"%(name)s\" đang chia hạn mức cho "
+                    "%(n)s dự án ở tab \"Phân bổ dự án\". Muốn gắn một "
+                    "dự án duy nhất thì xoá bớt các dòng phân bổ, hoặc "
+                    "để trống ô Dự án và chia tay như cũ.",
+                    name=rec.name or '', n=len(rec.project_allocation_ids)))
 
     def unlink(self):
         types = set(self.mapped('facility_type'))

@@ -56,6 +56,12 @@
                         <group>
                             <field name="credit_contract_id"/>
                             <field name="purpose"/>
+                            <!-- Một mục đích — một dự án (việc 1425).
+                                 Khai ở đây thì tab "Phân bổ dự án"
+                                 ẩn đi, hệ thống tự giữ dòng phân bổ
+                                 bằng trọn hạn mức. -->
+                            <field name="project_id"
+                                   options="{'no_quick_create': True}"/>
                             <field name="facility_type"/>
                             <field name="amount_limit"/>
                             <!-- Bản sao VÔ ĐIỀU KIỆN của currency_id. Trường hiển thị bên
@@ -131,7 +137,11 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Phân bổ dự án" name="project_allocation">
+                        <!-- Mục đích đã gắn MỘT dự án thì không còn gì
+                             để chia: ẩn tab, khỏi phải nhìn hai chỗ
+                             khai cùng một thứ (việc 1429). -->
+                        <page string="Phân bổ dự án" name="project_allocation"
+                              invisible="project_id">
                             <group>
                                 <group>
                                     <field name="amount_allocated_to_projects"/>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.2.1.0',
+    'version': '19.0.2.2.0',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '
@@ -46,7 +46,7 @@ có đủ các module đó.
 """,
     'author': 'BSDInsight',
     'website': 'https://bsdinsight.com',
-    'license': 'LGPL-3',
+    'license': 'AGPL-3',
     # KHÔNG phụ thuộc module thi công (rp_*). Phần cần dữ liệu hợp
     # đồng CĐT / dự toán / tiến độ nằm ở re_loan_bb_project — tách ra
     # để bộ vay chạy được độc lập ở khách chỉ mua phân hệ vay.

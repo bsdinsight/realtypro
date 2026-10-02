@@ -325,10 +325,15 @@ export class RpGanttAction extends Component {
         } catch {
             marks = [];
         }
+        // cssClass phải là MỘT lớp duy nhất, không khoảng trắng: EJ2 gọi
+        // classList.add(cssClass) nên chuỗi hai lớp ném InvalidCharacterError
+        // ngay giữa lúc vẽ mốc — chuỗi vẽ đứt ở đó, hideSpinner() không
+        // bao giờ chạy, và lớp spinner phủ kín Gantt nuốt mọi cú bấm.
         this._markers = marks.map((m) => ({
             day: new Date(m.date + "T00:00:00"),
             label: m.label,
-            cssClass: `rp-marker rp-marker-${m.kind || "other"}`,
+            cssClass: "rp-marker-" + String(m.kind || "other")
+                .replace(/[^a-z0-9-]/gi, ""),
         }));
     }
 
@@ -440,6 +445,7 @@ export class RpGanttAction extends Component {
             // Lịch lớn mở bung hết thì vừa chậm vừa không đọc được:
             // gấp lại, người xem tự mở nhánh cần xem (hoặc Expand all).
             collapseAllParentTasks: this.tasks.length > 150,
+            enableVirtualization: this.tasks.length > 150,
             allowAdding: true,
             allowDeleting: true,
             enableContextMenu: true,

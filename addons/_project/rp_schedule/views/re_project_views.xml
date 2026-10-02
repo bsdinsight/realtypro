@@ -23,13 +23,27 @@
                     <group>
                         <field name="schedule_forecast_end"
                                options="{'format': 'dd/MM/yyyy'}"/>
-                        <field name="schedule_slip_days"
-                               decoration-danger="schedule_slip_days &gt; 0"/>
+                        <!-- KHÔNG dùng decoration-* ở form: trình biên
+                             dịch form của Odoo 19 ném lỗi và web client
+                             chết ngay lúc mount — màn hình TRẮNG, không
+                             có hộp báo lỗi nào. decoration-* chỉ hợp lệ
+                             trong list/kanban. Muốn cảnh báo thì hiện
+                             hẳn một dòng đỏ có điều kiện. -->
+                        <field name="schedule_slip_days"/>
                         <field name="schedule_deadline"
                                options="{'format': 'dd/MM/yyyy'}"/>
                         <field name="schedule_deadline_slip"
-                               invisible="not schedule_deadline"
-                               decoration-danger="schedule_deadline_slip &gt; 0"/>
+                               invisible="not schedule_deadline"/>
+                        <div colspan="2" class="alert alert-danger py-1 mb-2"
+                             role="alert"
+                             invisible="schedule_deadline_slip &lt;= 0">
+                            <i class="fa fa-exclamation-triangle me-1"
+                               title="Trễ mốc"/>
+                            Ngày về đích dự báo đang VƯỢT mốc phải xong
+                            <field name="schedule_deadline_slip"
+                                   class="fw-bold" nolabel="1"
+                                   readonly="1"/> ngày.
+                        </div>
                         <div colspan="2">
                             <button name="action_open_project_gantt"
                                     type="object" class="btn-primary"

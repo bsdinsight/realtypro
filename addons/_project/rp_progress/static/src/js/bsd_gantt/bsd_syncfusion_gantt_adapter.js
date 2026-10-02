@@ -186,6 +186,12 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             ...(opts.collapseAllParentTasks ? {
                 collapseAllParentTasks: true,
             } : {}),
+            // Chỉ dựng DOM cho những hàng đang nhìn thấy. Đo trên lịch
+            // 485 công việc: 13,6s → 2,8s, và cuộn/mở nhánh vẫn giữ
+            // nguyên baseline, mốc sự kiện và màu đường găng.
+            ...(opts.enableVirtualization ? {
+                enableVirtualization: true,
+            } : {}),
             allowResizing: true,
             allowSorting: true,
             // Splitter mặc định show 4 cột (TaskName + StartDate +
@@ -251,6 +257,39 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             width: "100%",
         });
         this.gantt.appendTo(container);
+        this._clearStuckSpinner(container);
+    }
+
+    /**
+     * Gỡ lưới "đang tải" bị kẹt sau khi vẽ xong.
+     *
+     * Lưới spinner của EJ2 phủ kín component và `pointer-events: auto`
+     * nên nuốt mọi cú bấm. Nếu một ngoại lệ nổ ra GIỮA chuỗi vẽ (đã gặp
+     * thật: mốc sự kiện có cssClass hai lớp → classList.add ném
+     * InvalidCharacterError) thì EJ2 không bao giờ chạy tới hideSpinner:
+     * dữ liệu đã hiện đủ mà màn hình vẫn quay mãi và không bấm được gì —
+     * triệu chứng rất khó lần ra vì trông như lỗi mạng.
+     *
+     * Đây là lưới an toàn, KHÔNG phải cách chữa: lỗi gốc vẫn phải sửa.
+     */
+    _clearStuckSpinner(container) {
+        setTimeout(() => {
+            const pane = container.querySelector(
+                ":scope > .e-spinner-pane.e-spin-show");
+            if (!pane || !this.gantt) {
+                return;
+            }
+            console.warn(
+                "[BSD Gantt] Lưới 'đang tải' còn kẹt sau khi vẽ — gỡ để "
+                + "không chặn thao tác. Nhiều khả năng chuỗi vẽ của EJ2 "
+                + "đã đứt giữa chừng, xem console để tìm ngoại lệ gốc.");
+            try {
+                this.gantt.hideSpinner();
+            } catch {
+                pane.classList.remove("e-spin-show");
+                pane.classList.add("e-spin-hide");
+            }
+        }, 2500);
     }
 
     /**

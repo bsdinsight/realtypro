@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { BSDGanttAdapter } from "./bsd_gantt_adapter";
+import { loadEj2 } from "./ej2_loader";
 
 /**
  * BSDSyncfusionGanttAdapter — Syncfusion EJ2 Gantt implementation
@@ -50,6 +51,8 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
     }
 
     async render(container, tasks, opts = {}) {
+        // Lib nằm ở bundle riêng, nạp lần đầu khi thực sự mở Gantt.
+        await loadEj2();
         const ej = window.ej;
         if (!ej || !ej.gantt || !ej.gantt.Gantt) {
             throw new Error(

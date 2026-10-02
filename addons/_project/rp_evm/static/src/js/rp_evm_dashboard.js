@@ -13,6 +13,7 @@ import {
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
+import { loadEj2 } from "@rp_progress/js/bsd_gantt/ej2_loader";
 
 const TY = 1e9; // 1 tỷ
 
@@ -79,6 +80,9 @@ export class RpEvmDashboard extends Component {
 
     // ---- data ----
     async _ensureLicense() {
+        // Lib Syncfusion nằm ở bundle riêng của rp_progress — phải nạp
+        // xong mới có window.ej.base để đăng ký bản quyền và vẽ biểu đồ.
+        await loadEj2();
         if (this._licenseDone) return;
         try {
             const resp = await rpc("/rp_progress/syncfusion/license_key", {});

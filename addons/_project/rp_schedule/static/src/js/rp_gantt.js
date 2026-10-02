@@ -449,6 +449,11 @@ export class RpGanttAction extends Component {
             allowAdding: true,
             allowDeleting: true,
             enableContextMenu: true,
+            // KHÔNG đưa "TaskInformation" vào: hộp thoại đó sửa bản sao
+            // trong bộ nhớ của EJ2 rồi im lặng vứt đi — Odoo không nhận
+            // gì cả, người dùng tưởng đã lưu. Sửa chi tiết thì double
+            // click để mở form Odoo thật.
+            contextMenuItems: ["AutoFit", "Add", "DeleteTask"],
             onClick: (task) => this._openTaskForm(parseInt(task.id, 10)),
             onDateChange: (task, start, end) =>
                 this._onDateChange(task, start, end),

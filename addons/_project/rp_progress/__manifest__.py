@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Quản lý Tiến độ',
-    'version': '19.0.1.26.2',
+    'version': '19.0.1.27.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
@@ -62,11 +62,14 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         # assets_backend thì mọi trang Odoo phải tải 33 MB lib dù không
         # ai mở Gantt: bundle web lên 38 MB (9,4 MB sau nén) và màn hình
         # quay mấy chục giây sau mỗi lần nâng cấp module.
-        # Thứ tự nạp bắt buộc: theme → ej2 base → component Gantt.
+        # Bản RÚT GỌN: chỉ Gantt + Charts và cây phụ thuộc của chúng,
+        # dựng lại được bằng scripts/build_syncfusion_slim.py. Bản global
+        # của Syncfusion gộp mọi component (spreadsheet, pdfviewer,
+        # diagram, maps…) nên nặng 28,8 MB / 7,28 MB nén, trong khi bộ
+        # này chỉ dùng hai thứ — bản rút gọn còn 8,1 MB / 1,72 MB nén.
         'rp_progress.assets_syncfusion': [
-            'rp_progress/static/lib/syncfusion/material.css',
-            'rp_progress/static/lib/syncfusion/ej2.min.js',
-            'rp_progress/static/lib/syncfusion/ej2-gantt.min.js',
+            'rp_progress/static/lib/syncfusion/ej2-slim-material.css',
+            'rp_progress/static/lib/syncfusion/ej2-slim.min.js',
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),

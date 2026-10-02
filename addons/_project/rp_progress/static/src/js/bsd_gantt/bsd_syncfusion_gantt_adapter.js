@@ -40,8 +40,10 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
         }
         if (!window.ej || !window.ej.base || !window.ej.base.registerLicense) {
             throw new Error(
-                "Syncfusion ej2-gantt.min.js chưa load — kiểm tra " +
-                "rp_progress/static/lib/syncfusion/ + assets manifest"
+                "Syncfusion EJ2 chưa nạp — kiểm tra bundle " +
+                "rp_progress.assets_syncfusion và " +
+                "static/lib/syncfusion/ej2-slim.min.js " +
+                "(dựng lại bằng scripts/build_syncfusion_slim.py)"
             );
         }
         if (key) {

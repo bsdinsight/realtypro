@@ -255,6 +255,21 @@
                 <filter string="Project Type" name="group_type" context="{'group_by': 'project_type'}"/>
                 <filter string="Phase" name="group_state" context="{'group_by': 'primary_state'}"/>
                 <filter string="Development Type" name="group_dev_type" context="{'group_by': 'development_type'}"/>
+                <!-- Pane lọc bên trái. Chỉ dùng field có LƯU: pane đi
+                     qua read_group nên field tính không lưu sẽ nổ.
+                     primary_state là compute nhưng store=True nên dùng
+                     được. -->
+                <searchpanel>
+                    <field name="project_type" select="multi"
+                           string="Loại dự án" icon="fa-building"
+                           color="#0F2C3F" enable_counters="1"/>
+                    <field name="primary_state" select="multi"
+                           string="Giai đoạn" icon="fa-tasks"
+                           color="#0E8C99" enable_counters="1"/>
+                    <field name="state_id" select="multi"
+                           string="Tỉnh / Thành" icon="fa-map-marker"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

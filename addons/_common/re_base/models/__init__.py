@@ -1,3 +1,4 @@
+from . import base_search_panel
 from . import _lifecycle_mixin  # must load before re_subzone/re_building
 from . import re_project
 from . import re_subzone

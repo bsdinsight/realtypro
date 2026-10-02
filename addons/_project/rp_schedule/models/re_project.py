@@ -142,11 +142,15 @@ class ReProject(models.Model):
 
     def action_open_project_tasks(self):
         self.ensure_one()
+        panel = self.env.ref('rp_schedule.view_task_search_rp_panel',
+                             raise_if_not_found=False)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Công việc — %s', self.name),
             'res_model': 'project.task',
             'view_mode': 'list,form',
             'domain': [('rp_project_id', '=', self.id)],
+            # Pane lọc bên trái: gói thầu / hợp đồng của chính dự án này.
+            'search_view_id': [panel.id, 'search'] if panel else False,
             'context': {'search_default_rp_group_contract': 1},
         }

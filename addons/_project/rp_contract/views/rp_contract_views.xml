@@ -265,6 +265,23 @@
                         context="{'group_by': 'project_id'}"/>
                 <filter name="g_state" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+                <!-- Pane lọc bên trái: dự án → gói thầu → nhà thầu.
+                     Dự án một-chọn (xem hợp đồng thì luôn theo một dự
+                     án); gói thầu / nhà thầu / trạng thái nhiều-chọn để
+                     so sánh cạnh nhau. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="tender_package_id" select="multi"
+                           string="Gói thầu" icon="fa-gavel"
+                           color="#0E8C99" enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"/>
+                    <field name="contractor_id" select="multi"
+                           string="Nhà thầu" icon="fa-truck"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

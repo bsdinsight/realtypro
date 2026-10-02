@@ -85,12 +85,48 @@
         </field>
     </record>
 
+    <!-- Pane lọc bên trái cho màn hình lịch thi công.
+
+         KHÔNG gắn vào search view gốc của project.task: màn hình Công
+         việc của app Project lõi cũng dùng view đó, mà ở đó trục dự án
+         bất động sản / gói thầu / hợp đồng vô nghĩa. Nên đây là view
+         RIÊNG (mode primary, priority cao để không bị chọn mặc định),
+         chỉ các action của bộ xây dựng trỏ tới. Nó vẫn thừa hưởng đủ
+         filter của search view gốc và của các view mở rộng.
+
+         Trục đi từ to xuống nhỏ: dự án → gói thầu → hợp đồng (nhà thầu).
+         Dự án để một-chọn vì xem lịch thì luôn xem một dự án; gói thầu và
+         hợp đồng nhiều-chọn để so hai nhà thầu cạnh nhau. -->
+    <record id="view_task_search_rp_panel" model="ir.ui.view">
+        <field name="name">project.task.search.rp.panel</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <searchpanel>
+                    <field name="rp_project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="rp_package_id" select="multi"
+                           string="Gói thầu" icon="fa-gavel"
+                           color="#0E8C99" enable_counters="1"/>
+                    <field name="rp_contract_id" select="multi"
+                           string="Hợp đồng (nhà thầu)"
+                           icon="fa-file-text-o" enable_counters="1"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Action: công việc xây dựng -->
     <record id="action_rp_schedule_tasks" model="ir.actions.act_window">
         <field name="name">Lịch thi công (công việc)</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">list,form,kanban,calendar</field>
         <field name="domain">[('rp_contract_id', '!=', False)]</field>
+        <field name="search_view_id" ref="view_task_search_rp_panel"/>
     </record>
 
     <record id="action_rp_schedule_my_tasks" model="ir.actions.act_window">
@@ -98,5 +134,6 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">list,form,kanban,calendar</field>
         <field name="domain">[('rp_contract_id', '!=', False), ('user_ids', 'in', uid)]</field>
+        <field name="search_view_id" ref="view_task_search_rp_panel"/>
     </record>
 </odoo>

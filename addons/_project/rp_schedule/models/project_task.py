@@ -22,6 +22,12 @@ class ProjectTask(models.Model):
     rp_project_id = fields.Many2one(
         're.project', string='Dự án', related='rp_contract_id.project_id',
         store=True, index=True)
+    # Trục gói thầu: một dự án chia thành vài gói, mỗi gói vài hợp đồng.
+    # Lưu sẵn để pane lọc bên trái và báo cáo đi theo cây dự án → gói
+    # thầu → hợp đồng mà không phải nối bảng ở mọi truy vấn.
+    rp_package_id = fields.Many2one(
+        'rp.tender.package', string='Gói thầu',
+        related='rp_contract_id.tender_package_id', store=True, index=True)
     wbs_code = fields.Char(string='Mã WBS', index=True)
     planned_start = fields.Date(string='Bắt đầu (KH)')
     planned_end = fields.Date(string='Kết thúc (KH)')

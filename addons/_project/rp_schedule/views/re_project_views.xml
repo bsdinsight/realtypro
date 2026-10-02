@@ -64,6 +64,8 @@
                        string="Găng toàn DA" widget="boolean_toggle"
                        readonly="1"/>
                 <field name="rp_project_id" optional="hide"/>
+                <field name="rp_package_id" optional="hide"
+                       string="Gói thầu"/>
             </field>
         </field>
     </record>
@@ -80,6 +82,8 @@
             <filter name="rp_group_critical" position="after">
                 <filter string="Dự án" name="rp_group_project"
                         context="{'group_by': 'rp_project_id'}"/>
+                <filter string="Gói thầu" name="rp_group_package"
+                        context="{'group_by': 'rp_package_id'}"/>
                 <filter string="Hợp đồng" name="rp_group_contract"
                         context="{'group_by': 'rp_contract_id'}"/>
             </filter>

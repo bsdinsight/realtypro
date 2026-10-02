@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sổ giao diện đặt ngay cạnh khối tiến độ toàn dự án: hai thứ trả
+         lời cùng một câu hỏi — cái gì đang chặn ngày về đích. -->
+    <record id="view_re_project_form_interface" model="ir.ui.view">
+        <field name="name">re.project.form.interface</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_schedule.view_re_project_form_schedule"/>
+        <field name="arch" type="xml">
+            <!-- Neo theo name: Odoo 19 cấm dùng thuộc tính string làm
+                 selector kế thừa ("View inheritance may not use attribute
+                 'string' as a selector"). -->
+            <xpath expr="//group[@name='rp_schedule_rollup']"
+                   position="after">
+                <group string="SỔ GIAO DIỆN GIỮA CÁC HỢP ĐỒNG"
+                       invisible="not schedule_contract_count">
+                    <group>
+                        <field name="interface_count"/>
+                        <field name="interface_open_count"/>
+                        <field name="interface_conflict_count"/>
+                    </group>
+                    <group>
+                        <div colspan="2" class="alert alert-danger py-1 mb-2"
+                             role="alert"
+                             invisible="interface_conflict_count &lt;= 0">
+                            <i class="fa fa-exclamation-triangle me-1"
+                               title="Mâu thuẫn"/>
+                            Có <field name="interface_conflict_count"
+                                      class="fw-bold" nolabel="1"
+                                      readonly="1"/>
+                            điểm giao mà bên nhận cần TRƯỚC khi bên giao
+                            kịp xong.
+                        </div>
+                        <div colspan="2">
+                            <button name="action_open_interfaces"
+                                    type="object" class="btn-primary"
+                                    icon="fa-exchange"
+                                    string="Mở sổ giao diện"/>
+                            <button name="action_scan_interfaces"
+                                    type="object" class="btn-secondary"
+                                    icon="fa-search"
+                                    string="Quét giao diện từ lịch"
+                                    help="Mọi quan hệ trước-sau nối hai hợp đồng khác nhau đều là một điểm giao có thật — quét để ghi vào sổ."/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

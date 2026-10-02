@@ -12,7 +12,8 @@
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="before">
-                <group string="TIẾN ĐỘ TOÀN DỰ ÁN (mọi hợp đồng)"
+                <group name="rp_schedule_rollup"
+                       string="TIẾN ĐỘ TOÀN DỰ ÁN (mọi hợp đồng)"
                        invisible="not schedule_task_count">
                     <group>
                         <field name="schedule_task_count"/>

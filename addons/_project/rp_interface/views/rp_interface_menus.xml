@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_rp_interface_group" name="Sổ giao diện"
+              parent="rp_estimate.menu_construction"
+              sequence="15"/>
+
+    <menuitem id="menu_rp_interface_all" name="Giao diện giữa các hợp đồng"
+              parent="menu_rp_interface_group"
+              action="action_rp_interface" sequence="10"/>
+
+    <menuitem id="menu_rp_interface_conflict" name="Điểm giao đang mâu thuẫn"
+              parent="menu_rp_interface_group"
+              action="action_rp_interface_conflict" sequence="20"/>
+
+</odoo>

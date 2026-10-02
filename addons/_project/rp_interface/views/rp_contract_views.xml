@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Nhìn từ một hợp đồng: mình nợ ai cái gì, và đang chờ ai. -->
+    <record id="view_rp_contract_form_interface" model="ir.ui.view">
+        <field name="name">rp.contract.form.interface</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_interfaces_out" type="object"
+                        class="oe_stat_button" icon="fa-sign-out"
+                        invisible="not interface_out_count">
+                    <field name="interface_out_count" widget="statinfo"
+                           string="Phải bàn giao"/>
+                </button>
+                <button name="action_open_interfaces_in" type="object"
+                        class="oe_stat_button" icon="fa-sign-in"
+                        invisible="not interface_in_count">
+                    <field name="interface_in_count" widget="statinfo"
+                           string="Chờ nhận"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

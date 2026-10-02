@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tiến độ gom mọi hợp đồng của dự án.
+
+         Đặt ngay trên form dự án vì đây là con số người quản lý dự án
+         hỏi đầu tiên: bao giờ xong, trễ bao nhiêu so với kế hoạch gốc.
+         Số của từng hợp đồng vẫn nằm ở form hợp đồng như cũ. -->
+    <record id="view_re_project_form_schedule" model="ir.ui.view">
+        <field name="name">re.project.form.schedule</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <group string="TIẾN ĐỘ TOÀN DỰ ÁN (mọi hợp đồng)"
+                       invisible="not schedule_task_count">
+                    <group>
+                        <field name="schedule_task_count"/>
+                        <field name="schedule_contract_count"/>
+                        <field name="schedule_baseline_end"
+                               options="{'format': 'dd/MM/yyyy'}"/>
+                    </group>
+                    <group>
+                        <field name="schedule_forecast_end"
+                               options="{'format': 'dd/MM/yyyy'}"/>
+                        <field name="schedule_slip_days"
+                               decoration-danger="schedule_slip_days &gt; 0"/>
+                        <field name="schedule_deadline"
+                               options="{'format': 'dd/MM/yyyy'}"/>
+                        <field name="schedule_deadline_slip"
+                               invisible="not schedule_deadline"
+                               decoration-danger="schedule_deadline_slip &gt; 0"/>
+                        <div colspan="2">
+                            <button name="action_open_project_gantt"
+                                    type="object" class="btn-primary"
+                                    icon="fa-tasks"
+                                    string="Tiến độ dự án (Gantt)"/>
+                            <button name="action_compute_project_cpm"
+                                    type="object" class="btn-secondary"
+                                    icon="fa-sitemap"
+                                    string="Tính đường găng toàn dự án"/>
+                            <button name="action_open_project_tasks"
+                                    type="object" class="btn-link"
+                                    icon="fa-list"
+                                    string="Danh sách công việc"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Danh sách công việc: thêm trục dự án và số liệu đường găng toàn
+         dự án, để phân biệt với dư địa trong nội bộ một hợp đồng. -->
+    <record id="view_project_task_list_project_cpm" model="ir.ui.view">
+        <field name="name">project.task.list.project.cpm</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="rp_schedule.view_task_tree2_rp_schedule"/>
+        <field name="arch" type="xml">
+            <field name="total_float" position="after">
+                <field name="project_float" optional="show"
+                       string="Dư địa toàn DA"/>
+                <field name="is_project_critical" optional="show"
+                       string="Găng toàn DA" widget="boolean_toggle"
+                       readonly="1"/>
+                <field name="rp_project_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_task_search_project" model="ir.ui.view">
+        <field name="name">project.task.search.project</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="rp_schedule.view_task_search_rp_schedule"/>
+        <field name="arch" type="xml">
+            <filter name="rp_critical" position="after">
+                <filter name="rp_project_critical" string="Găng TOÀN DỰ ÁN"
+                        domain="[('is_project_critical', '=', True)]"/>
+            </filter>
+            <filter name="rp_group_critical" position="after">
+                <filter string="Dự án" name="rp_group_project"
+                        context="{'group_by': 'rp_project_id'}"/>
+                <filter string="Hợp đồng" name="rp_group_contract"
+                        context="{'group_by': 'rp_contract_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

@@ -16,6 +16,12 @@ class ProjectTask(models.Model):
         'rp.contract', string='HĐ nhà thầu', index=True, ondelete='cascade')
     rp_structure_id = fields.Many2one(
         'rp.structure', string='Hạng mục (đầu việc)', index=True)
+    # Một dự án có NHIỀU hợp đồng, mỗi hợp đồng một nhà thầu. Lưu sẵn dự
+    # án trên công việc để truy theo dự án mà không phải đi vòng qua hợp
+    # đồng ở mọi truy vấn, bộ lọc và Gantt cấp dự án.
+    rp_project_id = fields.Many2one(
+        're.project', string='Dự án', related='rp_contract_id.project_id',
+        store=True, index=True)
     wbs_code = fields.Char(string='Mã WBS', index=True)
     planned_start = fields.Date(string='Bắt đầu (KH)')
     planned_end = fields.Date(string='Kết thúc (KH)')
@@ -45,6 +51,16 @@ class ProjectTask(models.Model):
         string='Trên đường găng', copy=False, index=True,
         help='Total Float ≤ 0 — chậm ở đây là chậm cả dự án. '
              'Cập nhật bởi "Tính đường găng".')
+    # Cùng một công việc có thể găng trong hợp đồng của nó mà vẫn còn
+    # dư địa khi nhìn cả dự án, và ngược lại. Giữ hai bộ số riêng, không
+    # ghi đè nhau.
+    is_project_critical = fields.Boolean(
+        string='Găng toàn dự án', copy=False,
+        help='Nằm trên đường găng tính trên TOÀN BỘ hợp đồng của dự án.')
+    project_float = fields.Integer(
+        string='Dư địa toàn dự án (ngày)', copy=False,
+        help='Total float tính xuyên hợp đồng. Khác với dư địa trong nội '
+             'bộ một hợp đồng.')
     total_float = fields.Integer(
         string='Tổng dự trữ (ngày)', copy=False,
         help='LS − ES (backward pass CPM). ≤0 = găng; nhỏ = cận găng.')
@@ -90,41 +106,57 @@ class ProjectTask(models.Model):
 
     # --- Đường găng (CPM) — mục 3+11 khung phân tích tiến độ ---
     @api.model
-    def rp_compute_critical_path(self, contract_id):
-        """Tính Total Float + đường găng cho lịch của 1 HĐ.
+    def _rp_cpm(self, tasks, float_field='total_float',
+                critical_field='is_critical', horizon=None):
+        """Lõi tính Total Float + đường găng trên MỘT TẬP công việc.
 
         Backward pass trên mạng phụ thuộc FS (predecessor_ids) dùng ngày
-        kế hoạch nhập từ MS Project:
-          LF(t) = min(LS(succ) − 1) nếu có successor, else ngày kết thúc dự án
+        kế hoạch:
+          LF(t) = min(LS(succ) − 1) nếu có successor, else ngày kết thúc
+                  muộn nhất của tập
           LS(t) = LF(t) − thời lượng
           TF(t) = LS(t) − ES(t)   (ES = ngày bắt đầu KH)
-        Găng: TF ≤ 0. Cận găng (near-critical): 0 < TF ≤ 5.
-        Trả {task_id: {'tf': int, 'critical': bool, 'near': bool}}.
-        Chỉ tính task lá (bỏ WBS tổng). KHÔNG ghi DB — trả trực tiếp cho
-        Gantt tô màu, giữ nguyên ngày import.
+        Găng: TF ≤ 0. Cận găng: 0 < TF ≤ 5.
+
+        Tập công việc do bên gọi quyết định: một hợp đồng (cách cũ) hay
+        TẤT CẢ hợp đồng của một dự án. Cùng một thuật toán, hai phạm vi —
+        và hai phạm vi cho ra hai con số khác nhau, nên ghi vào hai cặp
+        field khác nhau chứ không đè lên nhau.
+
+        Chỉ tính task lá (bỏ dòng tổng WBS).
         """
-        cid = int(contract_id)
-        tasks = self.search([
-            ('rp_contract_id', '=', cid),
-            ('planned_start', '!=', False), ('planned_end', '!=', False)])
         if not tasks:
             return {}
-        wbs_all = set(t.wbs_code for t in tasks if t.wbs_code)
+        # Mã WBS chỉ duy nhất TRONG MỘT hợp đồng: hai gói thầu đều đánh
+        # "1", "2". Nên xét dòng tổng theo từng hợp đồng, nếu không thì
+        # việc "1" của hợp đồng này bị coi là dòng tổng chỉ vì hợp đồng
+        # khác có "1.1" — và nó bị loại khỏi đường găng.
+        wbs_all = set((t.rp_contract_id.id, t.wbs_code)
+                      for t in tasks if t.wbs_code)
 
         def is_summary(t):
             if not t.wbs_code:
                 return False
-            pre = t.wbs_code + '.'
-            return any(w.startswith(pre) for w in wbs_all)
+            cid, pre = t.rp_contract_id.id, t.wbs_code + '.'
+            return any(c == cid and w.startswith(pre) for c, w in wbs_all)
 
         leaves = [t for t in tasks if not is_summary(t)]
+        if not leaves:
+            return {}
         by_id = {t.id: t for t in leaves}
         succ = {t.id: [] for t in leaves}
         for t in leaves:
-            for p in t.predecessor_ids:
-                if p.id in by_id:
-                    succ[p.id].append(t.id)
-        project_end = max(t.planned_end for t in leaves)
+            for pr in t.predecessor_ids:
+                if pr.id in by_id:
+                    succ[pr.id].append(t.id)
+        horizon_end = max(t.planned_end for t in leaves)
+        # Mốc phải xong (COD / ngày bàn giao) nếu có: CHỈ dùng khi nó SỚM
+        # hơn ngày về đích đang dự báo. Sớm hơn thì chuỗi việc dẫn tới
+        # mốc ra dư địa ÂM — đó chính là thông tin cần thấy. Nếu mốc muộn
+        # hơn thì bỏ qua, không thì mọi việc đều còn dư địa và đường găng
+        # biến mất khỏi màn hình.
+        if horizon and horizon < horizon_end:
+            horizon_end = horizon
         ls_memo, lf_memo, visiting = {}, {}, set()
 
         def late_start(tid):
@@ -139,28 +171,70 @@ class ProjectTask(models.Model):
             if tid in lf_memo:
                 return lf_memo[tid]
             if tid in visiting:                      # chặn vòng lặp
-                return project_end
+                return horizon_end
             visiting.add(tid)
             ss = succ[tid]
-            lf = (project_end if not ss
+            lf = (horizon_end if not ss
                   else min(late_start(s) - timedelta(days=1) for s in ss))
             visiting.discard(tid)
             lf_memo[tid] = lf
             return lf
 
+        tf_of = {t.id: (late_start(t.id) - t.planned_start).days
+                 for t in leaves}
+        # Ngưỡng găng = 0 bình thường, nhưng khi lịch đã trễ so mốc phải
+        # xong thì CẢ MỘT VÙNG LỚN có dư địa âm. Lúc đó "găng = dư địa ≤ 0"
+        # tô đỏ gần hết màn hình và chẳng chỉ ra được chuỗi nào đang kéo
+        # ngày về đích. Nên lấy mức âm sâu nhất làm ngưỡng: chỉ chuỗi
+        # chịu lực mới là găng, các việc trễ ít hơn là cận găng.
+        worst = min(tf_of.values())
+        crit_tf = min(0, worst)
         result = {}
         for t in leaves:
-            tf = (late_start(t.id) - t.planned_start).days
+            tf = tf_of[t.id]
+            crit = tf <= crit_tf
             result[t.id] = {
-                'tf': tf, 'critical': tf <= 0, 'near': 0 < tf <= 5}
-            # Ghi field lưu (chỉ khi đổi) → list/report/KPI dùng được
-            if t.total_float != tf or t.is_critical != (tf <= 0):
-                t.write({'total_float': tf, 'is_critical': tf <= 0})
-        # Task tổng (WBS summary) không nằm trên đường găng
-        summary = tasks.filtered(lambda x: x.id not in by_id and x.is_critical)
+                'tf': tf, 'critical': crit,
+                'near': crit_tf < tf <= crit_tf + 5}
+            if t[float_field] != tf or t[critical_field] != crit:
+                t.write({float_field: tf, critical_field: crit})
+        # Dòng tổng (WBS summary) không nằm trên đường găng
+        summary = tasks.filtered(
+            lambda x: x.id not in by_id and x[critical_field])
         if summary:
-            summary.write({'is_critical': False, 'total_float': 0})
+            summary.write({critical_field: False, float_field: 0})
         return result
+
+    @api.model
+    def rp_compute_critical_path(self, contract_id):
+        """Đường găng TRONG MỘT hợp đồng (giữ nguyên cách gọi cũ).
+
+        Lưu ý khi đọc số: dự án nhiều hợp đồng thì con số này chỉ đúng
+        trong phạm vi hợp đồng. Một công việc duy nhất của một hợp đồng
+        luôn ra float 0 — đúng hình thức, vô nghĩa về nội dung. Số nhìn
+        cả dự án nằm ở rp_compute_project_critical_path.
+        """
+        tasks = self.search([
+            ('rp_contract_id', '=', int(contract_id)),
+            ('planned_start', '!=', False), ('planned_end', '!=', False)])
+        return self._rp_cpm(tasks)
+
+    @api.model
+    def rp_compute_project_critical_path(self, project_id):
+        """Đường găng XUYÊN HỢP ĐỒNG của cả dự án.
+
+        Đây là câu trả lời cho "bao giờ xong dự án": gom công việc của
+        MỌI hợp đồng thuộc dự án rồi chạy một lần, nên phụ thuộc giữa
+        hai nhà thầu (móng xong của gói xây lắp → lắp dựng của gói cơ
+        giới) mới có tác dụng.
+        """
+        project = self.env['re.project'].browse(int(project_id))
+        tasks = self.search([
+            ('rp_project_id', '=', int(project_id)),
+            ('planned_start', '!=', False), ('planned_end', '!=', False)])
+        return self._rp_cpm(tasks, float_field='project_float',
+                            critical_field='is_project_critical',
+                            horizon=project._rp_schedule_deadline())
 
     @api.depends('planned_start', 'planned_end')
     def _compute_planned_days(self):

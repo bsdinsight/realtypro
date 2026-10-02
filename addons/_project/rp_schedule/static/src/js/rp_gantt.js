@@ -34,14 +34,25 @@ export class RpGanttAction extends Component {
             empty: false,
             loading: true,
             error: null,
-            showBaseline: false,
-            showCriticalPath: false,
+            showBaseline: true,
+            showCriticalPath: true,
             hasBaseline: false,
+            isProject: false,
+            critCount: 0,
+            worstFloat: 0,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
-        this.contractId =
-            ctx.default_rp_contract_id || ctx.active_id ||
-            (this.props.action.params && this.props.action.params.contract_id) || false;
+        const params = this.props.action.params || {};
+        // Hai chế độ: lịch của MỘT hợp đồng (như trước), hoặc lịch TOÀN
+        // DỰ ÁN gom mọi hợp đồng. Chế độ dự án mở từ nút trên form dự án
+        // và truyền rp_project_id; lúc đó active_id là id dự án nên phải
+        // đọc project TRƯỚC, không thì nó bị hiểu nhầm thành id hợp đồng.
+        this.projectId = ctx.rp_project_id || params.project_id || false;
+        this.contractId = this.projectId
+            ? false
+            : (ctx.default_rp_contract_id || ctx.active_id ||
+               params.contract_id || false);
+        this.state.isProject = !!this.projectId;
         this.adapter = null;
         this._licenseKey = null;
 
@@ -104,14 +115,28 @@ export class RpGanttAction extends Component {
             const c = await this.orm.read(
                 "rp.contract", [this.contractId], ["name"]);
             this.state.title = (c[0] && c[0].name) || "";
+        } else if (this.projectId) {
+            const p = await this.orm.read(
+                "re.project", [this.projectId],
+                ["display_name", "schedule_contract_count"]);
+            this.state.title = p[0]
+                ? _t("%s — tiến độ toàn dự án (%s hợp đồng)",
+                     p[0].display_name, p[0].schedule_contract_count || 0)
+                : "";
         }
         const domain = this.contractId
-            ? [["rp_contract_id", "=", this.contractId]] : [];
+            ? [["rp_contract_id", "=", this.contractId]]
+            : (this.projectId ? [["rp_project_id", "=", this.projectId]] : []);
+        // Mốc vạch dọc (ngày phải xong, hôm nay, đóng điện…). Ở chế độ
+        // hợp đồng vẫn lấy mốc của dự án chứa hợp đồng — nhà thầu cần
+        // thấy mình đang chạy đua với mốc nào.
+        await this._loadMarkers();
         const recs = await this.orm.searchRead(
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
              "progress_percent", "is_milestone", "predecessor_ids",
-             "project_id", "user_ids", "baseline_start", "baseline_end"],
+             "project_id", "user_ids", "baseline_start", "baseline_end",
+             "baseline_slip_days", "rp_contract_id"],
             { order: "id asc" }
         );
         this.state.hasBaseline = recs.some((r) => r.baseline_start);
@@ -123,15 +148,68 @@ export class RpGanttAction extends Component {
                 "res.users", userIds, ["name"]);
             users.forEach((u) => userName.set(u.id, u.name));
         }
-        recs.sort((a, b) => this._wbsCompare(a, b));
+        if (this.projectId) {
+            // Mã WBS được đánh theo từng GÓI THẦU, nên hai gói khác nhau
+            // đều có "1", "2"… Xếp thuần theo WBS thì ba gói cài răng
+            // lược vào nhau, không ai đọc được. Gom theo hợp đồng trước
+            // (thứ tự: gói thầu rồi hợp đồng), trong mỗi hợp đồng mới
+            // xếp theo WBS.
+            const cids = [...new Set(
+                recs.map((r) => r.rp_contract_id && r.rp_contract_id[0])
+                    .filter(Boolean))];
+            const contracts = cids.length ? await this.orm.read(
+                "rp.contract", cids,
+                ["display_name", "tender_package_id"]) : [];
+            this._contractInfo = new Map();
+            const pkgOrder = new Map();
+            contracts.forEach((c) => {
+                const pkg = c.tender_package_id
+                    ? c.tender_package_id[1] : "";
+                if (!pkgOrder.has(pkg)) pkgOrder.set(pkg, pkgOrder.size);
+                this._contractInfo.set(c.id, {
+                    name: c.display_name || "",
+                    pkg,
+                    rank: [pkgOrder.get(pkg), c.id],
+                });
+            });
+            const rank = (r) => {
+                const info = r.rp_contract_id
+                    && this._contractInfo.get(r.rp_contract_id[0]);
+                return info ? info.rank : [9999, 0];
+            };
+            recs.sort((a, b) => {
+                const ra = rank(a), rb = rank(b);
+                return (ra[0] - rb[0]) || (ra[1] - rb[1])
+                    || this._wbsCompare(a, b);
+            });
+        } else {
+            recs.sort((a, b) => this._wbsCompare(a, b));
+        }
         this._recs = recs;
         this.state.count = recs.length;
         this.state.empty = recs.length === 0;
 
         // map WBS → task id để suy cha ("2.3" → cha là task wbs "2")
+        // Khoá theo HỢP ĐỒNG, không chỉ theo mã WBS: ở lịch dự án hai
+        // gói thầu đều có "1" nên khoá thuần WBS sẽ nối con của gói này
+        // vào cha của gói kia.
+        const ckey = (r) => (r.rp_contract_id ? r.rp_contract_id[0] : 0);
         const byWbs = new Map();
         recs.forEach((r) => {
-            if (r.wbs_code) byWbs.set(String(r.wbs_code), r.id);
+            if (r.wbs_code) {
+                byWbs.set(`${ckey(r)}|${r.wbs_code}`, r.id);
+            }
+        });
+        // Dòng nào THỰC SỰ là dòng tổng: có việc con treo dưới nó.
+        // Chỉ dựa vào "mã không có dấu chấm" thì một lịch phẳng (mọi mã
+        // đều 1, 2, 3) sẽ bị tô đậm toàn bộ như thể dòng nào cũng là
+        // giai đoạn lớn.
+        const hasChild = new Set();
+        recs.forEach((r) => {
+            const w = String(r.wbs_code || "");
+            if (w.includes(".")) {
+                hasChild.add(`${ckey(r)}|${w.slice(0, w.lastIndexOf("."))}`);
+            }
         });
         const idSet = new Set(recs.map((r) => r.id));
         // STT hiển thị kiểu MS Project: đánh 1..n theo thứ tự lịch;
@@ -143,22 +221,29 @@ export class RpGanttAction extends Component {
         const seqById = new Map(recs.map((r, i) => [r.id, i + seqBase]));
         // Đường găng — tính CPM ở backend chỉ khi bật + có HĐ
         let cpMap = {};
-        if (this.state.showCriticalPath && this.contractId) {
+        if (this.state.showCriticalPath && (this.contractId || this.projectId)) {
             try {
                 cpMap = await this.orm.call(
-                    "project.task", "rp_compute_critical_path",
-                    [this.contractId]) || {};
+                    "project.task",
+                    this.projectId
+                        ? "rp_compute_project_critical_path"
+                        : "rp_compute_critical_path",
+                    [this.projectId || this.contractId]) || {};
             } catch {
                 cpMap = {};
             }
         }
-        this._critCount = Object.values(cpMap).filter((v) => v.critical).length;
+        const cpVals = Object.values(cpMap);
+        this._critCount = cpVals.filter((v) => v.critical).length;
+        this.state.critCount = this._critCount;
+        this.state.worstFloat = cpVals.length
+            ? Math.min(...cpVals.map((v) => v.tf)) : 0;
         this.tasks = recs.map((r, idx) => {
             const cpv = cpMap[r.id];
             const w = String(r.wbs_code || "");
             let parent = null;
             if (w.includes(".")) {
-                const pw = w.slice(0, w.lastIndexOf("."));
+                const pw = `${ckey(r)}|${w.slice(0, w.lastIndexOf("."))}`;
                 if (byWbs.has(pw)) parent = String(byWbs.get(pw));
             }
             const hasDates = !!r.planned_start;
@@ -178,11 +263,19 @@ export class RpGanttAction extends Component {
                         .map((uid) => userName.get(uid))
                         .filter(Boolean)
                         .join(", "),
-                    _isTop: !!w && !w.includes("."),
+                    _isTop: !!w && !w.includes(".")
+                        && hasChild.has(`${ckey(r)}|${w}`),
+                    TaskContract: (this._contractInfo
+                        && this._contractInfo.get(ckey(r))
+                        && this._contractInfo.get(ckey(r)).name) || "",
+                    TaskPackage: (this._contractInfo
+                        && this._contractInfo.get(ckey(r))
+                        && this._contractInfo.get(ckey(r)).pkg) || "",
                     // Đường găng (CPM tự tính)
                     _critical: !!(cpv && cpv.critical),
                     _near: !!(cpv && cpv.near),
                     TaskFloat: cpv ? cpv.tf : "",
+                    TaskSlip: r.baseline_slip_days || "",
                 },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
@@ -198,6 +291,31 @@ export class RpGanttAction extends Component {
                 custom_class: r.is_milestone ? "rp-ej2-milestone" : "",
             };
         });
+    }
+
+    async _loadMarkers() {
+        this._markers = [];
+        let pid = this.projectId;
+        if (!pid && this.contractId) {
+            const c = await this.orm.read(
+                "rp.contract", [this.contractId], ["project_id"]);
+            pid = c[0] && c[0].project_id && c[0].project_id[0];
+        }
+        if (!pid) {
+            return;
+        }
+        let marks = [];
+        try {
+            marks = await this.orm.call(
+                "re.project", "rp_schedule_markers", [pid]) || [];
+        } catch {
+            marks = [];
+        }
+        this._markers = marks.map((m) => ({
+            day: new Date(m.date + "T00:00:00"),
+            label: m.label,
+            cssClass: `rp-marker rp-marker-${m.kind || "other"}`,
+        }));
     }
 
     async _render() {
@@ -225,6 +343,7 @@ export class RpGanttAction extends Component {
             taskMode: "Manual",
             renderBaseline: this.state.showBaseline,
             baselineColor: "#8a6fb0",
+            eventMarkers: this._markers,
             columns: [
                 // TaskID (id database) ẨN nhưng PHẢI có: là primary key
                 // của TreeGrid — thiếu nó saveSuccess→setRowData crash
@@ -237,6 +356,14 @@ export class RpGanttAction extends Component {
                   textAlign: "Right" },
                 { field: "TaskWbs", headerText: "WBS", width: 70 },
                 { field: "TaskName", headerText: "Công việc", width: 280 },
+                // Lịch dự án trộn việc của nhiều hợp đồng → phải thấy
+                // việc này của gói nào, nhà thầu nào.
+                ...(this.projectId ? [
+                    { field: "TaskPackage", headerText: "Gói thầu",
+                      width: 150 },
+                    { field: "TaskContract", headerText: "Hợp đồng",
+                      width: 200 },
+                ] : []),
                 { field: "StartDate", headerText: "Bắt đầu",
                   format: "dd/MM/yyyy", width: 110 },
                 { field: "EndDate", headerText: "Kết thúc",
@@ -248,6 +375,12 @@ export class RpGanttAction extends Component {
                     field: "TaskFloat", headerText: "Dự trữ (ngày)",
                     width: 100, textAlign: "Right",
                 }] : []),
+                // Trượt so kế hoạch gốc — chỉ có nghĩa khi đang xem
+                // baseline bên cạnh.
+                ...(this.state.showBaseline && this.state.hasBaseline ? [{
+                    field: "TaskSlip", headerText: "Trễ so gốc",
+                    width: 100, textAlign: "Right",
+                }] : []),
                 // STT các task đứng trước (kiểu Predecessors MS Project)
                 { field: "TaskDeps", headerText: "Depend on", width: 100 },
                 // Người được giao (assignees Odoo Project — dblclick
@@ -256,7 +389,8 @@ export class RpGanttAction extends Component {
                   width: 150 },
             ],
             treeColumnIndex: 3,
-            splitterColumnIndex: 9,
+            splitterColumnIndex: (this.projectId ? 11 : 9)
+                + (this.state.showBaseline && this.state.hasBaseline ? 1 : 0),
             preserveLinks: true,
             // KHÔNG auto-reschedule (giữ ngày import, tránh crash
             // validateTypes khi allowEditing=false + có predecessor).
@@ -363,6 +497,17 @@ export class RpGanttAction extends Component {
 
     // Context menu EJ2 "Add" → tạo record thật trong Odoo rồi reload
     async _onAdd(data) {
+        if (this.projectId) {
+            // Lịch dự án gom việc của NHIỀU hợp đồng; thêm việc ở đây thì
+            // không biết gắn vào hợp đồng nào, mà việc không có hợp đồng
+            // sẽ biến mất khỏi chính màn này. Thêm việc làm ở lịch của
+            // từng hợp đồng.
+            this.notification.add(
+                _t("Thêm công việc ở lịch của từng hợp đồng, không thêm "
+                   + "ở lịch tổng dự án."), { type: "warning" });
+            await this.loadAndRender();
+            return;
+        }
         const base = this._recs && this._recs[0];
         try {
             await this.orm.create("project.task", [{
@@ -422,7 +567,9 @@ export class RpGanttAction extends Component {
             try {
                 const n = await this.orm.call(
                     "project.task", "rp_set_baseline", [],
-                    { contract_id: this.contractId || false });
+                    this.projectId
+                        ? { project_id: this.projectId }
+                        : { contract_id: this.contractId || false });
                 this.notification.add(
                     _t("Đã chốt baseline cho %s công việc.", n),
                     { type: "success" });

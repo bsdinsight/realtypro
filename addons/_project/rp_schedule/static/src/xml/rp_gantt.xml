@@ -8,6 +8,17 @@
                 <span class="badge text-bg-secondary ms-2">
                     <t t-esc="state.count"/> công việc
                 </span>
+                <span t-if="state.showCriticalPath and state.critCount"
+                      class="badge text-bg-danger ms-1"
+                      title="Số công việc trên đường găng — chậm ở đây là chậm cả dự án.">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    <t t-esc="state.critCount"/> việc găng
+                </span>
+                <span t-if="state.showCriticalPath and state.worstFloat &lt; 0"
+                      class="badge text-bg-warning ms-1"
+                      title="Dư địa âm: chuỗi việc này không còn kịp mốc phải xong.">
+                    Dư địa <t t-esc="state.worstFloat"/> ngày
+                </span>
                 <span class="text-muted small ms-3 d-none d-lg-inline">
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·
                     Chuột phải thêm/xoá
@@ -52,8 +63,14 @@
             <div t-if="state.error" class="alert alert-danger m-3"
                  t-esc="state.error"/>
             <div t-if="state.empty and !state.loading" class="alert alert-info m-3">
-                Hợp đồng này chưa có công việc nào. Import lịch thi công
-                (MS Project XML / Excel) hoặc chuột phải để thêm.
+                <t t-if="state.isProject">
+                    Chưa hợp đồng nào của dự án này có lịch thi công. Vào
+                    từng hợp đồng để import hoặc nhập lịch.
+                </t>
+                <t t-else="">
+                    Hợp đồng này chưa có công việc nào. Import lịch thi công
+                    (MS Project XML / Excel) hoặc chuột phải để thêm.
+                </t>
             </div>
             <div t-if="state.loading" class="text-center text-muted p-5">
                 <i class="fa fa-spinner fa-spin me-2"/>Đang tải Gantt…

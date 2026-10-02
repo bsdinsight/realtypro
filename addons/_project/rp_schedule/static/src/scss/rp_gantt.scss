@@ -39,3 +39,31 @@
     color: #0a3d47;
     background: #eef4f5;
 }
+
+// Mốc sự kiện (event markers EJ2): vạch dọc + nhãn trên trục thời gian.
+// Ngày phải xong tô đỏ vì đó là mốc chịu lực; hôm nay tô lam cho dễ
+// định vị tiến độ hiện tại.
+.rp-gantt-ej2 .e-event-markers .e-span {
+    border-left-width: 2px;
+}
+.rp-gantt-ej2 .rp-marker-deadline .e-span {
+    border-left-color: #c0453b;
+}
+.rp-gantt-ej2 .rp-marker-deadline .e-label {
+    background: #c0453b;
+    color: #fff;
+}
+.rp-gantt-ej2 .rp-marker-today .e-span {
+    border-left-color: #0E8C99;
+}
+.rp-gantt-ej2 .rp-marker-today .e-label {
+    background: #0E8C99;
+    color: #fff;
+}
+.rp-gantt-ej2 .rp-marker-grid .e-span {
+    border-left-color: #d98b3d;
+}
+.rp-gantt-ej2 .rp-marker-grid .e-label {
+    background: #d98b3d;
+    color: #fff;
+}

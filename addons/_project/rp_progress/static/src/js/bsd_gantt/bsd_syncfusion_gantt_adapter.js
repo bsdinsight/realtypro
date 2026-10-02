@@ -110,7 +110,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             // View mode
             viewType: "ProjectView",
             // Toolbar built-in: zoom in/out, search, expand/collapse
-            toolbar: [
+            toolbar: opts.toolbar || [
                 "ZoomIn", "ZoomOut", "ZoomToFit", "ExpandAll", "CollapseAll",
             ],
             // Column panel bên trái — minimal, business view ở Odoo panel
@@ -129,6 +129,12 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 { field: "Progress", headerText: "%", width: 70,
                   textAlign: "Right" },
             ],
+            // Mốc sự kiện (event markers) — vạch dọc + nhãn trên trục
+            // thời gian: ngày phải xong, hôm nay, mốc đóng điện… Caller
+            // truyền [{day: Date, label, cssClass}].
+            ...(opts.eventMarkers && opts.eventMarkers.length ? {
+                eventMarkers: opts.eventMarkers,
+            } : {}),
             // Time zoom — map view mode frappe → ej2 timelineViewMode
             timelineSettings: {
                 timelineViewMode: this._mapViewMode(

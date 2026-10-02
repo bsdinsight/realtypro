@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Dự án năng lượng tái tạo',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'Realty/Project',
     'summary': 'Điện gió / điện mặt trời: loại dự án, công suất, ngày COD, '
                'gói thầu HV / TSA / BOP — giấu phần bán hàng bất động sản.',
@@ -37,6 +37,8 @@ Giấu chứ không xoá: dữ liệu cũ và các dự án bất động sản 
         're_base',
         'rp_estimate',
         'rp_cost_base',
+        # Mốc COD là đích của đường găng toàn dự án (_rp_schedule_deadline).
+        'rp_schedule',
     ],
     'data': [
         'views/re_project_views.xml',

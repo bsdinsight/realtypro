@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_schedule_alert_list" model="ir.ui.view">
+        <field name="name">rp.schedule.alert.list</field>
+        <field name="model">rp.schedule.alert</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="severity == 'critical' and state in ['open','acknowledged']"
+                  decoration-warning="severity == 'warning' and state in ['open','acknowledged']"
+                  decoration-muted="state in ['resolved','ignored']">
+                <field name="severity" widget="badge"
+                       decoration-danger="severity == 'critical'"
+                       decoration-warning="severity == 'warning'"/>
+                <field name="alert_type"/>
+                <field name="name" string="Đối tượng"/>
+                <field name="description" optional="show"/>
+                <field name="days_value" string="Số ngày" width="110px"/>
+                <field name="threshold" optional="hide"/>
+                <field name="partner_id" string="Nhà thầu" optional="show"/>
+                <field name="contract_id" optional="hide"/>
+                <field name="age_days" string="Tồn (ngày)" optional="show"
+                       width="110px"/>
+                <field name="date_first" optional="hide"/>
+                <field name="date_last" optional="hide"/>
+                <field name="user_id" optional="show"
+                       widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'resolved'"
+                       decoration-muted="state == 'ignored'"/>
+                <field name="project_id" optional="hide"/>
+                <button name="action_open_subject" type="object"
+                        icon="fa-external-link" title="Mở công việc / điểm giao"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_schedule_alert_form" model="ir.ui.view">
+        <field name="name">rp.schedule.alert.form</field>
+        <field name="model">rp.schedule.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_acknowledge" type="object"
+                            string="Tiếp nhận" class="btn-primary"
+                            invisible="state != 'open'"/>
+                    <button name="action_resolve" type="object"
+                            string="Đã xử lý"
+                            invisible="state not in ['open','acknowledged']"/>
+                    <button name="action_ignore" type="object"
+                            string="Bỏ qua"
+                            invisible="state not in ['open','acknowledged']"/>
+                    <button name="action_reopen" type="object"
+                            string="Mở lại"
+                            invisible="state in ['open','acknowledged']"/>
+                    <button name="action_open_subject" type="object"
+                            string="Mở đối tượng" icon="fa-external-link"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="open,acknowledged,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h4 class="text-muted">
+                            <field name="description" readonly="1"/>
+                        </h4>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" readonly="1"/>
+                            <field name="alert_type" readonly="1"/>
+                            <field name="severity"/>
+                            <field name="user_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="days_value" readonly="1"/>
+                            <field name="threshold" readonly="1"/>
+                            <field name="age_days" readonly="1"/>
+                            <field name="task_id" readonly="1"
+                                   invisible="not task_id"/>
+                            <field name="interface_id" readonly="1"
+                                   invisible="not interface_id"/>
+                            <field name="contract_id" readonly="1"
+                                   invisible="not contract_id"/>
+                        </group>
+                    </group>
+                    <group string="Dấu vết">
+                        <group>
+                            <field name="date_first" readonly="1"/>
+                            <field name="date_last" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date_resolved" readonly="1"
+                                   invisible="not date_resolved"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_schedule_alert_search" model="ir.ui.view">
+        <field name="name">rp.schedule.alert.search</field>
+        <field name="model">rp.schedule.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="f_open" string="Đang mở"
+                        domain="[('state','in',['open','acknowledged'])]"/>
+                <filter name="f_critical" string="Nghiêm trọng"
+                        domain="[('severity','=','critical')]"/>
+                <filter name="f_stale" string="Tồn quá 7 ngày"
+                        domain="[('state','in',['open','acknowledged']),
+                                 ('date_first','&lt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="g_type" string="Loại cảnh báo"
+                        context="{'group_by': 'alert_type'}"/>
+                <filter name="g_severity" string="Mức độ"
+                        context="{'group_by': 'severity'}"/>
+                <filter name="g_partner" string="Nhà thầu"
+                        context="{'group_by': 'partner_id'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="severity" select="multi" string="Mức độ"
+                           icon="fa-exclamation-triangle" color="#c0453b"
+                           enable_counters="1"/>
+                    <field name="alert_type" select="multi"
+                           string="Loại cảnh báo" icon="fa-bell"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_schedule_alert" model="ir.actions.act_window">
+        <field name="name">Cảnh báo tiến độ</field>
+        <field name="res_model">rp.schedule.alert</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_schedule_alert_search"/>
+        <field name="context">{'search_default_f_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có cảnh báo nào</p>
+            <p>Hệ thống quét mỗi sáng: công việc hết dư địa, công việc
+            trượt so kế hoạch gốc, điểm giao mà bên nhận cần trước khi bên
+            giao kịp xong, và cả dự án trễ mốc phải xong. Ngưỡng chỉnh ở
+            form dự án.</p>
+        </field>
+    </record>
+
+</odoo>

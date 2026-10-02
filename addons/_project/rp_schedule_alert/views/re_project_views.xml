@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_alert" model="ir.ui.view">
+        <field name="name">re.project.form.alert</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_schedule.view_re_project_form_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='rp_schedule_rollup']" position="after">
+                <group string="CẢNH BÁO TRƯỢT TIẾN ĐỘ"
+                       invisible="not schedule_task_count">
+                    <group string="Ngưỡng của dự án này">
+                        <field name="alert_float_days"/>
+                        <field name="alert_slip_days"/>
+                        <field name="alert_interface_days"/>
+                    </group>
+                    <group string="Đang mở">
+                        <field name="alert_open_count"/>
+                        <field name="alert_critical_count"/>
+                        <div colspan="2" class="alert alert-danger py-1 mb-2"
+                             role="alert"
+                             invisible="alert_critical_count &lt;= 0">
+                            <i class="fa fa-bell me-1" title="Cảnh báo"/>
+                            <field name="alert_critical_count" nolabel="1"
+                                   readonly="1" class="fw-bold"/>
+                            cảnh báo mức nghiêm trọng đang chờ xử lý.
+                        </div>
+                        <div colspan="2">
+                            <button name="action_open_alerts" type="object"
+                                    class="btn-primary" icon="fa-bell"
+                                    string="Mở cảnh báo"/>
+                            <button name="action_scan_alerts" type="object"
+                                    class="btn-secondary" icon="fa-refresh"
+                                    string="Quét lại ngay"
+                                    help="Hệ thống tự quét mỗi sáng; nút này để quét ngay sau khi vừa đổi lịch."/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

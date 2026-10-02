@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quét mỗi sáng sớm: cảnh báo phải nằm sẵn trên bàn trước giờ
+         giao ban, chứ không phải lúc có người nhớ ra mà bấm nút. -->
+    <record id="cron_rp_schedule_alert_scan" model="ir.cron">
+        <field name="name">Tiến độ: quét cảnh báo trượt</field>
+        <field name="model_id" ref="model_rp_schedule_alert"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_scan()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall"
+               eval="(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d 06:30:00')"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

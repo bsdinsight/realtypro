@@ -179,6 +179,10 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             ...(opts.autoCalculateDateScheduling === false ? {
                 autoCalculateDateScheduling: false,
             } : {}),
+            // Mở ở trạng thái gấp — caller bật khi lịch quá lớn.
+            ...(opts.collapseAllParentTasks ? {
+                collapseAllParentTasks: true,
+            } : {}),
             allowResizing: true,
             allowSorting: true,
             // Splitter mặc định show 4 cột (TaskName + StartDate +

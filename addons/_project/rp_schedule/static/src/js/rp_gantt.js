@@ -183,7 +183,21 @@ export class RpGanttAction extends Component {
                     || this._wbsCompare(a, b);
             });
         } else {
-            recs.sort((a, b) => this._wbsCompare(a, b));
+                recs.sort((a, b) => this._wbsCompare(a, b));
+        }
+        // Mức phóng mặc định theo ĐỘ DÀI lịch: xem 18 tháng ở mức Tuần
+        // thì trục thời gian phải vẽ hơn 500 ô ngày cho mỗi dòng — trình
+        // duyệt treo hàng chục giây mà người xem cũng chẳng đọc được gì.
+        // Người dùng tự bấm đổi mức thì tôn trọng lựa chọn đó.
+        if (!this._viewModeTouched) {
+            const ds = recs.map((r) => r.planned_start).filter(Boolean);
+            const de = recs.map((r) => r.planned_end).filter(Boolean);
+            if (ds.length && de.length) {
+                const span = (new Date(de.sort().at(-1))
+                    - new Date(ds.sort()[0])) / 86400000;
+                this.state.viewMode = span > 180
+                    ? "Month" : (span > 60 ? "Week" : "Day");
+            }
         }
         this._recs = recs;
         this.state.count = recs.length;
@@ -423,6 +437,9 @@ export class RpGanttAction extends Component {
                     }
                 }
             },
+            // Lịch lớn mở bung hết thì vừa chậm vừa không đọc được:
+            // gấp lại, người xem tự mở nhánh cần xem (hoặc Expand all).
+            collapseAllParentTasks: this.tasks.length > 150,
             allowAdding: true,
             allowDeleting: true,
             enableContextMenu: true,
@@ -544,6 +561,7 @@ export class RpGanttAction extends Component {
     }
 
     setViewMode(mode) {
+        this._viewModeTouched = true;
         this.state.viewMode = mode;
         if (this.adapter) this.adapter.changeViewMode(mode);
     }

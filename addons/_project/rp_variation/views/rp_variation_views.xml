@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_variation_list" model="ir.ui.view">
+        <field name="name">rp.variation.list</field>
+        <field name="model">rp.variation</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="date_quote and not quote_on_time"
+                  decoration-muted="state in ['rejected','cancelled']">
+                <field name="code" width="110px"/>
+                <field name="name"/>
+                <field name="partner_id" string="Nhà thầu" optional="show"/>
+                <field name="origin" optional="show"/>
+                <field name="cause" optional="hide"/>
+                <field name="pricing_basis" optional="hide"/>
+                <field name="date_event" optional="hide"/>
+                <field name="quote_due_date" optional="hide"/>
+                <field name="quote_late_days" string="Báo giá trễ"
+                       optional="hide" width="120px"/>
+                <field name="amount_quoted" width="185px" sum="Đề xuất"/>
+                <field name="amount_approved" width="185px" sum="Được duyệt"/>
+                <field name="eot_days_granted" string="Gia hạn (ngày)"
+                       optional="hide" width="120px"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ['approved','applied']"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="quote_on_time" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="project_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_variation_form" model="ir.ui.view">
+        <field name="name">rp.variation.form</field>
+        <field name="model">rp.variation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_request_quote" type="object"
+                            string="Yêu cầu báo giá" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_receive_quote" type="object"
+                            string="Nhận báo giá"
+                            invisible="state not in ['draft','requested']"/>
+                    <button name="action_review" type="object"
+                            string="Thẩm định"
+                            invisible="state != 'quoted'"/>
+                    <button name="action_approve" type="object"
+                            string="Duyệt giá" class="btn-primary"
+                            invisible="state not in ['quoted','review']"/>
+                    <button name="action_instruct" type="object"
+                            string="Chỉ thị thực hiện"
+                            invisible="state != 'approved'"/>
+                    <button name="action_apply_to_contract" type="object"
+                            string="Đưa vào giá hợp đồng" icon="fa-file-text-o"
+                            invisible="state not in ['approved','instructed'] or amendment_id"/>
+                    <button name="action_create_eot_claim" type="object"
+                            string="Mở khiếu nại gia hạn" icon="fa-gavel"
+                            invisible="not eot_days_claimed or claim_id"/>
+                    <button name="action_reject" type="object"
+                            string="Từ chối"
+                            invisible="state in ['rejected','cancelled','applied']"/>
+                    <button name="action_reset" type="object"
+                            string="Về nháp"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,requested,quoted,review,approved,applied"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not date_quote or quote_on_time">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Trễ hạn"/>
+                        Nhà thầu báo giá sau hạn chót
+                        <field name="quote_due_date" readonly="1" nolabel="1"
+                               class="fw-bold"/>
+                        <field name="quote_late_days" readonly="1" nolabel="1"
+                               class="fw-bold"/>
+                        ngày (điều 13.3 cho 14 ngày).
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Phát sinh gì, ở hạng mục nào?"/></h1>
+                        <h3 class="text-muted"><field name="code" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Hợp đồng &amp; nguồn gốc">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="origin"/>
+                            <field name="cause"/>
+                            <field name="date_event"/>
+                        </group>
+                        <group string="Đồng hồ điều 13">
+                            <field name="date_request"/>
+                            <field name="quote_days"/>
+                            <field name="quote_due_date" readonly="1"/>
+                            <field name="date_quote"/>
+                            <field name="quote_on_time" readonly="1"/>
+                            <field name="date_instruction"/>
+                            <field name="objection_due_date" readonly="1"
+                                   invisible="not date_instruction"/>
+                            <field name="objection_date"
+                                   invisible="not date_instruction"/>
+                            <field name="objection_ground"
+                                   invisible="not objection_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Giá trị">
+                            <field name="pricing_basis"/>
+                            <field name="amount_lines" readonly="1"/>
+                            <field name="amount_quoted"/>
+                            <field name="amount_approved"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Thời gian">
+                            <field name="eot_days_claimed"/>
+                            <field name="eot_days_granted"/>
+                            <field name="claim_id" readonly="1"
+                                   invisible="not claim_id"/>
+                            <field name="amendment_id" readonly="1"
+                                   invisible="not amendment_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chi tiết khối lượng" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="cost_category_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="uom_name"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price" width="150px"/>
+                                    <field name="from_rates"
+                                           widget="boolean_toggle"/>
+                                    <field name="amount" width="185px"
+                                           sum="Tổng"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Mô tả &amp; căn cứ" name="desc">
+                            <field name="description"
+                                   placeholder="Phát sinh do đâu, dẫn chiếu điều khoản nào, bằng chứng kèm theo."/>
+                        </page>
+                        <page string="Công việc liên quan" name="tasks">
+                            <field name="task_ids"
+                                   domain="[('rp_contract_id','=',contract_id)]">
+                                <list>
+                                    <field name="wbs_code"/>
+                                    <field name="name"/>
+                                    <field name="planned_start"/>
+                                    <field name="planned_end"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_variation_search" model="ir.ui.view">
+        <field name="name">rp.variation.search</field>
+        <field name="model">rp.variation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <filter name="f_open" string="Đang xử lý"
+                        domain="[('state','in',['draft','requested','quoted','review'])]"/>
+                <filter name="f_approved" string="Đã duyệt"
+                        domain="[('state','in',['approved','instructed','applied'])]"/>
+                <filter name="f_late_quote" string="Báo giá quá hạn"
+                        domain="[('date_quote','!=',False),('quote_on_time','=',False)]"/>
+                <filter name="f_not_in_contract" string="Chưa vào giá hợp đồng"
+                        domain="[('state','in',['approved','instructed'])]"/>
+                <separator/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_cause" string="Nguyên nhân"
+                        context="{'group_by': 'cause'}"/>
+                <filter name="g_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="origin" select="multi" string="Nguồn gốc"
+                           icon="fa-random" enable_counters="1"/>
+                    <field name="cause" select="multi" string="Nguyên nhân"
+                           icon="fa-question-circle" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_variation" model="ir.actions.act_window">
+        <field name="name">Phát sinh hợp đồng</field>
+        <field name="res_model">rp.variation</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_variation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có phát sinh nào</p>
+            <p>Mỗi phát sinh ghi: ai khởi xướng, báo giá có đúng hạn 14 ngày
+            không, giá lấy từ đơn giá hợp đồng hay tính theo chi phí, và đã
+            vào phụ lục điều chỉnh giá chưa.</p>
+        </field>
+    </record>
+
+</odoo>

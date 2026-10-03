@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_rp_variation" name="Phát sinh hợp đồng"
+              parent="rp_claim.menu_rp_claim_group"
+              action="action_rp_variation" sequence="5"/>
+</odoo>

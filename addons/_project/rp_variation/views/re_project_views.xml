@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Bốn con số phải nằm cạnh nhau thì mới trả lời được "phát sinh
+         thì ngân sách ra sao": ngân sách duyệt · đã cam kết · phát sinh
+         (duyệt + chờ) · dự báo cuối kỳ. -->
+    <record id="view_re_project_form_variation" model="ir.ui.view">
+        <field name="name">re.project.form.variation</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_schedule.view_re_project_form_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='rp_schedule_rollup']" position="before">
+                <group string="NGÂN SÁCH &amp; PHÁT SINH"
+                       invisible="not variation_count and not total_bac">
+                    <group string="Ngân sách và cam kết">
+                        <field name="total_bac" readonly="1"/>
+                        <field name="contract_committed_total" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Phát sinh">
+                        <field name="variation_count"/>
+                        <field name="variation_approved_total" readonly="1"/>
+                        <field name="variation_pending_total" readonly="1"/>
+                        <field name="cost_forecast_total" readonly="1"/>
+                        <field name="budget_gap" readonly="1"/>
+                    </group>
+                    <group>
+                        <div colspan="2" class="alert alert-danger py-1 mb-2"
+                             role="alert" invisible="budget_gap &lt;= 0">
+                            <i class="fa fa-exclamation-triangle me-1"
+                               title="Vượt ngân sách"/>
+                            Dự báo chi phí cuối kỳ đang VƯỢT ngân sách duyệt
+                            <field name="budget_gap" nolabel="1" readonly="1"
+                                   class="fw-bold"/>.
+                        </div>
+                        <div colspan="2">
+                            <button name="action_open_variations" type="object"
+                                    class="btn-primary" icon="fa-random"
+                                    string="Mở sổ phát sinh"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

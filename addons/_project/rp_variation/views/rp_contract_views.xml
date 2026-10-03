@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_form_variation" model="ir.ui.view">
+        <field name="name">rp.contract.form.variation</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_variations" type="object"
+                        class="oe_stat_button" icon="fa-random"
+                        invisible="not variation_count">
+                    <field name="variation_count" widget="statinfo"
+                           string="Phát sinh"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Phát sinh" name="variation">
+                    <group>
+                        <group string="Giá trị">
+                            <field name="contract_value_pretax" readonly="1"/>
+                            <field name="variation_approved_amount"
+                                   readonly="1"/>
+                            <field name="variation_pending_amount"
+                                   readonly="1"/>
+                            <field name="contract_value_forecast" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="variation_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="variation_ids" readonly="1">
+                        <list>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="origin"/>
+                            <field name="amount_quoted" width="185px"/>
+                            <field name="amount_approved" width="185px"/>
+                            <field name="state" widget="badge"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

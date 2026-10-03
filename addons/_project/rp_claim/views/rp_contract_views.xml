@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_form_claim" model="ir.ui.view">
+        <field name="name">rp.contract.form.claim</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_claims" type="object"
+                        class="oe_stat_button" icon="fa-gavel"
+                        invisible="not claim_count">
+                    <field name="claim_count" widget="statinfo"
+                           string="Khiếu nại"/>
+                </button>
+                <button name="action_open_ld_assessments" type="object"
+                        class="oe_stat_button" icon="fa-balance-scale"
+                        invisible="not ld_assessment_count">
+                    <field name="ld_assessment_count" widget="statinfo"
+                           string="Biên bản phạt"/>
+                </button>
+            </xpath>
+
+            <!-- Trang riêng: gia hạn và phạt chậm là hai mặt của cùng
+                 một đồng xu, phải đọc cạnh nhau. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Gia hạn &amp; phạt chậm" name="eot_ld">
+                    <div class="alert alert-danger" role="alert"
+                         invisible="ld_days_late &lt;= 0">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Chậm tiến độ"/>
+                        Theo lịch hiện hành, hợp đồng về đích
+                        <field name="ld_forecast_end" readonly="1"
+                               nolabel="1" class="fw-bold"/>,
+                        chậm
+                        <field name="ld_days_late" readonly="1"
+                               nolabel="1" class="fw-bold"/>
+                        ngày so với mốc đã gia hạn — phạt dự kiến
+                        <field name="ld_amount_exposure" readonly="1"
+                               nolabel="1" class="fw-bold"/>.
+                    </div>
+                    <group>
+                        <group string="Gia hạn đã chấp thuận">
+                            <field name="eot_days_granted" readonly="1"/>
+                            <field name="date_completion_adjusted"
+                                   readonly="1"/>
+                            <field name="claim_open_count" readonly="1"/>
+                        </group>
+                        <group string="Điều khoản phạt chậm">
+                            <field name="ld_rate_per_day"/>
+                            <field name="ld_cap_percent"/>
+                            <field name="ld_base_amount"/>
+                        </group>
+                    </group>
+                    <group string="Dự kiến theo lịch hiện hành">
+                        <group>
+                            <field name="ld_forecast_end" readonly="1"/>
+                            <field name="ld_days_late" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="ld_amount_exposure" readonly="1"/>
+                            <field name="ld_capped" readonly="1"/>
+                        </group>
+                    </group>
+                    <!-- Nút phải nằm TRONG <group>: đặt thẳng trong
+                         <page> làm web client chết lúc mount, trang
+                         trắng và không báo lỗi gì (Odoo 19). -->
+                    <group>
+                        <div colspan="2">
+                            <button name="action_create_ld_assessment"
+                                    type="object" class="btn-primary"
+                                    icon="fa-balance-scale"
+                                    string="Lập biên bản tính phạt"
+                                    invisible="ld_days_late &lt;= 0"
+                                    help="Đóng băng số liệu phạt tại ngày chốt để làm việc với nhà thầu."/>
+                            <button name="action_open_claims" type="object"
+                                    class="btn-secondary" icon="fa-gavel"
+                                    string="Mở sổ khiếu nại"/>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

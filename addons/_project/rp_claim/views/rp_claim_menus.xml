@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_rp_claim_group" name="Khiếu nại &amp; phạt chậm"
+              parent="rp_estimate.menu_construction"
+              sequence="20"/>
+
+    <menuitem id="menu_rp_claim" name="Khiếu nại hợp đồng"
+              parent="menu_rp_claim_group"
+              action="action_rp_claim" sequence="10"/>
+
+    <menuitem id="menu_rp_ld_assessment" name="Biên bản phạt chậm"
+              parent="menu_rp_claim_group"
+              action="action_rp_ld_assessment" sequence="20"/>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_rp_claim" model="ir.sequence">
+        <field name="name">Khiếu nại hợp đồng</field>
+        <field name="code">rp.claim</field>
+        <field name="prefix">KN</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_rp_ld_assessment" model="ir.sequence">
+        <field name="name">Biên bản tính phạt chậm</field>
+        <field name="code">rp.ld.assessment</field>
+        <field name="prefix">PC</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

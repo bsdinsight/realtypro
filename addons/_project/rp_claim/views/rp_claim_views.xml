@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_claim_list" model="ir.ui.view">
+        <field name="name">rp.claim.list</field>
+        <field name="model">rp.claim</field>
+        <field name="arch" type="xml">
+            <!-- Đỏ = thông báo đã quá hạn hợp đồng (nguy cơ mất quyền
+                 khiếu nại). Mờ = đã đóng hoặc bị từ chối. -->
+            <list decoration-danger="date_notice and not notice_ok"
+                  decoration-muted="state in ['closed','rejected']">
+                <field name="code" width="110px"/>
+                <field name="name"/>
+                <field name="direction" optional="show"/>
+                <field name="claim_type" optional="show"/>
+                <field name="cause" optional="hide"/>
+                <field name="partner_id" string="Nhà thầu" optional="show"/>
+                <field name="date_event" optional="show"/>
+                <field name="notice_deadline" optional="hide"/>
+                <field name="date_notice" optional="hide"/>
+                <field name="notice_late_days" string="TB trễ (ngày)"
+                       optional="show" width="120px"/>
+                <field name="eot_days_claimed" string="Xin (ngày)"
+                       optional="show" width="110px"/>
+                <field name="eot_days_granted" string="Được (ngày)"
+                       optional="show" width="110px"/>
+                <field name="amount_claimed" optional="hide"
+                       width="190px"/>
+                <field name="amount_granted" optional="hide"
+                       width="190px"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ['agreed','partial']"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="notice_ok" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="project_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_claim_form" model="ir.ui.view">
+        <field name="name">rp.claim.form</field>
+        <field name="model">rp.claim</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_notify" type="object"
+                            string="Gửi thông báo" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_submit" type="object"
+                            string="Nộp hồ sơ"
+                            invisible="state != 'notified'"/>
+                    <button name="action_review" type="object"
+                            string="Đưa ra xem xét"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_agree" type="object"
+                            string="Chấp thuận" class="btn-primary"
+                            invisible="state not in ['submitted','review']"/>
+                    <button name="action_reject" type="object"
+                            string="Từ chối"
+                            invisible="state not in ['submitted','review']"/>
+                    <button name="action_create_amendment" type="object"
+                            string="Lập phụ lục gia hạn" icon="fa-file-text-o"
+                            invisible="state not in ['agreed','partial'] or not eot_days_granted or amendment_id"/>
+                    <button name="action_close" type="object"
+                            string="Đóng hồ sơ"
+                            invisible="state in ['draft','closed']"/>
+                    <button name="action_reset" type="object"
+                            string="Về dự thảo"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,notified,submitted,review,agreed"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not date_notice or notice_ok">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Quá hạn thông báo"/>
+                        Thông báo gửi SAU hạn chót
+                        <field name="notice_deadline" readonly="1"
+                               nolabel="1" class="fw-bold"/>
+                        <field name="notice_late_days" readonly="1"
+                               nolabel="1" class="fw-bold"/>
+                        ngày — phần lớn hợp đồng coi đây là mất quyền
+                        khiếu nại.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Khiếu nại việc gì?"/></h1>
+                        <h3 class="text-muted">
+                            <field name="code" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="Hợp đồng &amp; chiều khiếu nại">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="direction"/>
+                            <field name="claim_type"/>
+                            <field name="cause"/>
+                        </group>
+                        <group string="Thời hạn thông báo">
+                            <field name="date_event"/>
+                            <field name="notice_days"/>
+                            <field name="notice_deadline" readonly="1"/>
+                            <field name="date_notice"/>
+                            <field name="notice_ok" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Yêu cầu">
+                            <field name="eot_days_claimed"
+                                   invisible="claim_type not in ['eot','eot_cost']"/>
+                            <field name="amount_claimed"
+                                   invisible="claim_type not in ['cost','eot_cost']"/>
+                        </group>
+                        <group string="Kết quả">
+                            <field name="eot_days_granted"
+                                   invisible="claim_type not in ['eot','eot_cost']"/>
+                            <field name="amount_granted"
+                                   invisible="claim_type not in ['cost','eot_cost']"/>
+                            <field name="decision_date" readonly="1"/>
+                            <field name="decision_user_id" readonly="1"/>
+                            <field name="amendment_id" readonly="1"
+                                   invisible="not amendment_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Diễn giải &amp; căn cứ" name="desc">
+                            <field name="description"
+                                   placeholder="Sự việc diễn ra thế nào, điều khoản hợp đồng nào, bằng chứng kèm theo."/>
+                        </page>
+                        <page string="Gốc sự việc" name="origin">
+                            <group>
+                                <field name="interface_id"
+                                       options="{'no_create': True}"
+                                       domain="[('project_id','=',project_id)]"/>
+                            </group>
+                            <field name="task_ids"
+                                   domain="[('rp_contract_id','=',contract_id)]">
+                                <list>
+                                    <field name="wbs_code"/>
+                                    <field name="name"/>
+                                    <field name="planned_start"/>
+                                    <field name="planned_end"/>
+                                    <field name="baseline_slip_days"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Quyết định" name="decision">
+                            <field name="decision_note"
+                                   placeholder="Căn cứ chấp thuận hoặc từ chối."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_claim_search" model="ir.ui.view">
+        <field name="name">rp.claim.search</field>
+        <field name="model">rp.claim</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="partner_id"/>
+                <filter name="f_open" string="Đang mở"
+                        domain="[('state','not in',['closed','rejected'])]"/>
+                <filter name="f_late_notice" string="Thông báo quá hạn"
+                        domain="[('date_notice','!=',False),
+                                 ('notice_ok','=',False)]"/>
+                <filter name="f_eot" string="Có xin gia hạn"
+                        domain="[('eot_days_claimed','>',0)]"/>
+                <filter name="f_from_contractor" string="Nhà thầu khiếu nại"
+                        domain="[('direction','=','from_contractor')]"/>
+                <filter name="f_from_owner" string="Chủ đầu tư khiếu nại"
+                        domain="[('direction','=','from_owner')]"/>
+                <separator/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_cause" string="Nguyên nhân"
+                        context="{'group_by': 'cause'}"/>
+                <filter name="g_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="direction" select="multi" string="Chiều"
+                           icon="fa-exchange" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"/>
+                    <field name="cause" select="multi" string="Nguyên nhân"
+                           icon="fa-question-circle" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_claim" model="ir.actions.act_window">
+        <field name="name">Khiếu nại hợp đồng</field>
+        <field name="res_model">rp.claim</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_claim_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có khiếu nại nào</p>
+            <p>Ghi cả hai chiều: nhà thầu khiếu nại chủ đầu tư và ngược
+            lại. Hệ thống đếm hạn thông báo giúp — quá hạn là mất quyền
+            khiếu nại, dù lý do đúng.</p>
+        </field>
+    </record>
+
+    <!-- ===================== Biên bản phạt chậm ===================== -->
+    <record id="view_rp_ld_assessment_list" model="ir.ui.view">
+        <field name="name">rp.ld.assessment.list</field>
+        <field name="model">rp.ld.assessment</field>
+        <field name="arch" type="xml">
+            <!-- ĐỪNG lặp y nguyên một biểu thức decoration-* ở cả cấp
+                 <list> lẫn field bên trong: Odoo 19 chết ngay lúc mount,
+                 trang TRẮNG, không báo lỗi gì. Dòng đã mờ theo trạng thái
+                 ở cấp list rồi thì badge không cần mờ nữa. -->
+            <list decoration-danger="capped"
+                  decoration-muted="state == 'waived'">
+                <field name="name" width="120px"/>
+                <field name="contract_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="date_cutoff"/>
+                <field name="date_due" optional="show"/>
+                <field name="date_actual" optional="show"/>
+                <field name="eot_days_granted" optional="hide"/>
+                <field name="days_late" width="120px"/>
+                <field name="amount" width="190px" sum="Tổng"/>
+                <field name="capped" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'deducted'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_ld_assessment_form" model="ir.ui.view">
+        <field name="name">rp.ld.assessment.form</field>
+        <field name="model">rp.ld.assessment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_refresh" type="object"
+                            string="Chụp lại số liệu" icon="fa-refresh"
+                            invisible="state != 'draft'"/>
+                    <button name="action_notify" type="object"
+                            string="Thông báo nhà thầu" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_deduct" type="object"
+                            string="Đã khấu trừ"
+                            invisible="state != 'notified'"/>
+                    <button name="action_waive" type="object"
+                            string="Miễn / giảm"
+                            invisible="state in ['waived','deducted']"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,notified,deducted"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not capped">
+                        <i class="fa fa-info-circle me-1" title="Chạm trần"/>
+                        Tiền phạt đã chạm TRẦN theo hợp đồng — số ngày
+                        chậm tăng thêm không làm tăng tiền phạt nữa.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Hợp đồng">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="date_cutoff"/>
+                        </group>
+                        <group string="Mốc tính">
+                            <field name="eot_days_granted" readonly="1"/>
+                            <field name="date_due" readonly="1"/>
+                            <field name="date_actual" readonly="1"/>
+                            <field name="days_late" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Cách tính">
+                        <group>
+                            <field name="base_amount" readonly="1"/>
+                            <field name="rate_per_day" readonly="1"/>
+                            <field name="cap_percent" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="amount" readonly="1"/>
+                            <field name="capped" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Ghi chú">
+                        <field name="note" nolabel="1"
+                               placeholder="Căn cứ, thoả thuận với nhà thầu, cách khấu trừ."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_ld_assessment" model="ir.actions.act_window">
+        <field name="name">Phạt chậm tiến độ</field>
+        <field name="res_model">rp.ld.assessment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

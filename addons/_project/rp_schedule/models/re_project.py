@@ -50,6 +50,13 @@ class ReProject(models.Model):
         string='Trễ so mốc phải xong (ngày)',
         compute='_compute_schedule_rollup', store=True)
 
+    schedule_deadline_task_id = fields.Many2one(
+        'project.task', string='Mốc chịu lực',
+        domain="[('rp_project_id', '=', id), ('is_milestone', '=', True)]",
+        help='Công việc mang mốc cam kết (ví dụ COD). Trễ của dự án đo ở '
+             'ĐÚNG mốc này, không đo ở ngày kết thúc muộn nhất — vì sau '
+             'COD vẫn còn việc hợp lệ như bàn giao, hoàn công, TOC.')
+
     def _rp_schedule_deadline(self):
         """Ngày dự án buộc phải xong — đích của đường găng toàn dự án.
 
@@ -67,7 +74,7 @@ class ReProject(models.Model):
     @api.depends('schedule_task_ids.planned_end',
                  'schedule_task_ids.baseline_end',
                  'schedule_task_ids.rp_contract_id',
-                 'schedule_deadline')
+                 'schedule_deadline', 'schedule_deadline_task_id.planned_end')
     def _compute_schedule_rollup(self):
         for rec in self:
             tasks = rec.schedule_task_ids
@@ -80,9 +87,13 @@ class ReProject(models.Model):
             rec.schedule_slip_days = (
                 (rec.schedule_forecast_end - rec.schedule_baseline_end).days
                 if ends and bases else 0)
+            # Đo trễ tại MỐC CHỊU LỰC nếu đã chỉ định; nếu chưa thì
+            # tạm lấy ngày về đích muộn nhất.
+            marker = (rec.schedule_deadline_task_id.planned_end
+                      or rec.schedule_forecast_end)
             rec.schedule_deadline_slip = (
-                (rec.schedule_forecast_end - rec.schedule_deadline).days
-                if ends and rec.schedule_deadline else 0)
+                (marker - rec.schedule_deadline).days
+                if marker and rec.schedule_deadline else 0)
 
     def _rp_schedule_markers(self):
         """Mốc vạch dọc trên Gantt: ngày phải xong + hôm nay.

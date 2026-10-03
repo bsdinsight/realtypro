@@ -131,3 +131,25 @@ class TestProjectCpm(TransactionCase):
         self.assertEqual(
             [m['date'] for m in marks if m['kind'] == 'deadline'],
             ['2026-12-31'])
+
+    def test_moc_chiu_luc_do_tre_dung_cho(self):
+        """Việc hợp lệ chạy SAU mốc cam kết không được tính là trễ.
+
+        Lịch EPC luôn còn hoàn công, bàn giao, TOC chạy sau COD. Nếu đo
+        trễ ở ngày kết thúc muộn nhất thì dự án nào cũng "trễ" oan.
+        """
+        self.project.expected_handover_date = '2026-02-10'
+        cod = self._task(self.c2, '2', 'COD', '2026-02-10', '2026-02-10')
+        cod.is_milestone = True
+        self._task(self.c2, '3', 'Hồ sơ hoàn công sau COD',
+                   '2026-02-11', '2026-03-10')
+        self.project.invalidate_recordset()
+        # Chưa chỉ định mốc: đo ở ngày muộn nhất → báo trễ oan 28 ngày
+        self.assertEqual(self.project.schedule_deadline_slip, 28)
+        self.project.schedule_deadline_task_id = cod
+        self.project.invalidate_recordset()
+        self.assertEqual(self.project.schedule_deadline_slip, 0)
+        # Và CPM ghim hạn vào đúng mốc đó, không ghim vào việc sau COD
+        res = self.env['project.task'].rp_compute_project_critical_path(
+            self.project.id)
+        self.assertEqual(res[cod.id]['tf'], 0)

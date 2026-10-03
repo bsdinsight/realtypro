@@ -113,7 +113,8 @@ class ProjectTask(models.Model):
     # --- Đường găng (CPM) — mục 3+11 khung phân tích tiến độ ---
     @api.model
     def _rp_cpm(self, tasks, float_field='total_float',
-                critical_field='is_critical', horizon=None):
+                critical_field='is_critical', horizon=None,
+                horizon_task_id=None):
         """Lõi tính Total Float + đường găng trên MỘT TẬP công việc.
 
         Backward pass trên mạng phụ thuộc FS (predecessor_ids) dùng ngày
@@ -161,7 +162,12 @@ class ProjectTask(models.Model):
         # mốc ra dư địa ÂM — đó chính là thông tin cần thấy. Nếu mốc muộn
         # hơn thì bỏ qua, không thì mọi việc đều còn dư địa và đường găng
         # biến mất khỏi màn hình.
-        if horizon and horizon < horizon_end:
+        # Khi đã chỉ định MỐC CHỊU LỰC, ghim hạn vào đúng việc đó thay
+        # vì ghim vào mọi việc không có việc sau: lịch EPC luôn còn việc
+        # hợp lệ chạy SAU mốc cam kết (hoàn công, bàn giao, TOC), ghim
+        # toàn cục sẽ biến chúng thành trễ giả.
+        pin = horizon if (horizon and horizon_task_id) else None
+        if horizon and not horizon_task_id and horizon < horizon_end:
             horizon_end = horizon
         ls_memo, lf_memo, visiting = {}, {}, set()
 
@@ -182,6 +188,8 @@ class ProjectTask(models.Model):
             ss = succ[tid]
             lf = (horizon_end if not ss
                   else min(late_start(s) - timedelta(days=1) for s in ss))
+            if pin and tid == horizon_task_id:
+                lf = min(lf, pin)
             visiting.discard(tid)
             lf_memo[tid] = lf
             return lf
@@ -240,7 +248,8 @@ class ProjectTask(models.Model):
             ('planned_start', '!=', False), ('planned_end', '!=', False)])
         return self._rp_cpm(tasks, float_field='project_float',
                             critical_field='is_project_critical',
-                            horizon=project._rp_schedule_deadline())
+                            horizon=project._rp_schedule_deadline(),
+                            horizon_task_id=project.schedule_deadline_task_id.id)
 
     @api.depends('planned_start', 'planned_end')
     def _compute_planned_days(self):

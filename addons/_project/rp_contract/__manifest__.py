@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project - Contractor Contracts',
-    'version': '19.0.1.8.1',
+    'version': '19.0.1.8.2',
     'category': 'Realty/Project',
     'summary': 'Hợp đồng nhà thầu (rp.contract): lifecycle, BOQ lines, '
                'lịch thanh toán, phụ lục, bảo lãnh',
@@ -37,6 +37,11 @@ NGOÀI scope v1 (làm sau):
         'base',
         'mail',
         're_base',
+        # Ngân hàng bảo lãnh lọc theo res.partner.is_bank — field do
+        # re_party khai. Thiếu dòng này thì cài mới trên DB sạch nổ ngay
+        # ở view (ParseError "Unknown field res.partner.is_bank"); DB cũ
+        # không thấy vì re_party đã được module khác kéo vào.
+        're_party',
         'rp_contractor',
         'rp_cost_base',
         'rp_estimate',

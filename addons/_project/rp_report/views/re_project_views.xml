@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_brief" model="ir.ui.view">
+        <field name="name">re.project.form.brief</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_schedule.view_re_project_form_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='rp_schedule_rollup']" position="after">
+                <group string="BÁO CÁO THEO KỲ"
+                       invisible="not schedule_task_count">
+                    <group>
+                        <div colspan="2" class="text-muted">
+                            Chốt số trước cuộc họp giao ban: mọi phòng đọc
+                            cùng một bộ số, và kỳ sau so được với kỳ trước.
+                        </div>
+                    </group>
+                    <group>
+                        <div colspan="2">
+                            <button name="action_capture_brief" type="object"
+                                    class="btn-primary" icon="fa-camera"
+                                    string="Chốt số kỳ báo cáo"/>
+                            <button name="action_open_briefs" type="object"
+                                    class="btn-secondary" icon="fa-history"
+                                    string="Các kỳ đã chốt"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Chốt số đầu mỗi tháng: báo cáo quản trị cần SO SÁNH giữa các kỳ,
+         mà muốn so thì phải có số đã đóng băng của kỳ trước. -->
+    <record id="cron_rp_project_brief_monthly" model="ir.cron">
+        <field name="name">Báo cáo: chốt số tổng hợp dự án hằng tháng</field>
+        <field name="model_id" ref="model_rp_project_brief"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_monthly()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="nextcall"
+               eval="(datetime.now().replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 05:30:00')"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

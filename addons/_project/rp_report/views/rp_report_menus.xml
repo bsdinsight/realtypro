@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu "Báo cáo" chia theo PHÒNG BAN, không chia theo bảng dữ liệu.
+
+         Người của phòng Tài chính không cần biết số liệu nằm ở model
+         nào; họ cần mở đúng một chỗ và thấy thứ phòng mình chịu trách
+         nhiệm. Mỗi mục dưới đây là một màn hình đã lọc và nhóm sẵn, bấm
+         ra là xuất Excel được ngay. -->
+    <menuitem id="menu_rp_report_root" name="Báo cáo"
+              parent="rp_estimate.menu_realty_project_root"
+              sequence="75"/>
+
+    <!-- Lãnh đạo -->
+    <menuitem id="menu_rp_report_exec" name="Lãnh đạo"
+              parent="menu_rp_report_root" sequence="10"/>
+    <menuitem id="menu_rp_report_brief" name="Bản tổng hợp dự án"
+              parent="menu_rp_report_exec"
+              action="action_rp_project_brief" sequence="10"/>
+    <menuitem id="menu_rp_report_alert_critical"
+              name="Cảnh báo nghiêm trọng"
+              parent="menu_rp_report_exec"
+              action="action_report_alert_critical" sequence="20"/>
+
+    <!-- Ban quản lý dự án -->
+    <menuitem id="menu_rp_report_pmu" name="Ban quản lý dự án"
+              parent="menu_rp_report_root" sequence="20"/>
+    <menuitem id="menu_rp_report_task_late" name="Công việc đang trượt"
+              parent="menu_rp_report_pmu"
+              action="action_report_task_late" sequence="10"/>
+    <menuitem id="menu_rp_report_task_critical" name="Công việc trên đường găng"
+              parent="menu_rp_report_pmu"
+              action="action_report_task_critical" sequence="20"/>
+    <menuitem id="menu_rp_report_interface_conflict"
+              name="Điểm giao đang mâu thuẫn"
+              parent="menu_rp_report_pmu"
+              action="rp_interface.action_rp_interface_conflict"
+              sequence="30"/>
+    <menuitem id="menu_rp_report_alert_open" name="Cảnh báo đang mở"
+              parent="menu_rp_report_pmu"
+              action="rp_schedule_alert.action_rp_schedule_alert"
+              sequence="40"/>
+
+    <!-- Tài chính -->
+    <menuitem id="menu_rp_report_finance" name="Tài chính"
+              parent="menu_rp_report_root" sequence="30"/>
+    <menuitem id="menu_rp_report_contract_value"
+              name="Hợp đồng — giá trị &amp; dự báo"
+              parent="menu_rp_report_finance"
+              action="action_report_contract_value" sequence="10"/>
+    <menuitem id="menu_rp_report_variation_money"
+              name="Phát sinh — tiền theo trạng thái"
+              parent="menu_rp_report_finance"
+              action="action_report_variation_money" sequence="20"/>
+    <menuitem id="menu_rp_report_ld" name="Phạt chậm dự kiến"
+              parent="menu_rp_report_finance"
+              action="action_report_contract_ld" sequence="30"/>
+
+    <!-- Mua sắm &amp; pháp chế -->
+    <menuitem id="menu_rp_report_procure" name="Mua sắm &amp; pháp chế"
+              parent="menu_rp_report_root" sequence="40"/>
+    <menuitem id="menu_rp_report_variation_open" name="Phát sinh đang xử lý"
+              parent="menu_rp_report_procure"
+              action="action_report_variation_open" sequence="10"/>
+    <menuitem id="menu_rp_report_claim_open" name="Khiếu nại đang mở"
+              parent="menu_rp_report_procure"
+              action="action_report_claim_open" sequence="20"/>
+
+</odoo>

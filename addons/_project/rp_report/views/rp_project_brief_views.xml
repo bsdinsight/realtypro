@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_project_brief_list" model="ir.ui.view">
+        <field name="name">rp.project.brief.list</field>
+        <field name="model">rp.project.brief</field>
+        <field name="arch" type="xml">
+            <!-- Mỗi dòng là một kỳ: đọc dọc xuống là thấy xu hướng. -->
+            <list decoration-danger="deadline_slip &gt; 0 or budget_gap &gt; 0">
+                <field name="date_snapshot"/>
+                <field name="name"/>
+                <field name="project_id" optional="show"/>
+                <field name="forecast_end" optional="show"/>
+                <field name="deadline_slip" string="Trễ mốc (ngày)"
+                       width="130px"/>
+                <field name="critical_count" string="Việc găng"
+                       optional="show" width="110px"/>
+                <field name="alert_critical_count" string="CB nghiêm trọng"
+                       optional="show" width="140px"/>
+                <field name="interface_conflict_count" string="Giao diện xung đột"
+                       optional="hide" width="150px"/>
+                <field name="committed" optional="hide" width="185px"/>
+                <field name="cost_forecast" width="185px"/>
+                <field name="budget_gap" string="Chênh ngân sách"
+                       width="185px"/>
+                <field name="ld_exposure" optional="hide" width="185px"/>
+                <field name="claim_open_count" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_project_brief_form" model="ir.ui.view">
+        <field name="name">rp.project.brief.form</field>
+        <field name="model">rp.project.brief</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_project" type="object"
+                            string="Mở dự án" icon="fa-folder-open"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="deadline_slip &lt;= 0 and budget_gap &lt;= 0">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Cảnh báo"/>
+                        Kỳ này dự án đang
+                        <field name="deadline_slip" readonly="1" nolabel="1"
+                               class="fw-bold"/> ngày trễ mốc và lệch ngân
+                        sách <field name="budget_gap" readonly="1" nolabel="1"
+                                    class="fw-bold"/>.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3 class="text-muted">
+                            <field name="project_id" readonly="1"/> ·
+                            chốt ngày <field name="date_snapshot" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group string="TIẾN ĐỘ — Ban quản lý dự án">
+                            <field name="task_count"/>
+                            <field name="contract_count"/>
+                            <field name="forecast_end"/>
+                            <field name="deadline"/>
+                            <field name="deadline_slip"/>
+                            <field name="baseline_slip"/>
+                            <field name="critical_count"/>
+                            <field name="worst_float"/>
+                            <field name="task_late_count"/>
+                        </group>
+                        <group string="PHỐI HỢP &amp; RỦI RO">
+                            <field name="interface_count"/>
+                            <field name="interface_conflict_count"/>
+                            <field name="alert_open_count"/>
+                            <field name="alert_critical_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="TIỀN — Phòng Tài chính">
+                            <field name="budget_bac"/>
+                            <field name="committed"/>
+                            <field name="variation_approved"/>
+                            <field name="variation_pending"/>
+                            <field name="cost_forecast"/>
+                            <field name="budget_gap"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="HỢP ĐỒNG — Mua sắm &amp; pháp chế">
+                            <field name="claim_count"/>
+                            <field name="claim_open_count"/>
+                            <field name="eot_days_granted"/>
+                            <field name="ld_exposure"/>
+                            <field name="variation_open_count"/>
+                        </group>
+                    </group>
+                    <group string="Nhận định">
+                        <field name="note" nolabel="1"
+                               placeholder="Ba dòng cho cuộc họp giao ban: việc gì đang chặn, ai phải quyết, hạn nào."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_project_brief_pivot" model="ir.ui.view">
+        <field name="name">rp.project.brief.pivot</field>
+        <field name="model">rp.project.brief</field>
+        <field name="arch" type="xml">
+            <pivot string="So sánh các kỳ">
+                <field name="date_snapshot" type="row"/>
+                <field name="deadline_slip" type="measure"/>
+                <field name="cost_forecast" type="measure"/>
+                <field name="budget_gap" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_project_brief_graph" model="ir.ui.view">
+        <field name="name">rp.project.brief.graph</field>
+        <field name="model">rp.project.brief</field>
+        <field name="arch" type="xml">
+            <graph string="Xu hướng" type="line">
+                <field name="date_snapshot"/>
+                <field name="budget_gap" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_rp_project_brief_search" model="ir.ui.view">
+        <field name="name">rp.project.brief.search</field>
+        <field name="model">rp.project.brief</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_late" string="Đang trễ mốc"
+                        domain="[('deadline_slip','&gt;',0)]"/>
+                <filter name="f_over" string="Vượt ngân sách"
+                        domain="[('budget_gap','&gt;',0)]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_date" string="Kỳ chốt"
+                        context="{'group_by': 'date_snapshot:month'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_project_brief" model="ir.actions.act_window">
+        <field name="name">Bản tổng hợp dự án</field>
+        <field name="res_model">rp.project.brief</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_rp_project_brief_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa chốt kỳ nào</p>
+            <p>Mở form dự án và bấm "Chốt số kỳ báo cáo" trước cuộc họp giao
+            ban. Mỗi kỳ một bản ghi, số đóng băng — để kỳ sau so được với
+            kỳ trước.</p>
+        </field>
+    </record>
+
+</odoo>

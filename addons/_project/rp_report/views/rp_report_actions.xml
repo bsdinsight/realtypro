@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Các màn hình đã lọc và nhóm sẵn cho từng phòng ban. Dùng lại
+         đúng view và dữ liệu của các module nghiệp vụ — không nhân bản
+         số liệu, chỉ đổi lát cắt. -->
+
+    <!-- Ban quản lý dự án -->
+    <record id="action_report_task_late" model="ir.actions.act_window">
+        <field name="name">Công việc đang trượt tiến độ</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="rp_schedule.view_task_search_rp_panel"/>
+        <field name="domain">[('rp_contract_id','!=',False),('baseline_slip_days','&gt;',0)]</field>
+        <field name="context">{'search_default_rp_group_contract': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có việc nào trượt</p>
+            <p>Danh sách so với kế hoạch gốc đã chốt, nhóm theo hợp đồng —
+            xuất Excel gửi nhà thầu được ngay.</p>
+        </field>
+    </record>
+
+    <record id="action_report_task_critical" model="ir.actions.act_window">
+        <field name="name">Công việc trên đường găng toàn dự án</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="rp_schedule.view_task_search_rp_panel"/>
+        <field name="domain">[('is_project_critical','=',True)]</field>
+        <field name="context">{'search_default_rp_group_contract': 1}</field>
+    </record>
+
+    <!-- Lãnh đạo -->
+    <record id="action_report_alert_critical" model="ir.actions.act_window">
+        <field name="name">Cảnh báo nghiêm trọng</field>
+        <field name="res_model">rp.schedule.alert</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('severity','=','critical'),('state','in',['open','acknowledged'])]</field>
+    </record>
+
+    <!-- Tài chính -->
+    <record id="view_rp_contract_list_report" model="ir.ui.view">
+        <field name="name">rp.contract.list.report</field>
+        <field name="model">rp.contract</field>
+        <field name="arch" type="xml">
+            <!-- Một dòng một hợp đồng, đủ cột để phòng Tài chính không
+                 phải mở thêm màn nào: giá gốc, phát sinh hai loại, dự
+                 báo, gia hạn, chậm, phạt. -->
+            <list string="Hợp đồng — giá trị &amp; dự báo"
+                  decoration-danger="ld_days_late &gt; 0">
+                <field name="name"/>
+                <field name="project_id" optional="show"/>
+                <field name="contractor_id" string="Nhà thầu"/>
+                <field name="state" widget="badge"/>
+                <field name="contract_value_pretax" width="185px"
+                       sum="Giá hợp đồng"/>
+                <field name="variation_approved_amount" width="185px"
+                       sum="Phát sinh duyệt"/>
+                <field name="variation_pending_amount" width="185px"
+                       sum="Phát sinh chờ"/>
+                <field name="contract_value_forecast" width="185px"
+                       sum="Dự báo"/>
+                <field name="eot_days_granted" string="Gia hạn (ngày)"
+                       optional="show" width="130px"/>
+                <field name="ld_days_late" string="Chậm (ngày)"
+                       width="120px"/>
+                <field name="ld_amount_exposure" width="185px"
+                       sum="Phạt dự kiến"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_report_contract_value" model="ir.actions.act_window">
+        <field name="name">Hợp đồng — giá trị &amp; dự báo</field>
+        <field name="res_model">rp.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_rp_contract_list_report"/>
+        <field name="context">{'search_default_g_project': 1}</field>
+    </record>
+
+    <record id="action_report_contract_ld" model="ir.actions.act_window">
+        <field name="name">Phạt chậm dự kiến</field>
+        <field name="res_model">rp.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_rp_contract_list_report"/>
+        <field name="domain">[('ld_days_late','&gt;',0)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa hợp đồng nào chậm</p>
+            <p>Số ngày chậm đo trên mốc hoàn thành ĐÃ GIA HẠN, lấy ngày về
+            đích từ lịch thi công. Chốt chính thức thì lập biên bản tính
+            phạt trong form hợp đồng.</p>
+        </field>
+    </record>
+
+    <record id="view_rp_variation_pivot" model="ir.ui.view">
+        <field name="name">rp.variation.pivot</field>
+        <field name="model">rp.variation</field>
+        <field name="arch" type="xml">
+            <pivot string="Phát sinh theo trạng thái">
+                <field name="contract_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount_quoted" type="measure"/>
+                <field name="amount_approved" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_report_variation_money" model="ir.actions.act_window">
+        <field name="name">Phát sinh — tiền theo trạng thái</field>
+        <field name="res_model">rp.variation</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="search_view_id"
+                ref="rp_variation.view_rp_variation_search"/>
+    </record>
+
+    <!-- Mua sắm &amp; pháp chế -->
+    <record id="action_report_variation_open" model="ir.actions.act_window">
+        <field name="name">Phát sinh đang xử lý</field>
+        <field name="res_model">rp.variation</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="rp_variation.view_rp_variation_search"/>
+        <field name="domain">[('state','in',['draft','requested','quoted','review'])]</field>
+        <field name="context">{'search_default_g_contract': 1}</field>
+    </record>
+
+    <record id="action_report_claim_open" model="ir.actions.act_window">
+        <field name="name">Khiếu nại đang mở</field>
+        <field name="res_model">rp.claim</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="rp_claim.view_rp_claim_search"/>
+        <field name="domain">[('state','not in',['closed','rejected'])]</field>
+        <field name="context">{'search_default_g_contract': 1}</field>
+    </record>
+
+</odoo>

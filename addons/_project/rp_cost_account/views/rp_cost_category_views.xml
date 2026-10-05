@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ Danh mục chuẩn (cấp công ty) ============ -->
+
+    <record id="view_rp_cost_category_master_list_account"
+            model="ir.ui.view">
+        <field name="name">rp.cost.category.master.list.account</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_master_list"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_id" optional="show"
+                       width="260"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_category_master_form_account"
+            model="ir.ui.view">
+        <field name="name">rp.cost.category.master.form.account</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_master_form"/>
+        <field name="arch" type="xml">
+            <field name="level" position="before">
+                <field name="account_id"
+                       options="{'no_create': True}"/>
+            </field>
+            <!-- Cây con ngay trong form: thấy luôn tài khoản của từng
+                 mã con, khỏi phải mở từng dòng ra xem. -->
+            <xpath expr="//field[@name='child_ids']/list/field[@name='name']"
+                   position="after">
+                <field name="account_id" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_category_master_search_account"
+            model="ir.ui.view">
+        <field name="name">rp.cost.category.master.search.account</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_master_search"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="account_id"/>
+            </field>
+            <filter name="filter_contingency" position="after">
+                <filter name="filter_chua_co_tk" string="Chưa gán tài khoản"
+                        domain="[('account_id', '=', False)]"/>
+                <separator/>
+                <filter name="group_account" string="Tài khoản kế toán"
+                        context="{'group_by': 'account_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Nút gán sẵn theo TT200. Nút tác động lên CẢ cây, không lên dòng
+         đang chọn, nên phải khai display="always": nút trong <header>
+         của list mặc định CHỈ hiện khi người dùng đã tích chọn dòng
+         (list_controller.xml: `t-if="button.display === 'always'"` ở
+         khối luôn hiện, còn lại nằm trong khối chỉ hiện khi có chọn). -->
+    <record id="view_rp_cost_category_master_list_button"
+            model="ir.ui.view">
+        <field name="name">rp.cost.category.master.list.button</field>
+        <field name="model">rp.cost.category.master</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_master_list"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <header>
+                    <button name="action_gan_tai_khoan_tt200" type="object"
+                            string="Gán tài khoản theo TT200"
+                            display="always"
+                            class="btn-secondary"/>
+                </header>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ Danh mục của từng dự án ============ -->
+
+    <record id="view_rp_cost_category_list_account" model="ir.ui.view">
+        <field name="name">rp.cost.category.list.account</field>
+        <field name="model">rp.cost.category</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_list"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_id" optional="show" width="260"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_category_form_account" model="ir.ui.view">
+        <field name="name">rp.cost.category.form.account</field>
+        <field name="model">rp.cost.category</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_form"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="account_id" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_category_search_account" model="ir.ui.view">
+        <field name="name">rp.cost.category.search.account</field>
+        <field name="model">rp.cost.category</field>
+        <field name="inherit_id"
+               ref="rp_cost_base.view_rp_cost_category_search"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="account_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

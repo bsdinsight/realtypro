@@ -139,6 +139,28 @@ class RpCostCategoryMaster(models.Model):
                     'description': child.get('description', ''),
                 })
 
+    def _project_copy_vals(self, project, parent):
+        """Giá trị dựng nên bản copy cấp dự án của MỘT mã master.
+
+        Tách riêng khỏi vòng lặp để module khác thêm trường của mình
+        bằng `super()` (vd. rp_cost_account thêm tài khoản kế toán),
+        khỏi phải chép lại cả hàm — chép lại là kiểu gì cũng có ngày
+        hai bản lệch nhau.
+        """
+        self.ensure_one()
+        return {
+            'project_id': project.id,
+            'parent_id': parent.id if parent else False,
+            'name': self.name,
+            'code': self.code,
+            'sequence': self.sequence,
+            'is_contingency': self.is_contingency,
+            'is_finance_cost': self.is_finance_cost,
+            'is_land_cost': self.is_land_cost,
+            'description': self.description or '',
+            'master_category_id': self.id,
+        }
+
     def _copy_tree_to_project(self, project):
         """Instantiate toàn bộ cây master (active) vào dự án, giữ link
         master_category_id trên từng bản copy."""
@@ -146,16 +168,5 @@ class RpCostCategoryMaster(models.Model):
         mapping = {}
         for m in self.search([], order='parent_path'):
             parent = mapping.get(m.parent_id.id) if m.parent_id else None
-            mapping[m.id] = Cat.create({
-                'project_id': project.id,
-                'parent_id': parent.id if parent else False,
-                'name': m.name,
-                'code': m.code,
-                'sequence': m.sequence,
-                'is_contingency': m.is_contingency,
-                'is_finance_cost': m.is_finance_cost,
-                'is_land_cost': m.is_land_cost,
-                'description': m.description or '',
-                'master_category_id': m.id,
-            })
+            mapping[m.id] = Cat.create(m._project_copy_vals(project, parent))
         return mapping

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Odoo đã có hệ thống tài khoản ở Invoicing > Configuration >
+         Chart of Accounts. Người làm dự án không vào đường đó, nên đặt
+         thêm một lối ngay cạnh "Danh mục chi phí" — hai thứ này luôn
+         được mở cùng nhau lúc khai mã chi phí ứng với tài khoản nào.
+         Dùng lại đúng action của Odoo, không dựng action mới. -->
+
+    <menuitem id="menu_rp_account_chart"
+              name="Tài khoản kế toán"
+              parent="rp_estimate.menu_rp_configuration"
+              action="account.action_account_form"
+              sequence="25"/>
+
+</odoo>

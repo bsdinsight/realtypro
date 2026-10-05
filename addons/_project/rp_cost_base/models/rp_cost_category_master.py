@@ -41,6 +41,13 @@ class RpCostCategoryMaster(models.Model):
         help='Depth from root (1, 2, or 3). Enforced max 3.')
     complete_path = fields.Char(
         compute='_compute_complete_path', store=True, recursive=True)
+    root_id = fields.Many2one(
+        'rp.cost.category.master', string='Nhóm cấp 1',
+        compute='_compute_root_id', store=True, recursive=True,
+        index=True, ondelete='cascade',
+        help='Nhóm cấp 1 mà mã này thuộc về. Để gom danh sách theo '
+             'nhóm — gom theo "Nhóm cha" thì chính 10 nhóm cấp 1 rơi '
+             'vào rổ "Không xác định" vì chúng không có cha.')
 
     is_contingency = fields.Boolean(string='Contingency')
 
@@ -65,6 +72,13 @@ class RpCostCategoryMaster(models.Model):
         for rec in self:
             rec.level = (rec.parent_id.level or 0) + 1 \
                 if rec.parent_id else 1
+
+    @api.depends('parent_id', 'parent_id.root_id')
+    def _compute_root_id(self):
+        # Mã cấp 1 tự làm nhóm của chính nó, nhờ vậy nó nằm cùng rổ với
+        # các mã con thay vì lạc sang nhóm rỗng.
+        for rec in self:
+            rec.root_id = rec.parent_id.root_id or rec.parent_id or rec
 
     @api.depends('name', 'parent_id', 'parent_id.complete_path')
     def _compute_complete_path(self):

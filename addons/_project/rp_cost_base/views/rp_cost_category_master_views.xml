@@ -5,7 +5,10 @@
         <field name="name">rp.cost.category.master.list</field>
         <field name="model">rp.cost.category.master</field>
         <field name="arch" type="xml">
-            <list string="Danh mục chi phí" expand="1">
+            <!-- Bỏ expand="1": đã gom nhóm thì để nhóm ĐÓNG lúc mở ra,
+                 nhìn 10 dòng nhóm rồi bung đúng nhóm cần. Bung sẵn cả
+                 77 dòng thì gom nhóm chẳng còn tác dụng gì. -->
+            <list string="Danh mục chi phí">
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
@@ -72,6 +75,8 @@
                         domain="[('level', '=', 1)]"/>
                 <filter name="filter_contingency" string="Dự phòng"
                         domain="[('is_contingency', '=', True)]"/>
+                <filter name="group_root" string="Nhóm cấp 1"
+                        context="{'group_by': 'root_id'}"/>
                 <filter name="group_parent" string="Nhóm cha"
                         context="{'group_by': 'parent_id'}"/>
             </search>
@@ -83,6 +88,10 @@
         <field name="name">Danh mục chi phí</field>
         <field name="res_model">rp.cost.category.master</field>
         <field name="view_mode">list,form</field>
+        <!-- Mở ra là đã gom sẵn theo 10 nhóm cấp 1: 77 mã phẳng thì
+             không ai đọc nổi, mà cây chi phí vốn dĩ người ta nhớ theo
+             nhóm. Bỏ gom đi vẫn xem phẳng được như cũ. -->
+        <field name="context">{'search_default_group_root': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Danh mục chi phí CHUẨN cấp công ty

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Dự án năng lượng tái tạo',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Project',
     'summary': 'Điện gió / điện mặt trời: loại dự án, công suất, ngày COD, '
                'gói thầu HV / TSA / BOP — giấu phần bán hàng bất động sản.',
@@ -41,9 +41,12 @@ Giấu chứ không xoá: dữ liệu cũ và các dự án bất động sản 
         'rp_schedule',
     ],
     'data': [
+        'views/menus.xml',
         'views/re_project_views.xml',
         'views/rp_tender_package_views.xml',
+        'views/res_config_settings_views.xml',
     ],
+    'post_init_hook': 'post_init_hook',
     'installable': True,
     'application': False,
     'auto_install': False,

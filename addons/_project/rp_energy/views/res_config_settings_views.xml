@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_rp_energy" model="ir.ui.view">
+        <field name="name">res.config.settings.form.rp_energy</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Dự án năng lượng" name="rp_energy"
+                     logo="/base/static/img/config_settings.png">
+                    <block title="Giao diện" name="rp_energy_ui_block">
+                        <setting string="Chỉ dùng cho dự án năng lượng"
+                                 help="Ẩn Subzones / Buildings / Floors / Units / Unit Types trong Project Master và thay bằng Phase. Chỉ bật nếu bản triển khai này không quản lý nhà ở — chỉ ẩn, không xoá dữ liệu.">
+                            <field name="rp_energy_only_ui"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

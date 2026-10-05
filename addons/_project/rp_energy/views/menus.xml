@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Cây dữ liệu gốc của bộ Realty dựng cho bất động sản nhà ở:
+      Dự án → Phân khu → Toà nhà → Tầng → Căn hộ. Nhà máy điện không có
+      toà nhà và không có căn hộ để bán, nên bốn mục cuối mở ra lúc nào
+      cũng rỗng. Phân khu thì vẫn dùng, nhưng mang nghĩa GIAI ĐOẠN —
+      đúng cách chủ đầu tư điện gió gọi dự án của họ: "… Wind Power
+      Project – Phase 1".
+
+      Hai điều phải lách, đều đã trả giá bằng một lần làm sai:
+
+      1. KHÔNG đổi tên `rp_estimate.menu_pm_subzones` thành "Phase".
+         `<menuitem>` của rp_estimate có khai `name`, nên `-u rp_estimate`
+         ghi tên trở lại "Subzones". "Phase" phải là menu riêng của
+         rp_energy, và lối vào chuyển bằng cờ `active`.
+
+      2. Menu "Phase" KHÔNG khai bằng `<menuitem>`. Trình nạp menuitem
+         ghi `active` vô điều kiện, mặc định True (convert.py
+         `_tag_menuitem`), nên mỗi lần `-u rp_energy` lại bật menu lên,
+         xoá mất lựa chọn của bản triển khai. Luật "chỉ đặt active lúc
+         tạo" chỉ áp cho `<template>` và `<asset>`, không áp cho menu.
+         Vì vậy khai bằng `<record>` trong khối noupdate: tạo một lần,
+         các lần cập nhật sau bỏ qua.
+
+      Cái giá của noupdate: sửa tên hay thứ tự menu này về sau sẽ KHÔNG
+      tự lan ra các bản đã cài, phải viết script nâng cấp.
+
+      Mặc định TẮT. Ẩn phần nhà ở là lựa chọn của từng bản triển khai
+      (cờ "Chỉ dùng cho dự án năng lượng" trong Cấu hình) chứ không phải
+      hệ quả của việc cài module — xem res_config_settings.py.
+    -->
+
+    <record id="action_rp_energy_phase" model="ir.actions.act_window">
+        <field name="name">Phase</field>
+        <field name="res_model">re.subzone</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="re_base.view_re_subzone_search"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="menu_pm_phase" model="ir.ui.menu">
+            <field name="name">Phase</field>
+            <field name="parent_id" ref="rp_estimate.menu_project_master"/>
+            <field name="sequence">20</field>
+            <field name="action"
+                   eval="'ir.actions.act_window,%d'
+                         % ref('rp_energy.action_rp_energy_phase')"/>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+
+</odoo>

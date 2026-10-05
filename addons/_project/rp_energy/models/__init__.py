@@ -2,3 +2,4 @@
 from . import re_project
 from . import rp_tender_package
 from . import rp_structure
+from . import res_config_settings

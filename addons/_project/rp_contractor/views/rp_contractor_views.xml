@@ -208,4 +208,32 @@
         </field>
     </record>
 
+    <!--
+      Danh bạ nhà thầu THẬT. Nhà thầu đã chuyển sang `res.partner` từ
+      bản 19.0.1.4.0 (xem rp_estimate/migrations/19.0.1.4.0): gói thầu
+      và hợp đồng đều trỏ `res.partner` + cờ `is_contractor`, còn model
+      `rp.contractor` ở trên không ai ghi vào nữa. Menu "Nhà thầu" vẫn
+      mở model cũ nên lúc nào cũng rỗng, trong khi hợp đồng đầy nhà
+      thầu — chính là lỗi người dùng báo.
+
+      Dựng theo đúng khuôn "Chủ đầu tư" (rp_owner_contract) để hai danh
+      bạ hành xử giống nhau.
+    -->
+    <record id="action_partner_contractor" model="ir.actions.act_window">
+        <field name="name">Nhà thầu</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_contractor', '=', True)]</field>
+        <field name="context">{'default_is_contractor': True, 'default_is_company': True, 'res_partner_search_mode': 'supplier'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có nhà thầu nào
+            </p>
+            <p>
+                Nhà thầu được đánh dấu tự động khi bạn chọn họ trên một
+                gói thầu hoặc hợp đồng. Thêm tay ở đây cũng được.
+            </p>
+        </field>
+    </record>
+
 </odoo>

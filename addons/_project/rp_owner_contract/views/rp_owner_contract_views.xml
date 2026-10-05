@@ -469,10 +469,13 @@
               parent="rp_estimate.menu_rp_configuration"
               action="action_partner_owner"
               sequence="40"/>
+    <!-- Trỏ sang danh bạ res.partner, không phải model rp.contractor cũ:
+         nhà thầu đã chuyển sang res.partner mà menu thì chưa đổi, nên
+         danh mục lúc nào cũng rỗng dù hợp đồng đầy nhà thầu. -->
     <menuitem id="menu_cfg_contractor"
               name="Nhà thầu"
               parent="rp_estimate.menu_rp_configuration"
-              action="rp_contractor.action_rp_contractor"
+              action="rp_contractor.action_partner_contractor"
               sequence="45"/>
 
 </odoo>

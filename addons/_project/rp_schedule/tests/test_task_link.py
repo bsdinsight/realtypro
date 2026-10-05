@@ -48,19 +48,40 @@ class TestTaskLink(TransactionCase):
             'rp_contract_id': self.contract.id, 'wbs_code': wbs or False,
             'planned_start': start, 'planned_end': end})
 
-    # --- Đánh số theo cây WBS --------------------------------------
-    def test_danh_so_theo_so_khong_theo_chuoi(self):
-        """Sắp theo chuỗi thì "12" đứng trước "2" — cả cây lộn ngược."""
-        a = self._task('2', 'Việc 2', '2026-01-01', '2026-01-10')
-        b = self._task('12', 'Việc 12', '2026-02-01', '2026-02-10')
-        c = self._task('2.3', 'Việc 2.3', '2026-01-02', '2026-01-05')
-        d = self._task('2.10', 'Việc 2.10', '2026-01-06', '2026-01-09')
-        self.Task.rp_renumber_wbs(contract_id=self.contract.id)
-        for t in (a, b, c, d):
-            t.invalidate_recordset()
-        self.assertEqual([a.wbs_seq, c.wbs_seq, d.wbs_seq, b.wbs_seq],
-                         [1, 2, 3, 4],
-                         '2 → 2.3 → 2.10 → 12, không phải 12 trước 2')
+    # --- Đánh số công việc ----------------------------------------
+    def test_viec_moi_tu_nhan_so_ke_tiep(self):
+        a = self._task('1', 'Việc đầu', '2026-01-01', '2026-01-10')
+        b = self._task('2', 'Việc hai', '2026-01-11', '2026-01-20')
+        c = self._task('3', 'Việc ba', '2026-01-21', '2026-01-30')
+        self.assertEqual([a.wbs_seq, b.wbs_seq, c.wbs_seq], [1, 2, 3])
+
+    def test_so_da_cap_khong_bao_gio_doi(self):
+        """Chèn việc vào giữa KHÔNG được làm việc sau đó chạy số.
+
+        Người dùng ghi "việc số 2" ra biên bản thì tuần sau vẫn phải là
+        đúng việc đó — đây là lý do không đánh số lại cả loạt.
+        """
+        a = self._task('1', 'Việc đầu', '2026-01-01', '2026-01-10')
+        b = self._task('3', 'Việc ba', '2026-01-21', '2026-01-30')
+        chen = self._task('2', 'Chèn vào giữa', '2026-01-11', '2026-01-20')
+        a.invalidate_recordset()
+        b.invalidate_recordset()
+        self.assertEqual([a.wbs_seq, b.wbs_seq], [1, 2])
+        self.assertEqual(chen.wbs_seq, 3, 'Việc chèn lấy số kế tiếp, '
+                                          'không chen vào giữa dãy số')
+
+    def test_cap_so_cho_viec_chua_co(self):
+        a = self._task('1', 'Có số', '2026-01-01', '2026-01-10')
+        b = self._task('2', 'Chưa số', '2026-01-11', '2026-01-20')
+        b.wbs_seq = 0
+        n = self.Task.rp_fill_missing_seq(contract_id=self.contract.id)
+        a.invalidate_recordset()
+        b.invalidate_recordset()
+        self.assertEqual(n, 1)
+        self.assertEqual(a.wbs_seq, 1, 'Việc đã có số không bị đụng')
+        self.assertEqual(b.wbs_seq, 2)
+        self.assertEqual(
+            self.Task.rp_fill_missing_seq(contract_id=self.contract.id), 0)
 
     def test_cap_wbs_tu_dem_dau_cham(self):
         a = self._task('7', 'Cấp 1', '2026-01-01', '2026-01-10')
@@ -69,15 +90,6 @@ class TestTaskLink(TransactionCase):
         self.assertEqual([a.wbs_level, b.wbs_level, c.wbs_level], [1, 2, 3])
         d = self._task(False, 'Không mã', '2026-01-01', '2026-01-02')
         self.assertEqual(d.wbs_level, 0)
-
-    def test_viec_khong_co_ma_xep_cuoi(self):
-        a = self._task('1', 'Có mã', '2026-02-01', '2026-02-10')
-        b = self._task(False, 'Không mã', '2026-01-01', '2026-01-10')
-        self.Task.rp_renumber_wbs(contract_id=self.contract.id)
-        a.invalidate_recordset()
-        b.invalidate_recordset()
-        self.assertEqual(a.wbs_seq, 1)
-        self.assertEqual(b.wbs_seq, 2, 'Việc thêm tay xếp xuống cuối')
 
     # --- Độ lệch thực tế đo theo đúng loại quan hệ -----------------
     def test_lech_thuc_te_tung_loai(self):

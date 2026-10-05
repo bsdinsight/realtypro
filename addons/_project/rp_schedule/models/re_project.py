@@ -159,17 +159,22 @@ class ReProject(models.Model):
             },
         }
 
-    def action_renumber_tasks(self):
-        """Đánh số lại STT công việc theo trật tự cây WBS."""
+    def action_fill_task_seq(self):
+        """Cấp STT cho công việc chưa có số — KHÔNG đụng việc đã có.
+
+        Việc mới tự nhận số kế tiếp ngay khi tạo, nên nút này chỉ cần
+        dùng cho lịch nhập từ trước khi có trường STT.
+        """
         self.ensure_one()
-        n = self.env['project.task'].rp_renumber_wbs(project_id=self.id)
+        n = self.env['project.task'].rp_fill_missing_seq(project_id=self.id)
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'type': 'success',
-                'message': _('Đã đánh số %(n)s công việc theo trật tự WBS.',
-                             n=n),
+                'type': 'success' if n else 'info',
+                'message': (_('Đã cấp STT cho %(n)s công việc chưa có số.',
+                              n=n) if n
+                            else _('Mọi công việc đều đã có STT.')),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }

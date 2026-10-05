@@ -36,9 +36,11 @@ class ProjectTask(models.Model):
     # (để lọc ra đúng tầng tổng hợp khi báo cáo).
     wbs_seq = fields.Integer(
         string='STT', index=True, copy=False,
-        help='Số thứ tự chạy theo đúng trật tự cây WBS của dự án, giống '
-             'cột ID của MS Project. Bấm "Đánh số lại công việc" trên dự '
-             'án để sinh/làm mới.')
+        help='Số thứ tự của công việc trong dự án. Nhập lịch lần đầu thì '
+             'đánh 1, 2, 3… theo đúng thứ tự trong file; việc thêm sau '
+             'lấy số kế tiếp. Số này KHÔNG BAO GIỜ bị đánh lại — người '
+             'dùng ghi "việc số 137" ra giấy thì tuần sau vẫn đúng việc '
+             'đó.')
     wbs_level = fields.Integer(
         string='Cấp', compute='_compute_wbs_level', store=True, index=True,
         help='Độ sâu trong cây WBS: "2" là cấp 1, "2.3" là cấp 2, '
@@ -123,26 +125,66 @@ class ProjectTask(models.Model):
         return out
 
     @api.model
-    def rp_renumber_wbs(self, project_id=None, contract_id=None):
-        """Đánh số thứ tự công việc theo đúng trật tự cây WBS.
+    def _rp_next_seq(self, project_id, _cache=None):
+        """Số kế tiếp của dự án = số lớn nhất đang có + 1."""
+        if not project_id:
+            return 0
+        if _cache is not None and project_id in _cache:
+            return _cache[project_id]
+        last = self.search([('rp_project_id', '=', project_id),
+                            ('wbs_seq', '>', 0)],
+                           order='wbs_seq desc', limit=1)
+        return (last.wbs_seq or 0) + 1
 
-        Việc không có mã WBS xếp xuống cuối, giữ thứ tự ngày bắt đầu —
-        chúng thường là việc thêm tay sau khi nhập lịch.
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Việc mới của lịch thi công tự nhận STT kế tiếp.
+
+        Cố ý KHÔNG đánh lại cả loạt: chèn một việc vào giữa mà mọi việc
+        sau nó đổi số thì mọi thứ người dùng đã ghi ra ngoài (biên bản,
+        công văn, email) thành sai. Số cấp một lần rồi giữ nguyên.
         """
-        domain = []
+        Contract = self.env['rp.contract']
+        du_an, ke_tiep = {}, {}
+        for vals in vals_list:
+            cid = vals.get('rp_contract_id')
+            if not cid or vals.get('wbs_seq'):
+                continue
+            if cid not in du_an:
+                du_an[cid] = Contract.browse(cid).project_id.id
+            pid = du_an[cid]
+            if not pid:
+                continue
+            n = self._rp_next_seq(pid, ke_tiep)
+            vals['wbs_seq'] = n
+            ke_tiep[pid] = n + 1
+        return super().create(vals_list)
+
+    @api.model
+    def rp_fill_missing_seq(self, project_id=None, contract_id=None):
+        """Cấp STT cho những việc CHƯA có, giữ nguyên việc đã có số.
+
+        Dùng cho lịch nhập từ trước khi có trường này. Thứ tự cấp theo
+        cây WBS rồi tới ngày bắt đầu — gần nhất với thứ tự trong file gốc.
+        """
+        domain = [('wbs_seq', '=', 0)]
         if contract_id:
             domain.append(('rp_contract_id', '=', int(contract_id)))
-        elif project_id:
+            pid = self.env['rp.contract'].browse(
+                int(contract_id)).project_id.id
+        else:
             domain.append(('rp_project_id', '=', int(project_id)))
-        tasks = self.search(domain)
-        co_ma = tasks.filtered(lambda t: (t.wbs_code or '').strip())
-        khong_ma = tasks - co_ma
-        xep = co_ma.sorted(lambda t: self._wbs_sort_key(t.wbs_code))
-        xep += khong_ma.sorted(lambda t: (t.planned_start or t.create_date,
-                                          t.id))
-        for i, t in enumerate(xep, 1):
-            if t.wbs_seq != i:
-                t.wbs_seq = i
+            pid = int(project_id)
+        thieu = self.search(domain)
+        if not thieu:
+            return 0
+        xep = thieu.sorted(
+            lambda t: (self._wbs_sort_key(t.wbs_code) or [(9999, '')],
+                       t.planned_start or t.create_date, t.id))
+        n = self._rp_next_seq(pid)
+        for t in xep:
+            t.wbs_seq = n
+            n += 1
         return len(xep)
 
     # --- Lối vào đơn giản cho quan hệ FS lệch 0 ---------------------

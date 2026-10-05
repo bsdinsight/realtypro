@@ -24,7 +24,7 @@
                 <field name="days_overdue" optional="hide"/>
                 <field name="total_value_period" sum="Σ kỳ"/>
                 <field name="total_value_to_date" sum="Σ lũy kế" optional="show"/>
-                <field name="progress_percent" widget="percentage"/>
+                <field name="progress_percent" widget="progressbar"/>
                 <field name="report_year" optional="hide"/>
                 <field name="report_month" optional="hide"/>
                 <field name="state" widget="badge"
@@ -150,7 +150,7 @@
                             <field name="total_value_period"/>
                             <field name="total_value_to_date"/>
                             <field name="progress_percent"
-                                   widget="percentage"/>
+                                   widget="progressbar"/>
                         </group>
                     </group>
                     <notebook>
@@ -200,7 +200,7 @@
                                            string="Giá trị lũy kế"
                                            optional="hide"/>
                                     <field name="progress_percent"
-                                           widget="percentage"
+                                           widget="progressbar"
                                            optional="hide"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>

@@ -28,7 +28,7 @@
                                    decoration-danger="kpi_cpi &lt; 0.9 and kpi_cpi &gt; 0"
                                    decoration-warning="kpi_cpi &gt;= 0.9 and kpi_cpi &lt; 1"
                                    decoration-success="kpi_cpi &gt;= 1"/>
-                            <field name="kpi_progress" widget="percentage"
+                            <field name="kpi_progress" widget="progressbar"
                                    string="% hoàn thành"/>
                             <field name="kpi_over_count"
                                    decoration-danger="kpi_over_count &gt; 0"/>

@@ -47,7 +47,7 @@
                         <group string="Tiến độ">
                             <field name="task_count"/>
                             <field name="schedule_progress"
-                                   widget="percentage"/>
+                                   widget="progressbar"/>
                         </group>
                         <group string="Baseline &amp; Đường găng">
                             <field name="has_baseline"/>

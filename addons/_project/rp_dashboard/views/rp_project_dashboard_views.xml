@@ -36,7 +36,7 @@
                             <field name="kpi_contract_total_value"
                                    widget="monetary"/>
                             <field name="kpi_contract_paid_pct"
-                                   widget="percentage"/>
+                                   widget="progressbar"/>
                             <button name="action_open_contracts_executing"
                                     type="object"
                                     string="→ HĐ đang thi công"

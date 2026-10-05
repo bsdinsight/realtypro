@@ -95,6 +95,10 @@
                                     type="object" class="btn-link"
                                     icon="fa-list"
                                     string="Danh sách công việc"/>
+                            <button name="action_renumber_tasks"
+                                    type="object" class="btn-link"
+                                    icon="fa-sort-numeric-asc"
+                                    string="Đánh số lại công việc"/>
                         </div>
                     </group>
                 </group>

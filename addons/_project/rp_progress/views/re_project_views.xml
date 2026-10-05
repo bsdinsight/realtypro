@@ -26,17 +26,21 @@
                            widget="statinfo"
                            string="Hạng mục hoàn thành"/>
                 </button>
+                <!-- MỘT thẻ o_stat_text thôi: hai thẻ liền nhau render
+                     dính chữ thành "GanttTiến độ", không có khoảng trắng. -->
                 <button name="action_open_gantt" type="object"
                         class="oe_stat_button" icon="fa-bar-chart">
-                    <span class="o_stat_text">Gantt</span>
-                    <span class="o_stat_text">Tiến độ</span>
+                    <span class="o_stat_text">Gantt tiến độ</span>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="before">
                 <group string="Tiến độ tổng dự án">
                     <group>
+                        <!-- KHÔNG dùng widget="percentage": compute đã
+                             nhân 100 sẵn (0,87 = 0,87%), gắn widget đó
+                             Odoo nhân thêm 100 → hiện 87,39%. -->
                         <field name="weighted_progress_percent"
-                               widget="percentage"/>
+                               widget="progressbar"/>
                         <field name="project_status" widget="badge"
                                decoration-success="project_status == 'on_track'"
                                decoration-warning="project_status == 'at_risk'"

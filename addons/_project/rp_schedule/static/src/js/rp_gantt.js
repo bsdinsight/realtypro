@@ -133,7 +133,7 @@ export class RpGanttAction extends Component {
         await this._loadMarkers();
         const recs = await this.orm.searchRead(
             "project.task", domain,
-            ["name", "wbs_code", "planned_start", "planned_end",
+            ["name", "wbs_code", "wbs_seq", "planned_start", "planned_end",
              "progress_percent", "is_milestone",
              "project_id", "user_ids", "baseline_start", "baseline_end",
              "baseline_slip_days", "rp_contract_id"],
@@ -230,9 +230,12 @@ export class RpGanttAction extends Component {
         // nếu dòng đầu là dòng tổng WBS "0" thì nó mang số 0.
         const seqBase =
             recs.length && String(recs[0].wbs_code || "") === "0" ? 0 : 1;
-        // map id → STT để cột "Depend on" hiện số STT (kiểu Predecessors
-        // của MS Project), không lộ ID database
-        const seqById = new Map(recs.map((r, i) => [r.id, i + seqBase]));
+        // STT lấy từ máy chủ (wbs_seq) để Gantt, danh sách và bản xuất
+        // Excel nói CÙNG một con số. Lịch chưa đánh số thì tạm dùng thứ
+        // tự nạp, nhưng lúc đó hai màn hình có thể lệch nhau — bấm
+        // "Đánh số lại công việc" trên dự án là hết.
+        const stt = (r, i) => r.wbs_seq || i + seqBase;
+        const seqById = new Map(recs.map((r, i) => [r.id, stt(r, i)]));
         // Quan hệ trước-sau: đọc riêng từ rp.task.link vì mỗi quan hệ có
         // LOẠI (FS/SS/FF/SF) và ĐỘ LỆCH — hai thứ m2m phẳng không chở
         // được. Lịch fast-track sống bằng SS+lag, vẽ hết thành FS là vẽ
@@ -292,7 +295,7 @@ export class RpGanttAction extends Component {
                 name: r.name,
                 extraFields: {
                     TaskWbs: w,
-                    TaskSeq: idx + seqBase,
+                    TaskSeq: stt(r, idx),
                     // Cột "Depend on" kiểu MS Project: STT + loại + lệch,
                     // ví dụ "12SS+20". FS lệch 0 để trần cho gọn mắt.
                     TaskDeps: (linksByTask.get(r.id) || [])

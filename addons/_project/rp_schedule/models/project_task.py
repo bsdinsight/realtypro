@@ -29,6 +29,20 @@ class ProjectTask(models.Model):
         'rp.tender.package', string='Gói thầu',
         related='rp_contract_id.tender_package_id', store=True, index=True)
     wbs_code = fields.Char(string='Mã WBS', index=True)
+    # Hai cách đánh số mà người lập lịch nào cũng cần, và chúng trả lời
+    # hai câu khác nhau: STT là "việc thứ mấy trong lịch" (để gọi nhau
+    # trong cuộc họp, và để cột quan hệ trước–sau dẫn chiếu mà không lộ
+    # id cơ sở dữ liệu); CẤP là "việc này nằm ở tầng mấy của cây WBS"
+    # (để lọc ra đúng tầng tổng hợp khi báo cáo).
+    wbs_seq = fields.Integer(
+        string='STT', index=True, copy=False,
+        help='Số thứ tự chạy theo đúng trật tự cây WBS của dự án, giống '
+             'cột ID của MS Project. Bấm "Đánh số lại công việc" trên dự '
+             'án để sinh/làm mới.')
+    wbs_level = fields.Integer(
+        string='Cấp', compute='_compute_wbs_level', store=True, index=True,
+        help='Độ sâu trong cây WBS: "2" là cấp 1, "2.3" là cấp 2, '
+             '"2.3.5" là cấp 3.')
     planned_start = fields.Date(string='Bắt đầu (KH)')
     planned_end = fields.Date(string='Kết thúc (KH)')
     planned_days = fields.Integer(
@@ -84,6 +98,52 @@ class ProjectTask(models.Model):
     total_float = fields.Integer(
         string='Tổng dự trữ (ngày)', copy=False,
         help='LS − ES (backward pass CPM). ≤0 = găng; nhỏ = cận găng.')
+
+    @api.depends('wbs_code')
+    def _compute_wbs_level(self):
+        for t in self:
+            code = (t.wbs_code or '').strip()
+            t.wbs_level = len([p for p in code.split('.') if p]) if code else 0
+
+    @api.model
+    def _wbs_sort_key(self, code):
+        """Khoá sắp xếp theo SỐ, không theo chuỗi.
+
+        Sắp chuỗi thì "12" đứng trước "2" — cả cây WBS lộn tùng phèo và
+        số thứ tự sinh ra vô nghĩa. Phần không phải số (ví dụ "3a") giữ
+        nguyên để so sau phần số.
+        """
+        out = []
+        for phan in (code or '').split('.'):
+            phan = phan.strip()
+            if not phan:
+                continue
+            so = ''.join(c for c in phan if c.isdigit())
+            out.append((int(so) if so else 0, phan))
+        return out
+
+    @api.model
+    def rp_renumber_wbs(self, project_id=None, contract_id=None):
+        """Đánh số thứ tự công việc theo đúng trật tự cây WBS.
+
+        Việc không có mã WBS xếp xuống cuối, giữ thứ tự ngày bắt đầu —
+        chúng thường là việc thêm tay sau khi nhập lịch.
+        """
+        domain = []
+        if contract_id:
+            domain.append(('rp_contract_id', '=', int(contract_id)))
+        elif project_id:
+            domain.append(('rp_project_id', '=', int(project_id)))
+        tasks = self.search(domain)
+        co_ma = tasks.filtered(lambda t: (t.wbs_code or '').strip())
+        khong_ma = tasks - co_ma
+        xep = co_ma.sorted(lambda t: self._wbs_sort_key(t.wbs_code))
+        xep += khong_ma.sorted(lambda t: (t.planned_start or t.create_date,
+                                          t.id))
+        for i, t in enumerate(xep, 1):
+            if t.wbs_seq != i:
+                t.wbs_seq = i
+        return len(xep)
 
     # --- Lối vào đơn giản cho quan hệ FS lệch 0 ---------------------
     @api.depends('link_ids.predecessor_id')

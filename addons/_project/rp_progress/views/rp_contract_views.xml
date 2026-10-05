@@ -25,7 +25,7 @@
                     <group>
                         <field name="acceptance_value_to_date"/>
                         <field name="acceptance_progress_percent"
-                               widget="percentage"/>
+                               widget="progressbar"/>
                     </group>
                 </group>
             </xpath>

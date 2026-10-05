@@ -45,7 +45,7 @@
                         <field name="progress_value"/>
                         <field name="estimate_value"/>
                         <field name="progress_percent"
-                               widget="percentage"/>
+                               widget="progressbar"/>
                         <field name="status" widget="badge"
                                decoration-info="status == 'not_started'"
                                decoration-warning="status == 'in_progress'"

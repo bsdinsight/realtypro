@@ -45,8 +45,39 @@ class TestTaskLink(TransactionCase):
     def _task(self, wbs, name, start, end):
         return self.Task.create({
             'name': name, 'project_id': self.sched.id,
-            'rp_contract_id': self.contract.id, 'wbs_code': wbs,
+            'rp_contract_id': self.contract.id, 'wbs_code': wbs or False,
             'planned_start': start, 'planned_end': end})
+
+    # --- Đánh số theo cây WBS --------------------------------------
+    def test_danh_so_theo_so_khong_theo_chuoi(self):
+        """Sắp theo chuỗi thì "12" đứng trước "2" — cả cây lộn ngược."""
+        a = self._task('2', 'Việc 2', '2026-01-01', '2026-01-10')
+        b = self._task('12', 'Việc 12', '2026-02-01', '2026-02-10')
+        c = self._task('2.3', 'Việc 2.3', '2026-01-02', '2026-01-05')
+        d = self._task('2.10', 'Việc 2.10', '2026-01-06', '2026-01-09')
+        self.Task.rp_renumber_wbs(contract_id=self.contract.id)
+        for t in (a, b, c, d):
+            t.invalidate_recordset()
+        self.assertEqual([a.wbs_seq, c.wbs_seq, d.wbs_seq, b.wbs_seq],
+                         [1, 2, 3, 4],
+                         '2 → 2.3 → 2.10 → 12, không phải 12 trước 2')
+
+    def test_cap_wbs_tu_dem_dau_cham(self):
+        a = self._task('7', 'Cấp 1', '2026-01-01', '2026-01-10')
+        b = self._task('7.2', 'Cấp 2', '2026-01-01', '2026-01-05')
+        c = self._task('7.2.4', 'Cấp 3', '2026-01-01', '2026-01-03')
+        self.assertEqual([a.wbs_level, b.wbs_level, c.wbs_level], [1, 2, 3])
+        d = self._task(False, 'Không mã', '2026-01-01', '2026-01-02')
+        self.assertEqual(d.wbs_level, 0)
+
+    def test_viec_khong_co_ma_xep_cuoi(self):
+        a = self._task('1', 'Có mã', '2026-02-01', '2026-02-10')
+        b = self._task(False, 'Không mã', '2026-01-01', '2026-01-10')
+        self.Task.rp_renumber_wbs(contract_id=self.contract.id)
+        a.invalidate_recordset()
+        b.invalidate_recordset()
+        self.assertEqual(a.wbs_seq, 1)
+        self.assertEqual(b.wbs_seq, 2, 'Việc thêm tay xếp xuống cuối')
 
     # --- Độ lệch thực tế đo theo đúng loại quan hệ -----------------
     def test_lech_thuc_te_tung_loai(self):

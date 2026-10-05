@@ -159,6 +159,21 @@ class ReProject(models.Model):
             },
         }
 
+    def action_renumber_tasks(self):
+        """Đánh số lại STT công việc theo trật tự cây WBS."""
+        self.ensure_one()
+        n = self.env['project.task'].rp_renumber_wbs(project_id=self.id)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _('Đã đánh số %(n)s công việc theo trật tự WBS.',
+                             n=n),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
     def action_open_schedule_links(self):
         self.ensure_one()
         return {

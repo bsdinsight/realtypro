@@ -13,6 +13,8 @@
                         <field name="rp_contract_id"/>
                         <field name="rp_structure_id"/>
                         <field name="wbs_code"/>
+                        <field name="wbs_seq" readonly="1"/>
+                        <field name="wbs_level" readonly="1"/>
                         <field name="is_milestone"/>
                     </group>
                     <group>
@@ -61,7 +63,11 @@
         <field name="inherit_id" ref="project.view_task_tree2"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="wbs_seq" string="STT" optional="show"
+                       width="70px"/>
                 <field name="wbs_code" optional="show"/>
+                <field name="wbs_level" string="Cấp" optional="hide"
+                       width="70px"/>
                 <field name="rp_contract_id" optional="hide"/>
                 <field name="planned_start" optional="show"/>
                 <field name="planned_end" optional="show"/>
@@ -97,6 +103,8 @@
                 <separator/>
                 <filter name="rp_group_critical" string="Đường găng"
                         context="{'group_by': 'is_critical'}"/>
+                <filter name="rp_group_level" string="Cấp WBS"
+                        context="{'group_by': 'wbs_level'}"/>
             </xpath>
         </field>
     </record>

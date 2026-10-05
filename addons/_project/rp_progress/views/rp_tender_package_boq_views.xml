@@ -75,10 +75,13 @@
                                    class="oe_subtotal_footer_separator"/>
                         </group>
                     </group>
-                    <group string="Ghi chú &amp; nguồn">
-                        <field name="note" nolabel="1"
-                               placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, mục 2.1"/>
-                    </group>
+                    <!-- Đặt THẲNG trong sheet, không bọc <group>: group
+                         chia hai cột nên ô ghi chú bị ép còn nửa bề ngang,
+                         mà đây lại là chỗ chép nguyên văn ghi chú và nguồn
+                         trong hồ sơ chào giá — thường dài vài dòng. -->
+                    <separator string="Ghi chú &amp; nguồn"/>
+                    <field name="note" nolabel="1" widget="text"
+                           placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, Commercial Offer Rev.03, mục 2.1"/>
                 </sheet>
             </form>
         </field>
@@ -237,10 +240,9 @@
                                         <field name="amount" readonly="1"/>
                                     </group>
                                 </group>
-                                <group string="Ghi chú &amp; nguồn">
-                                    <field name="note" nolabel="1"
-                                           placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, mục 2.1"/>
-                                </group>
+                                <separator string="Ghi chú &amp; nguồn"/>
+                                <field name="note" nolabel="1" widget="text"
+                                       placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, Commercial Offer Rev.03, mục 2.1"/>
                             </sheet>
                         </form>
                     </field>

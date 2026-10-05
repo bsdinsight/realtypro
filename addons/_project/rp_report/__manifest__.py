@@ -43,6 +43,7 @@ ban thì bấm nút chốt tay.
         'rp_schedule_alert',
         'rp_claim',
         'rp_variation',
+        'rp_document',
     ],
     'data': [
         'security/ir.model.access.csv',

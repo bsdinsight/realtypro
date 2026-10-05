@@ -53,6 +53,17 @@ class RpProjectBrief(models.Model):
     alert_open_count = fields.Integer(string='Cảnh báo đang mở')
     alert_critical_count = fields.Integer(string='Cảnh báo nghiêm trọng')
 
+    # --- Hồ sơ kỹ thuật (điều 4.21 buộc báo cáo tiến độ phải nêu tiến
+    # độ của chính hồ sơ nhà thầu, không chỉ tiến độ hiện trường) -------
+    doc_count = fields.Integer(string='Số hồ sơ phải trình')
+    doc_not_submitted_count = fields.Integer(string='Nhà thầu chưa trình')
+    doc_pending_count = fields.Integer(string='Hồ sơ đang xem xét')
+    doc_overdue_count = fields.Integer(string='Hồ sơ bên mình giữ quá hạn')
+    doc_blocked_task_count = fields.Integer(
+        string='Việc chưa được phép khởi công')
+    doc_toc_outstanding_count = fields.Integer(
+        string='Hồ sơ còn thiếu để bàn giao')
+
     # --- Tiền (Tài chính) ---------------------------------------------
     budget_bac = fields.Monetary(string='Ngân sách duyệt (BAC)')
     committed = fields.Monetary(string='Đã cam kết theo hợp đồng')
@@ -102,6 +113,13 @@ class RpProjectBrief(models.Model):
             'interface_conflict_count': project.interface_conflict_count,
             'alert_open_count': project.alert_open_count,
             'alert_critical_count': project.alert_critical_count,
+            # hồ sơ kỹ thuật
+            'doc_count': project.document_count,
+            'doc_not_submitted_count': project.doc_not_submitted_count,
+            'doc_pending_count': project.doc_pending_count,
+            'doc_overdue_count': project.doc_overdue_count,
+            'doc_blocked_task_count': project.doc_blocked_task_count,
+            'doc_toc_outstanding_count': project.doc_toc_outstanding_count,
             # tiền
             'budget_bac': project.total_bac,
             'committed': project.contract_committed_total,

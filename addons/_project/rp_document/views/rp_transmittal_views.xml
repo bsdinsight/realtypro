@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_transmittal_list" model="ir.ui.view">
+        <field name="name">rp.transmittal.list</field>
+        <field name="model">rp.transmittal</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code" width="110px"/>
+                <field name="date" width="120px"/>
+                <field name="ref" optional="show" width="140px"/>
+                <field name="name"/>
+                <field name="direction" optional="show"/>
+                <field name="contract_id" optional="show"/>
+                <field name="with_notice" string="Kèm thông báo 5.2"
+                       width="150px"/>
+                <field name="document_count" string="Số hồ sơ" width="110px"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'registered'"/>
+                <field name="project_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_transmittal_form" model="ir.ui.view">
+        <field name="name">rp.transmittal.form</field>
+        <field name="model">rp.transmittal</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_register" type="object"
+                            string="Ghi nhận đã trình" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="with_notice">
+                        <i class="fa fa-hourglass-half me-1"
+                           title="Đồng hồ chưa chạy"/>
+                        Phiếu này <b>không kèm thông báo theo điều 5.2</b>:
+                        hồ sơ nhận rồi nhưng hạn xem xét của tất cả hồ sơ
+                        trong phiếu chưa bắt đầu đếm.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Chuyển hồ sơ gì?"/></h1>
+                        <h3 class="text-muted"><field name="code" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Phiếu chuyển">
+                            <field name="direction"/>
+                            <field name="date"/>
+                            <field name="ref"/>
+                            <field name="with_notice"/>
+                        </group>
+                        <group string="Thuộc về">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="document_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Hồ sơ trong phiếu" name="docs">
+                            <group>
+                                <div colspan="2" class="text-muted mb-2">
+                                    Chọn các hồ sơ đi cùng công văn này. Bấm
+                                    "Ghi nhận đã trình" là cả lô cùng vào
+                                    trạng thái đang xem xét, cùng một ngày
+                                    bắt đầu đếm hạn.
+                                </div>
+                            </group>
+                            <field name="document_ids"
+                                   readonly="state == 'registered'"
+                                   domain="[('project_id','=',project_id)]">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="doc_ref"/>
+                                    <field name="name"/>
+                                    <field name="review_track"/>
+                                    <field name="revision" string="Rev"/>
+                                    <field name="review_deadline"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_transmittal_search" model="ir.ui.view">
+        <field name="name">rp.transmittal.search</field>
+        <field name="model">rp.transmittal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="ref"/>
+                <filter name="f_draft" string="Chưa ghi nhận"
+                        domain="[('state','=','draft')]"/>
+                <filter name="f_no_notice" string="Không kèm thông báo 5.2"
+                        domain="[('with_notice','=',False)]"/>
+                <separator/>
+                <filter name="g_direction" string="Chiều chuyển"
+                        context="{'group_by': 'direction'}"/>
+                <filter name="g_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_month" string="Tháng chuyển"
+                        context="{'group_by': 'date:month'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="direction" select="multi" string="Chiều"
+                           icon="fa-exchange" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_transmittal" model="ir.actions.act_window">
+        <field name="name">Phiếu chuyển hồ sơ</field>
+        <field name="res_model">rp.transmittal</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_transmittal_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có phiếu chuyển nào</p>
+            <p>Hồ sơ hiếm khi đi lẻ: một công văn kèm nhiều bản vẽ, và hạn
+            xem xét của tất cả chạy từ cùng một ngày. Ghi một phiếu cho cả
+            lô thì nhanh hơn và không lệch ngày giữa các hồ sơ.</p>
+        </field>
+    </record>
+
+</odoo>

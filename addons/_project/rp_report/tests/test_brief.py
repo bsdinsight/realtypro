@@ -60,6 +60,29 @@ class TestProjectBrief(TransactionCase):
         self.assertEqual(brief.forecast_end, old_forecast)
         self.assertNotEqual(self.project.schedule_forecast_end, old_forecast)
 
+    def test_chup_ca_so_ho_so(self):
+        """Điều 4.21: báo cáo tiến độ phải nêu cả tiến độ hồ sơ nhà thầu."""
+        doc = self.env['rp.document'].create({
+            'name': 'Thiết kế móng', 'doc_type': 'design',
+            'review_track': 'approval', 'project_id': self.project.id,
+            'contract_id': self.contract.id,
+            'task_ids': [(4, self.task.id)]})
+        asbuilt = self.env['rp.document'].create({
+            'name': 'Hồ sơ hoàn công', 'doc_type': 'as_built',
+            'review_track': 'review', 'project_id': self.project.id,
+            'contract_id': self.contract.id, 'is_toc_required': True})
+        brief = self.Brief._capture(self.project)
+        self.assertEqual(brief.doc_count, 2)
+        self.assertEqual(brief.doc_not_submitted_count, 2)
+        self.assertEqual(brief.doc_blocked_task_count, 1,
+                         'Việc đang chờ hồ sơ chưa trình thì phải lên báo cáo')
+        self.assertEqual(brief.doc_toc_outstanding_count, 1)
+        # Chốt rồi thì số không chạy theo nữa.
+        doc.unlink()
+        asbuilt.unlink()
+        brief.invalidate_recordset()
+        self.assertEqual(brief.doc_count, 2)
+
     def test_chot_tay_tu_form_du_an(self):
         res = self.project.action_capture_brief()
         self.assertEqual(res['res_model'], 'rp.project.brief')

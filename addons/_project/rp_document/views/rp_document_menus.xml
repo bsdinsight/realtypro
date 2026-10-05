@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_rp_document_group" name="Sổ hồ sơ kỹ thuật"
+              parent="rp_estimate.menu_construction"
+              sequence="18"/>
+
+    <menuitem id="menu_rp_document_all" name="Sổ hồ sơ"
+              parent="menu_rp_document_group"
+              action="action_rp_document" sequence="10"/>
+
+    <!-- Ba danh sách việc-phải-làm, chia theo bóng đang ở chân ai: nhà
+         thầu chưa trình · bên mình giữ quá hạn · thi công đang bị chặn. -->
+    <menuitem id="menu_rp_document_not_submitted"
+              name="Nhà thầu chưa trình"
+              parent="menu_rp_document_group"
+              action="action_rp_document_not_submitted" sequence="20"/>
+
+    <menuitem id="menu_rp_document_pending" name="Đang xem xét"
+              parent="menu_rp_document_group"
+              action="action_rp_document_pending" sequence="30"/>
+
+    <menuitem id="menu_rp_document_overdue" name="Bên mình giữ quá hạn"
+              parent="menu_rp_document_group"
+              action="action_rp_document_overdue" sequence="40"/>
+
+    <menuitem id="menu_rp_document_blocked_tasks"
+              name="Việc chưa được phép khởi công"
+              parent="menu_rp_document_group"
+              action="action_rp_document_blocked_tasks" sequence="50"/>
+
+    <menuitem id="menu_rp_document_toc" name="Còn thiếu để bàn giao"
+              parent="menu_rp_document_group"
+              action="action_rp_document_toc" sequence="60"/>
+
+    <menuitem id="menu_rp_transmittal" name="Phiếu chuyển hồ sơ"
+              parent="menu_rp_document_group"
+              action="action_rp_transmittal" sequence="70"/>
+
+</odoo>

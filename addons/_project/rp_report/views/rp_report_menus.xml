@@ -40,6 +40,18 @@
               parent="menu_rp_report_pmu"
               action="rp_schedule_alert.action_rp_schedule_alert"
               sequence="40"/>
+    <!-- Hai danh sách hồ sơ thuộc Ban QLDA vì chúng là việc phải đi
+         nhắc hằng tuần, không phải việc đọc cuối tháng. -->
+    <menuitem id="menu_rp_report_doc_blocked"
+              name="Việc chưa được phép khởi công"
+              parent="menu_rp_report_pmu"
+              action="rp_document.action_rp_document_blocked_tasks"
+              sequence="50"/>
+    <menuitem id="menu_rp_report_doc_overdue"
+              name="Hồ sơ bên mình giữ quá hạn"
+              parent="menu_rp_report_pmu"
+              action="rp_document.action_rp_document_overdue"
+              sequence="60"/>
 
     <!-- Tài chính -->
     <menuitem id="menu_rp_report_finance" name="Tài chính"
@@ -65,5 +77,8 @@
     <menuitem id="menu_rp_report_claim_open" name="Khiếu nại đang mở"
               parent="menu_rp_report_procure"
               action="action_report_claim_open" sequence="20"/>
+    <menuitem id="menu_rp_report_doc_toc" name="Hồ sơ còn thiếu để bàn giao"
+              parent="menu_rp_report_procure"
+              action="rp_document.action_rp_document_toc" sequence="30"/>
 
 </odoo>

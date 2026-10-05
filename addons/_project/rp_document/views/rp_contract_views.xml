@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_form_document" model="ir.ui.view">
+        <field name="name">rp.contract.form.document</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_documents" type="object"
+                        class="oe_stat_button" icon="fa-files-o"
+                        invisible="not document_count">
+                    <field name="document_count" widget="statinfo"
+                           string="Hồ sơ kỹ thuật"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Hồ sơ kỹ thuật" name="document">
+                    <group>
+                        <group string="Thời hạn xem xét">
+                            <field name="doc_review_days"/>
+                        </group>
+                        <group string="Tình trạng sổ hồ sơ">
+                            <field name="document_count" readonly="1"/>
+                            <field name="doc_not_submitted_count" readonly="1"/>
+                            <field name="doc_pending_count" readonly="1"/>
+                            <field name="doc_rejected_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Cổng bàn giao (điều 5.6 &amp; 5.7)">
+                            <field name="doc_toc_outstanding_count"
+                                   readonly="1"/>
+                            <field name="toc_doc_ready" readonly="1"/>
+                        </group>
+                        <group>
+                            <div colspan="2" class="alert alert-warning py-1 mb-2"
+                                 role="alert"
+                                 invisible="doc_toc_outstanding_count == 0">
+                                <i class="fa fa-exclamation-triangle me-1"
+                                   title="Thiếu hồ sơ bàn giao"/>
+                                Còn hồ sơ phải có trước khi bàn giao chưa được
+                                duyệt. Điều 5.6 và 5.7: chưa nhận đủ thì công
+                                trình CHƯA được coi là hoàn thành để bàn giao,
+                                dù hiện trường đã xong — và phạt chậm vẫn đếm.
+                            </div>
+                            <div colspan="2">
+                                <button name="action_seed_document_register"
+                                        type="object" icon="fa-magic"
+                                        string="Tạo bộ hồ sơ theo điều 5.2"
+                                        invisible="document_count"/>
+                                <button name="action_open_documents"
+                                        type="object" class="btn-primary"
+                                        icon="fa-files-o"
+                                        string="Mở sổ hồ sơ"
+                                        invisible="not document_count"/>
+                            </div>
+                        </group>
+                    </group>
+                    <field name="document_ids" readonly="1">
+                        <list>
+                            <field name="code"/>
+                            <field name="doc_ref"/>
+                            <field name="name"/>
+                            <field name="review_track"/>
+                            <field name="date_required"/>
+                            <field name="review_deadline"/>
+                            <field name="days_left" string="Còn (ngày)"/>
+                            <field name="gate_date" string="Được làm từ"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

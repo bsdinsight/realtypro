@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Cổng hồ sơ nằm NGAY TRONG form công việc, cạnh baseline và đường
+         găng. Ai mở việc ra cũng phải thấy việc này có được phép khởi
+         công hay chưa, chứ không phải đi tìm ở một sổ khác. -->
+    <record id="view_task_form2_rp_document" model="ir.ui.view">
+        <field name="name">project.task.form.rp.document</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="rp_schedule.view_task_form2_rp_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='rp_schedule']" position="inside">
+                <group string="Cổng hồ sơ (điều 5.2)" col="4"
+                       invisible="not doc_gate_count">
+                    <field name="doc_gate_count" readonly="1"/>
+                    <field name="doc_gate_ready_date" readonly="1"/>
+                    <field name="doc_gate_blocked" readonly="1"/>
+                    <field name="doc_gate_slip_days" readonly="1"/>
+                </group>
+                <field name="doc_gate_ids" widget="many2many_tags"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_tree2_rp_document" model="ir.ui.view">
+        <field name="name">project.task.list.rp.document</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="rp_schedule.view_task_tree2_rp_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='baseline_slip_days']" position="after">
+                <field name="doc_gate_blocked" string="Chưa đủ hồ sơ"
+                       optional="show"/>
+                <field name="doc_gate_ready_date" string="Được làm từ"
+                       optional="hide"/>
+                <field name="doc_gate_slip_days" string="Chờ hồ sơ (ngày)"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_task_search_rp_document" model="ir.ui.view">
+        <field name="name">project.task.search.rp.document</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="rp_schedule.view_task_search_rp_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="f_doc_blocked" string="Chưa đủ hồ sơ để khởi công"
+                        domain="[('doc_gate_blocked','=',True)]"/>
+                <filter name="f_doc_blocked_now"
+                        string="Đã đến ngày khởi công mà thiếu hồ sơ"
+                        domain="[('doc_gate_blocked','=',True),('planned_start','&lt;=',context_today().strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_rp_document_blocked_tasks" model="ir.actions.act_window">
+        <field name="name">Việc chưa được phép khởi công</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="rp_schedule.view_task_search_rp_panel"/>
+        <field name="domain">[('doc_gate_blocked','=',True)]</field>
+        <field name="context">{'search_default_rp_group_contract': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có việc nào chờ hồ sơ</p>
+            <p>Công việc ở đây có hồ sơ chưa qua điều 5.2: chưa trình, bị trả
+            lại, hoặc đang chờ phê duyệt. Gantt vẫn báo đúng hạn, nhưng hợp
+            đồng không cho phép bắt đầu.</p>
+        </field>
+    </record>
+
+</odoo>

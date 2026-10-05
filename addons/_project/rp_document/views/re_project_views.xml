@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Con số đáng đưa lên màn hình dự án là "việc chưa được phép khởi
+         công vì hồ sơ": nó không nằm trong tiến độ, không nằm trong chi
+         phí, và không ai báo cáo — cho đến lúc đã trễ. -->
+    <record id="view_re_project_form_document" model="ir.ui.view">
+        <field name="name">re.project.form.document</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_schedule.view_re_project_form_schedule"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='rp_schedule_rollup']" position="after">
+                <group string="HỒ SƠ KỸ THUẬT (ĐIỀU 5.2)"
+                       invisible="not document_count">
+                    <group string="Bóng đang ở chân ai">
+                        <field name="doc_not_submitted_count"/>
+                        <field name="doc_pending_count"/>
+                        <field name="doc_overdue_count"/>
+                        <field name="doc_toc_outstanding_count"/>
+                    </group>
+                    <group string="Hệ quả lên thi công">
+                        <field name="document_count"/>
+                        <field name="doc_blocked_task_count"/>
+                    </group>
+                    <group>
+                        <div colspan="2" class="alert alert-danger py-1 mb-2"
+                             role="alert" invisible="doc_overdue_count == 0">
+                            <i class="fa fa-exclamation-triangle me-1"
+                               title="Quá hạn xem xét"/>
+                            Bên mình đang giữ
+                            <field name="doc_overdue_count" nolabel="1"
+                                   readonly="1" class="fw-bold"/>
+                            hồ sơ quá hạn 21 ngày của điều 5.2 — nhà thầu
+                            được quyền dùng đúng số ngày đó để xin gia hạn.
+                        </div>
+                        <div colspan="2" class="alert alert-warning py-1 mb-2"
+                             role="alert"
+                             invisible="doc_blocked_task_count == 0">
+                            <i class="fa fa-lock me-1" title="Chặn khởi công"/>
+                            <field name="doc_blocked_task_count" nolabel="1"
+                                   readonly="1" class="fw-bold"/>
+                            công việc chưa được phép khởi công vì hồ sơ chưa
+                            qua điều 5.2, dù Gantt vẫn báo đúng hạn.
+                        </div>
+                        <div colspan="2">
+                            <button name="action_open_documents" type="object"
+                                    class="btn-primary" icon="fa-files-o"
+                                    string="Mở sổ hồ sơ"/>
+                            <button name="action_open_doc_blocked_tasks"
+                                    type="object" icon="fa-lock"
+                                    string="Việc đang chờ hồ sơ"
+                                    invisible="doc_blocked_task_count == 0"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

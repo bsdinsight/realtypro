@@ -94,6 +94,20 @@
                             <field name="variation_open_count"/>
                         </group>
                     </group>
+                    <!-- Điều 4.21 buộc báo cáo tiến độ nêu cả tiến độ của
+                         HỒ SƠ nhà thầu, không chỉ tiến độ hiện trường. -->
+                    <group>
+                        <group string="HỒ SƠ KỸ THUẬT — bóng ở chân ai">
+                            <field name="doc_count"/>
+                            <field name="doc_not_submitted_count"/>
+                            <field name="doc_pending_count"/>
+                            <field name="doc_overdue_count"/>
+                        </group>
+                        <group string="HỒ SƠ KỸ THUẬT — hệ quả">
+                            <field name="doc_blocked_task_count"/>
+                            <field name="doc_toc_outstanding_count"/>
+                        </group>
+                    </group>
                     <group string="Nhận định">
                         <field name="note" nolabel="1"
                                placeholder="Ba dòng cho cuộc họp giao ban: việc gì đang chặn, ai phải quyết, hạn nào."/>

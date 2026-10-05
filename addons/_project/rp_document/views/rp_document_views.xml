@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_document_list" model="ir.ui.view">
+        <field name="name">rp.document.list</field>
+        <field name="model">rp.document</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelled'">
+                <field name="code" width="110px"/>
+                <field name="doc_ref" optional="show" width="140px"/>
+                <field name="name"/>
+                <field name="doc_type" optional="hide"/>
+                <field name="discipline" optional="hide"/>
+                <field name="review_track" optional="show"/>
+                <field name="partner_id" string="Nhà thầu" optional="hide"/>
+                <field name="revision" string="Rev" width="80px"
+                       optional="show"/>
+                <field name="date_required" optional="show" width="130px"/>
+                <field name="date_submitted" optional="hide" width="130px"/>
+                <field name="submit_late_days" string="Trình trễ"
+                       optional="hide" width="110px"/>
+                <field name="review_deadline" string="Hạn xem xét"
+                       width="130px"/>
+                <field name="days_left" string="Còn (ngày)" width="110px"/>
+                <field name="review_late_days" string="Xem xét trễ"
+                       width="120px" optional="show"/>
+                <field name="gate_date" string="Được làm từ" width="130px"
+                       optional="show"/>
+                <field name="task_count" string="Việc chờ" width="100px"
+                       optional="hide"/>
+                <field name="is_toc_required" string="Chặn bàn giao"
+                       optional="hide" width="130px"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ['approved','approved_comment']"
+                       decoration-danger="state == 'rejected'"
+                       decoration-warning="state == 'submitted'"/>
+                <field name="project_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_document_form" model="ir.ui.view">
+        <field name="name">rp.document.form</field>
+        <field name="model">rp.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Nhận hồ sơ (có thông báo 5.2)"
+                            class="btn-primary"
+                            invisible="state not in ['planned','rejected']"/>
+                    <button name="action_submit_no_notice" type="object"
+                            string="Nhận hồ sơ, chưa có thông báo"
+                            invisible="state not in ['planned','rejected']"/>
+                    <button name="action_add_notice" type="object"
+                            string="Đã nhận thông báo 5.2" class="btn-primary"
+                            invisible="state != 'submitted' or date_notice"/>
+                    <button name="action_approve" type="object"
+                            string="Duyệt" class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_approve_comment" type="object"
+                            string="Duyệt kèm ý kiến"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_reject" type="object"
+                            string="Trả lại — không tuân thủ"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_resubmit" type="object"
+                            string="Trình lại" class="btn-primary"
+                            invisible="state != 'rejected'"/>
+                    <button name="action_create_review_claim" type="object"
+                            string="Mở khiếu nại chậm xem xét" icon="fa-gavel"
+                            invisible="claim_id or (not is_review_overdue and not review_late_days)"/>
+                    <button name="action_cancel" type="object"
+                            string="Không áp dụng"
+                            invisible="state in ['cancelled','approved','approved_comment']"/>
+                    <button name="action_reset" type="object"
+                            string="Về chưa trình"
+                            invisible="state == 'planned'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="planned,submitted,approved"/>
+                </header>
+                <sheet>
+                    <field name="pending_notice" invisible="1"/>
+                    <field name="is_review_overdue" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not pending_notice">
+                        <i class="fa fa-hourglass-half me-1"
+                           title="Đồng hồ chưa chạy"/>
+                        Đã nhận hồ sơ nhưng <b>chưa có thông báo theo điều
+                        5.2</b>, nên hạn xem xét chưa bắt đầu đếm. Việc phải
+                        nhắc là nhắc nhà thầu gửi thông báo, không phải nhắc
+                        người duyệt.
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_review_overdue">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Quá hạn"/>
+                        Quá hạn xem xét từ ngày
+                        <field name="review_deadline" readonly="1" nolabel="1"
+                               class="fw-bold"/>. Đây là lỗi của bên xem xét
+                        và nhà thầu được quyền dùng số ngày này để xin gia hạn.
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="gate_state != 'waiting' or not task_count">
+                        <i class="fa fa-lock me-1" title="Đang chặn"/>
+                        Hồ sơ này đang chặn
+                        <field name="task_count" readonly="1" nolabel="1"
+                               class="fw-bold"/> công việc: điều 5.2 không
+                        cho khởi công phần việc liên quan trước khi hồ sơ
+                        được duyệt (hoặc hết hạn xem xét, nếu chỉ trình để
+                        xem xét).
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Hồ sơ gì, thuộc phần việc nào?"/></h1>
+                        <h3 class="text-muted"><field name="code" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Hồ sơ">
+                            <field name="doc_ref"/>
+                            <field name="doc_type"/>
+                            <field name="discipline"/>
+                            <field name="review_track"/>
+                            <field name="is_toc_required"/>
+                            <field name="revision" readonly="1"/>
+                        </group>
+                        <group string="Thuộc về">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="structure_id"
+                                   options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="1"
+                                   invisible="not partner_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Đồng hồ xem xét (điều 5.2)">
+                            <field name="date_required"/>
+                            <field name="date_submitted"/>
+                            <field name="submit_late_days" readonly="1"
+                                   invisible="not submit_late_days"/>
+                            <field name="date_notice"/>
+                            <field name="review_days"/>
+                            <field name="clock_start" readonly="1"/>
+                            <field name="review_deadline" readonly="1"/>
+                            <field name="days_left" readonly="1"
+                                   invisible="state != 'submitted'"/>
+                        </group>
+                        <group string="Kết quả &amp; cổng thi công">
+                            <field name="date_reviewed" readonly="1"/>
+                            <field name="reviewer_id" readonly="1"
+                                   invisible="not reviewer_id"/>
+                            <field name="review_late_days" readonly="1"
+                                   invisible="not review_late_days"/>
+                            <field name="gate_state" readonly="1"/>
+                            <field name="gate_date" readonly="1"/>
+                            <field name="gate_certain" readonly="1"/>
+                            <field name="claim_id" readonly="1"
+                                   invisible="not claim_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Công việc phụ thuộc" name="tasks">
+                            <group>
+                                <div colspan="2" class="text-muted mb-2">
+                                    Khai những công việc không được khởi công
+                                    trước khi hồ sơ này mở cổng. Lịch thi công
+                                    sẽ tự biết việc nào đang chờ hồ sơ, và
+                                    chờ bao nhiêu ngày.
+                                </div>
+                            </group>
+                            <field name="task_ids"
+                                   domain="[('rp_project_id','=',project_id)]">
+                                <list>
+                                    <field name="wbs_code"/>
+                                    <field name="name"/>
+                                    <field name="rp_contract_id"
+                                           optional="hide"/>
+                                    <field name="planned_start"/>
+                                    <field name="planned_end"/>
+                                    <field name="doc_gate_ready_date"
+                                           string="Được làm từ"/>
+                                    <field name="doc_gate_slip_days"
+                                           string="Chờ hồ sơ (ngày)"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Các lần trình" name="revisions">
+                            <field name="revision_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="transmittal_id"/>
+                                    <field name="date_submitted"/>
+                                    <field name="date_notice"/>
+                                    <field name="review_deadline"/>
+                                    <field name="date_reviewed"/>
+                                    <field name="days_used"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="outcome" widget="badge"/>
+                                    <field name="review_note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Phạm vi &amp; ý kiến" name="note">
+                            <group>
+                                <field name="description"
+                                       placeholder="Hồ sơ gồm những gì, dẫn chiếu điều khoản hoặc mục nào của Yêu cầu chủ đầu tư."/>
+                                <field name="review_note"
+                                       placeholder="Nội dung không phù hợp, hoặc điều kiện kèm theo khi duyệt."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_document_search" model="ir.ui.view">
+        <field name="name">rp.document.search</field>
+        <field name="model">rp.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="doc_ref"/>
+                <field name="partner_id"/>
+                <filter name="f_pending" string="Đang xem xét"
+                        domain="[('state','=','submitted')]"/>
+                <filter name="f_overdue" string="Quá hạn xem xét"
+                        domain="[('state','=','submitted'),('review_deadline','&lt;',context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="f_no_notice" string="Chưa có thông báo 5.2"
+                        domain="[('state','=','submitted'),('date_notice','=',False)]"/>
+                <filter name="f_not_submitted" string="Nhà thầu chưa trình"
+                        domain="[('state','=','planned')]"/>
+                <filter name="f_late_submit" string="Trình trễ hạn"
+                        domain="[('submit_late_days','&gt;',0)]"/>
+                <filter name="f_rejected" string="Bị trả lại"
+                        domain="[('state','=','rejected')]"/>
+                <separator/>
+                <filter name="f_gate" string="Đang chặn công việc"
+                        domain="[('gate_certain','=',False),('review_track','!=','info'),('task_ids','!=',False)]"/>
+                <filter name="f_toc" string="Phải có trước khi bàn giao"
+                        domain="[('is_toc_required','=',True)]"/>
+                <filter name="f_toc_missing" string="Còn thiếu để bàn giao"
+                        domain="[('is_toc_required','=',True),('state','not in',['approved','approved_comment'])]"/>
+                <separator/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_track" string="Luồng trình"
+                        context="{'group_by': 'review_track'}"/>
+                <filter name="g_type" string="Loại hồ sơ"
+                        context="{'group_by': 'doc_type'}"/>
+                <filter name="g_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_deadline" string="Hạn xem xét"
+                        context="{'group_by': 'review_deadline:month'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="state" select="multi" string="Trạng thái"
+                           icon="fa-tasks" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="review_track" select="multi"
+                           string="Trình để" icon="fa-shield"
+                           enable_counters="1"/>
+                    <field name="doc_type" select="multi" string="Loại hồ sơ"
+                           icon="fa-files-o" enable_counters="1"/>
+                    <field name="discipline" select="multi" string="Bộ môn"
+                           icon="fa-wrench" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_document" model="ir.actions.act_window">
+        <field name="name">Sổ hồ sơ kỹ thuật</field>
+        <field name="res_model">rp.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_document_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Sổ hồ sơ còn trống</p>
+            <p>Mỗi dòng là một hồ sơ mà hợp đồng buộc nhà thầu phải trình.
+            Chưa có ma trận hồ sơ của hợp đồng thì mở form hợp đồng và bấm
+            "Tạo bộ hồ sơ theo điều 5.2" để có bộ khởi tạo, rồi sửa lại
+            theo Annex 16.</p>
+        </field>
+    </record>
+
+    <record id="action_rp_document_overdue" model="ir.actions.act_window">
+        <field name="name">Hồ sơ bên mình giữ quá hạn</field>
+        <field name="res_model">rp.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_document_search"/>
+        <field name="context">{'search_default_f_overdue': 1,
+                               'search_default_g_contract': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không giữ hồ sơ nào quá hạn</p>
+            <p>Quá hạn xem xét là lỗi của bên chủ đầu tư, và theo điều 5.2
+            công việc liên quan vẫn không được khởi công trong lúc chờ — nên
+            mỗi hồ sơ ở đây là một đơn xin gia hạn đang chờ được viết.</p>
+        </field>
+    </record>
+
+    <record id="action_rp_document_pending" model="ir.actions.act_window">
+        <field name="name">Hồ sơ đang xem xét</field>
+        <field name="res_model">rp.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_document_search"/>
+        <field name="context">{'search_default_f_pending': 1}</field>
+    </record>
+
+    <record id="action_rp_document_not_submitted" model="ir.actions.act_window">
+        <field name="name">Hồ sơ nhà thầu chưa trình</field>
+        <field name="res_model">rp.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_document_search"/>
+        <field name="context">{'search_default_f_not_submitted': 1,
+                               'search_default_g_contract': 1}</field>
+    </record>
+
+    <record id="action_rp_document_toc" model="ir.actions.act_window">
+        <field name="name">Hồ sơ còn thiếu để bàn giao</field>
+        <field name="res_model">rp.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_document_search"/>
+        <field name="context">{'search_default_f_toc_missing': 1,
+                               'search_default_g_contract': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Đã đủ hồ sơ để bàn giao</p>
+            <p>Điều 5.6 và 5.7: chưa nhận đủ hồ sơ hoàn công và tài liệu vận
+            hành thì công trình chưa được coi là hoàn thành cho mục đích bàn
+            giao — hiện trường xong mà hồ sơ thiếu thì phạt chậm vẫn đếm.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_rp_document" model="ir.sequence">
+        <field name="name">Hồ sơ kỹ thuật</field>
+        <field name="code">rp.document</field>
+        <field name="prefix">HS</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record id="seq_rp_transmittal" model="ir.sequence">
+        <field name="name">Phiếu chuyển hồ sơ</field>
+        <field name="code">rp.transmittal</field>
+        <field name="prefix">PCH</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

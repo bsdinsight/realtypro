@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_boq_line_package_list" model="ir.ui.view">
+        <field name="name">rp.boq.line.package.list</field>
+        <field name="model">rp.boq.line</field>
+        <field name="arch" type="xml">
+            <!-- Hai cột tiền để riêng vì BOQ gói thiết bị tách mua sắm
+                 và xây lắp; gói xây dựng thuần thì bỏ trống hai cột đó
+                 và dùng khối lượng × đơn giá. -->
+            <list editable="bottom"
+                  decoration-muted="line_status != 'priced'"
+                  decoration-info="not is_selected">
+                <field name="sequence" widget="handle"/>
+                <field name="description"/>
+                <field name="category_id" options="{'no_create': True}"/>
+                <field name="line_status"/>
+                <field name="option_code" optional="show" width="130px"/>
+                <field name="is_selected" width="110px"/>
+                <field name="uom_id" options="{'no_create': True}"
+                       optional="hide"/>
+                <field name="quantity" optional="hide"/>
+                <field name="unit_price" optional="hide" width="160px"/>
+                <field name="amount_supply" optional="show" width="175px"
+                       sum="Cung cấp"/>
+                <field name="amount_install" optional="show" width="175px"
+                       sum="Xây lắp"/>
+                <field name="amount" width="185px" sum="Ngân sách gói"/>
+                <field name="note" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="project_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_tender_package_form_boq" model="ir.ui.view">
+        <field name="name">rp.tender.package.form.boq</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id" ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="BOQ &amp; ngân sách gói" name="boq_budget">
+                    <group>
+                        <group string="Ngân sách">
+                            <field name="budget_amount" readonly="1"/>
+                            <field name="contract_value_total_pkg"
+                                   readonly="1"/>
+                            <field name="budget_vs_contract" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <div colspan="2" class="alert alert-warning py-1 mb-2"
+                                 role="alert"
+                                 invisible="budget_vs_contract &lt;= 0 or not budget_amount">
+                                <i class="fa fa-exclamation-triangle me-1"
+                                   title="Vượt ngân sách gói"/>
+                                Giá hợp đồng đang VƯỢT ngân sách duyệt của gói
+                                này. Chênh lệch phải truy được về một dòng BOQ
+                                — thường là đổi phương án, hoặc phát sinh.
+                            </div>
+                            <div colspan="2" class="text-muted">
+                                Ngân sách gói là tổng các dòng BOQ CÓ GIÁ và
+                                thuộc phương án đã chọn. Dòng "đã gộp vào mục
+                                khác" hay "ngoài phạm vi" giữ lại để đối chiếu
+                                với giá nhà thầu, nhưng không cộng tiền.
+                            </div>
+                        </group>
+                    </group>
+                    <field name="boq_line_ids"
+                           context="{'default_package_id': id}">
+                        <list editable="bottom"
+                              decoration-muted="line_status != 'priced'"
+                              decoration-info="not is_selected">
+                            <field name="sequence" widget="handle"/>
+                            <field name="description"/>
+                            <field name="category_id"
+                                   options="{'no_create': True}"/>
+                            <field name="line_status"/>
+                            <field name="option_code" optional="show"/>
+                            <field name="is_selected"/>
+                            <field name="uom_id" options="{'no_create': True}"
+                                   optional="hide"/>
+                            <field name="quantity" optional="hide"/>
+                            <field name="unit_price" optional="hide"
+                                   width="160px"/>
+                            <field name="amount_supply" optional="show"
+                                   width="175px" sum="Cung cấp"/>
+                            <field name="amount_install" optional="show"
+                                   width="175px" sum="Xây lắp"/>
+                            <field name="amount" width="185px"
+                                   sum="Ngân sách gói"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

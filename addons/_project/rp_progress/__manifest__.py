@@ -42,6 +42,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'rp_contract',
     ],
     'data': [
+        'views/rp_tender_package_boq_views.xml',
         'security/rp_progress_groups.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',

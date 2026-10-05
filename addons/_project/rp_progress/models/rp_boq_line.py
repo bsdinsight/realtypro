@@ -30,22 +30,33 @@ from odoo.exceptions import ValidationError
 class RpBoqLine(models.Model):
     _name = 'rp.boq.line'
     _description = 'Dòng dự toán chi tiết (BOQ)'
-    _order = 'structure_id, category_sequence, sequence, id'
+    _order = 'package_id, structure_id, sequence, id'
 
-    # ----- Neo vào hạng mục (parent)
+    # ----- Neo vào HẠNG MỤC hoặc GÓI THẦU (một trong hai)
+    #
+    # Hai lối dùng khác nhau, cùng một hình thù dữ liệu:
+    #  · neo HẠNG MỤC — chủ đầu tư tự làm, đo theo khối lượng, BOQ là
+    #    baseline để biên bản nghiệm thu trỏ vào;
+    #  · neo GÓI THẦU — mua trọn gói EPC. BOQ là bảng giá của chủ đầu tư
+    #    theo đầu mục, dùng làm NGÂN SÁCH GÓI và để so từng dòng với giá
+    #    nhà thầu bỏ. Khối lượng thường là "1 trọn gói".
     structure_id = fields.Many2one(
         'rp.structure', string='Hạng mục',
-        required=True, ondelete='cascade', index=True)
+        ondelete='cascade', index=True)
+    package_id = fields.Many2one(
+        'rp.tender.package', string='Gói thầu',
+        ondelete='cascade', index=True)
     project_id = fields.Many2one(
-        related='structure_id.project_id', store=True, index=True)
+        're.project', string='Dự án', compute='_compute_anchor',
+        store=True, index=True)
     subzone_id = fields.Many2one(
-        related='structure_id.subzone_id', store=True, index=True)
+        're.subzone', compute='_compute_anchor', store=True, index=True)
     structure_level = fields.Selection(
         related='structure_id.structure_level', store=True)
     currency_id = fields.Many2one(
-        related='structure_id.currency_id', store=True)
+        'res.currency', compute='_compute_anchor', store=True)
     company_id = fields.Many2one(
-        related='structure_id.company_id', store=True, index=True)
+        'res.company', compute='_compute_anchor', store=True, index=True)
 
     # ----- Nhóm chi phí (cùng dự án với hạng mục)
     category_id = fields.Many2one(
@@ -83,31 +94,82 @@ class RpBoqLine(models.Model):
         string='Khối lượng', digits=(16, 3), default=0.0)
     unit_price = fields.Monetary(
         string='Đơn giá', currency_field='currency_id', default=0.0)
+    # BOQ thật của chủ đầu tư có dòng KHÔNG mang tiền, và lý do khác
+    # nhau hẳn: "đã gộp vào mục khác" ≠ "nằm ngoài phạm vi". Để tiền = 0
+    # thì lúc so với giá nhà thầu sẽ tưởng là bỏ sót.
+    line_status = fields.Selection(
+        [('priced', 'Có giá'),
+         ('included', 'Đã gộp vào mục khác'),
+         ('excluded', 'Ngoài phạm vi')],
+        string='Tình trạng', default='priced', required=True, index=True)
+    # Một đầu mục có thể có nhiều phương án (BOP: cáp trên không hay cáp
+    # ngầm). Chỉ phương án được CHỌN mới vào ngân sách gói — chênh lệch
+    # giữa hai phương án chính là nguồn của khoản phát sinh về sau.
+    option_code = fields.Char(
+        string='Phương án',
+        help='Để trống nếu đầu mục chỉ có một phương án.')
+    is_selected = fields.Boolean(
+        string='Phương án đã chọn', default=True, index=True)
+
+    # BOQ gói thiết bị tách tiền MUA SẮM và tiền XÂY LẮP trên cùng một
+    # dòng (gói HV: cung cấp 7,33 triệu + lắp đặt 4,10 triệu). Khai hai
+    # cột thì thành tiền lấy tổng hai cột, bỏ trống thì quay về
+    # khối lượng × đơn giá.
+    amount_supply = fields.Monetary(
+        string='Cung cấp / mua sắm', currency_field='currency_id')
+    amount_install = fields.Monetary(
+        string='Xây lắp', currency_field='currency_id')
     amount = fields.Monetary(
         string='Thành tiền', currency_field='currency_id',
         compute='_compute_amount', store=True,
-        help='= Khối lượng × Đơn giá.')
+        help='Có khai cung cấp/xây lắp thì = tổng hai cột; nếu không '
+             'thì = Khối lượng × Đơn giá. Dòng không có giá luôn = 0.')
     note = fields.Text(string='Ghi chú')
 
     # ------------------------------------------------------------------
     # Compute
     # ------------------------------------------------------------------
-    @api.depends('quantity', 'unit_price')
+    @api.depends('structure_id', 'package_id')
+    def _compute_anchor(self):
+        for line in self:
+            st, pk = line.structure_id, line.package_id
+            proj = st.project_id or pk.project_id
+            line.project_id = proj
+            line.subzone_id = st.subzone_id
+            line.currency_id = (st.currency_id or pk.currency_id
+                                or proj.currency_id)
+            line.company_id = st.company_id or pk.company_id
+
+    @api.depends('quantity', 'unit_price', 'amount_supply',
+                 'amount_install', 'line_status', 'is_selected')
     def _compute_amount(self):
         for line in self:
-            line.amount = (line.quantity or 0.0) * (line.unit_price or 0.0)
+            if line.line_status != 'priced' or not line.is_selected:
+                line.amount = 0.0
+                continue
+            hai_cot = (line.amount_supply or 0.0) + (line.amount_install or 0.0)
+            line.amount = hai_cot or (
+                (line.quantity or 0.0) * (line.unit_price or 0.0))
 
     # ------------------------------------------------------------------
     # Constraints
     # ------------------------------------------------------------------
-    @api.constrains('category_id', 'structure_id')
+    @api.constrains('structure_id', 'package_id')
+    def _check_anchor(self):
+        for line in self:
+            if not line.structure_id and not line.package_id:
+                raise ValidationError(
+                    'Dòng BOQ phải gắn vào một hạng mục hoặc một gói '
+                    'thầu: "%s".' % (line.description or ''))
+
+    @api.constrains('category_id', 'structure_id', 'package_id')
     def _check_category_same_project(self):
         for line in self:
-            if line.category_id.project_id != line.structure_id.project_id:
+            if line.category_id.project_id != line.project_id:
                 raise ValidationError(
-                    f'[{line.structure_id.display_name}] Nhóm chi phí '
-                    f'"{line.category_id.display_name}" thuộc dự án khác. '
-                    f'Nhóm chi phí phải cùng dự án với hạng mục.')
+                    f'Nhóm chi phí "{line.category_id.display_name}" thuộc '
+                    f'dự án khác. Nhóm chi phí phải cùng dự án với dòng '
+                    f'BOQ "{line.description}".')
 
     @api.constrains('quantity', 'unit_price')
     def _check_non_negative(self):
@@ -115,5 +177,4 @@ class RpBoqLine(models.Model):
             if line.quantity < 0 or line.unit_price < 0:
                 raise ValidationError(
                     f'Khối lượng và đơn giá không được âm '
-                    f'(dòng "{line.description}" trên '
-                    f'{line.structure_id.display_name}).')
+                    f'(dòng "{line.description}").')

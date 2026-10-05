@@ -65,6 +65,12 @@ class RpTenderPackage(models.Model):
             'name': _('BOQ ngân sách — %s', self.name),
             'res_model': 'rp.boq.line',
             'view_mode': 'list,form',
+            'views': [
+                (self.env.ref(
+                    'rp_progress.view_rp_boq_line_package_list').id, 'list'),
+                (self.env.ref(
+                    'rp_progress.view_rp_boq_line_form').id, 'form'),
+            ],
             'domain': [('package_id', '=', self.id)],
             'context': {'default_package_id': self.id,
                         'default_uom_id': self.env[

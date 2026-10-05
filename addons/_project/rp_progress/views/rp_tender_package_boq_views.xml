@@ -1,34 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Form của một dòng BOQ — dùng cho cả màn hình riêng lẫn hộp thoại
+         bật lên khi bấm vào dòng trong gói thầu.
+
+         Sửa ngay trên dòng (editable list) không hợp với BOQ: một dòng
+         mang tới ba nhóm thông tin khác nhau (phân loại, tình trạng &
+         phương án, tiền) cộng ghi chú nguồn thường dài vài dòng. Nhét
+         hết vào một hàng ngang thì cột nào cũng cụt, và ghi chú — thứ
+         ghi rõ "Included in Item 1" hay lấy từ trang nào của hồ sơ chào
+         giá — không đọc được. -->
+    <record id="view_rp_boq_line_form" model="ir.ui.view">
+        <field name="name">rp.boq.line.form</field>
+        <field name="model">rp.boq.line</field>
+        <field name="arch" type="xml">
+            <form string="Dòng BOQ">
+                <sheet>
+                    <field name="project_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                         invisible="line_status == 'priced'">
+                        <i class="fa fa-info-circle me-1" title="Không cộng tiền"/>
+                        Dòng này <b>không cộng vào ngân sách gói</b>: nó
+                        <span invisible="line_status != 'included'">đã được gộp
+                        vào một mục khác</span>
+                        <span invisible="line_status != 'excluded'">nằm ngoài
+                        phạm vi hợp đồng</span>. Vẫn nên giữ lại và ghi đơn giá
+                        tham khảo — lúc đối chiếu với giá nhà thầu mới biết là
+                        cố ý, không phải bỏ sót.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="is_selected or line_status != 'priced'">
+                        <i class="fa fa-random me-1" title="Phương án chưa chọn"/>
+                        Đây là <b>phương án chưa được chọn</b> nên không cộng
+                        vào ngân sách. Ngân sách phải giữ phương án ĐÃ DUYỆT —
+                        đổi sang phương án khác là một khoản phát sinh, và
+                        chênh lệch giữa hai dòng chính là giá trị của nó.
+                    </div>
+                    <div class="oe_title">
+                        <label for="description"/>
+                        <h1>
+                            <field name="description"
+                                   placeholder="Đầu mục công việc trong BOQ"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Thuộc về">
+                            <field name="package_id"
+                                   options="{'no_create': True}"/>
+                            <field name="structure_id"
+                                   options="{'no_create': True}"/>
+                            <field name="category_id"
+                                   options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Tình trạng &amp; phương án">
+                            <field name="line_status"/>
+                            <field name="option_code"
+                                   placeholder="Để trống nếu chỉ có một phương án"/>
+                            <field name="is_selected"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Khối lượng × đơn giá">
+                            <field name="uom_id"
+                                   options="{'no_create': True}"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                        </group>
+                        <group string="Hoặc tách hai cột tiền">
+                            <field name="amount_supply"/>
+                            <field name="amount_install"/>
+                            <field name="amount" readonly="1"
+                                   class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                    <group string="Ghi chú &amp; nguồn">
+                        <field name="note" nolabel="1"
+                               placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, mục 2.1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_rp_boq_line_package_list" model="ir.ui.view">
         <field name="name">rp.boq.line.package.list</field>
         <field name="model">rp.boq.line</field>
         <field name="arch" type="xml">
-            <!-- Hai cột tiền để riêng vì BOQ gói thiết bị tách mua sắm
-                 và xây lắp; gói xây dựng thuần thì bỏ trống hai cột đó
-                 và dùng khối lượng × đơn giá. -->
-            <list editable="bottom"
-                  decoration-muted="line_status != 'priced'"
+            <list decoration-muted="line_status != 'priced'"
                   decoration-info="not is_selected">
                 <field name="sequence" widget="handle"/>
                 <field name="description"/>
-                <field name="category_id" options="{'no_create': True}"/>
+                <field name="package_id" optional="show"/>
+                <field name="category_id" optional="hide"/>
                 <field name="line_status"/>
-                <field name="option_code" optional="show" width="130px"/>
+                <field name="option_code" optional="show" width="150px"/>
                 <field name="is_selected" width="110px"/>
-                <field name="uom_id" options="{'no_create': True}"
-                       optional="hide"/>
                 <field name="quantity" optional="hide"/>
                 <field name="unit_price" optional="hide" width="160px"/>
-                <field name="amount_supply" optional="show" width="175px"
+                <field name="amount_supply" optional="hide" width="175px"
                        sum="Cung cấp"/>
-                <field name="amount_install" optional="show" width="175px"
+                <field name="amount_install" optional="hide" width="175px"
                        sum="Xây lắp"/>
-                <field name="amount" width="185px" sum="Ngân sách gói"/>
-                <field name="note" optional="hide"/>
+                <field name="amount" width="185px" sum="Ngân sách"/>
                 <field name="currency_id" column_invisible="1"/>
-                <field name="project_id" column_invisible="1"/>
             </list>
         </field>
     </record>
@@ -63,23 +139,26 @@
                                 thuộc phương án đã chọn. Dòng "đã gộp vào mục
                                 khác" hay "ngoài phạm vi" giữ lại để đối chiếu
                                 với giá nhà thầu, nhưng không cộng tiền.
+                                <br/>Bấm vào một dòng để mở chi tiết.
                             </div>
                         </group>
                     </group>
+                    <!-- KHÔNG editable: bấm vào dòng thì bật hộp thoại, vì
+                         một dòng BOQ mang ba nhóm thông tin cộng ghi chú
+                         nguồn dài — sửa ngang trên hàng thì cột nào cũng
+                         cụt và ghi chú không đọc được. -->
                     <field name="boq_line_ids"
                            context="{'default_package_id': id}">
-                        <list editable="bottom"
-                              decoration-muted="line_status != 'priced'"
+                        <list decoration-muted="line_status != 'priced'"
                               decoration-info="not is_selected">
                             <field name="sequence" widget="handle"/>
                             <field name="description"/>
-                            <field name="category_id"
-                                   options="{'no_create': True}"/>
+                            <field name="category_id" optional="hide"/>
                             <field name="line_status"/>
-                            <field name="option_code" optional="show"/>
-                            <field name="is_selected"/>
-                            <field name="uom_id" options="{'no_create': True}"
-                                   optional="hide"/>
+                            <field name="option_code" optional="show"
+                                   width="150px"/>
+                            <field name="is_selected" width="110px"/>
+                            <field name="uom_id" optional="hide"/>
                             <field name="quantity" optional="hide"/>
                             <field name="unit_price" optional="hide"
                                    width="160px"/>
@@ -89,8 +168,73 @@
                                    width="175px" sum="Xây lắp"/>
                             <field name="amount" width="185px"
                                    sum="Ngân sách gói"/>
+                            <field name="note" optional="hide"/>
                             <field name="currency_id" column_invisible="1"/>
                         </list>
+                        <form string="Dòng BOQ">
+                            <sheet>
+                                <field name="currency_id" invisible="1"/>
+                                <div class="alert alert-info" role="alert"
+                                     invisible="line_status == 'priced'">
+                                    <i class="fa fa-info-circle me-1"
+                                       title="Không cộng tiền"/>
+                                    Dòng này <b>không cộng vào ngân sách
+                                    gói</b>. Vẫn nên ghi đơn giá tham khảo —
+                                    lúc đối chiếu với giá nhà thầu mới biết là
+                                    cố ý, không phải bỏ sót.
+                                </div>
+                                <div class="alert alert-warning" role="alert"
+                                     invisible="is_selected or line_status != 'priced'">
+                                    <i class="fa fa-random me-1"
+                                       title="Phương án chưa chọn"/>
+                                    <b>Phương án chưa được chọn</b> nên không
+                                    cộng vào ngân sách. Ngân sách giữ phương án
+                                    ĐÃ DUYỆT; đổi sang phương án khác là một
+                                    khoản phát sinh.
+                                </div>
+                                <div class="oe_title">
+                                    <label for="description"/>
+                                    <h1>
+                                        <field name="description"
+                                               placeholder="Đầu mục công việc trong BOQ"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group string="Phân loại">
+                                        <field name="category_id"
+                                               domain="[('project_id', '=', parent.project_id)]"
+                                               options="{'no_create': True}"/>
+                                        <field name="structure_id"
+                                               domain="[('project_id', '=', parent.project_id)]"
+                                               options="{'no_create': True}"/>
+                                        <field name="sequence"/>
+                                    </group>
+                                    <group string="Tình trạng &amp; phương án">
+                                        <field name="line_status"/>
+                                        <field name="option_code"
+                                               placeholder="Để trống nếu chỉ có một phương án"/>
+                                        <field name="is_selected"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group string="Khối lượng × đơn giá">
+                                        <field name="uom_id"
+                                               options="{'no_create': True}"/>
+                                        <field name="quantity"/>
+                                        <field name="unit_price"/>
+                                    </group>
+                                    <group string="Hoặc tách hai cột tiền">
+                                        <field name="amount_supply"/>
+                                        <field name="amount_install"/>
+                                        <field name="amount" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group string="Ghi chú &amp; nguồn">
+                                    <field name="note" nolabel="1"
+                                           placeholder="Ví dụ: Included in Item 1 — Nguồn: TSA BOQ AMI Savannakhet.pdf, mục 2.1"/>
+                                </group>
+                            </sheet>
+                        </form>
                     </field>
                 </page>
             </xpath>

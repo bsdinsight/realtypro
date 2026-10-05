@@ -5,7 +5,7 @@
         <field name="name">rp.cost.category.master.list</field>
         <field name="model">rp.cost.category.master</field>
         <field name="arch" type="xml">
-            <list string="Danh mục chi phí chuẩn (Master)" expand="1">
+            <list string="Danh mục chi phí" expand="1">
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
@@ -24,7 +24,7 @@
         <field name="name">rp.cost.category.master.form</field>
         <field name="model">rp.cost.category.master</field>
         <field name="arch" type="xml">
-            <form string="Danh mục chi phí chuẩn">
+            <form string="Danh mục chi phí">
                 <sheet>
                     <widget name="web_ribbon" title="Archived"
                             bg_color="text-bg-danger"
@@ -80,7 +80,7 @@
 
     <!-- Action -->
     <record id="action_rp_cost_category_master" model="ir.actions.act_window">
-        <field name="name">Danh mục chi phí chuẩn (Master)</field>
+        <field name="name">Danh mục chi phí</field>
         <field name="res_model">rp.cost.category.master</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">

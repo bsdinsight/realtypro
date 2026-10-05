@@ -89,7 +89,7 @@
               sequence="10"/>
 
     <menuitem id="menu_pm_rp_cost_category_master"
-              name="Danh mục chi phí chuẩn (Master)"
+              name="Danh mục chi phí"
               parent="menu_rp_configuration"
               action="rp_cost_base.action_rp_cost_category_master"
               groups="re_base.group_re_manager"

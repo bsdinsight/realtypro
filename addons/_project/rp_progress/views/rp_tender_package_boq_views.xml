@@ -114,7 +114,15 @@
         <field name="model">rp.tender.package</field>
         <field name="inherit_id" ref="rp_estimate.view_rp_tender_package_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
+            <!-- Hai thẻ này lên đầu: mở một gói thầu ra thì câu hỏi
+                 đầu tiên là "gói này gồm gì và bao nhiêu tiền", chứ
+                 không phải tiêu chuẩn chấm thầu hay danh sách nhà
+                 thầu dự. Neo vào page "plan" — thẻ đầu của notebook
+                 chính; KHÔNG dùng //notebook/page[1] vì nhiều module
+                 cùng chèn thẻ nên vị trí số 1 không ổn định, cũng
+                 KHÔNG neo vào name="scope" vì tên đó bị trùng ở một
+                 notebook lồng bên trong thẻ Hạng mục. -->
+            <xpath expr="//page[@name='plan']" position="before">
                 <page string="BOQ &amp; ngân sách gói" name="boq_budget">
                     <group>
                         <group string="Ngân sách">
@@ -237,6 +245,14 @@
                         </form>
                     </field>
                 </page>
+            </xpath>
+
+            <!-- "Mô tả" vốn nằm cuối, kéo lên trước thẻ BOQ. Dùng
+                 position="move" để GIỮ NGUYÊN nội dung thẻ do rp_estimate
+                 định nghĩa — chép lại nội dung sang đây là tự tạo hai bản
+                 phải sửa song song. -->
+            <xpath expr="//page[@name='boq_budget']" position="before">
+                <xpath expr="//page[@name='desc']" position="move"/>
             </xpath>
         </field>
     </record>

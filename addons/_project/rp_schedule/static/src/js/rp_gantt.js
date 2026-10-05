@@ -209,9 +209,11 @@ export class RpGanttAction extends Component {
         // vào cha của gói kia.
         const ckey = (r) => (r.rp_contract_id ? r.rp_contract_id[0] : 0);
         const byWbs = new Map();
+        const byWbsAny = new Map();
         recs.forEach((r) => {
             if (r.wbs_code) {
                 byWbs.set(`${ckey(r)}|${r.wbs_code}`, r.id);
+                byWbsAny.set(r.wbs_code, r.id);
             }
         });
         // Dòng nào THỰC SỰ là dòng tổng: có việc con treo dưới nó.
@@ -285,8 +287,16 @@ export class RpGanttAction extends Component {
             const w = String(r.wbs_code || "");
             let parent = null;
             if (w.includes(".")) {
-                const pw = `${ckey(r)}|${w.slice(0, w.lastIndexOf("."))}`;
-                if (byWbs.has(pw)) parent = String(byWbs.get(pw));
+                const up = w.slice(0, w.lastIndexOf("."));
+                // Mã WBS đánh chung toàn dự án thì cha có thể nằm ở hợp
+                // đồng khác — tra trong hợp đồng trước, trượt thì tra
+                // toàn dự án, nếu không cây Gantt gãy mất một tầng.
+                const pw = `${ckey(r)}|${up}`;
+                if (byWbs.has(pw)) {
+                    parent = String(byWbs.get(pw));
+                } else if (byWbsAny.has(up)) {
+                    parent = String(byWbsAny.get(up));
+                }
             }
             const hasDates = !!r.planned_start;
             return {

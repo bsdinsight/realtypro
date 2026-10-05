@@ -251,13 +251,25 @@ class ProjectTask(models.Model):
         # "1", "2". Nên xét dòng tổng theo từng hợp đồng, nếu không thì
         # việc "1" của hợp đồng này bị coi là dòng tổng chỉ vì hợp đồng
         # khác có "1.1" — và nó bị loại khỏi đường găng.
-        wbs_all = set((t.rp_contract_id.id, t.wbs_code)
-                      for t in tasks if t.wbs_code)
+        # Mã WBS có thể đánh theo HAI lối, và nhận diện dòng tổng phải
+        # theo đúng lối đang dùng:
+        #  · đánh RIÊNG theo từng hợp đồng — hai gói đều có "1", "2", nên
+        #    phải so trong phạm vi một hợp đồng, nếu không việc "1" của
+        #    gói này bị coi là dòng tổng chỉ vì gói kia có "1.1";
+        #  · đánh CHUNG toàn dự án (nhập từ một file lịch tổng) — lúc đó
+        #    mã là duy nhất, và cha con có thể nằm ở hai hợp đồng khác
+        #    nhau, nên so theo hợp đồng sẽ bỏ sót dòng tổng.
+        # Tự nhận ra đang ở lối nào: mã trùng nhau thì là lối riêng.
+        codes = [t.wbs_code for t in tasks if t.wbs_code]
+        duy_nhat = len(set(codes)) == len(codes)
+        wbs_all = set((False if duy_nhat else t.rp_contract_id.id,
+                       t.wbs_code) for t in tasks if t.wbs_code)
 
         def is_summary(t):
             if not t.wbs_code:
                 return False
-            cid, pre = t.rp_contract_id.id, t.wbs_code + '.'
+            cid = False if duy_nhat else t.rp_contract_id.id
+            pre = t.wbs_code + '.'
             return any(c == cid and w.startswith(pre) for c, w in wbs_all)
 
         leaves = [t for t in tasks if not is_summary(t)]

@@ -42,6 +42,8 @@ class RpCostCategory(models.Model):
     parent_path = fields.Char(index=True)
     level = fields.Integer(
         compute='_compute_level', store=True, recursive=True,
+        # Cộng tổng độ sâu là con số vô nghĩa — xem ghi chú bên master.
+        aggregator=None,
         help='Độ sâu từ gốc (1 hoặc 2). Tối đa 2 cấp.',
     )
     complete_path = fields.Char(

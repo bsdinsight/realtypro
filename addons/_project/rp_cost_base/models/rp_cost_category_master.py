@@ -38,6 +38,9 @@ class RpCostCategoryMaster(models.Model):
     parent_path = fields.Char(index=True)
     level = fields.Integer(
         compute='_compute_level', store=True, recursive=True,
+        # Cộng tổng độ sâu là con số vô nghĩa; không tắt thì dòng nhóm
+        # hiện "15", "17" trông như số liệu thật.
+        aggregator=None,
         help='Depth from root (1, 2, or 3). Enforced max 3.')
     complete_path = fields.Char(
         compute='_compute_complete_path', store=True, recursive=True)

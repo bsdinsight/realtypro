@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Ranh giới & bàn giao giữa các gói thầu',
+    'name': 'Realty Project — Ranh giới gói thầu (EPC Interface)',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Điểm bàn giao giữa hai nhà thầu: ai giao gì cho ai, bên '
                'nhận cần ngày nào, lịch hiện hành có kịp không.',
     'description': """
-Realty Project — Sổ ranh giới (rp_interface)
+Realty Project — Ranh giới gói thầu (rp_interface)
 ============================================
 
 Dự án lớn chia thành nhiều gói thầu, mỗi gói một nhà thầu. Chỗ hỏng

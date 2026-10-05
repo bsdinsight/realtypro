@@ -15,7 +15,7 @@ lời được câu đó cần ba thứ gắn vào nhau mà bảng tính không 
 **Sổ khiếu nại hai chiều.** Nhà thầu khiếu nại chủ đầu tư và chủ đầu tư
 khiếu nại nhà thầu nằm chung một sổ, trên cùng một hợp đồng — có vậy mới
 thấy "ai nợ ai". Khiếu nại trỏ được về gốc sự việc: một điểm bàn giao hỏng
-trong sổ ranh giới, hoặc các công việc bị ảnh hưởng trong lịch thi công.
+trong sổ ranh giới gói thầu, hoặc các công việc bị ảnh hưởng trong lịch thi công.
 
 **Đếm hạn thông báo.** Hợp đồng xây dựng nào cũng có điều khoản thời hạn
 thông báo (mặc định 28 ngày); quá hạn là mất quyền khiếu nại dù lý do

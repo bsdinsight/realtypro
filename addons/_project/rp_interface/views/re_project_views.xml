@@ -13,7 +13,7 @@
                  'string' as a selector"). -->
             <xpath expr="//group[@name='rp_schedule_rollup']"
                    position="after">
-                <group string="RANH GIỚI &amp; BÀN GIAO GIỮA CÁC GÓI THẦU"
+                <group string="RANH GIỚI GÓI THẦU"
                        invisible="not schedule_contract_count">
                     <group>
                         <field name="interface_count"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Sổ ranh giới nhìn từ cấp dự án, và cách dựng sổ từ lịch có sẵn."""
+"""Sổ ranh giới gói thầu nhìn từ cấp dự án, và cách dựng sổ từ lịch có sẵn."""
 from odoo import _, api, fields, models
 
 # Đoán loại ranh giới từ tên công việc bên giao. Chỉ là điểm xuất phát
@@ -50,7 +50,7 @@ class ReProject(models.Model):
         return 'physical'
 
     def action_scan_interfaces(self):
-        """Dựng sổ ranh giới từ chính lịch thi công đang có.
+        """Dựng sổ ranh giới gói thầu từ chính lịch thi công đang có.
 
         Mọi quan hệ trước-sau NỐI HAI HỢP ĐỒNG KHÁC NHAU đều là một điểm
         giao đã tồn tại trên thực tế — chỉ là chưa ai ghi vào sổ. Quét
@@ -117,7 +117,7 @@ class ReProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Ranh giới & bàn giao — %s', self.name),
+            'name': _('Ranh giới gói thầu — %s', self.name),
             'res_model': 'rp.interface',
             'view_mode': 'list,kanban,form',
             'domain': [('project_id', '=', self.id)],

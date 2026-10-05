@@ -9,7 +9,7 @@
 Realty Project — Cảnh báo trượt tiến độ (rp_schedule_alert)
 ===========================================================
 
-Lịch thi công và sổ ranh giới đã đủ số để biết dự án hỏng ở đâu, nhưng
+Lịch thi công và sổ ranh giới gói thầu đã đủ số để biết dự án hỏng ở đâu, nhưng
 chỉ khi có người MỞ RA XEM. Không ai soi 485 công việc mỗi sáng, nên
 chuyện trượt thường lộ ra lúc đã muộn.
 

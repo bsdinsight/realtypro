@@ -17,7 +17,7 @@
                        optional="show" width="110px"/>
                 <field name="alert_critical_count" string="CB nghiêm trọng"
                        optional="show" width="140px"/>
-                <field name="interface_conflict_count" string="Giao diện xung đột"
+                <field name="interface_conflict_count" string="Điểm bàn giao xung đột"
                        optional="hide" width="150px"/>
                 <field name="committed" optional="hide" width="185px"/>
                 <field name="cost_forecast" width="185px"/>

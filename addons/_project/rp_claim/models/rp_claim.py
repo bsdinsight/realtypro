@@ -5,7 +5,7 @@ Dự án trễ thì câu hỏi tiếp theo luôn là "lỗi của ai, và ai tr�
 Trả lời được câu đó cần ba thứ gắn vào nhau mà bảng tính không giữ nổi:
 
 * **Sự kiện gây trễ** — thường chính là một điểm bàn giao hỏng
-  (sổ ranh giới) hoặc một công việc trượt (lịch thi công).
+  (sổ ranh giới gói thầu) hoặc một công việc trượt (lịch thi công).
 * **Thời hạn thông báo**. Hợp đồng xây dựng nào cũng có điều khoản: quá
   hạn thông báo thì mất quyền khiếu nại, dù lý do đúng. Đây là chỗ nhà
   thầu mất tiền nhiều nhất, và cũng là chỗ chủ đầu tư hay quên đếm.

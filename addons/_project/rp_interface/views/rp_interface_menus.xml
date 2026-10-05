@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem id="menu_rp_interface_group" name="Ranh giới giữa các gói thầu"
+    <menuitem id="menu_rp_interface_group" name="Ranh giới gói thầu"
               parent="rp_estimate.menu_construction"
               sequence="15"/>
 

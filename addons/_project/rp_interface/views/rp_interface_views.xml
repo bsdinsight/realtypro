@@ -245,7 +245,7 @@
     </record>
 
     <record id="action_rp_interface" model="ir.actions.act_window">
-        <field name="name">Sổ ranh giới</field>
+        <field name="name">Ranh giới gói thầu</field>
         <field name="res_model">rp.interface</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="view_rp_interface_search"/>

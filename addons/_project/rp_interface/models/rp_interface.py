@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Ranh giới & bàn giao giữa các gói thầu (interface register).
+"""Ranh giới gói thầu — EPC Interface Register.
 
 Dự án lớn chia thành nhiều gói thầu, mỗi gói một nhà thầu. Chỗ hỏng
 không nằm TRONG hợp đồng nào cả — nó nằm ở ĐIỂM BÀN GIAO giữa hai hợp đồng:
@@ -221,7 +221,7 @@ class RpInterface(models.Model):
     def action_link_schedule(self):
         """Khai việc bên giao là công việc trước của việc bên nhận.
 
-        Đây là chỗ sổ ranh giới thôi làm danh sách cho đẹp: nối xong thì
+        Đây là chỗ sổ ranh giới gói thầu thôi làm danh sách cho đẹp: nối xong thì
         đường găng toàn dự án chạy xuyên qua điểm bàn giao, và trễ ở bên giao
         tự đẩy ngày về đích.
         """

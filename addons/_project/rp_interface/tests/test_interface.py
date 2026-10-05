@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Sổ ranh giới: ràng buộc hai bên, đối chiếu lịch, và quét từ lịch."""
+"""Ranh giới gói thầu: ràng buộc hai bên, đối chiếu lịch, và quét từ lịch."""
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 

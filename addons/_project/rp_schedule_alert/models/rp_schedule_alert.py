@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Cảnh báo trượt tiến độ — phát hiện sớm, có lịch sử, không spam.
 
-Lịch thi công và sổ ranh giới đã có đủ số để biết dự án đang hỏng ở đâu,
+Lịch thi công và sổ ranh giới gói thầu đã có đủ số để biết dự án đang hỏng ở đâu,
 nhưng chỉ khi có người MỞ RA XEM. Thực tế thì không ai ngồi soi 485 công
 việc mỗi sáng, nên chuyện trượt lộ ra lúc đã muộn.
 

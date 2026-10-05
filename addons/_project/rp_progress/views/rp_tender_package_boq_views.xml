@@ -256,6 +256,35 @@
             <xpath expr="//page[@name='boq_budget']" position="before">
                 <xpath expr="//page[@name='desc']" position="move"/>
             </xpath>
+
+            <!-- Gộp "Phạm vi gói thầu" vào "Mô tả": hai thẻ đều chỉ có một
+                 ô chữ, tách ra thành hai thẻ thì người dùng phải nhớ mình
+                 gõ cái nào ở đâu.
+
+                 DỜI trường scope_summary sang chứ KHÔNG xoá thẻ cho gọn —
+                 ô đó là mô tả phạm vi dùng cho hồ sơ mời thầu, bỏ đi là
+                 mất luôn chỗ nhập.
+
+                 XPath phải đi đường TUYỆT ĐỐI: tên "scope" bị TRÙNG với
+                 thẻ "Ghi chú phạm vi" trong notebook LỒNG bên trong thẻ
+                 Hạng mục, //page[@name='scope'] sẽ bắt nhầm cái đó. Odoo
+                 KHÔNG cho dùng @string làm bộ chọn kế thừa, nên chặn bằng
+                 /form/sheet/notebook/page — chỉ notebook ngoài cùng mới
+                 là con trực tiếp của sheet gốc. -->
+            <xpath expr="//page[@name='desc']" position="attributes">
+                <attribute name="string">Mô tả &amp; Phạm vi</attribute>
+            </xpath>
+            <xpath expr="//page[@name='desc']/field[@name='description']"
+                   position="before">
+                <separator string="Mô tả gói thầu"/>
+            </xpath>
+            <xpath expr="//page[@name='desc']" position="inside">
+                <separator string="Phạm vi gói thầu (dùng cho hồ sơ mời thầu)"/>
+                <xpath expr="//field[@name='scope_summary']"
+                       position="move"/>
+            </xpath>
+            <xpath expr="/form/sheet/notebook/page[@name='scope']"
+                   position="replace"/>
         </field>
     </record>
 

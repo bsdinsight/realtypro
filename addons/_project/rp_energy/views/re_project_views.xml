@@ -12,6 +12,39 @@
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
 
+
+            <!-- Nút thống kê của bất động sản nhà ở (Subzones / Buildings
+                 / Units) vô nghĩa với một nhà máy điện: nhà máy không có
+                 toà nhà và không có căn hộ để bán. Ẩn đi và thay bằng hai
+                 con số nhà máy điện thật sự cần. -->
+            <xpath expr="//button[@name='action_view_buildings']"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_units']"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_subzones']"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_subzones']"
+                   position="before">
+                <button name="action_open_project_tasks" type="object"
+                        class="oe_stat_button" icon="fa-tasks"
+                        invisible="not is_energy or not schedule_task_count">
+                    <field name="schedule_task_count" widget="statinfo"
+                           string="Công việc"/>
+                </button>
+                <button name="action_open_project_gantt" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="not is_energy or not schedule_contract_count">
+                    <field name="schedule_contract_count" widget="statinfo"
+                           string="HĐ có lịch"/>
+                </button>
+            </xpath>
+
             <field name="project_type" position="after">
                 <field name="is_energy" invisible="1"/>
             </field>

@@ -18,6 +18,8 @@ Ba điều quyết định việc này dùng được hay không:
   vì bắn 54 thông báo. Người ta tắt thông báo khi bị bắn quá nhiều, và
   lúc đó cái cảnh báo thật cũng chết theo.
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 
 SEVERITY_ORDER = {'info': 0, 'warning': 1, 'critical': 2}
@@ -306,21 +308,28 @@ class RpScheduleAlert(models.Model):
         """Một bản tin cho mỗi lần quét, thay vì bắn từng cảnh báo."""
         if not (created or resolved):
             return
+        # Chatter của Odoo ESCAPE chuỗi thường, nên nối thẻ HTML bằng
+        # str sẽ hiện ra nguyên "<b>…</b>" trước mặt người dùng. Phải gói
+        # Markup — và dùng toán tử % của Markup để tên công việc (dữ liệu
+        # người dùng nhập) được escape đúng cách, không phá vỡ thẻ.
         lines = []
         if created:
             crit = created.filtered(lambda a: a.severity == 'critical')
-            lines.append(_('<b>%(n)s cảnh báo mới</b> (%(c)s nghiêm trọng):',
-                           n=len(created), c=len(crit)))
-            lines.append('<ul>')
+            lines.append(Markup('<b>%s</b>') % _(
+                '%(n)s cảnh báo mới (%(c)s nghiêm trọng):',
+                n=len(created), c=len(crit)))
+            lines.append(Markup('<ul>'))
             for a in (crit or created)[:8]:
-                lines.append('<li>%s — %s</li>' % (a.name, a.description))
+                lines.append(Markup('<li>%s — %s</li>')
+                             % (a.name or '', a.description or ''))
             if len(created) > 8:
-                lines.append(_('<li>… và %s cảnh báo khác</li>',
-                               len(created) - 8))
-            lines.append('</ul>')
+                lines.append(Markup('<li>%s</li>') % _(
+                    '… và %s cảnh báo khác', len(created) - 8))
+            lines.append(Markup('</ul>'))
         if resolved:
-            lines.append(_('<b>%s cảnh báo đã hết</b>.', len(resolved)))
-        project.message_post(body=''.join(lines),
+            lines.append(Markup('<b>%s</b>') % _(
+                '%s cảnh báo đã hết.', len(resolved)))
+        project.message_post(body=Markup('').join(lines),
                              subject=_('Quét cảnh báo tiến độ'))
 
     @api.model

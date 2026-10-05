@@ -11,6 +11,8 @@ Sau đó `borrowing_base_total` cộng thêm `giá trị × advance rate`, và
 `amount_available_effective` (hạn mức khả dụng) tăng theo — trừ khi
 đã chạm trần hạn mức tổng.
 """
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -325,7 +327,8 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
 
         cc = self.credit_contract_id or self.facility_id.credit_contract_id
         cc.invalidate_recordset()
-        ipc.message_post(body=_(
+        # Markup: nếu không, chatter hiện nguyên thẻ <b> ra màn hình.
+        ipc.message_post(body=Markup(_(
             'Đưa vào TSBĐ của <b>%(c)s</b>: NH nhận %(pc)s trên quyền '
             'đòi nợ %(q)s → giá trị bảo đảm %(s)s × tỷ lệ cho vay %(r)s%% '
             '→ borrowing base +%(b)s. Hạn mức khả dụng hiện tại: '
@@ -337,7 +340,7 @@ class RpOwnerIpcPledgeWizard(models.TransientModel):
             s='{:,.0f}'.format(self.secured_amount),
             r='{:,.0f}'.format(pledge.advance_rate or 0.0),
             b='{:,.0f}'.format(pledge.base_contribution or 0.0),
-            a='{:,.0f}'.format(cc.amount_available_effective or 0.0)))
+            a='{:,.0f}'.format(cc.amount_available_effective or 0.0))))
 
         return {
             'type': 'ir.actions.act_window',

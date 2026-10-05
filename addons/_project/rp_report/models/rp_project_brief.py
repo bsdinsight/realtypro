@@ -48,8 +48,8 @@ class RpProjectBrief(models.Model):
     task_late_count = fields.Integer(string='Số việc đang trượt')
 
     # --- Phối hợp (Ban QLDA) ------------------------------------------
-    interface_count = fields.Integer(string='Số điểm giao')
-    interface_conflict_count = fields.Integer(string='Điểm giao mâu thuẫn')
+    interface_count = fields.Integer(string='Số điểm bàn giao')
+    interface_conflict_count = fields.Integer(string='Điểm bàn giao mâu thuẫn')
     alert_open_count = fields.Integer(string='Cảnh báo đang mở')
     alert_critical_count = fields.Integer(string='Cảnh báo nghiêm trọng')
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Sổ giao diện giữa các hợp đồng (interface register).
+"""Ranh giới & bàn giao giữa các gói thầu (interface register).
 
 Dự án lớn chia thành nhiều gói thầu, mỗi gói một nhà thầu. Chỗ hỏng
-không nằm TRONG hợp đồng nào cả — nó nằm ở ĐIỂM GIAO giữa hai hợp đồng:
+không nằm TRONG hợp đồng nào cả — nó nằm ở ĐIỂM BÀN GIAO giữa hai hợp đồng:
 nhà thầu móng phải bàn giao mặt bằng và bu-lông neo đúng cao độ cho nhà
 thầu lắp dựng; hãng thiết bị phải giao bản vẽ tải trọng cho bên thiết kế
 móng; bên vận chuyển phải giao tua-bin tại bãi cho bên cẩu lắp.
 
-Mỗi điểm giao như vậy là một bản ghi ở đây, có bên giao, bên nhận, thứ
+Mỗi điểm bàn giao như vậy là một bản ghi ở đây, có bên giao, bên nhận, thứ
 được giao, ngày bên nhận CẦN và ngày bên giao HỨA — và quan trọng nhất:
 **đối chiếu với lịch thi công hiện hành**. Hợp đồng nào cũng báo "đúng
 tiến độ của tôi" mà dự án vẫn trễ, là vì không ai giữ sổ này.
@@ -20,7 +20,7 @@ TERMINAL = ('delivered', 'closed', 'cancelled')
 
 class RpInterface(models.Model):
     _name = 'rp.interface'
-    _description = 'Giao diện giữa các hợp đồng'
+    _description = 'Điểm bàn giao giữa các gói thầu'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'schedule_need_date, id'
 
@@ -34,7 +34,7 @@ class RpInterface(models.Model):
         're.project', string='Dự án', required=True, index=True,
         ondelete='cascade', tracking=True)
 
-    # --- Hai bên của điểm giao -------------------------------------
+    # --- Hai bên của điểm bàn giao -------------------------------------
     from_contract_id = fields.Many2one(
         'rp.contract', string='Bên giao (HĐ)', required=True, index=True,
         tracking=True, ondelete='cascade')
@@ -62,7 +62,7 @@ class RpInterface(models.Model):
          ('system', 'Đấu nối hệ thống (điện, điều khiển)'),
          ('approval', 'Phê duyệt, nghiệm thu của bên thứ ba'),
          ('other', 'Khác')],
-        string='Loại giao diện', default='physical', required=True,
+        string='Loại ranh giới', default='physical', required=True,
         tracking=True)
     criticality = fields.Selection(
         [('low', 'Thấp'), ('medium', 'Trung bình'),
@@ -108,7 +108,7 @@ class RpInterface(models.Model):
         string='Lịch: cần ngày', compute='_compute_schedule_dates',
         store=True)
     gap_days = fields.Integer(
-        string='Dư địa giao diện (ngày)', compute='_compute_gaps',
+        string='Dư địa bàn giao (ngày)', compute='_compute_gaps',
         store=True,
         help='Ngày bên nhận cần trừ ngày bên giao sẵn sàng, theo lịch '
              'hiện hành. ÂM = lịch đang mâu thuẫn: bên nhận phải chờ.')
@@ -174,9 +174,9 @@ class RpInterface(models.Model):
         for rec in self:
             if rec.from_contract_id == rec.to_contract_id:
                 raise UserError(_(
-                    'Giao diện phải nối HAI hợp đồng khác nhau. Việc bàn '
+                    'Điểm bàn giao phải nối HAI gói thầu khác nhau. Việc bàn '
                     'giao trong nội bộ một hợp đồng là quan hệ trước-sau '
-                    'của lịch thi công, không phải giao diện.'))
+                    'của lịch thi công, không phải điểm bàn giao.'))
 
     @api.constrains('from_task_id', 'to_task_id', 'from_contract_id',
                     'to_contract_id')
@@ -221,8 +221,8 @@ class RpInterface(models.Model):
     def action_link_schedule(self):
         """Khai việc bên giao là công việc trước của việc bên nhận.
 
-        Đây là chỗ sổ giao diện thôi làm danh sách cho đẹp: nối xong thì
-        đường găng toàn dự án chạy xuyên qua điểm giao, và trễ ở bên giao
+        Đây là chỗ sổ ranh giới thôi làm danh sách cho đẹp: nối xong thì
+        đường găng toàn dự án chạy xuyên qua điểm bàn giao, và trễ ở bên giao
         tự đẩy ngày về đích.
         """
         for rec in self:

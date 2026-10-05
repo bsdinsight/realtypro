@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <menuitem id="menu_rp_interface_group" name="Sổ giao diện"
+    <menuitem id="menu_rp_interface_group" name="Ranh giới giữa các gói thầu"
               parent="rp_estimate.menu_construction"
               sequence="15"/>
 
-    <menuitem id="menu_rp_interface_all" name="Giao diện giữa các hợp đồng"
+    <menuitem id="menu_rp_interface_all" name="Sổ điểm bàn giao"
               parent="menu_rp_interface_group"
               action="action_rp_interface" sequence="10"/>
 
-    <menuitem id="menu_rp_interface_conflict" name="Điểm giao đang mâu thuẫn"
+    <menuitem id="menu_rp_interface_conflict" name="Điểm bàn giao đang mâu thuẫn"
               parent="menu_rp_interface_group"
               action="action_rp_interface_conflict" sequence="20"/>
 

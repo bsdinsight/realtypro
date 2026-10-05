@@ -4,12 +4,12 @@
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Quét hằng ngày: việc hết dư địa, việc trượt kế hoạch gốc, '
-               'điểm giao mâu thuẫn, dự án trễ mốc — có lịch sử, tự đóng.',
+               'điểm bàn giao mâu thuẫn, dự án trễ mốc — có lịch sử, tự đóng.',
     'description': """
 Realty Project — Cảnh báo trượt tiến độ (rp_schedule_alert)
 ===========================================================
 
-Lịch thi công và sổ giao diện đã đủ số để biết dự án hỏng ở đâu, nhưng
+Lịch thi công và sổ ranh giới đã đủ số để biết dự án hỏng ở đâu, nhưng
 chỉ khi có người MỞ RA XEM. Không ai soi 485 công việc mỗi sáng, nên
 chuyện trượt thường lộ ra lúc đã muộn.
 
@@ -19,7 +19,7 @@ Mỗi sáng hệ thống quét bốn ngưỡng (chỉnh theo từng dự án):
   bàn giao cam kết.
 * **Công việc hết dư địa** trên đường găng toàn dự án.
 * **Công việc trượt so kế hoạch gốc** quá ngưỡng mà chưa xong.
-* **Điểm giao mâu thuẫn** — bên nhận cần trước khi bên giao kịp xong.
+* **Điểm bàn giao mâu thuẫn** — bên nhận cần trước khi bên giao kịp xong.
 
 Ba điều quyết định việc này dùng được hay không:
 

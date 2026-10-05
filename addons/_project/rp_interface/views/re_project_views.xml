@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Sổ giao diện đặt ngay cạnh khối tiến độ toàn dự án: hai thứ trả
+    <!-- Sổ ranh giới đặt ngay cạnh khối tiến độ toàn dự án: hai thứ trả
          lời cùng một câu hỏi — cái gì đang chặn ngày về đích. -->
     <record id="view_re_project_form_interface" model="ir.ui.view">
         <field name="name">re.project.form.interface</field>
@@ -13,7 +13,7 @@
                  'string' as a selector"). -->
             <xpath expr="//group[@name='rp_schedule_rollup']"
                    position="after">
-                <group string="SỔ GIAO DIỆN GIỮA CÁC HỢP ĐỒNG"
+                <group string="RANH GIỚI &amp; BÀN GIAO GIỮA CÁC GÓI THẦU"
                        invisible="not schedule_contract_count">
                     <group>
                         <field name="interface_count"/>
@@ -29,19 +29,19 @@
                             Có <field name="interface_conflict_count"
                                       class="fw-bold" nolabel="1"
                                       readonly="1"/>
-                            điểm giao mà bên nhận cần TRƯỚC khi bên giao
+                            điểm bàn giao mà bên nhận cần TRƯỚC khi bên giao
                             kịp xong.
                         </div>
                         <div colspan="2">
                             <button name="action_open_interfaces"
                                     type="object" class="btn-primary"
                                     icon="fa-exchange"
-                                    string="Mở sổ giao diện"/>
+                                    string="Mở sổ ranh giới"/>
                             <button name="action_scan_interfaces"
                                     type="object" class="btn-secondary"
                                     icon="fa-search"
-                                    string="Quét giao diện từ lịch"
-                                    help="Mọi quan hệ trước-sau nối hai hợp đồng khác nhau đều là một điểm giao có thật — quét để ghi vào sổ."/>
+                                    string="Quét điểm bàn giao từ lịch"
+                                    help="Mọi quan hệ trước-sau nối hai hợp đồng khác nhau đều là một điểm bàn giao có thật — quét để ghi vào sổ."/>
                         </div>
                     </group>
                 </group>

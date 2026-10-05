@@ -58,7 +58,21 @@
               parent="menu_finance"
               sequence="90"/>
 
-    <!-- ===== Xây dựng (Construction) — container, sequence 30 =====
+    <!-- ===== Hợp đồng (Contracts) — container, sequence 30 =====
+         ĐỨNG TRƯỚC "Xây dựng": hợp đồng là cái có trước, mọi thứ ở Xây
+         dựng (lịch, nghiệm thu, hồ sơ, phát sinh) đều treo vào một hợp
+         đồng — nên thứ tự menu đi theo thứ tự công việc thật.
+         Các module mount vào:
+         - rp_contract:           HĐ nhà thầu (10), Phụ lục HĐ (30),
+                                  Chấm dứt / Thanh lý (40)
+         - rp_owner_contract:     HĐ với Chủ đầu tư (20), BBNT với CĐT (25)
+         - rp_contract_guarantee: Bảo lãnh HĐ nhà thầu (50) -->
+    <menuitem id="menu_contracts"
+              name="Hợp đồng"
+              parent="menu_realty_project_root"
+              sequence="30"/>
+
+    <!-- ===== Xây dựng (Construction) — container, sequence 40 =====
          Nhấp "Xây dựng" mở Dashboard Xây dựng (con seq 5, module
          rp_construction). Các module mount vào:
          - rp_construction: Dashboard (5), Báo cáo (menu_construction_reports)
@@ -69,23 +83,12 @@
     <menuitem id="menu_construction"
               name="Xây dựng"
               parent="menu_realty_project_root"
-              sequence="30"/>
+              sequence="40"/>
 
     <menuitem id="menu_construction_reports"
               name="Báo cáo"
               parent="menu_construction"
               sequence="90"/>
-
-    <!-- ===== Hợp đồng (Contracts) — container, sequence 40 =====
-         Gom toàn bộ nghiệp vụ hợp đồng. Các module mount vào:
-         - rp_contract:           HĐ nhà thầu (10), Phụ lục HĐ (30),
-                                  Chấm dứt / Thanh lý (40)
-         - rp_owner_contract:     HĐ với Chủ đầu tư (20), BBNT với CĐT (25)
-         - rp_contract_guarantee: Bảo lãnh HĐ nhà thầu (50) -->
-    <menuitem id="menu_contracts"
-              name="Hợp đồng"
-              parent="menu_realty_project_root"
-              sequence="40"/>
 
     <!-- ===== Cấu hình (Realty Project) — master data ít đụng =====
          Cost Categories + Danh mục chi phí chuẩn mount vào đây

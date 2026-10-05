@@ -29,7 +29,7 @@
                        decoration-muted="state == 'ignored'"/>
                 <field name="project_id" optional="hide"/>
                 <button name="action_open_subject" type="object"
-                        icon="fa-external-link" title="Mở công việc / điểm giao"/>
+                        icon="fa-external-link" title="Mở công việc / điểm bàn giao"/>
             </list>
         </field>
     </record>
@@ -147,7 +147,7 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Chưa có cảnh báo nào</p>
             <p>Hệ thống quét mỗi sáng: công việc hết dư địa, công việc
-            trượt so kế hoạch gốc, điểm giao mà bên nhận cần trước khi bên
+            trượt so kế hoạch gốc, điểm bàn giao mà bên nhận cần trước khi bên
             giao kịp xong, và cả dự án trễ mốc phải xong. Ngưỡng chỉnh ở
             form dự án.</p>
         </field>

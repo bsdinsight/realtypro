@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Sổ giao diện: ràng buộc hai bên, đối chiếu lịch, và quét từ lịch."""
+"""Sổ ranh giới: ràng buộc hai bên, đối chiếu lịch, và quét từ lịch."""
 from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
@@ -110,10 +110,10 @@ class TestInterface(TransactionCase):
 
     def test_quet_tu_lich(self):
         """Quét chỉ bắt quan hệ NỐI HAI HỢP ĐỒNG, và chạy lại được."""
-        # cùng hợp đồng → không phải giao diện
+        # cùng hợp đồng → không phải điểm bàn giao
         self._task(self.c_giao, '2', 'Bảo dưỡng móng',
                    '2026-01-21', '2026-01-25', preds=self.t_giao)
-        # khác hợp đồng → là giao diện
+        # khác hợp đồng → là điểm bàn giao
         self.t_nhan.predecessor_ids = [(6, 0, self.t_giao.ids)]
         self.project.action_scan_interfaces()
         ifs = self.env['rp.interface'].search(

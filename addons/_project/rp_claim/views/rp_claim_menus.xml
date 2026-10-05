@@ -2,7 +2,7 @@
 <odoo>
     <menuitem id="menu_rp_claim_group" name="Khiếu nại &amp; phạt chậm"
               parent="rp_estimate.menu_construction"
-              sequence="20"/>
+              sequence="50"/>
 
     <menuitem id="menu_rp_claim" name="Khiếu nại hợp đồng"
               parent="menu_rp_claim_group"

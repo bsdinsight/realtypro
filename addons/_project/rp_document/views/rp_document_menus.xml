@@ -3,7 +3,7 @@
 
     <menuitem id="menu_rp_document_group" name="Sổ hồ sơ kỹ thuật"
               parent="rp_estimate.menu_construction"
-              sequence="18"/>
+              sequence="35"/>
 
     <menuitem id="menu_rp_document_all" name="Sổ hồ sơ"
               parent="menu_rp_document_group"

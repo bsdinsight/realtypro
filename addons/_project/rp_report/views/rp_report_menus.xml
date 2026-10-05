@@ -32,7 +32,7 @@
               parent="menu_rp_report_pmu"
               action="action_report_task_critical" sequence="20"/>
     <menuitem id="menu_rp_report_interface_conflict"
-              name="Điểm giao đang mâu thuẫn"
+              name="Điểm bàn giao đang mâu thuẫn"
               parent="menu_rp_report_pmu"
               action="rp_interface.action_rp_interface_conflict"
               sequence="30"/>

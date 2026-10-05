@@ -4,8 +4,8 @@
 Dự án trễ thì câu hỏi tiếp theo luôn là "lỗi của ai, và ai trả tiền".
 Trả lời được câu đó cần ba thứ gắn vào nhau mà bảng tính không giữ nổi:
 
-* **Sự kiện gây trễ** — thường chính là một điểm giao hỏng
-  (sổ giao diện) hoặc một công việc trượt (lịch thi công).
+* **Sự kiện gây trễ** — thường chính là một điểm bàn giao hỏng
+  (sổ ranh giới) hoặc một công việc trượt (lịch thi công).
 * **Thời hạn thông báo**. Hợp đồng xây dựng nào cũng có điều khoản: quá
   hạn thông báo thì mất quyền khiếu nại, dù lý do đúng. Đây là chỗ nhà
   thầu mất tiền nhiều nhất, và cũng là chỗ chủ đầu tư hay quên đếm.
@@ -69,7 +69,7 @@ class RpClaim(models.Model):
 
     # --- Gắn vào nơi sự việc xảy ra --------------------------------
     interface_id = fields.Many2one(
-        'rp.interface', string='Điểm giao liên quan',
+        'rp.interface', string='Điểm bàn giao liên quan',
         help='Khiếu nại do một điểm bàn giao giữa hai hợp đồng bị trễ '
              'thì trỏ vào đây — đó là bằng chứng gốc.')
     task_ids = fields.Many2many(

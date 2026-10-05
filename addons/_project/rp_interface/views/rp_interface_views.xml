@@ -110,7 +110,7 @@
                             string="Đã bàn giao" class="btn-primary"
                             invisible="state not in ['agreed','in_progress','disputed']"/>
                     <button name="action_close" type="object"
-                            string="Đóng điểm giao"
+                            string="Đóng điểm bàn giao"
                             invisible="state != 'delivered'"/>
                     <button name="action_dispute" type="object"
                             string="Ghi tranh chấp"
@@ -224,7 +224,7 @@
                         context="{'group_by': 'from_contract_id'}"/>
                 <filter name="g_to" string="Bên nhận"
                         context="{'group_by': 'to_contract_id'}"/>
-                <filter name="g_type" string="Loại giao diện"
+                <filter name="g_type" string="Loại ranh giới"
                         context="{'group_by': 'interface_type'}"/>
                 <searchpanel>
                     <field name="project_id" string="Dự án"
@@ -234,7 +234,7 @@
                            icon="fa-tasks" color="#0E8C99"
                            enable_counters="1"/>
                     <field name="interface_type" select="multi"
-                           string="Loại giao diện" icon="fa-exchange"
+                           string="Loại ranh giới" icon="fa-exchange"
                            enable_counters="1"/>
                     <field name="from_contract_id" select="multi"
                            string="Bên giao" icon="fa-truck"
@@ -245,21 +245,21 @@
     </record>
 
     <record id="action_rp_interface" model="ir.actions.act_window">
-        <field name="name">Sổ giao diện</field>
+        <field name="name">Sổ ranh giới</field>
         <field name="res_model">rp.interface</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="view_rp_interface_search"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Chưa có điểm giao nào</p>
-            <p>Mỗi điểm giao là một lần hợp đồng này phải bàn giao cho hợp
+            <p class="o_view_nocontent_smiling_face">Chưa có điểm bàn giao nào</p>
+            <p>Mỗi điểm bàn giao là một lần hợp đồng này phải bàn giao cho hợp
             đồng kia: mặt bằng, móng, bản vẽ, thiết bị, đấu nối. Mở form
-            dự án và bấm "Quét giao diện từ lịch" để dựng sổ từ chính lịch
+            dự án và bấm "Quét điểm bàn giao từ lịch" để dựng sổ từ chính lịch
             thi công đang có.</p>
         </field>
     </record>
 
     <record id="action_rp_interface_conflict" model="ir.actions.act_window">
-        <field name="name">Giao diện lịch mâu thuẫn</field>
+        <field name="name">Điểm bàn giao lịch mâu thuẫn</field>
         <field name="res_model">rp.interface</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="view_rp_interface_search"/>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Giao diện nhìn từ một hợp đồng: mình nợ ai, và chờ ai."""
+"""Ranh giới nhìn từ một gói thầu: mình nợ ai, và chờ ai."""
 from odoo import _, api, fields, models
 
 
@@ -27,7 +27,7 @@ class RpContract(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Giao diện — %s', self.name),
+            'name': _('Điểm bàn giao — %s', self.name),
             'res_model': 'rp.interface',
             'view_mode': 'list,form',
             'domain': [(field, '=', self.id)],

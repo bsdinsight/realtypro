@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Cảnh báo trượt tiến độ — phát hiện sớm, có lịch sử, không spam.
 
-Lịch thi công và sổ giao diện đã có đủ số để biết dự án đang hỏng ở đâu,
+Lịch thi công và sổ ranh giới đã có đủ số để biết dự án đang hỏng ở đâu,
 nhưng chỉ khi có người MỞ RA XEM. Thực tế thì không ai ngồi soi 485 công
 việc mỗi sáng, nên chuyện trượt lộ ra lúc đã muộn.
 
 Ở đây mỗi lần quét sinh ra bản ghi cảnh báo theo bốn ngưỡng (dự án trễ
-mốc, việc hết dư địa, việc trượt so kế hoạch gốc, điểm giao mâu thuẫn).
+mốc, việc hết dư địa, việc trượt so kế hoạch gốc, điểm bàn giao mâu thuẫn).
 Ba điều quyết định việc này dùng được hay không:
 
 * **Không nhân bản**: cảnh báo đang mở của cùng một đối tượng thì cập
@@ -39,7 +39,7 @@ class RpScheduleAlert(models.Model):
         [('project_deadline', 'Dự án trễ mốc phải xong'),
          ('task_float', 'Công việc hết dư địa'),
          ('task_slip', 'Công việc trượt so kế hoạch gốc'),
-         ('interface_conflict', 'Điểm giao mâu thuẫn lịch')],
+         ('interface_conflict', 'Điểm bàn giao mâu thuẫn lịch')],
         string='Loại cảnh báo', required=True, index=True)
     severity = fields.Selection(
         [('info', 'Theo dõi'), ('warning', 'Cảnh báo'),
@@ -53,7 +53,7 @@ class RpScheduleAlert(models.Model):
     task_id = fields.Many2one(
         'project.task', string='Công việc', index=True, ondelete='cascade')
     interface_id = fields.Many2one(
-        'rp.interface', string='Điểm giao', index=True, ondelete='cascade')
+        'rp.interface', string='Điểm bàn giao', index=True, ondelete='cascade')
     contract_id = fields.Many2one(
         'rp.contract', string='Hợp đồng', index=True, ondelete='cascade')
     partner_id = fields.Many2one(
@@ -152,7 +152,7 @@ class RpScheduleAlert(models.Model):
     def _candidates(self, project):
         """Trả danh sách cảnh báo ĐÁNG CÓ cho dự án, ở dạng dict.
 
-        Khoá nhận dạng là (loại, công việc, điểm giao) — cùng khoá thì
+        Khoá nhận dạng là (loại, công việc, điểm bàn giao) — cùng khoá thì
         là cùng một chuyện, dù con số đã đổi.
         """
         out = []
@@ -232,7 +232,7 @@ class RpScheduleAlert(models.Model):
                 'user_id': t.user_ids[:1].id or False,
             })
 
-        # 4. Điểm giao mà bên nhận cần trước khi bên giao kịp
+        # 4. Điểm bàn giao mà bên nhận cần trước khi bên giao kịp
         th_gap = project.alert_interface_days
         ifaces = self.env['rp.interface'].search([
             ('project_id', '=', project.id),
@@ -351,7 +351,7 @@ class RpScheduleAlert(models.Model):
         self.write({'state': 'open', 'date_resolved': False})
 
     def action_open_subject(self):
-        """Mở thẳng thứ đang có vấn đề: công việc, điểm giao, hay dự án."""
+        """Mở thẳng thứ đang có vấn đề: công việc, điểm bàn giao, hay dự án."""
         self.ensure_one()
         if self.task_id:
             return {'type': 'ir.actions.act_window',

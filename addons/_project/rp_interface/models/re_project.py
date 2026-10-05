@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Sổ giao diện nhìn từ cấp dự án, và cách dựng sổ từ lịch có sẵn."""
+"""Sổ ranh giới nhìn từ cấp dự án, và cách dựng sổ từ lịch có sẵn."""
 from odoo import _, api, fields, models
 
-# Đoán loại giao diện từ tên công việc bên giao. Chỉ là điểm xuất phát
+# Đoán loại ranh giới từ tên công việc bên giao. Chỉ là điểm xuất phát
 # để người quản lý dự án sửa lại, không phải phán quyết.
 TYPE_HINTS = [
     ('document', ('hồ sơ', 'bản vẽ', 'thiết kế', 'duyệt', 'phê duyệt',
@@ -21,13 +21,13 @@ class ReProject(models.Model):
     _inherit = 're.project'
 
     interface_ids = fields.One2many(
-        'rp.interface', 'project_id', string='Giao diện giữa các hợp đồng')
+        'rp.interface', 'project_id', string='Điểm bàn giao giữa các gói thầu')
     interface_count = fields.Integer(
-        string='Số giao diện', compute='_compute_interface_stats')
+        string='Số điểm bàn giao', compute='_compute_interface_stats')
     interface_open_count = fields.Integer(
-        string='Giao diện chưa đóng', compute='_compute_interface_stats')
+        string='Điểm bàn giao chưa đóng', compute='_compute_interface_stats')
     interface_conflict_count = fields.Integer(
-        string='Giao diện lịch mâu thuẫn',
+        string='Điểm bàn giao lịch mâu thuẫn',
         compute='_compute_interface_stats')
 
     @api.depends('interface_ids.state', 'interface_ids.is_conflict')
@@ -50,14 +50,14 @@ class ReProject(models.Model):
         return 'physical'
 
     def action_scan_interfaces(self):
-        """Dựng sổ giao diện từ chính lịch thi công đang có.
+        """Dựng sổ ranh giới từ chính lịch thi công đang có.
 
         Mọi quan hệ trước-sau NỐI HAI HỢP ĐỒNG KHÁC NHAU đều là một điểm
         giao đã tồn tại trên thực tế — chỉ là chưa ai ghi vào sổ. Quét
         một lượt để có sổ ngay, rồi người quản lý dự án bổ sung điều kiện
         nghiệm thu và người phụ trách hai bên.
 
-        Chạy lại được: điểm giao đã có (theo cặp việc) thì bỏ qua.
+        Chạy lại được: điểm bàn giao đã có (theo cặp việc) thì bỏ qua.
         """
         self.ensure_one()
         Task = self.env['project.task']
@@ -86,7 +86,7 @@ class ReProject(models.Model):
                     'from_task_id': pred.id,
                     'to_task_id': succ.id,
                     'interface_type': self._guess_interface_type(pred),
-                    # Việc nằm trên đường găng toàn dự án thì điểm giao
+                    # Việc nằm trên đường găng toàn dự án thì điểm bàn giao
                     # của nó chính là chỗ chịu lực.
                     'criticality': ('critical'
                                     if succ.is_project_critical
@@ -103,11 +103,11 @@ class ReProject(models.Model):
             'params': {
                 'type': 'success' if created else 'warning',
                 'message': (
-                    _('Đã ghi thêm %(n)s giao diện từ lịch thi công. '
+                    _('Đã ghi thêm %(n)s điểm bàn giao từ lịch thi công. '
                       'Tổng cộng %(t)s.',
                       n=len(created), t=before + len(created))
                     if created else
-                    _('Không có điểm giao mới: mọi quan hệ nối hai hợp '
+                    _('Không có điểm bàn giao mới: mọi quan hệ nối hai hợp '
                       'đồng đã nằm trong sổ.')),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
@@ -117,7 +117,7 @@ class ReProject(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Sổ giao diện — %s', self.name),
+            'name': _('Ranh giới & bàn giao — %s', self.name),
             'res_model': 'rp.interface',
             'view_mode': 'list,kanban,form',
             'domain': [('project_id', '=', self.id)],

@@ -26,8 +26,8 @@ class ReProject(models.Model):
         help='Báo khi công việc chưa xong mà đã kết thúc muộn hơn kế '
              'hoạch gốc từng này ngày trở lên.')
     alert_interface_days = fields.Integer(
-        string='Ngưỡng dư địa điểm giao (ngày)', default=0,
-        help='Báo khi điểm giao còn dư địa ÍT HƠN hoặc bằng số ngày này. '
+        string='Ngưỡng dư địa điểm bàn giao (ngày)', default=0,
+        help='Báo khi điểm bàn giao còn dư địa ÍT HƠN hoặc bằng số ngày này. '
              'Để 0 nghĩa là chỉ báo khi đã mâu thuẫn.')
 
     @api.depends('alert_ids.state', 'alert_ids.severity')

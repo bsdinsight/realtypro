@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="seq_rp_interface" model="ir.sequence">
-        <field name="name">Giao diện giữa các hợp đồng</field>
+        <field name="name">Điểm bàn giao giữa các gói thầu</field>
         <field name="code">rp.interface</field>
         <field name="prefix">GD</field>
         <field name="padding">5</field>

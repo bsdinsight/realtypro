@@ -65,7 +65,7 @@ class RpTaskLink(models.Model):
     is_cross_contract = fields.Boolean(
         string='Nối hai hợp đồng', compute='_compute_cross', store=True,
         help='Quan hệ vắt qua hai nhà thầu — chỗ dự án hay hỏng nhất, và '
-             'là nguồn của sổ giao diện.')
+             'là nguồn của sổ ranh giới.')
 
     lag_actual = fields.Integer(
         string='Độ lệch thực tế', compute='_compute_lag', store=True,

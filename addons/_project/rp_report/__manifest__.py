@@ -17,7 +17,7 @@ cuộc họp biến thành tranh luận về số liệu.
 
 * **Lãnh đạo** — bản tổng hợp dự án, cảnh báo nghiêm trọng.
 * **Ban quản lý dự án** — công việc đang trượt (nhóm theo hợp đồng),
-  công việc trên đường găng, điểm giao mâu thuẫn, cảnh báo đang mở.
+  công việc trên đường găng, điểm bàn giao mâu thuẫn, cảnh báo đang mở.
 * **Tài chính** — hợp đồng kèm giá gốc / phát sinh đã duyệt / phát sinh
   đang chờ / dự báo / gia hạn / ngày chậm / phạt dự kiến trên MỘT dòng;
   phát sinh dạng pivot theo trạng thái; danh sách hợp đồng đang chậm.

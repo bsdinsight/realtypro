@@ -134,7 +134,7 @@ export class RpGanttAction extends Component {
         const recs = await this.orm.searchRead(
             "project.task", domain,
             ["name", "wbs_code", "planned_start", "planned_end",
-             "progress_percent", "is_milestone", "predecessor_ids",
+             "progress_percent", "is_milestone",
              "project_id", "user_ids", "baseline_start", "baseline_end",
              "baseline_slip_days", "rp_contract_id"],
             { order: "id asc" }
@@ -233,6 +233,31 @@ export class RpGanttAction extends Component {
         // map id → STT để cột "Depend on" hiện số STT (kiểu Predecessors
         // của MS Project), không lộ ID database
         const seqById = new Map(recs.map((r, i) => [r.id, i + seqBase]));
+        // Quan hệ trước-sau: đọc riêng từ rp.task.link vì mỗi quan hệ có
+        // LOẠI (FS/SS/FF/SF) và ĐỘ LỆCH — hai thứ m2m phẳng không chở
+        // được. Lịch fast-track sống bằng SS+lag, vẽ hết thành FS là vẽ
+        // sai mũi tên.
+        const linkRecs = recs.length
+            ? await this.orm.searchRead(
+                "rp.task.link",
+                [["task_id", "in", [...idSet]],
+                 ["predecessor_id", "in", [...idSet]]],
+                ["task_id", "predecessor_id", "link_type", "lag_days"])
+            : [];
+        const lagTag = (n) => (n > 0 ? `+${n}` : (n < 0 ? String(n) : ""));
+        const linksByTask = new Map();
+        for (const l of linkRecs) {
+            const tid = l.task_id[0];
+            const pid = l.predecessor_id[0];
+            if (!linksByTask.has(tid)) {
+                linksByTask.set(tid, []);
+            }
+            linksByTask.get(tid).push({
+                pid,
+                type: l.link_type || "FS",
+                lag: l.lag_days || 0,
+            });
+        }
         // Đường găng — tính CPM ở backend chỉ khi bật + có HĐ
         let cpMap = {};
         if (this.state.showCriticalPath && (this.contractId || this.projectId)) {
@@ -268,10 +293,15 @@ export class RpGanttAction extends Component {
                 extraFields: {
                     TaskWbs: w,
                     TaskSeq: idx + seqBase,
-                    TaskDeps: (r.predecessor_ids || [])
-                        .filter((pid) => idSet.has(pid))
-                        .map((pid) => seqById.get(pid))
-                        .sort((a, b) => a - b)
+                    // Cột "Depend on" kiểu MS Project: STT + loại + lệch,
+                    // ví dụ "12SS+20". FS lệch 0 để trần cho gọn mắt.
+                    TaskDeps: (linksByTask.get(r.id) || [])
+                        .map((l) => ({ s: seqById.get(l.pid), l }))
+                        .filter((x) => x.s !== undefined)
+                        .sort((a, b) => a.s - b.s)
+                        .map(({ s, l }) => (l.type === "FS" && !l.lag
+                            ? String(s)
+                            : `${s}${l.type}${lagTag(l.lag)}`))
                         .join(", "),
                     TaskAssign: (r.user_ids || [])
                         .map((uid) => userName.get(uid))
@@ -299,9 +329,9 @@ export class RpGanttAction extends Component {
                 progress: Math.round(r.progress_percent || 0),
                 // taskMode 'Manual': predecessor chỉ VẼ mũi tên, không
                 // auto-reschedule → giữ đúng ngày import từ MS Project
-                dependencies: (r.predecessor_ids || [])
-                    .filter((pid) => idSet.has(pid))
-                    .map((pid) => `${pid}FS`).join(","),
+                dependencies: (linksByTask.get(r.id) || [])
+                    .map((l) => `${l.pid}${l.type}${lagTag(l.lag)}`)
+                    .join(","),
                 custom_class: r.is_milestone ? "rp-ej2-milestone" : "",
             };
         });

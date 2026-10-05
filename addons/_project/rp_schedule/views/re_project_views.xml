@@ -47,6 +47,41 @@
                                    class="fw-bold" nolabel="1"
                                    readonly="1"/> ngày.
                         </div>
+                        <field name="schedule_link_count"/>
+                        <field name="schedule_link_ss_count"/>
+                        <field name="schedule_link_violated_count"/>
+                        <!-- Đường găng tính trên một mạng phụ thuộc đang
+                             tự mâu thuẫn thì không đáng tin. Nói rõ ra,
+                             và cho đúng một nút để sửa cả loạt. -->
+                        <div colspan="2" class="alert alert-warning py-1 mb-2"
+                             role="alert"
+                             invisible="schedule_link_violated_count == 0">
+                            <i class="fa fa-exclamation-triangle me-1"
+                               title="Mạng phụ thuộc tự mâu thuẫn"/>
+                            Có
+                            <field name="schedule_link_violated_count"
+                                   class="fw-bold" nolabel="1" readonly="1"/>
+                            quan hệ mà ngày đang lập vi phạm chính logic đã
+                            khai — lịch chồng lấn nhưng vẫn ghi là
+                            finish-to-start. Dư địa và đường găng chỉ đáng
+                            tin sau khi sửa chỗ này.
+                        </div>
+                        <div colspan="2">
+                            <button name="action_links_to_ss" type="object"
+                                    class="btn-warning" icon="fa-compress"
+                                    string="Chuyển quan hệ chồng lấn sang SS"
+                                    invisible="schedule_link_violated_count == 0"/>
+                            <button name="action_open_violated_links"
+                                    type="object" class="btn-link"
+                                    icon="fa-chain-broken"
+                                    string="Xem quan hệ bị vi phạm"
+                                    invisible="schedule_link_violated_count == 0"/>
+                            <button name="action_open_schedule_links"
+                                    type="object" class="btn-link"
+                                    icon="fa-link"
+                                    string="Mạng phụ thuộc"
+                                    invisible="not schedule_link_count"/>
+                        </div>
                         <div colspan="2">
                             <button name="action_open_project_gantt"
                                     type="object" class="btn-primary"

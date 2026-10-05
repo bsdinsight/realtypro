@@ -35,9 +35,23 @@ class ProjectTask(models.Model):
         string='Số ngày KH', compute='_compute_planned_days', store=True)
     progress_percent = fields.Float(string='% hoàn thành', default=0.0)
     is_milestone = fields.Boolean(string='Là mốc (milestone)')
+    # Quan hệ trước–sau nằm ở rp.task.link (có loại FS/SS/FF/SF và độ
+    # lệch). `predecessor_ids` giữ lại làm lối vào đơn giản cho trường
+    # hợp FS lệch 0 — đọc, ghi và lọc đều chạy, nhưng dữ liệu thật chỉ
+    # có MỘT chỗ là link_ids.
+    link_ids = fields.One2many(
+        'rp.task.link', 'task_id', string='Quan hệ với việc trước')
+    successor_link_ids = fields.One2many(
+        'rp.task.link', 'predecessor_id', string='Quan hệ với việc sau')
     predecessor_ids = fields.Many2many(
-        'project.task', 'rp_task_predecessor_rel', 'task_id', 'pred_id',
-        string='Công việc trước')
+        'project.task', string='Công việc trước',
+        compute='_compute_predecessor_ids', inverse='_inverse_predecessor_ids',
+        search='_search_predecessor_ids')
+    link_count = fields.Integer(string='Số quan hệ',
+                                compute='_compute_link_count')
+    link_violated_count = fields.Integer(
+        string='Quan hệ bị vi phạm', compute='_compute_link_count',
+        help='Quan hệ mà ngày đang lập vi phạm chính logic đã khai.')
     external_uid = fields.Char(
         string='UID nguồn (MPP/Excel)', index=True, copy=False,
         help='Định danh task từ file nguồn — dùng để re-import idempotent.')
@@ -70,6 +84,39 @@ class ProjectTask(models.Model):
     total_float = fields.Integer(
         string='Tổng dự trữ (ngày)', copy=False,
         help='LS − ES (backward pass CPM). ≤0 = găng; nhỏ = cận găng.')
+
+    # --- Lối vào đơn giản cho quan hệ FS lệch 0 ---------------------
+    @api.depends('link_ids.predecessor_id')
+    def _compute_predecessor_ids(self):
+        for t in self:
+            t.predecessor_ids = t.link_ids.mapped('predecessor_id')
+
+    def _inverse_predecessor_ids(self):
+        """Ghi qua predecessor_ids = khai quan hệ FS lệch 0.
+
+        Quan hệ đã có LOẠI RIÊNG thì giữ nguyên loại và độ lệch — ghi
+        bằng lối vào đơn giản không được âm thầm biến SS+20 thành FS+0.
+        """
+        Link = self.env['rp.task.link']
+        for t in self:
+            want = set(t.predecessor_ids.ids)
+            have = {l.predecessor_id.id: l for l in t.link_ids}
+            for pid in want - set(have):
+                Link.create({'task_id': t.id, 'predecessor_id': pid})
+            drop = Link.browse([l.id for pid, l in have.items()
+                                if pid not in want])
+            drop.unlink()
+
+    def _search_predecessor_ids(self, operator, value):
+        links = self.env['rp.task.link'].search(
+            [('predecessor_id', operator, value)])
+        return [('id', 'in', links.mapped('task_id').ids)]
+
+    @api.depends('link_ids', 'link_ids.is_violated')
+    def _compute_link_count(self):
+        for t in self:
+            t.link_count = len(t.link_ids)
+            t.link_violated_count = len(t.link_ids.filtered('is_violated'))
 
     @api.depends('planned_end', 'baseline_end')
     def _compute_baseline_slip(self):
@@ -117,13 +164,19 @@ class ProjectTask(models.Model):
                 horizon_task_id=None):
         """Lõi tính Total Float + đường găng trên MỘT TẬP công việc.
 
-        Backward pass trên mạng phụ thuộc FS (predecessor_ids) dùng ngày
-        kế hoạch:
-          LF(t) = min(LS(succ) − 1) nếu có successor, else ngày kết thúc
-                  muộn nhất của tập
-          LS(t) = LF(t) − thời lượng
-          TF(t) = LS(t) − ES(t)   (ES = ngày bắt đầu KH)
-        Găng: TF ≤ 0. Cận găng: 0 < TF ≤ 5.
+        Backward pass trên mạng phụ thuộc (rp.task.link) dùng ngày kế
+        hoạch. Mỗi loại quan hệ chặn NGÀY KẾT THÚC MUỘN NHẤT của việc
+        trước một cách khác nhau — viết lại từ điều kiện của việc sau,
+        với d = thời lượng việc trước:
+
+          FS: LF ≤ LS(sau) − 1 − lag
+          SS: LF ≤ LS(sau) − lag + d     (chặn ngày BẮT ĐẦU, cộng d lại)
+          FF: LF ≤ LF(sau) − lag
+          SF: LF ≤ LF(sau) − lag + d
+
+        Không có việc sau thì LF = ngày kết thúc muộn nhất của tập. Rồi
+        LS = LF − d, và TF = LS − ES (ES = ngày bắt đầu KH).
+        Găng: TF ≤ ngưỡng. Cận găng: trong 5 ngày trên ngưỡng.
 
         Tập công việc do bên gọi quyết định: một hợp đồng (cách cũ) hay
         TẤT CẢ hợp đồng của một dự án. Cùng một thuật toán, hai phạm vi —
@@ -151,11 +204,14 @@ class ProjectTask(models.Model):
         if not leaves:
             return {}
         by_id = {t.id: t for t in leaves}
+        # succ[pred] = [(id việc sau, loại quan hệ, độ lệch), …]
         succ = {t.id: [] for t in leaves}
-        for t in leaves:
-            for pr in t.predecessor_ids:
-                if pr.id in by_id:
-                    succ[pr.id].append(t.id)
+        links = self.env['rp.task.link'].search([
+            ('task_id', 'in', list(by_id)),
+            ('predecessor_id', 'in', list(by_id))])
+        for ln in links:
+            succ[ln.predecessor_id.id].append(
+                (ln.task_id.id, ln.link_type or 'FS', ln.lag_days or 0))
         horizon_end = max(t.planned_end for t in leaves)
         # Mốc phải xong (COD / ngày bàn giao) nếu có: CHỈ dùng khi nó SỚM
         # hơn ngày về đích đang dự báo. Sớm hơn thì chuỗi việc dẫn tới
@@ -171,13 +227,27 @@ class ProjectTask(models.Model):
             horizon_end = horizon
         ls_memo, lf_memo, visiting = {}, {}, set()
 
+        def duration(tid):
+            t = by_id[tid]
+            return (t.planned_end - t.planned_start).days
+
         def late_start(tid):
             if tid in ls_memo:
                 return ls_memo[tid]
-            t = by_id[tid]
-            dur = (t.planned_end - t.planned_start).days
-            ls_memo[tid] = late_finish(tid) - timedelta(days=dur)
+            ls_memo[tid] = late_finish(tid) - timedelta(days=duration(tid))
             return ls_memo[tid]
+
+        def bound(tid, succ_id, kind, lag):
+            """Hạn kết thúc muộn nhất của `tid` do một quan hệ áp đặt."""
+            d = timedelta(days=duration(tid))
+            lag = timedelta(days=lag)
+            if kind == 'SS':
+                return late_start(succ_id) - lag + d
+            if kind == 'FF':
+                return late_finish(succ_id) - lag
+            if kind == 'SF':
+                return late_finish(succ_id) - lag + d
+            return late_start(succ_id) - timedelta(days=1) - lag      # FS
 
         def late_finish(tid):
             if tid in lf_memo:
@@ -187,7 +257,11 @@ class ProjectTask(models.Model):
             visiting.add(tid)
             ss = succ[tid]
             lf = (horizon_end if not ss
-                  else min(late_start(s) - timedelta(days=1) for s in ss))
+                  else min(bound(tid, s, k, g) for s, k, g in ss))
+            # Quan hệ SS/FF không chặn ngày kết thúc của việc trước, nên
+            # một mình nó có thể cho ra LF vượt cả ngày về đích của dự án.
+            # Không việc nào được kết thúc sau ngày về đích, nên chặn lại.
+            lf = min(lf, horizon_end)
             if pin and tid == horizon_task_id:
                 lf = min(lf, pin)
             visiting.discard(tid)
@@ -304,20 +378,35 @@ class ProjectTask(models.Model):
             for t in subtree:
                 shift(t, d_start)
 
-        # 2) Dây chuyền successor theo delta ngày kết thúc (BFS, chặn
-        #    vòng lặp bằng visited = changed)
-        if d_end and self.rp_contract_id:
+        # 2) Dây chuyền successor (BFS, chặn vòng lặp bằng visited =
+        #    changed). SS/SF neo vào NGÀY BẮT ĐẦU của việc trước, FS/FF
+        #    neo vào ngày kết thúc — kéo thanh thì hai nhóm dời khác nhau,
+        #    và đó chính là điểm của việc có loại quan hệ.
+        if (d_end or d_start) and self.rp_contract_id:
+            Link = self.env['rp.task.link']
             frontier = list(changed)
             while frontier:
-                succs = self.search([
-                    ('predecessor_ids', 'in', frontier),
-                    ('rp_contract_id', '=', self.rp_contract_id.id),
-                    ('id', 'not in', list(changed)),
+                links = Link.search([
+                    ('predecessor_id', 'in', frontier),
+                    ('contract_id', '=', self.rp_contract_id.id),
+                    ('task_id', 'not in', list(changed)),
                 ])
+                # Một cặp việc có thể có hai quan hệ (SS + FF). Việc sau
+                # phải thoả CẢ HAI, nên gom theo việc sau rồi dời MỘT lần
+                # theo đòi hỏi căng nhất — dời theo quan hệ gặp trước sẽ
+                # âm thầm bỏ qua quan hệ còn lại.
+                want = {}
+                for ln in links:
+                    delta = (d_start if ln.link_type in ('SS', 'SF')
+                             else d_end)
+                    tid = ln.task_id.id
+                    want[tid] = max(want.get(tid, delta), delta)
                 frontier = []
-                for s in succs:
-                    shift(s, d_end)
-                    frontier.append(s.id)
+                for tid, delta in want.items():
+                    if tid in changed or not delta:
+                        continue
+                    shift(self.browse(tid), delta)
+                    frontier.append(tid)
 
         # 3) Cuộn lại ngày cha (summary) theo con — cha nào bị đổi do
         #    rollup cũng đưa vào changed để Gantt reload đủ

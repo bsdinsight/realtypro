@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_task_link_list" model="ir.ui.view">
+        <field name="name">rp.task.link.list</field>
+        <field name="model">rp.task.link</field>
+        <field name="arch" type="xml">
+            <!-- Hai cột quan trọng nhất đứng cạnh nhau: độ lệch ĐÃ KHAI
+                 và độ lệch NGÀY ĐANG LẬP ngụ ý. Lệch nhau là lịch đang
+                 tự mâu thuẫn. -->
+            <list editable="bottom" decoration-danger="is_violated">
+                <field name="predecessor_id"
+                       options="{'no_create': True}"/>
+                <field name="task_id" options="{'no_create': True}"/>
+                <field name="link_type"/>
+                <field name="lag_days" string="Lệch khai (ngày)"
+                       width="150px"/>
+                <field name="lag_actual" string="Lệch thực tế"
+                       width="140px"/>
+                <field name="lag_gap" string="Chênh" width="110px"/>
+                <field name="is_violated" string="Vi phạm" width="110px"/>
+                <field name="is_cross_contract" string="Nối 2 HĐ"
+                       optional="show" width="110px"/>
+                <field name="contract_id" optional="hide"/>
+                <field name="note" optional="hide"/>
+                <field name="project_id" column_invisible="1"/>
+                <button name="action_set_ss_from_dates" type="object"
+                        icon="fa-compress" title="Chuyển sang SS theo ngày thật"
+                        invisible="not is_violated or link_type != 'FS'"/>
+                <button name="action_align_lag" type="object"
+                        icon="fa-magnet" title="Lấy độ lệch thực tế làm khai báo"
+                        invisible="lag_gap == 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_task_link_form" model="ir.ui.view">
+        <field name="name">rp.task.link.form</field>
+        <field name="model">rp.task.link</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_set_ss_from_dates" type="object"
+                            string="Chuyển sang SS theo ngày thật"
+                            class="btn-primary"
+                            invisible="not is_violated or link_type != 'FS'"/>
+                    <button name="action_align_lag" type="object"
+                            string="Lấy độ lệch thực tế làm khai báo"
+                            invisible="lag_gap == 0"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_violated">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Vi phạm"/>
+                        Ngày đang lập VI PHẠM quan hệ này: việc sau vào sớm
+                        hơn mức cho phép
+                        <field name="lag_gap" readonly="1" nolabel="1"
+                               class="fw-bold"/> ngày. Hai cách sửa: đổi
+                        ngày cho đúng quan hệ, hoặc đổi quan hệ cho đúng
+                        cách thi công thật (thường là chuyển sang SS kèm độ
+                        lệch).
+                    </div>
+                    <group>
+                        <group string="Quan hệ">
+                            <field name="predecessor_id"
+                                   options="{'no_create': True}"/>
+                            <field name="task_id"
+                                   options="{'no_create': True}"/>
+                            <field name="link_type"/>
+                            <field name="lag_days"/>
+                            <field name="note"/>
+                        </group>
+                        <group string="Đối chiếu với ngày đang lập">
+                            <field name="lag_actual" readonly="1"/>
+                            <field name="lag_gap" readonly="1"/>
+                            <field name="is_violated" readonly="1"/>
+                            <field name="is_cross_contract" readonly="1"/>
+                            <field name="contract_id" readonly="1"/>
+                            <field name="pred_contract_id" readonly="1"/>
+                            <field name="project_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_task_link_search" model="ir.ui.view">
+        <field name="name">rp.task.link.search</field>
+        <field name="model">rp.task.link</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="task_id"/>
+                <field name="predecessor_id"/>
+                <filter name="f_violated" string="Lịch đang vi phạm"
+                        domain="[('is_violated','=',True)]"/>
+                <filter name="f_overlap" string="Chồng lấn (lệch âm)"
+                        domain="[('lag_days','&lt;',0)]"/>
+                <filter name="f_cross" string="Nối hai hợp đồng"
+                        domain="[('is_cross_contract','=',True)]"/>
+                <filter name="f_not_fs" string="Không phải FS"
+                        domain="[('link_type','!=','FS')]"/>
+                <separator/>
+                <filter name="g_type" string="Loại quan hệ"
+                        context="{'group_by': 'link_type'}"/>
+                <filter name="g_contract" string="HĐ việc sau"
+                        context="{'group_by': 'contract_id'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="link_type" select="multi" string="Loại"
+                           icon="fa-link" color="#0E8C99"
+                           enable_counters="1"/>
+                    <field name="contract_id" select="multi"
+                           string="HĐ việc sau" icon="fa-file-text-o"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_task_link" model="ir.actions.act_window">
+        <field name="name">Quan hệ trước–sau</field>
+        <field name="res_model">rp.task.link</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_task_link_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai quan hệ nào</p>
+            <p>Mạng phụ thuộc là thứ làm nên đường găng. Mỗi quan hệ ghi
+            rõ loại (FS/SS/FF/SF) và độ lệch — có vậy mới mô tả được lịch
+            fast-track, nơi đội sau vào trước khi đội trước làm xong.</p>
+        </field>
+    </record>
+
+    <record id="action_rp_task_link_violated" model="ir.actions.act_window">
+        <field name="name">Quan hệ lịch đang bị vi phạm</field>
+        <field name="res_model">rp.task.link</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_task_link_search"/>
+        <field name="domain">[('is_violated','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Mạng phụ thuộc đang nhất quán</p>
+            <p>Ở đây là những chỗ ngày đang lập vi phạm chính quan hệ đã
+            khai. Đường găng tính trên một mạng tự mâu thuẫn thì không
+            đáng tin, nên sửa hết chỗ này trước khi đọc dư địa.</p>
+        </field>
+    </record>
+
+</odoo>

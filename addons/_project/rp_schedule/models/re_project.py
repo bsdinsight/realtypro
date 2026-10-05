@@ -37,6 +37,15 @@ class ReProject(models.Model):
         store=True,
         help='Hoàn thành dự báo trừ hoàn thành theo kế hoạch gốc. Dương '
              'là trễ.')
+    schedule_link_count = fields.Integer(
+        string='Số quan hệ trước–sau', compute='_compute_link_rollup')
+    schedule_link_violated_count = fields.Integer(
+        string='Quan hệ lịch đang bị vi phạm', compute='_compute_link_rollup',
+        help='Việc sau bắt đầu (hoặc kết thúc) sớm hơn mức quan hệ đã khai '
+             'cho phép. Đường găng tính trên một mạng đang tự mâu thuẫn '
+             'thì không đáng tin — sửa chỗ này trước.')
+    schedule_link_ss_count = fields.Integer(
+        string='Quan hệ chồng lấn (SS/FF)', compute='_compute_link_rollup')
     # KHÔNG lưu: giá trị đến từ hàm _rp_schedule_deadline() mà module
     # ngành ghi đè (nhà máy điện lấy ngày COD). Lưu lại thì lúc nâng cấp
     # rp_schedule nó được tính TRƯỚC khi module ngành vào registry, ra
@@ -95,6 +104,16 @@ class ReProject(models.Model):
                 (marker - rec.schedule_deadline).days
                 if marker and rec.schedule_deadline else 0)
 
+    def _compute_link_rollup(self):
+        Link = self.env['rp.task.link']
+        for rec in self:
+            base = [('project_id', '=', rec.id)] if rec.id else [('id', '=', 0)]
+            rec.schedule_link_count = Link.search_count(base)
+            rec.schedule_link_violated_count = Link.search_count(
+                base + [('is_violated', '=', True)])
+            rec.schedule_link_ss_count = Link.search_count(
+                base + [('link_type', 'in', ('SS', 'FF', 'SF'))])
+
     def _rp_schedule_markers(self):
         """Mốc vạch dọc trên Gantt: ngày phải xong + hôm nay.
 
@@ -136,6 +155,57 @@ class ReProject(models.Model):
                 'message': _(
                     'Đã tính đường găng toàn dự án: %(n)s công việc, '
                     '%(c)s việc găng.', n=len(res), c=n_crit),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
+    def action_open_schedule_links(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Quan hệ trước–sau — %s', self.name),
+            'res_model': 'rp.task.link',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    def action_open_violated_links(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Quan hệ lịch đang bị vi phạm — %s', self.name),
+            'res_model': 'rp.task.link',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id),
+                       ('is_violated', '=', True)],
+        }
+
+    def action_links_to_ss(self):
+        """Chuyển các quan hệ FS đang bị chồng lấn sang SS với lệch thật.
+
+        Lịch fast-track thường ĐÚNG, chỉ là quan hệ khai sai loại: hai
+        việc chồng lấn nhau mà vẫn ghi finish-to-start. Cách xử lý sai là
+        xoá quan hệ cho hết báo lỗi — mạng phụ thuộc rỗng dần và đường
+        găng thành vô nghĩa. Cách đúng là giữ quan hệ, đổi sang SS và lấy
+        độ lệch đúng bằng khoảng cách hai ngày bắt đầu.
+        """
+        self.ensure_one()
+        links = self.env['rp.task.link'].search([
+            ('project_id', '=', self.id), ('is_violated', '=', True),
+            ('link_type', '=', 'FS')])
+        added = links.action_set_ss_from_dates()
+        self.env['project.task'].rp_compute_project_critical_path(self.id)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _(
+                    'Đã chuyển %(n)s quan hệ FS bị chồng lấn sang SS kèm '
+                    'độ lệch thật, thêm %(f)s nhánh FF để vỡ thời lượng '
+                    'cũng truyền được, và tính lại đường găng.',
+                    n=len(links), f=len(added)),
                 'next': {'type': 'ir.actions.act_window_close'},
             },
         }

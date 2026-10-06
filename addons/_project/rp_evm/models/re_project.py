@@ -114,11 +114,17 @@ class ReProject(models.Model):
         for cl in self.project_cost_line_ids:
             if not cl.amount:
                 continue
+            cat = cl.category_id
+            # Cờ dự phòng gắn ở nhóm CẤP 1 (nhóm 10), mã con không mang
+            # cờ — nên phải hỏi cả nhóm gốc.
+            du_phong = bool(cat.is_contingency
+                            or cat.root_id.is_contingency)
             dong.append({
                 'source': 'project_cost',
-                'ref_code': cl.category_id.code or '',
-                'ref_name': cl.category_id.display_name or '',
+                'ref_code': cat.code or '',
+                'ref_name': cat.display_name or '',
                 'amount': cl.amount,
+                'is_contingency': du_phong,
             })
         return dong
 

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contingency_drawdown_list" model="ir.ui.view">
+        <field name="name">rp.contingency.drawdown.list</field>
+        <field name="model">rp.contingency.drawdown</field>
+        <field name="arch" type="xml">
+            <list string="Sổ rút dự phòng" default_order="date, id">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="project_id" optional="hide"/>
+                <field name="source"/>
+                <field name="variation_id" optional="show"/>
+                <field name="reason" optional="hide"/>
+                <field name="amount" width="200" sum="Tổng đã rút"/>
+                <!-- Số dư cạn dần đọc thẳng trên sổ — đây mới là thứ
+                     người kiểm soát chi phí nhìn, không phải tổng. -->
+                <field name="balance_after" width="200"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="approved_by_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_contingency_drawdown_form" model="ir.ui.view">
+        <field name="name">rp.contingency.drawdown.form</field>
+        <field name="model">rp.contingency.drawdown</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu rút dự phòng">
+                <header>
+                    <button name="action_duyet_rut" type="object"
+                            string="Duyệt rút" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_huy" type="object" string="Huỷ"
+                            invisible="state == 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="date"
+                                   readonly="state != 'draft'"/>
+                            <field name="source"
+                                   readonly="state != 'draft'"/>
+                            <field name="variation_id"
+                                   invisible="source != 'variation'"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount"
+                                   readonly="state != 'draft'"/>
+                            <field name="balance_after"/>
+                            <field name="approved_by_id" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Lý do rút"/>
+                    <field name="reason" readonly="state != 'draft'"
+                           placeholder="Vì sao khoản này tài trợ bằng dự phòng chứ không xin nới ngân sách…"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_contingency_drawdown_search" model="ir.ui.view">
+        <field name="name">rp.contingency.drawdown.search</field>
+        <field name="model">rp.contingency.drawdown</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="variation_id"/>
+                <filter name="f_confirmed" string="Đã duyệt rút"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter name="f_draft" string="Chờ duyệt"
+                        domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="f_hoan" string="Hoàn lại quỹ"
+                        domain="[('amount', '&lt;', 0)]"/>
+                <separator/>
+                <filter name="group_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="group_source" string="Nguồn"
+                        context="{'group_by': 'source'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_contingency_drawdown" model="ir.actions.act_window">
+        <field name="name">Sổ rút dự phòng</field>
+        <field name="res_model">rp.contingency.drawdown</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_rp_contingency_drawdown_search"/>
+        <field name="context">{'search_default_group_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa rút đồng dự phòng nào
+            </p>
+            <p>
+                Mỗi lần dùng quỹ dự phòng để tài trợ một phát sinh là một
+                phiếu ở đây. Quỹ cạn dần trên sổ này sớm hơn nhiều so với
+                lúc con số "vượt ngân sách" kịp xuất hiện — nên đây là
+                chỗ nhìn để biết dự án có đang hỏng không.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_contingency_drawdown"
+              name="Sổ rút dự phòng"
+              parent="rp_estimate.menu_realty_project_root"
+              action="action_rp_contingency_drawdown"
+              sequence="57"/>
+
+    <!-- Nút trên phát sinh: duyệt giá xong thì câu hỏi kế tiếp luôn là
+         "tiền ở đâu ra". -->
+    <record id="view_rp_variation_form_drawdown" model="ir.ui.view">
+        <field name="name">rp.variation.form.drawdown</field>
+        <field name="model">rp.variation</field>
+        <field name="inherit_id" ref="rp_variation.view_rp_variation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_rut_du_phong" type="object"
+                        string="Rút từ dự phòng"
+                        invisible="state not in ('approved', 'instructed', 'applied')"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -61,19 +61,67 @@ class ReProject(models.Model):
     budget_status = fields.Selection(
         [('no_baseline', 'Chưa chốt mốc'),
          ('on_budget', 'Trong ngân sách'),
+         ('using_contingency', 'Đang tiêu dự phòng'),
          ('drifted', 'Ngân sách đã trôi'),
          ('over', 'Dự kiến vượt')],
         string='Tình trạng ngân sách', compute='_compute_ngan_sach_3_lop')
 
+    # ----- Quỹ dự phòng
+    contingency_drawdown_ids = fields.One2many(
+        'rp.contingency.drawdown', 'project_id', string='Phiếu rút dự phòng')
+    contingency_drawdown_count = fields.Integer(
+        string='Số phiếu rút', compute='_compute_du_phong')
+    contingency_budget = fields.Monetary(
+        string='Quỹ dự phòng', compute='_compute_du_phong',
+        currency_field='currency_id',
+        help='Phần dự phòng đã chụp trong mốc đang hiệu lực. Nằm TRONG '
+             'ngân sách gốc, không cộng thêm.')
+    contingency_used = fields.Monetary(
+        string='Đã rút dự phòng', compute='_compute_du_phong',
+        currency_field='currency_id')
+    contingency_remaining = fields.Monetary(
+        string='Dự phòng còn lại', compute='_compute_du_phong',
+        currency_field='currency_id')
+    contingency_used_pct = fields.Float(
+        string='% dự phòng đã dùng', compute='_compute_du_phong',
+        digits=(16, 1),
+        help='Thang 0–100. Tiêu hết phần lớn dự phòng khi khối lượng mới '
+             'làm được ít là dấu hiệu hỏng sớm, dù báo cáo vẫn nói "trong '
+             'ngân sách".')
+
+    @api.depends('contingency_drawdown_ids.state',
+                 'contingency_drawdown_ids.amount',
+                 'cost_baseline_ids.state',
+                 'cost_baseline_ids.contingency_amount')
+    def _compute_du_phong(self):
+        for proj in self:
+            moc = proj.cost_baseline_ids.filtered(
+                lambda b: b.state == 'active')[:1]
+            quy = moc.contingency_amount if moc else 0.0
+            da_rut = sum(proj.contingency_drawdown_ids.filtered(
+                lambda d: d.state == 'confirmed').mapped('amount'))
+            proj.contingency_budget = quy
+            proj.contingency_used = da_rut
+            proj.contingency_remaining = quy - da_rut
+            proj.contingency_used_pct = (da_rut / quy * 100.0) if quy else 0.0
+            proj.contingency_drawdown_count = len(
+                proj.contingency_drawdown_ids)
+
     @api.depends('cost_baseline_ids.state', 'cost_baseline_ids.amount_total',
                  'total_bac', 'variation_approved_total',
-                 'cost_forecast_total')
+                 'cost_forecast_total',
+                 'contingency_drawdown_ids.state',
+                 'contingency_drawdown_ids.amount')
     def _compute_ngan_sach_3_lop(self):
         for proj in self:
             moc = proj.cost_baseline_ids.filtered(
                 lambda b: b.state == 'active')[:1]
             goc = moc.amount_total if moc else 0.0
-            hien_hanh = goc + (proj.variation_approved_total or 0.0)
+            # Phát sinh được tài trợ bằng dự phòng thì KHÔNG nới tổng:
+            # tiền chuyển từ dòng dự phòng sang phần việc, tổng y nguyên.
+            # Trừ đi phần đã rút chính là chỗ cài luật đó.
+            hien_hanh = (goc + (proj.variation_approved_total or 0.0)
+                         - (proj.contingency_used or 0.0))
             du_bao = proj.cost_forecast_total or 0.0
             troi = (proj.total_bac or 0.0) - goc if moc else 0.0
 
@@ -94,6 +142,10 @@ class ReProject(models.Model):
                 # Trôi mà chưa vượt vẫn phải báo: nó nghĩa là ngân sách
                 # đang bị sửa ngoài luồng phát sinh.
                 proj.budget_status = 'drifted'
+            elif proj.contingency_used > 0:
+                # Chưa vượt, nhưng đang ăn vào quỹ — nói thẳng ra thay vì
+                # để nó lẫn vào "trong ngân sách".
+                proj.budget_status = 'using_contingency'
             else:
                 proj.budget_status = 'on_budget'
 
@@ -114,6 +166,8 @@ class ReProject(models.Model):
                     else _('Ngân sách chốt lại lần %s', lan),
             'revision': lan,
             'amount_total': sum(d['amount'] for d in dong),
+            'contingency_amount': sum(d['amount'] for d in dong
+                                      if d.get('is_contingency')),
             'line_ids': [(0, 0, d) for d in dong],
         })
         moc.action_kich_hoat()
@@ -135,6 +189,17 @@ class ReProject(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Mốc ngân sách — %s', self.name),
             'res_model': 'rp.cost.baseline',
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.id)],
+            'context': {'default_project_id': self.id},
+        }
+
+    def action_mo_so_rut_du_phong(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sổ rút dự phòng — %s', self.name),
+            'res_model': 'rp.contingency.drawdown',
             'view_mode': 'list,form',
             'domain': [('project_id', '=', self.id)],
             'context': {'default_project_id': self.id},

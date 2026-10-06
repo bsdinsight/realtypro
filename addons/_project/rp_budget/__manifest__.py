@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project — Ngân sách 3 lớp",
-    "version": "19.0.1.0.0",
+    "version": "19.0.2.0.0",
     "category": "Realty/Project",
     "summary": "Ngân sách gốc (đóng băng) → hiện hành → dự báo, và cảnh "
                "báo khi ngân sách tính động trôi khỏi mốc đã duyệt.",
@@ -46,7 +46,9 @@ lại làm lịch sử.
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/ir_sequence.xml",
         "views/rp_cost_baseline_views.xml",
+        "views/rp_contingency_drawdown_views.xml",
         "views/re_project_views.xml",
     ],
     "installable": True,

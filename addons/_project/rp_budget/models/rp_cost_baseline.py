@@ -44,6 +44,11 @@ class RpCostBaseline(models.Model):
     amount_total = fields.Monetary(
         string='Ngân sách gốc', readonly=True, copy=False,
         currency_field='currency_id', tracking=True)
+    contingency_amount = fields.Monetary(
+        string='Trong đó: dự phòng', readonly=True, copy=False,
+        currency_field='currency_id', tracking=True,
+        help='Phần dự phòng nằm TRONG ngân sách gốc, không phải cộng '
+             'thêm. Rút dự phòng vì vậy không làm tổng ngân sách tăng.')
     line_ids = fields.One2many(
         'rp.cost.baseline.line', 'baseline_id', string='Chi tiết',
         readonly=True, copy=False)
@@ -116,6 +121,10 @@ class RpCostBaselineLine(models.Model):
         'rp.structure', string='Hạng mục', ondelete='set null')
     ref_code = fields.Char(string='Mã')
     ref_name = fields.Char(string='Tên khoản', required=True)
+    is_contingency = fields.Boolean(
+        string='Là dự phòng',
+        help='Khoản này là quỹ dự phòng, không phải tiền của một phần '
+             'việc cụ thể.')
     amount = fields.Monetary(
         string='Số tiền', currency_field='currency_id')
     currency_id = fields.Many2one(

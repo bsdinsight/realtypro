@@ -3,3 +3,5 @@ access_rp_cost_baseline_user,rp.cost.baseline user,model_rp_cost_baseline,re_bas
 access_rp_cost_baseline_manager,rp.cost.baseline manager,model_rp_cost_baseline,re_base.group_re_manager,1,1,1,1
 access_rp_cost_baseline_line_user,rp.cost.baseline.line user,model_rp_cost_baseline_line,re_base.group_re_user,1,0,0,0
 access_rp_cost_baseline_line_manager,rp.cost.baseline.line manager,model_rp_cost_baseline_line,re_base.group_re_manager,1,1,1,1
+access_rp_contingency_drawdown_user,rp.contingency.drawdown user,model_rp_contingency_drawdown,re_base.group_re_user,1,1,1,0
+access_rp_contingency_drawdown_manager,rp.contingency.drawdown manager,model_rp_contingency_drawdown,re_base.group_re_manager,1,1,1,1

@@ -306,6 +306,58 @@ class ProjectTask(models.Model):
         return len(tasks)
 
     @api.model
+    def _rp_ma_cha(self, code):
+        """Mã WBS của dòng tổng chứa mã này — bỏ đoạn cuối. "2.3.1" → "2.3"."""
+        doan = [x for x in (code or '').strip().split('.') if x]
+        return '.'.join(doan[:-1]) if len(doan) > 1 else False
+
+    @api.model
+    def _rp_dung_cay_wbs(self, tasks):
+        """Nối `parent_id` theo mã WBS. Trả về số bản ghi đã đổi.
+
+        Lịch nhập từ MS Project chỉ mang mã WBS, KHÔNG mang quan hệ
+        cha-con của Odoo — nên `parent_id` rỗng và phần cuộn % lên dòng
+        tổng (trong `write`) không bao giờ chạy. Cây nằm ở mã, việc đúng
+        là dựng `parent_id` từ mã chứ không viết thêm một bộ cuộn thứ
+        hai đi theo mã: hai cây song song thì sớm muộn cũng lệch nhau.
+
+        Phạm vi so mã dùng ĐÚNG quy ước của `_rp_viec_la`: mã duy nhất
+        trong cả tập thì so toàn dự án, trùng thì so trong từng hợp đồng.
+        """
+        if not tasks:
+            return 0
+        codes = [t.wbs_code for t in tasks if t.wbs_code]
+        duy_nhat = len(set(codes)) == len(codes)
+        chi_muc = {}
+        for t in tasks:
+            if t.wbs_code:
+                chi_muc[(False if duy_nhat else t.rp_contract_id.id,
+                         t.wbs_code.strip())] = t
+        doi = 0
+        for t in tasks:
+            ma_cha = self._rp_ma_cha(t.wbs_code)
+            cha = chi_muc.get(
+                (False if duy_nhat else t.rp_contract_id.id, ma_cha)
+            ) if ma_cha else None
+            moi = cha.id if cha else False
+            if moi != t.parent_id.id and moi != t.id:
+                t.parent_id = moi
+                doi += 1
+        return doi
+
+    def rp_action_dung_cay_wbs(self):
+        """Nút: dựng lại cây cha-con từ mã WBS cho cả dự án."""
+        du_an = self.mapped('rp_project_id')
+        tat_ca = self.search([('rp_project_id', 'in', du_an.ids),
+                              ('rp_contract_id', '!=', False)])
+        doi = self._rp_dung_cay_wbs(tat_ca)
+        # Dựng cây xong phải cuộn lại % một lượt, vì trước đó dòng tổng
+        # chưa có con nên chưa từng được cuộn.
+        la = {x.id for x in self._rp_viec_la(tat_ca)}
+        tat_ca.filtered(lambda t: t.id in la)._rp_cuon_tien_do()
+        return doi
+
+    @api.model
     def _rp_viec_la(self, tasks):
         """Lọc ra việc LÁ, bỏ các dòng tổng WBS.
 
@@ -610,34 +662,55 @@ class ProjectTask(models.Model):
         chính rollup ghi % cho cha.
         """
         res = super().write(vals)
-        if 'progress_percent' in vals \
-                and not self.env.context.get('rp_skip_progress_rollup'):
-            parents = self.mapped('parent_id')
-            seen = set()
-            while parents:
-                nxt = self.env['project.task']
-                for p in parents:
-                    if p.id in seen:
-                        continue
-                    seen.add(p.id)
-                    kids = p.child_ids.filtered(
-                        lambda t: not t.is_milestone)
-                    if kids:
-                        total_w = sum(kids.mapped('planned_days'))
-                        if total_w:
-                            pct = sum(
-                                k.progress_percent * k.planned_days
-                                for k in kids) / total_w
-                        else:
-                            pct = sum(kids.mapped(
-                                'progress_percent')) / len(kids)
+        if not self.env.context.get('rp_skip_progress_rollup') and (
+                {'progress_percent', 'planned_days', 'is_milestone'}
+                & set(vals)):
+            self._rp_cuon_tien_do()
+        if 'wbs_code' in vals or 'rp_contract_id' in vals:
+            # Mã đổi thì cây đổi theo. Dựng trong cùng phạm vi dự án để
+            # còn nhận ra dòng tổng.
+            du_an = self.mapped('rp_project_id')
+            if du_an:
+                self._rp_dung_cay_wbs(self.search(
+                    [('rp_project_id', 'in', du_an.ids),
+                     ('rp_contract_id', '!=', False)]))
+        return res
+
+    def _rp_cuon_tien_do(self):
+        """Cuộn % hoàn thành từ các việc này lên toàn chuỗi cha.
+
+        % cha = bình quân trọng số theo SỐ NGÀY kế hoạch của các con —
+        việc 75 ngày không thể cân ngang việc 1 ngày.
+
+        Mốc (milestone) bị loại khỏi trọng số vì chúng không mang khối
+        lượng. NHƯNG nếu một dòng tổng mà MỌI con đều là mốc thì phải
+        lấy chính các mốc đó: bỏ hết thì dòng tổng vĩnh viễn đứng 0.
+        Trên lịch AMI có 28 mốc, và "Site Handover" là đúng kiểu dòng
+        tổng toàn mốc — bản cũ bỏ qua nên nó không bao giờ nhúc nhích.
+        """
+        cha = self.mapped('parent_id')
+        da_xet = set()
+        while cha:
+            ke_tiep = self.env['project.task']
+            for p in cha:
+                if p.id in da_xet:
+                    continue
+                da_xet.add(p.id)
+                con = p.child_ids
+                lam_viec = con.filtered(lambda t: not t.is_milestone)
+                dung = lam_viec or con
+                if dung:
+                    trong_so = sum(max(1, t.planned_days or 1) for t in dung)
+                    pct = sum((t.progress_percent or 0.0)
+                              * max(1, t.planned_days or 1)
+                              for t in dung) / trong_so
+                    if abs((p.progress_percent or 0.0) - pct) > 0.05:
                         p.with_context(
                             rp_skip_progress_rollup=True,
                         ).write({'progress_percent': round(pct, 1)})
-                    if p.parent_id:
-                        nxt |= p.parent_id
-                parents = nxt
-        return res
+                if p.parent_id:
+                    ke_tiep |= p.parent_id
+            cha = ke_tiep
 
     def rp_update_progress(self, value):
         """Cập nhật % từ Gantt — rollup cha do write() lo.

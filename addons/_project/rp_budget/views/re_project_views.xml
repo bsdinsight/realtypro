@@ -42,6 +42,18 @@
                                    widget="progressbar"/>
                         </group>
                     </group>
+                    <group string="Chi phí &amp; tiền đã ra" colspan="2">
+                        <group>
+                            <field name="cost_invoiced_total"/>
+                            <field name="cost_paid_total"/>
+                        </group>
+                        <group>
+                            <field name="cost_advance_total"/>
+                            <!-- Tiền đã ra tách khỏi chi phí: tạm ứng là
+                                 trả trước, chưa phải chi phí. -->
+                            <field name="cash_out_total"/>
+                        </group>
+                    </group>
                     <group string="Rải theo lịch" colspan="2">
                         <group>
                             <field name="budget_phased_total"/>

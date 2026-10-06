@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project — Ngân sách 3 lớp",
-    "version": "19.0.3.1.0",
+    "version": "19.0.4.1.0",
     "category": "Realty/Project",
     "summary": "Ngân sách gốc (đóng băng) → hiện hành → dự báo, và cảnh "
                "báo khi ngân sách tính động trôi khỏi mốc đã duyệt.",
@@ -45,6 +45,9 @@ lại làm lịch sử.
         "rp_variation",
         # Rải ngân sách đọc planned_start/planned_end của công việc.
         "rp_schedule",
+        # Chuỗi hoá đơn → mốc thanh toán → hợp đồng → gói thầu, và
+        # biên bản nghiệm thu, đều nằm ở rp_progress.
+        "rp_progress",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -53,6 +56,7 @@ lại làm lịch sử.
         "views/rp_cost_baseline_views.xml",
         "views/rp_contingency_drawdown_views.xml",
         "views/rp_budget_phase_views.xml",
+        "views/rp_cost_report_views.xml",
         "views/re_project_views.xml",
     ],
     "installable": True,

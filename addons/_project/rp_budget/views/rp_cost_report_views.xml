@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Bảng kiểm soát chi phí: mỗi gói thầu một dòng, đi từ ngân sách tới
+      tiền đã ra. Đọc từ trái sang phải là đọc đúng vòng đời đồng tiền —
+      duyệt → ký → làm → xuất hoá đơn → trả.
+
+      "Đã tạm ứng" đứng tách ở cuối CÓ CHỦ Ý: nó là tiền đã ra nhưng
+      chưa phải chi phí, để lẫn vào dãy chi phí là người đọc cộng nhầm.
+    -->
+    <record id="view_rp_cost_report_list" model="ir.ui.view">
+        <field name="name">rp.tender.package.cost.report</field>
+        <field name="model">rp.tender.package</field>
+        <field name="arch" type="xml">
+            <list string="Bảng kiểm soát chi phí" create="0"
+                  default_order="project_id, code">
+                <field name="project_id" optional="hide"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="budget_amount" width="190"
+                       string="① Ngân sách" sum="Σ"/>
+                <field name="contract_value_total_pkg" width="190"
+                       string="② Đã cam kết" sum="Σ"/>
+                <field name="value_accepted" width="190"
+                       string="③ Đã nghiệm thu" sum="Σ"/>
+                <field name="cost_invoiced" width="190"
+                       string="④ Đã có hoá đơn" sum="Σ"/>
+                <field name="cost_paid" width="190"
+                       string="⑤ Đã thanh toán" sum="Σ"/>
+                <field name="cost_remaining" width="190"
+                       string="Còn phải chi" sum="Σ"/>
+                <field name="budget_vs_contract" width="190"
+                       string="Chênh NS ↔ HĐ" sum="Σ"/>
+                <field name="cost_advance" width="190"
+                       string="Đã tạm ứng (tiền)" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rp_cost_report" model="ir.actions.act_window">
+        <field name="name">Bảng kiểm soát chi phí</field>
+        <field name="res_model">rp.tender.package</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_rp_cost_report_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có gói thầu nào
+            </p>
+            <p>
+                Mỗi gói thầu một dòng, từ ngân sách tới tiền đã ra.
+                "Đã tạm ứng" tách riêng vì nó là tiền đã ra chứ chưa
+                phải chi phí.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_cost_report"
+              name="Bảng kiểm soát chi phí"
+              parent="menu_finance_budget"
+              action="action_rp_cost_report"
+              sequence="5"/>
+
+</odoo>

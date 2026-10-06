@@ -67,33 +67,70 @@ class ReProject(models.Model):
         for proj in self:
             proj.currency_id = proj.currency_id or default
 
+    def _bac_breakdown(self):
+        """Các dòng cấu thành BAC, mỗi dòng một khoản ngân sách.
+
+        BAC = Σ ngân sách GÓI THẦU + Σ dự toán HẠNG MỤC chưa nằm trong
+        gói nào có ngân sách + chi phí CẤP DỰ ÁN (quản lý dự án, lán
+        trại, bảo hiểm… — không thuộc hạng mục nào). Anh Đại chốt
+        2026-08-10: thiếu phần cấp dự án thì CTC và Nhu cầu vốn tính hụt
+        đúng bằng nó (tài liệu nghiệp vụ §3 đòi chi phí ĐỦ đến hoàn
+        thành).
+
+        Ngân sách lấy ở cấp mà chủ đầu tư KÝ được hợp đồng và ĐO được
+        tiền ra:
+         · mua trọn gói EPC → ngân sách nằm ở GÓI THẦU (BOQ của chủ đầu
+           tư), vì nhà thầu không báo tiền theo hạng mục;
+         · tự làm, đo khối lượng → ngân sách nằm ở HẠNG MỤC.
+        Cộng cả hai, nhưng hạng mục đã nằm trong một gói CÓ ngân sách
+        thì không cộng lại — nếu không là đếm đúp.
+
+        Trả về danh sách dict thay vì một con số, để chỗ khác (rp_budget
+        chốt mốc ngân sách gốc) cộng ĐÚNG cách này. Hai nơi tự cộng lấy
+        là kiểu gì cũng có ngày ra hai con số khác nhau mà không ai biết
+        bên nào đúng.
+        """
+        self.ensure_one()
+        Package = self.env['rp.tender.package']
+        goi = Package.search([('project_id', '=', self.id)]) \
+            if self.id else Package
+        goi_co_ns = goi.filtered(lambda p: p.budget_amount)
+        da_tinh = goi_co_ns.mapped('line_ids.structure_id')
+        dong = []
+        for p in goi_co_ns:
+            dong.append({
+                'source': 'package', 'package_id': p.id,
+                'ref_code': p.code or '', 'ref_name': p.name or '',
+                'amount': p.budget_amount,
+            })
+        for s in (self.structure_ids - da_tinh):
+            if not s.estimate_value:
+                continue
+            dong.append({
+                'source': 'structure', 'structure_id': s.id,
+                'ref_code': (s.code or '') if 'code' in s._fields else '',
+                'ref_name': s.name or '', 'amount': s.estimate_value,
+            })
+        for cl in self.project_cost_line_ids:
+            if not cl.amount:
+                continue
+            dong.append({
+                'source': 'project_cost',
+                'ref_code': cl.category_id.code or '',
+                'ref_name': cl.category_id.display_name or '',
+                'amount': cl.amount,
+            })
+        return dong
+
     @api.depends('structure_ids.estimate_value',
                  'structure_ids.progress_value',
                  'structure_ids.actual_cost',
                  'structure_ids.cost_status',
                  'project_cost_direct_total')
     def _compute_project_evm(self):
-        Package = self.env['rp.tender.package']
         for proj in self:
             structs = proj.structure_ids
-            # BAC = Σ dự toán hạng mục + chi phí CẤP DỰ ÁN (quản lý dự án,
-            # lán trại, bảo hiểm… — không thuộc hạng mục nào). Anh Đại chốt
-            # 2026-08-10: thiếu phần này thì CTC và Nhu cầu vốn tính hụt
-            # đúng bằng nó (tài liệu nghiệp vụ §3 đòi chi phí ĐỦ đến hoàn thành).
-            # Ngân sách lấy ở cấp mà chủ đầu tư KÝ được hợp đồng và ĐO
-            # được tiền ra:
-            #  · mua trọn gói EPC → ngân sách nằm ở GÓI THẦU (BOQ của chủ
-            #    đầu tư), vì nhà thầu không báo tiền theo hạng mục;
-            #  · tự làm, đo khối lượng → ngân sách nằm ở HẠNG MỤC.
-            # Cộng cả hai, nhưng hạng mục đã nằm trong một gói CÓ ngân
-            # sách thì không cộng lại — nếu không là đếm đúp.
-            goi = Package.search([('project_id', '=', proj.id)]) \
-                if proj.id else Package
-            goi_co_ns = goi.filtered(lambda p: p.budget_amount)
-            da_tinh = goi_co_ns.mapped('line_ids.structure_id')
-            bac = (sum(goi_co_ns.mapped('budget_amount'))
-                   + sum((structs - da_tinh).mapped('estimate_value'))
-                   + (proj.project_cost_direct_total or 0.0))
+            bac = sum(d['amount'] for d in proj._bac_breakdown())
             ev = sum(structs.mapped('progress_value'))
             ac = sum(structs.mapped('actual_cost'))
             cpi = (ev / ac) if ac else 0.0

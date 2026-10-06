@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="before">
-                <group string="EVM — Kiểm soát chi phí dự án">
+                <group name="evm_control" string="EVM — Kiểm soát chi phí dự án">
                     <group>
                         <field name="currency_id" invisible="1"/>
                         <field name="total_bac" string="Tổng ngân sách (BAC)"/>

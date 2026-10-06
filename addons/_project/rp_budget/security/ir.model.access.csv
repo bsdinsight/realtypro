@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_cost_baseline_user,rp.cost.baseline user,model_rp_cost_baseline,re_base.group_re_user,1,0,0,0
+access_rp_cost_baseline_manager,rp.cost.baseline manager,model_rp_cost_baseline,re_base.group_re_manager,1,1,1,1
+access_rp_cost_baseline_line_user,rp.cost.baseline.line user,model_rp_cost_baseline_line,re_base.group_re_user,1,0,0,0
+access_rp_cost_baseline_line_manager,rp.cost.baseline.line manager,model_rp_cost_baseline_line,re_base.group_re_manager,1,1,1,1

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_budget" model="ir.ui.view">
+        <field name="name">re.project.form.budget</field>
+        <field name="model">re.project</field>
+        <!-- Nối sau khối EVM để ba lớp ngân sách nằm ngay trên BAC —
+             người đọc thấy số đóng băng trước, số tính động sau. -->
+        <field name="inherit_id" ref="rp_evm.view_re_project_form_evm"/>
+        <field name="arch" type="xml">
+            <!-- Neo vào @name chứ KHÔNG vào @string: Odoo từ chối
+                 thẳng "View inheritance may not use attribute 'string'
+                 as a selector" và làm hỏng cả registry. -->
+            <xpath expr="//group[@name='evm_control']" position="before">
+                <group string="Ngân sách — ba lớp">
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="budget_original"/>
+                        <field name="budget_current"/>
+                        <field name="budget_forecast"/>
+                    </group>
+                    <group>
+                        <field name="budget_revision_total"/>
+                        <field name="budget_forecast_gap"/>
+                        <field name="budget_drift"/>
+                        <field name="budget_status" widget="badge"
+                               decoration-muted="budget_status == 'no_baseline'"
+                               decoration-success="budget_status == 'on_budget'"
+                               decoration-warning="budget_status == 'drifted'"
+                               decoration-danger="budget_status == 'over'"/>
+                    </group>
+                    <group colspan="2">
+                        <button name="action_chot_ngan_sach_goc"
+                                type="object" class="btn-primary"
+                                string="Chốt ngân sách gốc"
+                                confirm="Chốt ngân sách gốc theo số hiện tại? Mốc đang hiệu lực (nếu có) sẽ chuyển sang 'đã thay thế' và vẫn giữ lại làm lịch sử."/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_moc_ngan_sach" type="object"
+                        class="oe_stat_button" icon="fa-flag-checkered"
+                        invisible="cost_baseline_count == 0">
+                    <field name="cost_baseline_count" widget="statinfo"
+                           string="Mốc ngân sách"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

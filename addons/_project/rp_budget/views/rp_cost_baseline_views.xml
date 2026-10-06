@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_cost_baseline_list" model="ir.ui.view">
+        <field name="name">rp.cost.baseline.list</field>
+        <field name="model">rp.cost.baseline</field>
+        <field name="arch" type="xml">
+            <list string="Mốc ngân sách">
+                <field name="project_id"/>
+                <field name="revision" string="Lần chốt"/>
+                <field name="name"/>
+                <field name="date_approved"/>
+                <field name="approved_by_id"/>
+                <field name="line_count" string="Số khoản"/>
+                <!-- Cột tiền để 200px: cắt cụt số tiền là lỗi không
+                     được phép trong sản phẩm này. -->
+                <field name="amount_total" width="200"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state == 'superseded'"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'active'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_baseline_form" model="ir.ui.view">
+        <field name="name">rp.cost.baseline.form</field>
+        <field name="model">rp.cost.baseline</field>
+        <field name="arch" type="xml">
+            <form string="Mốc ngân sách">
+                <header>
+                    <button name="action_kich_hoat" type="object"
+                            string="Đưa vào hiệu lực" class="btn-primary"
+                            invisible="state == 'active'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp"
+                            invisible="state != 'active'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,superseded"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Ngân sách gốc…"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" readonly="1"/>
+                            <field name="revision" readonly="1"/>
+                            <field name="date_approved"/>
+                            <field name="approved_by_id"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_total"/>
+                            <field name="line_count"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="note"
+                           placeholder="Căn cứ chốt: số quyết định phê duyệt, cuộc họp, biên bản…"/>
+                    <notebook>
+                        <page string="Chi tiết các khoản" name="lines">
+                            <!-- Số đã CHỤP, không sửa được: sửa được thì
+                                 mốc hết là mốc. Muốn số khác thì chốt
+                                 lại một mốc mới. -->
+                            <field name="line_ids" readonly="1">
+                                <list string="Các khoản">
+                                    <field name="source"/>
+                                    <field name="ref_code"/>
+                                    <field name="ref_name"/>
+                                    <field name="package_id" optional="hide"/>
+                                    <field name="structure_id" optional="hide"/>
+                                    <field name="amount" width="200" sum="Tổng"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_baseline_search" model="ir.ui.view">
+        <field name="name">rp.cost.baseline.search</field>
+        <field name="model">rp.cost.baseline</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_active" string="Đang hiệu lực"
+                        domain="[('state', '=', 'active')]"/>
+                <filter name="f_superseded" string="Đã thay thế"
+                        domain="[('state', '=', 'superseded')]"/>
+                <separator/>
+                <filter name="group_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_baseline_line_list" model="ir.ui.view">
+        <field name="name">rp.cost.baseline.line.list</field>
+        <field name="model">rp.cost.baseline.line</field>
+        <field name="arch" type="xml">
+            <list string="Khoản trong mốc" create="0" edit="0">
+                <field name="baseline_id" optional="hide"/>
+                <field name="source"/>
+                <field name="ref_code"/>
+                <field name="ref_name"/>
+                <field name="amount" width="200" sum="Tổng"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_baseline_line_search" model="ir.ui.view">
+        <field name="name">rp.cost.baseline.line.search</field>
+        <field name="model">rp.cost.baseline.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ref_name"/>
+                <field name="ref_code"/>
+                <filter name="group_source" string="Nguồn"
+                        context="{'group_by': 'source'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_cost_baseline" model="ir.actions.act_window">
+        <field name="name">Mốc ngân sách</field>
+        <field name="res_model">rp.cost.baseline</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_cost_baseline_search"/>
+        <field name="context">{'search_default_group_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa chốt mốc ngân sách nào
+            </p>
+            <p>
+                Mốc ngân sách là ảnh chụp ngân sách tại lúc phê duyệt.
+                Không có mốc thì mọi câu "vượt bao nhiêu" đều vô nghĩa,
+                vì ngân sách tính động sẽ trôi theo từng lần sửa BOQ.
+                Chốt mốc bằng nút trên form Dự án.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_cost_baseline"
+              name="Mốc ngân sách"
+              parent="rp_estimate.menu_realty_project_root"
+              action="action_rp_cost_baseline"
+              sequence="56"/>
+
+</odoo>

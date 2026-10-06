@@ -259,6 +259,40 @@ class ProjectTask(models.Model):
                      'baseline_set_date': False})
         return len(tasks)
 
+    @api.model
+    def _rp_viec_la(self, tasks):
+        """Lọc ra việc LÁ, bỏ các dòng tổng WBS.
+
+        Mã WBS có thể đánh theo HAI lối, và nhận diện dòng tổng phải
+        theo đúng lối đang dùng:
+         · đánh RIÊNG theo từng hợp đồng — hai gói đều có "1", "2", nên
+           phải so trong phạm vi một hợp đồng, nếu không việc "1" của
+           gói này bị coi là dòng tổng chỉ vì gói kia có "1.1";
+         · đánh CHUNG toàn dự án (nhập từ một file lịch tổng) — lúc đó
+           mã là duy nhất, và cha con có thể nằm ở hai hợp đồng khác
+           nhau, nên so theo hợp đồng sẽ bỏ sót dòng tổng.
+        Tự nhận ra đang ở lối nào: mã trùng nhau thì là lối riêng.
+
+        Dùng chung cho đường găng và cho việc rải ngân sách theo lịch —
+        hai nơi tự lọc lấy là có ngày một nơi cộng cả dòng tổng, ngân
+        sách lập tức nhân đôi.
+        """
+        if not tasks:
+            return []
+        codes = [t.wbs_code for t in tasks if t.wbs_code]
+        duy_nhat = len(set(codes)) == len(codes)
+        wbs_all = set((False if duy_nhat else t.rp_contract_id.id,
+                       t.wbs_code) for t in tasks if t.wbs_code)
+
+        def is_summary(t):
+            if not t.wbs_code:
+                return False
+            cid = False if duy_nhat else t.rp_contract_id.id
+            pre = t.wbs_code + '.'
+            return any(c == cid and w.startswith(pre) for c, w in wbs_all)
+
+        return [t for t in tasks if not is_summary(t)]
+
     # --- Đường găng (CPM) — mục 3+11 khung phân tích tiến độ ---
     @api.model
     def _rp_cpm(self, tasks, float_field='total_float',
@@ -302,19 +336,7 @@ class ProjectTask(models.Model):
         #    mã là duy nhất, và cha con có thể nằm ở hai hợp đồng khác
         #    nhau, nên so theo hợp đồng sẽ bỏ sót dòng tổng.
         # Tự nhận ra đang ở lối nào: mã trùng nhau thì là lối riêng.
-        codes = [t.wbs_code for t in tasks if t.wbs_code]
-        duy_nhat = len(set(codes)) == len(codes)
-        wbs_all = set((False if duy_nhat else t.rp_contract_id.id,
-                       t.wbs_code) for t in tasks if t.wbs_code)
-
-        def is_summary(t):
-            if not t.wbs_code:
-                return False
-            cid = False if duy_nhat else t.rp_contract_id.id
-            pre = t.wbs_code + '.'
-            return any(c == cid and w.startswith(pre) for c, w in wbs_all)
-
-        leaves = [t for t in tasks if not is_summary(t)]
+        leaves = self._rp_viec_la(tasks)
         if not leaves:
             return {}
         by_id = {t.id: t for t in leaves}

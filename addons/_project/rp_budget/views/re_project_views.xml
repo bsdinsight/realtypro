@@ -42,7 +42,18 @@
                                    widget="progressbar"/>
                         </group>
                     </group>
+                    <group string="Rải theo lịch" colspan="2">
+                        <group>
+                            <field name="budget_phased_total"/>
+                        </group>
+                        <group>
+                            <field name="budget_unphased_total"/>
+                        </group>
+                    </group>
                     <group colspan="2">
+                        <button name="action_rai_ngan_sach_theo_lich"
+                                type="object" class="btn-secondary"
+                                string="Rải ngân sách theo lịch"/>
                         <button name="action_chot_ngan_sach_goc"
                                 type="object" class="btn-primary"
                                 string="Chốt ngân sách gốc"
@@ -62,6 +73,12 @@
                         invisible="contingency_drawdown_count == 0">
                     <field name="contingency_drawdown_count" widget="statinfo"
                            string="Phiếu rút dự phòng"/>
+                </button>
+                <button name="action_mo_rai_ngan_sach" type="object"
+                        class="oe_stat_button" icon="fa-area-chart"
+                        invisible="budget_phase_count == 0">
+                    <field name="budget_phase_count" widget="statinfo"
+                           string="Tháng đã rải"/>
                 </button>
             </xpath>
         </field>

@@ -58,6 +58,14 @@ class RpAdvancePayment(models.Model):
         tracking=True,
         help='Nhà thầu hoặc Nhà cung cấp nhận tạm ứng. Auto-fill từ '
              'HĐ/PO; sửa được nếu cần.')
+    project_id = fields.Many2one(
+        're.project', string='Dự án',
+        compute='_compute_project', store=True, readonly=False,
+        index=True, tracking=True,
+        help='Dự án của khoản tạm ứng. Tự lấy theo HĐ nhà thầu; tạm ứng '
+             'gắn PO mua hàng thì chọn tay. Có trường này thì mới lọc '
+             'và gom tạm ứng theo dự án được — pane lọc chỉ nhận trường '
+             'của chính model, không đi xuyên quan hệ.')
 
     amount = fields.Monetary(
         string='Giá trị tạm ứng', required=True, tracking=True,
@@ -235,6 +243,16 @@ class RpAdvancePayment(models.Model):
                 rec.partner_id = rec.contract_id.contractor_id
             elif rec.purchase_order_id and rec.purchase_order_id.partner_id:
                 rec.partner_id = rec.purchase_order_id.partner_id
+
+    @api.depends('contract_id', 'contract_id.project_id')
+    def _compute_project(self):
+        # Chỉ ĐIỀN khi có hợp đồng; không xoá giá trị người dùng tự chọn
+        # cho tạm ứng gắn PO mua hàng (PO không mang dự án).
+        for rec in self:
+            if rec.contract_id and rec.contract_id.project_id:
+                rec.project_id = rec.contract_id.project_id
+            elif not rec.project_id:
+                rec.project_id = False
 
     @api.depends('settlement_ids.amount', 'amount')
     def _compute_settled(self):

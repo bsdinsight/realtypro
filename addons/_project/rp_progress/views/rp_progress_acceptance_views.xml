@@ -250,6 +250,26 @@
                         context="{'group_by': 'state'}"/>
                 <filter name="g_month" string="Tháng đề xuất"
                         context="{'group_by': 'date_submitted:month'}"/>
+
+                <!-- Pane lọc trái. Cả bốn trường đều là m2o/selection
+                     THẬT trên rp.progress.acceptance nên pane nhận được;
+                     pane không đi xuyên quan hệ.
+                     Trạng thái để select="multi" vì người duyệt hay xem
+                     "đã đề xuất + đã duyệt" cùng lúc để biết còn bao
+                     nhiêu khối lượng đang chờ mình. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder" enable_counters="1"/>
+                    <field name="contract_id" string="HĐ nhà thầu"
+                           icon="fa-file-text-o" enable_counters="1"
+                           select="multi"/>
+                    <field name="contractor_id" string="Nhà thầu"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"
+                           select="multi"/>
+                </searchpanel>
             </search>
         </field>
     </record>

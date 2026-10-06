@@ -236,4 +236,39 @@
         </field>
     </record>
 
+    <!--
+      Danh bạ NHÀ CUNG CẤP — khác nhà thầu: nhà thầu THI CÔNG theo hợp
+      đồng xây lắp, nhà cung cấp BÁN vật tư/thiết bị theo đơn hàng. Một
+      đối tác có thể vừa là cả hai, nên hai danh bạ lọc theo hai cờ khác
+      nhau chứ không loại trừ nhau.
+
+      Dùng `supplier_rank` của Odoo thay vì đẻ thêm cờ riêng: đó là cờ
+      chuẩn mà phân hệ Mua hàng và Hoá đơn nhà cung cấp đang dùng, tự
+      tăng khi phát sinh đơn mua — tự khai cờ mới là lạc khỏi phần còn
+      lại của hệ thống.
+    -->
+    <record id="action_partner_supplier" model="ir.actions.act_window">
+        <field name="name">Nhà cung cấp</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('supplier_rank', '>', 0)]</field>
+        <field name="context">{'default_supplier_rank': 1, 'default_is_company': True, 'res_partner_search_mode': 'supplier'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có nhà cung cấp nào
+            </p>
+            <p>
+                Nhà cung cấp vật tư, thiết bị, dịch vụ. Đối tác được
+                đánh dấu tự động khi phát sinh đơn mua hoặc hoá đơn mua;
+                thêm tay ở đây cũng được.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_cfg_supplier"
+              name="Nhà cung cấp"
+              parent="rp_estimate.menu_rp_configuration"
+              action="action_partner_supplier"
+              sequence="50"/>
+
 </odoo>

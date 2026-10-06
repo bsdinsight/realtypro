@@ -13,6 +13,7 @@
                   decoration-muted="state == 'cancelled'">
                 <field name="name"/>
                 <field name="date_request"/>
+                <field name="project_id" optional="show"/>
                 <field name="contract_id" optional="show"/>
                 <field name="purchase_order_id" optional="hide"/>
                 <field name="partner_id"/>
@@ -192,6 +193,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="project_id"/>
                 <field name="partner_id"/>
                 <field name="contract_id"/>
                 <field name="purchase_order_id"/>
@@ -212,8 +214,31 @@
                         context="{'group_by': 'partner_id'}"/>
                 <filter name="g_state" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
                 <filter name="g_month" string="Tháng đề nghị"
                         context="{'group_by': 'date_request:month'}"/>
+
+                <!-- Pane lọc trái. Chỉ nhận m2o/m2m/selection của CHÍNH
+                     rp.advance.payment — nên `project_id` phải là trường
+                     thật có store trên model, đi xuyên contract_id thì
+                     pane không nhận.
+                     Trạng thái để select="multi" vì người dùng hay xem
+                     "đã duyệt + đã thanh toán" cùng lúc để biết tiền đã
+                     ra tới đâu. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder" enable_counters="1"/>
+                    <field name="partner_id" string="Bên nhận"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="contract_id" string="HĐ nhà thầu"
+                           icon="fa-file-text-o" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái"
+                           icon="fa-tasks" enable_counters="1"
+                           select="multi"/>
+                </searchpanel>
             </search>
         </field>
     </record>

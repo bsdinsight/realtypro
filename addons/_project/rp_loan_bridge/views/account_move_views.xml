@@ -54,7 +54,11 @@
         <field name="name">account.move.contractor.invoice.list</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <list string="Hóa đơn HĐ nhà thầu"
+            <!-- expand="1": action mở sẵn ở chế độ gom theo Dự án
+                 (`search_default_g_project`), mà nhóm thì mặc định ĐÓNG
+                 nên mở màn ra chỉ thấy mấy dòng tiêu đề. Bung sẵn để
+                 thấy hoá đơn ngay. -->
+            <list string="Hóa đơn HĐ nhà thầu" expand="1"
                   decoration-info="state == 'draft'"
                   decoration-warning="payment_state == 'partial'"
                   decoration-success="payment_state in ('paid','in_payment')"
@@ -138,6 +142,30 @@
                         context="{'group_by': 'payment_state'}"/>
                 <filter name="g_month" string="Tháng HĐ"
                         context="{'group_by': 'invoice_date:month'}"/>
+
+                <!-- Pane lọc bên trái. Chỉ nhận m2o/m2m/selection của
+                     CHÍNH account.move — project_id và contract_id đều
+                     là trường thật có store trên model (rp_loan_bridge),
+                     nên dùng được; đi xuyên quan hệ thì không.
+                     Lưu ý cách Odoo hành xử: các mục trong pane KHÔNG
+                     co lại theo mục đang chọn ở pane khác, nên con số
+                     đếm là đếm trong phạm vi bộ lọc ở thanh tìm kiếm,
+                     không phải trong phạm vi pane. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án"
+                           icon="fa-folder" enable_counters="1"/>
+                    <field name="partner_id" string="Nhà thầu"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="contract_id" string="HĐ nhà thầu"
+                           icon="fa-file-text-o" enable_counters="1"
+                           select="multi"/>
+                    <field name="payment_state" string="Tình trạng TT"
+                           icon="fa-money" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái"
+                           icon="fa-check-square-o" select="multi"/>
+                </searchpanel>
             </search>
         </field>
     </record>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_ppa_list" model="ir.ui.view">
+        <field name="name">rp.ppa.list</field>
+        <field name="model">rp.ppa</field>
+        <field name="arch" type="xml">
+            <list string="Hợp đồng mua bán điện">
+                <field name="name"/>
+                <field name="project_id" optional="hide"/>
+                <field name="partner_id" string="Bên mua"/>
+                <field name="meter_id" string="Điểm giao" optional="show"/>
+                <field name="date_cod" string="COD"/>
+                <field name="term_years" string="Thời hạn"/>
+                <field name="date_end" string="Hết hạn" optional="show"/>
+                <field name="tariff_base" string="Giá gốc (USD/kWh)"/>
+                <field name="escalation_percent" string="Trượt giá %/năm"/>
+                <field name="allocation_percent" string="Tỷ lệ SL (%)"
+                       sum="Σ phải = 100"/>
+                <field name="deemed_energy" string="Trả khi bị cắt giảm"
+                       optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'negotiating'"
+                       decoration-success="state in ('signed', 'active')"
+                       decoration-muted="state == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_ppa_form" model="ir.ui.view">
+        <field name="name">rp.ppa.form</field>
+        <field name="model">rp.ppa</field>
+        <field name="arch" type="xml">
+            <form string="Hợp đồng mua bán điện">
+                <header>
+                    <button name="action_sinh_bieu_gia" type="object"
+                            string="Sinh biểu giá theo năm"
+                            class="btn-secondary"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,negotiating,signed,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_bieu_gia" type="object"
+                                class="oe_stat_button" icon="fa-line-chart"
+                                invisible="tariff_line_count == 0">
+                            <field name="tariff_line_count" widget="statinfo"
+                                   string="Năm có giá"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <field name="title" placeholder="Tên hợp đồng…"/>
+                    </div>
+                    <group>
+                        <group string="Các bên &amp; điểm giao">
+                            <field name="project_id"/>
+                            <field name="partner_id"/>
+                            <field name="meter_id"
+                                   options="{'no_create': True}"/>
+                            <field name="allocation_percent"/>
+                        </group>
+                        <group string="Thời hạn">
+                            <field name="date_signed"/>
+                            <field name="date_cod"/>
+                            <field name="term_years"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Giá">
+                            <field name="currency_id"
+                                   options="{'no_create': True}"/>
+                            <field name="tariff_base"/>
+                            <field name="escalation_percent"/>
+                            <field name="test_energy_percent"/>
+                        </group>
+                        <group string="Sản lượng bị cắt giảm &amp; khả dụng">
+                            <field name="deemed_energy"
+                                   widget="boolean_toggle"/>
+                            <field name="deemed_percent"
+                                   invisible="not deemed_energy"/>
+                            <field name="availability_guarantee_y1"/>
+                            <field name="availability_guarantee_y2"/>
+                        </group>
+                    </group>
+                    <group string="Thanh toán">
+                        <group>
+                            <field name="payment_term_days"/>
+                        </group>
+                        <group>
+                            <field name="meter_reading_day"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Biểu giá theo năm hợp đồng"
+                              name="tariff">
+                            <field name="tariff_line_ids">
+                                <list editable="bottom">
+                                    <field name="contract_year"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="tariff"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú điều khoản" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Điều khoản đáng nhớ: cắt giảm, bất khả kháng, điều chỉnh giá…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_ppa_search" model="ir.ui.view">
+        <field name="name">rp.ppa.search</field>
+        <field name="model">rp.ppa</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <filter name="f_active" string="Đang hiệu lực"
+                        domain="[('state', 'in', ('signed', 'active'))]"/>
+                <filter name="f_nego" string="Đang đàm phán"
+                        domain="[('state', '=', 'negotiating')]"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="partner_id" string="Bên mua"
+                           icon="fa-plug" enable_counters="1" select="multi"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_ppa" model="ir.actions.act_window">
+        <field name="name">Hợp đồng mua bán điện</field>
+        <field name="res_model">rp.ppa</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_ppa_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có hợp đồng mua bán điện nào
+            </p>
+            <p>
+                Hợp đồng chạy từ mốc COD của dự án, không phải từ ngày ký —
+                nhà máy chưa vận hành thương mại thì chưa bán được gì.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_ppa" name="Hợp đồng mua bán điện"
+              parent="menu_energy_sale" action="action_rp_ppa"
+              sequence="10"/>
+
+</odoo>

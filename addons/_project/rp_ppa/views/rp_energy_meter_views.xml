@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_energy_meter_list" model="ir.ui.view">
+        <field name="name">rp.energy.meter.list</field>
+        <field name="model">rp.energy.meter</field>
+        <field name="arch" type="xml">
+            <list string="Điểm giao nhận / công-tơ" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="project_id"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="point_type"/>
+                <field name="serial" optional="show"/>
+                <field name="ct_ratio" optional="hide"/>
+                <field name="vt_ratio" optional="hide"/>
+                <field name="loss_factor_percent"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rp_energy_meter" model="ir.actions.act_window">
+        <field name="name">Điểm giao nhận &amp; công-tơ</field>
+        <field name="res_model">rp.energy.meter</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_project': 1}</field>
+    </record>
+
+    <menuitem id="menu_rp_energy_meter" name="Điểm giao nhận &amp; công-tơ"
+              parent="menu_energy_sale" action="action_rp_energy_meter"
+              sequence="30"/>
+</odoo>

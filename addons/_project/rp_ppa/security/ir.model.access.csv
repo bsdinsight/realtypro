@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_ppa_user,rp.ppa user,model_rp_ppa,re_base.group_re_user,1,0,0,0
+access_rp_ppa_manager,rp.ppa manager,model_rp_ppa,re_base.group_re_manager,1,1,1,1
+access_rp_ppa_tariff_user,rp.ppa.tariff user,model_rp_ppa_tariff,re_base.group_re_user,1,0,0,0
+access_rp_ppa_tariff_manager,rp.ppa.tariff manager,model_rp_ppa_tariff,re_base.group_re_manager,1,1,1,1
+access_rp_energy_meter_user,rp.energy.meter user,model_rp_energy_meter,re_base.group_re_user,1,0,0,0
+access_rp_energy_meter_manager,rp.energy.meter manager,model_rp_energy_meter,re_base.group_re_manager,1,1,1,1
+access_rp_energy_period_user,rp.energy.period user,model_rp_energy_period,re_base.group_re_user,1,1,1,0
+access_rp_energy_period_manager,rp.energy.period manager,model_rp_energy_period,re_base.group_re_manager,1,1,1,1
+access_rp_energy_period_line_user,rp.energy.period.line user,model_rp_energy_period_line,re_base.group_re_user,1,1,1,0
+access_rp_energy_period_line_manager,rp.energy.period.line manager,model_rp_energy_period_line,re_base.group_re_manager,1,1,1,1

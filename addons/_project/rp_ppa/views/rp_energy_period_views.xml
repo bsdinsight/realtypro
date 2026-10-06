@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_energy_period_list" model="ir.ui.view">
+        <field name="name">rp.energy.period.list</field>
+        <field name="model">rp.energy.period</field>
+        <field name="arch" type="xml">
+            <list string="Sản lượng theo kỳ" default_order="date_from"
+                  decoration-info="is_pre_cod"
+                  decoration-danger="shortfall_mwh &gt; 0">
+                <field name="name"/>
+                <field name="project_id" optional="hide"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="is_pre_cod" string="Chạy thử" optional="show"/>
+                <field name="gross_mwh" string="Phát gộp" sum="Σ"/>
+                <field name="auxiliary_mwh" string="Tự dùng" optional="hide"
+                       sum="Σ"/>
+                <field name="loss_mwh" string="Tổn thất" optional="hide"
+                       sum="Σ"/>
+                <field name="net_mwh" string="Giao nhận ròng" sum="Σ"/>
+                <field name="curtailed_mwh" string="Bị cắt giảm" sum="Σ"/>
+                <field name="availability_percent" string="Khả dụng %"/>
+                <field name="shortfall_mwh" string="Hụt khả dụng" sum="Σ"
+                       optional="show"/>
+                <field name="revenue_total" width="190" string="Doanh thu"
+                       sum="Σ"/>
+                <field name="deemed_total" width="190" optional="show"
+                       string="Trong đó cắt giảm" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'invoiced'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_energy_period_form" model="ir.ui.view">
+        <field name="name">rp.energy.period.form</field>
+        <field name="model">rp.energy.period</field>
+        <field name="arch" type="xml">
+            <form string="Sản lượng kỳ">
+                <header>
+                    <button name="action_chot_cong_to" type="object"
+                            string="Chốt công-tơ" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_xuat_hoa_don" type="object"
+                            string="Xuất hoá đơn tiền điện"
+                            class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-info" role="status"
+                         invisible="not is_pre_cod">
+                        <strong>Kỳ chạy thử (trước COD).</strong>
+                        Điện phát ra trước ngày vận hành thương mại được mua
+                        với giá chiết khấu theo điều khoản của từng hợp đồng.
+                    </div>
+                    <group>
+                        <group string="Kỳ">
+                            <field name="project_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="is_pre_cod" invisible="1"/>
+                        </group>
+                        <group string="Khả dụng">
+                            <field name="availability_percent"/>
+                            <field name="shortfall_mwh"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Chuỗi sản lượng">
+                        <group>
+                            <field name="gross_mwh"/>
+                            <field name="auxiliary_mwh"/>
+                            <field name="loss_mwh"/>
+                        </group>
+                        <group>
+                            <field name="net_mwh"/>
+                            <field name="curtailed_mwh"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Phân bổ theo hợp đồng" name="lines">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="ppa_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="energy_mwh" sum="Σ"/>
+                                    <field name="curtailed_mwh" sum="Σ"/>
+                                    <field name="tariff"/>
+                                    <field name="amount_energy" width="190"
+                                           sum="Σ"/>
+                                    <field name="deemed_amount" width="190"
+                                           sum="Σ"/>
+                                    <field name="amount" width="190" sum="Σ"/>
+                                    <field name="invoice_id"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_energy_period_search" model="ir.ui.view">
+        <field name="name">rp.energy.period.search</field>
+        <field name="model">rp.energy.period</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_pre_cod" string="Kỳ chạy thử"
+                        domain="[('is_pre_cod', '=', True)]"/>
+                <filter name="f_curtailed" string="Có bị cắt giảm"
+                        domain="[('curtailed_mwh', '&gt;', 0)]"/>
+                <filter name="f_shortfall" string="Khả dụng dưới cam kết"
+                        domain="[('shortfall_mwh', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="g_month" string="Tháng"
+                        context="{'group_by': 'date_from:month'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_energy_period" model="ir.actions.act_window">
+        <field name="name">Sản lượng &amp; doanh thu</field>
+        <field name="res_model">rp.energy.period</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_energy_period_search"/>
+    </record>
+
+    <menuitem id="menu_rp_energy_period" name="Sản lượng &amp; doanh thu"
+              parent="menu_energy_sale" action="action_rp_energy_period"
+              sequence="20"/>
+</odoo>

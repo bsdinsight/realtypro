@@ -139,8 +139,61 @@
                     <field name="rp_contract_id" select="multi"
                            string="Hợp đồng (nhà thầu)"
                            icon="fa-file-text-o" enable_counters="1"/>
+                    <field name="exec_status" string="Tình trạng thi công"
+                           icon="fa-tasks" enable_counters="1"
+                           select="multi"/>
                 </searchpanel>
             </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Danh sách RIÊNG cho lịch thi công =====
+         Danh sách công việc của Odoo lõi khai sẵn
+         `default_group_by="stage_id"` ngay trong thẻ <list>, nên màn này
+         luôn mở ra ở chế độ gom theo Stage — mà 228 việc lịch thi công
+         không việc nào có stage, ra đúng một nhóm "Không (228)" che hết
+         danh sách. Stage cũng không phải trục của lịch: nó là cột kanban
+         (DB đang có 28 stage rác kiểu Inbox / Today / This Week của app
+         Việc cần làm cá nhân).
+
+         Lịch thi công là một DÀN BÀI CÓ THỨ TỰ, nên mặc định không gom,
+         sắp theo STT. Và chỉ giữ cột của lịch — bỏ Priority, Tags, Next
+         Activity, Project vốn là cột của phần mềm quản lý việc văn phòng. -->
+    <record id="view_rp_schedule_task_list" model="ir.ui.view">
+        <field name="name">project.task.list.rp.schedule</field>
+        <field name="model">project.task</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Lịch thi công" default_order="wbs_seq, id"
+                  multi_edit="1" sample="1"
+                  decoration-danger="exec_status == 'late'"
+                  decoration-warning="is_critical and exec_status != 'done'"
+                  decoration-muted="exec_status == 'done'">
+                <field name="wbs_seq" string="STT" optional="show"/>
+                <field name="wbs_code" string="Mã WBS" optional="show"/>
+                <field name="wbs_level" string="Cấp" optional="hide"/>
+                <field name="name" string="Tên công việc"/>
+                <field name="rp_contract_id" string="Hợp đồng"
+                       optional="show"/>
+                <field name="planned_start" string="Bắt đầu (KH)"/>
+                <field name="planned_end" string="Kết thúc (KH)"/>
+                <field name="planned_days" string="Thời lượng"
+                       sum="Σ ngày"/>
+                <field name="progress_percent" string="% hoàn thành"
+                       widget="progressbar"/>
+                <field name="total_float" string="Dư địa (ngày)"
+                       optional="show"/>
+                <field name="is_critical" string="Găng" optional="show"/>
+                <field name="exec_status" string="Tình trạng"
+                       widget="badge"
+                       decoration-muted="exec_status == 'not_started'"
+                       decoration-info="exec_status == 'in_progress'"
+                       decoration-success="exec_status == 'done'"
+                       decoration-danger="exec_status == 'late'"/>
+                <field name="is_milestone" string="Mốc" optional="hide"/>
+                <field name="baseline_slip_days" string="Trượt baseline"
+                       optional="hide"/>
+            </list>
         </field>
     </record>
 
@@ -151,6 +204,14 @@
         <field name="view_mode">list,form,kanban,calendar</field>
         <field name="domain">[('rp_contract_id', '!=', False)]</field>
         <field name="search_view_id" ref="view_task_search_rp_panel"/>
+    </record>
+
+    <record id="action_rp_schedule_tasks_list_view"
+            model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_rp_schedule_task_list"/>
+        <field name="act_window_id" ref="action_rp_schedule_tasks"/>
     </record>
 
     <record id="action_rp_schedule_my_tasks" model="ir.actions.act_window">

@@ -250,7 +250,10 @@
     <record id="action_partner_supplier" model="ir.actions.act_window">
         <field name="name">Nhà cung cấp</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,list,form</field>
+        <!-- Danh sách đứng TRƯỚC: danh bạ nhà cung cấp là thứ người ta
+             tra và so sánh theo cột (ngành hàng, địa bàn, liên hệ), chứ
+             không phải lướt ảnh như danh bạ khách hàng. -->
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('supplier_rank', '>', 0)]</field>
         <field name="context">{'default_supplier_rank': 1, 'default_is_company': True, 'res_partner_search_mode': 'supplier'}</field>
         <field name="help" type="html">

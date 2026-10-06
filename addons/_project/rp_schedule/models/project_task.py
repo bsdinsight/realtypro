@@ -35,6 +35,8 @@ class ProjectTask(models.Model):
     # id cơ sở dữ liệu); CẤP là "việc này nằm ở tầng mấy của cây WBS"
     # (để lọc ra đúng tầng tổng hợp khi báo cáo).
     wbs_seq = fields.Integer(
+        # Cộng tổng SỐ THỨ TỰ là con số không tồn tại (1+2+…+228).
+        aggregator=None,
         string='STT', index=True, copy=False,
         help='Số thứ tự của công việc trong dự án. Nhập lịch lần đầu thì '
              'đánh 1, 2, 3… theo đúng thứ tự trong file; việc thêm sau '
@@ -42,6 +44,7 @@ class ProjectTask(models.Model):
              'dùng ghi "việc số 137" ra giấy thì tuần sau vẫn đúng việc '
              'đó.')
     wbs_level = fields.Integer(
+        aggregator=None,
         string='Cấp', compute='_compute_wbs_level', store=True, index=True,
         help='Độ sâu trong cây WBS: "2" là cấp 1, "2.3" là cấp 2, '
              '"2.3.5" là cấp 3.')
@@ -94,12 +97,55 @@ class ProjectTask(models.Model):
         string='Găng toàn dự án', copy=False,
         help='Nằm trên đường găng tính trên TOÀN BỘ hợp đồng của dự án.')
     project_float = fields.Integer(
+        aggregator=None,
         string='Dư địa toàn dự án (ngày)', copy=False,
         help='Total float tính xuyên hợp đồng. Khác với dư địa trong nội '
              'bộ một hợp đồng.')
     total_float = fields.Integer(
+        # Dư địa của các việc KHÔNG cộng được: chúng nằm trên những
+        # chuỗi khác nhau, cộng lại ra một con số không có thật.
+        aggregator=None,
         string='Tổng dự trữ (ngày)', copy=False,
         help='LS − ES (backward pass CPM). ≤0 = găng; nhỏ = cận găng.')
+
+    exec_status = fields.Selection(
+        [('not_started', 'Chưa bắt đầu'),
+         ('in_progress', 'Đang làm'),
+         ('done', 'Đã xong'),
+         ('late', 'Trễ hạn')],
+        string='Tình trạng thi công',
+        compute='_compute_exec_status', store=True, index=True,
+        help='TỰ SUY từ % hoàn thành và ngày kế hoạch — không gõ tay. '
+             'Trạng thái gõ tay trên vài trăm việc thì không ai cập '
+             'nhật, và nó sẽ luôn sai; trong khi % hoàn thành đã được '
+             'cập nhật từ nghiệm thu khối lượng và ngày thì có sẵn.\n'
+             'GĂNG KHÔNG nằm trong đây: găng là chiều khác (việc găng '
+             'vẫn có thể đang làm hoặc chưa bắt đầu), nó đã có cột riêng.')
+
+    @api.depends('progress_percent', 'planned_start', 'planned_end')
+    def _compute_exec_status(self):
+        """Bốn giá trị loại trừ nhau, xét theo thứ tự.
+
+        KHÔNG gộp "găng" vào đây, vì hai lý do:
+         · găng là chiều khác — một việc găng vẫn có thể đang làm, chưa
+           bắt đầu hoặc đã xong; gộp lại là mất chiều tiến độ;
+         · và nhất là: KHÔNG suy găng từ `total_float <= 0`. Dư địa là
+           Integer, mặc định 0 khi CPM chưa từng chạy cho việc đó — trên
+           dữ liệu AMI có 148/228 việc dư địa bằng 0 kiểu đó, trong khi
+           CPM chỉ đánh dấu đúng 3 việc găng thật. Lấy 0 làm bằng chứng
+           găng thì 63% lịch hoá găng và cảnh báo thành vô dụng.
+        """
+        hom_nay = fields.Date.context_today(self)
+        for t in self:
+            pct = t.progress_percent or 0.0
+            if pct >= 100.0:
+                t.exec_status = 'done'
+            elif t.planned_end and t.planned_end < hom_nay:
+                t.exec_status = 'late'
+            elif pct > 0.0:
+                t.exec_status = 'in_progress'
+            else:
+                t.exec_status = 'not_started'
 
     @api.depends('wbs_code')
     def _compute_wbs_level(self):

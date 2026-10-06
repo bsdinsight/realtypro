@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project - Contractors",
-    "version": "19.0.2.2.0",
+    "version": "19.0.2.3.0",
     "category": "Realty/Project",
     "summary": "Nhà thầu (contractor) master data + specialty registry",
     "description": """

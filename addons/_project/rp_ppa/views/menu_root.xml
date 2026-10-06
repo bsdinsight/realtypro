@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Nhánh gốc "Bán điện", sequence 45 — sau Xây dựng (40), trước
-         EVM (55): xây xong mới bán được điện.
+    <!-- Nhánh gốc "Kinh doanh", sequence 45 — sau Xây dựng (40), trước
+         EVM (55): xây xong mới kinh doanh được.
+
+         Tên "Kinh doanh" chứ không "Bán điện": chỗ này còn phải chứa
+         các nguồn thu khác của nhà máy về sau (chứng chỉ I-REC, tín chỉ
+         các-bon, dịch vụ phụ trợ cho lưới). Đặt tên hẹp theo sản phẩm
+         đầu tiên thì mỗi lần thêm nguồn thu lại phải đổi menu.
 
          KHÔNG mount vào nhánh "Doanh thu" của rp_owner_contract: nhánh
          đó là doanh thu của TỔNG THẦU bán cho chủ đầu tư, và đã được tắt
          trên bản triển khai vai chủ đầu tư. Hai thứ khác hẳn nhau. -->
-    <menuitem id="menu_energy_sale" name="Bán điện"
+    <menuitem id="menu_energy_sale" name="Kinh doanh"
               parent="rp_estimate.menu_realty_project_root" sequence="45"/>
 </odoo>

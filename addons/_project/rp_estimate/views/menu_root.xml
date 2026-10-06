@@ -46,6 +46,8 @@
          - rp_finance:         Dashboard (5), Dự toán BOQ (20),
                                Hoá đơn nhà thầu (40), Hồ sơ thanh toán (50),
                                Thanh toán (60)
+         - rp_budget:          Ngân sách (25) — nhánh con, gom Mốc ngân
+                               sách / Sổ rút dự phòng / Ngân sách theo tháng
          - rp_advance_payment: Tạm ứng (30)
          - rp_contract:        2 báo cáo → menu_finance_reports (90) -->
     <menuitem id="menu_finance"

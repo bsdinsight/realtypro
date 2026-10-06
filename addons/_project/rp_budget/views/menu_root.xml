@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Nhánh "Ngân sách" nằm TRONG Tài chính, không phải ba menu gốc rải
+      rác cạnh EVM. Ba thứ của ngân sách luôn được mở cùng nhau: mốc đã
+      chốt, quỹ dự phòng còn bao nhiêu, và tiền rải ra từng tháng.
+
+      Đặt ở sequence 25 — sau "Dự toán BOQ" (20) vì ngân sách sinh ra từ
+      BOQ, và trước "Tạm ứng" (30) vì tiêu tiền thì phải có ngân sách
+      trước.
+
+      Khai nhánh ở file nạp ĐẦU TIÊN của module: các file view sau đó
+      mount menu lá vào nhánh này, nhánh chưa có trước là nổ "External
+      ID not found".
+    -->
+    <menuitem id="menu_finance_budget"
+              name="Ngân sách"
+              parent="rp_estimate.menu_finance"
+              sequence="25"/>
+
+</odoo>

@@ -55,8 +55,8 @@
 
     <menuitem id="menu_rp_budget_phase"
               name="Ngân sách theo tháng"
-              parent="rp_estimate.menu_realty_project_root"
+              parent="menu_finance_budget"
               action="action_rp_budget_phase"
-              sequence="58"/>
+              sequence="30"/>
 
 </odoo>

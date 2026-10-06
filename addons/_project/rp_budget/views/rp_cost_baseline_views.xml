@@ -151,8 +151,8 @@
 
     <menuitem id="menu_rp_cost_baseline"
               name="Mốc ngân sách"
-              parent="rp_estimate.menu_realty_project_root"
+              parent="menu_finance_budget"
               action="action_rp_cost_baseline"
-              sequence="56"/>
+              sequence="10"/>
 
 </odoo>

@@ -123,9 +123,9 @@
 
     <menuitem id="menu_rp_contingency_drawdown"
               name="Sổ rút dự phòng"
-              parent="rp_estimate.menu_realty_project_root"
+              parent="menu_finance_budget"
               action="action_rp_contingency_drawdown"
-              sequence="57"/>
+              sequence="20"/>
 
     <!-- Nút trên phát sinh: duyệt giá xong thì câu hỏi kế tiếp luôn là
          "tiền ở đâu ra". -->

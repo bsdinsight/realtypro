@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Form Giai đoạn cho dự án năng lượng.
+
+      Giấu theo `is_energy` của DỰ ÁN chứ không theo cờ triển khai: một
+      bản triển khai có thể có cả dự án điện lẫn dự án bất động sản, nên
+      quyết định phải nằm ở từng bản ghi.
+    -->
+    <record id="view_re_subzone_form_energy" model="ir.ui.view">
+        <field name="name">re.subzone.form.energy</field>
+        <field name="model">re.subzone</field>
+        <field name="inherit_id" ref="re_base.view_re_subzone_form"/>
+        <field name="arch" type="xml">
+
+            <field name="code" position="before">
+                <field name="is_energy" invisible="1"/>
+            </field>
+
+            <!-- Nhà máy điện không có toà nhà, không có căn hộ — hai nút
+                 này mở ra lúc nào cũng rỗng. -->
+            <xpath expr="//button[@name='action_view_buildings']"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_units']"
+                   position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </xpath>
+
+            <!-- Băng "vòng đời quản ở cấp toà nhà" vô nghĩa khi không có
+                 toà nhà nào. -->
+            <xpath expr="//div[@role='status']" position="attributes">
+                <attribute name="invisible">is_lifecycle_owner or is_energy</attribute>
+            </xpath>
+
+            <!-- Các ô chỉ dùng để BÁN: khẩu hiệu, chủ đề, ngày bàn giao
+                 sản phẩm, cờ mở bán, và loại phân khu mà mọi giá trị đều
+                 là "Apartment Block / Villa Zone". -->
+            <field name="tagline" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="subzone_type" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="theme" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="expected_handover_date" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="is_open_for_sale" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="green_area_percent" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+            <field name="total_units_planned" position="attributes">
+                <attribute name="invisible">is_energy</attribute>
+            </field>
+
+            <!-- Ô của ngành điện: công suất, số tua-bin, hai mốc điện.
+                 Đóng điện KHÁC vận hành thương mại — xem ghi chú ở model. -->
+            <field name="sequence" position="after">
+                <field name="capacity_mw" invisible="not is_energy"/>
+                <field name="turbine_count" invisible="not is_energy"/>
+                <field name="date_grid_connection"
+                       invisible="not is_energy"
+                       options="{'format': 'dd/MM/yyyy'}"/>
+                <field name="date_cod" invisible="not is_energy"
+                       options="{'format': 'dd/MM/yyyy'}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

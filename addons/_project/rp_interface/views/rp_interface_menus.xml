@@ -2,8 +2,8 @@
 <odoo>
 
     <menuitem id="menu_rp_interface_group" name="Ranh giới gói thầu"
-              parent="rp_estimate.menu_construction"
-              sequence="15"/>
+              parent="rp_estimate.menu_schedule"
+              sequence="20"/>
 
     <menuitem id="menu_rp_interface_all" name="Sổ điểm bàn giao"
               parent="menu_rp_interface_group"

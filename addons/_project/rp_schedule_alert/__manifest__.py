@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Cảnh báo trượt tiến độ',
-    'version': '19.0.1.0.0',
+    'version': '19.0.2.0.0',
     'category': 'Realty/Project',
     'summary': 'Quét hằng ngày: việc hết dư địa, việc trượt kế hoạch gốc, '
                'điểm bàn giao mâu thuẫn, dự án trễ mốc — có lịch sử, tự đóng.',

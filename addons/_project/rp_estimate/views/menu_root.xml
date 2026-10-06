@@ -32,11 +32,11 @@
               parent="menu_realty_project_root"
               sequence="5"/>
 
-    <!-- Estimate submenu (cost plan workflows — sequence 10) -->
-    <menuitem id="menu_estimate_workflows"
-              name="Estimate"
-              parent="menu_realty_project_root"
-              sequence="10"/>
+    <!-- BỎ nhánh "Estimate" (cũ: sequence 10). "Khái toán" đã chuyển
+         sang Tài chính nên nó thành nút rỗng trên thanh ứng dụng: không
+         mục con, không action, bấm vào không ra gì. Xoá hẳn khai báo
+         chứ không tắt bằng active — `<menuitem>` ghi đè active mỗi lượt
+         `-u`, còn bỏ khai báo thì trình nạp tự dọn bản ghi mồ côi. -->
 
     <!-- ===== Tài chính (Finance) — container, sequence 12 =====
          Con đầu tiên (seq 5) là Dashboard Tài chính (module rp_finance)
@@ -60,6 +60,27 @@
               parent="menu_finance"
               sequence="90"/>
 
+    <!-- ===== Tiến độ — container, sequence 35 =====
+         ĐỨNG GIỮA "Hợp đồng" và "Xây dựng": có hợp đồng rồi mới có
+         lịch, có lịch rồi mới ra hiện trường.
+
+         Tách khỏi "Xây dựng" vì các thứ về tiến độ vốn nằm rải ở bốn
+         chỗ trong đó, mà dropdown ứng dụng bung HẾT mọi cấp nên "Xây
+         dựng" bung ra ~25 dòng một lúc. Thêm tầng không làm ngắn lại;
+         cách duy nhất để ngắn là tách nhánh gốc mới.
+
+         Ranh giới chia: Tiến độ = THỜI GIAN (lịch, ràng buộc giữa các
+         gói, cảnh báo trượt). Xây dựng = CÔNG VIỆC TẠI CHỖ và hồ sơ.
+
+         Các module mount vào:
+         - rp_schedule:       Lịch thi công (10)
+         - rp_interface:      Ranh giới gói thầu (20)
+         - rp_schedule_alert: Cảnh báo tiến độ (30) -->
+    <menuitem id="menu_schedule"
+              name="Tiến độ"
+              parent="menu_realty_project_root"
+              sequence="35"/>
+
     <!-- ===== Hợp đồng (Contracts) — container, sequence 30 =====
          ĐỨNG TRƯỚC "Xây dựng": hợp đồng là cái có trước, mọi thứ ở Xây
          dựng (lịch, nghiệm thu, hồ sơ, phát sinh) đều treo vào một hợp
@@ -78,10 +99,12 @@
          Nhấp "Xây dựng" mở Dashboard Xây dựng (con seq 5, module
          rp_construction). Các module mount vào:
          - rp_construction: Dashboard (5), Báo cáo (menu_construction_reports)
-         - rp_schedule:     Lịch thi công (10)
-         - rp_progress:     Tiến độ (20)
+         - rp_progress:     Nghiệm thu khối lượng (20)
          - rp_site:         Hiện trường (30)
-         - rp_rfi:          RFI & Trình duyệt (40) -->
+         - rp_rfi:          RFI & Trình duyệt (40)
+         - rp_document:     Sổ hồ sơ kỹ thuật
+         Lịch thi công / Ranh giới gói thầu / Cảnh báo tiến độ đã chuyển
+         sang nhánh gốc "Tiến độ" (sequence 35). -->
     <menuitem id="menu_construction"
               name="Xây dựng"
               parent="menu_realty_project_root"

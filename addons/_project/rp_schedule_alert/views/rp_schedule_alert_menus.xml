@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_rp_schedule_alert" name="Cảnh báo tiến độ"
-              parent="rp_estimate.menu_construction"
-              action="action_rp_schedule_alert" sequence="25"/>
+              parent="rp_estimate.menu_schedule"
+              action="action_rp_schedule_alert" sequence="30"/>
 </odoo>

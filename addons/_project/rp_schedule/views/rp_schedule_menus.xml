@@ -22,7 +22,7 @@
     </record>
 
     <menuitem id="menu_rp_schedule_group" name="Lịch thi công"
-              parent="rp_estimate.menu_construction"
+              parent="rp_estimate.menu_schedule"
               sequence="10"/>
 
     <menuitem id="menu_rp_schedule_tasks" name="Công việc (lịch thi công)"

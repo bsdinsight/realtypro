@@ -2,7 +2,7 @@
 <odoo>
 
     <menuitem id="menu_rp_progress_root"
-              name="Tiến độ"
+              name="Nghiệm thu khối lượng"
               parent="rp_estimate.menu_construction"
               sequence="20"/>
 

@@ -33,7 +33,7 @@ class IrUiMenu(models.Model):
         res = super()._register_hook()
         try:
             CS = self.env['res.config.settings'].sudo()
-            CS._rp_energy_ap_dung_ui(CS._rp_energy_co_bat_only_ui())
+            CS._rp_energy_ap_dung_ui()
         except Exception:
             _logger.exception(
                 'rp_energy: không áp lại được cờ giao diện năng lượng; '

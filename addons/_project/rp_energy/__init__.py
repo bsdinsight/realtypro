@@ -9,5 +9,4 @@ def post_init_hook(env):
     động sản không khai cờ nên phải tắt nó ngay sau khi nạp dữ liệu,
     nếu không mỗi lần cài mới sẽ thấy cả "Subzones" lẫn "Phase".
     """
-    env['res.config.settings']._rp_energy_ap_dung_ui(
-        env['res.config.settings']._rp_energy_co_bat_only_ui())
+    env['res.config.settings']._rp_energy_ap_dung_ui()

@@ -14,6 +14,10 @@
                                  help="Ẩn Subzones / Buildings / Floors / Units / Unit Types trong Project Master và thay bằng Phase. Chỉ bật nếu bản triển khai này không quản lý nhà ở — chỉ ẩn, không xoá dữ liệu.">
                             <field name="rp_energy_only_ui"/>
                         </setting>
+                        <setting string="Vai chủ đầu tư"
+                                 help="Ẩn nhánh Doanh thu — nhánh đó dựng cho vai TỔNG THẦU (bán cho chủ đầu tư, phát hoá đơn về chủ đầu tư, thu tiền). Chủ đầu tư không có nghiệp vụ đó; doanh thu của họ đến từ khai thác công trình. ĐỪNG bật cho nhà thầu EPC.">
+                            <field name="rp_energy_owner_role"/>
+                        </setting>
                     </block>
                 </app>
             </xpath>

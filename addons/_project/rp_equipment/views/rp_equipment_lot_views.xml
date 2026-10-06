@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_equipment_lot_list" model="ir.ui.view">
+        <field name="name">rp.equipment.lot.list</field>
+        <field name="model">rp.equipment.lot</field>
+        <field name="arch" type="xml">
+            <list string="Lô thiết bị chính"
+                  decoration-danger="insurance_alert"
+                  decoration-success="state == 'erected'">
+                <field name="name"/>
+                <field name="project_id" optional="hide"/>
+                <field name="turbine_no" string="Tua-bin"/>
+                <field name="equip_type"/>
+                <field name="description" optional="hide"/>
+                <field name="supplier_id" optional="show"/>
+                <field name="state" string="Đang ở" widget="badge"
+                       decoration-muted="state == 'planned'"
+                       decoration-info="state in ('ex_works','sea','port','customs','inland')"
+                       decoration-success="state in ('site','erected')"/>
+                <field name="location_current" string="Vị trí"/>
+                <field name="risk_party_id" string="Bên chịu rủi ro"/>
+                <field name="date_eta_site" string="Dự kiến tới CT"/>
+                <field name="insurance_expiry" string="BH đến" optional="show"/>
+                <field name="insurance_alert" string="BH hụt"
+                       optional="show"/>
+                <field name="value" width="190" sum="Σ giá trị"/>
+                <field name="payment_milestone_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_equipment_lot_form" model="ir.ui.view">
+        <field name="name">rp.equipment.lot.form</field>
+        <field name="model">rp.equipment.lot</field>
+        <field name="arch" type="xml">
+            <form string="Lô thiết bị">
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not insurance_alert">
+                        <strong>Bảo hiểm hết hạn trước khi hàng tới công
+                        trường.</strong> Khoảng trống giữa hai mốc là lúc
+                        không ai chịu nếu có chuyện.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <field name="description" placeholder="Mô tả lô…"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="contract_id"/>
+                            <field name="package_id"/>
+                            <field name="supplier_id"/>
+                            <field name="payment_milestone_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="equip_type"/>
+                            <field name="turbine_no"/>
+                            <field name="quantity"/>
+                            <field name="uom_name"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="value"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Hiện ở đâu">
+                            <field name="state"/>
+                            <field name="location_current"/>
+                            <field name="risk_party_id"/>
+                            <field name="date_eta_site"/>
+                        </group>
+                        <group string="Bảo hiểm">
+                            <field name="insurance_ref"/>
+                            <field name="insurance_expiry"/>
+                            <field name="insurance_alert"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Chặng vận chuyển" name="legs">
+                            <field name="movement_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="leg_type"/>
+                                    <field name="location_from"/>
+                                    <field name="location_to"/>
+                                    <field name="incoterm"/>
+                                    <field name="risk_party_id"/>
+                                    <field name="carrier_id" optional="hide"/>
+                                    <field name="date_planned"/>
+                                    <field name="date_actual"/>
+                                    <field name="state"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_equipment_lot_search" model="ir.ui.view">
+        <field name="name">rp.equipment.lot.search</field>
+        <field name="model">rp.equipment.lot</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="turbine_no"/>
+                <field name="description"/>
+                <filter name="f_alert" string="Bảo hiểm hụt"
+                        domain="[('insurance_alert', '=', True)]"/>
+                <filter name="f_chua_toi" string="Chưa tới công trường"
+                        domain="[('state', 'not in', ('site', 'erected'))]"/>
+                <separator/>
+                <filter name="g_type" string="Loại thiết bị"
+                        context="{'group_by': 'equip_type'}"/>
+                <filter name="g_state" string="Đang ở"
+                        context="{'group_by': 'state'}"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="equip_type" string="Loại thiết bị"
+                           icon="fa-cubes" enable_counters="1" select="multi"/>
+                    <field name="state" string="Đang ở" icon="fa-truck"
+                           enable_counters="1" select="multi"/>
+                    <field name="risk_party_id" string="Bên chịu rủi ro"
+                           icon="fa-shield" enable_counters="1"
+                           select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_equipment_lot" model="ir.actions.act_window">
+        <field name="name">Lô thiết bị chính</field>
+        <field name="res_model">rp.equipment.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_equipment_lot_search"/>
+    </record>
+
+    <menuitem id="menu_rp_equipment_group" name="Thiết bị chính"
+              parent="rp_estimate.menu_construction" sequence="25"/>
+    <menuitem id="menu_rp_equipment_lot" name="Sổ lô thiết bị"
+              parent="menu_rp_equipment_group"
+              action="action_rp_equipment_lot" sequence="10"/>
+</odoo>

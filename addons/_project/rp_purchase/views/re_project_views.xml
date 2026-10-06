@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_re_project_form_purchase" model="ir.ui.view">
+        <field name="name">re.project.form.purchase</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_evm.view_re_project_form_evm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_don_mua" type="object"
+                        class="oe_stat_button" icon="fa-shopping-cart"
+                        invisible="purchase_order_count == 0">
+                    <field name="purchase_order_count" widget="statinfo"
+                           string="Đơn mua"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='evm_control']" position="before">
+                <group string="Chi phí chủ đầu tư tự mua"
+                       invisible="purchase_order_count == 0">
+                    <group>
+                        <field name="owner_cost_budget"/>
+                        <field name="owner_cost_committed"/>
+                    </group>
+                    <group>
+                        <field name="owner_cost_invoiced"/>
+                        <field name="owner_cost_gap"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

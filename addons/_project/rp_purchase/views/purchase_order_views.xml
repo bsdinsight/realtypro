@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_rp" model="ir.ui.view">
+        <field name="name">purchase.order.form.rp</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="rp_project_id"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']"
+                   position="before">
+                <field name="rp_project_id" column_invisible="1"/>
+                <field name="rp_cost_category_id" optional="show"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_list_rp" model="ir.ui.view">
+        <field name="name">purchase.order.list.rp</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="rp_project_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_rp_purchase_order" model="ir.actions.act_window">
+        <field name="name">Đơn mua (chủ đầu tư)</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('rp_project_id', '!=', False)]</field>
+        <field name="context">{'search_default_group_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có đơn mua nào gắn dự án
+            </p>
+            <p>
+                Chủ đầu tư nhà máy điện không mua vật tư — nhà thầu mua.
+                Màn này dành cho phần chủ đầu tư TỰ mua: tư vấn giám sát
+                độc lập, bảo hiểm công trình, kiểm định, chi phí ban quản
+                lý dự án.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_search_rp" model="ir.ui.view">
+        <field name="name">purchase.order.search.rp</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="rp_project_id"/>
+            </field>
+            <!-- Neo vào `my_purchases` — bộ lọc chắc chắn có trong view
+                 gốc của Odoo; `draft` thì không tồn tại (tên thật là
+                 `draft_rfqs`). -->
+            <filter name="my_purchases" position="before">
+                <filter name="group_project" string="Dự án"
+                        context="{'group_by': 'rp_project_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_purchase_order" name="Đơn mua (chủ đầu tư)"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_purchase_order" sequence="35"/>
+</odoo>

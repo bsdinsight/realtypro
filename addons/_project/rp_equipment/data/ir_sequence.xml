@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_rp_equipment_lot" model="ir.sequence">
+            <field name="name">Lô thiết bị chính</field>
+            <field name="code">rp.equipment.lot</field>
+            <field name="prefix">LO/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

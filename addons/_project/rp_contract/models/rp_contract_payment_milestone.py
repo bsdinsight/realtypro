@@ -17,6 +17,19 @@ class RpContractPaymentMilestone(models.Model):
     contract_id = fields.Many2one(
         'rp.contract', string='HĐ', required=True, ondelete='cascade',
         index=True)
+    # Lưu sẵn hai trục dự án / gói thầu: pane lọc chỉ nhận trường của
+    # CHÍNH model, đi xuyên `contract_id.project_id` thì không nhận. Và
+    # màn "Mốc thanh toán đến hạn" là màn tiền — câu đầu tiên người ta
+    # hỏi luôn là "của dự án nào".
+    project_id = fields.Many2one(
+        're.project', related='contract_id.project_id', store=True,
+        index=True, string='Dự án', readonly=True)
+    package_id = fields.Many2one(
+        'rp.tender.package', related='contract_id.tender_package_id',
+        store=True, index=True, string='Gói thầu', readonly=True)
+    contractor_id = fields.Many2one(
+        'res.partner', related='contract_id.contractor_id', store=True,
+        index=True, string='Nhà thầu', readonly=True)
     sequence = fields.Integer(default=10)
     name = fields.Char(
         string='Mốc thanh toán', required=True,

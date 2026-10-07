@@ -38,7 +38,28 @@
     <menuitem id="menu_rp_stock_quant" name="Tồn kho"
               parent="menu_rp_warehouse"
               action="stock.action_view_quants" sequence="20"/>
+    <!-- Action RIÊNG để mở ở chế độ Danh sách: action chuẩn của Odoo
+         mở kanban trước, mà danh mục vật tư/phụ tùng là thứ người ta tra
+         theo cột (mã, đơn vị, tồn, giá vốn) chứ không lướt ảnh. Không
+         sửa action lõi vì nó dùng chung cho cả app Kho và Bán hàng. -->
+    <record id="action_rp_stock_product" model="ir.actions.act_window">
+        <field name="name">Vật tư &amp; phụ tùng</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'search_default_filter_to_purchase': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có vật tư nào
+            </p>
+            <p>
+                Danh mục vật tư và phụ tùng dự phòng. Phần lớn giá trị
+                nằm ở giai đoạn vận hành — phụ tùng cho 30 tua-bin trong
+                25 năm.
+            </p>
+        </field>
+    </record>
+
     <menuitem id="menu_rp_stock_product" name="Vật tư &amp; phụ tùng"
               parent="menu_rp_warehouse"
-              action="stock.product_template_action_product" sequence="30"/>
+              action="action_rp_stock_product" sequence="30"/>
 </odoo>

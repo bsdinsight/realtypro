@@ -33,20 +33,66 @@
         <field name="search_view_id" ref="view_rp_contract_search"/>
     </record>
 
+    <record id="view_rp_contract_milestone_search" model="ir.ui.view">
+        <field name="name">rp.contract.payment.milestone.search</field>
+        <field name="model">rp.contract.payment.milestone</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="contractor_id"/>
+                <filter name="f_qua_han" string="Quá hạn"
+                        domain="[('state', '!=', 'paid'),
+                                 ('due_date', '&lt;',
+                                  context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="f_chua_tra" string="Chưa thanh toán"
+                        domain="[('state', '!=', 'paid')]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_month" string="Tháng đến hạn"
+                        context="{'group_by': 'due_date:month'}"/>
+
+                <!-- Pane lọc trái. Ba trục đầu là trường THẬT có store
+                     trên chính model (vừa thêm) — pane không đi xuyên
+                     quan hệ được. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="package_id" string="Gói thầu"
+                           icon="fa-cubes" enable_counters="1"
+                           select="multi"/>
+                    <field name="contractor_id" string="Nhà thầu"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
     <record id="action_rp_contract_payment_due" model="ir.actions.act_window">
         <field name="name">Mốc thanh toán đến hạn</field>
         <field name="res_model">rp.contract.payment.milestone</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('state','!=','paid')]</field>
-        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_rp_contract_milestone_search"/>
+        <field name="context">{'search_default_g_project': 1}</field>
     </record>
 
     <record id="view_rp_contract_milestone_list" model="ir.ui.view">
         <field name="name">rp.contract.payment.milestone.list</field>
         <field name="model">rp.contract.payment.milestone</field>
         <field name="arch" type="xml">
-            <list>
+            <list expand="1" default_order="due_date, contract_id">
+                <field name="project_id" optional="show"/>
+                <field name="package_id" optional="hide"/>
                 <field name="contract_id"/>
+                <field name="contractor_id" optional="hide"/>
                 <field name="name"/>
                 <field name="due_date"/>
                 <field name="percent"/>

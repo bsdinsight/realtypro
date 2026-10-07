@@ -191,6 +191,8 @@ class RpEnergyPeriod(models.Model):
                 'partner_id': l.ppa_id.partner_id.id,
                 'invoice_date': self.date_to,
                 'currency_id': l.ppa_id.currency_id.id,
+                'invoice_payment_term_id': (
+                    l.ppa_id.payment_term_id.id or False),
                 'ref': _('Tiền điện %(ky)s — %(hd)s',
                          ky=self.name, hd=l.ppa_id.name),
                 'invoice_line_ids': l._dong_hoa_don(),

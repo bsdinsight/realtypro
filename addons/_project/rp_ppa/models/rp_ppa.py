@@ -57,6 +57,13 @@ class RpPpa(models.Model):
     date_end = fields.Date(
         string='Ngày hết hạn', compute='_compute_date_end', store=True)
 
+    payment_term_id = fields.Many2one(
+        'account.payment.term', string='Điều khoản thanh toán',
+        help='PPA luôn ghi kiểu "thanh toán trong N ngày kể từ ngày nhận '
+             'hoá đơn". Khai ở đây thì hạn thanh toán trên hoá đơn tự '
+             'tính, không phải gõ tay — mà hạn gõ tay sai một lần là cả '
+             'bảng tuổi nợ sai theo.')
+
     currency_id = fields.Many2one(
         'res.currency', string='Đồng tiền', required=True,
         default=lambda self: self.env.ref('base.USD',

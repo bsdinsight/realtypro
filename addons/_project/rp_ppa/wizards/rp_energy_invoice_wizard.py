@@ -91,6 +91,16 @@ class RpEnergyInvoiceWizard(models.TransientModel):
         if len(tien_te) > 1:
             raise UserError(_('Các kỳ đang chọn dùng %s loại tiền khác nhau.',
                               len(tien_te)))
+        # Điều khoản thanh toán lấy từ PPA → Odoo tự tính hạn thanh toán.
+        # Một bên mua có thể có nhiều PPA; khác điều khoản thì không gộp
+        # chung một tờ được, vì một hoá đơn chỉ mang được một hạn.
+        dieu_khoan = self.line_ids.mapped('ppa_id.payment_term_id')
+        if len(dieu_khoan) > 1:
+            raise UserError(_(
+                'Các kỳ đang chọn thuộc %s điều khoản thanh toán khác nhau '
+                '(%s). Một hoá đơn chỉ mang được một hạn thanh toán — hãy '
+                'lọc theo khoảng thời gian để tách ra.',
+                len(dieu_khoan), ', '.join(dieu_khoan.mapped('name'))))
         dong_hd = []
         for l in self.line_ids.sorted(lambda x: x.period_id.date_from):
             dong_hd += l._dong_hoa_don()
@@ -104,6 +114,7 @@ class RpEnergyInvoiceWizard(models.TransientModel):
                      tu=ky[0].date_from.strftime('%m/%Y'),
                      den=ky[-1].date_to.strftime('%m/%Y'),
                      hd=', '.join(self.line_ids.mapped('ppa_id.name'))),
+            'invoice_payment_term_id': dieu_khoan.id or False,
             'invoice_line_ids': dong_hd,
         })
         self.line_ids.invoice_id = hd.id

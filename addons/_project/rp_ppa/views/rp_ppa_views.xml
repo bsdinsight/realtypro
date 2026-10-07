@@ -74,6 +74,8 @@
                             <field name="currency_id"
                                    options="{'no_create': True}"/>
                             <field name="tariff_base"/>
+                            <field name="payment_term_id"
+                                   options="{'no_create': True}"/>
                             <field name="escalation_percent"/>
                             <field name="test_energy_percent"/>
                         </group>

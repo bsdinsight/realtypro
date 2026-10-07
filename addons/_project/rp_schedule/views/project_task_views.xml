@@ -193,6 +193,22 @@
                 <field name="is_milestone" string="Mốc" optional="hide"/>
                 <field name="baseline_slip_days" string="Trượt baseline"
                        optional="hide"/>
+                <!-- Baseline và đường găng là THAO TÁC, không phải danh
+                     sách, nên là nút trên chính màn lịch chứ không đẻ
+                     thêm mục menu. display="always" để bấm được khi chưa
+                     tích dòng nào — nút chạy cho cả lịch. -->
+                <header>
+                    <button name="rp_action_tinh_duong_gang" type="object"
+                            string="Tính đường găng" display="always"
+                            class="btn-secondary"/>
+                    <button name="rp_action_chot_baseline" type="object"
+                            string="Chốt baseline" display="always"
+                            class="btn-secondary"
+                            confirm="Chốt baseline theo ngày kế hoạch hiện tại? Baseline cũ (nếu có) sẽ bị thay."/>
+                    <button name="rp_action_xoa_baseline" type="object"
+                            string="Xoá baseline" display="always"
+                            confirm="Xoá baseline? Sau khi xoá sẽ không đo được độ trượt cho tới khi chốt lại."/>
+                </header>
             </list>
         </field>
     </record>
@@ -205,6 +221,78 @@
         <field name="domain">[('rp_contract_id', '!=', False)]</field>
         <field name="search_view_id" ref="view_task_search_rp_panel"/>
     </record>
+
+    <!-- ===== Gantt =====
+         Gantt là màn hình nhận diện của cả nghề tiến độ, nhưng trước đây
+         CHỈ vào được bằng nút trên form Dự án / Hợp đồng — không một mục
+         menu nào trỏ tới, nên người dùng phải biết trước mới tìm ra.
+         Mở từ menu thì không truyền dự án; thành phần JS đã xử lý sẵn
+         trường hợp đó (domain rỗng = lấy toàn bộ lịch). -->
+    <record id="action_rp_schedule_gantt" model="ir.actions.client">
+        <field name="name">Gantt tiến độ</field>
+        <field name="tag">rp_schedule.gantt</field>
+    </record>
+
+    <menuitem id="menu_rp_schedule_gantt" name="Gantt tiến độ"
+              parent="rp_estimate.menu_schedule"
+              action="action_rp_schedule_gantt" sequence="5"/>
+
+    <!-- ===== Mốc chính =====
+         Ban lãnh đạo không đọc 228 dòng công việc; họ hỏi đúng mấy mốc:
+         bao giờ xong móng, bao giờ đóng điện, bao giờ COD. Trường
+         `is_milestone` đã có từ lâu nhưng chưa có màn nào lọc theo nó. -->
+    <record id="view_rp_milestone_list" model="ir.ui.view">
+        <field name="name">project.task.list.rp.milestone</field>
+        <field name="model">project.task</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Mốc chính" default_order="planned_end, wbs_seq"
+                  create="0"
+                  decoration-danger="exec_status == 'late'"
+                  decoration-success="exec_status == 'done'">
+                <field name="wbs_code" string="Mã WBS"/>
+                <field name="name" string="Mốc"/>
+                <field name="rp_contract_id" string="Hợp đồng"
+                       optional="show"/>
+                <field name="planned_end" string="Ngày mốc"/>
+                <field name="baseline_end" string="Baseline"
+                       optional="show"/>
+                <field name="baseline_slip_days" string="Trượt (ngày)"
+                       optional="show"/>
+                <field name="progress_percent" string="% hoàn thành"
+                       widget="progressbar"/>
+                <field name="is_critical" string="Găng" optional="show"/>
+                <field name="exec_status" string="Tình trạng" widget="badge"
+                       decoration-muted="exec_status == 'not_started'"
+                       decoration-info="exec_status == 'in_progress'"
+                       decoration-success="exec_status == 'done'"
+                       decoration-danger="exec_status == 'late'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rp_milestones" model="ir.actions.act_window">
+        <field name="name">Mốc chính</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_rp_milestone_list"/>
+        <field name="search_view_id" ref="view_task_search_rp_panel"/>
+        <field name="domain">[('rp_contract_id', '!=', False),
+                              ('is_milestone', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa đánh dấu mốc nào
+            </p>
+            <p>
+                Đánh dấu "Là mốc" trên công việc để nó hiện ở đây. Mốc là
+                thứ ban lãnh đạo hỏi, không phải 228 dòng công việc.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_milestones" name="Mốc chính"
+              parent="rp_estimate.menu_schedule"
+              action="action_rp_milestones" sequence="15"/>
 
     <record id="action_rp_schedule_tasks_list_view"
             model="ir.actions.act_window.view">

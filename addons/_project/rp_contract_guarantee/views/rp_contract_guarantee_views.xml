@@ -274,6 +274,31 @@
                         context="{'group_by': 'contractor_id'}"/>
                 <filter name="g_state" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+
+                <!-- Pane lọc trái. Năm trường đều là m2o/selection THẬT
+                     trên chính model nên pane nhận được.
+                     "Tình trạng hạn" đứng trước trạng thái nghiệp vụ vì
+                     đó là thứ người giữ bảo lãnh nhìn trước: một bảo
+                     lãnh còn hiệu lực mà sắp hết hạn thì nguy hơn nhiều
+                     một bảo lãnh đã hết hạn và đã xử lý xong. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="guarantee_type" string="Loại bảo lãnh"
+                           icon="fa-shield" enable_counters="1"
+                           select="multi"/>
+                    <field name="expiry_status" string="Tình trạng hạn"
+                           icon="fa-clock-o" enable_counters="1"
+                           select="multi"/>
+                    <field name="contractor_id" string="Nhà thầu"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="issuer_partner_id" string="Ngân hàng phát hành"
+                           icon="fa-university" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                </searchpanel>
             </search>
         </field>
     </record>

@@ -6,7 +6,8 @@ predecessors) — tự khai để không phụ thuộc field native theo phiên 
 Odoo (planned_date_begin/milestone_id là của project_enterprise)."""
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ProjectTask(models.Model):
@@ -304,6 +305,74 @@ class ProjectTask(models.Model):
         tasks.write({'baseline_start': False, 'baseline_end': False,
                      'baseline_set_date': False})
         return len(tasks)
+
+    # --- Nút trên màn Lịch thi công -----------------------------------
+    # Baseline và đường găng là THAO TÁC, không phải danh sách, nên đặt
+    # thành nút trên chính màn lịch chứ không đẻ thêm mục menu. Trước đây
+    # chúng chỉ gọi được từ mã — viết xong mà không có cửa bấm.
+    def _rp_pham_vi(self):
+        """Tập công việc để chạy: đang chọn, không chọn thì cả lịch.
+
+        Nút khai display="always" nên bấm được lúc chưa tích dòng nào,
+        và khi đó `self` rỗng — phải tự lấy toàn bộ, nếu không bấm xong
+        không có gì xảy ra mà cũng không báo gì.
+        """
+        return self or self.search([('rp_contract_id', '!=', False)])
+
+    def _rp_bao(self, tieu_de, loi_nhan, loai='success'):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {'type': loai, 'title': tieu_de, 'message': loi_nhan,
+                       'next': {'type': 'ir.actions.act_window_close'}},
+        }
+
+    def rp_action_chot_baseline(self):
+        viec = self._rp_pham_vi()
+        du_an = viec.mapped('rp_project_id')
+        if not du_an:
+            raise UserError(_(
+                'Không có công việc nào thuộc dự án để chốt baseline.'))
+        tong = sum(self.rp_set_baseline(project_id=p.id) or 0
+                   for p in du_an)
+        return self._rp_bao(
+            _('Chốt baseline'),
+            _('Đã chốt baseline cho %(n)s công việc thuộc %(d)s dự án. '
+              'Từ giờ mọi thay đổi ngày đều đo được độ trượt.',
+              n=tong, d=len(du_an)))
+
+    def rp_action_xoa_baseline(self):
+        viec = self._rp_pham_vi()
+        tong = 0
+        for hd in viec.mapped('rp_contract_id'):
+            tong += self.rp_clear_baseline(contract_id=hd.id) or 0
+        return self._rp_bao(
+            _('Xoá baseline'),
+            _('Đã xoá baseline của %s công việc. Độ trượt không còn đo '
+              'được cho tới khi chốt lại.', tong), 'warning')
+
+    def rp_action_tinh_duong_gang(self):
+        """Chạy CPM ở phạm vi DỰ ÁN, không phải từng hợp đồng.
+
+        Chạy theo hợp đồng thì một việc đơn lẻ của hợp đồng luôn ra dư
+        địa 0 — đúng hình thức, vô nghĩa về nội dung. Câu "bao giờ xong
+        dự án" chỉ trả lời được khi gom mọi hợp đồng.
+        """
+        viec = self._rp_pham_vi()
+        du_an = viec.mapped('rp_project_id')
+        if not du_an:
+            raise UserError(_('Không có dự án nào để tính đường găng.'))
+        gang = 0
+        for p in du_an:
+            self.rp_compute_project_critical_path(p.id)
+            gang += self.search_count([
+                ('rp_project_id', '=', p.id),
+                ('is_project_critical', '=', True)])
+        return self._rp_bao(
+            _('Tính đường găng'),
+            _('Đã tính lại đường găng xuyên hợp đồng cho %(d)s dự án — '
+              '%(g)s công việc nằm trên đường găng.',
+              d=len(du_an), g=gang))
 
     @api.model
     def _rp_ma_cha(self, code):

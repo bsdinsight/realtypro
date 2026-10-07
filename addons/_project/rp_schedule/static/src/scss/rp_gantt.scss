@@ -158,6 +158,17 @@
     }
 }
 
+// Mốc nằm trên đường găng: vạch đỏ đầu dòng + chữ đậm. Trên lưới chúng
+// đứng liền nhau thành một khối, nên nhìn phát ra ngay chuỗi chịu lực mà
+// không phải dò từng dòng.
+.rp-gantt-ej2 tr.rp-ej2-gang .e-rowcell {
+    font-weight: 600;
+    background: #fff6f5;
+}
+.rp-gantt-ej2 tr.rp-ej2-gang .e-rowcell:first-child {
+    box-shadow: inset 3px 0 0 #c0453b;
+}
+
 // Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt
 .rp-gantt-ej2 tr.rp-ej2-level1 .e-rowcell {
     font-weight: 700;

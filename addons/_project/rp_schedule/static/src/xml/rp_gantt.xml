@@ -27,6 +27,9 @@
                     <span class="rp-cham" style="background:#c0453b"/>trễ
                     <span class="rp-cham ms-2" style="background:#2e8b57"/>đã xong
                     <span class="rp-cham ms-2" style="background:#e0a460"/>chưa tới
+                    <span t-if="state.showCriticalPath" class="ms-2">
+                        · mốc mờ = ngoài đường găng
+                    </span>
                 </span>
                 <span t-else="" class="text-muted small ms-3 d-none d-lg-inline">
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·
@@ -133,16 +136,21 @@
                     </div>
                 </div>
 
-                <!-- 4. Nút thắt -->
-                <div class="rp-the rp-the-gang" t-if="b.nut_that">
-                    <div class="rp-nhan">Nút thắt — chậm ở đây là chậm cả dự án</div>
-                    <div class="rp-so rp-so-ten" t-esc="b.nut_that.name"/>
-                    <div class="rp-phu">
-                        <span t-attf-class="rp-{{b.nut_that.float &lt; 0 ? 'xau' : 'tot'}}">
-                            dư địa <t t-esc="b.nut_that.float"/> ngày
-                        </span>
-                        · [<t t-esc="b.nut_that.package"/>]
-                        · <t t-esc="b.nut_that.date"/>
+                <!-- 4. Đường găng — câu duy nhất ban lãnh đạo quyết được -->
+                <div class="rp-the rp-the-gang" t-if="b.gang_moc">
+                    <div class="rp-nhan">Đường găng — chậm ở đây là chậm cả dự án</div>
+                    <div class="rp-so">
+                        <t t-esc="b.gang_moc"/> mốc
+                        <span class="rp-nho">dư địa <t t-esc="b.du_dia"/> ngày</span>
+                    </div>
+                    <div class="rp-phu" t-if="b.gang_ke">
+                        giữ bằng được:
+                        <b t-esc="b.gang_ke.name"/>
+                        · <t t-esc="b.gang_ke.date"/>
+                        · còn <t t-esc="b.gang_ke.days"/> ngày
+                    </div>
+                    <div class="rp-phu" t-else="">
+                        mọi mốc găng đã đạt
                     </div>
                 </div>
 

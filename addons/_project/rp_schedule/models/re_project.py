@@ -235,6 +235,14 @@ class ReProject(models.Model):
             tf, t = min(co_tf, key=lambda x: x[0])
             nut_that = _m(t, float=tf)
         tf_all = [v['tf'] for v in cpm.values() if v.get('tf') is not None]
+        # Các mốc NẰM TRÊN đường găng. Giao diện cần cả danh sách id (để
+        # làm nổi đúng những dòng đó) lẫn mốc găng sắp tới (câu "tuần sau
+        # phải giữ bằng được cái gì").
+        gang_moc = moc.filtered(
+            lambda t: (cpm.get(t.id) or {}).get('critical'))
+        gang_ke = gang_moc.filtered(
+            lambda t: t.exec_status != 'done' and t.planned_end
+            and t.planned_end >= today).sorted('planned_end')[:1]
 
         return {
             'project': P.display_name,
@@ -258,6 +266,10 @@ class ReProject(models.Model):
                     and x.planned_end >= today).sorted('planned_end')[:2]
             ],
             'nut_that': nut_that,
+            'gang_ids': gang_moc.ids,
+            'gang_moc': len(gang_moc),
+            'gang_ke': (_m(gang_ke, days=(gang_ke.planned_end - today).days)
+                        if gang_ke else None),
             'gang': sum(1 for v in cpm.values() if v.get('critical')),
             'du_dia': min(tf_all) if tf_all else 0,
             'theo_goi': sorted([

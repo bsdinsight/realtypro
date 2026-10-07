@@ -179,6 +179,9 @@ export class RpGanttAction extends Component {
                 this.state.title = b.project || this.state.title;
                 this.state.critCount = b.gang || 0;
                 this.state.worstFloat = b.du_dia || 0;
+                // Màn mốc không gọi CPM riêng nữa; lấy luôn tập mốc găng
+                // từ bản tóm tắt để làm nổi đúng những dòng đó.
+                this._gangIds = new Set(b.gang_ids || []);
             }
         }
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
@@ -379,7 +382,8 @@ export class RpGanttAction extends Component {
                         && this._contractInfo.get(ckey(r))
                         && this._contractInfo.get(ckey(r)).pkg) || "",
                     // Đường găng (CPM tự tính)
-                    _critical: !!(cpv && cpv.critical),
+                    _critical: !!(cpv && cpv.critical)
+                        || !!(this._gangIds && this._gangIds.has(r.id)),
                     _near: !!(cpv && cpv.near),
                     TaskFloat: cpv ? cpv.tf : "",
                     TaskSlip: r.baseline_slip_days || "",
@@ -649,6 +653,11 @@ export class RpGanttAction extends Component {
                 if (top && args.row) {
                     args.row.classList.add("rp-ej2-level1");
                 }
+                if (chiMoc && args.row
+                        && (d._critical
+                            || (d.taskData && d.taskData._critical))) {
+                    args.row.classList.add("rp-ej2-gang");
+                }
             },
             onQueryTaskbarInfo: (args) => {
                 const d = args.data || {};
@@ -659,9 +668,18 @@ export class RpGanttAction extends Component {
                 // xanh = đã xong, hổ phách = chưa tới.
                 if (chiMoc) {
                     const st = d._status || td._status || "";
-                    args.milestoneColor = st === "late" ? "#c0453b"
-                        : (st === "done" ? "#2e8b57"
-                           : (st === "in_progress" ? "#0E8C99" : "#e0a460"));
+                    const nen = st === "late" ? "192,69,59"
+                        : (st === "done" ? "46,139,87"
+                           : (st === "in_progress" ? "14,140,153"
+                              : "224,164,96"));
+                    // Bật "Đường găng" thì mốc NGOÀI chuỗi mờ đi, mốc
+                    // trên chuỗi giữ nguyên màu tình trạng. Một núm màu
+                    // duy nhất mà chở được hai tin: trễ hay chưa, và có
+                    // kéo ngày về đích hay không.
+                    const gang = d._critical || td._critical;
+                    const mo = this.state.showCriticalPath && !gang;
+                    args.milestoneColor = "rgba(" + nen + ","
+                        + (mo ? "0.28" : "1") + ")";
                     return;
                 }
                 if (top) {

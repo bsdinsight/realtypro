@@ -58,8 +58,7 @@
                         <option t-foreach="state.baselines" t-as="bl"
                                 t-key="bl.id" t-att-value="bl.id"
                                 t-att-selected="bl.id === state.baselineId">
-                            So với <t t-esc="bl.name"/>
-                            (<t t-esc="bl.date"/>)
+                            <t t-esc="bl.name"/> · <t t-esc="bl.date"/>
                         </option>
                     </select>
                     <!-- Vạch dọc trên trục -->

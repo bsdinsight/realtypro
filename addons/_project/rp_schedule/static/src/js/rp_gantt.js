@@ -558,9 +558,11 @@ export class RpGanttAction extends Component {
                               + " ngày");
                 }
             }
-            t.extraFields.TaskNhan = phan.length
-                ? (t.name || "") + "  ·  " + phan.join("  ·  ")
-                : (t.name || "");
+            // KHÔNG lặp lại tên việc: lưới trái đã có tên, ở ĐÚNG hàng
+            // ngang đó, và lưới không cuộn ngang nên tên luôn nhìn thấy.
+            // Nhét tên vào đây chỉ làm nhãn dài gấp đôi rồi tràn khỏi mép
+            // phải, cắt mất đúng đoạn số liệu mà người ta cần đọc.
+            t.extraFields.TaskNhan = phan.join("  ·  ");
             [du_an, goi, hd].forEach((l) => {
                 stretch(l, t.start);
                 stretch(l, t.end);
@@ -677,7 +679,7 @@ export class RpGanttAction extends Component {
                   width: 1 },
                 { field: "TaskName", headerText: "Mốc", width: 250 },
                 { field: "EndDate", headerText: "Ngày",
-                  format: "dd/MM/yyyy", width: 104, textAlign: "Right" },
+                  format: "dd/MM/yyyy", width: 118, textAlign: "Right" },
                 // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
                 // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi
                 // "TaskNhan" thay vì giá trị.

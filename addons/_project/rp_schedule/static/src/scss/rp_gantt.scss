@@ -207,12 +207,17 @@
 .rp-gantt-mode-milestone .rp-gantt-ej2.e-gantt .e-gantt-chart .e-baseline-bar {
     width: 11px !important;
     height: 11px !important;
-    margin-left: -5px;
-    margin-top: -2px;
     background: transparent !important;
     border: 2px solid #8a6fb0;
     border-radius: 2px;
-    transform: rotate(45deg);
+    // Dời bằng TRANSFORM chứ không phải lề: EJ2 định vị tuyệt đối nên
+    // margin không nhúc nhích (đã thử). Đẩy lên 5px để vừa lòng dòng
+    // 34px, và sang trái 5px để tâm hình thoi rơi đúng ngày — EJ2 neo
+    // MÉP TRÁI của cái gạch 2px gốc vào ngày.
+    // Nằm THẤP HƠN hình thoi hiện hành nửa dòng, theo lối MS Project vẽ
+    // đường cơ sở dưới thanh việc: mốc nào đúng hạn thì hai dấu chồng
+    // cột nhau mà vẫn tách bạch, không dính thành một cục.
+    transform: translate(-5px, -5px) rotate(45deg);
 }
 
 // Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt

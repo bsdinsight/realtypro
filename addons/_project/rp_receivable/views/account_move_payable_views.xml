@@ -85,6 +85,6 @@
     </record>
 
     <menuitem id="menu_rp_ap_aging" name="Công nợ phải trả"
-              parent="rp_estimate.menu_finance"
-              action="action_rp_ap_aging" sequence="65"/>
+              parent="rp_estimate.menu_finance_payable"
+              action="action_rp_ap_aging" sequence="40"/>
 </odoo>

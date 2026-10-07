@@ -55,6 +55,17 @@
               parent="menu_realty_project_root"
               sequence="12"/>
 
+    <!-- Hai nhánh công nợ đặt đối xứng nhau trong Tài chính: tiền ra
+         trước, tiền vào sau. Trước đây bốn màn phải trả nằm rải rác xen
+         giữa các nhánh khác (Tạm ứng · Hoá đơn nhà thầu · Giải ngân qua
+         khế ước · Công nợ phải trả), đọc menu không ra được đường tiền.
+         Nhóm này khai ở rp_estimate vì cả ba module chứa bốn màn đó đều
+         phụ thuộc nó — khai ở chỗ khác là sinh phụ thuộc chéo. -->
+    <menuitem id="menu_finance_payable"
+              name="Phải trả"
+              parent="menu_finance"
+              sequence="40"/>
+
     <menuitem id="menu_finance_reports"
               name="Báo cáo"
               parent="menu_finance"

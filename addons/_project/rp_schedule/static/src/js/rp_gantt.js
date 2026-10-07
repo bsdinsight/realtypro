@@ -676,6 +676,12 @@ export class RpGanttAction extends Component {
             rowHeight: chiMoc ? 34 : 42,
             // Ngày kiểu Việt Nam ở MỌI chỗ EJ2 tự in ra
             dateFormat: "dd/MM/yyyy",
+            // TẮT tooltip ở màn mốc. Tooltip của EJ2 không có khái niệm
+            // đường cơ sở: nó gắn với CÔNG VIỆC nên trỏ vào hình thoi gốc
+            // cũng trả về ngày hiện hành — người đọc tưởng dữ liệu sai.
+            // Ở màn này tooltip cũng chẳng thêm gì: tên và ngày đã ở lưới,
+            // ngày gốc ở cột "Gốc", trượt và dư địa ở nhãn cạnh hình thoi.
+            showTooltip: !chiMoc,
             // Mốc: để EJ2 tự nhận ra việc thời lượng 0 và vẽ hình thoi.
             useDuration: chiMoc,
             // Nhãn bên phải hình thoi — dùng labelSettings sẵn có của
@@ -699,7 +705,7 @@ export class RpGanttAction extends Component {
                 // Cột "Gốc" để đối chiếu bằng mắt ngay trên lưới
                 ...(this.state.baselineId ? [{
                     field: "TaskGoc", headerText: "Gốc",
-                    width: 104, textAlign: "Right",
+                    width: 118, textAlign: "Right",
                 }] : []),
                 // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
                 // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi

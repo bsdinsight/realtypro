@@ -230,7 +230,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             // /Progress. Custom template trigger SyntaxError ở compile
             // engine (new Function) khi có optional chaining.
             tooltipSettings: {
-                showTooltip: true,
+                showTooltip: opts.showTooltip !== false,
             },
             // Events
             // Khi resize/kéo bar CÓ predecessor: EJ2 mặc định bật dialog

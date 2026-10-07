@@ -5,7 +5,7 @@
         <field name="name">rp.budget.phase.list</field>
         <field name="model">rp.budget.phase</field>
         <field name="arch" type="xml">
-            <list string="Ngân sách theo tháng" create="0" edit="0"
+            <list expand="1" string="Ngân sách theo tháng" create="0" edit="0"
                   default_order="period, package_id">
                 <field name="period"/>
                 <field name="project_id" optional="hide"/>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project — Mua sắm",
-    "version": "19.0.2.1.0",
+    "version": "19.0.2.1.1",
     "category": "Realty/Project",
     "summary": "Nối đơn mua vào dự án và nhóm chi phí, để chi phí chủ đầu "
                "tư tự mua có chứng từ đứng sau thay vì một dòng khai tay.",

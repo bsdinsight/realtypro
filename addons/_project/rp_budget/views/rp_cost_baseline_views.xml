@@ -5,7 +5,7 @@
         <field name="name">rp.cost.baseline.list</field>
         <field name="model">rp.cost.baseline</field>
         <field name="arch" type="xml">
-            <list string="Mốc ngân sách">
+            <list expand="1" string="Mốc ngân sách">
                 <field name="project_id"/>
                 <field name="revision" string="Lần chốt"/>
                 <field name="name"/>
@@ -65,7 +65,7 @@
                                  mốc hết là mốc. Muốn số khác thì chốt
                                  lại một mốc mới. -->
                             <field name="line_ids" readonly="1">
-                                <list string="Các khoản">
+                                <list expand="1" string="Các khoản">
                                     <field name="source"/>
                                     <field name="ref_code"/>
                                     <field name="ref_name"/>
@@ -106,7 +106,7 @@
         <field name="name">rp.cost.baseline.line.list</field>
         <field name="model">rp.cost.baseline.line</field>
         <field name="arch" type="xml">
-            <list string="Khoản trong mốc" create="0" edit="0">
+            <list expand="1" string="Khoản trong mốc" create="0" edit="0">
                 <field name="baseline_id" optional="hide"/>
                 <field name="source"/>
                 <field name="ref_code"/>

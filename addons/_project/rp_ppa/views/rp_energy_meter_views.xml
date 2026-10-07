@@ -23,7 +23,6 @@
         <field name="name">Điểm giao nhận &amp; công-tơ</field>
         <field name="res_model">rp.energy.meter</field>
         <field name="view_mode">list</field>
-        <field name="context">{'search_default_group_project': 1}</field>
     </record>
 
     <menuitem id="menu_rp_energy_meter" name="Điểm giao nhận &amp; công-tơ"

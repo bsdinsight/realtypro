@@ -40,7 +40,7 @@
         <field name="name">rp.cost.category.list</field>
         <field name="model">rp.cost.category</field>
         <field name="arch" type="xml">
-            <list string="Cost Categories" sample="1" multi_edit="1">
+            <list expand="1" string="Cost Categories" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="project_id"/>
                 <field name="code"/>
@@ -105,7 +105,7 @@
                             <field name="child_ids"
                                    context="{'default_project_id': project_id,
                                              'default_parent_id': id}">
-                                <list>
+                                <list expand="1">
                                     <field name="sequence" widget="handle"/>
                                     <field name="code"/>
                                     <field name="name"/>
@@ -124,6 +124,11 @@
         <field name="res_model">rp.cost.category</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_rp_cost_category_search"/>
+        <!-- Chỉ ĐÍCH DANH view danh sách: model này có HAI view primary
+             cùng priority 16 (cái kia là rp.cost.category.estimate.list
+             của rp_evm), nên không ghim thì Odoo chọn theo id — tức là
+             tuỳ thứ tự cài module, và màn này từng mở nhầm sang view kia. -->
+        <field name="view_id" ref="view_rp_cost_category_list"/>
         <!-- Gom hai tầng: Dự án → Nhóm cấp 1. Màn này trộn mã của MỌI
              dự án, không gom thì xen kẽ theo sequence rất dễ đọc nhầm;
              mà trong một dự án vẫn là 77 dòng phẳng nên phải gom tiếp

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Realty Project — Ngân sách 3 lớp",
-    "version": "19.0.4.1.0",
+    "version": "19.0.4.1.1",
     "category": "Realty/Project",
     "summary": "Ngân sách gốc (đóng băng) → hiện hành → dự báo, và cảnh "
                "báo khi ngân sách tính động trôi khỏi mốc đã duyệt.",

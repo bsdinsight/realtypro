@@ -38,6 +38,36 @@
         </field>
     </record>
 
+    <!-- Danh sách riêng cho Đơn mua của chủ đầu tư: danh sách lõi của
+         Odoo không khai expand, mà action này mở sẵn ở chế độ gom theo
+         Dự án — nên vào màn chỉ thấy dòng tiêu đề nhóm. -->
+    <record id="view_purchase_order_list_procure" model="ir.ui.view">
+        <field name="name">purchase.order.list.procure</field>
+        <field name="model">purchase.order</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Đơn mua" expand="1" default_order="date_order desc">
+                <field name="name" string="Số đơn"/>
+                <field name="date_order" string="Ngày đặt"/>
+                <field name="rp_project_id" string="Dự án" optional="hide"/>
+                <field name="rp_request_id" string="Yêu cầu" optional="show"/>
+                <field name="partner_id" string="Nhà cung cấp"/>
+                <field name="date_planned" string="Dự kiến nhận"
+                       optional="show"/>
+                <field name="amount_untaxed" width="190"
+                       string="Trước thuế" sum="Σ"/>
+                <field name="amount_total" width="190" string="Tổng" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="rp_receipt_count" string="Nghiệm thu"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft', 'sent')"
+                       decoration-success="state in ('purchase', 'done')"
+                       decoration-muted="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
     <record id="action_rp_purchase_order" model="ir.actions.act_window">
         <field name="name">Đơn mua (chủ đầu tư)</field>
         <field name="res_model">purchase.order</field>
@@ -46,6 +76,7 @@
         <field name="context">{'search_default_group_project': 1}</field>
         <field name="search_view_id"
                ref="view_purchase_order_search_procure"/>
+        <field name="view_id" ref="view_purchase_order_list_procure"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Chưa có đơn mua nào gắn dự án

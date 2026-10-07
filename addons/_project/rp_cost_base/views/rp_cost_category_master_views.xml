@@ -5,10 +5,12 @@
         <field name="name">rp.cost.category.master.list</field>
         <field name="model">rp.cost.category.master</field>
         <field name="arch" type="xml">
-            <!-- Bỏ expand="1": đã gom nhóm thì để nhóm ĐÓNG lúc mở ra,
-                 nhìn 10 dòng nhóm rồi bung đúng nhóm cần. Bung sẵn cả
-                 77 dòng thì gom nhóm chẳng còn tác dụng gì. -->
-            <list string="Danh mục chi phí">
+            <!-- expand="1": anh Đại chốt 2026-10-07 — màn nào gom nhóm
+                 mặc định thì bung sẵn, vì cuối cùng người dùng cũng bung
+                 ra để tìm nghiệp vụ mình cần. Nhóm vẫn có tác dụng làm
+                 vạch phân cách, chỉ là không bắt bấm thêm một nhịp.
+                 (Trước đó tôi để nhóm đóng; luật này đảo lại.) -->
+            <list expand="1" string="Danh mục chi phí">
                 <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
@@ -51,7 +53,7 @@
                     <field name="description"
                            placeholder="Mô tả / hướng dẫn sử dụng nhóm chi phí này..."/>
                     <field name="child_ids">
-                        <list>
+                        <list expand="1">
                             <field name="sequence" widget="handle"/>
                             <field name="code"/>
                             <field name="name"/>

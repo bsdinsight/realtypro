@@ -5,7 +5,7 @@
         <field name="name">rp.contingency.drawdown.list</field>
         <field name="model">rp.contingency.drawdown</field>
         <field name="arch" type="xml">
-            <list string="Sổ rút dự phòng" default_order="date, id">
+            <list expand="1" string="Sổ rút dự phòng" default_order="date, id">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="project_id" optional="hide"/>

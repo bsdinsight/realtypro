@@ -75,7 +75,7 @@
         <field name="name">rp.structure.estimate.line.list</field>
         <field name="model">rp.structure.estimate.line</field>
         <field name="arch" type="xml">
-            <list string="Khái toán Lines" sample="1" create="false" edit="false">
+            <list expand="1" string="Khái toán Lines" sample="1" create="false" edit="false">
                 <field name="project_id" optional="show"/>
                 <field name="subzone_id" optional="show"/>
                 <field name="parent_structure_id" optional="show"

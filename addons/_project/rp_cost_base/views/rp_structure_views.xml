@@ -152,7 +152,7 @@
                             <field name="estimate_line_ids"
                                    context="{'default_structure_id': id,
                                              'default_currency_id': currency_id}">
-                                <list editable="bottom">
+                                <list expand="1" editable="bottom">
                                     <field name="project_id" column_invisible="1"/>
                                     <field name="currency_id" column_invisible="1"/>
                                     <field name="category_id"
@@ -176,7 +176,7 @@
                                              'default_subzone_id': subzone_id,
                                              'default_parent_id': id,
                                              'default_structure_level': 'sub_item'}">
-                                <list>
+                                <list expand="1">
                                     <field name="sequence" widget="handle"/>
                                     <field name="code"/>
                                     <field name="name"/>

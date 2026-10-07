@@ -136,19 +136,20 @@ export class RpGanttAction extends Component {
         if (this.mode === "milestone") {
             domain.push(["is_milestone", "=", true]);
         }
-        // Mốc vạch dọc (ngày phải xong, hôm nay, đóng điện…). Ở chế độ
-        // hợp đồng vẫn lấy mốc của dự án chứa hợp đồng — nhà thầu cần
-        // thấy mình đang chạy đua với mốc nào.
-        await this._loadMarkers();
         const recs = await this.orm.searchRead(
             "project.task", domain,
             ["name", "wbs_code", "wbs_seq", "planned_start", "planned_end",
              "progress_percent", "is_milestone",
              "project_id", "user_ids", "baseline_start", "baseline_end",
-             "baseline_slip_days", "rp_contract_id"],
+             "baseline_slip_days", "rp_contract_id", "rp_project_id"],
             { order: "id asc" }
         );
         this.state.hasBaseline = recs.some((r) => r.baseline_start);
+        // Mốc vạch dọc (ngày phải xong, hôm nay, đóng điện…). Ở chế độ
+        // hợp đồng vẫn lấy mốc của dự án chứa hợp đồng — nhà thầu cần
+        // thấy mình đang chạy đua với mốc nào. Nạp SAU khi có việc để
+        // màn mở từ menu (không mang id dự án) còn suy ra được dự án.
+        await this._loadMarkers(recs);
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
         const userIds = [...new Set(recs.flatMap((r) => r.user_ids || []))];
         const userName = new Map();
@@ -157,30 +158,38 @@ export class RpGanttAction extends Component {
                 "res.users", userIds, ["name"]);
             users.forEach((u) => userName.set(u.id, u.name));
         }
+        // Gói thầu + hợp đồng của từng việc. Đọc BẤT KỂ chế độ xem: màn
+        // "Mốc chính" mở từ menu nên không mang theo id dự án, mà nó vẫn
+        // phải xếp mốc theo gói thầu. Trước đây khối này nằm trong nhánh
+        // `if (this.projectId)` nên mở từ menu là mọi mốc đều rơi vào
+        // "chưa gắn gói thầu".
+        const cids = [...new Set(
+            recs.map((r) => r.rp_contract_id && r.rp_contract_id[0])
+                .filter(Boolean))];
+        const contracts = cids.length ? await this.orm.read(
+            "rp.contract", cids,
+            ["display_name", "tender_package_id"]) : [];
+        this._contractInfo = new Map();
+        const pkgOrder = new Map();
+        contracts.forEach((c) => {
+            const pkg = c.tender_package_id
+                ? c.tender_package_id[1] : "";
+            if (!pkgOrder.has(pkg)) pkgOrder.set(pkg, pkgOrder.size);
+            this._contractInfo.set(c.id, {
+                name: c.display_name || "",
+                pkg,
+                // Số thứ tự gói — dùng làm KHOÁ dòng làn, xem ghi chú
+                // trong _milestoneRows (khoá không được chứa dấu cách).
+                pkgKey: pkgOrder.get(pkg),
+                rank: [pkgOrder.get(pkg), c.id],
+            });
+        });
         if (this.projectId) {
             // Mã WBS được đánh theo từng GÓI THẦU, nên hai gói khác nhau
             // đều có "1", "2"… Xếp thuần theo WBS thì ba gói cài răng
             // lược vào nhau, không ai đọc được. Gom theo hợp đồng trước
             // (thứ tự: gói thầu rồi hợp đồng), trong mỗi hợp đồng mới
             // xếp theo WBS.
-            const cids = [...new Set(
-                recs.map((r) => r.rp_contract_id && r.rp_contract_id[0])
-                    .filter(Boolean))];
-            const contracts = cids.length ? await this.orm.read(
-                "rp.contract", cids,
-                ["display_name", "tender_package_id"]) : [];
-            this._contractInfo = new Map();
-            const pkgOrder = new Map();
-            contracts.forEach((c) => {
-                const pkg = c.tender_package_id
-                    ? c.tender_package_id[1] : "";
-                if (!pkgOrder.has(pkg)) pkgOrder.set(pkg, pkgOrder.size);
-                this._contractInfo.set(c.id, {
-                    name: c.display_name || "",
-                    pkg,
-                    rank: [pkgOrder.get(pkg), c.id],
-                });
-            });
             const rank = (r) => {
                 const info = r.rp_contract_id
                     && this._contractInfo.get(r.rp_contract_id[0]);
@@ -370,21 +379,31 @@ export class RpGanttAction extends Component {
      * tố chữ (P/K/H) để không đụng id của project.task. Ngày của dòng cha
      * trải từ mốc sớm nhất tới mốc muộn nhất của nhánh — nhờ vậy nhìn
      * một dòng gói thầu là biết gói đó kéo dài từ đâu tới đâu.
+     *
+     * KHOÁ DÒNG CHỈ ĐƯỢC CHỨA CHỮ-SỐ. EJ2 nối thẳng id vào tên class của
+     * thẻ <tr> ("gridrowtaskId<id>level2") rồi gọi classList.add, nên một
+     * dấu cách trong id ném InvalidCharacterError ngay giữa renderChartRows:
+     * trục thời gian đã vẽ xong vẫn còn đó, còn TOÀN BỘ hàng thì không
+     * hàng nào được vẽ — màn hình trống trơn không kèm thông báo lỗi.
+     * Vì vậy làn gói thầu khoá theo SỐ THỨ TỰ gói (pkgKey), không phải
+     * theo tên gói. (Cùng một cái bẫy với cssClass của mốc vạch dọc ở
+     * _loadMarkers.)
      */
     _milestoneRows(recs, mapped) {
         const byId = new Map(mapped.map((t) => [t.id, t]));
         const lanes = new Map();   // key → row
         const rows = [];
-        const touch = (key, name, parentKey, rank) => {
+        const touch = (key, name, parentKey, rank, tier) => {
             if (!lanes.has(key)) {
                 const row = {
                     id: key, parent: parentKey, name,
                     extraFields: { TaskWbs: "", TaskSeq: "", TaskDeps: "",
                                    TaskAssign: "", _isTop: !parentKey,
-                                   TaskContract: "", TaskPackage: "" },
+                                   TaskContract: "", TaskPackage: "",
+                                   TaskFloat: "", TaskSlip: "" },
                     start: null, end: null, progress: 0,
                     dependencies: "", custom_class: "rp-ej2-lane",
-                    _rank: rank,
+                    _rank: rank, _tier: tier,
                 };
                 lanes.set(key, row);
                 rows.push(row);
@@ -397,21 +416,27 @@ export class RpGanttAction extends Component {
             if (!row.end || d > row.end) row.end = d;
         };
 
-        const pName = this.state.title || "Dự án";
-        const pKey = "P0";
         recs.forEach((r) => {
             const t = byId.get(String(r.id));
             if (!t) return;
             const cid = r.rp_contract_id ? r.rp_contract_id[0] : 0;
             const info = this._contractInfo && this._contractInfo.get(cid);
             const pkg = (info && info.pkg) || "Chưa gắn gói thầu";
-            const kKey = "K" + pkg;
+            // Làn trên cùng theo DỰ ÁN thật, không theo tiêu đề màn hình:
+            // mở từ menu thì tiêu đề rỗng, mà danh sách mốc vẫn có thể
+            // trải trên nhiều dự án.
+            const pid = r.rp_project_id ? r.rp_project_id[0] : 0;
+            const pName = (r.rp_project_id && r.rp_project_id[1])
+                || this.state.title || "Chưa gắn dự án";
+            const pKey = "P" + pid;
+            const kKey = "P" + pid + "K"
+                + (info ? info.pkgKey : "x");
             const hKey = "H" + cid;
-            const du_an = touch(pKey, pName, null, [0]);
+            const du_an = touch(pKey, pName, null, [pid], 0);
             const goi = touch(kKey, pkg, pKey,
-                              (info && info.rank) || [9999, 0]);
+                              (info && info.rank) || [9999, 0], 1);
             const hd = touch(hKey, (info && info.name) || "Chưa gắn hợp đồng",
-                             kKey, (info && info.rank) || [9999, 0]);
+                             kKey, (info && info.rank) || [9999, 0], 2);
             t.parent = hKey;
             t.extraFields._isTop = false;
             [du_an, goi, hd].forEach((l) => {
@@ -421,22 +446,37 @@ export class RpGanttAction extends Component {
             rows.push(t);
         });
         // Giữ thứ tự: dự án → gói (theo rank) → hợp đồng → mốc theo ngày.
-        const bac = (id) => (id[0] === "P" ? 0 : id[0] === "K" ? 1
-                             : id[0] === "H" ? 2 : 3);
+        // Bậc khai tường minh khi dựng dòng, KHÔNG suy từ chữ đầu của
+        // khoá: khoá gói nay là "P18K0" nên cũng bắt đầu bằng "P".
         return rows.sort((a, b) => {
+            const ta = a._tier === undefined ? 3 : a._tier;
+            const tb = b._tier === undefined ? 3 : b._tier;
             const ka = a._rank || [9998, 0], kb = b._rank || [9998, 0];
-            return (bac(a.id) - bac(b.id)) || (ka[0] - kb[0])
+            return (ta - tb) || (ka[0] - kb[0])
                 || String(a.start || "").localeCompare(String(b.start || ""));
         });
     }
 
-    async _loadMarkers() {
+    async _loadMarkers(recs) {
         this._markers = [];
         let pid = this.projectId;
         if (!pid && this.contractId) {
             const c = await this.orm.read(
                 "rp.contract", [this.contractId], ["project_id"]);
             pid = c[0] && c[0].project_id && c[0].project_id[0];
+        }
+        if (!pid && recs) {
+            // Màn mở từ menu không mang id dự án. Mốc (hôm nay, ngày
+            // phải xong, đóng điện) là vạch dọc TRÊN TRỤC nên chỉ có
+            // nghĩa khi mọi việc đang xem thuộc cùng một dự án — nhiều
+            // dự án thì hai bộ ngày phải xong vẽ chồng lên nhau, đọc ra
+            // kết luận sai. Nên chỉ vẽ khi trong tầm nhìn có đúng 1 dự án.
+            const pids = [...new Set(
+                recs.map((r) => r.rp_project_id && r.rp_project_id[0])
+                    .filter(Boolean))];
+            if (pids.length === 1) {
+                pid = pids[0];
+            }
         }
         if (!pid) {
             return;

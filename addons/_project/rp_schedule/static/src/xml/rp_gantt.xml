@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="rp_schedule.RpGantt">
-        <div class="rp-gantt-container">
+        <div class="rp-gantt-container"
+             t-att-class="'rp-gantt-mode-' + mode">
             <div class="rp-gantt-toolbar">
                 <span class="rp-gantt-title" t-esc="state.title"/>
                 <span class="badge text-bg-secondary ms-2">

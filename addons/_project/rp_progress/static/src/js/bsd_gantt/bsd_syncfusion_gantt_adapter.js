@@ -81,6 +81,12 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
             Progress: Math.round(t.progress || 0),
             Predecessor: t.dependencies || "",
             ParentID: t.parent || null,
+            // Thời lượng — chỉ có nghĩa khi caller bật opts.useDuration.
+            // EJ2 coi việc có thời lượng 0 LÀ MỐC và tự vẽ hình thoi; đó
+            // là định nghĩa mốc sẵn có của thư viện, không phải ta tự tô.
+            // Ngày đầu = ngày cuối thôi thì EJ2 vẫn tính ra 1 ngày và vẽ
+            // thành thanh mảnh, không ra hình thoi.
+            ...(opts.useDuration ? { Duration: t.duration } : {}),
             // Baseline (kế hoạch gốc) — chỉ set khi caller truyền
             BaselineStartDate: this._parseDate(t.baselineStart),
             BaselineEndDate: this._parseDate(t.baselineEnd),
@@ -104,7 +110,14 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 parentID: "ParentID",
                 baselineStartDate: "BaselineStartDate",
                 baselineEndDate: "BaselineEndDate",
+                ...(opts.useDuration ? { duration: "Duration" } : {}),
             },
+            // Bề rộng đường nối trước-sau. Mặc định EJ2 vẽ khá dày; ở
+            // lịch nhiều quan hệ thì mạng dây che mất chính các thanh
+            // việc, nên caller hạ xuống 1px cho mảnh.
+            ...(opts.connectorLineWidth ? {
+                connectorLineWidth: opts.connectorLineWidth,
+            } : {}),
             // Baseline (kế hoạch gốc) — bar phụ dưới bar hiện hành. Bật khi
             // caller opts.renderBaseline = true (mục 1 khung phân tích).
             renderBaseline: !!opts.renderBaseline,

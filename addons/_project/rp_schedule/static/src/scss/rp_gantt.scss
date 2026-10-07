@@ -28,9 +28,30 @@
     }
 }
 
-// Milestone (is_milestone) — nhấn màu hổ phách theo brand
-.rp-gantt-ej2 .rp-ej2-milestone .e-gantt-milestone {
-    fill: #e0a460;
+// Mốc — EJ2 tự vẽ hình thoi cho việc thời lượng 0 và đặt lớp
+// .e-gantt-milestone. (Trước đây neo vào .rp-ej2-milestone, nhưng lớp
+// đó nằm trong DỮ LIỆU hàng chứ không được gắn lên thẻ, nên không bao
+// giờ ăn.) Tô hổ phách theo brand.
+.rp-gantt-ej2.e-gantt .e-gantt-chart .e-gantt-milestone {
+    background-color: #e0a460;
+    border-color: #b9823f;
+}
+
+// Màn "Mốc chính": ba làn Dự án → Gói thầu → Hợp đồng chỉ để GOM, không
+// phải việc có thời lượng. Giấu thanh dòng tổng (cả thanh đậm lẫn vạch
+// hai đầu tròn của chế độ Manual) để trục chỉ còn đúng các hình thoi —
+// đọc ngày nào dồn mốc, ngày nào trống, không bị thanh xám che.
+// (Viết đủ sâu + !important: quy tắc gốc EJ2 đặt display cho mấy thẻ này
+// ở mức `.e-gantt .e-gantt-chart …`, chọn nông hơn là thua. Lưu ý
+// `.rp-gantt-ej2` CHÍNH LÀ thẻ EJ2 gắn vào — EJ2 thêm `e-gantt` lên
+// chính nó — nên phải viết dính `.rp-gantt-ej2.e-gantt`, viết rời thành
+// thẻ con thì không bao giờ khớp.)
+.rp-gantt-mode-milestone .rp-gantt-ej2.e-gantt .e-gantt-chart {
+    .e-manualparent-main-container,
+    .e-gantt-parent-taskbar-inner-div,
+    .e-gantt-parent-progressbar-inner-div {
+        display: none !important;
+    }
 }
 
 // Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt
@@ -40,30 +61,36 @@
     background: #eef4f5;
 }
 
-// Mốc sự kiện (event markers EJ2): vạch dọc + nhãn trên trục thời gian.
-// Ngày phải xong tô đỏ vì đó là mốc chịu lực; hôm nay tô lam cho dễ
-// định vị tiến độ hiện tại.
-.rp-gantt-ej2 .e-event-markers .e-span {
-    border-left-width: 2px;
-}
-.rp-gantt-ej2 .rp-marker-deadline .e-span {
-    border-left-color: #c0453b;
-}
-.rp-gantt-ej2 .rp-marker-deadline .e-label {
-    background: #c0453b;
-    color: #fff;
-}
-.rp-gantt-ej2 .rp-marker-today .e-span {
-    border-left-color: #0E8C99;
-}
-.rp-gantt-ej2 .rp-marker-today .e-label {
-    background: #0E8C99;
-    color: #fff;
-}
-.rp-gantt-ej2 .rp-marker-grid .e-span {
-    border-left-color: #d98b3d;
-}
-.rp-gantt-ej2 .rp-marker-grid .e-label {
-    background: #d98b3d;
-    color: #fff;
+// Mốc vạch dọc (eventMarkers của EJ2). Cấu trúc thư viện dựng ra:
+//   <div class="e-event-markers <cssClass>">   ← chính nó là VẠCH (border-left)
+//     <div class="e-span-label">nhãn</div>
+// Trước đây nhắm vào `.e-span` và `.e-label` — hai lớp KHÔNG hề tồn tại,
+// nên bao lâu nay mọi vạch đều mang màu mặc định của thư viện chứ không
+// phải màu mình đặt. Và phải viết đủ sâu để đè quy tắc gốc của EJ2
+// (`.e-gantt .e-gantt-chart .e-event-markers .e-span-label`).
+.rp-gantt-ej2.e-gantt .e-gantt-chart {
+    .e-event-markers {
+        border-left-width: 2px;
+    }
+    // Ngày phải xong — mốc chịu lực
+    .e-event-markers.rp-marker-deadline {
+        border-left-color: #c0453b;
+        .e-span-label { background-color: #c0453b; color: #fff; }
+    }
+    // Hôm nay
+    .e-event-markers.rp-marker-today {
+        border-left-color: #0E8C99;
+        .e-span-label { background-color: #0E8C99; color: #fff; }
+    }
+    // Mốc riêng của ngành (đóng điện…)
+    .e-event-markers.rp-marker-grid {
+        border-left-color: #d98b3d;
+        .e-span-label { background-color: #d98b3d; color: #fff; }
+    }
+    // Vạch do người dùng tự khai trên công việc — đỏ, vì đây là những
+    // ngày người dùng chọn để cả phòng cùng nhìn vào.
+    .e-event-markers.rp-marker-event {
+        border-left-color: #c0453b;
+        .e-span-label { background-color: #c0453b; color: #fff; }
+    }
 }

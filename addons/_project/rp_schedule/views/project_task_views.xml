@@ -16,6 +16,7 @@
                         <field name="wbs_seq" readonly="1"/>
                         <field name="wbs_level" readonly="1"/>
                         <field name="is_milestone"/>
+                        <field name="rp_event_marker"/>
                     </group>
                     <group>
                         <field name="planned_start"/>
@@ -262,6 +263,8 @@
                 <field name="progress_percent" string="% hoàn thành"
                        widget="progressbar"/>
                 <field name="is_critical" string="Găng" optional="show"/>
+                <field name="rp_event_marker" string="Vạch trục"
+                       optional="show"/>
                 <field name="exec_status" string="Tình trạng" widget="badge"
                        decoration-muted="exec_status == 'not_started'"
                        decoration-info="exec_status == 'in_progress'"

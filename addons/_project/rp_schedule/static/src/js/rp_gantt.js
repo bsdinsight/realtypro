@@ -439,11 +439,23 @@ export class RpGanttAction extends Component {
                              kKey, (info && info.rank) || [9999, 0], 2);
             t.parent = hKey;
             t.extraFields._isTop = false;
+            // Mốc là ĐIỂM: thời lượng 0 thì EJ2 vẽ hình thoi theo đúng
+            // định nghĩa mốc của nó. Để trống, EJ2 suy ra 1 ngày và vẽ
+            // thành thanh mảnh — nhìn không ra mốc.
+            t.duration = 0;
             [du_an, goi, hd].forEach((l) => {
                 stretch(l, t.start);
                 stretch(l, t.end);
             });
             rows.push(t);
+        });
+        // Dòng làn mang thời lượng bằng chính bề rộng nhánh — nếu bỏ
+        // trống, EJ2 (đang bật taskFields.duration) hiểu là 0 và biến
+        // dòng tổng thành một cái mốc.
+        const ngay = (a, b) => Math.max(1, Math.round(
+            (new Date(b) - new Date(a)) / 86400000) + 1);
+        lanes.forEach((l) => {
+            l.duration = (l.start && l.end) ? ngay(l.start, l.end) : 1;
         });
         // Giữ thứ tự: dự án → gói (theo rank) → hợp đồng → mốc theo ngày.
         // Bậc khai tường minh khi dựng dòng, KHÔNG suy từ chữ đầu của
@@ -492,11 +504,16 @@ export class RpGanttAction extends Component {
         // classList.add(cssClass) nên chuỗi hai lớp ném InvalidCharacterError
         // ngay giữa lúc vẽ mốc — chuỗi vẽ đứt ở đó, hideSpinner() không
         // bao giờ chạy, và lớp spinner phủ kín Gantt nuốt mọi cú bấm.
+        // KHÔNG truyền `top`. Tài liệu Syncfusion có thuộc tính đó để so
+        // le nhãn, nhưng bản EJ2 đang đóng gói ở đây lặng lẽ BỎ HẲN vạch
+        // nào mang `top` — đo trên trang thử: 6 vạch, chỉ vạch duy nhất
+        // không có `top` được vẽ. Chống nhãn chồng nhau bằng cách đặt
+        // nhãn ngắn (xem _rp_schedule_markers) thay vì xếp tầng.
         this._markers = marks.map((m) => ({
             day: new Date(m.date + "T00:00:00"),
             label: m.label,
-            cssClass: "rp-marker-" + String(m.kind || "other")
-                .replace(/[^a-z0-9-]/gi, ""),
+            cssClass: "rp-marker-"
+                + String(m.kind || "other").replace(/[^a-z0-9-]/gi, ""),
         }));
     }
 
@@ -522,6 +539,11 @@ export class RpGanttAction extends Component {
             viewMode: this.state.viewMode,
             licenseKey: this._licenseKey,
             rowHeight: 42,
+            // Mốc: để EJ2 tự nhận ra việc thời lượng 0 và vẽ hình thoi.
+            useDuration: this.mode === "milestone",
+            // Đường nối trước-sau mảnh 1px — lịch 142 quan hệ mà vẽ dày
+            // thì mạng dây lấn hết thanh việc.
+            connectorLineWidth: 1,
             taskMode: "Manual",
             renderBaseline: this.state.showBaseline,
             baselineColor: "#8a6fb0",

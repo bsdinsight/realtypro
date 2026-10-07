@@ -55,6 +55,15 @@ class ProjectTask(models.Model):
         string='Số ngày KH', compute='_compute_planned_days', store=True)
     progress_percent = fields.Float(string='% hoàn thành', default=0.0)
     is_milestone = fields.Boolean(string='Là mốc (milestone)')
+    # Vạch dọc trên trục thời gian Gantt. KHÁC với is_milestone: mốc là
+    # một DÒNG trong lịch (có hợp đồng, có người chịu trách nhiệm), còn
+    # vạch này cắt ngang TOÀN BỘ biểu đồ để mọi dòng cùng đọc một ngày —
+    # kiểu "ngày đóng điện", "hạn ký PPA". Một lịch chỉ nên có dăm ba
+    # vạch; vạch nhiều thì biểu đồ thành cái hàng rào, không đọc được.
+    rp_event_marker = fields.Boolean(
+        string='Vạch trên trục thời gian',
+        help='Vẽ một vạch dọc màu đỏ tại ngày kết thúc kế hoạch của công '
+             'việc này, xuyên suốt biểu đồ Gantt của dự án.')
     # Quan hệ trước–sau nằm ở rp.task.link (có loại FS/SS/FF/SF và độ
     # lệch). `predecessor_ids` giữ lại làm lối vào đơn giản cho trường
     # hợp FS lệch 0 — đọc, ghi và lọc đều chạy, nhưng dữ liệu thật chỉ

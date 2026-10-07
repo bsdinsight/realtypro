@@ -135,6 +135,22 @@ class ReProject(models.Model):
             'label': _('Hôm nay'),
             'kind': 'today',
         })
+        # Vạch do người dùng tự khai trên công việc (cờ "Vạch trên trục
+        # thời gian"). Nhờ vậy mỗi dự án tự chọn lấy vài ngày đáng để cả
+        # phòng cùng nhìn, không phải chờ lập trình thêm loại mốc mới.
+        for t in self.env['project.task'].search([
+            ('rp_project_id', '=', self.id),
+            ('rp_event_marker', '=', True),
+            ('planned_end', '!=', False),
+        ], order='planned_end'):
+            marks.append({
+                'date': fields.Date.to_string(t.planned_end),
+                # Nhãn CHỈ tên việc, không kèm ngày: nhãn nằm ngang trên
+                # trục nên hai vạch cách nhau vài tuần là chữ đè lên nhau,
+                # mà ngày thì đọc ngay dưới trục rồi.
+                'label': t.name,
+                'kind': 'event',
+            })
         return marks
 
     @api.model

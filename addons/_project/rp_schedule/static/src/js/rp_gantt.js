@@ -46,6 +46,10 @@ export class RpGanttAction extends Component {
             // do màn này tồn tại, nhưng phải tắt được: lịch dày thì nhãn
             // che mất chính các mũi tên quan hệ.
             showLabels: true,
+            // Vạch dọc trên trục. Nhãn của chúng do EJ2 ghim ở một độ
+            // cao cố định trong biểu đồ nên CHE mất thanh/hình thoi của
+            // mấy dòng nằm đúng chỗ đó — phải tắt được.
+            showMarkers: true,
             // Các bản chụp lịch (V1, V2, V3…) và bản ĐANG so sánh.
             baselines: [],
             baselineId: false,
@@ -661,13 +665,13 @@ export class RpGanttAction extends Component {
             taskMode: "Manual",
             renderBaseline: this.state.showBaseline,
             baselineColor: "#8a6fb0",
-            eventMarkers: this._markers,
+            eventMarkers: this.state.showMarkers ? this._markers : [],
             columns: chiMoc ? [
                 { field: "TaskID", isPrimaryKey: true, visible: false,
                   width: 1 },
                 { field: "TaskName", headerText: "Mốc", width: 250 },
                 { field: "EndDate", headerText: "Ngày",
-                  format: "dd/MM/yyyy", width: 94, textAlign: "Right" },
+                  format: "dd/MM/yyyy", width: 104, textAlign: "Right" },
                 // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
                 // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi
                 // "TaskNhan" thay vì giá trị.
@@ -922,6 +926,12 @@ export class RpGanttAction extends Component {
     async setBaselineVersion(ev) {
         const id = parseInt(ev.target.value, 10);
         this.state.baselineId = isNaN(id) ? false : id;
+        await this.loadAndRender();
+    }
+
+    // Hiện/ẩn vạch dọc trên trục
+    async toggleMarkers() {
+        this.state.showMarkers = !this.state.showMarkers;
         await this.loadAndRender();
     }
 

@@ -6,16 +6,19 @@
              t-att-class="'rp-gantt-mode-' + mode">
             <div class="rp-gantt-toolbar">
                 <span class="rp-gantt-title" t-esc="state.title"/>
-                <span class="badge text-bg-secondary ms-2">
+                <!-- Ở màn mốc, ba huy hiệu này đã nằm trong dải số liệu
+                     bên dưới — để lại là vừa lặp vừa làm vỡ thanh công cụ. -->
+                <span t-if="mode !== 'milestone'"
+                      class="badge text-bg-secondary ms-2">
                     <t t-esc="state.count"/> công việc
                 </span>
-                <span t-if="state.showCriticalPath and state.critCount"
+                <span t-if="mode !== 'milestone' and state.showCriticalPath and state.critCount"
                       class="badge text-bg-danger ms-1"
                       title="Số công việc trên đường găng — chậm ở đây là chậm cả dự án.">
                     <i class="fa fa-exclamation-triangle me-1"/>
                     <t t-esc="state.critCount"/> việc găng
                 </span>
-                <span t-if="state.showCriticalPath and state.worstFloat &lt; 0"
+                <span t-if="mode !== 'milestone' and state.showCriticalPath and state.worstFloat &lt; 0"
                       class="badge text-bg-warning ms-1"
                       title="Dư địa âm: chuỗi việc này không còn kịp mốc phải xong.">
                     Dư địa <t t-esc="state.worstFloat"/> ngày
@@ -23,7 +26,7 @@
                 <!-- Chú giải màu hình thoi — màn mốc là chỗ họp tiến độ,
                      người xem phải đọc được màu mà không cần hỏi ai. -->
                 <span t-if="mode === 'milestone'"
-                      class="text-muted small ms-3 rp-gantt-chu-giai">
+                      class="text-muted small ms-3 rp-gantt-chu-giai d-none d-xxl-flex">
                     <span class="rp-cham" style="background:#c0453b"/>trễ
                     <span class="rp-cham ms-2" style="background:#2e8b57"/>đã xong
                     <span class="rp-cham ms-2" style="background:#e0a460"/>chưa tới
@@ -59,6 +62,13 @@
                             (<t t-esc="bl.date"/>)
                         </option>
                     </select>
+                    <!-- Vạch dọc trên trục -->
+                    <button type="button" class="btn btn-sm"
+                            t-att-class="state.showMarkers ? 'btn-secondary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.toggleMarkers()"
+                            title="Hiện/ẩn các vạch dọc (hôm nay, NTP, đóng điện, COD…). Nhãn của chúng che mất thanh của mấy dòng nằm cùng độ cao.">
+                        <i class="fa fa-flag me-1"/>Vạch mốc
+                    </button>
                     <!-- Ghi tên + dư địa cạnh hình thoi -->
                     <button t-if="mode === 'milestone'" type="button"
                             class="btn btn-sm"

@@ -566,8 +566,14 @@ export class RpGanttAction extends Component {
                 } else if (nf.late) {
                     phan.push("trễ " + nf.late + " ngày");
                 } else if (nf.tf !== null && nf.tf !== undefined) {
-                    phan.push("dư địa " + (nf.tf > 0 ? "+" : "") + nf.tf
-                              + " ngày");
+                    // KHÔNG có dấu "+" ở dư địa. "trượt +41" và
+                    // "dư địa +8" viết giống nhau thì người đọc tưởng
+                    // cùng một loại số, mà hai thứ này khác hẳn: trượt
+                    // là muộn hơn kế hoạch gốc bao nhiêu (so với
+                    // baseline), dư địa là còn được trễ thêm bao nhiêu
+                    // mà chưa mất ngày về đích (tính từ đường găng).
+                    // Dấu trừ thì GIỮ — dư địa âm nghĩa là đã quá hạn.
+                    phan.push("dư địa " + nf.tf + " ngày");
                 }
             }
             // Có TÊN ở đầu nhãn, nhưng CẮT NGẮN. Bỏ hẳn tên thì những

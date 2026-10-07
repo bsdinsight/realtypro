@@ -33,6 +33,10 @@
                     <span t-if="state.showCriticalPath" class="ms-2">
                         · mốc mờ = ngoài đường găng
                     </span>
+                    <span class="ms-2">
+                        · dư địa = còn được trễ thêm bấy nhiêu ngày mà
+                        chưa mất COD
+                    </span>
                 </span>
                 <span t-else="" class="text-muted small ms-3 d-none d-lg-inline">
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·

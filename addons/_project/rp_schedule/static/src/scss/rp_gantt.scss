@@ -197,6 +197,24 @@
     box-shadow: inset 3px 0 0 #c0453b;
 }
 
+// Vị trí mốc theo KẾ HOẠCH GỐC. Mốc có thời lượng 0 nên EJ2 vẽ đường
+// cơ sở của nó thành một cái gạch 2×8px — đo tận nơi — tức là gần như vô
+// hình, người xem tưởng không có đường cơ sở. Phóng thành hình thoi RỖNG
+// cùng cỡ với hình thoi đặc: đặc = đang ở đâu, rỗng = đáng lẽ ở đâu,
+// khoảng cách giữa hai cái chính là độ trượt.
+// Lề âm để tâm hình thoi rơi đúng ngày (EJ2 neo MÉP TRÁI của gạch 2px
+// vào ngày, nới rộng ra mà không bù lề thì nó lệch sang phải).
+.rp-gantt-mode-milestone .rp-gantt-ej2.e-gantt .e-gantt-chart .e-baseline-bar {
+    width: 11px !important;
+    height: 11px !important;
+    margin-left: -5px;
+    margin-top: -2px;
+    background: transparent !important;
+    border: 2px solid #8a6fb0;
+    border-radius: 2px;
+    transform: rotate(45deg);
+}
+
 // Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt
 .rp-gantt-ej2 tr.rp-ej2-level1 .e-rowcell {
     font-weight: 700;

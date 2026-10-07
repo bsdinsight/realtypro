@@ -539,8 +539,14 @@ export class RpGanttAction extends Component {
             if (nf && nf.truot > 0) {
                 // Độ trượt đứng NGAY SAU tên: khi đang so với kế hoạch
                 // gốc thì đây là con số người ta tìm, các số khác chỉ là
-                // bối cảnh.
-                phan.push("trượt +" + nf.truot + " ngày");
+                // bối cảnh. Kèm luôn NGÀY GỐC — nếu không, người xem phải
+                // tự trừ lùi trong đầu để biết bản gốc hẹn ngày nào, mà
+                // tooltip của EJ2 thì chỉ nói ngày hiện hành.
+                const bm2 = this._baseMap && this._baseMap[String(r.id)];
+                const ng = bm2 && bm2[1] ? bm2[1].slice(0, 10).split("-") : null;
+                phan.push("trượt +" + nf.truot + " ngày"
+                    + (ng ? " (gốc " + ng[2] + "/" + ng[1] + "/" + ng[0] + ")"
+                          : ""));
             }
             if (nf) {
                 if (nf.crit) {

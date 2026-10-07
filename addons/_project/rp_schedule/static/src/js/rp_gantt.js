@@ -141,15 +141,28 @@ export class RpGanttAction extends Component {
             ["name", "wbs_code", "wbs_seq", "planned_start", "planned_end",
              "progress_percent", "is_milestone",
              "project_id", "user_ids", "baseline_start", "baseline_end",
-             "baseline_slip_days", "rp_contract_id", "rp_project_id"],
+             "baseline_slip_days", "rp_contract_id", "rp_project_id",
+             "exec_status"],
             { order: "id asc" }
         );
         this.state.hasBaseline = recs.some((r) => r.baseline_start);
+        // Dự án HIỆU LỰC của màn hình. Mở từ nút trên form dự án thì đã
+        // có sẵn; mở từ menu thì suy ra từ chính các việc đang xem, và
+        // chỉ nhận khi cả màn hình thuộc đúng MỘT dự án — hai dự án thì
+        // mốc vạch dọc lẫn đường găng đều không còn nghĩa.
+        if (this.projectId) {
+            this._pid = this.projectId;
+        } else {
+            const pids = [...new Set(
+                recs.map((r) => r.rp_project_id && r.rp_project_id[0])
+                    .filter(Boolean))];
+            this._pid = pids.length === 1 ? pids[0] : false;
+        }
         // Mốc vạch dọc (ngày phải xong, hôm nay, đóng điện…). Ở chế độ
         // hợp đồng vẫn lấy mốc của dự án chứa hợp đồng — nhà thầu cần
         // thấy mình đang chạy đua với mốc nào. Nạp SAU khi có việc để
         // màn mở từ menu (không mang id dự án) còn suy ra được dự án.
-        await this._loadMarkers(recs);
+        await this._loadMarkers();
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
         const userIds = [...new Set(recs.flatMap((r) => r.user_ids || []))];
         const userName = new Map();
@@ -283,14 +296,14 @@ export class RpGanttAction extends Component {
         }
         // Đường găng — tính CPM ở backend chỉ khi bật + có HĐ
         let cpMap = {};
-        if (this.state.showCriticalPath && (this.contractId || this.projectId)) {
+        if (this.state.showCriticalPath && (this.contractId || this._pid)) {
             try {
                 cpMap = await this.orm.call(
                     "project.task",
-                    this.projectId
+                    this._pid
                         ? "rp_compute_project_critical_path"
                         : "rp_compute_critical_path",
-                    [this.projectId || this.contractId]) || {};
+                    [this._pid || this.contractId]) || {};
             } catch {
                 cpMap = {};
             }
@@ -351,6 +364,9 @@ export class RpGanttAction extends Component {
                     _near: !!(cpv && cpv.near),
                     TaskFloat: cpv ? cpv.tf : "",
                     TaskSlip: r.baseline_slip_days || "",
+                    // Trạng thái thực hiện — màn mốc tô hình thoi theo
+                    // đây, để nhìn phát biết mốc nào đã trễ.
+                    _status: r.exec_status || "",
                 },
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
@@ -469,7 +485,7 @@ export class RpGanttAction extends Component {
         });
     }
 
-    async _loadMarkers(recs) {
+    async _loadMarkers() {
         this._markers = [];
         let pid = this.projectId;
         if (!pid && this.contractId) {
@@ -477,18 +493,10 @@ export class RpGanttAction extends Component {
                 "rp.contract", [this.contractId], ["project_id"]);
             pid = c[0] && c[0].project_id && c[0].project_id[0];
         }
-        if (!pid && recs) {
-            // Màn mở từ menu không mang id dự án. Mốc (hôm nay, ngày
-            // phải xong, đóng điện) là vạch dọc TRÊN TRỤC nên chỉ có
-            // nghĩa khi mọi việc đang xem thuộc cùng một dự án — nhiều
-            // dự án thì hai bộ ngày phải xong vẽ chồng lên nhau, đọc ra
-            // kết luận sai. Nên chỉ vẽ khi trong tầm nhìn có đúng 1 dự án.
-            const pids = [...new Set(
-                recs.map((r) => r.rp_project_id && r.rp_project_id[0])
-                    .filter(Boolean))];
-            if (pids.length === 1) {
-                pid = pids[0];
-            }
+        if (!pid) {
+            // Màn mở từ menu không mang id dự án — dùng dự án hiệu lực
+            // suy từ chính các việc đang xem (xem _loadData).
+            pid = this._pid;
         }
         if (!pid) {
             return;
@@ -535,12 +543,19 @@ export class RpGanttAction extends Component {
         // ĐỎ leaf-task găng + CAM cận-găng qua queryTaskbarInfo. KHÔNG dùng
         // EJ2 enableCriticalPath (không tính được trên WBS lồng + predecessor
         // của ta). Giữ Manual + ngày import gốc.
+        // Màn "Mốc chính" là chỗ các trưởng bộ phận ngồi họp tiến độ: cái
+        // họ nhìn là TRỤC THỜI GIAN — mốc nào đã trễ, mốc nào dồn cục,
+        // còn bao lâu tới mốc sau. Bảng bên trái chỉ cần đủ gọi tên mốc,
+        // nên cắt còn Mốc + Ngày và đẩy con trượt sát trái, nhường gần
+        // hết bề ngang cho biểu đồ. Lịch đầy đủ thì ngược lại, vẫn cần
+        // đủ cột để tra cứu.
+        const chiMoc = this.mode === "milestone";
         await this.adapter.render(this.ganttRef.el, this.tasks, {
             viewMode: this.state.viewMode,
             licenseKey: this._licenseKey,
-            rowHeight: 42,
+            rowHeight: chiMoc ? 34 : 42,
             // Mốc: để EJ2 tự nhận ra việc thời lượng 0 và vẽ hình thoi.
-            useDuration: this.mode === "milestone",
+            useDuration: chiMoc,
             // Đường nối trước-sau mảnh 1px — lịch 142 quan hệ mà vẽ dày
             // thì mạng dây lấn hết thanh việc.
             connectorLineWidth: 1,
@@ -548,7 +563,13 @@ export class RpGanttAction extends Component {
             renderBaseline: this.state.showBaseline,
             baselineColor: "#8a6fb0",
             eventMarkers: this._markers,
-            columns: [
+            columns: chiMoc ? [
+                { field: "TaskID", isPrimaryKey: true, visible: false,
+                  width: 1 },
+                { field: "TaskName", headerText: "Mốc", width: 250 },
+                { field: "EndDate", headerText: "Ngày",
+                  format: "dd/MM/yy", width: 84, textAlign: "Right" },
+            ] : [
                 // TaskID (id database) ẨN nhưng PHẢI có: là primary key
                 // của TreeGrid — thiếu nó saveSuccess→setRowData crash
                 // (undefined.replace) trước khi bắn actionComplete → mất
@@ -592,8 +613,9 @@ export class RpGanttAction extends Component {
                 { field: "TaskAssign", headerText: "Phân việc",
                   width: 150 },
             ],
-            treeColumnIndex: 3,
-            splitterColumnIndex: (this.projectId ? 11 : 9)
+            treeColumnIndex: chiMoc ? 1 : 3,
+            splitterColumnIndex: chiMoc ? 2
+                : (this.projectId ? 11 : 9)
                 + (this.state.showBaseline && this.state.hasBaseline ? 1 : 0),
             preserveLinks: true,
             // KHÔNG auto-reschedule (giữ ngày import, tránh crash
@@ -613,6 +635,16 @@ export class RpGanttAction extends Component {
                 const d = args.data || {};
                 const td = d.taskData || {};
                 const top = d._isTop || td._isTop;
+                // Màn mốc: tô hình thoi theo TÌNH TRẠNG, vì cuộc họp
+                // tiến độ chỉ hỏi đúng một câu — mốc nào trễ. Đỏ = trễ,
+                // xanh = đã xong, hổ phách = chưa tới.
+                if (chiMoc) {
+                    const st = d._status || td._status || "";
+                    args.milestoneColor = st === "late" ? "#c0453b"
+                        : (st === "done" ? "#2e8b57"
+                           : (st === "in_progress" ? "#0E8C99" : "#e0a460"));
+                    return;
+                }
                 if (top) {
                     args.taskbarBgColor = "#0a3d47";
                     args.progressBarBgColor = "#062a31";

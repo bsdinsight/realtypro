@@ -20,7 +20,15 @@
                       title="Dư địa âm: chuỗi việc này không còn kịp mốc phải xong.">
                     Dư địa <t t-esc="state.worstFloat"/> ngày
                 </span>
-                <span class="text-muted small ms-3 d-none d-lg-inline">
+                <!-- Chú giải màu hình thoi — màn mốc là chỗ họp tiến độ,
+                     người xem phải đọc được màu mà không cần hỏi ai. -->
+                <span t-if="mode === 'milestone'"
+                      class="text-muted small ms-3 rp-gantt-chu-giai">
+                    <span class="rp-cham" style="background:#c0453b"/>trễ
+                    <span class="rp-cham ms-2" style="background:#2e8b57"/>đã xong
+                    <span class="rp-cham ms-2" style="background:#e0a460"/>chưa tới
+                </span>
+                <span t-else="" class="text-muted small ms-3 d-none d-lg-inline">
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·
                     Chuột phải thêm/xoá
                 </span>

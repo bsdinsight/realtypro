@@ -19,6 +19,15 @@
             font-size: 15px;
             color: #0e5563;
         }
+
+        // Chú giải màu hình thoi của màn mốc
+        .rp-gantt-chu-giai .rp-cham {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            margin-right: 4px;
+            transform: rotate(45deg);   // hình thoi, giống đúng cái trên trục
+        }
     }
 
     .rp-gantt-ej2 {

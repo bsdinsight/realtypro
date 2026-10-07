@@ -101,7 +101,7 @@ class ReProject(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'bsd_gantt_view',
-            'name': 'Gantt — %s' % self.name,
+            'name': 'Gantt hạng mục — %s' % self.name,
             'context': {'default_project_id': self.id,
                         'active_id': self.id},
         }

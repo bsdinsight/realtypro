@@ -172,6 +172,6 @@ class RpContract(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'rp_schedule.gantt',
-            'name': _('Gantt — %s', self.name),
+            'name': _('Gantt lịch thi công — %s', self.name),
             'context': {'default_rp_contract_id': self.id, 'active_id': self.id},
         }

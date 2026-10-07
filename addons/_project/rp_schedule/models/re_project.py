@@ -411,7 +411,7 @@ class ReProject(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'rp_schedule.gantt',
-            'name': _('Tiến độ dự án — %s', self.name),
+            'name': _('Gantt lịch thi công — %s', self.name),
             'params': {'project_id': self.id},
             'context': {'rp_project_id': self.id},
         }

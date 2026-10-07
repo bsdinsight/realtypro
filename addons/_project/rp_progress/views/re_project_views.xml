@@ -30,7 +30,7 @@
                      dính chữ thành "GanttTiến độ", không có khoảng trắng. -->
                 <button name="action_open_gantt" type="object"
                         class="oe_stat_button" icon="fa-bar-chart">
-                    <span class="o_stat_text">Gantt tiến độ</span>
+                    <span class="o_stat_text">Gantt hạng mục</span>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="before">

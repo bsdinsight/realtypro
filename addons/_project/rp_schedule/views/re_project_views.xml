@@ -86,7 +86,7 @@
                             <button name="action_open_project_gantt"
                                     type="object" class="btn-primary"
                                     icon="fa-tasks"
-                                    string="Tiến độ dự án (Gantt)"/>
+                                    string="Gantt lịch thi công"/>
                             <button name="action_compute_project_cpm"
                                     type="object" class="btn-secondary"
                                     icon="fa-sitemap"

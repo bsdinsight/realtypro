@@ -230,11 +230,11 @@
          Mở từ menu thì không truyền dự án; thành phần JS đã xử lý sẵn
          trường hợp đó (domain rỗng = lấy toàn bộ lịch). -->
     <record id="action_rp_schedule_gantt" model="ir.actions.client">
-        <field name="name">Gantt tiến độ</field>
+        <field name="name">Gantt lịch thi công</field>
         <field name="tag">rp_schedule.gantt</field>
     </record>
 
-    <menuitem id="menu_rp_schedule_gantt" name="Gantt tiến độ"
+    <menuitem id="menu_rp_schedule_gantt" name="Gantt lịch thi công"
               parent="rp_estimate.menu_schedule"
               action="action_rp_schedule_gantt" sequence="5"/>
 

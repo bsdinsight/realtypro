@@ -965,8 +965,6 @@ export class RpGanttAction extends Component {
         await this.loadAndRender();
     }
 
-    // Chốt baseline = copy lịch kế hoạch hiện hành làm mốc gốc.
-    // Re-baseline (đã có baseline) yêu cầu xác nhận — tránh che giấu trượt.
     // Chốt một bản chụp MỚI. KHÔNG có thao tác "cập nhật baseline":
     // baseline mà sửa được thì hết là mốc so sánh — ai cũng có thể dời
     // gốc cho hết trượt rồi báo "đúng kế hoạch". Kế hoạch đổi thì chốt
@@ -996,7 +994,6 @@ export class RpGanttAction extends Component {
             confirm: lam,
             cancel: () => {},
         });
-    }
     }
 }
 

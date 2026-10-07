@@ -556,16 +556,9 @@ export class RpGanttAction extends Component {
                 ? bg[1].slice(0, 10).split("-").reverse().join("/") : "";
             const phan = [];
             if (nf && nf.truot > 0) {
-                // Độ trượt đứng NGAY SAU tên: khi đang so với kế hoạch
-                // gốc thì đây là con số người ta tìm, các số khác chỉ là
-                // bối cảnh. Kèm luôn NGÀY GỐC — nếu không, người xem phải
-                // tự trừ lùi trong đầu để biết bản gốc hẹn ngày nào, mà
-                // tooltip của EJ2 thì chỉ nói ngày hiện hành.
-                const bm2 = this._baseMap && this._baseMap[String(r.id)];
-                const ng = bm2 && bm2[1] ? bm2[1].slice(0, 10).split("-") : null;
-                phan.push("trượt +" + nf.truot + " ngày"
-                    + (ng ? " (gốc " + ng[2] + "/" + ng[1] + "/" + ng[0] + ")"
-                          : ""));
+                // Chỉ số ngày trượt; NGÀY GỐC đã có cột riêng trên lưới
+                // nên không nhắc lại ở đây cho nhãn khỏi dài.
+                phan.push("trượt +" + nf.truot + " ngày");
             }
             if (nf) {
                 if (nf.crit) {
@@ -577,11 +570,15 @@ export class RpGanttAction extends Component {
                               + " ngày");
                 }
             }
-            // KHÔNG lặp lại tên việc: lưới trái đã có tên, ở ĐÚNG hàng
-            // ngang đó, và lưới không cuộn ngang nên tên luôn nhìn thấy.
-            // Nhét tên vào đây chỉ làm nhãn dài gấp đôi rồi tràn khỏi mép
-            // phải, cắt mất đúng đoạn số liệu mà người ta cần đọc.
-            t.extraFields.TaskNhan = phan.join("  ·  ");
+            // Có TÊN ở đầu nhãn, nhưng CẮT NGẮN. Bỏ hẳn tên thì những
+            // nhãn chỉ có số ("dư địa +7 ngày") trôi lơ lửng giữa biểu
+            // đồ, hai hàng cạnh nhau ra chữ giống hệt nhau, không biết
+            // của mốc nào. Còn để nguyên tên thì nhãn dài gấp đôi rồi
+            // tràn khỏi mép phải, cắt mất chính phần số liệu.
+            const ten = (t.name || "");
+            const ngan = ten.length > 30 ? ten.slice(0, 29) + "…" : ten;
+            t.extraFields.TaskNhan = phan.length
+                ? ngan + "  ·  " + phan.join("  ·  ") : ngan;
             [du_an, goi, hd].forEach((l) => {
                 stretch(l, t.start);
                 stretch(l, t.end);

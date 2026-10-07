@@ -9,8 +9,10 @@
     .rp-gantt-toolbar {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 16px;
+        // Siết sát: thanh này ăn chiều cao của chính biểu đồ bên dưới,
+        // mà màn 15" thì mỗi dòng Gantt đều quý.
+        gap: 6px;
+        padding: 6px 14px;
         border-bottom: 1px solid #dee2e6;
         flex: 0 0 auto;
         // Hết chỗ thì XUỐNG DÒNG cả nút, đừng bẻ chữ bên trong nút:
@@ -24,10 +26,10 @@
 
         .rp-gantt-title {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             color: #0e5563;
             // Tên dự án dài thì cắt bớt, không để nó đẩy vỡ cả hàng nút
-            max-width: 340px;
+            max-width: 230px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

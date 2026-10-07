@@ -26,17 +26,12 @@
                 <!-- Chú giải màu hình thoi — màn mốc là chỗ họp tiến độ,
                      người xem phải đọc được màu mà không cần hỏi ai. -->
                 <span t-if="mode === 'milestone'"
-                      class="text-muted small ms-3 rp-gantt-chu-giai d-none d-xxl-flex">
+                      class="text-muted small ms-3 rp-gantt-chu-giai d-none d-xxl-flex"
+                      title="Màu hình thoi = tình trạng mốc. Mốc mờ = ngoài đường găng. Dư địa = còn được trễ thêm bấy nhiêu ngày mà chưa mất COD.">
                     <span class="rp-cham" style="background:#c0453b"/>trễ
                     <span class="rp-cham ms-2" style="background:#2e8b57"/>đã xong
                     <span class="rp-cham ms-2" style="background:#e0a460"/>chưa tới
-                    <span t-if="state.showCriticalPath" class="ms-2">
-                        · mốc mờ = ngoài đường găng
-                    </span>
-                    <span class="ms-2">
-                        · dư địa = còn được trễ thêm bấy nhiêu ngày mà
-                        chưa mất COD
-                    </span>
+
                 </span>
                 <span t-else="" class="text-muted small ms-3 d-none d-lg-inline">
                     Kéo thanh đổi ngày · Double-click mở chi tiết ·

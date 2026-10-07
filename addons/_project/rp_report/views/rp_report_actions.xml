@@ -47,7 +47,7 @@
             <!-- Một dòng một hợp đồng, đủ cột để phòng Tài chính không
                  phải mở thêm màn nào: giá gốc, phát sinh hai loại, dự
                  báo, gia hạn, chậm, phạt. -->
-            <list string="Hợp đồng — giá trị &amp; dự báo"
+            <list expand="1" string="Hợp đồng — giá trị &amp; dự báo"
                   decoration-danger="ld_days_late &gt; 0">
                 <field name="name"/>
                 <field name="project_id" optional="show"/>

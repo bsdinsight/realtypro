@@ -165,7 +165,7 @@
         <field name="model">project.task</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <list string="Lịch thi công" default_order="wbs_seq, id"
+            <list expand="1" string="Lịch thi công" default_order="wbs_seq, id"
                   multi_edit="1" sample="1"
                   decoration-danger="exec_status == 'late'"
                   decoration-warning="is_critical and exec_status != 'done'"
@@ -247,7 +247,7 @@
         <field name="model">project.task</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <list string="Mốc chính" default_order="planned_end, wbs_seq"
+            <list expand="1" string="Mốc chính" default_order="planned_end, wbs_seq"
                   create="0"
                   decoration-danger="exec_status == 'late'"
                   decoration-success="exec_status == 'done'">

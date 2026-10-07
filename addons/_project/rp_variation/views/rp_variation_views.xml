@@ -5,7 +5,7 @@
         <field name="name">rp.variation.list</field>
         <field name="model">rp.variation</field>
         <field name="arch" type="xml">
-            <list decoration-danger="date_quote and not quote_on_time"
+            <list expand="1" decoration-danger="date_quote and not quote_on_time"
                   decoration-muted="state in ['rejected','cancelled']">
                 <field name="code" width="110px"/>
                 <field name="name"/>

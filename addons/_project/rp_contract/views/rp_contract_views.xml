@@ -5,7 +5,7 @@
         <field name="name">rp.contract.list</field>
         <field name="model">rp.contract</field>
         <field name="arch" type="xml">
-            <list decoration-muted="state in ('completed','terminated')"
+            <list expand="1" decoration-muted="state in ('completed','terminated')"
                   decoration-info="state == 'draft'"
                   decoration-success="state == 'executing'">
                 <field name="name"/>

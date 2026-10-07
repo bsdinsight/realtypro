@@ -395,6 +395,14 @@ export class RpGanttAction extends Component {
             }
             const hasDates = !!r.planned_start;
             const bm = this._baseMap && this._baseMap[String(r.id)];
+            // Mốc nằm ĐÚNG ngày kế hoạch gốc thì KHÔNG vẽ dấu gốc: không
+            // có gì để so, mà vẽ thì nó chồng khít lên dấu hiện hành
+            // thành một cục tím, nuốt luôn màu tình trạng. Không dấu
+            // nghĩa là không trượt — đọc nhanh hơn mọi ký hiệu.
+            const trungGoc = !!bm
+                && (bm[0] || "") === (r.planned_start || "")
+                && (bm[1] || "") === (r.planned_end || "");
+            const veGoc = bm && !(this.mode === "milestone" && trungGoc);
             return {
                 id: String(r.id),
                 parent,
@@ -439,9 +447,11 @@ export class RpGanttAction extends Component {
                     ? (r.planned_end || r.planned_start) : null,
                 // Thanh đường cơ sở vẽ theo PHIÊN BẢN đang chọn; chưa
                 // có bản chụp nào thì quay về hai trường trên công việc.
-                baselineStart: (bm && bm[0]) || r.baseline_start || null,
-                baselineEnd: (bm && bm[1])
-                    || r.baseline_end || r.baseline_start || null,
+                baselineStart: veGoc ? bm[0]
+                    : (bm ? null : (r.baseline_start || null)),
+                baselineEnd: veGoc ? (bm[1] || bm[0])
+                    : (bm ? null
+                       : (r.baseline_end || r.baseline_start || null)),
                 progress: Math.round(r.progress_percent || 0),
                 // taskMode 'Manual': predecessor chỉ VẼ mũi tên, không
                 // auto-reschedule → giữ đúng ngày import từ MS Project

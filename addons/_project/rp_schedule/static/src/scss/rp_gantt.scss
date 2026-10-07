@@ -214,10 +214,12 @@
     // margin không nhúc nhích (đã thử). Đẩy lên 5px để vừa lòng dòng
     // 34px, và sang trái 5px để tâm hình thoi rơi đúng ngày — EJ2 neo
     // MÉP TRÁI của cái gạch 2px gốc vào ngày.
-    // Nằm THẤP HƠN hình thoi hiện hành nửa dòng, theo lối MS Project vẽ
-    // đường cơ sở dưới thanh việc: mốc nào đúng hạn thì hai dấu chồng
-    // cột nhau mà vẫn tách bạch, không dính thành một cục.
-    transform: translate(-5px, -5px) rotate(45deg);
+    // Ngang TÂM với hình thoi hiện hành, để hai dấu nằm trên cùng một
+    // đường ngắm — mắt đọc ra ngay "dời từ đây sang đây". Đặt thấp hơn
+    // thì nó trông như rơi sang hàng dưới.
+    // (Mốc đúng hạn không vẽ dấu gốc nữa, nên không còn lo chồng nhau —
+    // xem chỗ dựng baselineStart trong rp_gantt.js.)
+    transform: translate(-5px, -14px) rotate(45deg);
 }
 
 // Task level 1 (WBS không chấm): hàng lưới đậm + nền nhạt

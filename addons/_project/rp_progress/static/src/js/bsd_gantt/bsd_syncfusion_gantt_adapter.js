@@ -112,6 +112,11 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 baselineEndDate: "BaselineEndDate",
                 ...(opts.useDuration ? { duration: "Duration" } : {}),
             },
+            // Định dạng ngày DÙNG CHUNG cho tooltip, hộp thoại sửa và
+            // mọi chỗ EJ2 tự in ngày. Không đặt thì nó in theo kiểu Mỹ
+            // (tháng trước ngày sau): "4/23/2027" đứng cạnh cột lưới
+            // "23/04/2027" là người đọc hiểu nhầm ngày.
+            ...(opts.dateFormat ? { dateFormat: opts.dateFormat } : {}),
             // Nhãn trái/phải cạnh thanh việc — khoá sẵn có của EJ2, nhận
             // TÊN TRƯỜNG trong dataSource. Không dùng mẫu tự viết: bộ
             // biên dịch mẫu của EJ2 (new Function) nổ với cú pháp hiện

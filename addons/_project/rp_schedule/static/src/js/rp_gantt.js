@@ -646,6 +646,8 @@ export class RpGanttAction extends Component {
             viewMode: this.state.viewMode,
             licenseKey: this._licenseKey,
             rowHeight: chiMoc ? 34 : 42,
+            // Ngày kiểu Việt Nam ở MỌI chỗ EJ2 tự in ra
+            dateFormat: "dd/MM/yyyy",
             // Mốc: để EJ2 tự nhận ra việc thời lượng 0 và vẽ hình thoi.
             useDuration: chiMoc,
             // Nhãn bên phải hình thoi — dùng labelSettings sẵn có của
@@ -665,7 +667,7 @@ export class RpGanttAction extends Component {
                   width: 1 },
                 { field: "TaskName", headerText: "Mốc", width: 250 },
                 { field: "EndDate", headerText: "Ngày",
-                  format: "dd/MM/yy", width: 84, textAlign: "Right" },
+                  format: "dd/MM/yyyy", width: 94, textAlign: "Right" },
                 // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
                 // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi
                 // "TaskNhan" thay vì giá trị.

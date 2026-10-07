@@ -11,6 +11,9 @@
                 <field name="project_id"/>
                 <field name="date_set"/>
                 <field name="task_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'draft'"/>
                 <field name="is_current" widget="boolean_toggle"
                        string="Hiện hành"/>
                 <field name="note" optional="show"/>
@@ -24,9 +27,14 @@
         <field name="arch" type="xml">
             <form string="Bản chụp lịch">
                 <header>
+                    <button name="action_duyet" type="object"
+                            string="Duyệt baseline" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Duyệt xong thì nội dung bản chụp ĐÓNG BĂNG, không sửa cũng không xoá được nữa. Tiếp tục?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved"/>
                     <button name="action_dat_hien_hanh" type="object"
                             string="Đặt làm bản hiện hành"
-                            class="btn-primary"
                             invisible="is_current"
                             confirm="Đổ ngày của phiên bản này xuống cột 'Trễ so gốc' của toàn bộ công việc. Tiếp tục?"/>
                     <widget name="web_ribbon" title="Hiện hành"
@@ -71,6 +79,8 @@
             <search>
                 <field name="name"/>
                 <field name="project_id"/>
+                <filter name="f_draft" string="Còn nháp"
+                        domain="[('state', '=', 'draft')]"/>
                 <filter name="f_current" string="Bản hiện hành"
                         domain="[('is_current', '=', True)]"/>
                 <filter name="group_project" string="Dự án"

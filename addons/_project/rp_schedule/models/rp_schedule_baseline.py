@@ -35,6 +35,13 @@ class RpScheduleBaseline(models.Model):
         string='Số công việc', compute='_compute_task_count', store=True)
     # Bản đang dùng làm gốc so sánh mặc định. Chỉ một bản mỗi dự án.
     is_current = fields.Boolean(string='Bản hiện hành')
+    # Duyệt xong là ĐÓNG BĂNG. Baseline mà sửa được thì nó hết là mốc so
+    # sánh: ai cũng có thể dời gốc cho hết trượt rồi báo "đúng kế hoạch".
+    # Vì vậy KHÔNG có thao tác "cập nhật baseline" — kế hoạch đổi thì chốt
+    # một BẢN MỚI, bản cũ nằm nguyên đó làm bằng chứng.
+    state = fields.Selection(
+        [('draft', 'Nháp'), ('approved', 'Đã duyệt')],
+        string='Trạng thái', default='draft', required=True)
 
     @api.depends('line_ids')
     def _compute_task_count(self):
@@ -72,6 +79,49 @@ class RpScheduleBaseline(models.Model):
         if make_current:
             ban.action_dat_hien_hanh()
         return ban
+
+    def action_duyet(self):
+        """Duyệt bản chụp — sau bước này không sửa được ngày trong đó nữa."""
+        for r in self:
+            if not r.line_ids:
+                raise UserError(_('Bản chụp "%s" chưa có dòng nào.', r.name))
+            r.state = 'approved'
+        return True
+
+    def write(self, vals):
+        # Cho sửa tên/ghi chú/bản hiện hành, KHÔNG cho đụng vào nội dung.
+        KHOA = {'project_id', 'date_set', 'line_ids'}
+        if KHOA & set(vals):
+            da_duyet = self.filtered(lambda r: r.state == 'approved')
+            if da_duyet:
+                raise UserError(_(
+                    'Bản chụp "%s" đã duyệt nên không sửa được nữa. Kế hoạch '
+                    'thay đổi thì chốt một BẢN MỚI.', da_duyet[0].name))
+        return super().write(vals)
+
+    def unlink(self):
+        da_duyet = self.filtered(lambda r: r.state == 'approved')
+        if da_duyet:
+            raise UserError(_(
+                'Bản chụp "%s" đã duyệt, không xoá được — nó là bằng chứng '
+                'của lần tái lập kế hoạch đó.', da_duyet[0].name))
+        return super().unlink()
+
+    @api.model
+    def rp_chot_moi(self, project_id, note=False):
+        """Chốt một bản chụp MỚI từ lịch hiện hành (cho nút trên Gantt).
+
+        Tên tự đánh V(n+1) theo số bản đã có. Để NHÁP, phải duyệt mới
+        đóng băng — đúng trình tự của một lần tái lập kế hoạch.
+        """
+        P = self.env['re.project'].browse(int(project_id))
+        n = self.search_count([('project_id', '=', P.id)])
+        ban = self.rp_chup(
+            P.id, 'V%d — chốt %s' % (
+                n + 1,
+                fields.Date.context_today(self).strftime('%d/%m/%Y')),
+            note=note, sequence=(n + 1) * 10, make_current=True)
+        return {'id': ban.id, 'name': ban.name, 'count': ban.task_count}
 
     def action_dat_hien_hanh(self):
         """Đặt bản này làm gốc so sánh mặc định của dự án."""
@@ -136,6 +186,27 @@ class RpScheduleBaselineLine(models.Model):
 
     # Odoo 19 BỎ `_sql_constraints` mà không báo gì — khai kiểu cũ là
     # ràng buộc không hề được tạo trong CSDL.
+    def _chan_neu_da_duyet(self):
+        da = self.filtered(lambda l: l.baseline_id.state == 'approved')
+        if da:
+            raise UserError(_(
+                'Bản chụp "%s" đã duyệt — nội dung đóng băng.',
+                da[0].baseline_id.name))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        recs._chan_neu_da_duyet()
+        return recs
+
+    def write(self, vals):
+        self._chan_neu_da_duyet()
+        return super().write(vals)
+
+    def unlink(self):
+        self._chan_neu_da_duyet()
+        return super().unlink()
+
     _uniq_task = models.Constraint(
         'UNIQUE(baseline_id, task_id)',
         'Mỗi công việc chỉ có một dòng trong một phiên bản baseline.',

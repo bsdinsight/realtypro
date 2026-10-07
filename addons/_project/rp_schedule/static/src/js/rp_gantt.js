@@ -967,39 +967,36 @@ export class RpGanttAction extends Component {
 
     // Chốt baseline = copy lịch kế hoạch hiện hành làm mốc gốc.
     // Re-baseline (đã có baseline) yêu cầu xác nhận — tránh che giấu trượt.
-    setBaseline() {
-        const doSet = async () => {
+    // Chốt một bản chụp MỚI. KHÔNG có thao tác "cập nhật baseline":
+    // baseline mà sửa được thì hết là mốc so sánh — ai cũng có thể dời
+    // gốc cho hết trượt rồi báo "đúng kế hoạch". Kế hoạch đổi thì chốt
+    // bản mới, bản cũ nằm nguyên làm bằng chứng của lần tái lập đó.
+    chotBaselineMoi() {
+        const lam = async () => {
             try {
-                const n = await this.orm.call(
-                    "project.task", "rp_set_baseline", [],
-                    this.projectId
-                        ? { project_id: this.projectId }
-                        : { contract_id: this.contractId || false });
+                const b = await this.orm.call(
+                    "rp.schedule.baseline", "rp_chot_moi", [this._pid]);
+                this.state.baselineId = false;   // nạp lại danh sách
                 this.notification.add(
-                    _t("Đã chốt baseline cho %s công việc.", n),
+                    _t("Đã chốt %s — %s công việc. Vào Tiến độ → Lịch thi "
+                       + "công → Bản chụp lịch để ghi lý do và DUYỆT; duyệt "
+                       + "xong là đóng băng.", b.name, b.count),
                     { type: "success" });
-                this.state.showBaseline = true;
                 await this.loadAndRender();
-            } catch {
+            } catch (err) {
                 this.notification.add(
-                    _t("Không chốt được baseline."), { type: "danger" });
+                    err.data ? err.data.message : String(err),
+                    { type: "danger" });
             }
         };
-        if (this.state.hasBaseline) {
-            this.dialog.add(ConfirmationDialog, {
-                title: _t("Cập nhật baseline"),
-                body: _t(
-                    "Baseline hiện tại sẽ bị GHI ĐÈ bằng lịch kế hoạch hiện "
-                    + "hành — mọi số đo trượt tiến độ sẽ tính lại từ mốc mới. "
-                    + "Re-baseline nên có chủ đích (qua kiểm soát thay đổi). "
-                    + "Tiếp tục?"),
-                confirmLabel: _t("Chốt lại baseline"),
-                confirm: doSet,
-                cancel: () => {},
-            });
-        } else {
-            doSet();
-        }
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Chốt baseline mới"),
+            body: _t("Chụp lịch kế hoạch hiện hành thành một phiên bản MỚI. "
+                     + "Các bản cũ giữ nguyên để còn đo được trượt tích luỹ."),
+            confirm: lam,
+            cancel: () => {},
+        });
+    }
     }
 }
 

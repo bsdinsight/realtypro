@@ -85,11 +85,9 @@
                     </button>
                     <!-- Chốt / cập nhật baseline -->
                     <button type="button" class="btn btn-sm btn-outline-primary"
-                            t-on-click="() => this.setBaseline()"
-                            title="Chốt lịch kế hoạch hiện hành làm baseline gốc.">
-                        <i class="fa fa-thumb-tack me-1"/>
-                        <t t-if="state.hasBaseline">Cập nhật baseline</t>
-                        <t t-else="">Chốt baseline</t>
+                            t-on-click="() => this.chotBaselineMoi()"
+                            title="Chụp lịch hiện hành thành một phiên bản MỚI. Không sửa được bản cũ — baseline sửa được thì hết là mốc so sánh.">
+                        <i class="fa fa-thumb-tack me-1"/>Chốt baseline mới
                     </button>
                     <div class="btn-group btn-group-sm" role="group">
                         <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"

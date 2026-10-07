@@ -42,6 +42,10 @@ export class RpGanttAction extends Component {
             worstFloat: 0,
             // Dải số liệu cố định của màn mốc (xem rp_milestone_brief)
             brief: null,
+            // Ghi tên + dư địa ngay cạnh hình thoi. Bật sẵn vì đó là lý
+            // do màn này tồn tại, nhưng phải tắt được: lịch dày thì nhãn
+            // che mất chính các mũi tên quan hệ.
+            showLabels: true,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         const params = this.props.action.params || {};
@@ -182,6 +186,7 @@ export class RpGanttAction extends Component {
                 // Màn mốc không gọi CPM riêng nữa; lấy luôn tập mốc găng
                 // từ bản tóm tắt để làm nổi đúng những dòng đó.
                 this._gangIds = new Set(b.gang_ids || []);
+                this._mocInfo = b.moc_info || {};
             }
         }
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
@@ -439,7 +444,8 @@ export class RpGanttAction extends Component {
                     extraFields: { TaskWbs: "", TaskSeq: "", TaskDeps: "",
                                    TaskAssign: "", _isTop: !parentKey,
                                    TaskContract: "", TaskPackage: "",
-                                   TaskFloat: "", TaskSlip: "" },
+                                   TaskFloat: "", TaskSlip: "",
+                                   TaskNhan: "" },
                     start: null, end: null, progress: 0,
                     dependencies: "", custom_class: "rp-ej2-lane",
                     _rank: rank, _tier: tier,
@@ -482,6 +488,22 @@ export class RpGanttAction extends Component {
             // định nghĩa mốc của nó. Để trống, EJ2 suy ra 1 ngày và vẽ
             // thành thanh mảnh — nhìn không ra mốc.
             t.duration = 0;
+            // Nhãn ghi ngay cạnh hình thoi. Lưới trái đã có tên nhưng
+            // hình thoi nằm tận đâu bên phải, mắt phải dò ngang cả màn
+            // mới ghép được hai thứ. Dư địa thì chưa hiện ở đâu cả, mà
+            // đó mới là con số người gỡ tiến độ cần: còn 60 ngày thì
+            // hoãn được, còn 0 ngày thì đụng vào là mất ngày về đích.
+            const nf = (this._mocInfo && this._mocInfo[String(r.id)]) || null;
+            let ghi = "";
+            if (nf) {
+                ghi = nf.crit ? "GĂNG"
+                    : (nf.late ? "trễ " + nf.late + " ngày"
+                       : (nf.tf === null || nf.tf === undefined ? ""
+                          : "dư địa " + (nf.tf > 0 ? "+" : "") + nf.tf
+                            + " ngày"));
+            }
+            t.extraFields.TaskNhan = ghi
+                ? (t.name || "") + "  ·  " + ghi : (t.name || "");
             [du_an, goi, hd].forEach((l) => {
                 stretch(l, t.start);
                 stretch(l, t.end);
@@ -579,6 +601,11 @@ export class RpGanttAction extends Component {
             rowHeight: chiMoc ? 34 : 42,
             // Mốc: để EJ2 tự nhận ra việc thời lượng 0 và vẽ hình thoi.
             useDuration: chiMoc,
+            // Nhãn bên phải hình thoi — dùng labelSettings sẵn có của
+            // EJ2, trỏ vào MỘT trường dữ liệu chứ không viết mẫu riêng
+            // (mẫu tự viết làm nổ bộ biên dịch của thư viện).
+            ...(chiMoc && this.state.showLabels
+                ? { labelSettings: { rightLabel: "TaskNhan" } } : {}),
             // Đường nối trước-sau mảnh 1px — lịch 142 quan hệ mà vẽ dày
             // thì mạng dây lấn hết thanh việc.
             connectorLineWidth: 1,
@@ -592,6 +619,11 @@ export class RpGanttAction extends Component {
                 { field: "TaskName", headerText: "Mốc", width: 250 },
                 { field: "EndDate", headerText: "Ngày",
                   format: "dd/MM/yy", width: 84, textAlign: "Right" },
+                // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
+                // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi
+                // "TaskNhan" thay vì giá trị.
+                { field: "TaskNhan", headerText: "Nhãn", visible: false,
+                  width: 1 },
             ] : [
                 // TaskID (id database) ẨN nhưng PHẢI có: là primary key
                 // của TreeGrid — thiếu nó saveSuccess→setRowData crash
@@ -834,6 +866,12 @@ export class RpGanttAction extends Component {
     // Hiện/ẩn baseline (kế hoạch gốc) — vẽ lại Gantt với renderBaseline mới
     async toggleBaseline() {
         this.state.showBaseline = !this.state.showBaseline;
+        await this.loadAndRender();
+    }
+
+    // Hiện/ẩn nhãn cạnh hình thoi
+    async toggleLabels() {
+        this.state.showLabels = !this.state.showLabels;
         await this.loadAndRender();
     }
 

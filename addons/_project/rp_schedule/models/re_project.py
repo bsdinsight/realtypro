@@ -267,6 +267,19 @@ class ReProject(models.Model):
             ],
             'nut_that': nut_that,
             'gang_ids': gang_moc.ids,
+            # Số liệu TỪNG mốc, để Gantt ghi thẳng cạnh hình thoi. Người
+            # gỡ tiến độ cần đọc dư địa ngay tại chỗ: mốc còn 60 ngày thì
+            # hoãn được, mốc 0 ngày thì đụng vào là mất ngày về đích.
+            'moc_info': {
+                str(t.id): {
+                    'tf': (cpm.get(t.id) or {}).get('tf'),
+                    'crit': bool((cpm.get(t.id) or {}).get('critical')),
+                    'late': ((today - t.planned_end).days
+                             if t.exec_status == 'late' and t.planned_end
+                             else 0),
+                }
+                for t in moc
+            },
             'gang_moc': len(gang_moc),
             'gang_ke': (_m(gang_ke, days=(gang_ke.planned_end - today).days)
                         if gang_ke else None),

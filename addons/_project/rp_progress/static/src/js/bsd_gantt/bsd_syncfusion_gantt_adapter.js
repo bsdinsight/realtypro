@@ -112,6 +112,11 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
                 baselineEndDate: "BaselineEndDate",
                 ...(opts.useDuration ? { duration: "Duration" } : {}),
             },
+            // Nhãn trái/phải cạnh thanh việc — khoá sẵn có của EJ2, nhận
+            // TÊN TRƯỜNG trong dataSource. Không dùng mẫu tự viết: bộ
+            // biên dịch mẫu của EJ2 (new Function) nổ với cú pháp hiện
+            // đại, đã dính một lần ở tooltip.
+            ...(opts.labelSettings ? { labelSettings: opts.labelSettings } : {}),
             // Bề rộng đường nối trước-sau. Mặc định EJ2 vẽ khá dày; ở
             // lịch nhiều quan hệ thì mạng dây che mất chính các thanh
             // việc, nên caller hạ xuống 1px cho mảnh.

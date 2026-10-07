@@ -44,6 +44,14 @@
                             title="Hiện/ẩn baseline (kế hoạch gốc). Cần chốt baseline trước.">
                         <i class="fa fa-flag-o me-1"/>Baseline
                     </button>
+                    <!-- Ghi tên + dư địa cạnh hình thoi -->
+                    <button t-if="mode === 'milestone'" type="button"
+                            class="btn btn-sm"
+                            t-att-class="state.showLabels ? 'btn-secondary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.toggleLabels()"
+                            title="Ghi tên mốc và dư địa ngay cạnh hình thoi trên trục.">
+                        <i class="fa fa-tag me-1"/>Nhãn mốc
+                    </button>
                     <!-- Đường găng (critical path) -->
                     <button type="button" class="btn btn-sm"
                             t-att-class="state.showCriticalPath ? 'btn-danger' : 'btn-outline-secondary'"

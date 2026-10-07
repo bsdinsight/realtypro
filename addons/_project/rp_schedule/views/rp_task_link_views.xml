@@ -21,6 +21,10 @@
                 <field name="is_violated" string="Vi phạm" width="110px"/>
                 <field name="is_cross_contract" string="Nối 2 HĐ"
                        optional="show" width="110px"/>
+                <field name="source" string="Nguồn" widget="badge"
+                       decoration-info="source == 'import'"
+                       decoration-warning="source in ('milestone', 'manual')"
+                       decoration-muted="source == 'anchor'"/>
                 <field name="contract_id" optional="hide"/>
                 <field name="note" optional="hide"/>
                 <field name="project_id" column_invisible="1"/>
@@ -69,6 +73,7 @@
                                    options="{'no_create': True}"/>
                             <field name="link_type"/>
                             <field name="lag_days"/>
+                            <field name="source"/>
                             <field name="note"/>
                         </group>
                         <group string="Đối chiếu với ngày đang lập">
@@ -102,6 +107,13 @@
                 <filter name="f_not_fs" string="Không phải FS"
                         domain="[('link_type','!=','FS')]"/>
                 <separator/>
+                <filter name="f_khach" string="Logic của nhà thầu (từ file)"
+                        domain="[('source','=','import')]"/>
+                <filter name="f_tu_khai" string="Logic tự khai thêm"
+                        domain="[('source','!=','import')]"/>
+                <separator/>
+                <filter name="g_source" string="Nguồn"
+                        context="{'group_by': 'source'}"/>
                 <filter name="g_type" string="Loại quan hệ"
                         context="{'group_by': 'link_type'}"/>
                 <filter name="g_contract" string="HĐ việc sau"
@@ -109,6 +121,9 @@
                 <searchpanel>
                     <field name="project_id" string="Dự án"
                            icon="fa-folder-open" color="#0F2C3F"
+                           enable_counters="1"/>
+                    <field name="source" select="multi" string="Nguồn"
+                           icon="fa-tag" color="#c0453b"
                            enable_counters="1"/>
                     <field name="link_type" select="multi" string="Loại"
                            icon="fa-link" color="#0E8C99"

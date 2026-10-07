@@ -176,10 +176,12 @@ export class RpGanttAction extends Component {
         // thấy mình đang chạy đua với mốc nào. Nạp SAU khi có việc để
         // màn mở từ menu (không mang id dự án) còn suy ra được dự án.
         await this._loadMarkers();
-        // Bản chụp lịch. Mặc định so với bản ĐẦU TIÊN (kế hoạch gốc),
-        // không phải bản mới nhất: tái lập kế hoạch bao giờ cũng xoá sạch
-        // vết trượt, nên so với bản vừa tái lập thì luôn ra 0 và người
-        // xem tưởng dự án chưa trượt ngày nào.
+        // Bản chụp lịch. Mở màn là đứng ở bản được đánh dấu HIỆN HÀNH —
+        // quyền chọn nằm ở cờ "Bản hiện hành" trong menu Bản chụp lịch,
+        // không gán cứng trong mã. Lưu ý: nếu bản hiện hành chính là lịch
+        // đang chạy thì mọi độ trượt đều bằng 0 (không có gì để so);
+        // muốn mở ra là thấy trượt tích luỹ thì đánh dấu kế hoạch GỐC làm
+        // bản hiện hành.
         this._baseMap = null;
         if (this._pid) {
             try {
@@ -190,7 +192,8 @@ export class RpGanttAction extends Component {
             }
             const ds = this.state.baselines;
             if (ds.length && !ds.some((b) => b.id === this.state.baselineId)) {
-                this.state.baselineId = ds[0].id;
+                const ht = ds.find((b) => b.current);
+                this.state.baselineId = (ht || ds[0]).id;
             }
             if (this.state.baselineId) {
                 try {

@@ -52,6 +52,21 @@ class RpTaskLink(models.Model):
         help='Dương là khoảng chờ, âm là chồng lấn. Ví dụ SS+20: việc sau '
              'được bắt đầu sau việc trước 20 ngày.')
     note = fields.Char(string='Lý do')
+    # Quan hệ này ở ĐÂU ra? Mạng phụ thuộc của một dự án EPC là trộn của
+    # hai nguồn: logic nhà thầu nộp trong file lịch, và logic mình tự khai
+    # thêm khi file của họ quá thưa. Đường găng tính trên cả hai, nên khi
+    # trình bày phải nói được câu nào là của ai — nếu không thì thành ra
+    # đem suy đoán của mình gán cho khách. Và khi khách nộp mạng đầy đủ,
+    # lọc theo trường này là thấy ngay cái nào thay được.
+    source = fields.Selection(
+        [('import', 'Nhập từ file lịch'),
+         ('manual', 'Khai tay'),
+         ('milestone', 'Khai ở tầng mốc'),
+         ('anchor', 'Neo mốc vào việc sinh ra nó')],
+        string='Nguồn', required=True, index=True,
+        default=lambda self: self.env.context.get('rp_link_source', 'manual'),
+        help='Nhập từ file lịch = logic do nhà thầu nộp. Các giá trị còn '
+             'lại là logic tự khai thêm — phải nói rõ khi trình bày.')
 
     project_id = fields.Many2one(
         're.project', related='task_id.rp_project_id', string='Dự án',

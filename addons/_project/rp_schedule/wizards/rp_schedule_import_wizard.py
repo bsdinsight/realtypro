@@ -215,7 +215,10 @@ class RpScheduleImportWizard(models.TransientModel):
                      for u in row['predecessors'].replace(';', ',').split(',')
                      if u.strip() in uid_to_task]
             if preds:
-                task.predecessor_ids = [(6, 0, [p.id for p in preds])]
+                # Đánh dấu nguồn: quan hệ sinh ra từ đây là logic của
+                # chính nhà thầu, khác hẳn quan hệ mình khai thêm.
+                task.with_context(rp_link_source='import').predecessor_ids = [
+                    (6, 0, [p.id for p in preds])]
 
         # pass 3: nối cha/con theo mã WBS → subtask thật trong Odoo
         c._relink_schedule_hierarchy()

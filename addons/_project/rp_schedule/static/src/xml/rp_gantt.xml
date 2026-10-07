@@ -87,7 +87,7 @@
                     <button type="button" class="btn btn-sm btn-outline-primary"
                             t-on-click="() => this.chotBaselineMoi()"
                             title="Chụp lịch hiện hành thành một phiên bản MỚI. Không sửa được bản cũ — baseline sửa được thì hết là mốc so sánh.">
-                        <i class="fa fa-thumb-tack me-1"/>Chốt baseline mới
+                        <i class="fa fa-thumb-tack me-1"/>Tạo baseline
                     </button>
                     <div class="btn-group btn-group-sm" role="group">
                         <button t-foreach="['Day','Week','Month']" t-as="m" t-key="m"

@@ -496,7 +496,7 @@ export class RpGanttAction extends Component {
                                    TaskAssign: "", _isTop: !parentKey,
                                    TaskContract: "", TaskPackage: "",
                                    TaskFloat: "", TaskSlip: "",
-                                   TaskNhan: "" },
+                                   TaskNhan: "", TaskGoc: "" },
                     start: null, end: null, progress: 0,
                     dependencies: "", custom_class: "rp-ej2-lane",
                     _rank: rank, _tier: tier,
@@ -545,6 +545,12 @@ export class RpGanttAction extends Component {
             // đó mới là con số người gỡ tiến độ cần: còn 60 ngày thì
             // hoãn được, còn 0 ngày thì đụng vào là mất ngày về đích.
             const nf = (this._mocInfo && this._mocInfo[String(r.id)]) || null;
+            // Ngày theo kế hoạch gốc, đọc thẳng trên lưới. Tooltip của EJ2
+            // luôn trả ngày của CÔNG VIỆC dù trỏ vào hình thoi gốc, nên
+            // không thể dùng nó để đối chiếu — phải có cột riêng.
+            const bg = this._baseMap && this._baseMap[String(r.id)];
+            t.extraFields.TaskGoc = bg && bg[1]
+                ? bg[1].slice(0, 10).split("-").reverse().join("/") : "";
             const phan = [];
             if (nf && nf.truot > 0) {
                 // Độ trượt đứng NGAY SAU tên: khi đang so với kế hoạch
@@ -690,6 +696,11 @@ export class RpGanttAction extends Component {
                 { field: "TaskName", headerText: "Mốc", width: 250 },
                 { field: "EndDate", headerText: "Ngày",
                   format: "dd/MM/yyyy", width: 118, textAlign: "Right" },
+                // Cột "Gốc" để đối chiếu bằng mắt ngay trên lưới
+                ...(this.state.baselineId ? [{
+                    field: "TaskGoc", headerText: "Gốc",
+                    width: 104, textAlign: "Right",
+                }] : []),
                 // Cột ẩn BẮT BUỘC: labelSettings chỉ tra được trường nào
                 // đã khai thành cột; không khai thì EJ2 vẽ ra đúng chuỗi
                 // "TaskNhan" thay vì giá trị.
@@ -740,7 +751,7 @@ export class RpGanttAction extends Component {
                   width: 150 },
             ],
             treeColumnIndex: chiMoc ? 1 : 3,
-            splitterColumnIndex: chiMoc ? 2
+            splitterColumnIndex: chiMoc ? (this.state.baselineId ? 3 : 2)
                 : (this.projectId ? 11 : 9)
                 + (this.state.showBaseline && this.state.hasBaseline ? 1 : 0),
             preserveLinks: true,

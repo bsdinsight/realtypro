@@ -19,7 +19,17 @@ class AccountMove(models.Model):
     rp_aging_bucket = fields.Selection(
         NHOM_TUOI, string='Tuổi nợ', compute='_compute_rp_tuoi_no',
         store=True, index=True)
+    rp_due_soon = fields.Boolean(
+        string='Sắp đến hạn (30 ngày)', compute='_compute_rp_tuoi_no',
+        store=True,
+        help='Chưa quá hạn nhưng còn dưới 30 ngày. Dùng để xếp lịch chi '
+             'tiền: đợi tới lúc quá hạn mới biết thì đã muộn.')
 
+    # Cùng một thước đo cho CẢ HAI CHIỀU. Tuổi nợ phải trả và tuổi nợ
+    # phải thu khác nhau ở ý nghĩa quản trị — một bên là tiền mình đòi,
+    # một bên là tiền mình nợ — nhưng cách tính thì y hệt: lấy hôm nay
+    # trừ hạn thanh toán. Tách thành hai bộ trường chỉ để trùng lặp mã và
+    # rồi lệch nhau lúc sửa.
     @api.depends('invoice_date_due', 'payment_state', 'state', 'move_type',
                  'amount_residual')
     def _compute_rp_tuoi_no(self):
@@ -27,15 +37,18 @@ class AccountMove(models.Model):
         # lại toàn bộ hoá đơn còn nợ (xem data/ir_cron.xml).
         hom_nay = fields.Date.context_today(self)
         for m in self:
-            no = (m.move_type == 'out_invoice' and m.state == 'posted'
+            no = (m.move_type in ('out_invoice', 'in_invoice')
+                  and m.state == 'posted'
                   and m.payment_state not in ('paid', 'reversed')
                   and m.amount_residual > 0)
             if not (no and m.invoice_date_due):
                 m.rp_days_overdue = 0
                 m.rp_aging_bucket = False
+                m.rp_due_soon = False
                 continue
             n = (hom_nay - m.invoice_date_due).days
             m.rp_days_overdue = n
+            m.rp_due_soon = -30 <= n < 0
             m.rp_aging_bucket = (
                 'current' if n <= 0
                 else 'd1_30' if n <= 30
@@ -46,7 +59,7 @@ class AccountMove(models.Model):
     @api.model
     def rp_cron_tinh_tuoi_no(self):
         """Tính lại tuổi nợ hằng ngày — mốc so là hôm nay nên nó tự cũ."""
-        no = self.search([('move_type', '=', 'out_invoice'),
+        no = self.search([('move_type', 'in', ('out_invoice', 'in_invoice')),
                           ('state', '=', 'posted'),
                           ('payment_state', 'not in', ('paid', 'reversed'))])
         no._compute_rp_tuoi_no()

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_ap_invoice_list" model="ir.ui.view">
+        <field name="name">account.move.list.rp.ap</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Công nợ phải trả" expand="1" create="0"
+                  default_order="invoice_date_due, name"
+                  decoration-danger="rp_aging_bucket in ('d61_90', 'd90')"
+                  decoration-warning="rp_aging_bucket in ('d1_30', 'd31_60')"
+                  decoration-info="rp_due_soon">
+                <field name="name"/>
+                <field name="partner_id" string="Nhà thầu / NCC"/>
+                <field name="ref" string="Số hoá đơn" optional="show"/>
+                <field name="invoice_date" string="Ngày HĐ"/>
+                <field name="invoice_date_due" string="Hạn thanh toán"/>
+                <field name="amount_total" string="Tổng tiền"
+                       sum="Tổng" widget="monetary" width="185px"/>
+                <field name="amount_residual" string="Còn phải trả"
+                       sum="Còn phải trả" widget="monetary" width="185px"/>
+                <field name="rp_days_overdue" string="Quá hạn (ngày)"/>
+                <field name="rp_aging_bucket" string="Tuổi nợ" widget="badge"
+                       decoration-success="rp_aging_bucket == 'current'"
+                       decoration-warning="rp_aging_bucket in ('d1_30', 'd31_60')"
+                       decoration-danger="rp_aging_bucket in ('d61_90', 'd90')"/>
+                <field name="rp_due_soon" string="Sắp đến hạn"
+                       optional="show"/>
+                <field name="payment_state" string="Thanh toán"
+                       widget="badge"/>
+                <field name="state" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="move_type" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_ap_invoice_search" model="ir.ui.view">
+        <field name="name">account.move.search.rp.ap</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search string="Công nợ phải trả">
+                <field name="partner_id"/>
+                <field name="name"/>
+                <field name="ref"/>
+                <filter name="f_qua_han" string="Đã quá hạn"
+                        domain="[('rp_days_overdue', '&gt;', 0)]"/>
+                <filter name="f_sap_han" string="Sắp đến hạn (30 ngày)"
+                        domain="[('rp_due_soon', '=', True)]"/>
+                <separator/>
+                <filter name="g_partner" string="Nhà thầu / NCC"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_tuoi" string="Tuổi nợ"
+                        context="{'group_by': 'rp_aging_bucket'}"/>
+                <filter name="g_han" string="Tháng đến hạn"
+                        context="{'group_by': 'invoice_date_due'}"/>
+                <searchpanel>
+                    <field name="partner_id" string="Nhà thầu / NCC"
+                           icon="fa-truck" enable_counters="1"/>
+                    <field name="rp_aging_bucket" select="multi"
+                           string="Tuổi nợ" icon="fa-hourglass-half"
+                           color="#c0453b" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_ap_aging" model="ir.actions.act_window">
+        <field name="name">Công nợ phải trả</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_type', '=', 'in_invoice'),
+                              ('state', '=', 'posted'),
+                              ('payment_state', 'not in', ('paid', 'reversed'))]</field>
+        <field name="view_id" ref="view_rp_ap_invoice_list"/>
+        <field name="search_view_id" ref="view_rp_ap_invoice_search"/>
+        <field name="context">{'search_default_g_partner': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không còn hoá đơn nào chưa trả</p>
+            <p>Hoá đơn nhà thầu và nhà cung cấp ĐÃ GHI SỔ mà chưa trả đủ,
+               gom theo đối tác. Cột "Sắp đến hạn" để xếp lịch chi tiền —
+               đợi tới lúc quá hạn mới biết thì đã muộn.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_ap_aging" name="Công nợ phải trả"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_ap_aging" sequence="65"/>
+</odoo>

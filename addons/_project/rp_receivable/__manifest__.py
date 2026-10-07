@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Công nợ phải thu",
+    "name": "Realty Project — Công nợ phải thu & phải trả",
     "version": "19.0.1.0.0",
     "category": "Realty/Project",
-    "summary": "Hoá đơn bán ra, thu tiền và tuổi nợ phải thu cho dự án.",
+    "summary": "Hoá đơn bán ra, thu tiền, và tuổi nợ cả hai chiều phải thu / phải trả.",
     "description": """
 Realty Project — Công nợ phải thu (rp_receivable)
 =================================================
@@ -22,6 +22,7 @@ chờ cron.
     "data": [
         "data/ir_cron.xml",
         "views/account_move_views.xml",
+        "views/account_move_payable_views.xml",
         "views/account_payment_views.xml",
         "views/menu.xml",
     ],

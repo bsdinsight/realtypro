@@ -84,6 +84,34 @@
         </field>
     </record>
 
+    <!-- Chi tiền: tiền ra từ TÀI KHOẢN CỦA MÌNH. Khác hẳn "Giải ngân qua
+         khế ước" — chỗ đó ngân hàng trả thẳng cho nhà thầu từ tiền vay,
+         mình không cầm tiền. Hai đường tiền khác nhau nên phải đứng cạnh
+         nhau để còn đối chiếu: một hoá đơn trả bằng đường nào.
+         Mua sắm cũng có màn thanh toán riêng của nó; đây là lối vào từ
+         phía Tài chính, cùng một dữ liệu. -->
+    <record id="action_rp_ap_payment" model="ir.actions.act_window">
+        <field name="name">Chi tiền</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'outbound'),
+                              ('partner_type', '=', 'supplier')]</field>
+        <field name="context">{'default_payment_type': 'outbound',
+                               'default_partner_type': 'supplier'}</field>
+        <field name="view_id" ref="view_rp_ar_payment_list"/>
+        <field name="search_view_id" ref="view_rp_ar_payment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có phiếu chi nào</p>
+            <p>Tiền trả nhà thầu / nhà cung cấp từ tài khoản của mình.
+               Tiền ngân hàng giải ngân thẳng cho nhà thầu thì xem ở
+               "Giải ngân qua khế ước".</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_ap_payment" name="Chi tiền"
+              parent="rp_estimate.menu_finance_payable"
+              action="action_rp_ap_payment" sequence="25"/>
+
     <menuitem id="menu_rp_ap_aging" name="Công nợ phải trả"
               parent="rp_estimate.menu_finance_payable"
               action="action_rp_ap_aging" sequence="40"/>

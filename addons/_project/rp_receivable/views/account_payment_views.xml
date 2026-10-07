@@ -9,7 +9,7 @@
                   default_order="date desc, id desc">
                 <field name="date" string="Ngày thu"/>
                 <field name="name" string="Số phiếu"/>
-                <field name="partner_id" string="Khách hàng"/>
+                <field name="partner_id" string="Đối tác"/>
                 <field name="journal_id" string="Tài khoản/Sổ quỹ"/>
                 <field name="amount" string="Số tiền" sum="Tổng thu"
                        widget="monetary" width="185px"/>

@@ -69,6 +69,99 @@
                 </div>
             </div>
 
+            <!-- Dải số liệu CỐ ĐỊNH: năm câu ban lãnh đạo hỏi, xếp đúng
+                 thứ tự người ta hỏi. Nằm ngoài vùng cuộn nên cuộn lịch
+                 xuống đâu nó vẫn còn đó — người trình bày chỉ tay vào
+                 đây là nói được, không phải lục. -->
+            <div t-if="mode === 'milestone' and state.brief"
+                 class="rp-gantt-brief">
+                <t t-set="b" t-value="state.brief"/>
+
+                <!-- 1. Bao giờ về đích -->
+                <div class="rp-the">
+                    <div class="rp-nhan">Về đích</div>
+                    <div class="rp-so" t-esc="b.ve_dich ? b.ve_dich.label : '—'"/>
+                    <div class="rp-phu" t-if="b.ve_dich">
+                        còn <b t-esc="b.ve_dich.days_left"/> ngày
+                        <span t-if="b.truot_max" class="rp-xau">
+                            · trượt <t t-esc="b.truot_max"/> ngày so gốc
+                            (<t t-esc="b.truot_count"/> mốc)
+                        </span>
+                        <span t-elif="b.co_goc" class="rp-tot">· bám đúng gốc</span>
+                        <span t-else="" class="text-muted">· chưa chốt baseline</span>
+                    </div>
+                </div>
+
+                <!-- 2. Đã đạt bao nhiêu -->
+                <div class="rp-the">
+                    <div class="rp-nhan">Mốc đã đạt</div>
+                    <div class="rp-so">
+                        <t t-esc="b.xong"/>/<t t-esc="b.tong"/>
+                        <span class="rp-nho"><t t-esc="b.phan_tram"/>%</span>
+                    </div>
+                    <div class="rp-thanh">
+                        <span t-attf-style="width:{{b.phan_tram}}%"/>
+                    </div>
+                    <div class="rp-phu rp-goi">
+                        <!-- khoá theo chỉ số, không theo mã gói: gói
+                             chưa đặt mã sẽ cho hai khoá rỗng trùng nhau -->
+                        <span t-foreach="b.theo_goi" t-as="g" t-key="g_index"
+                              class="me-2">
+                            <t t-esc="g.code"/>
+                            <b><t t-esc="g.xong"/>/<t t-esc="g.tong"/></b>
+                            <span t-if="g.tre" class="rp-xau">
+                                ·<t t-esc="g.tre"/> trễ</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 3. Đang trễ cái gì -->
+                <div class="rp-the" t-att-class="b.tre ? 'rp-the-xau' : ''">
+                    <div class="rp-nhan">Đang trễ</div>
+                    <div class="rp-so">
+                        <t t-esc="b.tre"/> mốc
+                    </div>
+                    <div class="rp-phu">
+                        <t t-if="b.tre_ds.length">
+                            <div t-foreach="b.tre_ds" t-as="m" t-key="m.id"
+                                 class="rp-dong">
+                                <span class="rp-ten" t-esc="m.name"/>
+                                <span class="rp-xau">trễ <t t-esc="m.days"/> ngày</span>
+                            </div>
+                        </t>
+                        <t t-else="">không mốc nào quá hạn</t>
+                    </div>
+                </div>
+
+                <!-- 4. Nút thắt -->
+                <div class="rp-the rp-the-gang" t-if="b.nut_that">
+                    <div class="rp-nhan">Nút thắt — chậm ở đây là chậm cả dự án</div>
+                    <div class="rp-so rp-so-ten" t-esc="b.nut_that.name"/>
+                    <div class="rp-phu">
+                        <span t-attf-class="rp-{{b.nut_that.float &lt; 0 ? 'xau' : 'tot'}}">
+                            dư địa <t t-esc="b.nut_that.float"/> ngày
+                        </span>
+                        · [<t t-esc="b.nut_that.package"/>]
+                        · <t t-esc="b.nut_that.date"/>
+                    </div>
+                </div>
+
+                <!-- 5. Sắp phải quyết cái gì -->
+                <div class="rp-the">
+                    <div class="rp-nhan">Tới hạn gần nhất</div>
+                    <t t-if="b.ke_tiep.length">
+                        <div t-foreach="b.ke_tiep" t-as="m" t-key="m.id"
+                             class="rp-dong">
+                            <span class="rp-ten" t-esc="m.name"/>
+                            <span class="rp-ngay">
+                                <t t-esc="m.date"/> · còn <b t-esc="m.days"/> ngày
+                            </span>
+                        </div>
+                    </t>
+                    <div t-else="" class="rp-phu">không còn mốc nào phía trước</div>
+                </div>
+            </div>
+
             <div t-if="state.error" class="alert alert-danger m-3"
                  t-esc="state.error"/>
             <div t-if="state.empty and !state.loading" class="alert alert-info m-3">

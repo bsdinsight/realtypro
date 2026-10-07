@@ -40,6 +40,8 @@ export class RpGanttAction extends Component {
             isProject: false,
             critCount: 0,
             worstFloat: 0,
+            // Dải số liệu cố định của màn mốc (xem rp_milestone_brief)
+            brief: null,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         const params = this.props.action.params || {};
@@ -163,6 +165,22 @@ export class RpGanttAction extends Component {
         // thấy mình đang chạy đua với mốc nào. Nạp SAU khi có việc để
         // màn mở từ menu (không mang id dự án) còn suy ra được dự án.
         await this._loadMarkers();
+        // Dải số liệu cố định — chỉ màn mốc. Gọi luôn CPM bên trong nên
+        // bên dưới khỏi gọi lại lần hai.
+        if (this.mode === "milestone" && this._pid) {
+            try {
+                this.state.brief = await this.orm.call(
+                    "re.project", "rp_milestone_brief", [this._pid]);
+            } catch {
+                this.state.brief = null;
+            }
+            const b = this.state.brief;
+            if (b) {
+                this.state.title = b.project || this.state.title;
+                this.state.critCount = b.gang || 0;
+                this.state.worstFloat = b.du_dia || 0;
+            }
+        }
         // Tên người được giao (user_ids là m2m → chỉ trả ids)
         const userIds = [...new Set(recs.flatMap((r) => r.user_ids || []))];
         const userName = new Map();
@@ -296,7 +314,8 @@ export class RpGanttAction extends Component {
         }
         // Đường găng — tính CPM ở backend chỉ khi bật + có HĐ
         let cpMap = {};
-        if (this.state.showCriticalPath && (this.contractId || this._pid)) {
+        if (this.state.showCriticalPath && this.mode !== "milestone"
+                && (this.contractId || this._pid)) {
             try {
                 cpMap = await this.orm.call(
                     "project.task",

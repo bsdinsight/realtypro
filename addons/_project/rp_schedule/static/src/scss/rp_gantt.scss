@@ -35,6 +35,101 @@
         min-height: 0;
         overflow: hidden;
     }
+
+    // Dải số liệu cố định của màn mốc. `flex: 0 0 auto` nên nó không bị
+    // ép co lại khi lịch dài; nằm ngoài vùng cuộn của Gantt nên cuộn đi
+    // đâu nó vẫn đứng yên — đó là lý do tồn tại của nó.
+    .rp-gantt-brief {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        border-bottom: 1px solid #dee2e6;
+        background: #f7fafb;
+        font-size: 12px;
+        line-height: 1.35;
+        overflow-x: auto;
+
+        .rp-the {
+            flex: 1 1 0;
+            min-width: 160px;
+            padding: 8px 14px;
+            border-left: 1px solid #e3eaec;
+
+            &:first-child { border-left: 0; }
+            // Nút thắt là thứ cả phòng nhìn vào nhiều nhất → cho rộng hơn
+            &.rp-the-gang { flex: 1.4 1 0; background: #fff6f5; }
+            &.rp-the-xau { background: #fff6f5; }
+        }
+
+        .rp-nhan {
+            color: #6c7a7d;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rp-so {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0F2C3F;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            // Tên mốc thì dài, không để nó đẩy vỡ dải
+            &.rp-so-ten { font-size: 13px; white-space: normal; }
+        }
+
+        .rp-nho {
+            font-size: 12px;
+            font-weight: 600;
+            color: #0E8C99;
+            margin-left: 6px;
+        }
+
+        .rp-phu { color: #55666a; }
+        .rp-xau { color: #c0453b; font-weight: 600; }
+        .rp-tot { color: #2e8b57; font-weight: 600; }
+
+        .rp-dong {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+
+            .rp-ten {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .rp-ngay { white-space: nowrap; color: #0F2C3F; }
+        }
+
+        // Thanh % mốc đã đạt
+        .rp-thanh {
+            height: 4px;
+            border-radius: 2px;
+            background: #dce5e7;
+            margin: 3px 0;
+            overflow: hidden;
+
+            span {
+                display: block;
+                height: 100%;
+                background: #0E8C99;
+            }
+        }
+
+        .rp-goi { white-space: nowrap; overflow: hidden;
+                  text-overflow: ellipsis; }
+    }
 }
 
 // Mốc — EJ2 tự vẽ hình thoi cho việc thời lượng 0 và đặt lớp

@@ -158,6 +158,122 @@ class ReProject(models.Model):
         """Cho Gantt gọi: trả mốc vạch dọc của dự án."""
         return self.browse(int(project_id))._rp_schedule_markers()
 
+    @api.model
+    def rp_milestone_brief(self, project_id):
+        """Tóm tắt tiến độ theo MỐC, cho dải số liệu cố định trên Gantt.
+
+        Đây là bộ câu hỏi một giám đốc dự án bị hỏi khi đứng trước ban
+        lãnh đạo, xếp đúng thứ tự người ta hỏi:
+
+          1. Bao giờ về đích, còn bao lâu, có trượt so kế hoạch gốc không?
+          2. Đã đạt bao nhiêu mốc trên tổng số?
+          3. Đang trễ mốc nào?
+          4. Nút thắt nằm ở đâu — chậm chỗ nào thì chậm cả dự án?
+          5. Sắp tới phải quyết cái gì?
+
+        Trả về nguyên liệu thô (tên, ngày, số ngày), phần chữ nghĩa để
+        giao diện lo, vì cùng bộ số này còn dùng cho bản in họp giao ban.
+        """
+        P = self.browse(int(project_id))
+        today = fields.Date.context_today(self)
+        Task = self.env['project.task']
+        moc = Task.search([('rp_project_id', '=', P.id),
+                           ('is_milestone', '=', True)])
+
+        def _g(t):
+            return t.rp_contract_id.tender_package_id.code or ''
+
+        def _m(t, **kw):
+            d = {
+                'id': t.id,
+                'name': t.name or '',
+                # Định dạng sẵn kiểu Việt Nam: dải này để ĐỌC TRƯỚC
+                # ĐÁM ĐÔNG, không phải để máy xử tiếp.
+                'date': (t.planned_end.strftime('%d/%m/%Y')
+                         if t.planned_end else ''),
+                'package': _g(t),
+            }
+            d.update(kw)
+            return d
+
+        # 1. Về đích — mượn nhãn của _rp_schedule_markers để module ngành
+        #    đặt tên gì (COD, phát điện thương mại…) thì hiện đúng tên đó.
+        dl = next((m for m in P._rp_schedule_markers()
+                   if m.get('kind') == 'deadline'), None)
+        ve_dich = None
+        if dl:
+            ngay = fields.Date.to_date(dl['date'])
+            ve_dich = {
+                'label': dl['label'],
+                'date': dl['date'],
+                'days_left': (ngay - today).days,
+            }
+
+        # Trượt so kế hoạch gốc: lấy mốc TRƯỢT NHIỀU NHẤT, không lấy
+        # trung bình — trung bình làm loãng đúng cái mốc đang gây hại.
+        # Phân biệt "không trượt" với "CHƯA CHỐT baseline" — hai chuyện
+        # khác hẳn nhau. Báo nhầm thành "bám đúng kế hoạch gốc" khi thật
+        # ra chưa có gốc nào là nói sai với ban lãnh đạo.
+        co_goc = bool(moc.filtered(lambda t: t.baseline_end))
+        truot = moc.filtered(lambda t: (t.baseline_slip_days or 0) > 0)
+        truot_max = max(truot.mapped('baseline_slip_days')) if truot else 0
+
+        xong = moc.filtered(lambda t: t.exec_status == 'done')
+        tre = moc.filtered(lambda t: t.exec_status == 'late')
+
+        # 4. Nút thắt: trong các MỐC, cái có tổng dự trữ thấp nhất. Dự trữ
+        #    âm nghĩa là không còn kịp mốc phải xong — số càng âm càng gấp.
+        cpm = {}
+        try:
+            cpm = Task.rp_compute_project_critical_path(P.id) or {}
+        except Exception:                      # noqa: BLE001
+            cpm = {}
+        co_tf = [(cpm[t.id]['tf'], t) for t in moc
+                 if cpm.get(t.id) and cpm[t.id].get('tf') is not None]
+        nut_that = None
+        if co_tf:
+            tf, t = min(co_tf, key=lambda x: x[0])
+            nut_that = _m(t, float=tf)
+        tf_all = [v['tf'] for v in cpm.values() if v.get('tf') is not None]
+
+        return {
+            'project': P.display_name,
+            'today': fields.Date.to_string(today),
+            've_dich': ve_dich,
+            'tong': len(moc),
+            'xong': len(xong),
+            'tre': len(tre),
+            'phan_tram': round(len(xong) * 100.0 / len(moc)) if moc else 0,
+            'co_goc': co_goc,
+            'truot_max': truot_max,
+            'truot_count': len(truot),
+            'tre_ds': [
+                _m(t, days=(today - t.planned_end).days)
+                for t in tre.sorted('planned_end')[:3] if t.planned_end
+            ],
+            'ke_tiep': [
+                _m(t, days=(t.planned_end - today).days)
+                for t in moc.filtered(
+                    lambda x: x.exec_status != 'done' and x.planned_end
+                    and x.planned_end >= today).sorted('planned_end')[:2]
+            ],
+            'nut_that': nut_that,
+            'gang': sum(1 for v in cpm.values() if v.get('critical')),
+            'du_dia': min(tf_all) if tf_all else 0,
+            'theo_goi': sorted([
+                {
+                    'code': g,
+                    'tong': len(ds),
+                    'xong': len(ds.filtered(lambda t: t.exec_status == 'done')),
+                    'tre': len(ds.filtered(lambda t: t.exec_status == 'late')),
+                }
+                for g, ds in [
+                    (g, moc.filtered(lambda t, g=g: _g(t) == g))
+                    for g in {_g(t) for t in moc}
+                ]
+            ], key=lambda x: -x['tong']),
+        }
+
     def action_compute_project_cpm(self):
         """Tính đường găng xuyên hợp đồng cho dự án."""
         self.ensure_one()

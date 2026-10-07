@@ -143,9 +143,9 @@
          mượn chỗ đứng trong chuỗi mua sắm. -->
     <menuitem id="menu_rp_procure_bills" name="Hoá đơn nhà cung cấp"
               parent="menu_procurement"
-              action="account.action_move_in_invoice_type" sequence="50"/>
+              action="action_procure_vendor_bills" sequence="50"/>
     <menuitem id="menu_rp_procure_payments" name="Thanh toán"
               parent="menu_procurement"
-              action="account.action_account_payments_payable"
+              action="action_procure_payments"
               sequence="60"/>
 </odoo>

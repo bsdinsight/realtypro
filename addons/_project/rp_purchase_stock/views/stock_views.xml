@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_rp" model="ir.ui.view">
+        <field name="name">stock.picking.form.rp</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_rp_lap_nghiem_thu" type="object"
+                        string="Lập biên bản nghiệm thu"
+                        class="btn-secondary"
+                        invisible="state != 'done' or rp_receipt_count &gt; 0"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_rp_mo_nghiem_thu" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o"
+                        invisible="rp_receipt_count == 0">
+                    <field name="rp_receipt_count" widget="statinfo"
+                           string="Nghiệm thu"/>
+                </button>
+            </xpath>
+            <field name="origin" position="after">
+                <field name="rp_receipt_ids" widget="many2many_tags"
+                       invisible="not rp_receipt_ids" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Nhánh Kho nằm TRONG Mua sắm: kho là một khâu của chuỗi mua sắm
+         chứ không phải một thế giới riêng. Người dùng của nó là thủ kho
+         và bộ phận vận hành, cùng một luồng việc. -->
+    <menuitem id="menu_rp_warehouse" name="Kho"
+              parent="rp_purchase.menu_procurement" sequence="70"/>
+
+    <menuitem id="menu_rp_stock_receipts" name="Phiếu nhập kho"
+              parent="menu_rp_warehouse"
+              action="stock.action_picking_tree_incoming" sequence="10"/>
+    <menuitem id="menu_rp_stock_quant" name="Tồn kho"
+              parent="menu_rp_warehouse"
+              action="stock.action_view_quants" sequence="20"/>
+    <menuitem id="menu_rp_stock_product" name="Vật tư &amp; phụ tùng"
+              parent="menu_rp_warehouse"
+              action="stock.product_template_action_product" sequence="30"/>
+</odoo>

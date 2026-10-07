@@ -19,6 +19,32 @@ class PurchaseOrder(models.Model):
         're.project', string='Dự án', index=True, tracking=True,
         help='Dự án mà khoản mua này thuộc về. Để trống nghĩa là chi phí '
              'chung của công ty, không vào ngân sách dự án nào.')
+    rp_request_id = fields.Many2one(
+        'rp.purchase.request', string='Yêu cầu mua', index=True,
+        ondelete='set null', tracking=True,
+        help='Yêu cầu đã duyệt sinh ra đơn mua này. Một yêu cầu ra được '
+             'nhiều đơn vì có thể cần nhiều nhà cung cấp.')
+    rp_receipt_ids = fields.One2many(
+        'rp.goods.receipt', 'purchase_order_id',
+        string='Biên bản nghiệm thu')
+    rp_receipt_count = fields.Integer(compute='_compute_rp_receipt')
+    rp_payment_request_ids = fields.One2many(
+        'rp.payment.request', 'purchase_order_id',
+        string='Đề nghị thanh toán')
+
+    def _compute_rp_receipt(self):
+        for o in self:
+            o.rp_receipt_count = len(o.rp_receipt_ids)
+
+    def action_rp_mo_nghiem_thu(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Nghiệm thu — %s' % self.name,
+            'res_model': 'rp.goods.receipt', 'view_mode': 'list,form',
+            'domain': [('purchase_order_id', '=', self.id)],
+            'context': {'default_purchase_order_id': self.id},
+        }
 
     @api.onchange('rp_project_id')
     def _onchange_rp_project(self):

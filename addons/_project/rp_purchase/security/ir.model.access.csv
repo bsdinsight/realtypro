@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_purchase_request_user,rp.purchase.request user,model_rp_purchase_request,re_base.group_re_user,1,1,1,0
+access_rp_purchase_request_manager,rp.purchase.request manager,model_rp_purchase_request,re_base.group_re_manager,1,1,1,1
+access_rp_purchase_request_line_user,rp.purchase.request.line user,model_rp_purchase_request_line,re_base.group_re_user,1,1,1,1
+access_rp_purchase_request_line_manager,rp.purchase.request.line manager,model_rp_purchase_request_line,re_base.group_re_manager,1,1,1,1
+access_rp_goods_receipt_user,rp.goods.receipt user,model_rp_goods_receipt,re_base.group_re_user,1,1,1,0
+access_rp_goods_receipt_manager,rp.goods.receipt manager,model_rp_goods_receipt,re_base.group_re_manager,1,1,1,1
+access_rp_goods_receipt_line_user,rp.goods.receipt.line user,model_rp_goods_receipt_line,re_base.group_re_user,1,1,1,1
+access_rp_goods_receipt_line_manager,rp.goods.receipt.line manager,model_rp_goods_receipt_line,re_base.group_re_manager,1,1,1,1
+access_rp_payment_request_user,rp.payment.request user,model_rp_payment_request,re_base.group_re_user,1,1,1,0
+access_rp_payment_request_manager,rp.payment.request manager,model_rp_payment_request,re_base.group_re_manager,1,1,1,1

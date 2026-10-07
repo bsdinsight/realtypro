@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_payment_request_list" model="ir.ui.view">
+        <field name="name">rp.payment.request.list</field>
+        <field name="model">rp.payment.request</field>
+        <field name="arch" type="xml">
+            <list string="Đề nghị thanh toán"
+                  decoration-info="state == 'to_approve'"
+                  decoration-success="state == 'paid'"
+                  decoration-muted="state == 'rejected'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="purchase_order_id" optional="show"/>
+                <field name="receipt_id" string="BB nghiệm thu"
+                       optional="show"/>
+                <field name="invoice_id" string="Hoá đơn" optional="show"/>
+                <field name="date_due" string="Chi trước"/>
+                <field name="amount" width="190" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'to_approve'"
+                       decoration-success="state in ('approved', 'paid')"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_payment_request_form" model="ir.ui.view">
+        <field name="name">rp.payment.request.form</field>
+        <field name="model">rp.payment.request</field>
+        <field name="arch" type="xml">
+            <form string="Giấy đề nghị thanh toán">
+                <header>
+                    <button name="action_trinh_duyet" type="object"
+                            string="Trình duyệt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_duyet" type="object"
+                            string="Duyệt chi" class="btn-primary"
+                            invisible="state != 'to_approve'"/>
+                    <button name="action_tu_choi" type="object"
+                            string="Từ chối"
+                            invisible="state != 'to_approve'"/>
+                    <button name="action_danh_dau_da_chi" type="object"
+                            string="Đã chi" class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp"
+                            invisible="state in ('draft', 'paid')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Bộ hồ sơ">
+                            <field name="purchase_order_id"
+                                   options="{'no_create': True}"/>
+                            <field name="receipt_id"
+                                   options="{'no_create': True}"/>
+                            <field name="invoice_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Thanh toán">
+                            <field name="partner_id"/>
+                            <field name="project_id"/>
+                            <field name="currency_id"
+                                   options="{'no_create': True}"/>
+                            <field name="amount"/>
+                            <field name="date"/>
+                            <field name="date_due"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="requester_id"/>
+                        </group>
+                        <group>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="payment_id" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Nội dung thanh toán"/>
+                    <field name="reason"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_payment_request_search" model="ir.ui.view">
+        <field name="name">rp.payment.request.search</field>
+        <field name="model">rp.payment.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="project_id"/>
+                <filter name="f_cho_duyet" string="Chờ duyệt chi"
+                        domain="[('state', '=', 'to_approve')]"/>
+                <filter name="f_da_duyet" string="Đã duyệt, chưa chi"
+                        domain="[('state', '=', 'approved')]"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                    <field name="partner_id" string="Đơn vị thụ hưởng"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_payment_request" model="ir.actions.act_window">
+        <field name="name">Đề nghị thanh toán</field>
+        <field name="res_model">rp.payment.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_payment_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có đề nghị thanh toán nào
+            </p>
+            <p>
+                Cửa duy nhất để tiền đi ra: không có đề nghị được duyệt
+                thì không chi. Nó gom đủ bộ hồ sơ — đơn mua, biên bản
+                nghiệm thu, hoá đơn — để người duyệt nhìn một chỗ mà
+                quyết.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_payment_request" name="Đề nghị thanh toán"
+              parent="menu_procurement" action="action_rp_payment_request"
+              sequence="40"/>
+
+    <!-- Hoá đơn NCC và Thanh toán: dùng lại action chuẩn của Odoo, chỉ
+         mượn chỗ đứng trong chuỗi mua sắm. -->
+    <menuitem id="menu_rp_procure_bills" name="Hoá đơn nhà cung cấp"
+              parent="menu_procurement"
+              action="account.action_move_in_invoice_type" sequence="50"/>
+    <menuitem id="menu_rp_procure_payments" name="Thanh toán"
+              parent="menu_procurement"
+              action="account.action_account_payments_payable"
+              sequence="60"/>
+</odoo>

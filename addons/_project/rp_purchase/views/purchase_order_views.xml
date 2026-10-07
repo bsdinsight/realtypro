@@ -7,7 +7,17 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="rp_project_id"/>
+                <field name="rp_request_id" readonly="1"
+                       invisible="not rp_request_id"/>
             </field>
+            <div name="button_box" position="inside">
+                <button name="action_rp_mo_nghiem_thu" type="object"
+                        class="oe_stat_button" icon="fa-check-square-o"
+                        invisible="rp_receipt_count == 0">
+                    <field name="rp_receipt_count" widget="statinfo"
+                           string="Nghiệm thu"/>
+                </button>
+            </div>
             <xpath expr="//field[@name='order_line']/list/field[@name='product_qty']"
                    position="before">
                 <field name="rp_project_id" column_invisible="1"/>
@@ -65,7 +75,10 @@
         </field>
     </record>
 
-    <menuitem id="menu_rp_purchase_order" name="Đơn mua (chủ đầu tư)"
-              parent="rp_estimate.menu_finance"
-              action="action_rp_purchase_order" sequence="35"/>
+    <!-- Chuyển từ Tài chính sang nhánh gốc "Mua sắm": để trong Tài
+         chính thì người dùng tưởng phân hệ này nhỏ, mà quy mô thật của
+         nó nằm ở 25 năm vận hành chứ không ở hai năm xây dựng. -->
+    <menuitem id="menu_rp_purchase_order" name="Đơn mua"
+              parent="menu_procurement"
+              action="action_rp_purchase_order" sequence="20"/>
 </odoo>

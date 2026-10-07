@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Đơn mua của chủ đầu tư",
-    "version": "19.0.1.2.0",
+    "name": "Realty Project — Mua sắm",
+    "version": "19.0.2.0.0",
     "category": "Realty/Project",
     "summary": "Nối đơn mua vào dự án và nhóm chi phí, để chi phí chủ đầu "
                "tư tự mua có chứng từ đứng sau thay vì một dòng khai tay.",
@@ -46,7 +46,13 @@ sẽ không tách — họ sẽ chọn bừa một nhóm.
         "rp_evm",
     ],
     "data": [
+        "security/ir.model.access.csv",
+        "data/ir_sequence.xml",
+        "views/menu_root.xml",
+        "views/rp_purchase_request_views.xml",
         "views/purchase_order_views.xml",
+        "views/rp_goods_receipt_views.xml",
+        "views/rp_payment_request_views.xml",
         "views/re_project_views.xml",
     ],
     "installable": True,

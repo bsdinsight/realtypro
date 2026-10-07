@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_purchase_request_list" model="ir.ui.view">
+        <field name="name">rp.purchase.request.list</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="arch" type="xml">
+            <list string="Yêu cầu mua sắm"
+                  decoration-info="state == 'to_approve'"
+                  decoration-muted="state in ('rejected', 'cancelled')">
+                <field name="name"/>
+                <field name="date_request"/>
+                <field name="project_id" optional="show"/>
+                <field name="department" optional="show"/>
+                <field name="requester_id"/>
+                <field name="date_required" string="Cần trước"/>
+                <field name="amount_estimated" width="190" sum="Σ"/>
+                <field name="purchase_order_count" string="Số đơn mua"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'to_approve'"
+                       decoration-success="state in ('approved', 'done')"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_purchase_request_form" model="ir.ui.view">
+        <field name="name">rp.purchase.request.form</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="arch" type="xml">
+            <form string="Yêu cầu mua sắm">
+                <header>
+                    <button name="action_trinh_duyet" type="object"
+                            string="Trình duyệt" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_duyet" type="object"
+                            string="Duyệt" class="btn-primary"
+                            invisible="state != 'to_approve'"/>
+                    <button name="action_tu_choi" type="object"
+                            string="Từ chối"
+                            invisible="state != 'to_approve'"/>
+                    <button name="action_tao_don_mua" type="object"
+                            string="Ra đơn mua" class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp"
+                            invisible="state in ('draft', 'done')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_don_mua" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart"
+                                invisible="purchase_order_count == 0">
+                            <field name="purchase_order_count"
+                                   widget="statinfo" string="Đơn mua"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="requester_id"/>
+                            <field name="department"/>
+                        </group>
+                        <group>
+                            <field name="date_request"/>
+                            <field name="date_required"/>
+                            <field name="currency_id"
+                                   options="{'no_create': True}"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="date_approved" readonly="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Lý do / căn cứ"/>
+                    <field name="reason"
+                           placeholder="Vì sao cần mua, căn cứ nào…"/>
+                    <notebook>
+                        <page string="Nội dung yêu cầu" name="lines">
+                            <field name="line_ids"
+                                   readonly="state not in ('draft',)">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="project_id"
+                                           column_invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="product_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="quantity"/>
+                                    <field name="price_estimated"/>
+                                    <field name="amount_estimated"
+                                           width="190" sum="Σ"/>
+                                    <field name="cost_category_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="partner_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="amount_estimated"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_purchase_request_search" model="ir.ui.view">
+        <field name="name">rp.purchase.request.search</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="requester_id"/>
+                <filter name="f_cho_duyet" string="Chờ tôi duyệt"
+                        domain="[('state', '=', 'to_approve')]"/>
+                <filter name="f_cua_toi" string="Tôi đề nghị"
+                        domain="[('requester_id', '=', uid)]"/>
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                    <field name="requester_id" string="Người đề nghị"
+                           icon="fa-user" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_purchase_request" model="ir.actions.act_window">
+        <field name="name">Yêu cầu mua sắm</field>
+        <field name="res_model">rp.purchase.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rp_purchase_request_search"/>
+    </record>
+
+    <menuitem id="menu_rp_purchase_request" name="Yêu cầu mua sắm"
+              parent="menu_procurement" action="action_rp_purchase_request"
+              sequence="10"/>
+</odoo>

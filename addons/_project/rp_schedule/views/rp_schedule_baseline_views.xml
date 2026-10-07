@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_schedule_baseline_list" model="ir.ui.view">
+        <field name="name">rp.schedule.baseline.list</field>
+        <field name="model">rp.schedule.baseline</field>
+        <field name="arch" type="xml">
+            <list string="Bản chụp lịch" expand="1"
+                  default_order="project_id, sequence, id">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date_set"/>
+                <field name="task_count"/>
+                <field name="is_current" widget="boolean_toggle"
+                       string="Hiện hành"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_schedule_baseline_form" model="ir.ui.view">
+        <field name="name">rp.schedule.baseline.form</field>
+        <field name="model">rp.schedule.baseline</field>
+        <field name="arch" type="xml">
+            <form string="Bản chụp lịch">
+                <header>
+                    <button name="action_dat_hien_hanh" type="object"
+                            string="Đặt làm bản hiện hành"
+                            class="btn-primary"
+                            invisible="is_current"
+                            confirm="Đổ ngày của phiên bản này xuống cột 'Trễ so gốc' của toàn bộ công việc. Tiếp tục?"/>
+                    <widget name="web_ribbon" title="Hiện hành"
+                            bg_color="text-bg-success" invisible="not is_current"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="project_id"/>
+                            <field name="date_set"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="task_count"/>
+                            <field name="is_current"/>
+                        </group>
+                    </group>
+                    <field name="note"
+                           placeholder="Vì sao phải tái lập kế hoạch ở phiên bản này…"/>
+                    <notebook>
+                        <page string="Dòng đã chụp">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="wbs_code"/>
+                                    <field name="task_name"/>
+                                    <field name="planned_start"/>
+                                    <field name="planned_end"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_schedule_baseline_search" model="ir.ui.view">
+        <field name="name">rp.schedule.baseline.search</field>
+        <field name="model">rp.schedule.baseline</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_current" string="Bản hiện hành"
+                        domain="[('is_current', '=', True)]"/>
+                <filter name="group_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <searchpanel>
+                    <field name="project_id" icon="fa-building" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_schedule_baseline" model="ir.actions.act_window">
+        <field name="name">Bản chụp lịch (baseline)</field>
+        <field name="res_model">rp.schedule.baseline</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Chưa có bản chụp lịch nào
+            </p>
+            <p>
+                Mỗi lần tái lập kế hoạch thì chụp một bản. Giữ nhiều bản
+                mới trả lời được câu "mốc này trượt từ lần tái lập nào",
+                thay vì chỉ biết hiện tại lệch bản gần nhất bao nhiêu.
+            </p>
+        </field>
+    </record>
+</odoo>

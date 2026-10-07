@@ -159,7 +159,7 @@ class ReProject(models.Model):
         return self.browse(int(project_id))._rp_schedule_markers()
 
     @api.model
-    def rp_milestone_brief(self, project_id):
+    def rp_milestone_brief(self, project_id, baseline_id=False):
         """Tóm tắt tiến độ theo MỐC, cho dải số liệu cố định trên Gantt.
 
         Đây là bộ câu hỏi một giám đốc dự án bị hỏi khi đứng trước ban
@@ -211,12 +211,29 @@ class ReProject(models.Model):
 
         # Trượt so kế hoạch gốc: lấy mốc TRƯỢT NHIỀU NHẤT, không lấy
         # trung bình — trung bình làm loãng đúng cái mốc đang gây hại.
+        # Trượt đo so với PHIÊN BẢN ĐANG CHỌN, không phải bản hiện
+        # hành: người quản lý dự án muốn biết trượt bao nhiêu so với kế
+        # hoạch GỐC (V1), chứ so với bản vừa tái lập xong thì bao giờ
+        # cũng ra 0 — tái lập kế hoạch luôn xoá sạch vết trượt.
+        goc = {}
+        if baseline_id:
+            goc = {int(k): v for k, v in self.env['rp.schedule.baseline']
+                   .rp_lay_dong(baseline_id).items()}
         # Phân biệt "không trượt" với "CHƯA CHỐT baseline" — hai chuyện
         # khác hẳn nhau. Báo nhầm thành "bám đúng kế hoạch gốc" khi thật
         # ra chưa có gốc nào là nói sai với ban lãnh đạo.
-        co_goc = bool(moc.filtered(lambda t: t.baseline_end))
-        truot = moc.filtered(lambda t: (t.baseline_slip_days or 0) > 0)
-        truot_max = max(truot.mapped('baseline_slip_days')) if truot else 0
+        def _truot(t):
+            if goc:
+                d = goc.get(t.id)
+                if not (d and d[1] and t.planned_end):
+                    return None
+                return (t.planned_end - fields.Date.to_date(d[1])).days
+            return t.baseline_slip_days if t.baseline_end else None
+
+        truot_moc = {t.id: _truot(t) for t in moc}
+        co_goc = bool(goc) or bool(moc.filtered(lambda t: t.baseline_end))
+        truot = [d for d in truot_moc.values() if d and d > 0]
+        truot_max = max(truot) if truot else 0
 
         xong = moc.filtered(lambda t: t.exec_status == 'done')
         tre = moc.filtered(lambda t: t.exec_status == 'late')
@@ -277,6 +294,7 @@ class ReProject(models.Model):
                     'late': ((today - t.planned_end).days
                              if t.exec_status == 'late' and t.planned_end
                              else 0),
+                    'truot': truot_moc.get(t.id),
                 }
                 for t in moc
             },

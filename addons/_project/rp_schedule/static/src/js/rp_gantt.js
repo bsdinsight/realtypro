@@ -46,6 +46,9 @@ export class RpGanttAction extends Component {
             // do màn này tồn tại, nhưng phải tắt được: lịch dày thì nhãn
             // che mất chính các mũi tên quan hệ.
             showLabels: true,
+            // Các bản chụp lịch (V1, V2, V3…) và bản ĐANG so sánh.
+            baselines: [],
+            baselineId: false,
         });
         const ctx = (this.props.action && this.props.action.context) || {};
         const params = this.props.action.params || {};
@@ -169,12 +172,42 @@ export class RpGanttAction extends Component {
         // thấy mình đang chạy đua với mốc nào. Nạp SAU khi có việc để
         // màn mở từ menu (không mang id dự án) còn suy ra được dự án.
         await this._loadMarkers();
+        // Bản chụp lịch. Mặc định so với bản ĐẦU TIÊN (kế hoạch gốc),
+        // không phải bản mới nhất: tái lập kế hoạch bao giờ cũng xoá sạch
+        // vết trượt, nên so với bản vừa tái lập thì luôn ra 0 và người
+        // xem tưởng dự án chưa trượt ngày nào.
+        this._baseMap = null;
+        if (this._pid) {
+            try {
+                this.state.baselines = await this.orm.call(
+                    "rp.schedule.baseline", "rp_danh_sach", [this._pid]) || [];
+            } catch {
+                this.state.baselines = [];
+            }
+            const ds = this.state.baselines;
+            if (ds.length && !ds.some((b) => b.id === this.state.baselineId)) {
+                this.state.baselineId = ds[0].id;
+            }
+            if (this.state.baselineId) {
+                try {
+                    this._baseMap = await this.orm.call(
+                        "rp.schedule.baseline", "rp_lay_dong",
+                        [this.state.baselineId]);
+                } catch {
+                    this._baseMap = null;
+                }
+            }
+            if (this._baseMap) {
+                this.state.hasBaseline = true;
+            }
+        }
         // Dải số liệu cố định — chỉ màn mốc. Gọi luôn CPM bên trong nên
         // bên dưới khỏi gọi lại lần hai.
         if (this.mode === "milestone" && this._pid) {
             try {
                 this.state.brief = await this.orm.call(
-                    "re.project", "rp_milestone_brief", [this._pid]);
+                    "re.project", "rp_milestone_brief",
+                    [this._pid, this.state.baselineId || false]);
             } catch {
                 this.state.brief = null;
             }
@@ -357,6 +390,7 @@ export class RpGanttAction extends Component {
                 }
             }
             const hasDates = !!r.planned_start;
+            const bm = this._baseMap && this._baseMap[String(r.id)];
             return {
                 id: String(r.id),
                 parent,
@@ -399,8 +433,11 @@ export class RpGanttAction extends Component {
                 start: hasDates ? r.planned_start : null,
                 end: hasDates
                     ? (r.planned_end || r.planned_start) : null,
-                baselineStart: r.baseline_start || null,
-                baselineEnd: r.baseline_end || r.baseline_start || null,
+                // Thanh đường cơ sở vẽ theo PHIÊN BẢN đang chọn; chưa
+                // có bản chụp nào thì quay về hai trường trên công việc.
+                baselineStart: (bm && bm[0]) || r.baseline_start || null,
+                baselineEnd: (bm && bm[1])
+                    || r.baseline_end || r.baseline_start || null,
                 progress: Math.round(r.progress_percent || 0),
                 // taskMode 'Manual': predecessor chỉ VẼ mũi tên, không
                 // auto-reschedule → giữ đúng ngày import từ MS Project
@@ -494,16 +531,26 @@ export class RpGanttAction extends Component {
             // đó mới là con số người gỡ tiến độ cần: còn 60 ngày thì
             // hoãn được, còn 0 ngày thì đụng vào là mất ngày về đích.
             const nf = (this._mocInfo && this._mocInfo[String(r.id)]) || null;
-            let ghi = "";
-            if (nf) {
-                ghi = nf.crit ? "GĂNG"
-                    : (nf.late ? "trễ " + nf.late + " ngày"
-                       : (nf.tf === null || nf.tf === undefined ? ""
-                          : "dư địa " + (nf.tf > 0 ? "+" : "") + nf.tf
-                            + " ngày"));
+            const phan = [];
+            if (nf && nf.truot > 0) {
+                // Độ trượt đứng NGAY SAU tên: khi đang so với kế hoạch
+                // gốc thì đây là con số người ta tìm, các số khác chỉ là
+                // bối cảnh.
+                phan.push("trượt +" + nf.truot + " ngày");
             }
-            t.extraFields.TaskNhan = ghi
-                ? (t.name || "") + "  ·  " + ghi : (t.name || "");
+            if (nf) {
+                if (nf.crit) {
+                    phan.push("GĂNG");
+                } else if (nf.late) {
+                    phan.push("trễ " + nf.late + " ngày");
+                } else if (nf.tf !== null && nf.tf !== undefined) {
+                    phan.push("dư địa " + (nf.tf > 0 ? "+" : "") + nf.tf
+                              + " ngày");
+                }
+            }
+            t.extraFields.TaskNhan = phan.length
+                ? (t.name || "") + "  ·  " + phan.join("  ·  ")
+                : (t.name || "");
             [du_an, goi, hd].forEach((l) => {
                 stretch(l, t.start);
                 stretch(l, t.end);
@@ -866,6 +913,13 @@ export class RpGanttAction extends Component {
     // Hiện/ẩn baseline (kế hoạch gốc) — vẽ lại Gantt với renderBaseline mới
     async toggleBaseline() {
         this.state.showBaseline = !this.state.showBaseline;
+        await this.loadAndRender();
+    }
+
+    // Đổi phiên bản baseline đang so sánh
+    async setBaselineVersion(ev) {
+        const id = parseInt(ev.target.value, 10);
+        this.state.baselineId = isNaN(id) ? false : id;
         await this.loadAndRender();
     }
 

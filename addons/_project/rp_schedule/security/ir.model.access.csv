@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_rp_schedule_import_wizard,rp.schedule.import.wizard,model_rp_schedule_import_wizard,base.group_user,1,1,1,1
 access_rp_task_link_user,rp.task.link user,model_rp_task_link,re_base.group_re_user,1,1,1,1
+access_rp_schedule_baseline_user,rp.schedule.baseline user,model_rp_schedule_baseline,re_base.group_re_user,1,1,1,1
+access_rp_schedule_baseline_line_user,rp.schedule.baseline.line user,model_rp_schedule_baseline_line,re_base.group_re_user,1,1,1,1

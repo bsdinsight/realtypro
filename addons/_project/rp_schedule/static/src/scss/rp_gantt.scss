@@ -20,6 +20,13 @@
             color: #0e5563;
         }
 
+        // Ô chọn phiên bản baseline — gọn, không chiếm chỗ của các nút
+        .rp-gantt-chon-goc {
+            width: auto;
+            max-width: 230px;
+            flex: 0 0 auto;
+        }
+
         // Chú giải màu hình thoi của màn mốc
         .rp-gantt-chu-giai .rp-cham {
             display: inline-block;

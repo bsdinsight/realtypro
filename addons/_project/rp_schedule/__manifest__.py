@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Project — Lịch thi công (Schedule)',
-    'version': '19.0.8.0.0',
+    'version': '19.0.9.0.0',
     'category': 'Realty/Project',
     'summary': 'Tầng lịch thi công theo task (Odoo Project) cho HĐ nhà '
                'thầu: import Excel/MS Project XML, WBS, %, milestone, '
@@ -43,6 +43,7 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'views/project_task_views.xml',
         'views/re_project_views.xml',
         'views/rp_contract_views.xml',
+        'views/rp_schedule_baseline_views.xml',
         'views/rp_schedule_menus.xml',
     ],
     'assets': {

@@ -44,6 +44,21 @@
                             title="Hiện/ẩn baseline (kế hoạch gốc). Cần chốt baseline trước.">
                         <i class="fa fa-flag-o me-1"/>Baseline
                     </button>
+                    <!-- So với bản chụp lịch nào. Mặc định là bản ĐẦU
+                         (kế hoạch gốc): tái lập kế hoạch luôn xoá sạch
+                         vết trượt, so với bản vừa lập thì bao giờ cũng
+                         ra 0 ngày. -->
+                    <select t-if="state.baselines.length"
+                            class="form-select form-select-sm rp-gantt-chon-goc"
+                            t-on-change="(ev) => this.setBaselineVersion(ev)"
+                            title="Đường cơ sở vẽ theo phiên bản này, và độ trượt cũng đo so với nó.">
+                        <option t-foreach="state.baselines" t-as="bl"
+                                t-key="bl.id" t-att-value="bl.id"
+                                t-att-selected="bl.id === state.baselineId">
+                            So với <t t-esc="bl.name"/>
+                            (<t t-esc="bl.date"/>)
+                        </option>
+                    </select>
                     <!-- Ghi tên + dư địa cạnh hình thoi -->
                     <button t-if="mode === 'milestone'" type="button"
                             class="btn btn-sm"

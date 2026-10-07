@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Danh sách hạng mục: thêm ba cột tiến độ KHỐI LƯỢNG. Trước đây
+         màn này chỉ có Khái toán, nên nhìn vào không biết hạng mục nào
+         đã nghiệm thu tới đâu — phải mở Gantt hạng mục mới thấy, mà
+         Gantt thì không cộng tổng và không lọc được.
+         `progress_percent` đã ở thang 0–100 nên dùng progressbar, KHÔNG
+         dùng widget percentage (widget đó nhân thêm 100 lần nữa). -->
+    <record id="view_rp_structure_list_inherit_progress" model="ir.ui.view">
+        <field name="name">rp.structure.list.progress</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id" ref="rp_cost_base.view_rp_structure_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='estimate_total']" position="after">
+                <field name="estimate_value" string="BAC (Σ BOQ)"
+                       widget="monetary" width="200px" sum="Tổng BAC"/>
+                <field name="progress_value" string="Giá trị nghiệm thu"
+                       widget="monetary" width="200px"
+                       sum="Tổng đã nghiệm thu"/>
+                <field name="progress_percent" string="% hoàn thành"
+                       widget="progressbar"/>
+                <field name="date_actual_start" string="Bắt đầu thực tế"
+                       optional="hide"/>
+                <field name="date_actual_end" string="Kết thúc thực tế"
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_rp_structure_form_inherit_progress" model="ir.ui.view">
         <field name="name">rp.structure.form.progress</field>
         <field name="model">rp.structure</field>

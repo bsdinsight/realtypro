@@ -54,6 +54,7 @@ làm thành trường riêng chứ không gộp:
         "views/rp_energy_meter_views.xml",
         "views/rp_ppa_views.xml",
         "views/rp_energy_period_views.xml",
+        "views/rp_energy_invoice_wizard_views.xml",
         "views/re_project_views.xml",
     ],
     "installable": True,

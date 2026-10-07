@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_ar_payment_list" model="ir.ui.view">
+        <field name="name">account.payment.list.rp.ar</field>
+        <field name="model">account.payment</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Thu tiền" expand="1"
+                  default_order="date desc, id desc">
+                <field name="date" string="Ngày thu"/>
+                <field name="name" string="Số phiếu"/>
+                <field name="partner_id" string="Khách hàng"/>
+                <field name="journal_id" string="Tài khoản/Sổ quỹ"/>
+                <field name="amount" string="Số tiền" sum="Tổng thu"
+                       widget="monetary" width="185px"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="payment_type" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_ar_payment_search" model="ir.ui.view">
+        <field name="name">account.payment.search.rp.ar</field>
+        <field name="model">account.payment</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search string="Thu tiền">
+                <field name="partner_id"/>
+                <field name="name"/>
+                <filter name="g_partner" string="Khách hàng"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date'}"/>
+                <searchpanel>
+                    <field name="partner_id" string="Khách hàng"
+                           icon="fa-user" enable_counters="1"/>
+                    <field name="journal_id" select="multi"
+                           string="Sổ quỹ / Ngân hàng" icon="fa-university"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_ar_payment" model="ir.actions.act_window">
+        <field name="name">Thu tiền</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'inbound'),
+                              ('partner_type', '=', 'customer')]</field>
+        <field name="context">{'default_payment_type': 'inbound',
+                               'default_partner_type': 'customer'}</field>
+        <field name="view_id" ref="view_rp_ar_payment_list"/>
+        <field name="search_view_id" ref="view_rp_ar_payment_search"/>
+    </record>
+</odoo>

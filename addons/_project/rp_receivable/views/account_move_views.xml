@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_ar_invoice_list" model="ir.ui.view">
+        <field name="name">account.move.list.rp.ar</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Hoá đơn bán ra" expand="1" create="0"
+                  default_order="invoice_date_due, name"
+                  decoration-danger="rp_aging_bucket in ('d61_90', 'd90')"
+                  decoration-warning="rp_aging_bucket in ('d1_30', 'd31_60')">
+                <field name="name"/>
+                <field name="partner_id" string="Khách hàng"/>
+                <field name="invoice_date" string="Ngày HĐ"/>
+                <field name="invoice_date_due" string="Hạn thanh toán"/>
+                <field name="amount_total" string="Tổng tiền"
+                       sum="Tổng" widget="monetary" width="185px"/>
+                <field name="amount_residual" string="Còn phải thu"
+                       sum="Còn phải thu" widget="monetary" width="185px"/>
+                <field name="rp_days_overdue" string="Quá hạn (ngày)"/>
+                <field name="rp_aging_bucket" string="Tuổi nợ" widget="badge"
+                       decoration-success="rp_aging_bucket == 'current'"
+                       decoration-warning="rp_aging_bucket in ('d1_30', 'd31_60')"
+                       decoration-danger="rp_aging_bucket in ('d61_90', 'd90')"/>
+                <field name="payment_state" string="Thanh toán"
+                       widget="badge"/>
+                <field name="state" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="move_type" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_ar_invoice_search" model="ir.ui.view">
+        <field name="name">account.move.search.rp.ar</field>
+        <field name="model">account.move</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <search string="Hoá đơn bán ra">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="f_chua_thu" string="Còn phải thu"
+                        domain="[('payment_state', 'not in', ('paid', 'reversed'))]"/>
+                <filter name="f_qua_han" string="Đã quá hạn"
+                        domain="[('rp_days_overdue', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="f_nhap" string="Nháp"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="f_so" string="Đã ghi sổ"
+                        domain="[('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="g_partner" string="Khách hàng"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_tuoi" string="Tuổi nợ"
+                        context="{'group_by': 'rp_aging_bucket'}"/>
+                <filter name="g_thang" string="Tháng hoá đơn"
+                        context="{'group_by': 'invoice_date'}"/>
+                <searchpanel>
+                    <field name="partner_id" string="Khách hàng"
+                           icon="fa-user" enable_counters="1"/>
+                    <field name="rp_aging_bucket" select="multi"
+                           string="Tuổi nợ" icon="fa-hourglass-half"
+                           color="#c0453b" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_ar_invoice" model="ir.actions.act_window">
+        <field name="name">Hoá đơn bán ra</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_type', '=', 'out_invoice')]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="view_id" ref="view_rp_ar_invoice_list"/>
+        <field name="search_view_id" ref="view_rp_ar_invoice_search"/>
+    </record>
+
+    <record id="action_rp_ar_aging" model="ir.actions.act_window">
+        <field name="name">Công nợ phải thu</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'),
+                              ('state', '=', 'posted'),
+                              ('payment_state', 'not in', ('paid', 'reversed'))]</field>
+        <field name="view_id" ref="view_rp_ar_invoice_list"/>
+        <field name="search_view_id" ref="view_rp_ar_invoice_search"/>
+        <field name="context">{'search_default_g_partner': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không còn hoá đơn nào chưa thu</p>
+            <p>Màn này chỉ lấy hoá đơn ĐÃ GHI SỔ và CHƯA thu đủ, gom theo
+               khách hàng. Cột "Tuổi nợ" tính lại mỗi ngày lúc 01:00.</p>
+        </field>
+    </record>
+</odoo>

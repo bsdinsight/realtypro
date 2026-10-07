@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rp_energy_invoice_wizard_form" model="ir.ui.view">
+        <field name="name">rp.energy.invoice.wizard.form</field>
+        <field name="model">rp.energy.invoice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xuất hoá đơn tiền điện">
+                <div class="alert alert-info" role="alert">
+                    Một hoá đơn chỉ cho MỘT bên mua, nhưng gộp được nhiều kỳ.
+                    Chỉ lấy các kỳ đã chốt công-tơ và chưa xuất hoá đơn.
+                </div>
+                <group>
+                    <group>
+                        <field name="project_id"
+                               options="{'no_create': True}"/>
+                        <field name="partner_id"
+                               options="{'no_create': True}"/>
+                        <field name="invoice_date"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="ky_count"/>
+                        <field name="tong_mwh"/>
+                        <field name="tong_tien"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list>
+                        <field name="period_id"/>
+                        <field name="ppa_id"/>
+                        <field name="energy_mwh" sum="Tổng MWh"/>
+                        <field name="tariff"/>
+                        <field name="amount" sum="Tổng tiền"/>
+                        <field name="currency_id" column_invisible="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_tao_hoa_don" type="object"
+                            string="Tạo hoá đơn" class="btn-primary"
+                            invisible="ky_count == 0"/>
+                    <button string="Huỷ" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_energy_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Xuất hoá đơn tiền điện</field>
+        <field name="res_model">rp.energy.invoice.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Nhánh doanh thu trong Tài chính: phát hành → thu → còn nợ.
+         Ba màn đi liền nhau theo đúng thứ tự tiền chạy. -->
+    <menuitem id="menu_rp_ar_group" name="Bán ra &amp; công nợ"
+              parent="rp_estimate.menu_finance" sequence="40"/>
+
+    <menuitem id="menu_rp_ar_invoice" name="Hoá đơn bán ra"
+              parent="menu_rp_ar_group"
+              action="action_rp_ar_invoice" sequence="10"/>
+
+    <menuitem id="menu_rp_ar_payment" name="Thu tiền"
+              parent="menu_rp_ar_group"
+              action="action_rp_ar_payment" sequence="20"/>
+
+    <menuitem id="menu_rp_ar_aging" name="Công nợ phải thu"
+              parent="menu_rp_ar_group"
+              action="action_rp_ar_aging" sequence="30"/>
+</odoo>

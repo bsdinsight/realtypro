@@ -290,9 +290,27 @@
         </field>
     </record>
 
-    <menuitem id="menu_rp_milestones" name="Mốc chính"
+    <!-- Mốc chính mở bằng GANTT chứ không bằng danh sách: mốc là ĐIỂM
+         thời gian, đọc trên một trục chung thì thấy ngay cái nào đã trễ
+         (bên trái vạch "Hôm nay") và cái nào dồn cục — danh sách bắt
+         người đọc tự sắp ngày trong đầu.
+         Ba làn Dự án → Gói thầu → Hợp đồng nằm trên CÙNG trục, nên mốc
+         của gói này chặn mốc của gói kia là nhìn ra được. -->
+    <record id="action_rp_milestone_gantt" model="ir.actions.client">
+        <field name="name">Mốc chính</field>
+        <field name="tag">rp_schedule.gantt</field>
+        <field name="params" eval="{'mode': 'milestone'}"/>
+    </record>
+
+    <menuitem id="menu_rp_milestone_gantt" name="Mốc chính"
               parent="rp_estimate.menu_schedule"
-              action="action_rp_milestones" sequence="15"/>
+              action="action_rp_milestone_gantt" sequence="15"/>
+
+    <!-- Giữ danh sách: Gantt để NHÌN, danh sách để LỌC và XUẤT. Cùng một
+         tập dữ liệu, hai cách dùng khác nhau. -->
+    <menuitem id="menu_rp_milestones" name="Danh sách mốc"
+              parent="rp_estimate.menu_schedule"
+              action="action_rp_milestones" sequence="16"/>
 
     <record id="action_rp_schedule_tasks_list_view"
             model="ir.actions.act_window.view">

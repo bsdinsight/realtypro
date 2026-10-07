@@ -129,6 +129,27 @@
                         context="{'group_by': 'contract_id'}"/>
                 <filter string="Tháng" name="group_month"
                         context="{'group_by': 'date:month'}"/>
+
+                <!-- Pane lọc trái. Thời tiết sáng để trong pane có chủ
+                     ý: tranh chấp kéo dài thời gian của nhà thầu gần như
+                     luôn viện dẫn thời tiết, và lúc đó người ta cần lọc
+                     ra tất cả ngày mưa trong kỳ chứ không đọc từng quyển
+                     nhật ký. -->
+                <searchpanel>
+                    <field name="project_id" string="Dự án" icon="fa-folder"
+                           enable_counters="1"/>
+                    <field name="contract_id" string="HĐ / công trường"
+                           icon="fa-file-text-o" enable_counters="1"
+                           select="multi"/>
+                    <field name="contractor_id" string="Nhà thầu"
+                           icon="fa-truck" enable_counters="1"
+                           select="multi"/>
+                    <field name="weather_am" string="Thời tiết sáng"
+                           icon="fa-cloud" enable_counters="1"
+                           select="multi"/>
+                    <field name="state" string="Trạng thái" icon="fa-tasks"
+                           enable_counters="1" select="multi"/>
+                </searchpanel>
             </search>
         </field>
     </record>

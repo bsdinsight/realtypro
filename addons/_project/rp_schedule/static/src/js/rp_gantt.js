@@ -48,6 +48,12 @@ export class RpGanttAction extends Component {
         // và truyền rp_project_id; lúc đó active_id là id dự án nên phải
         // đọc project TRƯỚC, không thì nó bị hiểu nhầm thành id hợp đồng.
         this.projectId = ctx.rp_project_id || params.project_id || false;
+        // Chế độ "mốc": chỉ lấy công việc được đánh dấu là mốc, và xếp
+        // hàng theo Dự án → Gói thầu → Hợp đồng thay vì theo cây WBS.
+        // Mốc là ĐIỂM thời gian; đọc chúng trên một trục chung thì thấy
+        // ngay cái nào đã trễ và cái nào dồn cục, điều mà danh sách bắt
+        // người đọc tự sắp trong đầu.
+        this.mode = params.mode || ctx.rp_gantt_mode || "full";
         this.contractId = this.projectId
             ? false
             : (ctx.default_rp_contract_id || ctx.active_id ||
@@ -127,6 +133,9 @@ export class RpGanttAction extends Component {
         const domain = this.contractId
             ? [["rp_contract_id", "=", this.contractId]]
             : (this.projectId ? [["rp_project_id", "=", this.projectId]] : []);
+        if (this.mode === "milestone") {
+            domain.push(["is_milestone", "=", true]);
+        }
         // Mốc vạch dọc (ngày phải xong, hôm nay, đóng điện…). Ở chế độ
         // hợp đồng vẫn lấy mốc của dự án chứa hợp đồng — nhà thầu cần
         // thấy mình đang chạy đua với mốc nào.
@@ -347,6 +356,77 @@ export class RpGanttAction extends Component {
                     .join(","),
                 custom_class: r.is_milestone ? "rp-ej2-milestone" : "",
             };
+        });
+        if (this.mode === "milestone") {
+            this.tasks = this._milestoneRows(recs, this.tasks);
+        }
+    }
+
+    /**
+     * Xếp mốc thành ba làn trên CÙNG một trục thời gian:
+     * Dự án → Gói thầu → Hợp đồng → mốc.
+     *
+     * Dòng cha là dòng tổng hợp, không phải việc thật, nên id dùng tiền
+     * tố chữ (P/K/H) để không đụng id của project.task. Ngày của dòng cha
+     * trải từ mốc sớm nhất tới mốc muộn nhất của nhánh — nhờ vậy nhìn
+     * một dòng gói thầu là biết gói đó kéo dài từ đâu tới đâu.
+     */
+    _milestoneRows(recs, mapped) {
+        const byId = new Map(mapped.map((t) => [t.id, t]));
+        const lanes = new Map();   // key → row
+        const rows = [];
+        const touch = (key, name, parentKey, rank) => {
+            if (!lanes.has(key)) {
+                const row = {
+                    id: key, parent: parentKey, name,
+                    extraFields: { TaskWbs: "", TaskSeq: "", TaskDeps: "",
+                                   TaskAssign: "", _isTop: !parentKey,
+                                   TaskContract: "", TaskPackage: "" },
+                    start: null, end: null, progress: 0,
+                    dependencies: "", custom_class: "rp-ej2-lane",
+                    _rank: rank,
+                };
+                lanes.set(key, row);
+                rows.push(row);
+            }
+            return lanes.get(key);
+        };
+        const stretch = (row, d) => {
+            if (!d) return;
+            if (!row.start || d < row.start) row.start = d;
+            if (!row.end || d > row.end) row.end = d;
+        };
+
+        const pName = this.state.title || "Dự án";
+        const pKey = "P0";
+        recs.forEach((r) => {
+            const t = byId.get(String(r.id));
+            if (!t) return;
+            const cid = r.rp_contract_id ? r.rp_contract_id[0] : 0;
+            const info = this._contractInfo && this._contractInfo.get(cid);
+            const pkg = (info && info.pkg) || "Chưa gắn gói thầu";
+            const kKey = "K" + pkg;
+            const hKey = "H" + cid;
+            const du_an = touch(pKey, pName, null, [0]);
+            const goi = touch(kKey, pkg, pKey,
+                              (info && info.rank) || [9999, 0]);
+            const hd = touch(hKey, (info && info.name) || "Chưa gắn hợp đồng",
+                             kKey, (info && info.rank) || [9999, 0]);
+            t.parent = hKey;
+            t.extraFields._isTop = false;
+            [du_an, goi, hd].forEach((l) => {
+                stretch(l, t.start);
+                stretch(l, t.end);
+            });
+            rows.push(t);
+        });
+        // Giữ thứ tự: dự án → gói (theo rank) → hợp đồng → mốc theo ngày.
+        const bac = (id) => (id[0] === "P" ? 0 : id[0] === "K" ? 1
+                             : id[0] === "H" ? 2 : 3);
+        return rows.sort((a, b) => {
+            const ka = a._rank || [9998, 0], kb = b._rank || [9998, 0];
+            return (bac(a.id) - bac(b.id)) || (ka[0] - kb[0])
+                || String(a.start || "").localeCompare(String(b.start || ""));
         });
     }
 

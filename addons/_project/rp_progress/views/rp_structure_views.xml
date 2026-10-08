@@ -55,8 +55,8 @@
                     </group>
                     <p class="text-muted">
                         Dự toán chi tiết theo đầu việc (khối lượng × đơn
-                        giá). Khi có BOQ, BAC = Σ BOQ; chưa có thì dùng
-                        Khái toán. BBN nghiệm thu sẽ trỏ vào các dòng này.
+                        giá). Khi có BOQ, dự toán = Σ BOQ; chưa bóc thì dùng số
+                        khai tay. BBN nghiệm thu sẽ trỏ vào các dòng này.
                     </p>
                 </page>
             </xpath>
@@ -86,6 +86,86 @@
             </xpath>
         </field>
     </record>
+
+    <!-- Màn hình "Dự toán".
+
+         Dự toán của một hạng mục KHÔNG phải tổng của hai bảng: nó là
+         BOQ nếu đã bóc, còn chưa bóc thì lấy số khai tay
+         (estimate_value = boq_total or estimate_total). Vì vậy màn hình
+         mang tên Dự toán phải hiện CẢ HAI nguồn cạnh con số cuối, nếu
+         không người xem không biết số mình đang nhìn là số bóc hay số
+         ước — hai thứ chênh nhau rất xa về độ tin cậy. -->
+    <record id="view_rp_structure_list_estimate" model="ir.ui.view">
+        <field name="name">rp.structure.list.estimate</field>
+        <field name="model">rp.structure</field>
+        <field name="arch" type="xml">
+            <list string="Dự toán theo hạng mục" sample="1" expand="1"
+                  create="false" decoration-muted="not active">
+                <field name="code" width="110px"/>
+                <field name="name" width="340px"/>
+                <field name="project_id"/>
+                <field name="structure_type" optional="hide"/>
+                <field name="boq_total" string="Bóc từ BOQ"
+                       widget="monetary" width="190px" sum="Σ BOQ"/>
+                <field name="estimate_total" string="Khai tay"
+                       widget="monetary" width="190px" sum="Σ khai tay"/>
+                <field name="estimate_value" string="Dự toán"
+                       widget="monetary" width="200px" sum="Tổng dự toán"/>
+                <field name="estimate_source" string="Nguồn" widget="badge"
+                       decoration-success="estimate_source == 'boq'"
+                       decoration-warning="estimate_source == 'manual'"
+                       decoration-danger="estimate_source == 'none'"/>
+                <field name="progress_value" string="Đã nghiệm thu"
+                       widget="monetary" width="190px" optional="show"
+                       sum="Σ nghiệm thu"/>
+                <field name="progress_percent" string="% hoàn thành"
+                       widget="progressbar" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_structure_search_estimate" model="ir.ui.view">
+        <field name="name">rp.structure.search.estimate</field>
+        <field name="model">rp.structure</field>
+        <field name="inherit_id" ref="rp_cost_base.view_rp_structure_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="f_est_boq" string="Đã bóc BOQ"
+                        domain="[('estimate_source', '=', 'boq')]"/>
+                <filter name="f_est_manual" string="Còn chạy bằng số khai tay"
+                        domain="[('estimate_source', '=', 'manual')]"/>
+                <filter name="f_est_none" string="Chưa có dự toán"
+                        domain="[('estimate_source', '=', 'none')]"/>
+                <separator/>
+                <filter name="g_est_source" string="Nguồn dự toán"
+                        context="{'group_by': 'estimate_source'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_rp_structure_estimate" model="ir.actions.act_window">
+        <field name="name">Dự toán</field>
+        <field name="res_model">rp.structure</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_project': 1}</field>
+        <field name="view_id" ref="view_rp_structure_list_estimate"/>
+        <field name="search_view_id" ref="view_rp_structure_search_estimate"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có hạng mục nào</p>
+            <p>Dự toán từng hạng mục lấy từ BOQ nếu đã bóc khối lượng,
+               chưa bóc thì lấy số khai tay trên form hạng mục. Cột
+               "Nguồn" cho biết con số đang nhìn là số bóc hay số ước.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_finance_estimate"
+              name="Dự toán"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_structure_estimate"
+              sequence="12"/>
 
     <record id="view_rp_structure_kanban_progress" model="ir.ui.view">
         <field name="name">rp.structure.kanban.progress</field>

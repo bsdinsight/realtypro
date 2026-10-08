@@ -149,10 +149,10 @@
               action="action_rp_concept_estimate"
               sequence="10"/>
 
-    <menuitem id="menu_estimate_by_structure"
-              name="Dự toán khai tay theo hạng mục"
-              parent="menu_finance"
-              action="rp_cost_base.action_rp_structure_estimate_summary"
-              sequence="12"/>
+    <!-- Menu "Dự toán" khai ở rp_progress, vì dự toán của một hạng mục
+         là `estimate_value` = BOQ nếu đã bóc, chưa bóc thì số khai tay —
+         mà BOQ do rp_progress sở hữu. Đưa bảng khai tay lên menu là chỉ
+         hiện một trong hai nguồn: dự án đã bóc BOQ sẽ thấy màn hình
+         trống trong khi dự toán có đủ. -->
 
 </odoo>

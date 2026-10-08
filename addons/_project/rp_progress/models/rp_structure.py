@@ -35,7 +35,15 @@ class RpStructure(models.Model):
         string='Giá trị dự toán (BAC)',
         compute='_compute_estimate_value', store=True,
         help='Budget At Completion. Ưu tiên Σ BOQ chi tiết nếu đã nhập, '
-             'else Σ Khái toán (estimate_total).')
+             'else Σ dự toán khai tay (estimate_total).')
+    estimate_source = fields.Selection(
+        [('boq', 'Bóc từ BOQ'), ('manual', 'Khai tay'),
+         ('none', 'Chưa có dự toán')],
+        string='Nguồn dự toán', compute='_compute_estimate_value',
+        store=True,
+        help='Dự toán hạng mục lấy từ BOQ nếu đã bóc, nếu chưa thì lấy '
+             'số khai tay. Cột này để thấy ngay hạng mục nào còn đang '
+             'chạy bằng số ước.')
     progress_percent = fields.Float(
         string='% hoàn thành',
         compute='_compute_progress', store=True,
@@ -105,11 +113,13 @@ class RpStructure(models.Model):
 
     @api.depends('boq_total', 'estimate_total')
     def _compute_estimate_value(self):
-        # BAC = Σ BOQ chi tiết nếu đã nhập, else Σ Khái toán.
+        # BAC = Σ BOQ chi tiết nếu đã nhập, else số khai tay.
         # estimate_total (rp_cost_base) là stored-computed reactive theo
         # estimate_line_ids → BAC tự cập nhật cả 2 nguồn.
         for rec in self:
             rec.estimate_value = rec.boq_total or rec.estimate_total
+            rec.estimate_source = ('boq' if rec.boq_total else
+                                   'manual' if rec.estimate_total else 'none')
 
     @api.depends('progress_percent', 'date_planned_end',
                  'date_planned_start', 'date_actual_start')

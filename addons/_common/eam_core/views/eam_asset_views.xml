@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_asset_list" model="ir.ui.view">
+        <field name="name">eam.asset.list</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <list string="Tài sản" expand="1"
+                  decoration-muted="state == 'scrapped'"
+                  decoration-danger="warranty_state == 'expired'"
+                  decoration-warning="warranty_state == 'expiring'">
+                <field name="code" width="130px"/>
+                <field name="name" width="300px"/>
+                <field name="serial_no" string="Sê-ri" width="160px"/>
+                <field name="category_id" string="Loại" width="220px"/>
+                <field name="current_location_id" string="Đang lắp tại"
+                       width="220px"/>
+                <field name="is_rotable" string="Quay vòng"/>
+                <field name="install_count" string="Số lần lắp"/>
+                <field name="criticality" string="Mức QT" widget="badge"
+                       optional="show"/>
+                <field name="warranty_end" string="BH đến" optional="show"/>
+                <field name="warranty_days_left" string="BH còn (ngày)"
+                       optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'repair'"/>
+                <field name="warranty_state" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_eam_asset_form" model="ir.ui.view">
+        <field name="name">eam.asset.form</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <form string="Tài sản">
+                <header>
+                    <button name="action_lap_dat" type="object"
+                            string="Ghi lần lắp mới" class="btn-primary"
+                            invisible="state == 'scrapped'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,scrapped"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_lich_su" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="install_count" widget="statinfo"
+                                   string="Lần lắp"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="GBX-014"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Hộp số"/>
+                        </h1>
+                    </div>
+                    <div class="alert alert-info" role="status"
+                         invisible="not is_installed">
+                        Đang lắp tại
+                        <field name="current_location_id" readonly="1"
+                               nolabel="1" class="oe_inline"/>.
+                        Muốn đổi chỗ thì ghi một lần lắp mới — không sửa
+                        tay, vì sửa tay là mất lịch sử.
+                    </div>
+                    <group>
+                        <group string="Định danh">
+                            <field name="serial_no"/>
+                            <field name="category_id"/>
+                            <field name="manufacturer_id"/>
+                            <field name="model_ref"/>
+                        </group>
+                        <group string="Tính chất">
+                            <field name="is_rotable"/>
+                            <field name="is_refurbished"/>
+                            <field name="owner_partner_id"/>
+                            <field name="criticality"/>
+                        </group>
+                        <group string="Vị trí">
+                            <field name="is_installed"/>
+                            <field name="current_location_id"/>
+                            <field name="current_installation_id"
+                                   invisible="not is_installed"/>
+                        </group>
+                        <group string="Mốc thời gian">
+                            <field name="date_manufacture"/>
+                            <field name="date_commissioned"/>
+                            <field name="warranty_end"/>
+                            <field name="warranty_state"/>
+                            <field name="warranty_days_left"
+                                   invisible="warranty_state == 'none'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lịch sử lắp đặt" name="ls">
+                            <field name="installation_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="location_id" width="300px"/>
+                                    <field name="date_install"/>
+                                    <field name="date_remove"/>
+                                    <field name="duration_days" string="Số ngày"/>
+                                    <field name="reason_install"/>
+                                    <field name="reason_remove"/>
+                                    <field name="is_current" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Bảo hành" name="bh">
+                            <field name="warranty_note" nolabel="1"
+                                   placeholder="Điều kiện, phạm vi, hạn gửi thông báo theo hợp đồng…"/>
+                        </page>
+                        <page string="Nguồn gốc &amp; ghi chú" name="ng">
+                            <group>
+                                <field name="origin"/>
+                                <field name="company_id"
+                                       groups="base.group_multi_company"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_eam_asset_search" model="ir.ui.view">
+        <field name="name">eam.asset.search</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <search string="Tài sản">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="serial_no"/>
+                <field name="category_id"/>
+                <field name="current_location_id"/>
+                <filter name="f_lap" string="Đang lắp trên máy"
+                        domain="[('is_installed', '=', True)]"/>
+                <filter name="f_kho" string="Không lắp trên máy"
+                        domain="[('is_installed', '=', False)]"/>
+                <filter name="f_rot" string="Vật tư quay vòng"
+                        domain="[('is_rotable', '=', True)]"/>
+                <!-- Lọc theo NGÀY, không theo trạng thái tính sẵn:
+                     warranty_state phụ thuộc hôm nay nên không được lưu,
+                     mà không lưu thì không đưa vào domain được. Lưu nó
+                     lại chính là cái bẫy "đếm ngày đứng im". -->
+                <filter name="f_bh_sap" string="Bảo hành sắp hết (90 ngày)"
+                        domain="[('warranty_end', '&gt;=', context_today().strftime('%Y-%m-%d')), ('warranty_end', '&lt;=', (context_today() + relativedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <filter name="f_bh_het" string="Bảo hành đã hết"
+                        domain="[('warranty_end', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="g_cat" string="Loại cấu phần"
+                        context="{'group_by': 'category_id'}"/>
+                <filter name="g_loc" string="Vị trí đang lắp"
+                        context="{'group_by': 'current_location_id'}"/>
+                <filter name="g_state" string="Vòng đời"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_eam_asset" model="ir.actions.act_window">
+        <field name="name">Tài sản</field>
+        <field name="res_model">eam.asset</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có tài sản nào</p>
+            <p>Tài sản là <b>vật</b>, mang theo lịch sử của chính nó qua mọi
+               lần tháo ra và lắp lại. Vị trí nó đang nằm là thuộc tính tạm
+               thời, suy ra từ lịch sử lắp đặt.</p>
+        </field>
+    </record>
+</odoo>

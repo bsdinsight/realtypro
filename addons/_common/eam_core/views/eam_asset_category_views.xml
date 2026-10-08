@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_asset_category_list" model="ir.ui.view">
+        <field name="name">eam.asset.category.list</field>
+        <field name="model">eam.asset.category</field>
+        <field name="arch" type="xml">
+            <list string="Loại cấu phần" expand="1">
+                <field name="complete_name" string="Loại" width="420px"/>
+                <field name="code" width="120px"/>
+                <field name="level" string="Cấp"/>
+                <field name="alias_names" string="Tên gọi khác"
+                       optional="show"/>
+                <field name="is_rotable_default" string="Quay vòng"/>
+                <field name="is_catch_all" string="Rổ Khác" optional="hide"/>
+                <field name="asset_count" string="Số tài sản"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_eam_asset_category_form" model="ir.ui.view">
+        <field name="name">eam.asset.category.form</field>
+        <field name="model">eam.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="Loại cấu phần">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="complete_name"/>
+                        </group>
+                        <group>
+                            <field name="is_rotable_default"/>
+                            <field name="is_catch_all"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Tên gọi khác">
+                        <field name="alias_names" nolabel="1"
+                               placeholder="Converter, Frequency converter, Bộ biến đổi"/>
+                        <div class="text-muted">
+                            Cùng một cụm mang tên khác nhau tuỳ nguồn. Không
+                            khai thì nhập dữ liệu từ hai OEM sẽ đẻ ra hai
+                            loại trùng nghĩa, và thống kê cộng nhầm.
+                        </div>
+                    </group>
+                    <group string="Ghi chú"><field name="note" nolabel="1"/></group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_eam_asset_category" model="ir.actions.act_window">
+        <field name="name">Loại cấu phần</field>
+        <field name="res_model">eam.asset.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Cây phân loại còn trống</p>
+            <p>Lõi chỉ dựng cây rỗng. Nội dung chuyên ngành — ví dụ 11 phân
+               hệ và 19 cụm của một tua-bin gió — do gói ngành nạp vào.</p>
+        </field>
+    </record>
+</odoo>

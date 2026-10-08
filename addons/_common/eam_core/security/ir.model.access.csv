@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_asset_category_user,eam.asset.category.user,model_eam_asset_category,base.group_user,1,0,0,0
+access_eam_asset_category_mgr,eam.asset.category.mgr,model_eam_asset_category,base.group_system,1,1,1,1
+access_eam_location_user,eam.location.user,model_eam_location,base.group_user,1,1,1,0
+access_eam_location_mgr,eam.location.mgr,model_eam_location,base.group_system,1,1,1,1
+access_eam_asset_user,eam.asset.user,model_eam_asset,base.group_user,1,1,1,0
+access_eam_asset_mgr,eam.asset.mgr,model_eam_asset,base.group_system,1,1,1,1
+access_eam_installation_user,eam.installation.user,model_eam_installation,base.group_user,1,1,1,0
+access_eam_installation_mgr,eam.installation.mgr,model_eam_installation,base.group_system,1,1,1,1

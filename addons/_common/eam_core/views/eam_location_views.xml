@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_location_list" model="ir.ui.view">
+        <field name="name">eam.location.list</field>
+        <field name="model">eam.location</field>
+        <field name="arch" type="xml">
+            <list string="Vị trí chức năng" expand="1">
+                <field name="complete_code" string="Mã đầy đủ" width="220px"/>
+                <field name="name" width="320px"/>
+                <field name="location_type" string="Loại" widget="badge"/>
+                <field name="level" string="Cấp" optional="hide"/>
+                <field name="asset_count" string="Tài sản đang lắp"/>
+                <field name="category_id" string="Nhận loại" optional="show"/>
+                <field name="allow_multiple" string="Nhiều tài sản"
+                       optional="hide"/>
+                <field name="parent_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_eam_location_form" model="ir.ui.view">
+        <field name="name">eam.location.form</field>
+        <field name="model">eam.location</field>
+        <field name="arch" type="xml">
+            <form string="Vị trí chức năng">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_lich_su" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <span class="o_stat_text">Lịch sử lắp đặt</span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="WTG-07"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Vị trí tua-bin 07"/>
+                        </h1>
+                        <h3><field name="complete_code" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="location_type"/>
+                            <field name="parent_id"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="allow_multiple"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status"
+                         invisible="allow_multiple">
+                        Vị trí này chỉ chứa <b>một</b> tài sản tại một thời
+                        điểm. Thay thiết bị thì phải đóng quãng cũ trước khi
+                        mở quãng mới.
+                    </div>
+                    <notebook>
+                        <page string="Lịch sử lắp đặt" name="ls">
+                            <field name="installation_ids" nolabel="1"
+                                   readonly="1">
+                                <list>
+                                    <field name="asset_id" width="320px"/>
+                                    <field name="date_install"/>
+                                    <field name="date_remove"/>
+                                    <field name="duration_days" string="Số ngày"/>
+                                    <field name="reason_install"/>
+                                    <field name="reason_remove"/>
+                                    <field name="is_current" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="gc">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_eam_location_search" model="ir.ui.view">
+        <field name="name">eam.location.search</field>
+        <field name="model">eam.location</field>
+        <field name="arch" type="xml">
+            <search string="Vị trí">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="complete_code"/>
+                <filter name="f_trong" string="Chưa lắp tài sản nào"
+                        domain="[('asset_count', '=', 0), ('location_type', 'in', ('position', 'component'))]"/>
+                <separator/>
+                <filter name="g_type" string="Loại vị trí"
+                        context="{'group_by': 'location_type'}"/>
+                <filter name="g_parent" string="Vị trí cha"
+                        context="{'group_by': 'parent_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_eam_location" model="ir.actions.act_window">
+        <field name="name">Vị trí chức năng</field>
+        <field name="res_model">eam.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có vị trí nào</p>
+            <p>Vị trí là <b>chỗ</b>, không phải <b>vật</b>. Mã vị trí không
+               bao giờ đổi khi thay thiết bị — đó là lý do bảng này tách
+               khỏi bảng tài sản.</p>
+        </field>
+    </record>
+</odoo>

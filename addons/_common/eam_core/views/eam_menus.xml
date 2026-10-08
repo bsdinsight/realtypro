@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_eam_root" name="EAMOne" sequence="46"
+              />
+    <menuitem id="menu_eam_asset_group" name="Tài sản"
+              parent="menu_eam_root" sequence="10"/>
+    <menuitem id="menu_eam_location" name="Vị trí chức năng"
+              parent="menu_eam_asset_group" action="action_eam_location"
+              sequence="10"/>
+    <menuitem id="menu_eam_asset" name="Tài sản"
+              parent="menu_eam_asset_group" action="action_eam_asset"
+              sequence="20"/>
+    <menuitem id="menu_eam_installation" name="Lịch sử lắp đặt"
+              parent="menu_eam_asset_group" action="action_eam_installation"
+              sequence="30"/>
+    <menuitem id="menu_eam_config" name="Cấu hình"
+              parent="menu_eam_root" sequence="90"/>
+    <menuitem id="menu_eam_asset_category" name="Loại cấu phần"
+              parent="menu_eam_config" action="action_eam_asset_category"
+              sequence="10"/>
+</odoo>

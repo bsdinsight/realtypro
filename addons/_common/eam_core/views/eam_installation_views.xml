@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_installation_list" model="ir.ui.view">
+        <field name="name">eam.installation.list</field>
+        <field name="model">eam.installation</field>
+        <field name="arch" type="xml">
+            <list string="Lịch sử lắp đặt" expand="1"
+                  decoration-success="is_current">
+                <field name="asset_id" width="300px"/>
+                <field name="location_id" width="300px"/>
+                <field name="category_id" string="Loại" optional="show"/>
+                <field name="date_install"/>
+                <field name="date_remove"/>
+                <field name="duration_days" string="Số ngày"/>
+                <field name="reason_install"/>
+                <field name="reason_remove"/>
+                <field name="is_current" string="Đang lắp"
+                       widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_eam_installation_form" model="ir.ui.view">
+        <field name="name">eam.installation.form</field>
+        <field name="model">eam.installation</field>
+        <field name="arch" type="xml">
+            <form string="Lần lắp đặt">
+                <header>
+                    <button name="action_thao" type="object"
+                            string="Ghi tháo hôm nay"
+                            invisible="date_remove"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="asset_id"/>
+                            <field name="location_id"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="date_install"/>
+                            <field name="date_remove"/>
+                            <field name="duration_days"/>
+                            <field name="is_current"/>
+                        </group>
+                        <group>
+                            <field name="reason_install"/>
+                            <field name="reason_remove"
+                                   required="date_remove"/>
+                        </group>
+                    </group>
+                    <group string="Ghi chú"><field name="note" nolabel="1"/></group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_eam_installation_search" model="ir.ui.view">
+        <field name="name">eam.installation.search</field>
+        <field name="model">eam.installation</field>
+        <field name="arch" type="xml">
+            <search string="Lịch sử lắp đặt">
+                <field name="asset_id"/>
+                <field name="location_id"/>
+                <filter name="f_now" string="Đang lắp"
+                        domain="[('is_current', '=', True)]"/>
+                <filter name="f_het" string="Đã tháo"
+                        domain="[('is_current', '=', False)]"/>
+                <separator/>
+                <filter name="g_loc" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_cat" string="Loại cấu phần"
+                        context="{'group_by': 'category_id'}"/>
+                <filter name="g_ly" string="Lý do tháo"
+                        context="{'group_by': 'reason_remove'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_eam_installation" model="ir.actions.act_window">
+        <field name="name">Lịch sử lắp đặt</field>
+        <field name="res_model">eam.installation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

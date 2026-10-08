@@ -13,9 +13,17 @@
     <menuitem id="menu_eam_installation" name="Lịch sử lắp đặt"
               parent="menu_eam_asset_group" action="action_eam_installation"
               sequence="30"/>
+    <menuitem id="menu_eam_ops" name="Vận hành"
+              parent="menu_eam_root" sequence="20"/>
+    <menuitem id="menu_eam_outage" name="Sổ dừng máy"
+              parent="menu_eam_ops" action="action_eam_outage"
+              sequence="10"/>
     <menuitem id="menu_eam_config" name="Cấu hình"
               parent="menu_eam_root" sequence="90"/>
     <menuitem id="menu_eam_asset_category" name="Loại cấu phần"
               parent="menu_eam_config" action="action_eam_asset_category"
               sequence="10"/>
+    <menuitem id="menu_eam_time_category" name="Loại thời gian"
+              parent="menu_eam_config" action="action_eam_time_category"
+              sequence="20"/>
 </odoo>

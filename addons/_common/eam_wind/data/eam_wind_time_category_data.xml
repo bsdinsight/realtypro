@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phân loại trạng thái thời gian theo IEC 61400-26-1:2019 (International
+     Standard, Ed.1.0, 29/05/2019 — huỷ và thay cả ba TS 26-1:2011,
+     26-2:2014, 26-3:2016). Nhãn tiếng Việt theo TCVN 10687-26-1:2025,
+     công bố tại Quyết định 3022/QĐ-BKHCN.
+
+     CHỈ ship TÊN ĐIỀU KHOẢN và CẤU TRÚC — là dữ kiện. KHÔNG chép nội
+     dung chuẩn: mua chuẩn là mua giấy phép dùng, không phải quyền phát
+     hành lại.
+
+     ⚠ Hai chỗ còn phải đối chiếu khi có bản đầy đủ:
+     · quan hệ cha-con chính xác của 5.6 Bất khả kháng
+     · danh sách đầy đủ loại TUỲ CHỌN ở phụ lục B
+     Xem EAMOne_Wind_Pack_v1.md mục 10.
+
+     counts_as_downtime KHAI TAY TỪNG LOẠI, không suy từ tên: cắt giảm
+     lưới xếp là ĐANG HOẠT ĐỘNG / phát một phần — KHÔNG phải dừng máy.
+-->
+<odoo>
+  <data noupdate="1">
+
+    <!-- ===== 5.1 THÔNG TIN KHẢ DỤNG ===== -->
+    <record id="tc_info_avail" model="eam.time.category">
+        <field name="code">5.1</field>
+        <field name="name">Thông tin khả dụng</field>
+        <field name="priority">10</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.1</field>
+    </record>
+
+    <!-- 5.2 ĐANG HOẠT ĐỘNG -->
+    <record id="tc_operative" model="eam.time.category">
+        <field name="code">5.2</field>
+        <field name="name">Đang hoạt động</field>
+        <field name="parent_id" ref="tc_info_avail"/>
+        <field name="priority">20</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.2</field>
+    </record>
+
+    <!-- 5.3 ĐANG CUNG CẤP DỊCH VỤ -->
+    <record id="tc_in_service" model="eam.time.category">
+        <field name="code">5.3</field>
+        <field name="name">Đang cung cấp dịch vụ</field>
+        <field name="parent_id" ref="tc_operative"/>
+        <field name="priority">30</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.3</field>
+    </record>
+    <record id="tc_full_perf" model="eam.time.category">
+        <field name="code">5.3.2</field>
+        <field name="name">Phát đầy đủ</field>
+        <field name="parent_id" ref="tc_in_service"/>
+        <field name="priority">90</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.3.2</field>
+    </record>
+    <record id="tc_partial_perf" model="eam.time.category">
+        <field name="code">5.3.3</field>
+        <field name="name">Phát một phần</field>
+        <field name="parent_id" ref="tc_in_service"/>
+        <field name="priority">40</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.3.3</field>
+        <field name="note">Nhánh chứa CẮT GIẢM DO RÀNG BUỘC LƯỚI. Máy vẫn đang hoạt động, chỉ bị giảm tải — không phải thời gian dừng.</field>
+    </record>
+    <record id="tc_curtail_grid" model="eam.time.category">
+        <field name="code">5.3.3-GRID</field>
+        <field name="name">Cắt giảm do ràng buộc lưới</field>
+        <field name="parent_id" ref="tc_partial_perf"/>
+        <field name="priority">35</field>
+        <field name="is_mandatory" eval="False"/>
+        <field name="attributable_to">grid</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 — phụ lục D, "Grid constraint"</field>
+        <field name="note">Ở Việt Nam đây là nguyên nhân mất tiền SỐ MỘT, không phải trường hợp biên: Quảng Trị 2025 bị cắt trung bình 20–90% công suất khả dụng, có lúc 99%. Nghị định 58/2025 cam kết bao tiêu 80% nhưng LOẠI TRỪ phần thiếu do hạn chế kỹ thuật của hệ thống điện — tức cắt giảm KHÔNG được bồi thường. Không có dữ liệu cắt giảm công khai, nên sổ của chủ đầu tư là sổ sách duy nhất để đối chiếu lệnh điều độ.</field>
+    </record>
+    <record id="tc_ready_standby" model="eam.time.category">
+        <field name="code">5.3.4</field>
+        <field name="name">Sẵn sàng chờ</field>
+        <field name="parent_id" ref="tc_in_service"/>
+        <field name="priority">85</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.3.4</field>
+    </record>
+
+    <!-- 5.4 KHÔNG CUNG CẤP DỊCH VỤ -->
+    <record id="tc_out_service" model="eam.time.category">
+        <field name="code">5.4</field>
+        <field name="name">Không cung cấp dịch vụ</field>
+        <field name="parent_id" ref="tc_operative"/>
+        <field name="priority">50</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.4</field>
+    </record>
+    <record id="tc_tech_standby" model="eam.time.category">
+        <field name="code">5.4.2</field>
+        <field name="name">Chờ kỹ thuật</field>
+        <field name="parent_id" ref="tc_out_service"/>
+        <field name="priority">51</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="attributable_to">operator</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.4.2</field>
+    </record>
+    <record id="tc_out_env" model="eam.time.category">
+        <field name="code">5.4.3</field>
+        <field name="name">Ngoài dải môi trường</field>
+        <field name="parent_id" ref="tc_out_service"/>
+        <field name="priority">52</field>
+        <field name="attributable_to">environment</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.4.3</field>
+        <field name="note">Gió lặng, gió quá lớn, nhiệt độ ngoài dải. KHÔNG tính là dừng máy — máy không có lỗi gì, điều kiện không cho phát.</field>
+    </record>
+    <record id="tc_req_shutdown" model="eam.time.category">
+        <field name="code">5.4.4</field>
+        <field name="name">Dừng theo yêu cầu</field>
+        <field name="parent_id" ref="tc_out_service"/>
+        <field name="priority">53</field>
+        <field name="attributable_to">grid</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.4.4</field>
+    </record>
+    <record id="tc_out_elec" model="eam.time.category">
+        <field name="code">5.4.5</field>
+        <field name="name">Ngoài dải điện</field>
+        <field name="parent_id" ref="tc_out_service"/>
+        <field name="priority">54</field>
+        <field name="attributable_to">grid</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.4.5</field>
+        <field name="note">Sự cố điện áp lưới. Khác hẳn cắt giảm: đây là lưới HỎNG, không phải lưới ra lệnh giảm.</field>
+    </record>
+
+    <!-- 5.5 KHÔNG HOẠT ĐỘNG — nhánh tính là dừng máy -->
+    <record id="tc_non_operative" model="eam.time.category">
+        <field name="code">5.5</field>
+        <field name="name">Không hoạt động</field>
+        <field name="parent_id" ref="tc_info_avail"/>
+        <field name="priority">60</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.5</field>
+    </record>
+    <record id="tc_sched_maint" model="eam.time.category">
+        <field name="code">5.5.2</field>
+        <field name="name">Bảo trì theo kế hoạch</field>
+        <field name="parent_id" ref="tc_non_operative"/>
+        <field name="priority">61</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="attributable_to">operator</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.5.2</field>
+        <field name="note">Bảo trì NẰM TRONG định mức thời gian của hợp đồng. Vượt định mức, hoặc do OEM tự quyết, thì xếp sang Can thiệp sửa chữa có kế hoạch.</field>
+    </record>
+    <record id="tc_planned_corr" model="eam.time.category">
+        <field name="code">5.5.3</field>
+        <field name="name">Can thiệp sửa chữa có kế hoạch</field>
+        <field name="parent_id" ref="tc_non_operative"/>
+        <field name="priority">62</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="attributable_to">oem</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.5</field>
+    </record>
+    <record id="tc_forced_outage" model="eam.time.category">
+        <field name="code">5.5.4</field>
+        <field name="name">Dừng sự cố</field>
+        <field name="parent_id" ref="tc_non_operative"/>
+        <field name="priority">15</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="attributable_to">oem</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.5</field>
+        <field name="note">Ưu tiên cao: máy hỏng mà đồng thời bị cắt giảm thì giờ đó là giờ HỎNG, không phải giờ cắt giảm — nếu không, lỗi thiết bị sẽ trốn sau lệnh điều độ.</field>
+    </record>
+    <record id="tc_fo_response" model="eam.time.category">
+        <field name="code">5.5.4-RSP</field>
+        <field name="name">Dừng sự cố — chờ phản hồi</field>
+        <field name="parent_id" ref="tc_forced_outage"/>
+        <field name="priority">16</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="is_mandatory" eval="False"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 phụ lục B (tuỳ chọn)</field>
+    </record>
+    <record id="tc_fo_diagnostic" model="eam.time.category">
+        <field name="code">5.5.4-DIA</field>
+        <field name="name">Dừng sự cố — chẩn đoán</field>
+        <field name="parent_id" ref="tc_forced_outage"/>
+        <field name="priority">17</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="is_mandatory" eval="False"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 phụ lục B (tuỳ chọn)</field>
+    </record>
+    <record id="tc_fo_logistic" model="eam.time.category">
+        <field name="code">5.5.4-LOG</field>
+        <field name="name">Dừng sự cố — chờ vật tư, thiết bị</field>
+        <field name="parent_id" ref="tc_forced_outage"/>
+        <field name="priority">18</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="is_mandatory" eval="False"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 phụ lục B (tuỳ chọn)</field>
+        <field name="note">Chờ cần cẩu thường nằm ở đây, và nó mới là nút thắt thật: cẩu lớn giao hàng một tháng trở lên, thuê 150.000–400.000 USD.</field>
+    </record>
+    <record id="tc_fo_repair" model="eam.time.category">
+        <field name="code">5.5.4-REP</field>
+        <field name="name">Dừng sự cố — đang sửa</field>
+        <field name="parent_id" ref="tc_forced_outage"/>
+        <field name="priority">19</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="is_mandatory" eval="False"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 phụ lục B (tuỳ chọn)</field>
+    </record>
+    <record id="tc_suspended" model="eam.time.category">
+        <field name="code">5.5.5</field>
+        <field name="name">Tạm ngừng</field>
+        <field name="parent_id" ref="tc_non_operative"/>
+        <field name="priority">63</field>
+        <field name="counts_as_downtime" eval="True"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.5</field>
+    </record>
+
+    <!-- ===== 5.6 BẤT KHẢ KHÁNG ===== -->
+    <record id="tc_force_majeure" model="eam.time.category">
+        <field name="code">5.6</field>
+        <field name="name">Trường hợp bất khả kháng</field>
+        <field name="priority">5</field>
+        <field name="attributable_to">force_majeure</field>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.6</field>
+        <field name="note">Ưu tiên cao nhất — bất khả kháng phủ lên mọi loại khác. ⚠ Quan hệ cha-con chính xác của điều 5.6 còn phải đối chiếu trên bản chuẩn đầy đủ: mục lục cho thấy nó đứng riêng, nhưng phần thẩm định có phản bác điểm này.</field>
+    </record>
+
+    <!-- ===== 5.7 THÔNG TIN KHÔNG KHẢ DỤNG ===== -->
+    <record id="tc_info_unavail" model="eam.time.category">
+        <field name="code">5.7</field>
+        <field name="name">Thông tin không khả dụng</field>
+        <field name="priority">95</field>
+        <field name="is_data_gap" eval="True"/>
+        <field name="standard_ref">IEC 61400-26-1:2019 §5.7</field>
+        <field name="note">Mất kết nối giám sát. Đây là MỘT LOẠI THỜI GIAN, không phải lỗi dữ liệu — phải hạch toán, không được bỏ qua và tuyệt đối không được mặc định là máy chạy tốt. Khoảng mất dữ liệu mà báo 100% sẵn sàng là lỗi nguy hiểm nhất của một sổ khả dụng.</field>
+    </record>
+
+  </data>
+</odoo>

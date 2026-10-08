@@ -49,6 +49,7 @@ DFIG, ngược hẳn giả định phổ biến rằng hộp số thống trị.
     'data': [
         'views/eam_wind_category_views.xml',
         'data/eam_wind_category_data.xml',
+        'data/eam_wind_time_category_data.xml',
     ],
     'installable': True,
 }

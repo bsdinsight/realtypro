@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_eam_outage" model="ir.sequence">
+        <field name="name">Khoảng dừng máy</field>
+        <field name="code">eam.outage</field>
+        <field name="prefix">OUT/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

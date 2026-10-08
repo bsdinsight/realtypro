@@ -7,3 +7,7 @@ access_eam_asset_user,eam.asset.user,model_eam_asset,base.group_user,1,1,1,0
 access_eam_asset_mgr,eam.asset.mgr,model_eam_asset,base.group_system,1,1,1,1
 access_eam_installation_user,eam.installation.user,model_eam_installation,base.group_user,1,1,1,0
 access_eam_installation_mgr,eam.installation.mgr,model_eam_installation,base.group_system,1,1,1,1
+access_eam_time_category_user,eam.time.category.user,model_eam_time_category,base.group_user,1,1,1,0
+access_eam_time_category_mgr,eam.time.category.mgr,model_eam_time_category,base.group_system,1,1,1,1
+access_eam_outage_user,eam.outage.user,model_eam_outage,base.group_user,1,1,1,0
+access_eam_outage_mgr,eam.outage.mgr,model_eam_outage,base.group_system,1,1,1,1

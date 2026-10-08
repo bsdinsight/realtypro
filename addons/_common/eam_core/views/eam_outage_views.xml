@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_outage_list" model="ir.ui.view">
+        <field name="name">eam.outage.list</field>
+        <field name="model">eam.outage</field>
+        <field name="arch" type="xml">
+            <list string="Sổ dừng máy" expand="1"
+                  decoration-info="is_open"
+                  decoration-warning="has_overlap"
+                  decoration-muted="is_root_cause">
+                <field name="name" width="140px"/>
+                <field name="location_id" string="Vị trí" width="230px"/>
+                <field name="category_id" string="Loại thời gian"
+                       width="260px"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="duration_hours" string="Số giờ" sum="Tổng giờ"/>
+                <field name="counts_as_downtime" string="Tính là dừng"/>
+                <field name="liability" string="Quy cho" widget="badge"
+                       decoration-danger="liability == 'undetermined'"
+                       decoration-success="liability in ('warranty', 'om_contract')"/>
+                <field name="lost_mwh" string="MWh mất" sum="Σ MWh"
+                       optional="show"/>
+                <field name="lost_revenue" string="Doanh thu mất"
+                       widget="monetary" width="190px" sum="Σ tổn thất"
+                       optional="show"/>
+                <field name="child_count" string="Máy kéo theo"
+                       optional="show"/>
+                <field name="has_overlap" string="Chồng" optional="show"/>
+                <field name="source" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'confirmed'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="is_open" column_invisible="1"/>
+                <field name="is_root_cause" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_form" model="ir.ui.view">
+        <field name="name">eam.outage.form</field>
+        <field name="model">eam.outage</field>
+        <field name="arch" type="xml">
+            <form string="Khoảng dừng máy">
+                <header>
+                    <button name="action_dong" type="object"
+                            string="Đóng khoảng" invisible="not is_open"/>
+                    <button name="action_xac_nhan" type="object"
+                            string="Xác nhận" class="btn-primary"
+                            invisible="state == 'confirmed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_chong" type="object"
+                                class="oe_stat_button" icon="fa-clone"
+                                invisible="not has_overlap">
+                            <span class="o_stat_text">Khoảng chồng</span>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name"
+                        readonly="1"/></h1></div>
+                    <div class="alert alert-warning" role="status"
+                         invisible="not has_overlap">
+                        Cùng vị trí, cùng lúc, có khoảng dừng loại khác.
+                        <b>Không phải lỗi</b> — một máy có thể vừa hỏng vừa
+                        bị cắt giảm. Nhưng phải có người phân xử giờ đó
+                        tính vào loại nào, không để máy tự chọn.
+                    </div>
+                    <div class="alert alert-info" role="status"
+                         invisible="not is_root_cause">
+                        Đây là <b>sự cố gốc</b>, có
+                        <field name="child_count" readonly="1" nolabel="1"
+                               class="oe_inline"/> máy dừng theo. Báo cáo
+                        giờ-máy phải loại dòng này ra để khỏi đếm đúp.
+                    </div>
+                    <group>
+                        <group string="Ở đâu">
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="parent_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Khi nào">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="duration_hours"/>
+                            <field name="is_open"/>
+                        </group>
+                        <group string="Loại gì">
+                            <field name="category_id"
+                                   options="{'no_create': True}"/>
+                            <field name="counts_as_downtime"/>
+                            <field name="has_overlap"/>
+                        </group>
+                        <group string="Mất bao nhiêu, đòi ai">
+                            <field name="liability"/>
+                            <field name="lost_mwh"/>
+                            <field name="lost_revenue"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Máy dừng theo" name="con"
+                              invisible="not child_count">
+                            <field name="child_ids" nolabel="1" readonly="1">
+                                <list>
+                                    <field name="location_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="duration_hours" sum="Tổng giờ"/>
+                                    <field name="lost_mwh" sum="Σ MWh"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Diễn giải" name="dg">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                        <page string="Nguồn" name="ng">
+                            <group>
+                                <field name="source"/>
+                                <field name="source_ref"/>
+                                <field name="company_id"
+                                       groups="base.group_multi_company"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_search" model="ir.ui.view">
+        <field name="name">eam.outage.search</field>
+        <field name="model">eam.outage</field>
+        <field name="arch" type="xml">
+            <search string="Sổ dừng máy">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="category_id"/>
+                <filter name="f_open" string="Đang dừng"
+                        domain="[('is_open', '=', True)]"/>
+                <filter name="f_dt" string="Tính là thời gian dừng"
+                        domain="[('counts_as_downtime', '=', True)]"/>
+                <filter name="f_nodt" string="Không tính là dừng (cắt giảm, gió lặng…)"
+                        domain="[('counts_as_downtime', '=', False)]"/>
+                <separator/>
+                <filter name="f_chuaquy" string="Chưa quy trách nhiệm"
+                        domain="[('liability', '=', 'undetermined')]"/>
+                <filter name="f_chong" string="Chồng khoảng, cần phân xử"
+                        domain="[('has_overlap', '=', True)]"/>
+                <filter name="f_la" string="Chỉ khoảng con (không đếm đúp)"
+                        domain="[('is_root_cause', '=', False)]"/>
+                <separator/>
+                <filter name="g_cat" string="Loại thời gian"
+                        context="{'group_by': 'category_id'}"/>
+                <filter name="g_li" string="Quy trách nhiệm"
+                        context="{'group_by': 'liability'}"/>
+                <filter name="g_loc" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_thang" string="Tháng bắt đầu"
+                        context="{'group_by': 'date_start:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_outage" model="ir.actions.act_window">
+        <field name="name">Sổ dừng máy</field>
+        <field name="res_model">eam.outage</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_la': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Sổ còn trống</p>
+            <p>Mỗi khoảng dừng là một quãng thời gian một vị trí ở một
+               trạng thái. Ô <b>Quy trách nhiệm</b> là ô làm ra tiền:
+               không có nó thì mỗi lần dừng chỉ là một dòng nhật ký.</p>
+        </field>
+    </record>
+</odoo>

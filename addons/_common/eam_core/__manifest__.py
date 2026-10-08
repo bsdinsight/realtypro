@@ -41,10 +41,13 @@ một vị trí, hoặc một con "đang nằm" ở hai nơi.
     'depends': ['base', 'mail'],
     'data': [
         'security/ir.model.access.csv',
+        'data/eam_sequence_data.xml',
         'views/eam_asset_category_views.xml',
         'views/eam_location_views.xml',
         'views/eam_asset_views.xml',
         'views/eam_installation_views.xml',
+        'views/eam_time_category_views.xml',
+        'views/eam_outage_views.xml',
         'views/eam_menus.xml',
     ],
     'application': True,

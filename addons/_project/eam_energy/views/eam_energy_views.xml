@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_energy_period_list_eam" model="ir.ui.view">
+        <field name="name">rp.energy.period.list.eam</field>
+        <field name="model">rp.energy.period</field>
+        <field name="inherit_id" ref="rp_ppa.view_rp_energy_period_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shortfall_mwh']" position="after">
+                <!-- Mẫu số thật, đặt NGAY SAU "hụt do khả dụng" để hai con
+                     số nằm cạnh nhau: người đọc phải thấy được khoảng cách
+                     giữa "mất bao nhiêu" và "đòi được bao nhiêu". -->
+                <field name="unavail_mwh" string="Mất do không khả dụng"
+                       sum="Σ" optional="show"/>
+                <field name="outage_lost_mwh" string="Giải thích được"
+                       sum="Σ" optional="show"/>
+                <field name="outage_unexplained_mwh" string="Chưa giải thích"
+                       sum="Σ" optional="show"
+                       decoration-danger="outage_unexplained_mwh &gt; 0"/>
+                <field name="outage_coverage_percent" string="Bao phủ %"
+                       optional="show"
+                       decoration-danger="outage_coverage_percent &lt; 80"
+                       decoration-success="outage_coverage_percent >= 95"/>
+                <field name="outage_count" string="Khoảng dừng"
+                       optional="hide"/>
+                <field name="outage_lost_revenue" string="Doanh thu tổn thất"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="hide"/>
+                <field name="revenue_claimable" string="Tổn thất đòi được"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="show"/>
+                <field name="outage_warning_count" string="Nghi lỗi dữ liệu"
+                       optional="hide"
+                       decoration-warning="outage_warning_count &gt; 0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_energy_period_form_eam" model="ir.ui.view">
+        <field name="name">rp.energy.period.form.eam</field>
+        <field name="model">rp.energy.period</field>
+        <field name="inherit_id" ref="rp_ppa.view_rp_energy_period_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shortfall_mwh']" position="after">
+                <field name="unavail_mwh"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Sản lượng mất — giải thích và quy trách nhiệm"
+                       name="gr_eam">
+                    <!-- unavail_mwh và curtailed_mwh đã nằm ở khối trên;
+                         khai lại trong cùng một form sẽ có hai ô cùng tên,
+                         và các modifier bắt đầu đánh nhau. -->
+                    <group string="Đối chiếu sổ dừng máy">
+                        <field name="outage_lost_mwh"/>
+                        <field name="outage_unexplained_mwh"/>
+                        <field name="outage_coverage_percent"
+                               widget="percentage_pie"/>
+                        <field name="outage_count"/>
+                        <field name="outage_warning_count"
+                               invisible="not outage_warning_count"/>
+                        <field name="outage_deemed_mwh"/>
+                    </group>
+                    <group string="Theo trách nhiệm (MWh)">
+                        <field name="mwh_warranty"/>
+                        <field name="mwh_om"/>
+                        <field name="mwh_owner"/>
+                        <field name="mwh_force_majeure"/>
+                        <field name="mwh_grid"/>
+                    </group>
+                    <group string="Tiền">
+                        <field name="outage_lost_revenue"/>
+                        <field name="revenue_economic_loss"/>
+                        <field name="revenue_claim_cap"/>
+                        <field name="revenue_claimable"
+                               class="fw-bolder"/>
+                        <button name="action_mo_khoang_dung" type="object"
+                                string="Xem từng khoảng dừng"
+                                class="btn-link"/>
+                    </group>
+                    <div class="text-muted" colspan="2">
+                        <b>Đối chiếu theo "Mất do không khả dụng", đòi tiền
+                        theo "Hụt do khả dụng".</b> Hai con số lệch nhau rất
+                        xa: cam kết khả dụng 98% nghĩa là 2% dừng máy được
+                        phép xảy ra — mất sản lượng mà không ai phải trả.<br/>
+                        <b>Độ bao phủ dưới 100% nghĩa là có sản lượng mất mà
+                        không ai biết vì sao.</b> Nhìn con số này trước khi
+                        tin bất kỳ báo cáo khả dụng nào, kể cả của chính
+                        mình.<br/>
+                        <b>Tổn thất đòi được vẫn là số để đàm phán.</b> Chế
+                        tài hợp đồng O&amp;M có công thức phạt khả dụng
+                        riêng, có trần trách nhiệm theo năm, và thường loại
+                        trừ giờ do lưới hoặc bất khả kháng khỏi mẫu số khả
+                        dụng.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_list_energy" model="ir.ui.view">
+        <field name="name">eam.outage.list.energy</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lost_mwh']" position="before">
+                <field name="period_id" string="Kỳ" width="170px"
+                       optional="show"/>
+                <field name="tariff_applied" string="Giá áp dụng"
+                       optional="hide"/>
+                <field name="spans_period" string="Vắt qua kỳ"
+                       optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='lost_mwh']" position="after">
+                <field name="energy_treatment" string="Cách tính tiền"
+                       optional="show"/>
+                <field name="energy_value" string="Giá trị mất"
+                       widget="monetary" width="185px" sum="Σ"
+                       optional="hide"/>
+                <field name="revenue_deemed" string="Được đền"
+                       widget="monetary" width="185px" sum="Σ"
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_form_energy" model="ir.ui.view">
+        <field name="name">eam.outage.form.energy</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lost_mwh']" position="before">
+                <field name="period_id"/>
+                <field name="tariff_applied"/>
+                <field name="spans_period"/>
+            </xpath>
+            <xpath expr="//field[@name='lost_revenue']" position="before">
+                <field name="energy_treatment"/>
+                <field name="energy_value"/>
+                <field name="revenue_deemed"
+                       invisible="energy_treatment != 'deemed'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_time_category_form_energy" model="ir.ui.view">
+        <field name="name">eam.time.category.form.energy</field>
+        <field name="model">eam.time.category</field>
+        <field name="inherit_id" ref="eam_core.view_eam_time_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='counts_as_downtime']"
+                   position="after">
+                <field name="energy_treatment"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -130,6 +130,10 @@ class ReLoanAdjustmentNote(models.Model):
                 'date_from': line.date_from,
                 'date_to': line.date_to,
                 'principal_base': 0,
+                # Dòng điều chỉnh KHÔNG mang tiền gốc: nó chỉ truy thu
+                # / truy hoàn lãi của kỳ đã có (việc 1436). Khai thẳng
+                # 0 ở đây, dù compute cũng đã chặn theo line_type.
+                'principal_due': 0,
                 'interest_rate': 0,
                 'is_overridden': True,
                 'interest_amount_manual': sign * rec.amount,

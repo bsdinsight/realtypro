@@ -394,15 +394,26 @@ class ReLoanNoteInterestLine(models.Model):
                 line.interest_amount_manual = line.interest_amount
 
     @api.depends('note_id.repayment_plan', 'note_id.amount',
-                 'note_id.tenor_months', 'period_no')
+                 'note_id.tenor_months', 'period_no', 'line_type')
     def _compute_principal_due(self):
         """Tiền gốc phải trả theo Kế hoạch trả gốc của KW.
 
         bullet:          period_no < n → 0; period_no == n → full amount
         equal_principal: amount / n cho mọi kỳ
         custom:          0 mặc định, user nhập tay (readonly=False)
+
+        Dòng ĐIỀU CHỈNH luôn 0 (việc 1436): nó là khoản truy thu/truy
+        hoàn LÃI của Thông báo Nợ/Có, mang cùng số kỳ với kỳ gốc chứ
+        không phải một kỳ trả nợ mới. Không chặn ở đây thì công thức
+        theo `period_no` gán cho nó nguyên tiền gốc của kỳ đó — lịch
+        hoá ra đòi gốc hai lần, và phép kiểm "tổng gốc ≤ số tiền khế
+        ước" chặn ngay lúc bấm Áp dụng. Ô phí đã loại dòng điều chỉnh
+        từ trước, ô gốc thì bị sót.
         """
         for line in self:
+            if line.line_type != 'period':
+                line.principal_due = 0.0
+                continue
             note = line.note_id
             n = note.tenor_months or 0
             plan = note.repayment_plan

@@ -28,13 +28,22 @@ class RpContractGuarantee(models.Model):
     name = fields.Char(
         string='Số chứng thư / bảo lãnh', required=True, tracking=True,
         help='Số thư bảo lãnh / chứng thư do bên phát hành cấp.')
+    # "Bảo hành" đứng một mình trên cột danh sách đọc ra là NGHĨA VỤ
+    # BẢO HÀNH THIẾT BỊ — một thứ hoàn toàn khác. Ở đây nó là CHỨNG THƯ
+    # TIỀN do ngân hàng phát hành để bảo đảm cho nghĩa vụ đó. Hai khái
+    # niệm trùng tên tiếng Việt, và lẫn chúng thì sổ đòi bảo hành sẽ bị
+    # dựng nhầm lên bảng bảo lãnh. Ghi đủ chữ để không ai đọc nhầm.
     guarantee_type = fields.Selection(
-        [('performance', 'Thực hiện hợp đồng'),
-         ('advance',     'Hoàn tạm ứng'),
-         ('warranty',    'Bảo hành'),
-         ('bid',         'Dự thầu')],
+        [('performance', 'Bảo lãnh thực hiện hợp đồng'),
+         ('advance',     'Bảo lãnh hoàn tạm ứng'),
+         ('warranty',    'Bảo lãnh bảo hành'),
+         ('bid',         'Bảo lãnh dự thầu')],
         string='Loại bảo lãnh', required=True, default='performance',
-        tracking=True)
+        tracking=True,
+        help='Đây là CHỨNG THƯ TIỀN của ngân hàng, không phải nghĩa vụ '
+             'bảo hành thiết bị. Nghĩa vụ bảo hành thiết bị — lỗi gì, '
+             'thiết bị nào, còn hạn không, hạn thông báo bao giờ — nằm ở '
+             'sổ tài sản, không nằm ở đây.')
     security_form = fields.Selection(
         [('bank_guarantee', 'Thư bảo lãnh ngân hàng'),
          ('insurance',      'Bảo hiểm bảo lãnh'),

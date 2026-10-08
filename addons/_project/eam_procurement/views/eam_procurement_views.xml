@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_purchase_request_form_eam" model="ir.ui.view">
+        <field name="name">rp.purchase.request.form.eam</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="inherit_id"
+               ref="rp_purchase.view_rp_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department']" position="after">
+                <field name="is_spare"/>
+                <field name="eam_asset_id"
+                       invisible="not is_spare"
+                       options="{'no_create': True}"/>
+                <field name="eam_category_id"
+                       invisible="not is_spare"
+                       required="is_spare and not eam_asset_id"
+                       options="{'no_create': True}"/>
+                <field name="eam_location_id" invisible="not eam_asset_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_purchase_request_list_eam" model="ir.ui.view">
+        <field name="name">rp.purchase.request.list.eam</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="inherit_id"
+               ref="rp_purchase.view_rp_purchase_request_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department']" position="after">
+                <field name="is_spare" string="Phụ tùng" optional="show"/>
+                <field name="eam_asset_id" string="Cho tài sản"
+                       width="240px" optional="show"/>
+                <field name="eam_category_id" string="Loại cấu phần"
+                       width="220px" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_purchase_request_search_eam" model="ir.ui.view">
+        <field name="name">rp.purchase.request.search.eam</field>
+        <field name="model">rp.purchase.request</field>
+        <field name="inherit_id"
+               ref="rp_purchase.view_rp_purchase_request_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="f_spare" string="Mua phụ tùng bảo trì"
+                        domain="[('is_spare', '=', True)]"/>
+                <filter name="f_capex" string="Mua sắm thi công"
+                        domain="[('is_spare', '=', False)]"/>
+                <separator/>
+                <filter name="g_eam_cat" string="Loại cấu phần"
+                        context="{'group_by': 'eam_category_id'}"/>
+                <filter name="g_eam_loc" string="Vị trí"
+                        context="{'group_by': 'eam_location_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_template_form_eam" model="ir.ui.view">
+        <field name="name">product.template.form.eam</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="eam_category_id" options="{'no_create': True}"/>
+                <field name="eam_is_rotable" invisible="not eam_category_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_doc_folder" model="ir.ui.view">
+        <field name="name">re.project.form.doc.folder</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_mo_thu_muc" type="object"
+                        class="oe_stat_button" icon="fa-folder-open-o">
+                    <field name="doc_folder_count" widget="statinfo"
+                           string="Thư mục"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Hồ sơ dự án" name="doc_folder">
+                    <group>
+                        <field name="doc_folder_count"/>
+                        <field name="doc_file_count"/>
+                        <field name="doc_missing_count"
+                               string="Thư mục bắt buộc còn rỗng"/>
+                    </group>
+                    <group>
+                        <button name="action_tao_thu_muc" type="object"
+                                string="Dựng bộ thư mục chuẩn"
+                                class="btn-primary"/>
+                        <div class="text-muted">
+                            Chạy lại bao nhiêu lần cũng được — thư mục đã
+                            có thì bỏ qua, chỉ thêm cái còn thiếu.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

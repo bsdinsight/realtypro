@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_doc_folder_list" model="ir.ui.view">
+        <field name="name">rp.doc.folder.list</field>
+        <field name="model">rp.doc.folder</field>
+        <field name="arch" type="xml">
+            <list string="Thư mục hồ sơ" expand="1" sample="1"
+                  decoration-danger="is_empty_required"
+                  decoration-muted="tool_model_id">
+                <field name="project_id" optional="hide"/>
+                <field name="code" width="90px"/>
+                <field name="name" width="420px"/>
+                <!-- Thư mục có sổ thì file nằm ở sổ. Hiện tên sổ ra để
+                     không ai thả file rời vào đây rồi mất dấu. -->
+                <field name="tool_name" string="Sổ phụ trách"
+                       width="230px"/>
+                <field name="file_count" string="Tệp"/>
+                <field name="file_count_total" string="Tệp (cả con)"
+                       optional="hide"/>
+                <field name="is_required" string="Bắt buộc"
+                       optional="show"/>
+                <field name="is_empty_required" string="Bắt buộc còn rỗng"
+                       optional="show"/>
+                <field name="full_path" optional="hide"/>
+                <field name="sp_url" widget="url" string="SharePoint"
+                       optional="hide"/>
+                <field name="tool_model_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_doc_folder_form" model="ir.ui.view">
+        <field name="name">rp.doc.folder.form</field>
+        <field name="model">rp.doc.folder</field>
+        <field name="arch" type="xml">
+            <form string="Thư mục hồ sơ">
+                <sheet>
+                    <div class="alert alert-info" role="status"
+                         invisible="not tool_model_id">
+                        Hồ sơ loại này do một sổ riêng quản lý
+                        (<field name="tool_name" readonly="1" nolabel="1"
+                                class="oe_inline"/>).
+                        Thư mục chỉ là bãi đáp tệp — đừng thả hồ sơ rời
+                        vào đây, nếu không sẽ có hai nguồn sự thật.
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="04.3"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Tên thư mục"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="parent_id"/>
+                            <field name="full_path"/>
+                            <field name="tool_model_id"/>
+                        </group>
+                        <group>
+                            <field name="is_required"/>
+                            <field name="file_count"/>
+                            <field name="file_count_total"/>
+                            <field name="sp_url" widget="url"/>
+                            <field name="sp_synced_on"/>
+                        </group>
+                    </group>
+                    <group string="Đưa gì vào đây">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                    <group string="Tệp">
+                        <field name="attachment_ids" nolabel="1"
+                               widget="many2many_binary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_doc_folder_search" model="ir.ui.view">
+        <field name="name">rp.doc.folder.search</field>
+        <field name="model">rp.doc.folder</field>
+        <field name="arch" type="xml">
+            <search string="Thư mục hồ sơ">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="project_id"/>
+                <filter name="f_thieu" string="Bắt buộc nhưng còn rỗng"
+                        domain="[('is_empty_required', '=', True)]"/>
+                <filter name="f_co_so" string="Có sổ phụ trách"
+                        domain="[('tool_model_id', '!=', False)]"/>
+                <filter name="f_co_tep" string="Đã có tệp"
+                        domain="[('file_count', '>', 0)]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_parent" string="Nhánh"
+                        context="{'group_by': 'parent_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_doc_folder" model="ir.actions.act_window">
+        <field name="name">Thư mục hồ sơ dự án</field>
+        <field name="res_model">rp.doc.folder</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa dựng thư mục</p>
+            <p>Mở dự án và bấm "Dựng bộ thư mục chuẩn". Cây thư mục không
+               chỉ để lưu file — nó là danh mục những hồ sơ dự án phải
+               có, nên ô nào còn rỗng là một việc chưa xong.</p>
+        </field>
+    </record>
+
+    <record id="view_rp_doc_folder_template_form" model="ir.ui.view">
+        <field name="name">rp.doc.folder.template.form</field>
+        <field name="model">rp.doc.folder.template</field>
+        <field name="arch" type="xml">
+            <form string="Bộ thư mục chuẩn">
+                <header>
+                    <button name="action_ap_vao_du_an" type="object"
+                            string="Áp vào các dự án đã dựng"
+                            class="btn-primary"
+                            help="Thêm thư mục còn thiếu và đồng bộ lại tên, sổ phụ trách, dấu bắt buộc. Không xoá thư mục nào, không đụng vào tệp."/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="line_count"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group string="Phạm vi áp dụng">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code" width="90px"/>
+                            <field name="name" width="400px"/>
+                            <field name="parent_id"/>
+                            <field name="tool_model_id"/>
+                            <field name="is_required"/>
+                            <field name="note" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_doc_folder_template_list" model="ir.ui.view">
+        <field name="name">rp.doc.folder.template.list</field>
+        <field name="model">rp.doc.folder.template</field>
+        <field name="arch" type="xml">
+            <list string="Bộ thư mục chuẩn">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="line_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_rp_doc_folder_template"
+            model="ir.actions.act_window">
+        <field name="name">Bộ thư mục chuẩn</field>
+        <field name="res_model">rp.doc.folder.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_doc_folder"
+              name="Thư mục hồ sơ dự án"
+              parent="rp_estimate.menu_project_master"
+              action="action_rp_doc_folder"
+              sequence="60"/>
+
+    <menuitem id="menu_doc_folder_template"
+              name="Bộ thư mục chuẩn"
+              parent="rp_estimate.menu_rp_configuration"
+              action="action_rp_doc_folder_template"
+              sequence="60"/>
+
+</odoo>

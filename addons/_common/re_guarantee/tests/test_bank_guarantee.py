@@ -465,3 +465,148 @@ class TestGuaranteeRequestDates(TransactionCase):
         req = self._request(date_expected_issue='2026-01-20')
         with self.assertRaises(ValidationError):
             req.date_expected_issue = '2025-12-31'
+
+
+@tagged('post_install', '-at_install', 're_guarantee')
+class TestGuaranteeExpiryReminder(TransactionCase):
+    """Việc 1452 — thư nhắc bảo lãnh sắp hết hạn.
+
+    Hai thứ được khoá ở đây: mẫu thư phải gửi tới ĐÚNG người phụ
+    trách, và khi không gửi được thì phải NÓI RA lý do thay vì im
+    lặng bỏ qua bản ghi.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bank = cls.env['res.partner'].create({
+            'name': 'NH 1452', 'is_company': True, 'is_bank': True})
+        cls.applicant = cls.env['res.partner'].create({
+            'name': 'Bên xin BL 1452', 'is_company': True})
+        cls.beneficiary = cls.env['res.partner'].create({
+            'name': 'Người thụ hưởng 1452', 'is_company': True})
+        cls.pic = cls.env['res.users'].create({
+            'name': 'PIC có email', 'login': 'pic1452@example.com',
+            'email': 'pic1452@example.com'})
+        cls.pic_no_mail = cls.env['res.users'].create({
+            'name': 'PIC chưa có email', 'login': 'pic1452b'})
+        cls.pic_no_mail.partner_id.email = False
+
+    def _cert(self, **vals):
+        base = {
+            'guarantee_type': 'performance',
+            'issuing_bank_partner_id': self.bank.id,
+            'applicant_partner_id': self.applicant.id,
+            'beneficiary_partner_id': self.beneficiary.id,
+            'date_issue': date.today().strftime('%Y-%m-%d'),
+            'date_expiry': (date.today()
+                            + timedelta(days=10)).strftime('%Y-%m-%d'),
+            'amount': 1_000_000_000.0,
+            'state': 'issued',
+        }
+        base.update(vals)
+        return self.env['re.bank.guarantee'].create(base)
+
+    def _mails_to(self, email):
+        return self.env['mail.mail'].search(
+            [('email_to', 'like', email)])
+
+    # ----- Mẫu thư ------------------------------------------------------
+    def test_template_keeps_its_own_recipient(self):
+        """Odoo 19 bật "người nhận mặc định" thì ô To bị bỏ qua và thư
+        đi không có địa chỉ nhận — mẫu phải tắt cờ đó."""
+        template = self.env.ref(
+            're_guarantee.mail_template_guarantee_expiry')
+        self.assertFalse(template.use_default_to)
+        self.assertIn('pic_user_id', template.email_to or '')
+
+    # ----- Gửi được ------------------------------------------------------
+    def test_cron_sends_mail_to_pic(self):
+        cert = self._cert(pic_user_id=self.pic.id)
+        self.assertFalse(cert.reminder_block_reason)
+        before = len(self._mails_to('pic1452@example.com'))
+        self.env['re.bank.guarantee']._cron_expiry_reminder()
+        self.assertEqual(cert.last_expiry_reminder, date.today())
+        self.assertGreater(len(self._mails_to('pic1452@example.com')),
+                           before, 'phải sinh thư gửi cho PIC')
+
+    def test_manual_button_sends_now(self):
+        cert = self._cert(pic_user_id=self.pic.id)
+        cert.action_send_expiry_reminder()
+        self.assertEqual(cert.last_expiry_reminder, date.today())
+
+    # ----- Không gửi được thì phải nói ra --------------------------------
+    def test_missing_pic_is_explained(self):
+        cert = self._cert()
+        self.assertTrue(cert.reminder_block_reason)
+        self.assertIn('Người phụ trách', cert.reminder_block_reason)
+        # Cron vẫn chạy bình thường, chỉ bỏ qua bản ghi này.
+        self.env['re.bank.guarantee']._cron_expiry_reminder()
+        self.assertFalse(cert.last_expiry_reminder)
+        with self.assertRaises(UserError):
+            cert.action_send_expiry_reminder()
+
+    def test_pic_without_email_is_explained(self):
+        cert = self._cert(pic_user_id=self.pic_no_mail.id)
+        self.assertTrue(cert.reminder_block_reason)
+        self.assertIn('email', cert.reminder_block_reason)
+        with self.assertRaises(UserError):
+            cert.action_send_expiry_reminder()
+
+    def test_reason_clears_once_pic_filled(self):
+        cert = self._cert()
+        cert.pic_user_id = self.pic
+        self.assertFalse(cert.reminder_block_reason)
+
+
+@tagged('post_install', '-at_install', 're_guarantee')
+class TestRequestCertificateColumns(TransactionCase):
+    """Việc 1450 — danh sách Đề nghị BL mang theo số + trạng thái
+    chứng thư, khỏi phải mở từng bản ghi."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bank = cls.env['res.partner'].create({
+            'name': 'NH 1450', 'is_company': True, 'is_bank': True})
+        cls.beneficiary = cls.env['res.partner'].create({
+            'name': 'Người thụ hưởng 1450', 'is_company': True})
+        contract = cls.env['re.loan.credit.contract'].create({
+            'name': 'HĐTD-1450', 'partner_id': cls.bank.id,
+            'amount_total': 10_000_000_000.0})
+        contract.action_activate()
+        cls.facility = cls.env['re.loan.facility'].create({
+            'name': 'F-BL-1450', 'credit_contract_id': contract.id,
+            'facility_type': 'revolving', 'purpose': 'bank_guarantee',
+            'amount_limit': 10_000_000_000.0})
+        if 'borrowing_base_opening' in cls.facility._fields:
+            cls.facility.borrowing_base_opening = 10_000_000_000.0
+
+    def _request(self):
+        return self.env['re.guarantee.request'].create({
+            'guarantee_type': 'performance',
+            'facility_id': self.facility.id,
+            'issuing_bank_partner_id': self.bank.id,
+            'beneficiary_partner_id': self.beneficiary.id,
+            'amount': 1_000_000_000.0,
+            'date_request': date.today().strftime('%Y-%m-%d'),
+            'date_expiry': (date.today()
+                            + timedelta(days=180)).strftime('%Y-%m-%d'),
+        })
+
+    def test_empty_until_certificate_issued(self):
+        req = self._request()
+        self.assertFalse(req.guarantee_number)
+        self.assertFalse(req.guarantee_state)
+
+    def test_carries_number_and_state_after_issue(self):
+        req = self._request()
+        req.action_activate()
+        req.action_issue()
+        cert = req.bank_guarantee_id
+        self.assertTrue(cert)
+        self.assertEqual(req.guarantee_number, cert.name)
+        self.assertEqual(req.guarantee_state, 'issued')
+        # Trạng thái chứng thư đổi thì cột trên đề nghị đổi theo.
+        cert.state = 'released'
+        self.assertEqual(req.guarantee_state, 'released')

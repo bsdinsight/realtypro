@@ -15,11 +15,14 @@ bấm "Phát hành" trên đề nghị BL. Theo dõi thanh toán + trả nợ tr
 tiếp trên chứng thư (phí BL, ký quỹ, phạt trả chậm). Khi đủ thanh
 toán cả 3 nhóm → auto chuyển 'settled' → khôi phục hạn mức facility.
 """
+import logging
 from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import clean_context
+
+_logger = logging.getLogger(__name__)
 
 
 GUARANTEE_TYPES = [
@@ -1214,6 +1217,67 @@ class ReBankGuaranteeExpiryReminder(models.Model):
     last_expiry_reminder = fields.Date(
         string='Lần nhắc hết hạn gần nhất', readonly=True, copy=False)
 
+    # Vì sao cần ô này: thư nhắc không gửi được là chuyện IM LẶNG —
+    # cron bỏ qua bản ghi, người dùng khai đủ ngày nhắc rồi ngồi chờ
+    # một lá thư không bao giờ tới (việc 1452). Nay lý do hiện thẳng
+    # trên chứng thư.
+    reminder_block_reason = fields.Char(
+        string='Vì sao chưa nhắc được',
+        compute='_compute_reminder_block_reason')
+
+    @api.depends('state', 'date_expiry', 'pic_user_id',
+                 'pic_user_id.email')
+    def _compute_reminder_block_reason(self):
+        for rec in self:
+            reason = False
+            if rec.state in ('issued', 'extended') and rec.date_expiry:
+                if not rec.pic_user_id:
+                    reason = _(
+                        'Chưa khai Người phụ trách (PIC) — hệ thống '
+                        'không biết gửi thư nhắc hết hạn cho ai.')
+                elif not rec.pic_user_id.email:
+                    reason = _(
+                        'Người phụ trách %(u)s chưa có địa chỉ email '
+                        '— thư nhắc hết hạn không gửi được.',
+                        u=rec.pic_user_id.name)
+            rec.reminder_block_reason = reason
+
+    def _expiry_reminder_template(self):
+        return self.env.ref(
+            're_guarantee.mail_template_guarantee_expiry',
+            raise_if_not_found=False)
+
+    def action_send_expiry_reminder(self):
+        """Gửi thư nhắc NGAY, báo lỗi rõ ràng nếu không gửi được.
+
+        Chờ cron sáng mai để biết thư có đi hay không là cách dò lỗi
+        tốn một ngày cho mỗi lần thử. Nút này gửi thẳng (force_send)
+        nên lỗi SMTP hiện ra tại chỗ, kèm địa chỉ đã gửi tới.
+        """
+        self.ensure_one()
+        if self.reminder_block_reason:
+            raise UserError(self.reminder_block_reason)
+        template = self._expiry_reminder_template()
+        if not template:
+            raise UserError(_(
+                'Không tìm thấy mẫu thư "Bảo lãnh sắp hết hạn". '
+                'Nâng cấp lại module re_guarantee để nạp lại mẫu.'))
+        template.send_mail(self.id, force_send=True)
+        self.last_expiry_reminder = fields.Date.context_today(self)
+        self.message_post(body=_(
+            'Đã gửi thư nhắc hết hạn tới %(email)s.',
+            email=self.pic_user_id.email))
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _('Đã gửi thư nhắc tới %(email)s.',
+                             email=self.pic_user_id.email),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
     @api.model
     def _cron_expiry_reminder(self):
         Param = self.env['ir.config_parameter'].sudo()
@@ -1228,15 +1292,30 @@ class ReBankGuaranteeExpiryReminder(models.Model):
 
         today = fields.Date.context_today(self)
         limit = today + timedelta(days=lead)
-        due = self.search([
+        in_window = self.search([
             ('state', 'in', ('issued', 'extended')),
             ('date_expiry', '!=', False),
             ('date_expiry', '<=', limit),
-            ('pic_user_id', '!=', False),
         ])
-        template = self.env.ref(
-            're_guarantee.mail_template_guarantee_expiry',
-            raise_if_not_found=False)
+        # Không gửi được thì phải NÓI RA. Trước đây điều kiện "có PIC"
+        # nằm trong domain nên chứng thư thiếu PIC (hoặc PIC chưa có
+        # email) rơi ra ngoài lặng lẽ: không thư, không log, không dấu
+        # vết — người dùng chờ mãi (việc 1452).
+        blocked = in_window.filtered('reminder_block_reason')
+        if blocked:
+            _logger.warning(
+                'BL sắp hết hạn nhưng KHÔNG gửi được thư nhắc cho %s '
+                'chứng thư: %s',
+                len(blocked),
+                '; '.join('%s: %s' % (r.name, r.reminder_block_reason)
+                          for r in blocked))
+        due = in_window - blocked
+        template = self._expiry_reminder_template()
+        if due and not template:
+            _logger.warning(
+                'Không tìm thấy mẫu thư re_guarantee.'
+                'mail_template_guarantee_expiry — %s chứng thư sắp hết '
+                'hạn không được nhắc.', len(due))
         sent = 0
         for rec in due:
             # Đã nhắc rồi thì chờ hết khoảng lặp mới nhắc lại. Không có

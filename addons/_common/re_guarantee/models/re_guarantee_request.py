@@ -213,6 +213,17 @@ class ReGuaranteeRequest(models.Model):
     # ------------------------------------------------------------------
     # Liên kết chứng thư BL chính thức (optional)
     # ------------------------------------------------------------------
+    # Số + trạng thái chứng thư hiện ngay trên danh sách đề nghị (việc
+    # 1450): nhìn danh sách đề nghị mà không thấy chứng thư đi kèm thì
+    # phải mở từng bản ghi mới biết đề nghị nào đã ra chứng thư, chứng
+    # thư đó còn hiệu lực hay đã giải toả.
+    guarantee_number = fields.Char(
+        string='Số chứng thư BL',
+        related='bank_guarantee_id.name', store=True, readonly=True)
+    guarantee_state = fields.Selection(
+        string='Trạng thái chứng thư',
+        related='bank_guarantee_id.state', store=True, readonly=True)
+
     bank_guarantee_id = fields.Many2one(
         're.bank.guarantee', string='Chứng thư BL',
         copy=False,

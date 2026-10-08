@@ -188,6 +188,15 @@
                         <field name="penalty_amount" class="oe_inline"
                                widget="monetary"/>.
                     </div>
+                    <!-- Việc 1452: nói thẳng lý do thư nhắc không
+                         gửi được, thay vì im lặng bỏ qua -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not reminder_block_reason">
+                        <i class="fa fa-envelope-o" title="Thư nhắc"/>
+                        <b>Chưa nhắc hết hạn được:</b>
+                        <field name="reminder_block_reason" readonly="1"
+                               class="oe_inline" nolabel="1"/>
+                    </div>
                     <div class="alert alert-success" role="alert"
                          invisible="not is_fully_paid or state not in ('issued','extended')">
                         <i class="fa fa-check-circle" title="Đủ"/>
@@ -216,6 +225,14 @@
                             <field name="pic_department_id"/>
                             <field name="last_expiry_reminder"
                                    invisible="not last_expiry_reminder"/>
+                            <!-- Thử đường thư ngay tại chỗ, không phải
+                                 chờ cron sáng mai (việc 1452) -->
+                            <button name="action_send_expiry_reminder"
+                                    type="object" class="btn-link"
+                                    icon="fa-paper-plane"
+                                    string="Gửi thư nhắc ngay"
+                                    invisible="state not in ('issued','extended')"
+                                    colspan="2"/>
                             <field name="days_remaining" readonly="1"/>
                             <field name="currency_id"
                                    groups="base.group_multi_currency"/>

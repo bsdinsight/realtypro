@@ -18,6 +18,12 @@
             <field name="subject">[Bảo lãnh] {{ object.name }} hết hạn ngày {{ object.date_expiry }}</field>
             <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
             <field name="email_to">{{ object.pic_user_id.email_formatted }}</field>
+            <!-- Odoo 19 mặc định use_default_to = True: lúc đó ô "To
+                 (Emails)" ngay trên bị BỎ QUA, người nhận lấy từ
+                 "người nhận mặc định của bản ghi" — mà chứng thư bảo
+                 lãnh không có partner_id nào để lấy, nên thư đi không
+                 có địa chỉ nhận (việc 1452). Khai thẳng False. -->
+            <field name="use_default_to" eval="False"/>
             <field name="body_html" type="html">
                 <div style="font-family:Arial,sans-serif;font-size:14px">
                     <p>Chào <t t-out="object.pic_user_id.name or ''"></t>,</p>

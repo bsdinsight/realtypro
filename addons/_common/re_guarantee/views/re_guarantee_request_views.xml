@@ -18,6 +18,13 @@
                 <field name="project_id" optional="show"/>
                 <field name="date_request"/>
                 <field name="date_expiry"/>
+                <!-- Chứng thư sinh ra từ đề nghị: số + trạng thái hiện
+                     ngay trên danh sách (việc 1450) -->
+                <field name="guarantee_number" optional="show"/>
+                <field name="guarantee_state" widget="badge" optional="show"
+                       decoration-success="guarantee_state in ('issued','extended')"
+                       decoration-muted="guarantee_state in ('released','expired','settled')"
+                       decoration-danger="guarantee_state == 'forfeited'"/>
                 <field name="amount" width="185px" sum="Σ"/>
                 <field name="guarantee_fee_amount" width="185px" optional="show"
                        sum="Σ phí"/>
@@ -242,6 +249,7 @@
                 <field name="credit_contract_id"/>
                 <field name="beneficiary_partner_id"/>
                 <field name="project_id"/>
+                <field name="guarantee_number"/>
                 <filter name="f_draft" string="Nháp"
                         domain="[('state','=','draft')]"/>
                 <filter name="f_active" string="Đã kích hoạt"
@@ -266,6 +274,8 @@
                         context="{'group_by': 'project_id'}"/>
                 <filter name="g_type" string="Loại BL"
                         context="{'group_by': 'guarantee_type'}"/>
+                <filter name="g_guarantee_state" string="Trạng thái chứng thư"
+                        context="{'group_by': 'guarantee_state'}"/>
             </search>
         </field>
     </record>

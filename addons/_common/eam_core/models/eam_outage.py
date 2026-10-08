@@ -155,9 +155,13 @@ class EamOutage(models.Model):
         bg = fields.Datetime.now()
         for o in self:
             o.is_open = bool(o.date_start and not o.date_end)
-            o.duration_hours = (
+            # Chặn số âm: khoảng ĐANG MỞ tính tới bây giờ, nên một khoảng
+            # bắt đầu ở tương lai (nhập trước, hoặc dữ liệu dựng sẵn) sẽ
+            # ra thời lượng âm — và số âm đó cộng vào báo cáo làm KHẢ
+            # DỤNG VỌT LÊN TRÊN 100%, con số vô lý mà không chỗ nào chặn.
+            o.duration_hours = max(
                 ((o.date_end or bg) - o.date_start).total_seconds() / 3600.0
-                if o.date_start else 0.0)
+                if o.date_start else 0.0, 0.0)
 
     @api.depends('child_ids')
     def _compute_child_count(self):

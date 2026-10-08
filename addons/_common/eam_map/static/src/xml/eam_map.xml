@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="eam_map.PlantMap">
+    <div class="eam-map-root o_action">
+        <div class="eam-map-side">
+            <div t-if="state.loading" class="p-3 text-muted">Đang nạp…</div>
+            <t t-if="state.data">
+                <div class="eam-box">
+                    <div class="eam-box-h">
+                        <t t-esc="state.data.plant and state.data.plant.name or 'Toàn bộ vị trí'"/>
+                    </div>
+                    <div class="eam-kv"><span>Số vị trí</span>
+                        <b t-esc="state.data.summary.n"/></div>
+                    <div class="eam-kv"><span>Công suất đặt</span>
+                        <b><t t-esc="so(state.data.summary.mw_total)"/> MW</b></div>
+                    <div class="eam-kv"><span>Đang phát</span>
+                        <b class="text-success">
+                            <t t-esc="so(state.data.summary.mw_running)"/> MW</b></div>
+                    <div class="eam-kv"><span>Khả dụng bình quân</span>
+                        <b t-if="state.data.summary.avail === null">—</b>
+                        <b t-else=""><t t-esc="state.data.summary.avail"/>%</b></div>
+                    <div class="eam-kv"><span>Sản lượng mất</span>
+                        <b><t t-esc="so(state.data.summary.lost_mwh)"/> MWh</b></div>
+                    <div class="eam-kv"><span>Doanh thu tổn thất</span>
+                        <b class="text-danger">
+                            <t t-esc="so(state.data.summary.lost_money)"/>
+                            <t t-esc="state.data.currency"/></b></div>
+                    <div class="eam-kv"><span>Lệnh đang mở</span>
+                        <b t-esc="state.data.summary.wo_open"/></div>
+                    <div class="eam-kv" t-if="state.data.summary.wo_hold">
+                        <span>— trong đó đang chờ</span>
+                        <b class="text-warning"
+                           t-esc="state.data.summary.wo_hold"/></div>
+                    <div class="eam-kv" t-if="state.data.summary.pairs">
+                        <span>Cặp quá gần nhau</span>
+                        <b class="text-danger"
+                           t-esc="state.data.summary.pairs"/></div>
+                    <div class="eam-kv" t-if="state.data.summary.no_coords">
+                        <span>Chưa có toạ độ</span>
+                        <b class="text-warning"
+                           t-esc="state.data.summary.no_coords"/></div>
+                    <div class="mt-2">
+                        <label class="small text-muted">Mốc xem</label>
+                        <input type="date" class="form-control form-control-sm"
+                               t-att-value="mocNgay" t-on-change="doiMoc"/>
+                    </div>
+                    <div class="eam-trong" t-if="trong">
+                        Tại mốc này <b>chưa lắp máy nào</b> — nhà máy còn
+                        đang xây.
+                        <t t-if="state.data.data_span">
+                            Sổ dừng máy có dữ liệu từ
+                            <b t-esc="state.data.data_span.from.slice(0, 10)"/>
+                            đến
+                            <b t-esc="state.data.data_span.to.slice(0, 10)"/>.
+                            <button class="btn btn-sm btn-warning w-100 mt-1"
+                                    t-on-click="nhayToiDuLieu">
+                                Xem lúc đang vận hành</button>
+                        </t>
+                    </div>
+                    <div class="mt-2">
+                        <label class="small text-muted">Cửa sổ thống kê</label>
+                        <select class="form-select form-select-sm"
+                                t-on-change="doiKy">
+                            <option value="1"
+                                t-att-selected="state.months === 1">1 tháng</option>
+                            <option value="3"
+                                t-att-selected="state.months === 3">3 tháng</option>
+                            <option value="12"
+                                t-att-selected="state.months === 12">12 tháng</option>
+                            <option value="60"
+                                t-att-selected="state.months === 60">5 năm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="eam-box">
+                    <div class="eam-box-h">Trạng thái</div>
+                    <t t-foreach="mauList" t-as="m" t-key="m.k">
+                        <label class="eam-chk">
+                            <input type="checkbox" t-att-checked="state.loc[m.k]"
+                                   t-on-change="() => this.batLoc(m.k)"/>
+                            <span class="eam-dot" t-attf-style="background:{{m.c}}"/>
+                            <span t-esc="m.t"/>
+                            <b class="ms-auto"
+                               t-esc="state.data.summary.by_state[m.k] or 0"/>
+                        </label>
+                    </t>
+                </div>
+
+                <div class="eam-box">
+                    <div class="eam-box-h">Lớp hiển thị</div>
+                    <label class="eam-chk">
+                        <input type="checkbox" t-att-checked="state.lop.wake"
+                               t-on-change="() => this.batLop('wake')"/>
+                        <span>Vòng giãn cách
+                            <t t-esc="state.data.spacing_d"/>D</span>
+                    </label>
+                    <label class="eam-chk">
+                        <input type="checkbox" t-att-checked="state.lop.pairs"
+                               t-on-change="() => this.batLop('pairs')"/>
+                        <span>Nối cặp quá gần</span>
+                    </label>
+                    <label class="eam-chk">
+                        <input type="checkbox" t-att-checked="state.lop.nhan"
+                               t-on-change="() => this.batLop('nhan')"/>
+                        <span>Nhãn mã vị trí</span>
+                    </label>
+                    <div class="btn-group btn-group-sm w-100 mt-2">
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.nen === 'sat'}"
+                                t-on-click="() => this.doiNen('sat')">Ảnh vệ tinh</button>
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.nen === 'dia_hinh'}"
+                                t-on-click="() => this.doiNen('dia_hinh')">Địa hình</button>
+                    </div>
+                    <div class="eam-note">
+                        Vòng giãn cách là <b>phép đơn giản hoá</b>: dòng khí
+                        có hướng, thực tế cần giãn 7–10D xuôi gió nhưng chỉ
+                        3–5D ngang gió. Không có hoa gió thì không tính đúng
+                        được — con số này dùng để <b>soi chỗ đáng ngờ</b>,
+                        không dùng để kết luận.
+                    </div>
+                </div>
+
+                <div class="eam-box" t-if="state.selected">
+                    <div class="eam-box-h">
+                        <t t-esc="state.selected.code"/>
+                    </div>
+                    <div class="d-grid gap-1">
+                        <button class="btn btn-sm btn-outline-primary"
+                                t-on-click="() => this.moViTri(state.selected)">
+                            Mở hồ sơ vị trí</button>
+                        <button class="btn btn-sm btn-outline-secondary"
+                                t-on-click="() => this.moDung(state.selected)">
+                            Khoảng dừng</button>
+                        <button class="btn btn-sm btn-outline-secondary"
+                                t-on-click="() => this.moLenh(state.selected)">
+                            Lệnh công việc</button>
+                    </div>
+                </div>
+
+                <div class="eam-box eam-list">
+                    <div class="eam-box-h">Danh sách</div>
+                    <t t-foreach="diemLoc" t-as="p" t-key="p.id">
+                        <div class="eam-row"
+                             t-att-class="{'eam-row-on': state.selected and state.selected.id === p.id}"
+                             t-on-click="() => this.bay(p)">
+                            <span class="eam-dot"
+                                  t-attf-style="background:{{mauCua(p.state)}}"/>
+                            <b t-esc="p.code"/>
+                            <span class="ms-auto small text-muted"
+                                  t-if="p.avail === null">—</span>
+                            <span t-else="" class="ms-auto small"
+                                  t-attf-class="{{p.avail &lt; 97 ? 'text-danger' : 'text-muted'}}">
+                                <t t-esc="p.avail"/>%</span>
+                            <span t-if="p.wo_hold" class="eam-badge-w"
+                                  title="Lệnh đang chờ">⏸</span>
+                            <span t-if="p.too_close" class="eam-badge-r"
+                                  title="Quá gần máy khác">⚠</span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <div class="eam-map-canvas" t-ref="map"/>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_eam_plant_map" model="ir.actions.client">
+        <field name="name">Bản đồ hiện trường</field>
+        <field name="tag">eam_map.plant_map</field>
+    </record>
+
+    <record id="view_eam_location_form_map" model="ir.ui.view">
+        <field name="name">eam.location.form.map</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Toạ độ và thông số hiện trường" name="gr_map"
+                       invisible="location_type == 'component'">
+                    <group>
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                        <field name="elevation_m"/>
+                        <field name="has_coords" invisible="1"/>
+                    </group>
+                    <group invisible="location_type != 'position'">
+                        <field name="rated_power_mw"/>
+                        <field name="rotor_diameter_m"/>
+                        <field name="hub_height_m"/>
+                    </group>
+                    <button name="action_mo_ban_do" type="object"
+                            string="Mở bản đồ" class="btn-link" colspan="2"
+                            invisible="location_type != 'plant'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_location_list_map" model="ir.ui.view">
+        <field name="name">eam.location.list.map</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_type']" position="after">
+                <field name="rated_power_mw" string="MW" optional="hide"/>
+                <field name="latitude" optional="hide"/>
+                <field name="longitude" optional="hide"/>
+                <field name="has_coords" string="Có toạ độ" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_plant_map" name="Bản đồ hiện trường"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_plant_map" sequence="5"/>
+
+</odoo>

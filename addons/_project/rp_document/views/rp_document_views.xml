@@ -22,8 +22,14 @@
                 <field name="review_deadline" string="Hạn xem xét"
                        width="130px"/>
                 <field name="days_left" string="Còn (ngày)" width="110px"/>
-                <field name="review_late_days" string="Xem xét trễ"
-                       width="120px" optional="show"/>
+                <!-- Hai cột này ĐO HAI THỨ KHÁC NHAU, để cạnh nhau mà
+                     cùng tên "trễ" thì người đọc tưởng mâu thuẫn:
+                     "Còn (ngày)" là đang trễ bao nhiêu NGAY LÚC NÀY;
+                     "Trễ khi trả lời" chỉ có số sau khi đã có ý kiến và
+                     giữ nguyên làm bằng chứng. Hồ sơ chưa trả lời thì
+                     cột sau bằng 0 là ĐÚNG. -->
+                <field name="review_late_days" string="Trễ khi trả lời"
+                       width="140px" optional="show"/>
                 <field name="gate_date" string="Được làm từ" width="130px"
                        optional="show"/>
                 <field name="task_count" string="Việc chờ" width="100px"

@@ -47,7 +47,13 @@ class RpStructure(models.Model):
     progress_percent = fields.Float(
         string='% hoàn thành',
         compute='_compute_progress', store=True,
-        help='= progress_value / estimate_value × 100.')
+        # Float mặc định gộp nhóm bằng SUM — cộng các tỷ lệ phần trăm
+        # lại với nhau là ra con số vô nghĩa (11 hạng mục cộng thành
+        # 104,26% trong khi toàn dự án mới 3,53%). Tỷ lệ của một nhóm
+        # phải tính lại từ ΣEV/ΣBAC, không bao giờ cộng được.
+        aggregator=False,
+        help='= progress_value / estimate_value × 100. Không cộng tổng '
+             'được: tỷ lệ của nhóm phải tính lại từ Σ nghiệm thu / Σ BAC.')
     date_actual_start = fields.Date(
         string='Ngày bắt đầu thực tế',
         compute='_compute_progress', store=True,

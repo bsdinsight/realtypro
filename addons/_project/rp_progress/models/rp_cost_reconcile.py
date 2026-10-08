@@ -24,8 +24,12 @@ class RpCostReconcile(models.Model):
 
     * Tất cả đều **trước thuế**. Khái toán và BOQ vốn trước thuế; hợp
       đồng lấy ``contract_value_pretax`` chứ không lấy tổng có VAT.
-    * Hợp đồng **cộng cả phát sinh đã duyệt**, vì cam kết thật của chủ
-      đầu tư là giá ký cộng phần đã đồng ý thêm, không phải giá ký.
+    * Hợp đồng = **giá hiện hành cộng phát sinh đã duyệt NHƯNG CHƯA áp
+      phụ lục**. Đây là chỗ rất dễ cộng trùng: phát sinh khi đã áp phụ
+      lục thì nó ĐÃ NẰM TRONG giá hợp đồng rồi (gói BOP: phụ lục đẩy giá
+      77.523.011 → 80.098.625). Cộng thêm ``variation_approved_amount``
+      một lần nữa là thổi cam kết lên 2,58 triệu không có thật. Chỉ phần
+      đã đồng ý mà chưa kịp ra phụ lục mới là khoản cộng thêm.
     * Một hợp đồng phủ một gói thầu trải nhiều nhóm chi phí thì giá trị
       hợp đồng **chia theo tỷ trọng BOQ** của gói đó. Không có cách nào
       chính xác hơn: hợp đồng trọn gói không khai theo nhóm chi phí.
@@ -46,6 +50,11 @@ class RpCostReconcile(models.Model):
     root_category_id = fields.Many2one(
         'rp.cost.category', string='Nhóm gốc', ondelete='cascade',
         index=True)
+    nhan_nhom = fields.Char(
+        string='Nhóm chi phí', compute='_compute_nhan', store=True,
+        help='Dòng không quy được về nhóm nào vẫn phải đọc ra được là '
+             'của gói nào — để trống thì người đọc không nhận ra tiền '
+             'đó ở đâu ra.')
     currency_id = fields.Many2one('res.currency', string='Tiền tệ')
     concept_id = fields.Many2one(
         'rp.concept.estimate', string='Bản khái toán')
@@ -54,7 +63,7 @@ class RpCostReconcile(models.Model):
     amount_estimate = fields.Monetary(string='Dự toán (Σ BOQ)')
     amount_contract = fields.Monetary(string='Hợp đồng đã ký')
     amount_variation = fields.Monetary(
-        string='Trong đó phát sinh đã duyệt')
+        string='Trong đó phát sinh chưa áp phụ lục')
 
     diff_estimate = fields.Monetary(
         string='Lệch dự toán − khái toán', compute='_compute_lech',
@@ -76,6 +85,12 @@ class RpCostReconcile(models.Model):
          ('khop', 'Khớp'),
          ('ngoai', 'Ngoài khái toán')],
         string='Tình trạng', compute='_compute_lech', store=True)
+
+    @api.depends('category_id', 'project_id')
+    def _compute_nhan(self):
+        for r in self:
+            r.nhan_nhom = (r.category_id.name if r.category_id
+                           else '— chưa quy được nhóm —')
 
     @api.depends('amount_concept', 'amount_estimate', 'amount_contract')
     def _compute_lech(self):
@@ -108,6 +123,23 @@ class RpCostReconcile(models.Model):
                 r.tinh_trang = 'khop'
 
     # ------------------------------------------------------------------
+    @api.model
+    def _ps_chua_ap(self, contract):
+        """Phát sinh đã đồng ý nhưng CHƯA vào giá hợp đồng.
+
+        ``variation_approved_amount`` gộp cả phát sinh đã áp phụ lục —
+        mà phát sinh đã áp thì nằm sẵn trong ``contract_value_pretax``.
+        Lấy thẳng trường đó là cộng trùng.
+        """
+        V = self.env.get('rp.variation')
+        if V is None:
+            return 0.0
+        return sum(V.sudo().search([
+            ('contract_id', '=', contract.id),
+            ('state', 'in', ('approved', 'instructed')),
+            ('amendment_id', '=', False),
+        ]).mapped('amount_approved'))
+
     @api.model
     def rp_dung_lai(self, project_ids=None):
         """Dựng lại bảng đối chiếu. Xoá sạch rồi tính lại, không vá.
@@ -147,8 +179,8 @@ class RpCostReconcile(models.Model):
             for c in HD.search([('project_id', '=', p.id)]):
                 if c.state in bo_qua:
                     continue
-                gia = c.contract_value_pretax + c.variation_approved_amount
-                ps = c.variation_approved_amount
+                ps = self._ps_chua_ap(c)
+                gia = c.contract_value_pretax + ps
                 dong_goi = self.env['rp.boq.line'].search(
                     [('package_id', '=', c.tender_package_id.id)]
                 ) if c.tender_package_id else self.env['rp.boq.line']
@@ -228,7 +260,10 @@ class RpPackageReconcile(models.Model):
 
     amount_boq = fields.Monetary(string='BOQ đã bóc')
     amount_contract = fields.Monetary(string='Hợp đồng trước thuế')
-    amount_variation = fields.Monetary(string='Phát sinh đã duyệt')
+    amount_variation = fields.Monetary(
+        string='Phát sinh chưa áp phụ lục',
+        help='Đã đồng ý nhưng chưa vào giá hợp đồng. Phát sinh đã áp '
+             'phụ lục không nằm ở đây — nó đã ở trong giá ký rồi.')
     amount_committed = fields.Monetary(
         string='Đã cam kết', compute='_compute_lech', store=True,
         help='Giá ký cộng phát sinh đã duyệt — cam kết thật của chủ '
@@ -309,7 +344,8 @@ class RpPackageReconcile(models.Model):
                     'amount_contract': sum(
                         hd.mapped('contract_value_pretax')),
                     'amount_variation': sum(
-                        hd.mapped('variation_approved_amount')),
+                        self.env['rp.cost.reconcile']._ps_chua_ap(x)
+                        for x in hd),
                     'amount_accepted': sum(
                         hd.mapped('acceptance_value_to_date')),
                     'amount_paid': sum(hd.mapped('amount_paid')),

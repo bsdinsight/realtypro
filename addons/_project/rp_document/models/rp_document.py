@@ -139,9 +139,11 @@ class RpDocument(models.Model):
     submit_late_days = fields.Integer(
         string='Trình trễ (ngày)', compute='_compute_clock', store=True)
     review_late_days = fields.Integer(
-        string='Xem xét trễ (ngày)', compute='_compute_clock', store=True,
-        help='Số ngày bên xem xét vượt quá hạn 21 ngày. Đây là căn cứ để '
-             'nhà thầu đòi gia hạn, nên phải giữ cả sau khi đã trả lời.')
+        string='Trễ khi trả lời (ngày)', compute='_compute_clock',
+        store=True,
+        help='Số ngày bên xem xét vượt hạn TÍNH TỚI LÚC ĐÃ TRẢ LỜI, giữ '
+             'nguyên sau đó làm bằng chứng. Hồ sơ chưa trả lời thì bằng '
+             '0 — số đang trễ lúc này nằm ở "Còn lại (ngày)" (âm).')
     date_reviewed = fields.Date(string='Ngày có ý kiến', copy=False,
                                 tracking=True)
     reviewer_id = fields.Many2one('res.users', string='Người xem xét',

@@ -10,8 +10,12 @@
                   default_order="root_category_id, category_id">
                 <field name="project_id" column_invisible="1"/>
                 <field name="root_category_id" optional="hide"/>
-                <field name="category_id" string="Nhóm chi phí"
+                <!-- Hiện nhan_nhom chứ không phải category_id: dòng
+                     không quy được về nhóm nào mà để trống thì người
+                     đọc không nhận ra tiền đó ở đâu ra. -->
+                <field name="nhan_nhom" string="Nhóm chi phí"
                        width="300px"/>
+                <field name="category_id" column_invisible="1"/>
                 <!-- Ba cột tiền đều TRƯỚC THUẾ, nếu không thì không so
                      được với nhau. Cột rộng, không cho cắt cụt. -->
                 <field name="amount_concept" widget="monetary"

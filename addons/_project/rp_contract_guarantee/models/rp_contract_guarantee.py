@@ -252,8 +252,19 @@ class RpContractGuarantee(models.Model):
     # ---- Cron cảnh báo hết hạn -------------------------------------
     @api.model
     def _cron_expiry_alert(self):
-        """Đăng activity nhắc các BL sắp/đã hết hạn cho người phụ trách."""
+        """Đăng activity nhắc các BL sắp/đã hết hạn cho người phụ trách.
+
+        Trước khi nhắc phải TÍNH LẠI số ngày còn lại. ``days_to_expiry``
+        và ``expiry_status`` là trường LƯU, chỉ phụ thuộc ``date_expiry``
+        và ``state`` — hai thứ không đổi theo thời gian. Không ép tính
+        lại thì số đứng im từ hôm ghi: bảo lãnh hết hạn 30/10 vẫn báo
+        "còn 25 ngày" vào ngày 08/10 (thật ra 22). Trường nào phụ thuộc
+        NGÀY HÔM NAY thì phải có người đánh thức mỗi ngày.
+        """
         today = fields.Date.context_today(self)
+        song = self.search([('state', '=', 'active')])
+        song._compute_expiry()
+        song.flush_recordset(['days_to_expiry', 'expiry_status'])
         limit = today + relativedelta(days=EXPIRY_ALERT_DAYS)
         due = self.search([
             ('state', '=', 'active'),

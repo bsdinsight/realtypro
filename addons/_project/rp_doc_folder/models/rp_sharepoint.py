@@ -187,6 +187,32 @@ class RpSharepointConfig(models.Model):
         }
 
     # ------------------------------------------------------------------
+    # SharePoint cấm " * : < > ? / \ | trong tên tệp và thư mục, và cắt
+    # bỏ khoảng trắng lẫn dấu chấm ở hai đầu. Tên tiếng Việt ở đây hợp
+    # lệ với Odoo nhưng không hợp lệ với SharePoint — "Báo cáo định kỳ
+    # (tuần / tháng)" có dấu gạch chéo, vừa sai tên vừa làm VỠ ĐƯỜNG DẪN
+    # vì gạch chéo chính là dấu phân cấp. Nên phải nắn ở đúng ranh giới
+    # này, không đổi tên trong Odoo.
+    CAM = '"*:<>?/\\|'
+
+    @api.model
+    def _ten_sp(self, ten):
+        for c in self.CAM:
+            ten = (ten or '').replace(c, '-')
+        return ten.strip(' .') or 'khong-ten'
+
+    def _duong_sp(self, folder, goc):
+        """Ghép đường dẫn từ chuỗi cha-con, KHÔNG cắt full_path.
+
+        Cắt full_path bằng dấu gạch chéo sẽ sai ngay khi một tên có chứa
+        gạch chéo — đúng ca vừa gặp.
+        """
+        seg, f = [], folder
+        while f:
+            seg.append(self._ten_sp('%s %s' % (f.code or '', f.name or '')))
+            f = f.parent_id
+        return '/'.join([goc] + list(reversed(seg)))
+
     def rp_dung_cay(self, project):
         """Dựng cây thư mục của dự án lên SharePoint.
 
@@ -199,15 +225,14 @@ class RpSharepointConfig(models.Model):
         if not (self.site_id and self.drive_id):
             raise UserError(_('Bấm "Kiểm tra kết nối" trước đã.'))
         tok = self._token()
-        goc = '%s/%s' % (project.code or 'DA', project.name or '')
+        goc = self._ten_sp(project.code or 'DA')
         tao = 0
         for f in project.doc_folder_ids.sorted(
                 lambda x: (len((x.code or '').split('.')), x.code or '')):
             if f.sp_item_id:
                 continue
-            duong = '%s/%s' % (goc, f.full_path)
-            cha = duong.rsplit('/', 1)[0]
-            ten = duong.rsplit('/', 1)[1]
+            duong = self._duong_sp(f, goc)
+            cha, ten = duong.rsplit('/', 1)
             r = self._goi(
                 tok, 'POST',
                 '/drives/%s/root:/%s:/children' % (self.drive_id,

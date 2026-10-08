@@ -5,18 +5,18 @@
         <field name="name">Dự án EPC — phía Chủ đầu tư</field>
         <field name="code">EPC-OWNER</field>
         <field name="sequence">10</field>
-        <field name="note">Vòng đời EPC nhìn từ chủ đầu tư: pháp lý → tài chính → đấu thầu → thiết kế → mua sắm → thi công → chạy thử → bàn giao. Thư mục nào đã có sổ riêng trong hệ thống thì khai sổ đó, không dùng làm chỗ thả file rời.</field>
+        <field name="note">Vòng đời EPC nhìn từ chủ đầu tư. Tên thư mục đặt tiếng Anh: hồ sơ EPC vốn song ngữ, nhà thầu và ngân hàng nước ngoài đều đọc được, và tránh luôn ký tự SharePoint cấm (&quot; * : &lt; &gt; ? / \ |). Thư mục nào đã có sổ riêng trong hệ thống thì khai sổ đó, không dùng làm chỗ thả file rời.</field>
     </record>
 
     <record id="tl_epc_00" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00</field>
-        <field name="name">Quản lý dự án &amp; Hành chính</field>
+        <field name="name">Project Management &amp; Administration</field>
     </record>
     <record id="tl_epc_00_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00.1</field>
-        <field name="name">Điều lệ dự án, phân quyền, sơ đồ tổ chức</field>
+        <field name="name">Project charter, authority matrix, org chart</field>
         <field name="parent_id" ref="tl_epc_00"/>
         <field name="is_required" eval="True"/>
         <field name="note">Ai được ký đến mức nào — thiếu cái này là mọi phê duyệt sau đều hở.</field>
@@ -24,19 +24,19 @@
     <record id="tl_epc_00_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00.2</field>
-        <field name="name">Biên bản họp</field>
+        <field name="name">Meeting minutes</field>
         <field name="parent_id" ref="tl_epc_00"/>
     </record>
     <record id="tl_epc_00_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00.3</field>
-        <field name="name">Báo cáo định kỳ (tuần / tháng)</field>
+        <field name="name">Periodic reports - weekly and monthly</field>
         <field name="parent_id" ref="tl_epc_00"/>
     </record>
     <record id="tl_epc_00_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00.4</field>
-        <field name="name">Thư từ giao dịch chính thức</field>
+        <field name="name">Official correspondence</field>
         <field name="parent_id" ref="tl_epc_00"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.transmittal')]"/>
         <field name="note">Đã có sổ phiếu chuyển — file đính ở sổ, đây chỉ là bãi đáp.</field>
@@ -44,32 +44,32 @@
     <record id="tl_epc_00_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">00.5</field>
-        <field name="name">Kế hoạch quản lý dự án (PEP)</field>
+        <field name="name">Project Execution Plan (PEP)</field>
         <field name="parent_id" ref="tl_epc_00"/>
     </record>
     <record id="tl_epc_01" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01</field>
-        <field name="name">Phát triển dự án &amp; Pháp lý</field>
+        <field name="name">Development &amp; Permits</field>
     </record>
     <record id="tl_epc_01_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.1</field>
-        <field name="name">Chủ trương đầu tư, giấy chứng nhận đăng ký đầu tư</field>
+        <field name="name">Investment approval and registration certificate</field>
         <field name="parent_id" ref="tl_epc_01"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_01_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.2</field>
-        <field name="name">Đất đai — thuê đất, nhượng quyền, giải phóng mặt bằng</field>
+        <field name="name">Land - lease, concession, site acquisition</field>
         <field name="parent_id" ref="tl_epc_01"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_01_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.3</field>
-        <field name="name">Giấy phép xây dựng &amp; giấy phép chuyên ngành</field>
+        <field name="name">Construction permit and sector permits</field>
         <field name="parent_id" ref="tl_epc_01"/>
         <field name="is_required" eval="True"/>
         <field name="note">Xây dựng, PCCC, điện lực, môi trường. Rỗng là không được khởi công.</field>
@@ -77,93 +77,93 @@
     <record id="tl_epc_01_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.4</field>
-        <field name="name">Thoả thuận đấu nối &amp; hợp đồng mua bán điện (PPA)</field>
+        <field name="name">Grid connection agreement and PPA</field>
         <field name="parent_id" ref="tl_epc_01"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_01_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.5</field>
-        <field name="name">Đánh giá tác động môi trường &amp; xã hội</field>
+        <field name="name">Environmental and social impact assessment</field>
         <field name="parent_id" ref="tl_epc_01"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_01_6" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">01.6</field>
-        <field name="name">Rà phá bom mìn, vật cản</field>
+        <field name="name">UXO clearance</field>
         <field name="parent_id" ref="tl_epc_01"/>
     </record>
     <record id="tl_epc_02" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02</field>
-        <field name="name">Tài chính &amp; Bảo hiểm</field>
+        <field name="name">Finance &amp; Insurance</field>
     </record>
     <record id="tl_epc_02_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.1</field>
-        <field name="name">Khái toán, dự toán, tổng mức đầu tư</field>
+        <field name="name">Concept estimate, detailed estimate, total investment</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.concept.estimate')]"/>
     </record>
     <record id="tl_epc_02_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.2</field>
-        <field name="name">Hợp đồng tín dụng &amp; khế ước nhận nợ</field>
+        <field name="name">Credit agreement and promissory notes</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="tool_model_id" search="[('model', '=', 're.loan.note')]"/>
     </record>
     <record id="tl_epc_02_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.3</field>
-        <field name="name">Hồ sơ giải ngân</field>
+        <field name="name">Drawdown dossiers</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.loan.disbursement.dossier')]"/>
     </record>
     <record id="tl_epc_02_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.4</field>
-        <field name="name">Bảo lãnh ngân hàng &amp; thư tín dụng</field>
+        <field name="name">Bank guarantees and letters of credit</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.contract.guarantee')]"/>
     </record>
     <record id="tl_epc_02_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.5</field>
-        <field name="name">Bảo hiểm công trình (CAR/EAR) &amp; trách nhiệm</field>
+        <field name="name">Construction insurance (CAR, EAR) and liability</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_02_6" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">02.6</field>
-        <field name="name">Tài sản bảo đảm &amp; định giá</field>
+        <field name="name">Collateral and valuation</field>
         <field name="parent_id" ref="tl_epc_02"/>
         <field name="tool_model_id" search="[('model', '=', 're.loan.collateral')]"/>
     </record>
     <record id="tl_epc_03" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03</field>
-        <field name="name">Đấu thầu &amp; Hợp đồng</field>
+        <field name="name">Tendering &amp; Contracts</field>
     </record>
     <record id="tl_epc_03_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.1</field>
-        <field name="name">Hồ sơ mời thầu</field>
+        <field name="name">Tender documents</field>
         <field name="parent_id" ref="tl_epc_03"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.tender.package')]"/>
     </record>
     <record id="tl_epc_03_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.2</field>
-        <field name="name">Hồ sơ dự thầu &amp; biên bản chấm thầu</field>
+        <field name="name">Bids and evaluation reports</field>
         <field name="parent_id" ref="tl_epc_03"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.tender.bidder')]"/>
     </record>
     <record id="tl_epc_03_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.3</field>
-        <field name="name">Hợp đồng đã ký</field>
+        <field name="name">Executed contracts</field>
         <field name="parent_id" ref="tl_epc_03"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.contract')]"/>
         <field name="is_required" eval="True"/>
@@ -171,60 +171,60 @@
     <record id="tl_epc_03_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.4</field>
-        <field name="name">Phụ lục hợp đồng</field>
+        <field name="name">Contract amendments</field>
         <field name="parent_id" ref="tl_epc_03"/>
     </record>
     <record id="tl_epc_03_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.5</field>
-        <field name="name">Phát sinh / thay đổi</field>
+        <field name="name">Variations</field>
         <field name="parent_id" ref="tl_epc_03"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.variation')]"/>
     </record>
     <record id="tl_epc_03_6" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">03.6</field>
-        <field name="name">Khiếu nại &amp; gia hạn thời gian (EOT)</field>
+        <field name="name">Claims and extension of time (EOT)</field>
         <field name="parent_id" ref="tl_epc_03"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.claim')]"/>
     </record>
     <record id="tl_epc_04" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04</field>
-        <field name="name">Thiết kế (Engineering)</field>
+        <field name="name">Engineering</field>
     </record>
     <record id="tl_epc_04_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.1</field>
-        <field name="name">Khảo sát — địa hình, địa chất, thuỷ văn, đo gió</field>
+        <field name="name">Surveys - topographic, geotechnical, hydrological, wind</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_04_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.2</field>
-        <field name="name">Thiết kế cơ sở</field>
+        <field name="name">Basic design</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_04_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.3</field>
-        <field name="name">Thiết kế kỹ thuật</field>
+        <field name="name">Detailed design</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_04_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.4</field>
-        <field name="name">Bản vẽ thi công</field>
+        <field name="name">Construction drawings</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_04_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.5</field>
-        <field name="name">Hồ sơ nhà thầu trình để xem xét / phê duyệt</field>
+        <field name="name">Contractor submittals for review or approval</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.document')]"/>
         <field name="note">Đồng hồ 21 ngày và cổng khởi công nằm ở sổ hồ sơ kỹ thuật.</field>
@@ -232,184 +232,184 @@
     <record id="tl_epc_04_6" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.6</field>
-        <field name="name">Thuyết minh, tính toán kỹ thuật</field>
+        <field name="name">Design calculations and technical reports</field>
         <field name="parent_id" ref="tl_epc_04"/>
     </record>
     <record id="tl_epc_04_7" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.7</field>
-        <field name="name">Thẩm tra, thẩm định thiết kế</field>
+        <field name="name">Design review and verification</field>
         <field name="parent_id" ref="tl_epc_04"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_04_8" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">04.8</field>
-        <field name="name">Mô hình BIM &amp; dữ liệu số</field>
+        <field name="name">BIM models and digital data</field>
         <field name="parent_id" ref="tl_epc_04"/>
     </record>
     <record id="tl_epc_05" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05</field>
-        <field name="name">Mua sắm &amp; Thiết bị (Procurement)</field>
+        <field name="name">Procurement &amp; Equipment</field>
     </record>
     <record id="tl_epc_05_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05.1</field>
-        <field name="name">Đơn hàng &amp; hợp đồng cung cấp</field>
+        <field name="name">Purchase orders and supply contracts</field>
         <field name="parent_id" ref="tl_epc_05"/>
     </record>
     <record id="tl_epc_05_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05.2</field>
-        <field name="name">Hồ sơ kỹ thuật nhà sản xuất (vendor data)</field>
+        <field name="name">Vendor data</field>
         <field name="parent_id" ref="tl_epc_05"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_05_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05.3</field>
-        <field name="name">Chứng nhận xuất xưởng (FAT) &amp; chứng chỉ vật liệu</field>
+        <field name="name">Factory acceptance tests (FAT) and material certificates</field>
         <field name="parent_id" ref="tl_epc_05"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_05_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05.4</field>
-        <field name="name">Vận chuyển, bảo hiểm hàng hoá, hải quan</field>
+        <field name="name">Shipping, cargo insurance and customs</field>
         <field name="parent_id" ref="tl_epc_05"/>
     </record>
     <record id="tl_epc_05_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">05.5</field>
-        <field name="name">Nhận hàng &amp; kiểm tra tại công trường</field>
+        <field name="name">Site delivery and inspection</field>
         <field name="parent_id" ref="tl_epc_05"/>
     </record>
     <record id="tl_epc_06" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06</field>
-        <field name="name">Thi công (Construction)</field>
+        <field name="name">Construction</field>
     </record>
     <record id="tl_epc_06_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.1</field>
-        <field name="name">Biện pháp thi công &amp; kế hoạch huy động</field>
+        <field name="name">Method statements and mobilisation plan</field>
         <field name="parent_id" ref="tl_epc_06"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_06_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.2</field>
-        <field name="name">Nhật ký công trường</field>
+        <field name="name">Site diary</field>
         <field name="parent_id" ref="tl_epc_06"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.site.diary')]"/>
     </record>
     <record id="tl_epc_06_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.3</field>
-        <field name="name">Nghiệm thu khối lượng</field>
+        <field name="name">Quantity acceptance</field>
         <field name="parent_id" ref="tl_epc_06"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.progress.acceptance')]"/>
     </record>
     <record id="tl_epc_06_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.4</field>
-        <field name="name">Nghiệm thu công việc / giai đoạn</field>
+        <field name="name">Work and milestone acceptance</field>
         <field name="parent_id" ref="tl_epc_06"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_06_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.5</field>
-        <field name="name">Ảnh hiện trường</field>
+        <field name="name">Site photos</field>
         <field name="parent_id" ref="tl_epc_06"/>
     </record>
     <record id="tl_epc_06_6" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">06.6</field>
-        <field name="name">Trắc đạc, định vị, mốc chuẩn</field>
+        <field name="name">Survey and setting out</field>
         <field name="parent_id" ref="tl_epc_06"/>
     </record>
     <record id="tl_epc_07" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">07</field>
-        <field name="name">Chất lượng (Quality)</field>
+        <field name="name">Quality</field>
     </record>
     <record id="tl_epc_07_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">07.1</field>
-        <field name="name">Kế hoạch quản lý chất lượng &amp; ITP</field>
+        <field name="name">Quality management plan and ITP</field>
         <field name="parent_id" ref="tl_epc_07"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_07_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">07.2</field>
-        <field name="name">Thí nghiệm, kiểm định, hiệu chuẩn</field>
+        <field name="name">Testing, inspection and calibration</field>
         <field name="parent_id" ref="tl_epc_07"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_07_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">07.3</field>
-        <field name="name">Phiếu không phù hợp (NCR) &amp; khắc phục</field>
+        <field name="name">Non-conformance reports (NCR)</field>
         <field name="parent_id" ref="tl_epc_07"/>
     </record>
     <record id="tl_epc_07_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">07.4</field>
-        <field name="name">Danh mục tồn đọng (punch list)</field>
+        <field name="name">Punch list</field>
         <field name="parent_id" ref="tl_epc_07"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.site.punch')]"/>
     </record>
     <record id="tl_epc_08" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08</field>
-        <field name="name">An toàn, Sức khoẻ, Môi trường (HSE)</field>
+        <field name="name">Health, Safety &amp; Environment (HSE)</field>
     </record>
     <record id="tl_epc_08_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08.1</field>
-        <field name="name">Kế hoạch HSE &amp; đánh giá rủi ro</field>
+        <field name="name">HSE plan and risk assessment</field>
         <field name="parent_id" ref="tl_epc_08"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_08_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08.2</field>
-        <field name="name">Huấn luyện &amp; chứng chỉ nhân sự</field>
+        <field name="name">Training and certification</field>
         <field name="parent_id" ref="tl_epc_08"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.site.toolbox')]"/>
     </record>
     <record id="tl_epc_08_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08.3</field>
-        <field name="name">Sự cố, tai nạn &amp; điều tra</field>
+        <field name="name">Incidents and investigations</field>
         <field name="parent_id" ref="tl_epc_08"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.site.incident')]"/>
     </record>
     <record id="tl_epc_08_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08.4</field>
-        <field name="name">Kiểm tra, tuần tra an toàn</field>
+        <field name="name">Safety inspections and patrols</field>
         <field name="parent_id" ref="tl_epc_08"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.site.safety.inspection')]"/>
     </record>
     <record id="tl_epc_08_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">08.5</field>
-        <field name="name">Giấy phép làm việc (công việc nguy hiểm)</field>
+        <field name="name">Permits to work</field>
         <field name="parent_id" ref="tl_epc_08"/>
     </record>
     <record id="tl_epc_09" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">09</field>
-        <field name="name">Tiến độ (Schedule)</field>
+        <field name="name">Schedule</field>
     </record>
     <record id="tl_epc_09_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">09.1</field>
-        <field name="name">Tiến độ gốc đã duyệt (baseline)</field>
+        <field name="name">Approved baseline schedule</field>
         <field name="parent_id" ref="tl_epc_09"/>
         <field name="tool_model_id" search="[('model', '=', 'rp.schedule.baseline')]"/>
         <field name="is_required" eval="True"/>
@@ -417,88 +417,88 @@
     <record id="tl_epc_09_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">09.2</field>
-        <field name="name">Cập nhật tiến độ định kỳ</field>
+        <field name="name">Periodic schedule updates</field>
         <field name="parent_id" ref="tl_epc_09"/>
     </record>
     <record id="tl_epc_09_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">09.3</field>
-        <field name="name">Phân tích trượt tiến độ &amp; biện pháp bù</field>
+        <field name="name">Delay analysis and recovery plans</field>
         <field name="parent_id" ref="tl_epc_09"/>
     </record>
     <record id="tl_epc_10" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10</field>
-        <field name="name">Chạy thử &amp; Nghiệm thu (Commissioning)</field>
+        <field name="name">Commissioning</field>
     </record>
     <record id="tl_epc_10_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10.1</field>
-        <field name="name">Kế hoạch chạy thử &amp; quy trình thử</field>
+        <field name="name">Commissioning plan and test procedures</field>
         <field name="parent_id" ref="tl_epc_10"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_10_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10.2</field>
-        <field name="name">Thí nghiệm trước đóng điện</field>
+        <field name="name">Pre-energisation testing</field>
         <field name="parent_id" ref="tl_epc_10"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_10_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10.3</field>
-        <field name="name">Đóng điện, hoà lưới, thử không tải</field>
+        <field name="name">Energisation and grid synchronisation</field>
         <field name="parent_id" ref="tl_epc_10"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_10_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10.4</field>
-        <field name="name">Thử nghiệm hiệu năng (performance test)</field>
+        <field name="name">Performance tests</field>
         <field name="parent_id" ref="tl_epc_10"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_10_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">10.5</field>
-        <field name="name">Chứng chỉ nghiệm thu / COD</field>
+        <field name="name">Taking-over certificate and COD</field>
         <field name="parent_id" ref="tl_epc_10"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_11" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">11</field>
-        <field name="name">Thanh toán (Commercial)</field>
+        <field name="name">Commercial &amp; Payments</field>
     </record>
     <record id="tl_epc_11_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">11.1</field>
-        <field name="name">Hồ sơ thanh toán giai đoạn (IPC)</field>
+        <field name="name">Interim payment certificates (IPC)</field>
         <field name="parent_id" ref="tl_epc_11"/>
     </record>
     <record id="tl_epc_11_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">11.2</field>
-        <field name="name">Hoá đơn nhà thầu &amp; chứng từ chi</field>
+        <field name="name">Contractor invoices and payment records</field>
         <field name="parent_id" ref="tl_epc_11"/>
     </record>
     <record id="tl_epc_11_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">11.3</field>
-        <field name="name">Quyết toán hợp đồng</field>
+        <field name="name">Final account</field>
         <field name="parent_id" ref="tl_epc_11"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_12" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12</field>
-        <field name="name">Bàn giao &amp; Kết thúc (Closeout)</field>
+        <field name="name">Handover &amp; Closeout</field>
     </record>
     <record id="tl_epc_12_1" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12.1</field>
-        <field name="name">Hồ sơ hoàn công (as-built)</field>
+        <field name="name">As-built documentation</field>
         <field name="parent_id" ref="tl_epc_12"/>
         <field name="is_required" eval="True"/>
         <field name="note">Điều 5.6: thiếu thì ngày bàn giao chưa chạy, phạt chậm vẫn đếm.</field>
@@ -506,7 +506,7 @@
     <record id="tl_epc_12_2" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12.2</field>
-        <field name="name">Tài liệu vận hành &amp; bảo trì (O&amp;M)</field>
+        <field name="name">Operation and maintenance manuals (O&amp;M)</field>
         <field name="parent_id" ref="tl_epc_12"/>
         <field name="is_required" eval="True"/>
         <field name="note">Điều 5.7: cùng cơ chế chặn bàn giao như hồ sơ hoàn công.</field>
@@ -514,20 +514,20 @@
     <record id="tl_epc_12_3" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12.3</field>
-        <field name="name">Bảo hành &amp; danh mục phụ tùng dự phòng</field>
+        <field name="name">Warranties and spare parts list</field>
         <field name="parent_id" ref="tl_epc_12"/>
         <field name="is_required" eval="True"/>
     </record>
     <record id="tl_epc_12_4" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12.4</field>
-        <field name="name">Đào tạo vận hành &amp; bàn giao nhân sự</field>
+        <field name="name">Operator training and handover</field>
         <field name="parent_id" ref="tl_epc_12"/>
     </record>
     <record id="tl_epc_12_5" model="rp.doc.folder.template.line">
         <field name="template_id" ref="tmpl_epc_owner"/>
         <field name="code">12.5</field>
-        <field name="name">Quyết toán dự án &amp; lưu trữ</field>
+        <field name="name">Project closeout and archive</field>
         <field name="parent_id" ref="tl_epc_12"/>
         <field name="is_required" eval="True"/>
     </record>

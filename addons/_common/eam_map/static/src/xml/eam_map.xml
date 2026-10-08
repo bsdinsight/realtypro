@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="eam_map.PlantMap">
-    <div class="eam-map-root o_action">
+    <div class="eam-map-root">
         <div class="eam-map-side">
             <div t-if="state.loading" class="p-3 text-muted">Đang nạp…</div>
             <t t-if="state.data">

@@ -1,17 +1,28 @@
 .eam-map-root {
+    // KHÔNG gắn thêm lớp `o_action` lên thẻ gốc. Odoo khai
+    // `.o_web_client > .o_action_manager > .o_action { flex-flow: column }`
+    // — ba lớp, đè đứt mọi khai báo một lớp ở đây — nên thanh bên và bản
+    // đồ xếp CHỒNG DỌC thay vì nằm cạnh nhau. Không gắn thì không có
+    // luật nào chạm tới, và chiều cao vẫn có vì thẻ cha
+    // `.o_action_manager` đã cao 100%.
     display: flex;
+    flex-direction: row;
     height: 100%;
     overflow: hidden;
 
     .eam-map-side {
         width: 330px;
         min-width: 330px;
+        // min-height:0 để thanh bên tự cuộn thay vì đẩy dài cả khung.
+        min-height: 0;
         overflow-y: auto;
         background: #f7f7f8;
         border-right: 1px solid #d8dadc;
         padding: 8px;
     }
-    .eam-map-canvas { flex: 1 1 auto; height: 100%; }
+    // min-width:0 để khung bản đồ co được; thiếu nó thì nội dung bên
+    // trong giữ bề rộng tối thiểu và đẩy tràn khỏi màn hình.
+    .eam-map-canvas { flex: 1 1 auto; min-width: 0; height: 100%; }
 
     .eam-box {
         background: #fff;

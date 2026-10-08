@@ -335,9 +335,40 @@ class ReLoanFacility(models.Model):
         domain="[('pledge_target', '=', 'facility')]")
     note_count = fields.Integer(
         string='Số khế ước', compute='_compute_note_count')
+    # Số đầu kỳ: hạn mức đã chạy ở ngân hàng TRƯỚC khi vào hệ thống
+    # ------------------------------------------------------------------
+    # Hợp đồng tín dụng gần như không bao giờ được nhập vào đúng ngày ký.
+    # Khi nhập một hợp đồng đang chạy dở mà không khai số đã rút, hệ
+    # thống tính "đã sử dụng = 0" và báo còn nguyên hạn mức — con số đó
+    # sai theo hướng NGUY HIỂM NHẤT: mời đi rút một khoản không còn.
+    #
+    # Khai bằng số ĐÃ DÙNG chứ không phải số còn lại, vì đã dùng là một
+    # sự thật lịch sử đứng yên, còn "còn lại" sẽ sai ngay khi hạn mức
+    # được điều chỉnh bằng phụ lục. Ô "Khả dụng đầu kỳ" bên dưới chỉ để
+    # đối chiếu với sao kê ngân hàng.
+    amount_used_opening = fields.Monetary(
+        string='Đã dùng đầu kỳ', tracking=True,
+        help='Số đã rút / đã phát hành theo hạn mức này TRƯỚC khi đưa '
+             'vào hệ thống, mà không có khế ước tương ứng trong hệ '
+             'thống. Để 0 nếu hạn mức được theo dõi đầy đủ từ đầu.\n'
+             'Khai số này thì "Đã sử dụng" và "Còn lại" mới khớp sao kê '
+             'ngân hàng.')
+    date_opening = fields.Date(
+        string='Ngày chốt số đầu kỳ',
+        help='Ngày của sao kê / xác nhận số dư mà số đầu kỳ lấy theo. '
+             'Không có ngày thì vài tháng sau không ai biết con số kia '
+             'chốt tại thời điểm nào để đối chiếu lại.')
+    amount_available_opening = fields.Monetary(
+        string='Khả dụng đầu kỳ', store=True,
+        compute='_compute_amount_available_opening',
+        help='= Hạn mức − Đã dùng đầu kỳ. Ô này chỉ để ĐỐI CHIẾU với '
+             'xác nhận số dư của ngân hàng; muốn sửa thì sửa ô "Đã dùng '
+             'đầu kỳ".')
+
     amount_used = fields.Monetary(
         string='Đã sử dụng', compute='_compute_amount_used', store=True,
-        help='Cách tính phụ thuộc Loại hạn mức:\n'
+        help='Gồm cả "Đã dùng đầu kỳ" (phần đã chạy trước khi vào hệ '
+             'thống). Phần trong hệ thống tính theo Loại hạn mức:\n'
              '• Tuần hoàn / Thấu chi: = Σ DƯ NỢ GỐC các KW chưa tất toán '
              '(khi trả gốc, hạn mức được KHÔI PHỤC tự động — vd KW vay 2 tỷ '
              'trả gốc 1 tỷ → đã dùng giảm còn 1 tỷ → còn lại tăng thêm 1 tỷ).\n'
@@ -624,7 +655,7 @@ class ReLoanFacility(models.Model):
             rec.note_count = len(rec.note_ids)
 
     @api.depends('facility_type', 'note_ids.state', 'note_ids.amount',
-                 'note_ids.principal_outstanding')
+                 'note_ids.principal_outstanding', 'amount_used_opening')
     def _compute_amount_used(self):
         for rec in self:
             # Bỏ qua KW nháp / đã gửi NH / huỷ / đã tất toán hoặc giải
@@ -636,9 +667,20 @@ class ReLoanFacility(models.Model):
             live = rec.note_ids.filtered(
                 lambda n: n.state not in NOTE_STATES_NO_EXPOSURE)
             if rec.facility_type in ('revolving', 'overdraft'):
-                rec.amount_used = sum(live.mapped('principal_outstanding'))
+                trong_he = sum(live.mapped('principal_outstanding'))
             else:
-                rec.amount_used = sum(live.mapped('amount'))
+                trong_he = sum(live.mapped('amount'))
+            # Cộng phần đã rút TRƯỚC khi hạn mức được đưa vào hệ thống.
+            # Không có nó thì hợp đồng tín dụng đang chạy dở, nhập vào
+            # giữa chừng, sẽ hiện "còn lại = toàn bộ hạn mức" — mời người
+            # dùng đi rút một khoản tiền không còn tồn tại.
+            rec.amount_used = trong_he + (rec.amount_used_opening or 0.0)
+
+    @api.depends('amount_limit', 'amount_used_opening')
+    def _compute_amount_available_opening(self):
+        for rec in self:
+            rec.amount_available_opening = (
+                (rec.amount_limit or 0.0) - (rec.amount_used_opening or 0.0))
 
     @api.depends('note_ids.state', 'note_ids.amount')
     def _compute_amount_pending_bank(self):
@@ -682,6 +724,23 @@ class ReLoanFacility(models.Model):
             if rec.amount_limit < 0:
                 raise ValidationError(_(
                     "Số tiền hạn mức không được âm."))
+
+    @api.constrains('amount_used_opening', 'amount_limit')
+    def _check_amount_used_opening(self):
+        for rec in self:
+            if (rec.amount_used_opening or 0.0) < 0:
+                raise ValidationError(_(
+                    'Số đã dùng đầu kỳ không được âm.'))
+            if (rec.amount_used_opening or 0.0) > (rec.amount_limit or 0.0):
+                raise ValidationError(_(
+                    'Hạn mức "%(ten)s": đã dùng đầu kỳ %(dung)s vượt quá '
+                    'chính hạn mức %(han)s.\n\n'
+                    'Nếu ngân hàng thực sự đã giải ngân quá trần thì đó '
+                    'là một phụ lục nâng hạn mức chưa được nhập, không '
+                    'phải số đầu kỳ.',
+                    ten=rec.display_name,
+                    dung='{:,.0f}'.format(rec.amount_used_opening or 0.0),
+                    han='{:,.0f}'.format(rec.amount_limit or 0.0)))
 
     @api.constrains('amount_limit', 'credit_contract_id')
     def _check_within_contract(self):

@@ -81,6 +81,19 @@
                         </group>
                     </group>
                     <group>
+                        <group string="Số đầu kỳ (hạn mức đã chạy trước khi vào hệ thống)"
+                               name="gr_dau_ky">
+                            <field name="amount_used_opening"/>
+                            <field name="date_opening"/>
+                            <field name="amount_available_opening"/>
+                            <div colspan="2" class="text-muted small">
+                                Chỉ khai khi đưa một hợp đồng tín dụng
+                                <b>đang chạy dở</b> vào hệ thống. Bỏ trống
+                                thì "Còn lại" sẽ báo nguyên hạn mức, tức
+                                mời đi rút một khoản ngân hàng đã giải
+                                ngân mất rồi.
+                            </div>
+                        </group>
                         <group string="Sử dụng hạn mức">
                             <field name="amount_used"/>
                             <field name="interest_rate_weighted"/>

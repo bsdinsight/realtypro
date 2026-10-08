@@ -146,6 +146,20 @@
                                     <field name="flexible_limits"
                                            widget="boolean_toggle"
                                            optional="show"/>
+                                    <!-- Số đầu kỳ: mặc định ẩn vì hạn mức
+                                         mở mới trong hệ thống không có số
+                                         này. Hiện ra khi nhập một HĐTD
+                                         đang chạy dở — không có nó thì
+                                         "Còn lại" báo nguyên hạn mức. -->
+                                    <field name="amount_used_opening"
+                                           width="185px" optional="hide"
+                                           string="Đã dùng đầu kỳ"
+                                           sum="Tổng đã dùng đầu kỳ"/>
+                                    <field name="amount_available_opening"
+                                           width="185px" optional="hide"
+                                           string="Khả dụng đầu kỳ"/>
+                                    <field name="date_opening"
+                                           optional="hide"/>
                                     <field name="amount_used" width="185px"
                                            sum="Tổng đã sử dụng"/>
                                     <!-- KW "Đã gửi NH" KHÔNG nằm trong "Đã

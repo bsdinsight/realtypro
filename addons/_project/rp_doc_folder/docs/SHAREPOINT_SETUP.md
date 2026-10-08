@@ -1,5 +1,55 @@
 # Đấu nối SharePoint Online — việc cần làm phía Microsoft 365
 
+---
+
+## ✅ Tình trạng thực tế của BSD (cập nhật 08/10/2026)
+
+Bước 1, 2, 3 **đã làm xong**. Giá trị thực:
+
+```
+Tenant ID      : 623399a9-16dd-43ba-b733-5c71e7ea004c
+Client ID      : 7c896a6b-8d8b-49c6-b0f0-5f71e6e118bf
+Tên ứng dụng   : RealtyPro — Hồ sơ dự án
+Site URL       : https://bsdinsight0.sharepoint.com/sites/Demo
+Graph Site ID  : bsdinsight0.sharepoint.com,8edda0a0-207d-47d0-8424-98b25578b90a,c8b94779-e6cd-45ca-b7bc-7edd0d4507ba
+```
+
+`Sites.Selected` đã thêm đúng loại **Application** và đã **Grant admin
+consent** (Status: Granted).
+
+**Còn lại hai việc, cả hai đều phải chính anh Đại bấm:**
+
+**(a) Bước 4b** — mở <https://developer.microsoft.com/graph/graph-explorer>
+bằng trình duyệt thường (pop-up đăng nhập không chạy được trong pane của
+Claude), đăng nhập tài khoản admin, chọn `POST`, dán URL:
+
+```
+https://graph.microsoft.com/v1.0/sites/bsdinsight0.sharepoint.com,8edda0a0-207d-47d0-8424-98b25578b90a,c8b94779-e6cd-45ca-b7bc-7edd0d4507ba/permissions
+```
+
+Request body:
+
+```json
+{
+  "roles": ["write"],
+  "grantedToIdentities": [
+    {
+      "application": {
+        "id": "7c896a6b-8d8b-49c6-b0f0-5f71e6e118bf",
+        "displayName": "RealtyPro — Hồ sơ dự án"
+      }
+    }
+  ]
+}
+```
+
+Trả về `201 Created` là xong. Bước 4a (lấy Site ID) **bỏ qua** — đã lấy
+sẵn ở trên bằng `_api/site/id` và `_api/web/id`.
+
+**(b) Bước 5** — tạo client secret. Chuỗi bí mật không đi qua Claude.
+
+---
+
 Làm một lần cho cả hệ thống. Mất khoảng 15 phút, nhưng **phải có quyền
 Global Administrator hoặc SharePoint Administrator** của tenant công ty.
 

@@ -29,6 +29,9 @@
                             Chạy lại bao nhiêu lần cũng được — thư mục đã
                             có thì bỏ qua, chỉ thêm cái còn thiếu.
                         </div>
+                        <button name="action_day_sharepoint" type="object"
+                                string="Đẩy lên SharePoint"
+                                invisible="doc_folder_count == 0"/>
                     </group>
                 </group>
             </xpath>

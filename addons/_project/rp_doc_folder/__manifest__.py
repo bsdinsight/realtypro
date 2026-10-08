@@ -51,6 +51,7 @@ toán → 12 bàn giao.
         'data/rp_doc_folder_template_data.xml',
         'views/rp_doc_folder_views.xml',
         'views/re_project_views.xml',
+        'views/rp_sharepoint_views.xml',
     ],
     'installable': True,
 }

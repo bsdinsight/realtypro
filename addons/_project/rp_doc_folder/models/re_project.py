@@ -88,6 +88,25 @@ class ReProject(models.Model):
             },
         }
 
+    def action_day_sharepoint(self):
+        """Dựng cây thư mục của dự án lên SharePoint."""
+        self.ensure_one()
+        if not self.doc_folder_ids:
+            raise UserError(_('Dựng bộ thư mục chuẩn trước đã.'))
+        n = self.env['rp.sharepoint.config']._lay().rp_dung_cay(self)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': (_('Đã tạo %s thư mục trên SharePoint.', n)
+                            if n else
+                            _('Không có thư mục nào phải tạo — SharePoint '
+                              'đã khớp.')),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
     def action_mo_thu_muc(self):
         self.ensure_one()
         return {

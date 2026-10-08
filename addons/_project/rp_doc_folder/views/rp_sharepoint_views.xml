@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_sharepoint_config_form" model="ir.ui.view">
+        <field name="name">rp.sharepoint.config.form</field>
+        <field name="model">rp.sharepoint.config</field>
+        <field name="arch" type="xml">
+            <form string="Cấu hình SharePoint">
+                <header>
+                    <button name="action_kiem_tra" type="object"
+                            string="Kiểm tra kết nối" class="btn-primary"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,ok"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state != 'error'">
+                        Kết nối đang lỗi — xem phần "Kết quả kiểm tra" bên
+                        dưới, nó chỉ đúng chỗ phải sửa.
+                    </div>
+                    <group>
+                        <group string="Ứng dụng Entra ID">
+                            <field name="tenant_id"
+                                   placeholder="623399a9-…"/>
+                            <field name="client_id"
+                                   placeholder="7c896a6b-…"/>
+                            <!-- password: gõ xong không hiện lại -->
+                            <field name="client_secret" password="True"/>
+                            <field name="secret_expire"/>
+                        </group>
+                        <group string="Site">
+                            <field name="site_url"
+                                   placeholder="https://congty.sharepoint.com/sites/Demo"/>
+                            <field name="site_id"/>
+                            <field name="drive_id"/>
+                            <field name="last_check"/>
+                        </group>
+                    </group>
+                    <group string="Kết quả kiểm tra">
+                        <field name="last_message" nolabel="1" readonly="1"/>
+                    </group>
+                    <div class="text-muted">
+                        Nút kiểm tra chạy bốn tầng và dừng ở tầng đầu tiên
+                        hỏng: lấy token → đọc site → thấy thư viện → thử
+                        ghi. Đọc được không có nghĩa là ghi được, nên tầng
+                        cuối tạo thật một thư mục rồi xoá đi.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rp_sharepoint_config" model="ir.actions.act_window">
+        <field name="name">SharePoint</field>
+        <field name="res_model">rp.sharepoint.config</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+    </record>
+
+    <record id="action_rp_sharepoint_config_open"
+            model="ir.actions.server">
+        <field name="name">SharePoint</field>
+        <field name="model_id" ref="model_rp_sharepoint_config"/>
+        <field name="state">code</field>
+        <field name="code">
+cfg = model._lay()
+action = env['ir.actions.act_window']._for_xml_id(
+    'rp_doc_folder.action_rp_sharepoint_config')
+action['res_id'] = cfg.id
+        </field>
+    </record>
+
+    <menuitem id="menu_sharepoint_config"
+              name="SharePoint"
+              parent="rp_estimate.menu_rp_configuration"
+              action="action_rp_sharepoint_config_open"
+              sequence="62"/>
+
+</odoo>

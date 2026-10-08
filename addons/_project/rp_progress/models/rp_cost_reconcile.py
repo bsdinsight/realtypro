@@ -191,3 +191,134 @@ class RpCostReconcile(models.Model):
         act = self.env['ir.actions.act_window']._for_xml_id(
             'rp_progress.action_rp_cost_reconcile')
         return act
+
+
+class RpPackageReconcile(models.Model):
+    """Đối chiếu ở cấp GÓI THẦU: số bóc so với số đã ký.
+
+    Bảng đối chiếu theo nhóm chi phí không trả lời chính xác được câu
+    "gói nào ký thiếu so với số bóc", vì hợp đồng trọn gói phải chia về
+    nhóm theo tỷ trọng BOQ — nên một gói ký thiếu sẽ bị **rải đều** phần
+    hụt ra mọi nhóm của nó thay vì chỉ đúng chỗ.
+
+    Ở cấp gói thì không phải chia gì cả: BOQ của gói và giá hợp đồng của
+    gói đều là số có sẵn. Vì vậy đây mới là chỗ đọc ra được phần phạm vi
+    đã bóc mà chưa ai ký, và phần ký cao hơn số bóc.
+
+    Hai cột cùng quy ước với bảng theo nhóm chi phí: đều TRƯỚC THUẾ, và
+    cam kết = giá ký cộng phát sinh đã duyệt.
+    """
+    _name = 'rp.package.reconcile'
+    _description = 'Đối chiếu theo gói thầu — số bóc so với số đã ký'
+    _order = 'project_id, package_id'
+    _rec_name = 'package_id'
+
+    project_id = fields.Many2one(
+        're.project', string='Dự án', required=True,
+        ondelete='cascade', index=True)
+    package_id = fields.Many2one(
+        'rp.tender.package', string='Gói thầu', ondelete='cascade',
+        index=True)
+    contract_ids = fields.Many2many(
+        'rp.contract', string='Hợp đồng')
+    contractor_id = fields.Many2one(
+        'res.partner', string='Nhà thầu')
+    structure_codes = fields.Char(string='Phạm vi hợp đồng khai')
+    currency_id = fields.Many2one('res.currency', string='Tiền tệ')
+
+    amount_boq = fields.Monetary(string='BOQ đã bóc')
+    amount_contract = fields.Monetary(string='Hợp đồng trước thuế')
+    amount_variation = fields.Monetary(string='Phát sinh đã duyệt')
+    amount_committed = fields.Monetary(
+        string='Đã cam kết', compute='_compute_lech', store=True,
+        help='Giá ký cộng phát sinh đã duyệt — cam kết thật của chủ '
+             'đầu tư, không phải giá ký.')
+    amount_accepted = fields.Monetary(string='Đã nghiệm thu')
+    amount_paid = fields.Monetary(string='Đã thanh toán')
+
+    diff_amount = fields.Monetary(
+        string='Hụt / vượt', compute='_compute_lech', store=True,
+        help='Đã cam kết trừ BOQ đã bóc. Âm = phần đã bóc nhưng chưa ký '
+             'với ai.')
+    diff_percent = fields.Float(
+        string='Hụt / vượt %', compute='_compute_lech', store=True,
+        digits=(16, 1))
+    tinh_trang = fields.Selection(
+        [('chua_ky', 'Đã bóc, chưa ký hợp đồng'),
+         ('hut', 'Hợp đồng chưa phủ hết phạm vi đã bóc'),
+         ('vuot', 'Ký cao hơn số bóc'),
+         ('ngoai', 'Có hợp đồng, chưa bóc BOQ'),
+         ('khop', 'Khớp')],
+        string='Tình trạng', compute='_compute_lech', store=True)
+
+    @api.depends('amount_boq', 'amount_contract', 'amount_variation')
+    def _compute_lech(self):
+        for r in self:
+            cam = r.amount_contract + r.amount_variation
+            r.amount_committed = cam
+            r.diff_amount = cam - r.amount_boq
+            r.diff_percent = ((cam - r.amount_boq) / r.amount_boq * 100.0
+                              if r.amount_boq else 0.0)
+            if r.amount_boq and not cam:
+                r.tinh_trang = 'chua_ky'
+            elif cam and not r.amount_boq:
+                r.tinh_trang = 'ngoai'
+            # Ngưỡng 0,5%: dưới mức đó là làm tròn, không phải chuyện
+            # phải đi hỏi ai.
+            elif cam < r.amount_boq * 0.995:
+                r.tinh_trang = 'hut'
+            elif cam > r.amount_boq * 1.005:
+                r.tinh_trang = 'vuot'
+            else:
+                r.tinh_trang = 'khop'
+
+    @api.model
+    def rp_dung_lai(self, project_ids=None):
+        self = self.sudo()
+        DA = self.env['re.project']
+        da = DA.browse(project_ids) if project_ids else DA.search([])
+        self.search([('project_id', 'in', da.ids)]).unlink()
+        HD = self.env['rp.contract']
+        B = self.env['rp.boq.line']
+        bo_qua = {'draft', 'cancel', 'cancelled', 'rejected'}
+        dong = []
+        for p in da:
+            hd_het = HD.search([('project_id', '=', p.id)]).filtered(
+                lambda c: c.state not in bo_qua)
+            goi_het = self.env['rp.tender.package'].search(
+                [('project_id', '=', p.id)])
+            # Hợp đồng không gắn gói nào vẫn phải hiện, nếu không là
+            # giấu mất một khoản cam kết.
+            for g in list(goi_het) + [self.env['rp.tender.package']]:
+                hd = (hd_het.filtered(lambda c: c.tender_package_id == g)
+                      if g else
+                      hd_het.filtered(lambda c: not c.tender_package_id))
+                boq = (sum(B.search([('package_id', '=', g.id)]).mapped(
+                    'amount')) if g else 0.0)
+                if not boq and not hd:
+                    continue
+                dong.append({
+                    'project_id': p.id,
+                    'package_id': g.id or False,
+                    'contract_ids': [(6, 0, hd.ids)],
+                    'contractor_id': hd[:1].contractor_id.id or False,
+                    'structure_codes': ', '.join(
+                        hd.structure_ids.mapped('code')) or False,
+                    'currency_id': p.currency_id.id,
+                    'amount_boq': boq,
+                    'amount_contract': sum(
+                        hd.mapped('contract_value_pretax')),
+                    'amount_variation': sum(
+                        hd.mapped('variation_approved_amount')),
+                    'amount_accepted': sum(
+                        hd.mapped('acceptance_value_to_date')),
+                    'amount_paid': sum(hd.mapped('amount_paid')),
+                })
+        self.create(dong)
+        return len(dong)
+
+    @api.model
+    def rp_mo_man_hinh(self):
+        self.rp_dung_lai()
+        return self.env['ir.actions.act_window']._for_xml_id(
+            'rp_progress.action_rp_package_reconcile')

@@ -85,7 +85,7 @@
     </record>
 
     <record id="action_rp_cost_reconcile" model="ir.actions.act_window">
-        <field name="name">Đối chiếu khái toán — dự toán — hợp đồng</field>
+        <field name="name">Đối chiếu — theo nhóm chi phí</field>
         <field name="res_model">rp.cost.reconcile</field>
         <field name="view_mode">list,pivot</field>
         <field name="context">{'search_default_g_root': 1}</field>
@@ -99,16 +99,111 @@
     <!-- Menu gọi qua server action: dựng lại bảng rồi mới mở, để số trên
          màn luôn là số lúc này chứ không phải số lần mở trước. -->
     <record id="action_rp_cost_reconcile_open" model="ir.actions.server">
-        <field name="name">Đối chiếu khái toán — dự toán — hợp đồng</field>
+        <field name="name">Đối chiếu — theo nhóm chi phí</field>
         <field name="model_id" ref="model_rp_cost_reconcile"/>
         <field name="state">code</field>
         <field name="code">action = model.rp_mo_man_hinh()</field>
     </record>
 
     <menuitem id="menu_finance_cost_reconcile"
-              name="Đối chiếu khái toán — dự toán — hợp đồng"
+              name="Đối chiếu — theo nhóm chi phí"
               parent="rp_estimate.menu_finance"
               action="action_rp_cost_reconcile_open"
               sequence="14"/>
+
+    <!-- ============ Đối chiếu theo GÓI THẦU ============
+         Bảng theo nhóm chi phí phải chia giá hợp đồng trọn gói về nhóm
+         theo tỷ trọng BOQ, nên một gói ký thiếu bị rải đều phần hụt ra
+         mọi nhóm. Ở cấp gói thì không phải chia gì: cả hai vế đều là số
+         có sẵn, nên phần đã bóc mà chưa ai ký hiện ra chính xác. -->
+    <record id="view_rp_package_reconcile_list" model="ir.ui.view">
+        <field name="name">rp.package.reconcile.list</field>
+        <field name="model">rp.package.reconcile</field>
+        <field name="arch" type="xml">
+            <list string="Đối chiếu theo gói thầu" create="false"
+                  edit="false" expand="1" sample="1">
+                <field name="project_id" optional="hide"/>
+                <field name="package_id" string="Gói thầu" width="280px"/>
+                <field name="contractor_id" string="Nhà thầu"
+                       optional="show"/>
+                <field name="amount_boq" widget="monetary" width="190px"
+                       sum="Σ bóc"/>
+                <field name="amount_contract" widget="monetary"
+                       width="190px" sum="Σ ký"/>
+                <field name="amount_variation" widget="monetary"
+                       width="175px" sum="Σ phát sinh"/>
+                <field name="amount_committed" widget="monetary"
+                       width="190px" sum="Σ cam kết"/>
+                <field name="diff_amount" widget="monetary" width="190px"
+                       sum="Σ hụt/vượt"
+                       decoration-danger="diff_amount &lt; 0"
+                       decoration-warning="diff_amount &gt; 0"/>
+                <field name="diff_percent" string="Hụt/vượt %"
+                       optional="show"/>
+                <field name="tinh_trang" widget="badge"
+                       decoration-danger="tinh_trang in ('hut', 'chua_ky')"
+                       decoration-warning="tinh_trang == 'vuot'"
+                       decoration-info="tinh_trang == 'ngoai'"
+                       decoration-success="tinh_trang == 'khop'"/>
+                <field name="structure_codes" string="Phạm vi HĐ khai"
+                       optional="show"/>
+                <field name="amount_accepted" widget="monetary"
+                       width="190px" optional="hide"/>
+                <field name="amount_paid" widget="monetary" width="190px"
+                       optional="hide"/>
+                <field name="contract_ids" widget="many2many_tags"
+                       optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_package_reconcile_search" model="ir.ui.view">
+        <field name="name">rp.package.reconcile.search</field>
+        <field name="model">rp.package.reconcile</field>
+        <field name="arch" type="xml">
+            <search string="Đối chiếu theo gói thầu">
+                <field name="package_id"/>
+                <field name="project_id"/>
+                <field name="contractor_id"/>
+                <filter name="f_hut" string="Hợp đồng chưa phủ hết phạm vi đã bóc"
+                        domain="[('tinh_trang', '=', 'hut')]"/>
+                <filter name="f_chua_ky" string="Đã bóc, chưa ký hợp đồng"
+                        domain="[('tinh_trang', '=', 'chua_ky')]"/>
+                <filter name="f_vuot" string="Ký cao hơn số bóc"
+                        domain="[('tinh_trang', '=', 'vuot')]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_trang" string="Tình trạng"
+                        context="{'group_by': 'tinh_trang'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_package_reconcile" model="ir.actions.act_window">
+        <field name="name">Đối chiếu — theo gói thầu</field>
+        <field name="res_model">rp.package.reconcile</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có gói thầu nào</p>
+            <p>So số bóc với số đã ký ở cấp gói thầu — nơi cả hai vế đều
+               là số có sẵn, không phải chia tỷ trọng, nên phần phạm vi
+               đã bóc mà chưa ai ký hiện ra chính xác.</p>
+        </field>
+    </record>
+
+    <record id="action_rp_package_reconcile_open" model="ir.actions.server">
+        <field name="name">Đối chiếu — theo gói thầu</field>
+        <field name="model_id" ref="model_rp_package_reconcile"/>
+        <field name="state">code</field>
+        <field name="code">action = model.rp_mo_man_hinh()</field>
+    </record>
+
+    <menuitem id="menu_finance_package_reconcile"
+              name="Đối chiếu — theo gói thầu"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_package_reconcile_open"
+              sequence="15"/>
 
 </odoo>

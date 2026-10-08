@@ -733,17 +733,27 @@ class ProjectTask(models.Model):
         return sorted(changed)
 
     def write(self, vals):
-        """Đổi % (từ Gantt, form, list...) → tự cuộn % lên chuỗi cha.
+        """Đổi % hoặc NGÀY (từ Gantt, form, list...) → cuộn lên chuỗi cha.
 
         % cha = bình quân trọng số theo số ngày KH của các con (bỏ
         milestone). Context `rp_skip_progress_rollup` chặn đệ quy khi
         chính rollup ghi % cho cha.
+
+        Ngày cha = min ngày bắt đầu / max ngày kết thúc của các con. Việc
+        cuộn ngày TRƯỚC ĐÂY chỉ chạy khi kéo thanh trong Gantt
+        (``rp_shift_schedule``), nên sửa ngày ở form hay list thì dòng
+        tổng đứng im — nhìn vào tưởng giai đoạn vẫn đúng hạn trong khi
+        việc bên trong đã lòi ra ngoài. Đặt ở đây để mọi đường ghi đều
+        đi qua, không phụ thuộc vào người dùng bấm ở đâu.
         """
         res = super().write(vals)
         if not self.env.context.get('rp_skip_progress_rollup') and (
                 {'progress_percent', 'planned_days', 'is_milestone'}
                 & set(vals)):
             self._rp_cuon_tien_do()
+        if not self.env.context.get('rp_skip_date_rollup') and (
+                {'planned_start', 'planned_end', 'parent_id'} & set(vals)):
+            self._rp_cuon_ngay_cha()
         if 'wbs_code' in vals or 'rp_contract_id' in vals:
             # Mã đổi thì cây đổi theo. Dựng trong cùng phạm vi dự án để
             # còn nhận ra dòng tổng.
@@ -753,6 +763,25 @@ class ProjectTask(models.Model):
                     [('rp_project_id', 'in', du_an.ids),
                      ('rp_contract_id', '!=', False)]))
         return res
+
+    def _rp_cuon_ngay_cha(self):
+        """Cuộn ngày lên dòng tổng, theo từng hợp đồng.
+
+        Dùng lại ``_rollup_schedule_parent_dates`` của hợp đồng — nơi đã
+        xử lý đúng thứ tự từ sâu lên nông, để cha cấp trên nhận ngày đã
+        cuộn của cha cấp dưới.
+
+        ``rp_skip_date_rollup`` là thứ chặn đệ quy: chính hàm cuộn lại
+        ghi ``planned_start``/``planned_end`` lên cha, mà mỗi lần ghi là
+        một lần vào ``write`` nữa. Lần cuộn thứ hai không đổi gì (hàm
+        này luỹ đẳng) nhưng vẫn quét lại toàn bộ cây của hợp đồng — với
+        lịch vài trăm việc thì mỗi lần sửa một ngày sẽ quét thừa nhiều
+        lần.
+        """
+        hd = self.mapped('rp_contract_id')
+        if hd:
+            hd.with_context(rp_skip_date_rollup=True) \
+              ._rollup_schedule_parent_dates()
 
     def _rp_cuon_tien_do(self):
         """Cuộn % hoàn thành từ các việc này lên toàn chuỗi cha.

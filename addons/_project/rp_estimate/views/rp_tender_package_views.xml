@@ -284,7 +284,14 @@
                                    context="{'default_package_id': id}">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="kind" widget="badge"/>
+                                    <!-- KHÔNG dùng widget="badge" ở đây:
+                                         badge chỉ VẼ giá trị, không bấm
+                                         vào sửa được — kể cả trong list
+                                         sửa tại chỗ. Người dùng thêm được
+                                         dòng nhưng không chọn nổi nhóm
+                                         tiêu chuẩn, mà cũng không có lỗi
+                                         nào hiện ra để biết vì sao. -->
+                                    <field name="kind"/>
                                     <field name="name"/>
                                     <field name="weight" sum="Tổng trọng số"/>
                                     <field name="is_mandatory"

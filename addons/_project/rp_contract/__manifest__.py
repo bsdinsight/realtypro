@@ -50,6 +50,7 @@ NGOÀI scope v1 (làm sau):
         'security/ir.model.access.csv',
         'data/ir_sequence_change.xml',
         'views/rp_contract_views.xml',
+        'views/re_project_views.xml',
         'views/rp_contract_closure_views.xml',
         'views/rp_contract_change_views.xml',
         'views/rp_tender_package_views.xml',

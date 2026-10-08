@@ -29,19 +29,32 @@
                    position="attributes">
                 <attribute name="invisible">is_energy</attribute>
             </xpath>
+            <!-- rp_schedule đã đặt một nút "Tiến độ" chung cho MỌI dự án,
+                 mở thẳng Gantt. Ở đây chỉ ẩn nó đi cho dự án năng lượng
+                 để khỏi có hai ô cùng đếm schedule_task_count trong một
+                 form — khai trùng một trường thì các modifier bắt đầu
+                 đánh nhau. -->
+            <xpath expr="//button[@name='action_open_project_gantt']"
+                   position="attributes">
+                <attribute name="invisible">is_energy or not schedule_task_count</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_view_subzones']"
                    position="before">
                 <button name="action_open_project_tasks" type="object"
-                        class="oe_stat_button" icon="fa-tasks"
+                        class="oe_stat_button" icon="fa-list-ul"
                         invisible="not is_energy or not schedule_task_count">
                     <field name="schedule_task_count" widget="statinfo"
                            string="Công việc"/>
                 </button>
+                <!-- Nhãn cũ là "HĐ có lịch" và đếm số hợp đồng, trong khi
+                     nút lại mở GANTT. Không ai đoán ra, nên người test
+                     báo là dự án chưa có Gantt tổng quan — mà nó đã có
+                     sẵn từ lâu. Nhãn phải nói đúng việc nút làm. -->
                 <button name="action_open_project_gantt" type="object"
-                        class="oe_stat_button" icon="fa-file-text-o"
+                        class="oe_stat_button" icon="fa-tasks"
                         invisible="not is_energy or not schedule_contract_count">
                     <field name="schedule_contract_count" widget="statinfo"
-                           string="HĐ có lịch"/>
+                           string="Gantt tiến độ"/>
                 </button>
             </xpath>
 

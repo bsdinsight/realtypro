@@ -844,6 +844,56 @@ export class RpGanttAction extends Component {
         });
     }
 
+    /**
+     * Giao việc cho người thực hiện.
+     *
+     * Đang chọn đúng một dòng công việc → mở form việc đó. Không chọn
+     * gì, hoặc chọn nhiều → mở DANH SÁCH công việc, nơi có cột người
+     * thực hiện và bật sửa hàng loạt: tích một loạt việc rồi sửa một ô
+     * là áp cho cả loạt. Đó mới là thao tác thật của người lập kế
+     * hoạch, chứ không phải mở từng việc một.
+     *
+     * Dòng "làn hợp đồng" (_isContract) không phải việc thật nên bỏ qua.
+     */
+    phanViec() {
+        const g = this.adapter && this.adapter.gantt;
+        let chon = [];
+        try {
+            chon = (g && g.getSelectedRecords && g.getSelectedRecords()) || [];
+        } catch {
+            chon = [];
+        }
+        const ids = chon
+            .map((r) => (r && r.taskData) || r || {})
+            .filter((d) => !d._isContract)
+            .map((d) => parseInt(d.TaskID, 10))
+            .filter((n) => n && !isNaN(n));
+        if (ids.length === 1) {
+            this._openTaskForm(ids[0]);
+            return;
+        }
+        const mien = ids.length > 1
+            ? [["id", "in", ids]]
+            : (this.projectId
+                ? [["rp_project_id", "=", this.projectId]]
+                : [["rp_contract_id", "=", this.contractId]]);
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            name: _t("Phân việc"),
+            res_model: "project.task",
+            views: [[false, "list"], [false, "form"]],
+            domain: mien,
+            target: "current",
+            // Danh sách lịch thi công khai priority 99 nên KHÔNG phải
+            // list mặc định của project.task — không ghim bằng
+            // list_view_ref thì Odoo mở danh sách việc thường, vốn
+            // không có cột WBS lẫn ngày kế hoạch.
+            context: {
+                list_view_ref: "rp_schedule.view_rp_schedule_task_list",
+            },
+        });
+    }
+
     _openTaskForm(id) {
         if (!id || isNaN(id)) return;
         this.action.doAction({

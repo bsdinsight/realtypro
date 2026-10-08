@@ -36,7 +36,9 @@
             <list string="Tiêu chuẩn đánh giá HSDT" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="package_id" optional="show"/>
-                <field name="kind" widget="badge"/>
+                <!-- badge không sửa được — xem chú thích ở tab tiêu
+                     chuẩn trong rp_tender_package_views.xml -->
+                <field name="kind"/>
                 <field name="name"/>
                 <field name="weight" sum="Tổng trọng số"/>
                 <field name="is_mandatory" widget="boolean_toggle"/>

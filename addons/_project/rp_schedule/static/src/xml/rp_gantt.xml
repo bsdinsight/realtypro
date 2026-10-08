@@ -82,6 +82,16 @@
                             title="Tô đỏ đường găng — chuỗi công việc quyết định ngày về đích.">
                         <i class="fa fa-exclamation-triangle me-1"/>Đường găng
                     </button>
+                    <!-- Phân việc: lưới Gantt không sửa được ô nào (tắt
+                         allowEditing để tránh vỡ khi có predecessor), nên
+                         cột "Phân việc" chỉ HIỆN tên. Phải có một lối rõ
+                         ràng để giao việc, không thể trông vào việc người
+                         dùng đoán ra là nhấp đúp được. -->
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            t-on-click="() => this.phanViec()"
+                            title="Giao việc cho người thực hiện. Tích một dòng rồi bấm, hoặc bấm thẳng để mở danh sách và phân việc hàng loạt.">
+                        <i class="fa fa-user-plus me-1"/>Phân việc
+                    </button>
                     <!-- Chốt / cập nhật baseline -->
                     <button type="button" class="btn btn-sm btn-outline-primary"
                             t-on-click="() => this.chotBaselineMoi()"

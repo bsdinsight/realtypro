@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_contract" model="ir.ui.view">
+        <field name="name">re.project.form.contract</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_hop_dong_nha_thau" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o">
+                    <field name="rp_contract_count" widget="statinfo"
+                           string="HĐ nhà thầu"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

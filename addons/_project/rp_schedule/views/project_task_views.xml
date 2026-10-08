@@ -182,6 +182,15 @@
                        sum="Σ ngày"/>
                 <field name="progress_percent" string="% hoàn thành"
                        widget="progressbar"/>
+                <!-- Danh sách này đã có multi_edit từ đầu, nhưng thiếu
+                     đúng cột người thực hiện — nên không có cách nào
+                     phân việc hàng loạt, mà đó mới là thao tác thật của
+                     người lập kế hoạch: tích một loạt việc rồi giao cho
+                     một đội. Có cột này thì sửa một ô là áp cho cả loạt
+                     đang tích. -->
+                <field name="user_ids" string="Người thực hiện"
+                       widget="many2many_avatar_user" optional="show"
+                       width="140px"/>
                 <field name="total_float" string="Dư địa (ngày)"
                        optional="show"/>
                 <field name="is_critical" string="Găng" optional="show"/>

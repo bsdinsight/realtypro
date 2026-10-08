@@ -11,6 +11,18 @@
         <field name="model">re.project</field>
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
         <field name="arch" type="xml">
+            <!-- Gantt toàn dự án đã có từ trước, nhưng nút mở nó nằm
+                 lọt trong khối tiến độ ở giữa form — người test tìm
+                 không ra và báo là "chưa có". Đưa thêm một nút lên hộp
+                 thống kê: đó là chỗ người ta nhìn đầu tiên. -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_project_gantt" type="object"
+                        class="oe_stat_button" icon="fa-tasks"
+                        invisible="not schedule_task_count">
+                    <field name="schedule_task_count" widget="statinfo"
+                           string="Tiến độ"/>
+                </button>
+            </xpath>
             <xpath expr="//notebook" position="before">
                 <group name="rp_schedule_rollup"
                        string="TIẾN ĐỘ TOÀN DỰ ÁN (mọi hợp đồng)"

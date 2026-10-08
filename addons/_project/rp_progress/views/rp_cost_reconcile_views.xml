@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_cost_reconcile_list" model="ir.ui.view">
+        <field name="name">rp.cost.reconcile.list</field>
+        <field name="model">rp.cost.reconcile</field>
+        <field name="arch" type="xml">
+            <list string="Đối chiếu khái toán — dự toán — hợp đồng"
+                  create="false" edit="false" expand="1" sample="1"
+                  default_order="root_category_id, category_id">
+                <field name="project_id" column_invisible="1"/>
+                <field name="root_category_id" optional="hide"/>
+                <field name="category_id" string="Nhóm chi phí"
+                       width="300px"/>
+                <!-- Ba cột tiền đều TRƯỚC THUẾ, nếu không thì không so
+                     được với nhau. Cột rộng, không cho cắt cụt. -->
+                <field name="amount_concept" widget="monetary"
+                       width="190px" sum="Σ khái toán"/>
+                <field name="amount_estimate" widget="monetary"
+                       width="190px" sum="Σ dự toán"/>
+                <field name="amount_contract" widget="monetary"
+                       width="190px" sum="Σ hợp đồng"/>
+                <field name="diff_total" widget="monetary" width="190px"
+                       sum="Σ lệch"
+                       decoration-danger="diff_total &lt; 0"
+                       decoration-success="diff_total &gt; 0"/>
+                <field name="pct_total" string="Lệch %" optional="show"/>
+                <field name="tinh_trang" widget="badge"
+                       decoration-danger="tinh_trang in ('chua_boc', 'vuot')"
+                       decoration-warning="tinh_trang in ('chua_ky', 'lech_boc')"
+                       decoration-info="tinh_trang == 'ngoai'"
+                       decoration-success="tinh_trang == 'khop'"/>
+                <field name="diff_estimate" widget="monetary" width="190px"
+                       optional="hide"/>
+                <field name="diff_contract" widget="monetary" width="190px"
+                       optional="hide"/>
+                <field name="amount_variation" widget="monetary"
+                       width="190px" optional="hide"/>
+                <field name="concept_id" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_reconcile_pivot" model="ir.ui.view">
+        <field name="name">rp.cost.reconcile.pivot</field>
+        <field name="model">rp.cost.reconcile</field>
+        <field name="arch" type="xml">
+            <pivot string="Đối chiếu ba đời của một khoản tiền" sample="1">
+                <field name="root_category_id" type="row"/>
+                <field name="amount_concept" type="measure"/>
+                <field name="amount_estimate" type="measure"/>
+                <field name="amount_contract" type="measure"/>
+                <field name="diff_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_cost_reconcile_search" model="ir.ui.view">
+        <field name="name">rp.cost.reconcile.search</field>
+        <field name="model">rp.cost.reconcile</field>
+        <field name="arch" type="xml">
+            <search string="Đối chiếu">
+                <field name="project_id"/>
+                <field name="category_id"/>
+                <filter name="f_chua_boc" string="Khái toán có, chưa bóc dự toán"
+                        domain="[('tinh_trang', '=', 'chua_boc')]"/>
+                <filter name="f_chua_ky" string="Đã bóc, chưa ký hợp đồng"
+                        domain="[('tinh_trang', '=', 'chua_ky')]"/>
+                <filter name="f_vuot" string="Hợp đồng vượt dự toán"
+                        domain="[('tinh_trang', '=', 'vuot')]"/>
+                <filter name="f_lech_boc" string="Dự toán lệch khái toán"
+                        domain="[('tinh_trang', '=', 'lech_boc')]"/>
+                <filter name="f_ngoai" string="Ngoài khái toán"
+                        domain="[('tinh_trang', '=', 'ngoai')]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_root" string="Nhóm gốc"
+                        context="{'group_by': 'root_category_id'}"/>
+                <filter name="g_trang" string="Tình trạng"
+                        context="{'group_by': 'tinh_trang'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_cost_reconcile" model="ir.actions.act_window">
+        <field name="name">Đối chiếu khái toán — dự toán — hợp đồng</field>
+        <field name="res_model">rp.cost.reconcile</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="context">{'search_default_g_root': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có gì để đối chiếu</p>
+            <p>Màn hình này cần một bản khái toán <b>đã duyệt</b>. Bản
+               nháp không phải cam kết với ai nên không đem ra đối chiếu.</p>
+        </field>
+    </record>
+
+    <!-- Menu gọi qua server action: dựng lại bảng rồi mới mở, để số trên
+         màn luôn là số lúc này chứ không phải số lần mở trước. -->
+    <record id="action_rp_cost_reconcile_open" model="ir.actions.server">
+        <field name="name">Đối chiếu khái toán — dự toán — hợp đồng</field>
+        <field name="model_id" ref="model_rp_cost_reconcile"/>
+        <field name="state">code</field>
+        <field name="code">action = model.rp_mo_man_hinh()</field>
+    </record>
+
+    <menuitem id="menu_finance_cost_reconcile"
+              name="Đối chiếu khái toán — dự toán — hợp đồng"
+              parent="rp_estimate.menu_finance"
+              action="action_rp_cost_reconcile_open"
+              sequence="14"/>
+
+</odoo>

@@ -55,6 +55,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/rp_contract_milestone_views.xml',
         'views/rp_milestone_acceptance_views.xml',
         'views/re_project_views.xml',
+        'views/rp_cost_reconcile_views.xml',
         'views/menu.xml',
     ],
     'assets': {

@@ -44,7 +44,9 @@
                             loại trùng nghĩa, và thống kê cộng nhầm.
                         </div>
                     </group>
-                    <group string="Ghi chú"><field name="note" nolabel="1"/></group>
+                    <group string="Ghi chú" name="gr_ghichu">
+                        <field name="note" nolabel="1"/>
+                    </group>
                 </sheet>
             </form>
         </field>

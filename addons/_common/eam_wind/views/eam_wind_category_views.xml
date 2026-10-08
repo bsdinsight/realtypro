@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_category_list_wind" model="ir.ui.view">
+        <field name="name">eam.asset.category.list.wind</field>
+        <field name="model">eam.asset.category</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_category_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_rotable_default']" position="after">
+                <field name="platform_scope" string="Nền tảng" widget="badge"
+                       decoration-warning="platform_scope != 'all'"/>
+                <field name="rank_failure" string="Hạng hỏng"
+                       optional="show"/>
+                <field name="rank_downtime" string="Hạng dừng"
+                       optional="show"/>
+                <field name="rdspp_code" string="RDS-PP" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_category_form_wind" model="ir.ui.view">
+        <field name="name">eam.asset.category.form.wind</field>
+        <field name="model">eam.asset.category</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_catch_all']" position="after">
+                <field name="platform_scope"/>
+                <field name="rdspp_code" placeholder="khách tự điền nếu có giấy phép VGB"/>
+            </xpath>
+            <xpath expr="//group[@name='gr_ghichu']" position="before">
+                <group string="Xếp hạng tham chiếu">
+                    <group>
+                        <field name="rank_failure"/>
+                        <field name="rank_downtime"/>
+                    </group>
+                    <group>
+                        <div class="text-muted">
+                            Hai trục xếp hạng <b>khác nhau</b>: cụm hỏng
+                            nhiều nhất không phải cụm gây dừng lâu nhất.
+                            Đây là <b>giá trị tham chiếu</b> — mức quan
+                            trọng thật phải suy ra từ lịch sử của chính
+                            đội máy này.
+                        </div>
+                    </group>
+                    <field name="reference_note" nolabel="1" colspan="2"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

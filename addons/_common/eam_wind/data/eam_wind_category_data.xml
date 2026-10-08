@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cây cấu phần điện gió.
+     Nhánh WTG theo phân loại ReliaWind (công bố công khai).
+     Nhánh BOP do BSD tự dựng — ReliaWind chỉ phủ tua-bin.
+     Cột rdspp_code để TRỐNG: RDS-PP là tài sản có bản quyền của
+     VGB, khách có giấy phép thì tự điền.
+     noupdate="1": nâng cấp module KHÔNG ghi đè chỉnh sửa của khách.
+-->
+<odoo>
+  <data noupdate="1">
+
+    <record id="cat_wtg" model="eam.asset.category">
+        <field name="code">WTG</field>
+        <field name="name">Tua-bin gió</field>
+        <field name="alias_names">Wind turbine generator, WTG</field>
+        <field name="reference_note">Cây 3 cấp theo phân loại ReliaWind — bộ de-facto trong tài liệu nghiên cứu độ tin cậy điện gió. 11 phân hệ + rổ Khác, 19 cụm.</field>
+    </record>
+    <record id="cat_wtg_rot" model="eam.asset.category">
+        <field name="code">WTG-ROT</field>
+        <field name="name">Rotor</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Hệ rotor</field>
+    </record>
+    <record id="cat_wtg_rot_bld" model="eam.asset.category">
+        <field name="code">WTG-ROT-BLD</field>
+        <field name="name">Cánh</field>
+        <field name="parent_id" ref="cat_wtg_rot"/>
+        <field name="alias_names">Blades, Rotor blades, Cánh quạt</field>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="rank_failure">3</field>
+        <field name="rank_downtime">3</field>
+        <field name="reference_note">Đứng hạng 3 ở CẢ HAI trục. Giờ công thay thế lớn ~288h, chi phí vật tư trung bình ~€90.000.</field>
+    </record>
+    <record id="cat_wtg_rot_hub" model="eam.asset.category">
+        <field name="code">WTG-ROT-HUB</field>
+        <field name="name">Moay-ơ</field>
+        <field name="parent_id" ref="cat_wtg_rot"/>
+        <field name="alias_names">Hub, Rotor hub</field>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="reference_note">Giờ công thay thế lớn cao nhất ~298h, chi phí ~€95.000. Nhưng tỷ lệ thay thấp nên ảnh hưởng khả dụng ít hơn hộp số và máy phát.</field>
+    </record>
+    <record id="cat_wtg_rot_pch" model="eam.asset.category">
+        <field name="code">WTG-ROT-PCH</field>
+        <field name="name">Hệ pitch</field>
+        <field name="parent_id" ref="cat_wtg_rot"/>
+        <field name="alias_names">Pitch system, Hệ điều chỉnh góc cánh</field>
+        <field name="rank_failure">4</field>
+        <field name="reference_note">Cùng hệ thuỷ lực là nhóm hỏng nhiều nhất trong dữ liệu ngoài khơi (~13% số lần hỏng); lỗi dầu ~17%, lỗi van ~14%.</field>
+    </record>
+    <record id="cat_wtg_rot_abr" model="eam.asset.category">
+        <field name="code">WTG-ROT-ABR</field>
+        <field name="name">Phanh khí động</field>
+        <field name="parent_id" ref="cat_wtg_rot"/>
+        <field name="alias_names">Air brake</field>
+    </record>
+    <record id="cat_wtg_drv" model="eam.asset.category">
+        <field name="code">WTG-DRV</field>
+        <field name="name">Hệ truyền động</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Drive train</field>
+        <field name="rank_downtime">4</field>
+    </record>
+    <record id="cat_wtg_drv_shf" model="eam.asset.category">
+        <field name="code">WTG-DRV-SHF</field>
+        <field name="name">Trục và ổ trục</field>
+        <field name="parent_id" ref="cat_wtg_drv"/>
+        <field name="alias_names">Shafts and bearings, Main bearing, Ổ trục chính</field>
+        <field name="is_rotable_default" eval="True"/>
+    </record>
+    <record id="cat_wtg_drv_mbr" model="eam.asset.category">
+        <field name="code">WTG-DRV-MBR</field>
+        <field name="name">Phanh cơ</field>
+        <field name="parent_id" ref="cat_wtg_drv"/>
+        <field name="alias_names">Mechanical brake</field>
+    </record>
+    <record id="cat_wtg_gbx" model="eam.asset.category">
+        <field name="code">WTG-GBX</field>
+        <field name="name">Hộp số</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Gearbox, System for converting speed, Hộp số tăng tốc</field>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="platform_scope">geared</field>
+        <field name="rank_downtime">1</field>
+        <field name="reference_note">CHỈ CÓ ở máy có hộp số. Đứng đầu về thời gian dừng. Cùng máy phát chiếm 95% tổng số lần thay thế lớn — riêng hộp số 0,154 lần/máy/năm. Chi phí vật tư trung bình mỗi lần thay thế lớn ~€230.000, giờ công ~231h. Tỷ lệ thay trong 10 năm đầu ~5%.</field>
+    </record>
+    <record id="cat_wtg_gen" model="eam.asset.category">
+        <field name="code">WTG-GEN</field>
+        <field name="name">Máy phát</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Generator, Máy phát điện</field>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="rank_downtime">2</field>
+        <field name="reference_note">Hạng 2 về thời gian dừng, và là cụm hỏng nhiều BẤT KỂ loại truyền động. 0,095 lần thay thế lớn/máy/năm. Tỷ lệ thay trong 10 năm đầu ~3,5%, đỉnh vào năm thứ sáu và bảy. Lỗi vành góp chiếm ~31% số lần hỏng của máy phát.</field>
+    </record>
+    <record id="cat_wtg_ele" model="eam.asset.category">
+        <field name="code">WTG-ELE</field>
+        <field name="name">Hệ điện</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Electrical, Electric systems, Hệ thống điện</field>
+        <field name="rank_failure">1</field>
+        <field name="reference_note">Đứng ĐẦU về số lần hỏng. Bộ dữ liệu CIRCE (Tây Ban Nha, ~4.300 máy) cho thấy với máy DFIG hệ điện đứng đầu CẢ HAI trục — 40,08% số lần hỏng và 43,11% thời gian dừng — ngược hẳn giả định hộp số thống trị.</field>
+    </record>
+    <record id="cat_wtg_ele_cnv" model="eam.asset.category">
+        <field name="code">WTG-ELE-CNV</field>
+        <field name="name">Bộ biến đổi</field>
+        <field name="parent_id" ref="cat_wtg_ele"/>
+        <field name="alias_names">Converter, Frequency converter, Inverter, Bộ nghịch lưu</field>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="reference_note">IGBT hỏng thường xuyên nhưng thay nhanh — đây là lý do số lần hỏng và thời gian dừng xếp hạng khác nhau.</field>
+    </record>
+    <record id="cat_wtg_ele_trf" model="eam.asset.category">
+        <field name="code">WTG-ELE-TRF</field>
+        <field name="name">Máy biến áp</field>
+        <field name="parent_id" ref="cat_wtg_ele"/>
+        <field name="alias_names">Transformer, MBA máy</field>
+        <field name="is_rotable_default" eval="True"/>
+    </record>
+    <record id="cat_wtg_ele_pro" model="eam.asset.category">
+        <field name="code">WTG-ELE-PRO</field>
+        <field name="name">Bảo vệ và đóng cắt</field>
+        <field name="parent_id" ref="cat_wtg_ele"/>
+        <field name="alias_names">Electrical protection, Switchgear, Contactor, Circuit breaker, Relay</field>
+    </record>
+    <record id="cat_wtg_ctl" model="eam.asset.category">
+        <field name="code">WTG-CTL</field>
+        <field name="name">Hệ điều khiển</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Control system, Controls, PLC</field>
+        <field name="rank_failure">2</field>
+        <field name="reference_note">Hạng 2 về số lần hỏng.</field>
+    </record>
+    <record id="cat_wtg_hyd" model="eam.asset.category">
+        <field name="code">WTG-HYD</field>
+        <field name="name">Hệ thuỷ lực</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Hydraulic system, Hydraulics</field>
+        <field name="reference_note">Trong dữ liệu ngoài khơi thường gộp với hệ pitch thành nhóm hỏng nhiều nhất; nhưng CIRCE lại thấy chỉ ~2%. Khác nhau rất xa giữa các đội máy — phải tự đo.</field>
+    </record>
+    <record id="cat_wtg_yaw" model="eam.asset.category">
+        <field name="code">WTG-YAW</field>
+        <field name="name">Hệ yaw</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Yaw system, Hệ xoay hướng gió</field>
+    </record>
+    <record id="cat_wtg_sns" model="eam.asset.category">
+        <field name="code">WTG-SNS</field>
+        <field name="name">Cảm biến</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Sensors, Anemometer, Cảm biến gió</field>
+    </record>
+    <record id="cat_wtg_nac" model="eam.asset.category">
+        <field name="code">WTG-NAC</field>
+        <field name="name">Nacelle</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Nacelle, Vỏ máy, Khoang máy</field>
+    </record>
+    <record id="cat_wtg_str" model="eam.asset.category">
+        <field name="code">WTG-STR</field>
+        <field name="name">Kết cấu</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Structure</field>
+    </record>
+    <record id="cat_wtg_str_twr" model="eam.asset.category">
+        <field name="code">WTG-STR-TWR</field>
+        <field name="name">Tháp</field>
+        <field name="parent_id" ref="cat_wtg_str"/>
+        <field name="alias_names">Tower, Trụ</field>
+    </record>
+    <record id="cat_wtg_str_fnd" model="eam.asset.category">
+        <field name="code">WTG-STR-FND</field>
+        <field name="name">Móng</field>
+        <field name="parent_id" ref="cat_wtg_str"/>
+        <field name="alias_names">Foundation, Móng trụ</field>
+    </record>
+    <record id="cat_wtg_oth" model="eam.asset.category">
+        <field name="code">WTG-OTH</field>
+        <field name="name">Khác (tua-bin)</field>
+        <field name="parent_id" ref="cat_wtg"/>
+        <field name="alias_names">Other, Other components, Tủ điện, Chiếu sáng, Chưa rõ</field>
+        <field name="is_catch_all" eval="True"/>
+        <field name="reference_note">RỔ KHÁC — bắt buộc phải có. Không có thì người nhập nhét bừa vào loại gần nhất và làm hỏng thống kê. Trong dữ liệu ngoài khơi rổ này chiếm ~12% số lần hỏng, riêng lỗi cửa/nắp ~25% của rổ.</field>
+    </record>
+    <record id="cat_bop" model="eam.asset.category">
+        <field name="code">BOP</field>
+        <field name="name">Hệ thống phụ trợ nhà máy</field>
+        <field name="alias_names">Balance of plant, BOP</field>
+        <field name="reference_note">ReliaWind chỉ phủ tua-bin. Nhánh này do BSD tự dựng cho phần còn lại của nhà máy — KHÔNG phải nội dung ReliaWind.</field>
+    </record>
+    <record id="cat_bop_sub" model="eam.asset.category">
+        <field name="code">BOP-SUB</field>
+        <field name="name">Trạm nâng áp</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">Substation, Step-up station</field>
+    </record>
+    <record id="cat_bop_sub_trf" model="eam.asset.category">
+        <field name="code">BOP-SUB-TRF</field>
+        <field name="name">Máy biến áp lực</field>
+        <field name="parent_id" ref="cat_bop_sub"/>
+        <field name="alias_names">Power transformer, MBA lực</field>
+        <field name="is_rotable_default" eval="True"/>
+    </record>
+    <record id="cat_bop_sub_swg" model="eam.asset.category">
+        <field name="code">BOP-SUB-SWG</field>
+        <field name="name">Thiết bị đóng cắt</field>
+        <field name="parent_id" ref="cat_bop_sub"/>
+        <field name="alias_names">Switchgear, GIS, Máy cắt</field>
+    </record>
+    <record id="cat_bop_sub_pro" model="eam.asset.category">
+        <field name="code">BOP-SUB-PRO</field>
+        <field name="name">Rơ-le bảo vệ</field>
+        <field name="parent_id" ref="cat_bop_sub"/>
+        <field name="alias_names">Protection relay</field>
+    </record>
+    <record id="cat_bop_mvc" model="eam.asset.category">
+        <field name="code">BOP-MVC</field>
+        <field name="name">Cáp ngầm trung thế</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">MV collector, Medium voltage collection</field>
+    </record>
+    <record id="cat_bop_trl" model="eam.asset.category">
+        <field name="code">BOP-TRL</field>
+        <field name="name">Đường dây truyền tải</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">Transmission line, Overhead line, Đường dây đấu nối</field>
+    </record>
+    <record id="cat_bop_sca" model="eam.asset.category">
+        <field name="code">BOP-SCA</field>
+        <field name="name">SCADA và truyền thông</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">SCADA, Communication, Hệ giám sát</field>
+        <field name="reference_note">Mất kết nối SCADA phải hạch toán thành loại thời gian &quot;Thông tin không khả dụng&quot; theo IEC 61400-26-1, không được bỏ qua.</field>
+    </record>
+    <record id="cat_bop_civ" model="eam.asset.category">
+        <field name="code">BOP-CIV</field>
+        <field name="name">Hạ tầng dân dụng</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">Civil works, Đường nội bộ, Hardstand, Thoát nước</field>
+    </record>
+    <record id="cat_bop_oth" model="eam.asset.category">
+        <field name="code">BOP-OTH</field>
+        <field name="name">Khác (phụ trợ)</field>
+        <field name="parent_id" ref="cat_bop"/>
+        <field name="alias_names">Other BOP</field>
+        <field name="is_catch_all" eval="True"/>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_eam_work_order" name="Lệnh công việc"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_work_order" sequence="20"/>
+    <menuitem id="menu_eam_work_order_hold" name="Lệnh đang chờ"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_work_order_hold" sequence="30"/>
+    <menuitem id="menu_eam_failure_mode" name="Dạng hỏng"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_failure_mode" sequence="30"/>
+</odoo>

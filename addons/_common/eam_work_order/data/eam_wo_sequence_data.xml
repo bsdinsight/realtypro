@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_eam_work_order" model="ir.sequence">
+        <field name="name">Lệnh công việc</field>
+        <field name="code">eam.work.order</field>
+        <field name="prefix">WO/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

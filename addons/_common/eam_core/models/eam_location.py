@@ -67,8 +67,12 @@ class EamLocation(models.Model):
         compute='_compute_asset_ids')
     # LƯU: cần lọc "vị trí chưa lắp tài sản nào" ngay trên danh sách,
     # mà trường tính không lưu thì không đưa vào domain được.
+    #
+    # Hàm tính RIÊNG, không dùng chung với asset_ids: Odoo cảnh báo khi
+    # một hàm tính vừa nuôi trường lưu vừa nuôi trường không lưu, vì khi
+    # đó chỉ ĐỌC asset_ids cũng kéo theo ghi lại asset_count.
     asset_count = fields.Integer(
-        string='Số tài sản đang lắp', compute='_compute_asset_ids',
+        string='Số tài sản đang lắp', compute='_compute_asset_count',
         store=True)
 
     company_id = fields.Many2one(
@@ -110,9 +114,15 @@ class EamLocation(models.Model):
                  'installation_ids.asset_id')
     def _compute_asset_ids(self):
         for l in self:
-            ts = l.installation_ids.filtered('is_current').mapped('asset_id')
-            l.asset_ids = ts
-            l.asset_count = len(ts)
+            l.asset_ids = l.installation_ids.filtered('is_current')\
+                .mapped('asset_id')
+
+    @api.depends('installation_ids.is_current',
+                 'installation_ids.asset_id')
+    def _compute_asset_count(self):
+        for l in self:
+            l.asset_count = len(
+                l.installation_ids.filtered('is_current').mapped('asset_id'))
 
     @api.depends('complete_code', 'name')
     def _compute_display_name(self):

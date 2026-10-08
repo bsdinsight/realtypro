@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_work_order_list" model="ir.ui.view">
+        <field name="name">eam.work.order.list</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <list string="Lệnh công việc" multi_edit="1"
+                  decoration-danger="delay_days &gt; 7"
+                  decoration-warning="is_on_hold"
+                  decoration-muted="state in ('closed','cancelled')">
+                <field name="name" width="150px"/>
+                <field name="title" width="320px"/>
+                <field name="work_type" width="170px"/>
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="location_id" string="Vị trí" width="180px"/>
+                <field name="asset_id" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user"
+                       optional="show"/>
+                <field name="executor" string="Bên làm" optional="show"/>
+                <field name="cost_bearer" string="Bên trả" optional="show"/>
+                <field name="date_planned_start" optional="show"/>
+                <field name="date_end" optional="hide"/>
+                <field name="delay_days" string="Trễ (ngày)" optional="show"/>
+                <field name="is_on_hold" string="Đang chờ" optional="hide"/>
+                <field name="hold_reason" string="Chờ vì" optional="show"/>
+                <field name="is_failure" string="Có hỏng" optional="hide"/>
+                <!-- Ba cột tiền giữ nguyên bề rộng: cột Monetary bị cắt
+                     cụt là mất đúng mấy chữ số đầu. -->
+                <field name="cost_total" string="Chi phí can thiệp"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="show"/>
+                <field name="cost_downtime" string="Sản lượng mất"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="hide"/>
+                <field name="cost_full" string="Tổng chi phí thật"
+                       widget="monetary" width="195px" sum="Σ"
+                       optional="show"/>
+                <field name="amount_chargeable" string="Đòi lại được"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'in_progress'"
+                       decoration-success="state in ('done','closed')"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_work_order_form" model="ir.ui.view">
+        <field name="name">eam.work.order.form</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <form string="Lệnh công việc">
+                <header>
+                    <button name="action_duyet" type="object" string="Duyệt"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_len_lich" type="object"
+                            string="Lên lịch" invisible="state != 'approved'"/>
+                    <button name="action_bat_dau" type="object"
+                            string="Bắt đầu làm" class="oe_highlight"
+                            invisible="state not in ('approved','planned')"/>
+                    <button name="action_cho" type="object" string="Chuyển sang chờ"
+                            invisible="state != 'in_progress' or is_on_hold"/>
+                    <button name="action_lam_tiep" type="object"
+                            string="Làm tiếp" class="oe_highlight"
+                            invisible="not is_on_hold"/>
+                    <button name="action_xong" type="object" string="Xong"
+                            class="oe_highlight"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_dong_lenh" type="object"
+                            string="Đóng hồ sơ" class="oe_highlight"
+                            invisible="state != 'done'"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp"
+                            invisible="state in ('draft','closed','cancelled')"/>
+                    <button name="action_huy" type="object" string="Huỷ"
+                            invisible="state in ('closed','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved,planned,in_progress,done,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Đang chờ" bg_color="text-bg-warning"
+                            invisible="not is_on_hold"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_khoang_dung" type="object"
+                                class="oe_stat_button" icon="fa-plug">
+                            <field name="outage_id" widget="statinfo"
+                                   string="Khoảng dừng"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Nội dung công việc"/></h2>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="work_type"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="category_id" invisible="1"/>
+                            <field name="outage_id"
+                                   domain="[('location_id','=',location_id)]"/>
+                            <field name="parent_id"
+                                   domain="[('id','!=',id)]"/>
+                        </group>
+                        <group string="Ai làm, ai trả tiền">
+                            <field name="executor"/>
+                            <field name="contractor_id"
+                                   invisible="executor == 'own_team'"
+                                   required="executor != 'own_team'"/>
+                            <field name="cost_bearer"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <div class="text-muted" colspan="2">
+                                <b>Bên làm khác bên trả tiền.</b> Hãng chế
+                                tạo tự cử người tới sửa mà chủ đầu tư vẫn
+                                trả nếu đã hết bảo hành; tổ của mình làm mà
+                                chi phí đòi lại được nhà thầu.
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Lịch">
+                            <field name="date_request"/>
+                            <field name="date_planned_start"/>
+                            <field name="date_planned_end"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="duration_hours"/>
+                            <field name="delay_days"/>
+                        </group>
+                        <group string="Đang chờ" invisible="not is_on_hold">
+                            <field name="is_on_hold"/>
+                            <field name="hold_reason"
+                                   required="is_on_hold"/>
+                            <field name="date_hold_start" readonly="1"/>
+                            <field name="hold_hours"/>
+                            <div class="text-muted" colspan="2">
+                                Chờ cẩu và chờ thời tiết là lý do THẬT của
+                                điện gió: thay cánh cần cẩu bánh xích huy
+                                động cả tuần, và gió phải dưới ngưỡng cho
+                                phép.
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="An toàn" name="safety">
+                            <div class="alert alert-info" role="status">
+                                <b>Lệnh công việc này KHÔNG phải phiếu công
+                                tác.</b> Phiếu công tác và lệnh công tác là
+                                hai chứng từ an toàn điện do quy chuẩn định
+                                nghĩa (mục 3.8 QCVN 25:2025/BCT), do người
+                                có thẩm quyền cấp. Ô dưới chỉ ghi số hiệu
+                                để tra ngược hai hồ sơ với nhau.
+                            </div>
+                            <group>
+                                <group string="Chứng từ an toàn điện">
+                                    <field name="requires_permit"/>
+                                    <field name="permit_kind"
+                                           invisible="not requires_permit"
+                                           required="requires_permit"/>
+                                    <field name="permit_ref"
+                                           invisible="not requires_permit"/>
+                                    <field name="permit_date"
+                                           invisible="not requires_permit"/>
+                                    <field name="permit_issuer_id"
+                                           invisible="not requires_permit"/>
+                                </group>
+                                <group string="Biện pháp khác">
+                                    <field name="requires_isolation"/>
+                                    <field name="work_at_height"/>
+                                </group>
+                            </group>
+                            <group string="Ghi chú an toàn">
+                                <field name="safety_note" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Giờ công" name="labour">
+                            <field name="labour_line_ids">
+                                <list editable="bottom">
+                                    <field name="date_work"/>
+                                    <field name="user_id"
+                                           widget="many2one_avatar_user"/>
+                                    <field name="worker_name"/>
+                                    <field name="trade"/>
+                                    <field name="hours" sum="Σ giờ"/>
+                                    <field name="rate" widget="monetary"
+                                           width="150px"/>
+                                    <field name="amount" widget="monetary"
+                                           width="185px" sum="Σ"/>
+                                    <field name="note"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Vật tư, phụ tùng" name="parts">
+                            <field name="part_line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="part_name"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id"/>
+                                    <field name="unit_cost" widget="monetary"
+                                           width="150px"/>
+                                    <field name="is_warranty_part"
+                                           string="Bảo hành"/>
+                                    <field name="amount" widget="monetary"
+                                           width="185px" sum="Σ"/>
+                                    <field name="is_rotable"
+                                           string="Quay vòng"/>
+                                    <field name="asset_out_id"
+                                           optional="show"/>
+                                    <field name="asset_in_id"
+                                           optional="show"/>
+                                    <field name="note" optional="hide"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="text-muted">
+                                Thay một cấu phần quay vòng là <b>tháo con
+                                cũ ra và lắp con mới vào</b>, cả hai mang
+                                sê-ri riêng. Ghi mỗi số lượng thì vài năm
+                                sau không biết trong máy đang có con nào —
+                                mà đó đúng là câu cần trả lời khi đi đòi
+                                bảo hành.
+                            </div>
+                        </page>
+                        <page string="Hỏng hóc" name="failure">
+                            <div class="alert alert-warning" role="status"
+                                 invisible="is_failure">
+                                Lệnh này đang khai là <b>không có hỏng
+                                hóc</b>. Phần lớn lần dừng chỉ cần khởi
+                                động lại từ xa, và đúng là không có hỏng.
+                                Nhưng ô này phải khai tay — suy từ việc có
+                                lệnh công việc hay không sẽ làm thống kê độ
+                                tin cậy sai theo hướng đẹp hơn thực tế.
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="is_failure"/>
+                                    <field name="failure_mode_id"
+                                           invisible="not is_failure"
+                                           required="is_failure"
+                                           domain="['|', ('category_id','=',False),
+                                                    ('category_id','parent_of',category_id)]"/>
+                                    <field name="failure_mechanism"
+                                           invisible="not is_failure"/>
+                                </group>
+                                <group>
+                                    <field name="detection_method"/>
+                                </group>
+                            </group>
+                            <group string="Nguyên nhân gốc"
+                                   invisible="not is_failure">
+                                <field name="root_cause" nolabel="1"
+                                       placeholder="Vì sao cơ chế đó xảy ra: lắp sai lực siết, bôi trơn thiếu, lỗi thiết kế, lỗi lô hàng…"/>
+                            </group>
+                            <group string="Việc đã làm">
+                                <field name="corrective_action" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Chi phí" name="cost">
+                            <group>
+                                <group string="Chi phí can thiệp">
+                                    <field name="cost_labour"/>
+                                    <field name="cost_parts"/>
+                                    <field name="cost_service"/>
+                                    <field name="cost_service_note"/>
+                                    <field name="cost_total"
+                                           class="fw-bold"/>
+                                </group>
+                                <group string="Tiền thật">
+                                    <field name="cost_downtime"/>
+                                    <field name="cost_full"
+                                           class="fw-bolder"/>
+                                    <field name="amount_chargeable"/>
+                                    <field name="currency_id"
+                                           groups="base.group_multi_currency"/>
+                                </group>
+                            </group>
+                            <div class="text-muted">
+                                <b>Tổng chi phí thật = can thiệp + sản
+                                lượng mất.</b> Vật tư và giờ công là phần
+                                nhìn thấy; với nhà máy điện thì phần lớn
+                                tiền nằm ở sản lượng không phát được trong
+                                lúc máy dừng. Chỉ nhìn chi phí can thiệp thì
+                                bảo trì phòng ngừa luôn trông như một khoản
+                                chi vô ích.<br/>
+                                <b>Chi phí đòi lại được không gồm sản lượng
+                                mất</b> — phần đó đi theo chế tài khả dụng
+                                của hợp đồng, có công thức và trần riêng.
+                            </div>
+                        </page>
+                        <page string="Chiến dịch" name="campaign"
+                              invisible="not child_count">
+                            <field name="child_count" invisible="1"/>
+                            <field name="child_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="location_id"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="date_end"/>
+                                    <field name="cost_total"
+                                           widget="monetary" width="190px"
+                                           sum="Σ"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Diễn giải" name="desc">
+                            <field name="description" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_work_order_search" model="ir.ui.view">
+        <field name="name">eam.work.order.search</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <search string="Lệnh công việc">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="location_id"/>
+                <field name="asset_id"/>
+                <field name="permit_ref"/>
+                <field name="contractor_id"/>
+                <separator/>
+                <filter name="f_mo" string="Chưa đóng"
+                        domain="[('state','not in',('closed','cancelled'))]"/>
+                <filter name="f_lam" string="Đang làm"
+                        domain="[('state','=','in_progress')]"/>
+                <filter name="f_cho" string="Đang chờ"
+                        domain="[('is_on_hold','=',True)]"/>
+                <filter name="f_tre" string="Trễ quá 7 ngày"
+                        domain="[('delay_days','&gt;',7)]"/>
+                <separator/>
+                <filter name="f_hong" string="Có hỏng hóc"
+                        domain="[('is_failure','=',True)]"/>
+                <filter name="f_thieu_dang" string="Khai có hỏng mà thiếu dạng hỏng"
+                        domain="[('is_failure','=',True),
+                                 ('failure_mode_id','=',False)]"/>
+                <filter name="f_doi" string="Đòi lại được"
+                        domain="[('cost_bearer','in',('warranty','om_chargeable'))]"/>
+                <filter name="f_chua_quy" string="Chưa quy bên chịu chi phí"
+                        domain="[('cost_bearer','=','undetermined')]"/>
+                <separator/>
+                <filter name="f_phieu" string="Cần phiếu công tác"
+                        domain="[('requires_permit','=',True)]"/>
+                <filter name="f_thieu_phieu" string="Cần phiếu mà chưa có số"
+                        domain="[('requires_permit','=',True),
+                                 ('permit_ref','=',False)]"/>
+                <separator/>
+                <filter name="f_cua_toi" string="Tôi phụ trách"
+                        domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter name="g_loai" string="Loại công việc"
+                        context="{'group_by': 'work_type'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_vt" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_cp" string="Loại cấu phần"
+                        context="{'group_by': 'category_id'}"/>
+                <filter name="g_lam" string="Bên thực hiện"
+                        context="{'group_by': 'executor'}"/>
+                <filter name="g_tra" string="Bên chịu chi phí"
+                        context="{'group_by': 'cost_bearer'}"/>
+                <filter name="g_cho" string="Chờ vì"
+                        context="{'group_by': 'hold_reason'}"/>
+                <filter name="g_dang" string="Dạng hỏng"
+                        context="{'group_by': 'failure_mode_id'}"/>
+                <filter name="g_phat_hien" string="Phát hiện bằng"
+                        context="{'group_by': 'detection_method'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_work_order" model="ir.actions.act_window">
+        <field name="name">Lệnh công việc</field>
+        <field name="res_model">eam.work.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_mo': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tạo lệnh công việc đầu tiên</p>
+            <p>Lệnh công việc là chứng từ <b>cho phép tiêu</b> giờ công,
+            vật tư và thời gian. Nó không thay thế phiếu công tác —
+            chứng từ an toàn điện vẫn do người có thẩm quyền cấp riêng.</p>
+        </field>
+    </record>
+
+    <record id="action_eam_work_order_hold" model="ir.actions.act_window">
+        <field name="name">Lệnh đang chờ</field>
+        <field name="res_model">eam.work.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_on_hold','=',True)]</field>
+        <field name="context">{'search_default_g_cho': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có lệnh nào đang chờ</p>
+            <p>Màn hình này trả lời câu <b>tiền và thời gian đang mắc ở
+            đâu</b>. Một lệnh mở 14 ngày hiếm khi có người làm suốt 14
+            ngày — phần lớn là chờ vật tư, chờ cẩu hoặc chờ thời tiết.</p>
+        </field>
+    </record>
+
+    <!-- Dạng hỏng -->
+    <record id="view_eam_failure_mode_list" model="ir.ui.view">
+        <field name="name">eam.failure.mode.list</field>
+        <field name="model">eam.failure.mode</field>
+        <field name="arch" type="xml">
+            <list string="Dạng hỏng" editable="bottom">
+                <field name="code" width="130px"/>
+                <field name="name" width="320px"/>
+                <field name="category_id"/>
+                <field name="mechanism"/>
+                <field name="standard_ref" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_failure_mode_form" model="ir.ui.view">
+        <field name="name">eam.failure.mode.form</field>
+        <field name="model">eam.failure.mode</field>
+        <field name="arch" type="xml">
+            <form string="Dạng hỏng">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="Mã"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Dạng hỏng"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="mechanism"/>
+                        </group>
+                        <group>
+                            <field name="standard_ref"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        <b>Dạng hỏng</b> là biểu hiện quan sát được (rò dầu,
+                        quá nhiệt, rung vượt ngưỡng). <b>Cơ chế hỏng</b> là
+                        quá trình vật lý dẫn tới (mỏi, mài mòn, ăn mòn).
+                        <b>Nguyên nhân gốc</b> là vì sao cơ chế đó xảy ra —
+                        khai trên từng lệnh công việc, không khai ở đây.
+                    </div>
+                    <group string="Ghi chú">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_failure_mode" model="ir.actions.act_window">
+        <field name="name">Dạng hỏng</field>
+        <field name="res_model">eam.failure.mode</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

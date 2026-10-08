@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_outage_form_wo" model="ir.ui.view">
+        <field name="name">eam.outage.form.wo</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_lenh" type="object"
+                        class="oe_stat_button" icon="fa-wrench"
+                        invisible="not work_order_count">
+                    <field name="work_order_count" widget="statinfo"
+                           string="Lệnh công việc"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Lệnh công việc" name="gr_wo">
+                    <field name="has_work_order" invisible="1"/>
+                    <field name="work_order_ids" nolabel="1" colspan="2"
+                           readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="title"/>
+                            <field name="work_type"/>
+                            <field name="executor" string="Bên làm"/>
+                            <field name="cost_bearer" string="Bên trả"/>
+                            <field name="state" widget="badge"/>
+                            <field name="cost_total" widget="monetary"
+                                   width="190px" sum="Σ"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <field name="wo_cost_total"/>
+                    <button name="action_tao_lenh" type="object"
+                            string="Tạo lệnh công việc" class="btn-link"/>
+                    <div class="text-muted" colspan="2"
+                         invisible="has_work_order">
+                        Khoảng dừng không có lệnh công việc <b>không phải
+                        lỗi</b> — khởi động lại từ xa là một lần dừng thật
+                        mà không có hành động bảo trì nào. Nhưng một khoảng
+                        dừng DÀI mà không có lệnh thì nên hỏi.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_list_wo" model="ir.ui.view">
+        <field name="name">eam.outage.list.wo</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lost_revenue']" position="after">
+                <field name="work_order_count" string="Số lệnh"
+                       optional="hide"/>
+                <field name="wo_cost_total" string="Chi phí can thiệp"
+                       widget="monetary" width="190px" sum="Σ"
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_search_wo" model="ir.ui.view">
+        <field name="name">eam.outage.search.wo</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='g_cat']" position="before">
+                <separator/>
+                <filter name="f_khong_lenh"
+                        string="Dừng dài mà không có lệnh công việc"
+                        domain="[('has_work_order','=',False),
+                                 ('counts_as_downtime','=',True),
+                                 ('duration_hours','&gt;',8)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

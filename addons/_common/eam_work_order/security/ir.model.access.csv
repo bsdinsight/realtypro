@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_failure_mode_user,eam.failure.mode.user,model_eam_failure_mode,base.group_user,1,0,0,0
+access_eam_failure_mode_mgr,eam.failure.mode.mgr,model_eam_failure_mode,base.group_system,1,1,1,1
+access_eam_work_order_user,eam.work.order.user,model_eam_work_order,base.group_user,1,1,1,0
+access_eam_work_order_mgr,eam.work.order.mgr,model_eam_work_order,base.group_system,1,1,1,1
+access_eam_wo_labour_user,eam.work.order.labour.user,model_eam_work_order_labour,base.group_user,1,1,1,1
+access_eam_wo_part_user,eam.work.order.part.user,model_eam_work_order_part,base.group_user,1,1,1,1

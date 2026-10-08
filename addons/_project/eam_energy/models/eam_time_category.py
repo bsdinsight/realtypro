@@ -48,7 +48,11 @@ class EamTimeCategory(models.Model):
         [('loss', 'Tổn thất thật — không ai đền'),
          ('deemed', 'Được đền theo điều khoản deemed energy'),
          ('no_loss', 'Không có sản lượng để mất')],
-        string='Cách tính tiền', required=True,
+        # KHÔNG khai required=True: Odoo CHÈN giá trị rỗng trước rồi mới
+        # tính trường lưu, nên NOT NULL sẽ nổ ngay lúc tạo một loại thời
+        # gian mới. Bắt buộc do chính hàm tính bảo đảm — nó luôn trả về
+        # một trong ba giá trị.
+        string='Cách tính tiền',
         compute='_compute_energy_treatment', store=True, readonly=False,
         help='Quyết định sản lượng mất ở loại này có vào doanh thu tổn '
              'thất hay không. Hệ thống suy sẵn, nhưng SỬA ĐƯỢC: dự án '

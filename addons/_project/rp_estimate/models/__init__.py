@@ -2,3 +2,4 @@
 from . import rp_tender_package
 from . import rp_tender_bidder
 from . import rp_tender_eval_criterion
+from . import rp_concept_estimate

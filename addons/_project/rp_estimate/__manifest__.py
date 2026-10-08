@@ -36,6 +36,7 @@ Phase 2 deliverable (v1.4.3-r4). Owns:
     ],
     "data": [
         "security/ir.model.access.csv",
+        "views/rp_concept_estimate_views.xml",
         "views/rp_tender_package_views.xml",
         "views/rp_tender_bidder_views.xml",
         "views/rp_tender_eval_criterion_views.xml",

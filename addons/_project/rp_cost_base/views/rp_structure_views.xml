@@ -150,7 +150,7 @@
                     </group>
 
                     <notebook>
-                        <page string="Khái toán" name="estimate">
+                        <page string="Dự toán khai tay" name="estimate">
                             <field name="estimate_line_ids"
                                    context="{'default_structure_id': id,
                                              'default_currency_id': currency_id}">

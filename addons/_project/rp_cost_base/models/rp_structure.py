@@ -151,13 +151,17 @@ class RpStructure(models.Model):
         help='For road / bridge structures.',
     )
 
-    # ----- Estimate (Khái toán) inline lines
+    # ----- Dự toán khai tay theo hạng mục
+    # KHÔNG phải khái toán: bảng này đòi khai xong cây hạng mục rồi mới
+    # nhập được tiền, mà khái toán lập lúc chưa có hạng mục nào. Nó là
+    # lối nhập tay cho hạng mục chưa kịp bóc BOQ. Khái toán thật nằm ở
+    # rp.concept.estimate (cấp dự án, tính theo suất đầu tư).
     estimate_line_ids = fields.One2many(
         'rp.structure.estimate.line', 'structure_id',
-        string='Khái toán', copy=True,
+        string='Dự toán khai tay', copy=True,
     )
     estimate_total = fields.Monetary(
-        string='Tổng Khái toán',
+        string='Tổng dự toán khai tay',
         compute='_compute_estimate_total', store=True,
         currency_field='currency_id',
     )

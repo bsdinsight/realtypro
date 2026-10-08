@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_concept_estimate_list" model="ir.ui.view">
+        <field name="name">rp.concept.estimate.list</field>
+        <field name="model">rp.concept.estimate</field>
+        <field name="arch" type="xml">
+            <list string="Khái toán" sample="1" expand="1"
+                  decoration-muted="state == 'draft'">
+                <field name="project_id"/>
+                <field name="name" width="140px"/>
+                <field name="date_made"/>
+                <field name="price_year" string="Mặt bằng giá"/>
+                <field name="line_count" string="Số dòng"/>
+                <field name="amount_build" widget="monetary" width="190px"/>
+                <field name="amount_soft" widget="monetary" width="190px"/>
+                <field name="amount_finance" widget="monetary" width="190px"
+                       optional="show"/>
+                <field name="amount_contingency" widget="monetary"
+                       width="190px" optional="show"/>
+                <field name="amount_total" widget="monetary" width="200px"
+                       sum="Tổng"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_concept_estimate_line_list" model="ir.ui.view">
+        <field name="name">rp.concept.estimate.line.list</field>
+        <field name="model">rp.concept.estimate.line</field>
+        <field name="arch" type="xml">
+            <list string="Dòng khái toán" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="estimate_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="category_id" width="260px"/>
+                <field name="name" string="Diễn giải" optional="show"/>
+                <field name="method" width="170px"/>
+                <field name="driver_qty" string="Chỉ tiêu"/>
+                <field name="driver_uom" string="Đơn vị"/>
+                <field name="rate" widget="monetary" width="150px"
+                       string="Suất"/>
+                <field name="base_line_ids" widget="many2many_tags"
+                       string="Tính trên" optional="show"/>
+                <field name="percent" string="Tỷ lệ %"/>
+                <field name="amount_input" widget="monetary" width="170px"
+                       string="Số khai" optional="hide"/>
+                <!-- Cột tiền quan trọng nhất màn này — không cho cắt cụt -->
+                <field name="amount_total" widget="monetary" width="200px"
+                       sum="Tổng"/>
+                <field name="source" string="Nguồn" width="200px"/>
+                <field name="source_ref" string="Dẫn chứng" optional="show"/>
+                <field name="source_project_id" optional="hide"/>
+                <field name="is_build" string="Xây lắp/TB" optional="hide"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_concept_estimate_form" model="ir.ui.view">
+        <field name="name">rp.concept.estimate.form</field>
+        <field name="model">rp.concept.estimate</field>
+        <field name="arch" type="xml">
+            <form string="Khái toán">
+                <header>
+                    <button name="action_duyet" type="object" string="Duyệt"
+                            class="btn-primary" invisible="state != 'draft'"
+                            confirm="Duyệt xong là đóng băng, không sửa được nữa. Số liệu đổi thì phải lập phiên bản mới. Duyệt?"/>
+                    <button name="action_phien_ban_moi" type="object"
+                            string="Lập phiên bản mới"
+                            invisible="state != 'approved'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="status"
+                         invisible="state != 'approved'">
+                        Khái toán đã duyệt — đóng băng để còn làm mốc so
+                        sánh. Số liệu đổi thì bấm "Lập phiên bản mới".
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="KT-V1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"
+                                   readonly="state == 'approved'"/>
+                            <field name="version"/>
+                            <field name="currency_id"
+                                   readonly="state == 'approved'"/>
+                        </group>
+                        <group>
+                            <field name="date_made"
+                                   readonly="state == 'approved'"/>
+                            <field name="price_year"
+                                   readonly="state == 'approved'"/>
+                            <field name="date_approved"
+                                   invisible="state != 'approved'"/>
+                            <field name="user_approved_id"
+                                   invisible="state != 'approved'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dòng khái toán" name="dong">
+                            <field name="line_ids" nolabel="1"
+                                   readonly="state == 'approved'"
+                                   context="{'default_estimate_id': id}"/>
+                            <group class="oe_subtotal_footer"
+                                   colspan="2" name="tong">
+                                <field name="amount_build"/>
+                                <field name="amount_soft"/>
+                                <field name="amount_finance"/>
+                                <field name="amount_contingency"/>
+                                <div class="oe_subtotal_footer_separator">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1"
+                                       class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Căn cứ lập" name="cancu">
+                            <field name="note" nolabel="1"
+                                   readonly="state == 'approved'"
+                                   placeholder="Căn cứ lập khái toán, hoặc lý do phải lập phiên bản mới…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_concept_estimate_search" model="ir.ui.view">
+        <field name="name">rp.concept.estimate.search</field>
+        <field name="model">rp.concept.estimate</field>
+        <field name="arch" type="xml">
+            <search string="Khái toán">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter name="f_draft" string="Nháp"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="f_approved" string="Đã duyệt"
+                        domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter name="g_project" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_state" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_concept_estimate" model="ir.actions.act_window">
+        <field name="name">Khái toán</field>
+        <field name="res_model">rp.concept.estimate</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_project': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Lập khái toán đầu tiên</p>
+            <p>Khái toán là con số mang đi xin chủ trương, lập khi chưa
+               có thiết kế nên chưa bóc được khối lượng. Nó suy tiền ra
+               từ một chỉ tiêu dự án đã biết — công suất đặt, diện tích
+               sàn, chiều dài tuyến — nhân với một suất đầu tư.</p>
+            <p>Đây cũng là chỗ duy nhất đếm đủ tổng mức đầu tư: tiền đất,
+               tư vấn, quản lý dự án, lãi vay vốn hoá và dự phòng không
+               bao giờ có dòng BOQ nào.</p>
+        </field>
+    </record>
+
+</odoo>

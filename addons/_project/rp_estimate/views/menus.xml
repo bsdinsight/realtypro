@@ -135,11 +135,24 @@
     -->
 
     <!-- v1.11.0: Khái toán chuyển vào Tài chính; container "Estimate"
-         không còn con sẽ tự ẩn. -->
+         không còn con sẽ tự ẩn.
+
+         2026-10-08: tên "Khái toán" trả về đúng nghĩa. Bảng cũ
+         (rp.structure.estimate.line) là hạng mục × nhóm chi phí × số
+         tiền gõ tay — nó đòi khai xong cây hạng mục rồi mới nhập được
+         tiền, mà khái toán thì lập lúc CHƯA có hạng mục nào. Nó là dự
+         toán khai tay cho hạng mục chưa kịp bóc BOQ, nên đổi tên và
+         đứng sau. -->
     <menuitem id="menu_estimate_preliminary"
               name="Khái toán"
               parent="menu_finance"
-              action="rp_cost_base.action_rp_structure_estimate_summary"
+              action="action_rp_concept_estimate"
               sequence="10"/>
+
+    <menuitem id="menu_estimate_by_structure"
+              name="Dự toán khai tay theo hạng mục"
+              parent="menu_finance"
+              action="rp_cost_base.action_rp_structure_estimate_summary"
+              sequence="12"/>
 
 </odoo>

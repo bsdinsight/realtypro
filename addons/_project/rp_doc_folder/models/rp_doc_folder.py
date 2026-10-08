@@ -37,9 +37,6 @@ class RpDocFolder(models.Model):
     template_id = fields.Many2one(
         'rp.doc.folder.template', string='Dựng từ bộ')
 
-    attachment_ids = fields.Many2many(
-        'ir.attachment', 'rp_doc_folder_attachment_rel',
-        'folder_id', 'attachment_id', string='Tệp')
     file_count = fields.Integer(
         string='Số tệp', compute='_compute_file_count', store=True)
     file_count_total = fields.Integer(
@@ -77,18 +74,3 @@ class RpDocFolder(models.Model):
     def _compute_tool(self):
         for f in self:
             f.tool_name = f.tool_model_id.name or False
-
-    @api.depends('attachment_ids', 'is_required',
-                 'child_ids.file_count_total',
-                 'child_ids.is_empty_required')
-    def _compute_file_count(self):
-        for f in self:
-            rieng = len(f.attachment_ids)
-            f.file_count = rieng
-            f.file_count_total = rieng + sum(
-                f.child_ids.mapped('file_count_total'))
-            # Thư mục có sổ phụ trách thì file nằm ở sổ, rỗng ở đây là
-            # bình thường — không được báo động giả.
-            f.is_empty_required = bool(
-                f.is_required and not f.tool_model_id
-                and not f.file_count_total)

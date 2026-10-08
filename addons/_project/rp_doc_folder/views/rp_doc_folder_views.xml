@@ -16,6 +16,7 @@
                 <field name="tool_name" string="Sổ phụ trách"
                        width="230px"/>
                 <field name="file_count" string="Tệp"/>
+                <field name="file_ids" column_invisible="1"/>
                 <field name="file_count_total" string="Tệp (cả con)"
                        optional="hide"/>
                 <field name="is_required" string="Bắt buộc"
@@ -35,6 +36,12 @@
         <field name="model">rp.doc.folder</field>
         <field name="arch" type="xml">
             <form string="Thư mục hồ sơ">
+                <header>
+                    <button name="action_lam_moi" type="object"
+                            string="Làm mới từ SharePoint"
+                            invisible="not sp_item_id"
+                            help="Đọc ngược danh sách tệp từ SharePoint — tệp ai thả thẳng vào đó cũng hiện ra ở đây."/>
+                </header>
                 <sheet>
                     <div class="alert alert-info" role="status"
                          invisible="not tool_model_id">
@@ -70,10 +77,38 @@
                     <group string="Đưa gì vào đây">
                         <field name="note" nolabel="1"/>
                     </group>
-                    <group string="Tệp">
-                        <field name="attachment_ids" nolabel="1"
-                               widget="many2many_binary"/>
-                    </group>
+                    <notebook>
+                        <page string="Tệp trên SharePoint" name="tep">
+                            <field name="file_ids" nolabel="1" readonly="1">
+                                <list string="Tệp" create="false"
+                                      edit="false" expand="1">
+                                    <field name="name" width="420px"/>
+                                    <field name="size_human"/>
+                                    <field name="date_modified"/>
+                                    <field name="modified_by"/>
+                                    <field name="sp_url" widget="url"
+                                           string="Mở"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Đưa tệp lên" name="dua_len">
+                            <!-- Tệp thả vào đây chỉ nằm tạm: đưa lên
+                                 SharePoint xong là gỡ khỏi Odoo, để
+                                 không bao giờ có hai bản cùng một tệp. -->
+                            <field name="upload_ids" nolabel="1"
+                                   widget="many2many_binary"/>
+                            <button name="action_day_tep" type="object"
+                                    string="Đưa lên SharePoint"
+                                    class="btn-primary mt-2"
+                                    invisible="not upload_ids"/>
+                            <p class="text-muted mt-2">
+                                Tệp đưa lên xong sẽ nằm ở SharePoint, Odoo
+                                chỉ giữ con trỏ. Giữ hai bản là lập tức có
+                                câu hỏi không trả lời được: ai sửa bản nào
+                                thì bản nào đúng.
+                            </p>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

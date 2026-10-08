@@ -107,6 +107,16 @@ class ReProject(models.Model):
             },
         }
 
+    def action_lam_moi_sharepoint(self):
+        """Đọc ngược toàn bộ cây từ SharePoint.
+
+        Phần lớn hồ sơ đi vào qua Teams hay File Explorer chứ không qua
+        Odoo. Không đọc ngược thì cột "thư mục bắt buộc còn rỗng" nói
+        dối, mà đó lại là cột đáng tin nhất của màn hình này.
+        """
+        self.ensure_one()
+        return self.doc_folder_ids.action_lam_moi()
+
     def action_mo_thu_muc(self):
         self.ensure_one()
         return {

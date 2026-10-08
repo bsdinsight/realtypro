@@ -32,6 +32,11 @@
                         <button name="action_day_sharepoint" type="object"
                                 string="Đẩy lên SharePoint"
                                 invisible="doc_folder_count == 0"/>
+                        <button name="action_lam_moi_sharepoint"
+                                type="object"
+                                string="Làm mới từ SharePoint"
+                                invisible="doc_folder_count == 0"
+                                help="Đọc ngược danh sách tệp từ SharePoint, kể cả tệp thả thẳng vào đó không qua Odoo."/>
                     </group>
                 </group>
             </xpath>

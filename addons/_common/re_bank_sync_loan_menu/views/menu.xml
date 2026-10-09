@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Hai mục con chuyển sang nhóm "Trích thu & Thanh toán" của
+         Quản lý Vay. Số thứ tự 30/32 nối tiếp hai mục sẵn có trong nhóm
+         (Trích thu tự động, Import giấy báo nợ) để giao dịch ngân hàng
+         nằm NGAY SAU chứng từ sinh ra chúng. -->
+    <record id="re_bank_sync.menu_re_bank_transaction" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_payment"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="re_bank_sync.menu_sepay_simulate" model="ir.ui.menu">
+        <field name="parent_id" ref="re_loan.menu_grp_payment"/>
+        <field name="sequence">32</field>
+    </record>
+
+    <!-- Menu gốc rỗng sau khi chuyển hết con.
+         Odoo KHÔNG tự ẩn menu gốc rỗng khi nó vẫn còn bản ghi, nên phải
+         tắt tường minh — bỏ qua bước này là còn lại một mục gốc bấm vào
+         không ra gì. -->
+    <record id="re_bank_sync.menu_re_bank_sync_root" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>

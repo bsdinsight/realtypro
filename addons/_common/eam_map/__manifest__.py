@@ -50,15 +50,33 @@ vệ tinh và địa hình tải thẳng từ trình duyệt người dùng.
 
 Dùng được cho mọi ngành
 -----------------------
-Module chỉ phụ thuộc lõi EAM và lệnh công việc; phần sản lượng mất và
-cách tính tiền được **dò mềm** — có thì hiện, không có thì thôi. Nhà máy
+Module chỉ phụ thuộc **lõi EAM**. Lệnh công việc, sản lượng mất và cách
+tính tiền đều được **dò mềm** — có thì hiện, không có thì thôi. Nhà máy
 nước, trạm biến áp, đội xe hay dây chuyền nhà xưởng dùng cùng một màn
 hình này, chỉ khác cái vòng giãn cách vốn là chuyện riêng của điện gió.
+
+Dùng được cả lúc ĐANG XÂY
+-------------------------
+Trạng thái của một vị trí đi qua ba bậc, và bậc giữa là bậc cả một dự án
+EPC sống trong đó hàng năm trời:
+
+* **Chưa lắp máy** — chưa có tài sản nào lắp tại mốc đang xem.
+* **Đã dựng, chưa vận hành** — đã lắp nhưng chưa tới ngày vận hành
+  thương mại. Dựng xong KHÁC chạy được: giữa hai mốc đó là chạy thử và
+  nghiệm thu. Thiếu bậc này thì bản đồ của một dự án đang xây trông như
+  đã vận hành xong.
+* **Đang phát** và các bậc dừng máy.
+
+Không khai ngày vận hành thì **không suy** — thiếu dữ liệu mà bịa ra một
+bậc trạng thái còn tệ hơn để trống.
 """,
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
-    'depends': ['eam_core', 'eam_work_order'],
+    # KHÔNG phụ thuộc cứng eam_work_order: phần lệnh công việc đã dò mềm
+    # trong mã (`env.get`). Buộc cứng thì một khách chỉ cần bản đồ công
+    # trường vẫn bị kéo theo cả phân hệ bảo trì.
+    'depends': ['eam_core'],
     'data': ['views/eam_map_views.xml'],
     'assets': {
         'web.assets_backend': [

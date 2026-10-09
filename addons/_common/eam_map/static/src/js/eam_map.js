@@ -22,6 +22,9 @@ const MAU = {
     // Chưa lắp máy thì không nói chuyện phát điện. Thiếu trạng thái này
     // thì bản đồ của một dự án đang xây vẫn xanh rờn.
     not_installed: { c: "#ffffff", t: "Chưa lắp máy" },
+    // Dựng xong nhưng chưa tới ngày vận hành thương mại — chạy thử và
+    // nghiệm thu. Đây là bậc cả một dự án đang xây sống trong đó.
+    commissioning: { c: "#e3a008", t: "Đã dựng, chưa vận hành" },
 };
 
 const NEN = {
@@ -230,7 +233,9 @@ export class EamPlantMap extends Component {
         L.push(`<hr/>`);
         L.push(`<div class="eam-pop-t">${d.months} tháng gần nhất</div>`);
         if (p.avail === null) {
-            L.push(`<div>📈 Chưa lắp máy — chưa có khả dụng để tính</div>`);
+            L.push(`<div>📈 ${p.state === "commissioning"
+                ? "Chưa tới ngày vận hành — chưa có cam kết khả dụng"
+                : "Chưa lắp máy — chưa có khả dụng để tính"}</div>`);
         } else {
             L.push(`<div>📈 Khả dụng <b>${p.avail}%</b> `
                 + `· dừng ${p.down_hours} giờ · ${p.outage_count} lần</div>`);

@@ -111,8 +111,20 @@ class EamLocation(models.Model):
                        ('date_start', '<=', moc)], order='id desc')
         mo = mo.filtered(lambda o: not o.date_end or o.date_end >= moc)
         if not mo:
-            return ('running' if self._map_lap_tai(moc)
-                    else 'not_installed'), False
+            lap = self._map_lap_tai(moc)
+            if not lap:
+                return 'not_installed', False
+            # Dựng xong KHÁC chạy được. Giữa hai mốc đó là chạy thử và
+            # nghiệm thu, có khi vài tháng. Thiếu bậc này thì mọi vị trí
+            # vừa lắp máy đã hiện "đang phát" — bản đồ của một dự án
+            # đang xây trông như đã vận hành xong.
+            ngay = [a.date_commissioned
+                    for a in lap.mapped('asset_id') if a.date_commissioned]
+            # KHÔNG khai ngày vận hành thì KHÔNG suy. Thiếu dữ liệu mà
+            # bịa ra một bậc trạng thái còn tệ hơn để trống.
+            if ngay and min(ngay) > moc.date():
+                return 'commissioning', False
+            return 'running', False
         # Ưu tiên số NHỎ thắng.
         kd = min(mo, key=lambda o: (o.category_id.priority or 999, o.id))
         c = kd.category_id
@@ -216,7 +228,10 @@ class EamLocation(models.Model):
             # Vị trí CHƯA LẮP MÁY không có khả dụng để nói. Trả về 100%
             # thì một dự án đang xây hiện lên "khả dụng hoàn hảo" — con
             # số đẹp nhất trên màn hình lại là con số rỗng nghĩa nhất.
-            'avail': None if ma == 'not_installed' else round(kha_dung, 2),
+            # Vị trí ĐANG CHẠY THỬ cũng vậy: chưa tới ngày vận hành thì
+            # chưa có cam kết khả dụng nào để đo.
+            'avail': (None if ma in ('not_installed', 'commissioning')
+                      else round(kha_dung, 2)),
             'down_hours': round(gio_dung, 1),
             'lost_mwh': round(mwh_mat, 1),
             'lost_money': round(tien_mat, 0),
@@ -322,6 +337,11 @@ class EamLocation(models.Model):
                 'mw_running': round(mw_phat, 2),
                 'avail': (round(sum(x['avail'] for x in co_kd)
                                 / len(co_kd), 2) if co_kd else None),
+                # Bình quân phải đi kèm MẪU SỐ. Lúc đang nghiệm thu, chỉ
+                # vài vị trí đã vận hành nên bình quân có thể là 100% của
+                # đúng MỘT máy — con số đúng về phép tính, lừa người đọc
+                # về quy mô. Bày số vị trí ra cạnh nó.
+                'avail_n': len(co_kd),
                 'lost_mwh': round(sum(p['lost_mwh'] for p in diem), 1),
                 'lost_money': round(sum(p['lost_money'] for p in diem)),
                 'wo_open': sum(p['wo_open'] for p in diem),

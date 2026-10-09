@@ -19,7 +19,12 @@
                             <t t-esc="so(state.data.summary.mw_running)"/> MW</b></div>
                     <div class="eam-kv"><span>Khả dụng bình quân</span>
                         <b t-if="state.data.summary.avail === null">—</b>
-                        <b t-else=""><t t-esc="state.data.summary.avail"/>%</b></div>
+                        <b t-else=""><t t-esc="state.data.summary.avail"/>%
+                            <span class="text-muted fw-normal"
+                                  t-if="state.data.summary.avail_n !== state.data.summary.n">
+                                (<t t-esc="state.data.summary.avail_n"/>/<t
+                                 t-esc="state.data.summary.n"/> vị trí)</span>
+                        </b></div>
                     <div class="eam-kv"><span>Sản lượng mất</span>
                         <b><t t-esc="so(state.data.summary.lost_mwh)"/> MWh</b></div>
                     <div class="eam-kv"><span>Doanh thu tổn thất</span>

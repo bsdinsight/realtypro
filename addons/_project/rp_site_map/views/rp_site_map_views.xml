@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_project_form_site_map" model="ir.ui.view">
+        <field name="name">re.project.form.site.map</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_estimate.view_re_project_form_tender"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Bản đồ hiện trường" name="gr_site_map">
+                    <group>
+                        <field name="plant_location_id"
+                               options="{'no_create': True}"/>
+                        <field name="site_position_count"/>
+                        <!-- KHÔNG dùng decoration-* trong form: nó làm
+                             CHẾT MOUNT cả màn hình, và kéo theo hỏng luôn
+                             list cùng action. Muốn nhấn mạnh thì dùng
+                             class. -->
+                        <field name="site_no_coords"
+                               invisible="not site_no_coords"
+                               class="text-danger fw-bold"/>
+                    </group>
+                    <group>
+                        <button name="action_mo_ban_do_hien_truong"
+                                type="object" class="btn-primary"
+                                string="Mở bản đồ hiện trường"
+                                invisible="not plant_location_id"/>
+                    </group>
+                    <!-- Không khai lại site_no_coords ở đây: hai ô cùng
+                         tên trong một form thì các modifier đánh nhau. -->
+                    <div class="text-muted" colspan="2"
+                         invisible="not site_no_coords">
+                        Có vị trí thiết bị <b>chưa khai toạ độ</b> nên không
+                        cắm lên bản đồ được — bản đồ sẽ trông đầy đủ trong
+                        khi thực tế đang thiếu.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_site_map" name="Bản đồ hiện trường"
+              parent="rp_site.menu_rp_site_root"
+              action="eam_map.action_eam_plant_map"
+              sequence="5"/>
+
+</odoo>

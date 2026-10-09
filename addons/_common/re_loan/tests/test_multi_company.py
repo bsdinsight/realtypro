@@ -155,7 +155,6 @@ class TestCompanyRuleCoverage(TransactionCase):
     }
 
     def test_every_company_model_has_global_rule(self):
-        IrModel = self.env['ir.model']
         Rule = self.env['ir.rule']
         missing = []
         for model_name in sorted(self.env.registry.keys()):
@@ -166,9 +165,12 @@ class TestCompanyRuleCoverage(TransactionCase):
                 continue
             if model_name in self.EXEMPT:
                 continue
-            rec = IrModel.search([('model', '=', model_name)], limit=1)
-            modules = set((rec.modules or '').replace(' ', '').split(','))
-            if not any(m.startswith(('re_', 'rp_')) for m in modules):
+            # Chỉ soi model DO MÌNH ĐỊNH NGHĨA. Model của Odoo hay của
+            # đối tác mà mình chỉ kế thừa thêm trường thì việc cách ly
+            # thuộc về bên sở hữu — vd account.payment khai company_id
+            # dạng related không lưu và được chặn bằng luật của phân hệ
+            # kế toán, không phải việc của bộ này.
+            if not model_name.startswith(('re.', 'rp.')):
                 continue
             field = model._fields.get('company_id')
             if not field:

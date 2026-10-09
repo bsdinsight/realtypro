@@ -76,6 +76,7 @@
                                    widget="progressbar"/>
                             <field name="missing_serial"/>
                             <field name="missing_lot"/>
+                            <field name="kept_warranty"/>
                         </group>
                     </group>
                     <div class="alert alert-info" role="status">
@@ -91,6 +92,15 @@
                         dòng. Hệ thống <b>vẫn cho bàn giao</b>: chặn tới
                         khi đủ thì bàn giao không bao giờ xảy ra, còn cho
                         qua im lặng thì chỗ thiếu không bao giờ được điền.
+                    </div>
+                    <div class="alert alert-warning" role="status"
+                         invisible="not kept_warranty">
+                        <b>Có tài sản giữ hạn bảo hành riêng, không áp mặc
+                        định của dự án.</b> Cấu phần tân trang hay thay thế
+                        mang bảo hành riêng của nhà cung cấp, thường ngắn
+                        hơn — áp mặc định lên là hệ thống tuyên bố một thứ
+                        còn được bảo hành trong khi không, và người đọc tin
+                        vào đó rồi không đặt phụ tùng dự phòng.
                     </div>
                     <notebook>
                         <page string="Chi tiết theo vị trí" name="lines">
@@ -120,6 +130,9 @@
                                            widget="progressbar"/>
                                     <field name="missing" string="Còn thiếu"
                                            width="240px"/>
+                                    <field name="kept_warranty"
+                                           string="Giữ BH riêng"
+                                           optional="show"/>
                                     <field name="state" widget="badge"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>

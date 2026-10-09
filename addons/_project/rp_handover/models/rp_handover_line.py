@@ -55,6 +55,11 @@ class RpHandoverLine(models.Model):
         digits=(16, 1), aggregator=False)
     missing = fields.Char(
         string='Còn thiếu', compute='_compute_kiem', store=True)
+    kept_warranty = fields.Integer(
+        string='Giữ bảo hành riêng', readonly=True,
+        help='Số tài sản ĐÃ CÓ hạn bảo hành khác mặc định nên được giữ '
+             'nguyên. Thường là cấu phần tân trang hoặc thay thế, có bảo '
+             'hành riêng của nhà cung cấp.')
     state = fields.Selection(
         [('pending', 'Chờ bàn giao'), ('done', 'Đã bàn giao')],
         string='Trạng thái', default='pending', required=True, index=True)
@@ -121,16 +126,36 @@ class RpHandoverLine(models.Model):
                 hd=self.contract_id.name or _('(chưa rõ hợp đồng)'),
                 lo=(' · lô: %s' % ', '.join(self.lot_ids.mapped('name')[:4]))
                 if self.lot_ids else '')
+        giu = 0
         for a in self.asset_ids:
             v = {'origin': goc, 'state': 'active'}
             if self.date_toc:
                 v['date_commissioned'] = self.date_toc
             if self.warranty_end:
-                v['warranty_end'] = self.warranty_end
-                v['warranty_note'] = _(
-                    'Bảo hành %(n)d tháng kể từ ngày nghiệm thu bàn giao '
-                    '%(d)s của chính vị trí này.',
-                    n=h.warranty_months, d=self.date_toc or '')
+                # LUẬT: bàn giao KHÔNG BAO GIỜ KÉO DÀI bảo hành, chỉ
+                # chỉnh về đúng ngày nghiệm thu của từng trụ.
+                #
+                # Cấu phần tân trang hay thay thế mang bảo hành riêng của
+                # nhà cung cấp, thường NGẮN hơn. Áp mặc định dự án lên là
+                # tuyên bố một thứ còn được bảo hành trong khi không —
+                # đo trên dữ liệu thật: hai hộp số tân trang hết hạn sau
+                # 62 ngày suýt bị kéo dài thêm 15 tháng, im lặng. Người
+                # đọc tin vào đó rồi không đặt phụ tùng dự phòng.
+                #
+                # Nhưng chặn MỌI thay đổi thì quá tay: 22 tua-bin đang
+                # dùng chung một ngày tính từ COD sẽ không bao giờ nhận
+                # được ngày riêng của mình, tức mất đúng mục đích của cả
+                # cuộc bàn giao. Nên chỉ giữ khi ngày tính ra DÀI HƠN —
+                # rút ngắn về đúng ngày nghiệm thu của trụ là việc cần
+                # làm, kéo dài mới là bịa ra phạm vi bảo hành.
+                if a.warranty_end and self.warranty_end > a.warranty_end:
+                    giu += 1
+                else:
+                    v['warranty_end'] = self.warranty_end
+                    v['warranty_note'] = _(
+                        'Bảo hành %(n)d tháng kể từ ngày nghiệm thu bàn '
+                        'giao %(d)s của chính vị trí này.',
+                        n=h.warranty_months, d=self.date_toc or '')
             if self.supplier_id and not a.manufacturer_id:
                 v['manufacturer_id'] = self.supplier_id.id
             a.write(v)
@@ -158,5 +183,6 @@ class RpHandoverLine(models.Model):
                                'location_id': self.location_id.id})
             if self.date_toc and not d.date_start:
                 d.date_start = self.date_toc
+        self.kept_warranty = giu
         self.state = 'done'
         return True

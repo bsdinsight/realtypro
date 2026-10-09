@@ -96,6 +96,13 @@ class RpHandover(models.Model):
                                     compute='_compute_thong_ke')
     missing_lot = fields.Integer(string='Không khớp lô thiết bị',
                                  store=True, compute='_compute_thong_ke')
+    kept_warranty = fields.Integer(
+        string='Giữ bảo hành riêng', store=True,
+        compute='_compute_thong_ke',
+        help='Tài sản mà ngày tính ra DÀI HƠN hạn đang có thì giữ '
+             'nguyên hạn cũ. Bàn giao không bao giờ kéo dài bảo hành — '
+             'kéo dài là bịa ra phạm vi bảo hành; rút về đúng ngày '
+             'nghiệm thu của trụ mới là việc cần làm.')
     unmatched_note = fields.Text(
         string='Lô thiết bị không khớp vị trí nào', readonly=True,
         help='Khớp theo quy ước đặt tên. Cái nào không khớp thì liệt kê '
@@ -106,7 +113,8 @@ class RpHandover(models.Model):
         default=lambda self: self.env.company, index=True)
 
     @api.depends('line_ids.state', 'line_ids.completeness',
-                 'line_ids.has_serial', 'line_ids.lot_count')
+                 'line_ids.has_serial', 'line_ids.lot_count',
+                 'line_ids.kept_warranty')
     def _compute_thong_ke(self):
         for h in self:
             ds = h.line_ids
@@ -116,6 +124,7 @@ class RpHandover(models.Model):
                               if ds else 0.0)
             h.missing_serial = len(ds.filtered(lambda l: not l.has_serial))
             h.missing_lot = len(ds.filtered(lambda l: not l.lot_count))
+            h.kept_warranty = sum(ds.mapped('kept_warranty'))
 
     @api.model_create_multi
     def create(self, vals_list):

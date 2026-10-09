@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_handover_user,rp.handover.user,model_rp_handover,base.group_user,1,1,1,0
+access_rp_handover_mgr,rp.handover.mgr,model_rp_handover,base.group_system,1,1,1,1
+access_rp_handover_line_user,rp.handover.line.user,model_rp_handover_line,base.group_user,1,1,1,1

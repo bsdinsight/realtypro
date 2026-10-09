@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_handover_list" model="ir.ui.view">
+        <field name="name">rp.handover.list</field>
+        <field name="model">rp.handover</field>
+        <field name="arch" type="xml">
+            <list string="Bàn giao sang vận hành"
+                  decoration-success="state == 'done'"
+                  decoration-muted="state == 'draft'">
+                <field name="name" width="150px"/>
+                <field name="project_id" width="260px"/>
+                <field name="plant_id" width="200px"/>
+                <field name="date_handover" width="130px"/>
+                <field name="line_count" string="Vị trí"/>
+                <field name="done_count" string="Đã bàn giao"/>
+                <field name="completeness" string="Đầy đủ hồ sơ"
+                       widget="progressbar"/>
+                <field name="missing_serial" string="Thiếu sê-ri"
+                       optional="show"/>
+                <field name="warranty_months" string="BH (tháng)"
+                       optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_handover_form" model="ir.ui.view">
+        <field name="name">rp.handover.form</field>
+        <field name="model">rp.handover</field>
+        <field name="arch" type="xml">
+            <form string="Biên bản bàn giao">
+                <header>
+                    <button name="action_quet" type="object"
+                            string="Quét vị trí sẵn sàng" class="oe_highlight"
+                            invisible="state == 'done'"/>
+                    <button name="action_ban_giao" type="object"
+                            string="Thực hiện bàn giao" class="oe_highlight"
+                            invisible="state != 'confirmed'"
+                            confirm="Bàn giao là mốc pháp lý: đồng hồ bảo hành của từng vị trí bắt đầu chạy từ ngày nghiệm thu của chính nó, và không quay lui được. Tiếp tục?"/>
+                    <button name="action_ve_nhap" type="object"
+                            string="Về nháp" invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_tai_san" type="object"
+                                class="oe_stat_button" icon="fa-cubes">
+                            <field name="done_count" widget="statinfo"
+                                   string="Vị trí đã bàn giao"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Phạm vi">
+                            <field name="project_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="plant_id"
+                                   options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
+                            <field name="gate_id"
+                                   options="{'no_create': True}"
+                                   readonly="state == 'done'"/>
+                            <field name="date_handover"/>
+                        </group>
+                        <group string="Bảo hành">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="warranty_months"
+                                   readonly="state == 'done'"/>
+                            <field name="completeness"
+                                   widget="progressbar"/>
+                            <field name="missing_serial"/>
+                            <field name="missing_lot"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        <b>Bảo hành chạy từ ngày nghiệm thu của CHÍNH trụ
+                        đó</b>, lấy từ cổng nghiệm thu trong sổ dựng máy —
+                        không phải một ngày chung cho cả dự án. Trụ số 1
+                        xong trước trụ số 30 có khi tám tháng; gộp làm một
+                        mốc là xoá mất thứ đắt nhất của cả cuộc bàn giao.
+                    </div>
+                    <div class="alert alert-warning" role="status"
+                         invisible="completeness &gt;= 100 or not line_count">
+                        Hồ sơ còn khuyết — xem cột <b>Còn thiếu</b> ở từng
+                        dòng. Hệ thống <b>vẫn cho bàn giao</b>: chặn tới
+                        khi đủ thì bàn giao không bao giờ xảy ra, còn cho
+                        qua im lặng thì chỗ thiếu không bao giờ được điền.
+                    </div>
+                    <notebook>
+                        <page string="Chi tiết theo vị trí" name="lines">
+                            <field name="line_ids" readonly="state == 'done'">
+                                <list editable="bottom"
+                                      decoration-success="state == 'done'"
+                                      decoration-warning="completeness &lt; 100">
+                                    <field name="location_id"
+                                           options="{'no_create': True}"
+                                           width="200px"/>
+                                    <field name="location_code"
+                                           column_invisible="1"/>
+                                    <field name="date_toc" width="150px"/>
+                                    <field name="warranty_end" width="150px"/>
+                                    <field name="asset_count" string="Tài sản"/>
+                                    <field name="has_serial" string="Có sê-ri"/>
+                                    <field name="lot_count" string="Lô TB"/>
+                                    <field name="supplier_id"
+                                           optional="show" width="220px"/>
+                                    <field name="contract_id"
+                                           optional="hide"/>
+                                    <field name="lot_value" widget="monetary"
+                                           width="190px" sum="Σ"
+                                           optional="hide"/>
+                                    <field name="completeness"
+                                           string="Đầy đủ"
+                                           widget="progressbar"/>
+                                    <field name="missing" string="Còn thiếu"
+                                           width="240px"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Lô thiết bị không khớp" name="unmatched"
+                              invisible="not unmatched_note">
+                            <div class="alert alert-warning" role="status">
+                                Sổ lô thiết bị và sổ vị trí chức năng là hai
+                                hệ đặt tên khác nhau — <b>WTG-01</b> với
+                                <b>T01</b>. Hệ thống khớp theo quy ước, và
+                                cái nào <b>không khớp được thì liệt kê ra
+                                đây</b> chứ không lặng lẽ bỏ qua.
+                            </div>
+                            <field name="unmatched_note" nolabel="1"
+                                   readonly="1"/>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_handover_search" model="ir.ui.view">
+        <field name="name">rp.handover.search</field>
+        <field name="model">rp.handover</field>
+        <field name="arch" type="xml">
+            <search string="Bàn giao">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="plant_id"/>
+                <separator/>
+                <filter name="f_cho" string="Chưa bàn giao"
+                        domain="[('state', '!=', 'done')]"/>
+                <filter name="f_thieu" string="Hồ sơ còn khuyết"
+                        domain="[('completeness', '&lt;', 100)]"/>
+                <separator/>
+                <filter name="g_da" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_handover" model="ir.actions.act_window">
+        <field name="name">Bàn giao sang vận hành</field>
+        <field name="res_model">rp.handover</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có biên bản bàn
+            giao nào</p>
+            <p>Phần mềm quản lý dự án dừng ở ngày vận hành thương mại.
+            Phần mềm quản lý tài sản bắt đầu từ đó. Giữa hai bên là một
+            cuộc <b>gõ lại bằng tay vài trăm bản ghi</b> — và thứ mất đi
+            đắt nhất là <b>đồng hồ bảo hành</b>.</p>
+            <p>Biên bản này nối hai đầu: tài sản nhận được ngày vận hành và
+            hạn bảo hành <b>theo ngày nghiệm thu của chính trụ đó</b>,
+            giữ đường về lô thiết bị và hợp đồng, được dựng đồng hồ giờ
+            máy và áp lịch bảo trì.</p>
+        </field>
+    </record>
+
+    <!-- Gắn vào form dự án -->
+    <record id="view_re_project_form_handover" model="ir.ui.view">
+        <field name="name">re.project.form.handover</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="rp_site_map.view_re_project_form_site_map"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='gr_site_map']" position="after">
+                <group string="Bàn giao sang vận hành" name="gr_handover"
+                       invisible="not plant_location_id">
+                    <group>
+                        <field name="handover_ready"/>
+                        <field name="handover_done"/>
+                        <field name="handover_count"/>
+                    </group>
+                    <group>
+                        <button name="action_mo_ban_giao" type="object"
+                                string="Mở biên bản bàn giao"
+                                class="btn-primary"/>
+                    </group>
+                    <div class="text-muted" colspan="2"
+                         invisible="not handover_ready">
+                        Có vị trí <b>đã qua cổng nghiệm thu mà chưa bàn
+                        giao</b>. Mỗi trụ như vậy là một đồng hồ bảo hành
+                        chưa ai bấm bắt đầu — và bảo hành chỉ đếm từ lúc
+                        có người ghi nhận.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_handover" name="Bàn giao sang vận hành"
+              parent="rp_estimate.menu_project_master"
+              action="action_rp_handover" sequence="40"/>
+
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_rp_handover" model="ir.sequence">
+        <field name="name">Biên bản bàn giao sang vận hành</field>
+        <field name="code">rp.handover</field>
+        <field name="prefix">BG/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

@@ -195,16 +195,21 @@ def xml_apply(text, mapping, missing):
 
     text = re.sub(r'\b(%s)="([^"]*)"' % '|'.join(ATTRS), attr_repl, text)
 
-    # Chữ trần: thay theo đúng chuỗi đã rút, so khớp sau khi gom khoảng
-    # trắng nên phải tìm lại nguyên văn trong tệp.
-    for _, val in [i for i in xml_items(text) if i[0] == 'text']:
+    # Chữ trần giữa hai thẻ. PHẢI neo vào dấu > và < của chính nút đó:
+    # nhãn ngắn ("mục đích") mà thay tự do giữa tệp thì nó ăn luôn vào
+    # giữa các câu dài, câu dài hỏng khoá nên tra từ điển trượt — và
+    # tệ hơn là trượt im lặng, vì chuỗi gốc đã bị sửa mất.
+    # Thay chuỗi DÀI trước, ngắn sau, cho cùng một lý do.
+    vals = sorted({v for k, v in xml_items(text) if k == 'text'},
+                  key=len, reverse=True)
+    for val in vals:
         en = mapping.get(val)
         if en is None:
             missing.add(val)
             continue
-        # Nguyên văn có thể xuống dòng giữa chừng: dựng regex theo từ.
-        pat = re.compile(r'\s+'.join(re.escape(w) for w in val.split()))
-        text, k = pat.subn(lambda _m: en, text)
+        body = r'\s+'.join(re.escape(w) for w in val.split())
+        pat = re.compile(r'(>\s*)%s(\s*<)' % body)
+        text, k = pat.subn(lambda m: m.group(1) + en + m.group(2), text)
         n[0] += k
     return text, n[0]
 

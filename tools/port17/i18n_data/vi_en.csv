@@ -1,45 +1,1349 @@
 vi,en
+"
+
+Hạn mức này chưa khai bảo đảm nào nên khả dụng thực tế đang bằng 0. Mở hạn mức '%(f)s' rồi làm MỘT trong hai cách:
+• Khai số vào ô ""Bảo đảm khai ban đầu"" — dùng khi ngân hàng cấp trên cả rổ tài sản mà hồ sơ không tách được từng tài sản;
+• Hoặc phân bổ tài sản bảo đảm cho mục đích này ở tab Phân bổ TSBĐ.","
+
+This facility has no collateral recorded, so its actual availability is 0. Open facility '%(f)s' and do ONE of the following:
+• Enter a figure in ""Opening collateral"" — for when the bank granted the limit against a basket of assets that the file cannot break down;
+• Or allocate collateral to this facility on the Collateral allocation tab."
+ (từ %s), (from %s)
+% HM bảo lãnh đã dùng,% guarantee limit used
+% HM cho vay đã dùng,% lending limit used
+%(hd)s — kỳ %(k)s/%(n)s,%(hd)s — period %(k)s/%(n)s
 "%(n)s hồ sơ thiếu Hóa đơn. NH yêu cầu mỗi hồ sơ phải có hoá đơn của nhà thầu — nếu đây là tiền trả trước khi có hoá đơn, đổi ""Loại hồ sơ"" sang Tạm ứng.","%(n)s dossier(s) have no Invoice. The bank requires an invoice from the contractor on every dossier — if this is money paid before any invoice exists, switch ""Dossier type"" to Advance payment."
 %(n)s hồ sơ tạm ứng chưa khai Bên nhận tạm ứng. NH cần biết tiền đi đâu.,%(n)s advance-payment dossier(s) have no Advance payee. The bank needs to know where the money goes.
+"(244 — NH trả lại khi giải toả, nên có nút","(244 — the bank returns it on release, hence the button"
+"(Ký, ghi rõ họ tên)",(Signature and full name)
+(Legacy) Tất toán đề nghị — khôi phục hạn mức.,(Legacy) Settle the request — restores the limit.
+"(cột ""Tỷ lệ cho vay"") hoặc cấu hình mặc định theo","(the ""Advance rate"" column) or the default configured on"
+(ngày phát hành,(issued on
+). Cân nhắc gia hạn hoặc giải tỏa.,). Consider extending or releasing it.
+", chia giá trị ở tab",", split the value on the tab"
+", kiểm tỷ giá rồi ghi sổ.",", check the rates, then post."
+", sau đó chia giá trị đóng góp của nó cho từng",", then split its base contribution across each"
+". Vẫn khai được (hạn mức hợp đồng), nhưng phần vượt chỉ rút được khi bổ sung TSBĐ hoặc nghiệm thu thêm sản lượng với CĐT.",". It can still be recorded (contractual limit), but the excess can only be drawn once more collateral is pledged or more work is certified with the owner."
+". Âm là lãi, ghi ngược lại.",. A negative figure is a gain and is posted the other way round.
+. Đối ứng phụ thuộc bản chất khoản trả nên không đoán được:,". The counter-account depends on what is being paid, so it cannot be guessed:"
+30 ngày tới &amp; back-to-back,Next 30 days &amp; back-to-back
+6 tháng,6 months
+: Nợ 1121 / Có 3411 (hoặc 3412 dài hạn),: Dr 1121 / Cr 3411 (or 3412 for long term)
+: Nợ 33531 / Có 1121,: Dr 33531 / Cr 1121
+: Nợ 3411/3412 / Có 1121,: Dr 3411/3412 / Cr 1121
+: Nợ 635 (hoặc 241 capitalize) / Có 33531,: Dr 635 (or 241 when capitalised) / Cr 33531
 : hồ sơ loại,: a dossier of type
+<b>Phụ lục %(n)s</b> (%(t)s): %(d)s,<b>Addendum %(n)s</b> (%(t)s): %(d)s
+"= Bảo đảm khai ban đầu + Σ TSBĐ (kể cả IPC) đã PHÂN BỔ cho mục đích này − số tiền đã sử dụng. Floor 0.
+Mục đích LIÊN THÔNG thì tính trên cả bể: Σ cơ sở bảo đảm của nhóm liên thông − Σ đã sử dụng của nhóm.
+TSBĐ đã thế chấp nhưng CHƯA phân bổ thì không làm tăng khả dụng của mục đích nào.","= Opening collateral + Σ collateral (IPCs included) ALLOCATED to this facility − amount used. Floored at 0.
+For POOLED facilities it is computed over the whole pool: Σ borrowing base of the pooled group − Σ amount used by the group.
+Collateral that is pledged but NOT yet allocated raises no facility's availability."
+= Bảo đảm khai ban đầu + Σ TSBĐ đã phân bổ. Mục đích LIÊN THÔNG thì cộng cả bể.,= Opening collateral + Σ allocated collateral. For POOLED facilities the whole pool is added up.
+= Giá trị BL × tỷ lệ × số ngày hiệu lực / 365. User sửa được nếu NH tính khác.,= Guarantee amount × rate × days in force / 365. Editable if the bank computes it differently.
+"= Giá trị BL − Tổng các đợt thanh toán loại ""Tiền gốc"". Auto-settle yêu cầu mục này = 0.","= Guarantee amount − total of the ""Principal"" instalments. Auto-settlement requires this to be 0."
+"= Giá trị hiện tại × Tỷ lệ cho vay. Phần ngân hàng chấp nhận làm cơ sở bảo đảm, chưa trừ phần đã thế chấp.","= Current value × Advance rate. The part the bank accepts as borrowing base, before deducting what is already pledged."
+"= Giá trị đánh giá lại − Số đang ghi sổ. Dương là nghĩa vụ trả nợ TĂNG, tức là LỖ tỷ giá.","= Revalued amount − carrying amount. A positive figure means the liability INCREASES, i.e. an FX LOSS."
+= Ký cược − khấu trừ (không âm). Có thể sửa tay.,= Security deposit − deductions (never negative). Editable.
+= Phí BL + Ký quỹ + Phạt.,= Guarantee fee + margin deposit + penalty.
 = Số tiền giải ngân − Σ hồ sơ. Phải bằng 0 khi gửi NH.,= Disbursement amount − Σ dossiers. Must be 0 when submitting to the bank.
+= Số đang ghi sổ ÷ dư nợ nguyên tệ. Chỉ để đối chiếu.,= Carrying amount ÷ outstanding in foreign currency. For reconciliation only.
+= Tổng kỳ − Số tiền đã thanh toán.,= Period total − amount already paid.
+= giá trị đem thế chấp × tỷ lệ cho vay; đó mới là số được chia xuống các mục đích bên dưới.,= pledged value × advance rate; that is the figure split across the facilities below.
+"= min(Giá trị đảm bảo theo HĐ thế chấp, Giá trị hiện hành TS theo định giá mới nhất) × tỷ lệ cho vay. Định giá lại TSĐB GIẢM → base giảm theo (khả dụng HĐTD/facility giảm); tăng thì vẫn trần ở giá trị đảm bảo đã ký (muốn tăng phải ký phụ lục). TS chưa định giá → dùng giá trị đảm bảo. Chỉ tính pledge đang thế chấp.","= min(secured value in the pledge agreement, current asset value per the latest valuation) × advance rate. A revaluation DOWN lowers the base accordingly (credit contract / facility availability drops); a revaluation up is still capped at the secured value already signed (raising it requires an addendum). An asset with no valuation uses the secured value. Only active pledges count."
+"= min(Tổng hạn mức, Cơ sở bảo đảm) − tổng dư nợ. Floor 0. Không có pledge nào → bỏ ràng buộc base.","= min(total limit, borrowing base) − total outstanding. Floored at 0. With no pledge at all the base constraint is dropped."
+= Đơn giá thuê × Số lượng.,= Unit rent × quantity.
+= Σ khả dụng qua các facility nhưng,"= Σ availability across the facilities, but"
+= Σ phân bổ cho dự án đó trên mọi facility của HĐTD này (giá trị lặp ở các dòng cùng dự án).,= Σ allocated to that project across every facility of this credit contract (the value repeats on the lines of the same project).
+= Σ(phí + ký quỹ chưa trả) × tỷ lệ phạt × số ngày quá hạn / 365. User sửa được nếu cần.,= Σ(unpaid fee + margin deposit) × penalty rate × days overdue / 365. Editable if needed.
+AI đọc chứng từ,AI document reading
+Actual date keys were handed over (bàn giao nhà). Resident may move in from this date.,Actual date the keys were handed over. The resident may move in from this date.
+Anh/Chị/Em ruột,Sibling
+Archive building vĩnh viễn?,Archive this building permanently?
+Archive subzone vĩnh viễn?,Archive this subzone permanently?
+"Authorizes sale activities for units in this building. For low-rise developments a ""Dãy"" is one Building with one Floor; the flag works the same way. Combined (ANDed) with project- and subzone-level flags.",Authorizes sale activities for units in this building. In low-rise developments a row of houses is one Building with one Floor; the flag works the same way. Combined (ANDed) with the project- and subzone-level flags.
+Auto = giá trị × tỷ lệ × số ngày / 365. User có thể sửa tay nếu NH tính khác.,Automatic = amount × rate × days / 365. Editable if the bank computes it differently.
+Auto sinh sequence ĐNBL/YYYY/NNNNN khi save.,A document number is generated automatically on save.
+BB riêng dự án,Project-specific BB
+BIÊN BẢN THANH LÝ HỢP ĐỒNG THUÊ,LEASE CONTRACT SETTLEMENT RECORD
+BL %(name)s hết hạn ngày %(d)s (còn %(n)s ngày). Cân nhắc gia hạn hoặc giải tỏa.,Guarantee %(name)s expires on %(d)s (%(n)s days left). Consider extending or releasing it.
+BL bị thu — NH trả thay %(a)s cho beneficiary '%(b)s'.,Guarantee called — the bank paid %(a)s to beneficiary '%(b)s'.
+BL sắp hết hạn ≤30 ngày,Guarantees expiring ≤30 days
+BL sắp hết hạn:,Guarantees expiring soon:
+BL tự động chuyển trạng thái Hết hạn (quá 7 ngày kể từ ngày hết hạn mà chưa giải tỏa).,Guarantees move to Expired automatically (7 days past the expiry date without release).
+BL đã quá hạn,The guarantee is overdue
+BL: tự đặt expired + nhắc sắp hết hạn,Guarantees: auto-expire and expiry reminders
+Back-to-back (cho thuê lại từ HĐ này),Back-to-back (subleased from this contract)
+Bank advice state = draft (chưa post → chưa tạo repayment).,"Bank advices in draft state (not posted yet, so no repayment created)."
+Biên bản thanh lý,Settlement record
+"Borrowing base của dự án này DÙNG ĐƯỢC TẠI facility này = phần TSBĐ cầm cố riêng cho facility (ring-fence, ví dụ IPC phân bổ vào facility) + phần bể cấp HĐTD của dự án còn trống sau khi các facility khác đã tựa vào.",The project borrowing base USABLE AT this facility = collateral ring-fenced to the facility (e.g. an IPC allocated to it) + the part of the project pool at credit-contract level still free after the other facilities have drawn on it.
+Borrowing base — khả dụng theo TSBĐ,Borrowing base — availability from collateral
+Borrowing base — khả dụng thực tế,Borrowing base — actual availability
+Bên cho thuê / Bên đi thuê (đối tác):,Lessor / lessee (counterparty):
+Bên nhận BL — vd CĐT (khi tổng thầu mua BL).,"The party receiving the guarantee — e.g. the owner, when the main contractor buys it."
+Bên nhận BL — vd CĐT (khi tổng thầu mua) hoặc tổng thầu (khi nhà thầu phụ mua đưa cho tổng thầu).,The party receiving the guarantee — e.g. the owner (when the main contractor buys it) or the main contractor (when a subcontractor buys it for them).
 Bên nhận tạm ứng,Advance payee
+Bên thụ hưởng,Beneficiary
+Bên xin BL,Applicant
+Bù thêm chừng này vào đúng nhánh đang chặn thì khả dụng mới nhích lên (đến khi chạm nhánh kế tiếp). Ví dụ tài liệu nghiệp vụ §9.9: thiếu 48 tỷ TSBĐ → thêm IPC 80 tỷ được CĐT ký (tỷ lệ cho vay 60%) là mở khoá đúng 48 tỷ.,Add this much to whichever branch is binding and availability moves up (until the next branch binds). Example from the business spec §9.9: 48bn short of collateral → an extra IPC of 80bn signed by the owner (advance rate 60%) unlocks exactly 48bn.
+Bút toán,Journal entry
+Bút toán account.move đã post cho giải ngân này.,The posted account.move for this disbursement.
+Bút toán chuyển giao TS (cho thuê lại TC),Asset transfer entry (finance sublease)
+Bút toán chuyển giao chỉ áp dụng HĐ CHO THUÊ LẠI TÀI CHÍNH.,The transfer entry only applies to FINANCE SUBLEASE contracts.
+Bút toán ghi nhận TS thuê TC,Finance lease asset recognition entry
+Bút toán ghi nhận chỉ áp dụng HĐ ĐI THUÊ TÀI CHÍNH.,The recognition entry only applies to FINANCE LEASE-IN contracts.
+Bút toán kế toán,Journal entries
+Bút toán kết chuyển,Closing entry
+Bút toán — %s,Journal entry — %s
+BẢO LÃNH OUTSTANDING THEO LOẠI,OUTSTANDING GUARANTEES BY TYPE
 "Bản scan hoá đơn, biên bản nghiệm thu, chứng từ NH.","Scanned invoice, acceptance report, bank document."
+Bảng kê chứng từ theo KW,Document list by promissory note
+Bảng kê đối chiếu KW vay,Promissory note reconciliation list
+Bảng tỷ giá,Exchange rate table
+Bảo lãnh,Guarantees
+Bảo lãnh NH,Bank guarantee
+Bảo lãnh NH — %s,Bank guarantee — %s
+Bảo lãnh bảo hành (Warranty),Warranty bond
+Bảo lãnh còn lại,Guarantee limit available
+Bảo lãnh dự thầu (Bid Bond),Bid bond
+Bảo lãnh hết hạn ngày %(d)s — còn %(n)s ngày. Đã gửi thư nhắc cho %(u)s.,The guarantee expires on %(d)s — %(n)s days left. A reminder was sent to %(u)s.
+Bảo lãnh sắp hết hạn,Guarantee expiring soon
+Bảo lãnh thanh toán (Payment Guarantee),Payment guarantee
+Bảo lãnh theo loại,Guarantees by type
+Bảo lãnh thực hiện HĐ (Performance Bond),Performance bond
+Bảo lãnh tạm ứng (Advance Payment),Advance payment guarantee
+Bảo lãnh: nhắc sắp hết hạn,Guarantees: expiry reminders
+Bảo đảm khai ban đầu,Opening collateral
+Bấm,Click
 Bắt buộc,Required
+Bắt đầu gửi thư nhắc khi chứng thư còn bao nhiêu ngày là hết hạn. Để 0 thì dùng mặc định %s ngày.,How many days before expiry the reminder emails start. 0 uses the default of %s days.
+Bắt đầu thuê,Lease start
+Bắt đầu thuê (mới),Lease start (new)
+Bể chung còn trống,Shared pool still free
+Bị thu (NH trả thay),Called (paid by the bank)
+Bỏ,Drop
+Bỏ qua,Ignored
+Bỏ trống thì dùng Sổ Nhật ký Vay,Leave empty to use the Loan Journal
+Bỏ trống thì dùng Sổ Nhật ký Vay khai ở Cấu hình.,Leave empty to use the Loan Journal set in Configuration.
+Bốn tài khoản này bắt buộc khai,These four accounts must be set
+Bổ sung tài sản,Add assets
+Bổ sung tài sản: %s,Assets added: %s
+CHƯA hoàn tất bàn giao,Handover NOT completed
+CP khấu hao %(n)s kỳ %(k)s,Depreciation expense %(n)s period %(k)s
+CP lãi %(kw)s — kỳ %(p)s,Interest expense %(kw)s — period %(p)s
+Certificate (Sổ hồng / Sổ đỏ),Title certificate
+Chi nhánh NH,Bank branch
+Chi nhánh NH phát hành. Lọc theo NH ở trên.,The issuing branch. Filtered by the bank above.
+Chi phí đi thuê,Lease expense
+Chi tiết,Details
+Chi tiết theo khế ước,Details by promissory note
+Chiều,Direction
+Chiều / Loại thuê,Direction / lease type
+Cho thuê lại,Sublease
+Cho thuê lại TÀI CHÍNH: hóa đơn kỳ tách gốc (giảm Phải thu thuê TC) + lãi (doanh thu tài chính). Bút toán chuyển tài sản sang phải thu khi bàn giao — Phase này lập tay theo hướng dẫn kế toán.,"FINANCE sublease: each period invoice splits principal (reducing the finance lease receivable) from interest (financial income). The entry moving the asset to receivables at handover is prepared manually in this phase, following the accounting guidance."
+Cho thuê lại tài chính: dòng GỐC trên hóa đơn bán ghi vào TK này → giảm phải thu dài hạn.,"Finance sublease: the PRINCIPAL line of the sales invoice posts to this account, reducing the long-term receivable."
+Cho vay còn lại,Lending limit available
+Chu kỳ,Frequency
+Chu kỳ mới,New frequency
+"Chu kỳ thanh toán Phí BL — dùng cho nút ""Tạo lịch phí BL"" (khách hàng #11): chia phí theo đợt, số tiền mỗi đợt pro-rata theo SỐ NGÀY của đợt.","The guarantee fee payment cycle — used by the ""Generate fee schedule"" button: the fee is split into instalments, each prorated by the NUMBER OF DAYS it covers."
+Chuyển giao TS %(n)s,Asset transfer %(n)s
+Chuyển giao TS cho thuê TC — %(n)s,Finance lease asset transfer — %(n)s
+Chào,Dear
+Cháu,Grandchild / Nephew / Niece
 Chênh lệch,Difference
+Chênh lệch (Loan − KT),Difference (loan − accounting)
+Chênh lệch = Giá trị đánh giá lại − Số đang ghi sổ.,Difference = revalued amount − carrying amount.
+Chênh lệch cho thuê lại,Sublease margin
+Chênh lệch cho thuê lại (lũy kế),Sublease margin (cumulative)
+Chưa có bút toán,No journal entry yet
+Chưa có chứng từ,No document yet
+Chưa có giao dịch nào,No transactions yet
+Chưa có phiếu đánh giá lại tỷ giá nào,No FX revaluation sheet yet
+"Chưa có sổ nhật ký ngân hàng để ghi phiếu chi. Khai ""Tài khoản chuyển tiền"" trên đợt thanh toán, hoặc đặt sổ mặc định ở Vay > Cấu hình.","There is no bank journal to post the payment. Set the ""Transfer account"" on the instalment, or a default journal in Loans > Configuration."
+Chưa có sổ nhật ký ngân hàng để ghi phiếu thu.,There is no bank journal to post the receipt.
+Chưa cấu hình Sổ Nhật ký Vay cho company '%s'.,No Loan Journal configured for company '%s'.
+Chưa cấu hình tài khoản '%(f)s' cho company '%(c)s'. Vào Settings → Loan Accounts để map.,Account '%(f)s' is not configured for company '%(c)s'. Go to Settings → Loan Accounts to map it.
+Chưa ghi sổ,Not posted
+"Chưa khai ""%(l)s"" cho công ty ""%(c)s"". Vào Cấu hình → Tài khoản vay để khai.","""%(l)s"" is not set for company ""%(c)s"". Go to Configuration → Loan accounts to set it."
+Chưa khai Người phụ trách (PIC) — hệ thống không biết gửi thư nhắc hết hạn cho ai.,No person in charge is set — the system does not know who to send the expiry reminder to.
+"Chưa khai Sổ Nhật ký Vay cho công ty ""%s"". Vào Cấu hình → Tài khoản vay để khai.","No Loan Journal is set for company ""%s"". Go to Configuration → Loan accounts to set it."
+"Chưa khai tài khoản kế toán cho khoản ""%(k)s"".
+Vào Vay > Cấu hình > Tham số phân hệ Vay, mục ""Kế toán thanh toán bảo lãnh"" để khai — không có tài khoản thì phiếu chi hạch toán vào đâu cũng sai.","No account is set for ""%(k)s"".
+Go to Loans > Configuration > Loan parameters, section ""Guarantee payment accounting"" — without an account the payment would be posted to the wrong place whatever happens."
+Chưa lên hóa đơn,Not invoiced
+Chưa nhắc hết hạn được:,Expiry reminder could not be sent:
+Chưa phân bổ,Not allocated
+Chưa phân bổ TSBĐ nào,No collateral allocated yet
+Chưa thanh toán,Unpaid
+Chưa xác định,Undetermined
+Chưa đối soát,Not reconciled
+Chấm dứt sớm,Early termination
+Chấm dứt sớm HĐ thuê,Early termination of the lease
+Chấm dứt sớm hợp đồng này? Các kỳ chưa lên hóa đơn sẽ không thu/trả nữa.,Terminate this contract early? Periods not yet invoiced will no longer be charged or paid.
+Chấm dứt sớm ngày %(d)s. Phạt/bồi thường: %(p)s. Lý do: %(r)s. Các kỳ chưa lên hóa đơn sẽ không thu/trả nữa.,Early termination on %(d)s. Penalty / compensation: %(p)s. Reason: %(r)s. Periods not yet invoiced will no longer be charged or paid.
+Chỉ BL Đã huỷ mới đưa về Nháp được.,Only a cancelled guarantee can be reset to draft.
+Chỉ BL Đã kích hoạt mới tất toán được (legacy).,Only an activated guarantee can be settled (legacy).
+Chỉ BL Đã phát hành / Gia hạn / Bị thu mới tất toán được.,"Only an issued, extended or called guarantee can be settled."
+Chỉ BL Đã phát hành / Đã gia hạn mới giải tỏa được.,Only an issued or extended guarantee can be released.
+Chỉ BL đang hiệu lực mới có thể bị thu.,Only a guarantee in force can be called.
+Chỉ BL ở trạng thái Nháp mới phát hành được.,Only a draft guarantee can be issued.
+Chỉ HĐ CHO THUÊ LẠI mới link HĐ đi thuê gốc.,Only a SUBLEASE contract can link to an originating lease-in contract.
+Chỉ Integration Admin hoặc quản trị hệ thống được mô phỏng giao dịch ngân hàng.,Only an Integration Admin or a system administrator may simulate bank transactions.
+"Chỉ chọn được hạn mức có Mục đích thuộc nhóm ""Bảo lãnh"" và thuộc HĐTD đã kích hoạt. BL active sẽ chiếm hạn mức = giá trị BL; settled/cancelled không chiếm.","Only facilities whose purpose is in the ""Guarantee"" group and that belong to an active credit contract can be selected. An active guarantee consumes limit equal to its amount; settled or cancelled ones consume none."
+Chỉ hoàn ký quỹ khi chứng thư đã kết thúc (giải toả / hết hạn / tất toán).,The margin deposit is only refunded once the certificate has ended (released / expired / settled).
+"Chỉ huỷ được BL ở Nháp, Đã kích hoạt hoặc Đã phát hành.","Only a draft, activated or issued guarantee can be cancelled."
+Chỉ kích hoạt HĐ Nháp.,Only draft contracts can be activated.
+Chỉ nạp được khi phiếu đang ở trạng thái Nháp.,Loading is only possible while the sheet is in Draft.
+Chỉ phát hành được khi đề nghị đang Đã kích hoạt.,Issuance is only possible while the request is activated.
+Chỉ tạo lịch cho HĐ Nháp / Hiệu lực.,Schedules can only be generated for draft or active contracts.
+Chỉ xem,Read only
+Chỉ áp dụng phụ lục cho BL Đã phát hành / Đã gia hạn.,Amendments only apply to issued or extended guarantees.
+Chỉ đề nghị ở trạng thái Nháp mới kích hoạt được.,Only a draft request can be activated.
+Chọn 'Tài sản mục tiêu' và nhập 'Tên tài sản (mới)'.,Select the 'Target asset' and enter the 'Asset name (new)'.
+Chọn 'Tài sản mục tiêu' để rút.,Select the 'Target asset' to withdraw.
+Chọn NH ở trên trước...,Select the bank above first...
+"Chọn Project và (tùy chọn) Building, bấm","Select a Project and (optionally) a Building, then click"
+Chọn dự án mới hoặc nhập địa điểm mới.,Select a new project or enter a new location.
+Chứng thư %(c)s đang ở trạng thái '%(s)s' — không huỷ đề nghị được. Xử lý chứng thư trước.,Certificate %(c)s is in state '%(s)s' — the request cannot be cancelled. Deal with the certificate first.
+"Chứng thư %(c)s đã huỷ/giải toả — hạn mức bảo lãnh đã được trả lại. Đề nghị này vẫn đang ở trạng thái ""%(s)s""; huỷ nốt đề nghị nếu không phát hành lại.","Certificate %(c)s has been cancelled or released — the guarantee limit is back. This request is still in state ""%(s)s""; cancel it too unless it will be reissued."
+Chứng thư BL,Guarantee certificate
+Chứng thư Bảo lãnh,Guarantee certificate
+Chứng thư Bảo lãnh ngân hàng,Bank guarantee certificate
+Chứng thư bảo lãnh dưới đây sắp hết hạn:,The guarantee certificates below are expiring soon:
+Chứng thư chi tiết NH cấp sau khi duyệt đề nghị (nếu có). Tự link / có thể chọn tay.,"The detailed certificate the bank issues after approving the request (if any). Linked automatically, or selectable by hand."
+Chứng thư huỷ theo đề nghị phát hành %s.,Certificate cancelled along with issuance request %s.
+Chứng thư này không có tiền ký quỹ đã nộp.,This certificate has no margin deposit paid.
+Chứng từ,Document
+Chứng từ KW %s,Documents of promissory note %s
+Chứng từ mà giao dịch này được đối soát vào.,The document this transaction is reconciled against.
 Chứng từ tạm ứng,Advance payment document
+Corporate Group (Tập đoàn),Corporate Group
+Corporate group parent. Use for tập đoàn structures where a parent company on-lends to subsidiaries. Independent of the standard contact hierarchy (parent_id).,Corporate group parent. Use for group structures where a parent company on-lends to its subsidiaries. Independent of the standard contact hierarchy (parent_id).
+"Cuối kỳ, số dư khoản vay có gốc ngoại tệ phải được đánh giá lại theo tỷ giá cuối kỳ (TT 200 Điều 69). Tạo phiếu, bấm","At period end, loan balances denominated in a foreign currency must be revalued at the closing rate (Circular 200, Article 69). Create a sheet, click"
+Các bên + Áp dụng,Parties and scope
+Các lần thanh toán,Payments
+Các lần thanh toán — %s,Payments — %s
+Các đợt thanh toán,Instalments
+Cách trả gốc,Principal repayment method
+Còn,Remaining
+"Còn %(a)s ₫ ký quỹ tại ngân hàng. Khi NH chuyển trả, bấm <b>Ghi nhận thu hoàn ký quỹ</b> để ghi phiếu thu và tất toán khoản ký quỹ.","%(a)s ₫ of margin deposit is still with the bank. When it is returned, click <b>Record the deposit refund</b> to post the receipt and clear the deposit."
+Còn KW thiếu bút toán,Promissory notes still missing journal entries
+Còn bút toán đang ở trạng thái đã ghi sổ. Bấm Huỷ để đảo bút toán trước.,Some journal entries are still posted. Click Cancel to reverse them first.
+Còn hạn,In force
 Còn lại HĐ,Invoice remaining
+Còn nợ (phí / ký quỹ / phạt / gốc),Outstanding (fee / deposit / penalty / principal)
+Còn nợ phí,Fee outstanding
+Còn phần,Remaining part
+Có,Credit
+Có giá trị với phiếu THU ghi nhận ngân hàng trả lại tiền ký quỹ khi chứng thư kết thúc.,Set on the RECEIPT recording the bank returning the margin deposit once the certificate ends.
+Có hao mòn TSCĐ thuê tài chính mỗi kỳ.,Credit accumulated depreciation of the finance lease asset each period.
+Công ty,Company
+"Căn cứ tỷ giá, quyết định phê duyệt…","Rate source, approval decision…"
+CƠ CẤU HĐTD (đã cho vay / bảo lãnh / còn trống),CREDIT CONTRACT BREAKDOWN (lent / guaranteed / free)
+Cơ cấu bảo lãnh,Guarantee breakdown
+Cơ cấu hạn mức,Limit breakdown
+Cơ sở bảo đảm (base tổng),Borrowing base (total)
+Cơ sở bảo đảm (Σ HĐTD active),Borrowing base (Σ active credit contracts)
+Cơ sở bảo đảm của mục đích,Facility borrowing base
+Cảnh báo thiếu bảo đảm,Under-collateralisation warning
+Cảnh báo thiếu bảo đảm (HĐTD),Under-collateralisation warning (credit contract)
+Cấp bảo đảm là,The collateral level is
+Cấu hình tài khoản,Account configuration
+Cấu hình tài khoản Quản lý Vay,Loan Management account configuration
+Cấu hình tài khoản kế toán Vay,Loan accounting configuration
+Cần Ngày kích hoạt/phát hành + Ngày hết hạn hợp lệ trước khi tạo lịch phí.,A valid activation / issue date and expiry date are needed before generating the fee schedule.
+Cần chọn hạn mức bảo lãnh trước khi kích hoạt.,A guarantee facility must be selected before activation.
+Cần thêm để mở khoá,Needed to unlock
 Cần ít nhất 1 hồ sơ giải ngân trước khi gửi NH.,At least 1 disbursement dossier is required before submitting to the bank.
+Danh sách TSBĐ đang đỡ lưng cho mục đích này và giá trị phân bổ của từng tài sản.,The collateral backing this facility and how much each asset contributes.
+Date the title certificate (sổ hồng / sổ đỏ) was issued to the owner. Routinely months to years after product handover in Vietnam.,Date the title certificate was issued to the owner. In Vietnam this routinely happens months to years after product handover.
+Declared family / personal relationships of this partner. Required when this partner is a Buyer or Co-owner on an HĐMB sale contract.,Declared family / personal relationships of this partner. Required when this partner is a Buyer or Co-owner on a sale contract.
+Demo: dựng giao dịch đúng dạng SePay và đưa vào sổ đệm như webhook thật. Không cần tài khoản ngân hàng thật.,Demo: builds a transaction in the SePay format and feeds it into the buffer exactly like a real webhook. No real bank account needed.
 Diễn giải,Description
+Diễn giải / căn cứ...,Description / basis...
+Diễn giải / Điều khoản,Description / terms
+Diện tích sử dụng: the area written on the sale contract (HĐMB). Defined by Vietnamese regulation; can differ from both gross and net depending on developer policy.,Sellable area: the area written on the sale contract. Defined by Vietnamese regulation; it can differ from both gross and net area depending on developer policy.
+"Diện tích thông thuỷ: usable interior, excludes walls. Must be ≤ gross area.","Net area: usable interior, walls excluded. Must be ≤ gross area."
+Diện tích tim tường: includes walls. Larger of the three.,Gross area: measured to the wall centre lines. The largest of the three.
+Doanh thu cho thuê lại,Sublease revenue
+Dài hạn,Long term
+"Dòng giải ngân đang ghi dự án %(d)s trong khi KW %(kw)s khai dự án %(n)s — phải cùng một dự án.
+(Muốn giải ngân cho nhiều dự án: bỏ trống dự án trên KW, hoặc lập KW riêng cho từng dự án.)","The disbursement line records project %(d)s while promissory note %(kw)s records project %(n)s — they must be the same project.
+(To disburse for several projects: leave the project empty on the note, or issue one note per project.)"
+Dòng lãi đã có bút toán %s.,This interest line already has journal entry %s.
+Dòng tài sản để rút / thay thế.,The asset line to withdraw or replace.
+Dòng tô đỏ = có chênh lệch (bút toán chưa post đủ hoặc lệch).,"Lines in red have a difference (entries not fully posted, or out of line)."
+Dòng đánh giá lại tỷ giá,FX revaluation lines
+Dùng cho bút toán ghi nhận tài sản thuê TC (Nợ TS thuê TC / Có Nợ gốc thuê TC).,Used by the finance lease recognition entry (Dr finance lease asset / Cr finance lease liability).
+DƯ NỢ GỐC THEO NGÂN HÀNG (top 6),OUTSTANDING PRINCIPAL BY BANK (top 6)
+Dư nợ (loan),Outstanding (loan)
+Dư nợ dự án,Project outstanding
+Dư nợ dự án đã vượt (BB riêng + phần bể chung) — cần thêm IPC được CĐT ký hoặc trả bớt nợ.,"Project outstanding already exceeds (project BB + shared pool) — more IPCs signed by the owner are needed, or some debt must be repaid."
+Dư nợ facility đã vượt base riêng — NH sẽ yêu cầu bổ sung TSBĐ hoặc trả bớt nợ (margin call).,Facility outstanding already exceeds its own base — the bank will require more collateral or partial repayment (margin call).
+Dư nợ gốc (loan) − Dư nợ kế toán. Khác 0 = bút toán chưa post đủ hoặc lệch.,Outstanding principal (loan) − accounting balance. Anything other than 0 means entries are not fully posted or are out of line.
+Dư nợ gốc còn lại,Remaining principal
+Dư nợ gốc sau kỳ,Principal after the period
+Dư nợ gốc thuê TC (đi thuê),Finance lease principal (as lessee)
+Dư nợ gốc thuê tài chính,Finance lease outstanding principal
+Dư nợ kế toán,Accounting balance
+Dư nợ nguyên tệ,Outstanding in foreign currency
+Dư nợ theo ngân hàng,Outstanding by bank
+Dư nợ thuê TC theo đối tác,Finance lease outstanding by counterparty
+"Dương là nghĩa vụ trả nợ tăng, tức là","A positive figure means the liability increases, i.e. a"
+Dồn tích lãi %(kw)s kỳ %(p)s,Interest accrual %(kw)s period %(p)s
+Dự án,Project
+Dự án (ring-fence),Project (ring-fenced)
+Dự án (áp dụng),Project (scope)
+Dự án mà BL này phục vụ. Optional — chỉ filter báo cáo.,The project this guarantee serves. Optional — used for report filtering only.
+Dự án mà BL này phục vụ. Tự lấy từ Đề nghị phát hành BL khi phát hành chứng thư; sửa được.,The project this guarantee serves. Taken from the issuance request when the certificate is issued; editable.
+Dự án mới,New project
+"Dự án thiết bị phục vụ (tham khảo, không bắt buộc).","The project the equipment serves (reference, optional)."
+East (Đông),East
 File đính kèm,Attachments
+Fix the errors in Excel and re-upload (bấm Set to Draft),Fix the errors in Excel and upload again (click Set to Draft)
+Flag legacy. Workflow mới: theo dõi qua payment_ids + guarantee_fee_paid_amount.,Legacy flag. The new workflow tracks this through payment_ids and guarantee_fee_paid_amount.
+Ghi chú,Note
+Ghi chú / tình trạng tài sản,Notes / asset condition
+Ghi chú khớp,Matching note
+Ghi lại tỷ giá ở đâu ra — câu hỏi đầu tiên khi bị kiểm.,Record where the rate came from — the first question an auditor asks.
+Ghi nhận,Recognise
+Ghi nhận TS thuê TC,Recognise the finance lease asset
+Ghi nhận chuyển giao TS,Record the asset transfer
+Ghi nhận lãi (accrual),Interest accrual
+Ghi nhận thanh toán,Record a payment
+Ghi nhận thu hoàn ký quỹ,Record the deposit refund
+Ghi nhận tài sản thuê TC trước khi lập lịch khấu hao.,Recognise the finance lease asset before generating the depreciation schedule.
+Ghi nhận tài sản thuê TC — %(n)s,Finance lease asset recognition — %(n)s
+Ghi sổ,Post
+"Ghi sổ bút toán chênh lệch tỷ giá cho từng khế ước. Bút toán đã ghi chỉ đảo được, không xoá được. Tiếp tục?","Post the FX difference entry for each promissory note. Posted entries can only be reversed, never deleted. Continue?"
+Ghi sổ khấu hao đến hạn,Post due depreciation
+Gia hạn,Extension
+Gia hạn thời gian,Extend the term
+Giai đoạn,Phase
+Giao dịch,Transaction
+Giao dịch ngân hàng,Bank transaction
+Giao dịch ngân hàng (sổ đệm đối soát),Bank transaction (reconciliation buffer)
+"Giao dịch từ SePay (webhook), sao kê, AI đọc chứng từ hay nhập tay — gom về đây để đối soát vào IPC / đặt cọc / trả nợ.","Transactions from SePay (webhook), bank statements, AI document reading or manual entry — collected here to be reconciled against IPCs / deposits / repayments."
+Giá chuyển quyền sở hữu khi hết hạn (thường tượng trưng).,Transfer-of-ownership price at the end of the term (usually nominal).
+Giá mua lại cuối kỳ,End-of-term purchase price
+Giá trị,Amount
+Giá trị (mới),Value (new)
+Giá trị + Phí,Amount and fee
+Giá trị + Thời gian,Amount and dates
+Giá trị BL,Guarantee amount
+Giá trị BL %(b)s lớn hơn khả dụng thực tế %(a)s của hạn mức '%(f)s'. Sẽ không lưu được nếu không giảm xuống.,The guarantee amount %(b)s is larger than the actual availability %(a)s of facility '%(f)s'. It cannot be saved unless reduced.
+"Giá trị BL (%(b)s) vượt khả dụng thực tế của hạn mức '%(f)s' (%(a)s). Số bảo lãnh phát hành được căn theo tài sản bảo đảm đang có, không phải theo trần hạn mức ngân hàng cấp.","The guarantee amount (%(b)s) exceeds the actual availability of facility '%(f)s' (%(a)s). What can be issued is driven by the collateral on hand, not by the limit ceiling the bank granted."
+Giá trị BL mới,New guarantee amount
+Giá trị BL mới phải > 0.,The new guarantee amount must be > 0.
+Giá trị BL phải > 0.,The guarantee amount must be > 0.
 Giá trị HĐ,Invoice total
+Giá trị NH cam kết trả nếu vi phạm.,The amount the bank undertakes to pay on default.
+"Giá trị bảo đảm đỡ lưng cho mục đích này mà KHÔNG tách được theo từng tài sản — thường là hạn mức ngân hàng cấp ban đầu trên một rổ tài sản chung, hồ sơ không ghi tài sản nào đóng góp bao nhiêu.
+Khai tay ở đây, hệ thống CỘNG THÊM vào phần TSBĐ đã phân bổ chi tiết. Về sau tách được tài sản nào thì khai phân bổ cho tài sản đó rồi trừ bớt số này xuống, tránh đếm trùng.","Collateral value backing this facility that CANNOT be broken down per asset — typically the limit the bank granted at the outset against a basket of assets, with no record of how much each asset contributes.
+Entered by hand here, it is ADDED ON TOP of the collateral allocated in detail. Once an asset can be separated out, record its allocation and reduce this figure accordingly, otherwise the same asset is counted twice."
+Giá trị cho vay được,Lendable value
+Giá trị còn lại,Residual value
+Giá trị cũ,Old value
 Giá trị hoá đơn − Σ các hồ sơ giải ngân khác đang gắn cùng hoá đơn này (bỏ hồ sơ đã huỷ).,Invoice total − Σ of the other disbursement dossiers linked to this same invoice (cancelled dossiers excluded).
 Giá trị hóa đơn,Invoice total
+Giá trị mới,New value
+Giá trị phân bổ,Allocated value
+Giá trị phân bổ không được âm.,The allocated value cannot be negative.
+Giá trị tài sản,Asset value
+Giá trị tài sản (tham khảo / bảo hiểm).,Asset value (reference / insurance).
+Giá trị tài trợ,Financed value
+Giá trị đem thế chấp,Pledged value
+Giá trị đánh giá lại,Revalued amount
+Giá trị đảm bảo,Secured value
+Giá trị:,Amount:
 Giải ngân,Disbursement
+Giải ngân %(kw)s — %(ref)s,Disbursement %(kw)s — %(ref)s
+Giải ngân này đã có bút toán %s.,This disbursement already has journal entry %s.
+Giải tỏa / Bị thu,Release / call
+Giải tỏa BL — beneficiary trả lại chứng thư cho NH.,Guarantee released — the beneficiary returned the certificate to the bank.
+Giảm / rút tài sản,Reduce / withdraw assets
+Giấy báo nợ chờ áp dụng,Debit advices awaiting posting
+"Gross Area (Tim tường, m²)",Gross Area (m²)
+Gốc kỳ,Principal of the period
+Gốc thuê TC — %(l)s,Finance lease principal — %(l)s
+Gốc đều,Equal principal
+Gửi thư nhắc ngay,Send the reminder now
+Hai bên xác nhận đã hoàn tất nghĩa vụ theo hợp đồng và các phụ lục kèm theo; biên bản này là căn cứ thanh lý hợp đồng.,Both parties confirm that the obligations under the contract and its addenda have been fulfilled; this record is the basis for settling the contract.
+Hao mòn %(n)s kỳ %(k)s,Accumulated depreciation %(n)s period %(k)s
+High-Rise / Chung cư,High-rise / Apartment
+Hiệu lực,Active
+Hoàn ký cược,Security deposit refund
+Hoàn ký quỹ cho BL,Deposit refund for guarantee
+Hoàn ký quỹ — BL %s,Deposit refund — guarantee %s
 Hoá đơn,Invoice
 "Hoá đơn: giải ngân trả hoá đơn nhà thầu đã xuất.
 Tạm ứng: trả trước theo hợp đồng, chưa có hoá đơn.","Invoice: disbursement pays an invoice already issued by the contractor.
 Advance payment: paid up front under the contract, no invoice yet."
+Hoạt động,Operating
+Huỷ,Cancelled
+Huỷ / Giải toả,Cancel / release
+Huỷ chứng thư bảo lãnh này? Hạn mức bảo lãnh sẽ được trả lại ngay.,Cancel this guarantee certificate? The guarantee limit is released immediately.
+Huỷ qua phụ lục %s,Cancelled through amendment %s
+Huỷ theo đề nghị %s,Cancelled along with request %s
+Huỷ trước hạn,Early cancellation
+Huỷ đề nghị này? Chứng thư bảo lãnh sinh ra từ nó sẽ được giải toả và hạn mức trả lại.,Cancel this request? The guarantee certificate it produced will be released and the limit returned.
+Hàng năm,Yearly
+Hàng quý,Quarterly
+Hàng tháng,Monthly
 Hóa đơn,Invoice
+Hóa đơn của kỳ này chưa vào sổ — xác nhận (post) hóa đơn trước khi thanh toán.,The invoice for this period is not posted — post it before paying.
 Hóa đơn từ nhà thầu (vendor bill). Lọc theo bên nhận tiền trên giải ngân. Chọn được hoá đơn CHƯA thanh toán và ĐÃ thanh toán MỘT PHẦN; bỏ hoá đơn đã trả đủ hoặc đã đảo.,Vendor bill from the contractor. Filtered by the payee on the disbursement. Unpaid and PARTIALLY paid invoices can be selected; fully paid or reversed invoices are excluded.
+HĐ %(n)s chưa Hiệu lực — kích hoạt trước khi lên hóa đơn.,Contract %(n)s is not active — activate it before invoicing.
+HĐ %(n)s: khai TK cho dòng GỐC (tab Kế toán — TK nợ gốc thuê TC hoặc TK phải thu thuê TC) trước khi lên hóa đơn kỳ tài chính.,Contract %(n)s: set the account for the PRINCIPAL line (Accounting tab — finance lease liability or finance lease receivable account) before invoicing a finance period.
+HĐ Nháp chưa cần thanh lý.,A draft contract does not need settlement.
+HĐ cho thuê lại,Sublease contract
+HĐ cho thuê lại — %(n)s,Sublease contract — %(n)s
+HĐ gốc phải là HĐ ĐI THUÊ.,The originating contract must be a LEASE-IN contract.
+HĐ hiệu lực,Active contracts
+HĐ hiệu lực theo ma trận 2×2,Active contracts in the 2×2 matrix
+HĐ thuê,Lease contract
+HĐ thuê...,Lease contract...
+HĐ đi thuê gốc,Originating lease-in contract
+HĐ đã có %(n)s kỳ lên hóa đơn — không tạo lại lịch được (huỷ hóa đơn trước).,The contract already has %(n)s invoiced period(s) — the schedule cannot be regenerated (cancel the invoices first).
+HĐ đã kết thúc / chấm dứt — không áp dụng phụ lục.,The contract has ended or been terminated — no addendum can be applied.
+HĐ đã kết thúc.,The contract has ended.
+HĐ đã thanh lý.,The contract is already settled.
+HĐTD,Credit contract
+HĐTD còn chưa cấp,Credit contract amount not yet allocated
+HĐTD sắp hết hạn ≤90 ngày,Credit contracts expiring ≤90 days
+HĐTD đang hiệu lực,Active credit contracts
+Hạch toán trên khế ước,Accounting on the promissory note
+Hạn mức,Facility
+Hạn mức + HĐTD,Facility and credit contract
+Hạn mức BL,Guarantee facility
+Hạn mức bảo lãnh,Guarantee limit
+Hạn mức còn của facility,Facility limit remaining
+"Hạn mức có Mục đích thuộc nhóm ""Bảo lãnh"" mà BL này dùng.
+Hạn mức bị chiếm TỪ LÚC ĐỀ NGHỊ ĐƯỢC KÍCH HOẠT (backlog 732), không chờ tới lúc phát hành chứng thư. Phát hành xong thì chứng thư chiếm THAY đề nghị — tổng không đổi.","The facility with a ""Guarantee"" purpose that this guarantee draws on.
+The limit is consumed FROM THE MOMENT THE REQUEST IS ACTIVATED, not when the certificate is issued. Once issued, the certificate consumes it INSTEAD of the request — the total does not change."
+Hạn mức phân bổ cho dự án,Limit allocated to the project
+Hạn mức theo dự án,Limits by project
+Hạn thanh toán,Payment due date
+Hằng năm,Yearly
+Hằng quý,Quarterly
+Hằng tháng,Monthly
+Hết hạn,Expired
 Hồ sơ giải ngân,Disbursement dossiers
 Hồ sơ giải ngân (hoá đơn),Disbursement dossier (invoice)
+Hồ sơ giải ngân chờ duyệt,Disbursement dossiers awaiting approval
+"Hồ sơ giải ngân state ∈ {draft, submitted}.",Disbursement dossiers in state draft or submitted.
+Hợp đồng thuê,Lease contracts
+Hợp đồng thuê tài sản,Asset lease contract
+Hủy,Cancel
+"ID giao dịch từ nguồn (SePay payload id). Khoá idempotent — cùng nguồn + cùng ID = cùng một giao dịch, không tạo lại.","Transaction ID from the source (SePay payload id). Idempotency key — same source + same ID means the same transaction, never created twice."
+ID nguồn (chống trùng),Source ID (deduplication)
+In biên bản thanh lý,Print the settlement record
+"Issuing authority and location, e.g. ""Cục CSQLHC về TTXH"".","Issuing authority and location, e.g. ""Department of Administrative Management of Social Order""."
+"Journal để post bút toán nghiệp vụ vay. Khuyến nghị 1 journal riêng ""Loan Journal"" type general.","The journal used to post loan entries. A dedicated ""Loan Journal"" of type general is recommended."
+KHẾ ƯỚC ĐÁO HẠN THEO MỐC THỜI GIAN,PROMISSORY NOTES BY MATURITY BUCKET
+"KW %(kw)s khai dự án %(p)s nhưng có %(n)s dòng giải ngân đang ghi dự án khác (%(o)s).
+Sửa dự án ở các dòng giải ngân cho khớp, hoặc bỏ trống dự án trên KW.","Promissory note %(kw)s records project %(p)s but %(n)s disbursement line(s) record a different project (%(o)s).
+Align the project on those disbursement lines, or leave the project empty on the note."
+KW chưa có bút toán,Promissory notes with no journal entry
+KW còn dư nợ,PNs with outstanding balance
+KW của bút toán (related từ account.move). Cho phép pivot phát sinh theo KW.,The promissory note of the entry (related from account.move). Allows pivoting movements by note.
+KW phát sinh bút toán này (giải ngân / lãi / trả nợ). Tự set khi user click Post trên dòng liên quan.,The promissory note that generated this entry (disbursement / interest / repayment). Set automatically when the user clicks Post on the related line.
+KW rút vốn cho công trình nào. Nên chọn khi facility có phân bổ dự án — KW không gắn dự án sẽ ăn vào phần TSBĐ chung khi tính khả dụng theo dự án.,Which project this note draws funds for. Worth filling in when the facility is allocated by project — a note with no project eats into the shared collateral when project availability is computed.
+KW sắp đáo hạn ≤30 ngày,PNs maturing ≤30 days
+KW sắp đáo hạn ≤90 ngày,PNs maturing ≤90 days
+KW thiếu bút toán,Notes missing journal entries
+KW đáo hạn theo mốc,PN maturities by bucket
+Khai đủ Sổ nhật ký + TK chi phí khấu hao + TK hao mòn lũy kế trước.,"Set the journal, the depreciation expense account and the accumulated depreciation account first."
+Khai đủ Sổ nhật ký + TK phải thu thuê TC + TK tài sản (tab Kế toán) trước.,"Set the journal, the finance lease receivable account and the asset account (Accounting tab) first."
+Khai đủ Sổ nhật ký + TK tài sản thuê TC + TK nợ gốc thuê TC (tab Kế toán) trước.,"Set the journal, the finance lease asset account and the finance lease liability account (Accounting tab) first."
+Khai đủ TK khấu hao + sổ nhật ký trên HĐ %(n)s.,Set the depreciation accounts and the journal on contract %(n)s.
+Khi CHO THUÊ LẠI thiết bị đang đi thuê — link về HĐ đi thuê gốc để theo dõi chênh lệch (back-to-back).,When SUBLEASING equipment that is itself leased in — link back to the originating contract to track the margin (back-to-back).
+Khi lãi vay KHÔNG capitalize — vào CP tài chính (vd TK 635).,When interest is NOT capitalised — charged to financial expenses (e.g. account 635).
+Khi lãi vay capitalize vào dự án xây dựng (vd TK 241 — VAS TT 200 §54).,When interest is capitalised into a construction project (e.g. account 241 — VAS Circular 200 §54).
+Khác,Other
+Không bị chặn,Not blocked
+Không có chênh lệch nào để kết chuyển.,There is no difference to close out.
+Không có dòng nào phát sinh chênh lệch để ghi sổ.,No line has a difference to post.
+Không có khế ước ngoại tệ nào còn dư nợ. Khế ước cùng đồng tiền với công ty (%s) không phải đánh giá lại.,No foreign-currency promissory note has an outstanding balance. Notes in the company currency (%s) are not revalued.
+Không thể còn %(x)s kỳ — đã có %(b)s kỳ lên hóa đơn.,Cannot leave %(x)s period(s) — %(b)s period(s) are already invoiced.
+Không thể rút xuống %(x)s kỳ — đã có %(b)s kỳ lên hóa đơn.,Cannot shorten to %(x)s period(s) — %(b)s period(s) are already invoiced.
+Không thể đưa BL %s về Nháp.,Guarantee %s cannot be reset to draft.
+"Không tìm thấy mẫu thư ""Bảo lãnh sắp hết hạn"". Nâng cấp lại module re_guarantee để nạp lại mẫu.","The ""Guarantee expiring soon"" email template was not found. Upgrade the re_guarantee module to reload it."
+"Không xoá được phụ lục ""%(n)s"" đã áp dụng cho chứng thư %(g)s. Muốn đảo thay đổi thì lập phụ lục mới.","Amendment ""%(n)s"" has already been applied to certificate %(g)s and cannot be deleted. Issue a new amendment to reverse the change."
+Không đổi,Unchanged
+Khả dụng dự án,Project availability
+Khả dụng dự án = min(phân bổ còn lại; BB riêng dự án + bể chung còn trống − dư nợ dự án; khả dụng facility). Các dòng,Project availability = min(allocation remaining; project BB + shared pool still free − project outstanding; facility availability). The lines
+Khả dụng thực tế,Actual availability
+Khả dụng thực tế (HĐTD),Actual availability (credit contract)
+Khả dụng thực tế (theo TSBĐ),Actual availability (from collateral)
+Khấu hao,Depreciation
+Khấu hao TS thuê TC %(n)s — kỳ %(k)s,Finance lease asset depreciation %(n)s — period %(k)s
+Khấu hao chỉ áp dụng HĐ ĐI THUÊ TÀI CHÍNH.,Depreciation only applies to FINANCE LEASE-IN contracts.
+"Khấu hao đường thẳng theo tháng (Nợ CP khấu hao / Có hao mòn lũy kế). Cron hằng tháng tự ghi sổ kỳ đến hạn; hoặc bấm ""Ghi sổ khấu hao đến hạn"".","Straight-line monthly depreciation (Dr depreciation expense / Cr accumulated depreciation). A monthly cron posts the due periods automatically, or click ""Post due depreciation""."
+Khấu trừ khác,Other deductions
+Khấu trừ sửa chữa / hư hỏng,Repair / damage deductions
+Khế ước,Promissory note
+Khế ước (KW),Promissory note
+Khế ước chưa có bút toán nào trên tài khoản vay. Dòng này bị loại khỏi bút toán đánh giá lại.,This promissory note has no entry at all on the loan account. The line is excluded from the revaluation entry.
+Kích hoạt,Activate
+"Kích hoạt đề nghị BL %(a)s trên hạn mức %(f)s — hạn mức bị chiếm TỪ BÂY GIỜ, không chờ tới lúc phát hành chứng thư.","Guarantee request %(a)s activated on facility %(f)s — the limit is consumed FROM NOW, not when the certificate is issued."
+Ký cược / đặt cọc,Security deposit
+Ký cược mới,New security deposit
+Ký cược đã nhận/đặt,Security deposit received / placed
+Ký cược − khấu trừ (không âm).,Security deposit − deductions (never negative).
+Ký quỹ,Margin deposit
+Ký quỹ (%),Margin deposit (%)
+Ký quỹ + Phạt,Margin deposit and penalty
+Ký quỹ còn phải nộp,Margin deposit still payable
+Ký quỹ đã nộp,Margin deposit paid
+Kế toán,Accounting
+Kế toán thanh toán bảo lãnh,Guarantee payment accounting
+Kết chuyển 635 / 515,Close out to 635 / 515
+Kết chuyển chênh lệch tỷ giá %s,FX difference closing %s
+Kết chuyển lãi tỷ giá %s,FX gain closing %s
+Kết chuyển lỗ tỷ giá %s,FX loss closing %s
+Kết chuyển toàn bộ chênh lệch tỷ giá sang chi phí / doanh thu tài chính. Tiếp tục?,Close the whole FX difference out to financial expenses / income. Continue?
+Kết quả,Result
+Kết thúc,End
+Kết thúc thuê,Lease end
+Kết thúc thuê (mới),Lease end (new)
+Kỳ,Period
+Kỳ %(k)s đã có hóa đơn %(i)s.,Period %(k)s already has invoice %(i)s.
+Kỳ %(k)s: đã tạo hóa đơn %(t)s (nháp) — %(a)s.,Period %(k)s: invoice %(t)s created (draft) — %(a)s.
+Kỳ hạn,Term
+Kỳ khấu hao tài sản thuê TC,Finance lease asset depreciation periods
+"Kỳ này chưa có hóa đơn — bấm ""Tạo hóa đơn"" trước.","This period has no invoice — click ""Create invoice"" first."
+Kỳ này chưa có hóa đơn.,This period has no invoice.
+Kỳ này đã thanh toán.,This period is already paid.
+Kỳ thanh toán,Payment period
+Kỳ thanh toán thuê,Lease payment periods
+Kỳ thuê đến hạn ≤30 ngày,Lease instalments due ≤30 days
+Kỳ đánh giá,Revaluation period
+Kỳ đến hạn 6 tháng tới (chưa thanh toán),Periods due in the next 6 months (unpaid)
+Kỳ đến hạn kế tiếp,Next period due
+Liên kết HĐTD / Facility / Đề nghị,Links: credit contract / facility / request
+Liệt kê tất cả bút toán kế toán (giải ngân / lãi / trả nợ) có gắn KW. Group mặc định theo Khế ước.,Lists every journal entry (disbursement / interest / repayment) linked to a promissory note. Grouped by note by default.
+Loại BL,Guarantee type
+Loại TSBĐ,Collateral type
+Loại dự án,Project type
 Loại hồ sơ,Dossier type
+Loại nghĩa vụ phải trả cho NH theo đợt này.,The kind of obligation owed to the bank in this instalment.
+Loại phụ lục,Addendum type
+Loại thanh toán,Payment type
+Loại thanh toán phải khớp với loại của đợt.,The payment type must match the type of the instalment.
+Loại thuê,Lease type
+Loại tiền,Currency
+"Lãi = 0, không cần post.","Interest is 0, nothing to post."
+Lãi capitalize %(kw)s — kỳ %(p)s,Capitalised interest %(kw)s — period %(p)s
+Lãi kỳ,Interest of the period
+Lãi phải trả %(kw)s — kỳ %(p)s,Interest payable %(kw)s — period %(p)s
+Lãi suất (%/năm),Interest rate (%/year)
+Lãi suất không được âm.,The interest rate cannot be negative.
+Lãi suất ngầm định trong HĐ thuê tài chính.,The rate implicit in the finance lease.
+Lãi thuê TC — %(l)s,Finance lease interest — %(l)s
+Lãi tỷ giá,FX gain
+Lãi tỷ giá %s,FX gain %s
+Lãi đã trả YTD,Interest paid YTD
+Lý do bị thu,Reason for the call
+Lý do chấm dứt,Termination reason
+Lý do chấm dứt sớm...,Reason for early termination...
+Lý do giải tỏa,Reason for release
+"Lý do, ghi chú, văn bản tham chiếu...","Reason, notes, reference documents..."
+Lưu,Save
+Lần nhắc hết hạn gần nhất,Last expiry reminder
+Lần thanh toán Chứng thư BL (transaction),Guarantee certificate payment (transaction)
+Lịch khấu hao,Depreciation schedule
+Lịch sử thanh toán,Payment history
+Lịch thanh toán,Payment schedule
+Lỗ tỷ giá,FX loss
+Lỗ tỷ giá %s,FX loss %s
+Ma trận Tài sản × Mục đích của cả HĐTD. Sửa ở đây hay ở form văn bản thế chấp đều được — cùng một bảng dữ liệu.,Asset × Facility matrix for the whole credit contract. Edit it here or on the pledge form — it is the same table.
+"Map tài khoản kế toán theo COA của công ty bạn. VAS TT 200: 3411/3412 Vay, 1121 Tiền gửi NH, 33531 Lãi phải trả, 635 CP lãi, 241 XDCB capitalize.","Map the accounts to your company chart of accounts. VAS Circular 200: 3411/3412 borrowings, 1121 bank deposits, 33531 interest payable, 635 interest expense, 241 capitalised construction in progress."
+"Map tài khoản kế toán theo COA của công ty. VAS TT 200: 3411/3412 Vay, 1121 Tiền gửi NH, 33531 Lãi phải trả, 635 CP lãi, 241 XDCB capitalize.","Map the accounts to the company chart of accounts. VAS Circular 200: 3411/3412 borrowings, 1121 bank deposits, 33531 interest payable, 635 interest expense, 241 capitalised construction in progress."
+Mã (code),Code
+Mã giao dịch NH (FT),Bank transaction reference (FT)
+Mã tham chiếu (code),Reference code
+Mã thanh toán SePay tách được (thường = mã IPC).,Payment code parsed by SePay (usually the IPC reference).
+Mã thanh toán SePay tách được từ nội dung CK.,Payment code parsed by SePay from the transfer description.
+Mô phỏng,Simulate
+Mô phỏng (demo),Simulation (demo)
+Mô phỏng giao dịch SePay,Simulate a SePay transaction
+Mô phỏng giao dịch SePay (demo),Simulate a SePay transaction (demo)
+"Mô phỏng giao dịch chỉ bật trên DB demo (tham số hệ thống %s). Trên DB thật, giao dịch giả sẽ tự đối soát vào IPC thật và làm sai giá trị tài sản bảo đảm.",Transaction simulation is enabled on demo databases only (system parameter %s). On a production database a fake transaction would reconcile itself against a real IPC and corrupt collateral values.
+Mô tả / Điều khoản,Description / terms
+Mặc định lấy dư nợ gốc của khế ước tại thời điểm nạp. Sửa tay được khi số dư ngân hàng xác nhận khác sổ.,Defaults to the outstanding principal of the note at load time. Editable when the balance confirmed by the bank differs from the books.
+Mặc định theo loại TSBĐ — sửa được từng pledge (cùng là phải thu nhưng CĐT uy tín khác nhau → tỷ lệ khác nhau). 0 = không tính vào borrowing base.,Defaults from the collateral type — editable per pledge (two receivables can carry different rates when the owners differ in standing). 0 = excluded from the borrowing base.
+Mẹ,Mother
+Mọi dòng phân bổ dự án của các facility thuộc HĐTD này.,Every project allocation line of the facilities under this credit contract.
+Mọi đợt thanh toán của chứng thư này đã có phiếu chi.,Every instalment of this certificate already has a payment.
+Mỗi sáng hệ thống rà các chứng thư sắp hết hạn và gửi thư cho,Every morning the system reviews the certificates expiring soon and emails
+Mỗi đợt thanh toán chứng thư BL sinh một,Each guarantee certificate instalment generates one
+Mới nhận,Received
+Mở bán chính thức?,Open for official sale?
+Mở bán chính thức? Việc này cho phép tạo booking và HĐMB.,Open for official sale? This allows bookings and sale contracts to be created.
+Mục đích,Facility
+"Mục đích ""%(f)s"" thuộc HĐTD khác với văn bản thế chấp ""%(p)s"". TSBĐ chỉ phân bổ được cho mục đích trong cùng một HĐTD.","Facility ""%(f)s"" belongs to a different credit contract than pledge ""%(p)s"". Collateral can only be allocated to facilities within the same credit contract."
+NH phát hành,Issuing bank
+"Net Area (Thông thuỷ, m²)",Net Area (m²)
+Nguyên tệ,Foreign currency
+Nguồn,Source
+Nguồn gốc,Origin
+Nguồn tỷ giá,Rate source
+Ngày,Date
+Ngày BL chính thức bắt đầu có hiệu lực (NH ký + người thụ hưởng nhận). Nếu trống → fallback date_issue. Phí BL tính từ ngày này đến date_expiry.,The date the guarantee actually takes effect (signed by the bank and received by the beneficiary). Empty falls back to the issue date. The fee runs from this date to the expiry date.
+Ngày BL hết hiệu lực. Quá ngày này mà chưa tất toán → tính phí phạt quá hạn.,"The date the guarantee ceases to be in force. Past this date without settlement, a late penalty accrues."
+Ngày bắt đầu,Start date
+Ngày bị thu,Call date
+Ngày chấm dứt,Termination date
+"Ngày cuối kỳ / cuối năm. Tỷ giá và số dư đều lấy tại ngày này, và bút toán cũng ghi vào ngày này.","Period-end / year-end date. Both the rate and the balance are taken at this date, and the entry is posted on it."
+Ngày dự kiến phát hành,Expected issue date
+Ngày dự kiến phát hành (%(x)s) không được sớm hơn Ngày đề nghị (%(r)s).,The expected issue date (%(x)s) cannot be earlier than the request date (%(r)s).
+Ngày giải tỏa,Release date
+Ngày hiệu lực,Effective date
+Ngày hết hạn,Expiry date
+Ngày hết hạn (%(e)s) không được sớm hơn Ngày dự kiến phát hành (%(x)s).,The expiry date (%(e)s) cannot be earlier than the expected issue date (%(x)s).
+Ngày hết hạn (%(e)s) không được sớm hơn Ngày phát hành thực tế (%(i)s).,The expiry date (%(e)s) cannot be earlier than the actual issue date (%(i)s).
+Ngày hết hạn không được trước ngày phát hành.,The expiry date cannot precede the issue date.
+Ngày hết hạn mới,New expiry date
+Ngày hết hạn phải sau ngày đề nghị.,The expiry date must be after the request date.
+Ngày khấu hao,Depreciation date
+Ngày kích hoạt,Activation date
+Ngày ký,Signature date
+Ngày kết thúc,End date
+Ngày phát hành,Issue date
+Ngày phát hành chứng thư,Certificate issue date
+Ngày phát hành thực tế,Actual issue date
+Ngày phát hành thực tế (%(i)s) không được sớm hơn Ngày đề nghị (%(r)s).,The actual issue date (%(i)s) cannot be earlier than the request date (%(r)s).
+Ngày thanh lý,Settlement date
+Ngày thanh toán,Payment date
+Ngày thanh toán phải từ 1 đến 31.,The payment day must be between 1 and 31.
+Ngày thế chấp,Pledge date
+Ngày trong tháng phải thanh toán CHẬM NHẤT (vd 10 = chậm nhất ngày 10). Bỏ trống = đúng ngày đến hạn theo chu kỳ. Nếu tháng không có ngày này thì lấy ngày cuối tháng.,"The LATEST day of the month payment is due (e.g. 10 = by the 10th). Empty = exactly the due date of the cycle. If a month has no such day, the last day of the month is used."
+Ngày tài sản bổ sung bắt đầu tính tiền thuê (có thể muộn hơn ngày ký phụ lục).,The date rent starts accruing on the added asset (it may be later than the addendum signature date).
+Ngày tài sản này BẮT ĐẦU tính tiền thuê. Bỏ trống = theo ngày bắt đầu HĐ. Có thể muộn hơn ngày ký HĐ (tài sản chưa cần dùng ngay).,The date rent STARTS accruing on this asset. Empty = the contract start date. It may be later than the signature date (the asset is not needed straight away).
+Ngày tài sản này KẾT THÚC thuê. Bỏ trống = theo HĐ.,The date the lease of this asset ENDS. Empty = as per the contract.
+Ngày tất toán,Settlement date
+Ngày đánh giá,Valuation date
+Ngày đánh giá lại,Revaluation date
+Ngày đáo hạn,Maturity date
+Ngày đến hạn,Due date
+Ngày đề nghị,Request date
+Ngân hàng,Bank
+Ngân hàng phát hành,Issuing bank
+Người mua bảo lãnh — thường là tổng thầu hoặc nhà thầu phụ.,The party buying the guarantee — usually the main contractor or a subcontractor.
+Người nhận thư nhắc khi bảo lãnh sắp hết hạn.,Who receives the reminder when a guarantee is about to expire.
+Người phụ trách %(u)s chưa có địa chỉ email — thư nhắc hết hạn không gửi được.,The person in charge %(u)s has no email address — the expiry reminder cannot be sent.
+Người phụ trách (PIC),Person in charge
+Người thụ hưởng,Beneficiary
+Người thụ hưởng mới,New beneficiary
+Ngắn hạn,Short term
 Nhà thầu,Contractor
 Nhà thầu (từ GN),Contractor (from disbursement)
+Nhà thầu / Contractor,Contractor
 Nhà thầu / nhà cung cấp nhận tiền tạm ứng. Mặc định lấy theo Bên nhận tiền của lần giải ngân.,Contractor / supplier receiving the advance payment. Defaults to the payee of the disbursement.
+Nhánh nào đang quyết định con số khả dụng — biết chỗ nghẽn thì mới biết xử lý: thiếu TSBĐ thì bổ sung IPC được CĐT ký / thu hồi công nợ; thiếu hạn mức thì đàm phán với NH.,"Which branch is driving the availability figure — knowing the bottleneck tells you what to do: short of collateral, add IPCs signed by the owner or collect receivables; short of limit, negotiate with the bank."
+Nháp,Draft
+Nhập 'Số kỳ gia hạn' (> 0).,Enter the 'Extension periods' (> 0).
+Nhập 'Số kỳ rút ngắn' (> 0).,Enter the 'Periods removed' (> 0).
+Nhập 'Tên tài sản (mới)' hoặc chọn/tạo lý lịch tài sản.,Enter the 'Asset name (new)' or select / create an asset record.
+Nhập 'Đơn giá thuê mới' (> 0).,Enter the 'New unit rent' (> 0).
+Nhập chu kỳ mới hoặc ký cược mới.,Enter a new frequency or a new security deposit.
+Nhập tay,Manual entry
+Nhập từ file (sao kê),File import (bank statement)
+Nhắc bảo lãnh sắp hết hạn,Guarantee expiry reminder
+Nhắc lặp lại sau (ngày),Repeat the reminder after (days)
+Nhắc trước (ngày),Remind in advance (days)
+"Nhắc trước quá 365 ngày thì thư nhắc mất ý nghĩa — chứng thư nào cũng ""sắp hết hạn"".","Reminding more than 365 days ahead makes the reminder meaningless — every certificate would be ""expiring soon""."
+Niên kim (tổng kỳ đều),Annuity (equal instalments)
+North (Bắc),North
+Northeast (Đông Bắc),Northeast
+Northwest (Tây Bắc),Northwest
+Nơi kết chuyển phần LÃI tỷ giá cuối kỳ — doanh thu tài chính (vd TK 515). Chỉ cần khi dùng nút Kết chuyển.,Where the period-end FX GAIN is closed out — financial income (e.g. account 515). Only needed when the Close out button is used.
+Nơi kết chuyển phần LỖ tỷ giá cuối kỳ — chi phí tài chính (vd TK 635). Chỉ cần khi dùng nút Kết chuyển.,Where the period-end FX LOSS is closed out — financial expenses (e.g. account 635). Only needed when the Close out button is used.
+"Nơi thường trú theo CCCD/CMND. Ví dụ: Số 123 đường Nguyễn Văn A, Phường X, TP Hà Nội.","Permanent residence as written on the citizen ID card. Example: No. 123 Nguyen Van A street, Ward X, Hanoi."
+Nạp khế ước ngoại tệ,Load foreign-currency notes
+"Nếu cần gia hạn, lập phụ lục trên chứng thư trước ngày hết hạn.","If an extension is needed, raise an amendment on the certificate before the expiry date."
+Nội dung,Description
+Nội dung CK,Transfer description
+Nội dung chuyển khoản,Transfer description
+Nội dung chứng thư,Certificate text
+Nội dung văn bản chứng thư (copy từ PDF nếu cần).,The text of the certificate (paste it from the PDF if needed).
+Nội dung văn bản chứng thư...,The text of the certificate...
+Nội dung điều chỉnh,Amendment content
+Nợ TK chênh lệch tỷ giá / Có TK vay,Dr FX difference account / Cr loan account
+Nợ chi phí khấu hao mỗi kỳ.,Debit depreciation expense each period.
+Nợ gốc thuê TC %(n)s,Finance lease liability %(n)s
+"Nợ gốc thuê tài chính ban đầu (giá trị tài sản được tài trợ, trước thuế).","Initial finance lease liability (the financed asset value, before tax)."
+Override TK Vay riêng cho facility này (mặc định lấy từ company).,Override the loan account for this facility (defaults to the company setting).
+Payload gốc,Raw payload
+Permanent (Sở hữu lâu dài),Permanent ownership
+Permanent Address (Thường trú),Permanent Address
+Permanent address as written on the citizen ID (CCCD/CMND). Used verbatim in HĐMB and other legal documents. Leave empty if same as the standard address above.,Permanent address as written on the citizen ID card. Used verbatim in sale contracts and other legal documents. Leave empty if it is the same as the standard address above.
+Phiếu chi,Payment
+Phiếu chi (outgoing payment) sinh từ đợt thanh toán này. Bấm vào để xem bút toán.,The outgoing payment generated from this instalment. Click to see the journal entry.
+Phiếu chi / thu — %s,Payments / receipts — %s
+Phiếu này đã ghi sổ hoặc đã huỷ.,This sheet is already posted or cancelled.
+Phiếu này đã kết chuyển bằng bút toán %s.,This sheet was already closed out by journal entry %s.
+Phiếu thu ghi nhận ngân hàng trả lại tiền ký quỹ khi chứng thư kết thúc. Chưa có phiếu này thì số dư ký quỹ (TK 244) còn treo dù chứng thư đã đóng.,The receipt recording the bank returning the margin deposit once the certificate ends. Without it the deposit balance (account 244) stays open even though the certificate is closed.
+Phiếu thu hoàn ký quỹ,Deposit refund receipt
+Phiếu đánh giá lại,Revaluation sheet
+Phiếu đánh giá lại tỷ giá,FX revaluation sheet
+"Pháp nhân ngân hàng (res.partner is_bank=True) mà res.bank này thuộc về. Dùng để filter chi nhánh theo NH trên các form HĐTD, tài khoản…",The bank legal entity (res.partner with is_bank=True) this res.bank belongs to. Used to filter branches by bank on credit contract and account forms.
+Phát hành,Issue
+"Phát hành BL — giá trị %(a)s, hết hạn %(d)s.","Guarantee issued — amount %(a)s, expiring %(d)s."
+Phát hành chứng thư BL %(c)s từ đề nghị này.,Guarantee certificate %(c)s issued from this request.
+Phân bổ TSBĐ,Collateral allocation
+Phân bổ TSBĐ cho mục đích,Collateral allocation to facilities
+Phân bổ VƯỢT hạn mức facility.,Allocation EXCEEDS the facility limit.
+Phân bổ cho mục đích,Allocated to facility
+Phân bổ theo dự án,Allocation by project
+Phân bổ vượt giá trị TSBĐ,Allocation exceeds the collateral value
+"Phân bổ vượt giá trị bảo đảm.
+
+Tài sản: %(c)s
+Đem đi thế chấp: %(s)s × tỷ lệ cho vay %(r)s%% = %(b)s
+Đang phân bổ: %(t)s
+Vượt: %(o)s","The allocation exceeds the secured value.
+
+Asset: %(c)s
+Pledged: %(s)s × advance rate %(r)s%% = %(b)s
+Currently allocated: %(t)s
+Excess: %(o)s"
+Phân bổ ở facility,Allocated at facility
+Phân loại,Classification
+"Phân loại theo thời gian còn lại tới ngày đáo hạn, tính từ ngày đánh giá lại: đến 12 tháng là ngắn hạn.",Classified by the time left to maturity from the revaluation date: up to 12 months is short term.
+Phí + Ký quỹ + Phạt,"Fee, margin deposit and penalty"
+Phí BL,Guarantee fee
+Phí BL (%/năm),Guarantee fee (%/year)
+Phí BL (số tiền),Guarantee fee (amount)
+"Phí BL NH thu trên giá trị BL, tính theo năm.","The fee the bank charges on the guarantee amount, per year."
+Phí BL còn phải trả,Guarantee fee outstanding
+Phí BL phải trả,Guarantee fee payable
+Phí BL trả lần đầu,Guarantee fee paid up front
+Phí BL đã trả,Guarantee fee paid
+Phí bảo lãnh,Guarantee fee
+Phòng ban,Department
+Phạt,Penalty
+Phạt / bồi thường,Penalty / compensation
+Phạt còn phải trả,Penalty outstanding
+Phạt quá hạn,Late penalty
+"Phạt trả chậm áp lên số phí + ký quỹ chưa trả khi quá date_expiry. Mặc định 0 — khai theo đúng HĐTD, hệ thống không tự đoán hộ (việc 1437).",The late penalty charged on the unpaid fee and margin deposit past the expiry date. Default 0 — enter what the credit contract says; the system does not guess it for you.
+Phạt trả chậm áp lên số phí + ký quỹ chưa trả khi quá date_expiry. Mặc định 10%/năm.,The late penalty charged on the unpaid fee and margin deposit past the expiry date. Default 10%/year.
+Phạt đã trả,Penalty paid
+Phạt/bồi thường,Penalty / compensation
+Phải ghi sổ đánh giá lại trước khi kết chuyển.,The revaluation must be posted before it can be closed out.
+Phải thu 30 ngày tới,Receivable in the next 30 days
+Phải thu thuê TC %(n)s,Finance lease receivable %(n)s
+Phải thu thuê TC (cho thuê lại),Finance lease receivable (as sublessor)
+Phải trả 30 ngày tới,Payable in the next 30 days
+Phần lãi capitalize,Capitalised interest portion
+Phần lãi vào CP,Interest charged to expense
+Phần lãi vào CP lãi vay (TK 635).,Interest charged to interest expense (account 635).
+Phần lãi vào TK XDCB dở dang (TK 241).,Interest charged to construction in progress (account 241).
+"Phần ĐÓNG GÓP BASE (đã nhân tỷ lệ cho vay) mà văn bản thế chấp này dành cho mục đích trên. Tài sản 100 tỷ, tỷ lệ cho vay 70% thì tổng phân bổ tối đa là 70 tỷ.",The BASE CONTRIBUTION (already multiplied by the advance rate) this pledge assigns to the facility above. An asset of 100bn at a 70% advance rate can be allocated up to 70bn in total.
+"Phần đã thanh toán của kỳ (quy theo tỷ lệ trả trên hóa đơn, tính trên Tổng kỳ trước thuế).","The paid share of the period (prorated from the invoice payment, on the pre-tax period total)."
+Phần đóng góp base chưa chia cho mục đích nào. Còn dư ở đây nghĩa là TSBĐ đã thế chấp nhưng chưa đỡ lưng cho mục đích nào cả — không mục đích nào tăng khả dụng.,Base contribution not yet split across any facility. Anything left here means the collateral is pledged but backs no facility — so no facility gains availability from it.
+Phụ lục,Addendum
+Phụ lục chứng thư,Certificate amendments
+Phụ lục chứng thư BL,Guarantee certificate amendment
+Phụ lục ghi thay đổi HĐ (Điều 403 BLDS 2015); bấm,"An addendum records a change to the contract (Article 403, Civil Code 2015); click"
+Phụ lục gia hạn cần Ngày hết hạn mới.,An extension amendment needs a new expiry date.
+Phụ lục hợp đồng thuê,Lease contract addenda
+Phụ lục này đã áp dụng.,This addendum has already been applied.
+Phụ lục này đã được áp dụng.,This amendment has already been applied.
+Phụ lục — %s,Addendum — %s
+Pink Book (Sổ hồng),Pink Book
+Pledge chưa khai tỷ lệ,Pledges with no advance rate
+Posted ngay khi tạo — quan điểm: user chỉ nhập khi đã có chứng từ thật.,Posted as soon as it is created — on the view that a user only enters it once a real document exists.
+Product Handover (Bàn giao nhà),Product handover
+Quyết toán cuối (thu/trả),Final settlement (receive / pay)
+Quyết toán ký cược,Security deposit settlement
+Quyết toán tài chính,Financial settlement
+Quá hạn,Overdue
+Quản lý Vay — Dashboard,Loan Management — Dashboard
+Real Estate Subzone (Phân khu),Real Estate Subzone
+Red Book (Sổ đỏ),Red Book
+Reset state về Planning?,Reset the state back to Planning?
+Reset state về Planning? Action này dành cho admin sửa lỗi.,Reset the state back to Planning? This action is for administrators fixing mistakes.
+Rút ngắn thời gian,Shorten the term
+Rút tài sản: %s,Assets withdrawn: %s
+Sale Contract (HĐMB),Sale Contract
+"Sellable Area (Sử dụng, m²)",Sellable Area (m²)
+Sinh phiếu chi cho các đợt thanh toán chưa có? Đối ứng lấy theo tài khoản đã khai cho từng loại (phí / ký quỹ / phạt / gốc).,Generate payments for the instalments that have none? The counter-account comes from what is configured per type (fee / deposit / penalty / principal).
+Sinh phiếu chi còn thiếu,Generate the missing payments
+Southeast (Đông Nam),Southeast
+Southwest (Tây Nam),Southwest
+Sơ đồ định khoản VAS TT 200,VAS Circular 200 posting scheme
+Sắp hết hạn,Expiring soon
+Sắp hết hạn (30 ngày),Expiring soon (30 days)
+Sẽ ĐẢO toàn bộ bút toán đã ghi sổ. Tiếp tục?,This will REVERSE every posted entry. Continue?
+Số BL active,Active guarantees
+Số HĐ thuê,Lease contract number
+Số HĐ:,Contract no.:
+Số KW,Note count
+"Số TSBĐ đang thế chấp nhưng CHƯA khai Tỷ lệ cho vay (%) — chưa tham gia cơ sở bảo đảm, định giá lại các TS này không ảnh hưởng khả dụng.","Number of pledged assets with NO advance rate (%) recorded — they do not enter the borrowing base, and revaluing them changes no availability."
+Số UNC / chứng từ NH...,Payment order / bank document number...
+Số VB thế chấp,Pledge count
+Số bút toán,Entry count
+"Số bút toán kế toán do CHÍNH khế ước này sinh ra (giải ngân, ghi nhận lãi, trả nợ).
+KHÔNG gồm phiếu chi trả hoá đơn/tạm ứng của nhà thầu — những thứ đó nằm ở nút ""Hoá đơn/Tạm ứng"".","Number of journal entries generated by THIS promissory note itself (disbursement, interest accrual, repayment).
+It does NOT include payments of contractor invoices or advances — those sit under the ""Invoices/Advances"" button."
+Số chứng thư,Certificate number
+Số chứng thư BL,Guarantee certificate number
+Số chứng thư BL gắn với HĐTD qua facility.,Number of guarantee certificates linked to the credit contract through a facility.
+Số chứng thư NH cấp. Auto sequence nếu để trống.,The certificate number issued by the bank. A sequence is generated if left empty.
+Số chứng từ NH,Bank document number
+Số dư luỹ kế,Running balance
+Số dư phía kế toán = Σ Có − Σ Nợ trên TK Vay (TK 3411) filtered theo KW.,Accounting balance = Σ credits − Σ debits on the loan account (3411) filtered by promissory note.
+"Số dư tài khoản vay của khế ước này trên SỔ CÁI (Σ Có − Σ Nợ). Đây là con số kế toán đang mang, không phải số quy đổi lại từ sổ vay.","The loan-account balance of this note in the GENERAL LEDGER (Σ credits − Σ debits). This is the figure accounting carries, not a figure re-derived from the loan ledger."
+Số dương = phải trả lại bên kia; âm = còn phải thu.,A positive figure is payable to the other party; a negative one is still receivable.
+"Số dự án này rút được NGAY = số NHỎ NHẤT của: ① phân bổ − dư nợ dự án · ② TSBĐ riêng dự án (+ bể chung với tới được) − dư nợ dự án · ③ hạn mức còn của facility và TSBĐ chung toàn HĐTD.
+Bằng 0 dù hạn mức còn là ĐÚNG nghiệp vụ (tài liệu tài liệu nghiệp vụ §9.8): dư nợ đã dùng hết TSBĐ. Xem cột ""Đang bị chặn bởi"" để biết phải xử lý gì.","What this project can draw RIGHT NOW = the SMALLEST of: ① allocation − project outstanding · ② project collateral (+ the shared pool it can reach) − project outstanding · ③ the facility limit remaining and the collateral shared across the credit contract.
+Zero while limit remains is business-correct (business spec §9.8): the outstanding debt has consumed the collateral. See the ""Blocked by"" column for what to do."
+Số facility/HĐTD có dư nợ vượt cơ sở bảo đảm (margin call).,Number of facilities / credit contracts whose outstanding exceeds the borrowing base (margin call).
+Số khế ước chưa có bút toán nào trên sổ cái — bị loại khỏi bút toán đánh giá lại.,Number of promissory notes with no entry at all in the ledger — excluded from the revaluation entry.
+Số kỳ,Periods
+Số kỳ cắt bớt (không dưới số kỳ đã lên hóa đơn).,Periods removed (not below the number already invoiced).
+Số kỳ cộng thêm.,Periods added.
+Số kỳ gia hạn,Extension periods
+Số kỳ phải lớn hơn 0.,The number of periods must be greater than 0.
+Số kỳ rút ngắn,Periods removed
+Số kỳ: %(o)s → %(n)s (gia hạn +%(e)s),Periods: %(o)s → %(n)s (extended by %(e)s)
+Số kỳ: %(o)s → %(n)s (rút %(r)s),Periods: %(o)s → %(n)s (shortened by %(r)s)
+Số liệu thời gian thực — click số để xem chi tiết,Real-time figures — click a number to drill down
+Số lượng,Quantity
+Số lượng (mới),Quantity (new)
+Số lần TT,Payments
+Số ngày còn lại,Days remaining
+Số ngày nhắc không được âm.,The reminder lead time cannot be negative.
+Số ngày quá hạn,Days overdue
+Số nhà + tên đường,House number + street name
+Số phiếu,Sheet number
+Số phiếu chi,Payment count
+"Số phiếu chi / phiếu thu thật trong sổ kế toán sinh từ chứng thư này. Khác với ""Đợt thanh toán"" — đó là bảng theo dõi nghĩa vụ của chứng thư.","The number of real payments / receipts in the books generated from this certificate. Different from ""Instalments"", which is the obligation schedule of the certificate."
+Số phụ lục,Addendum number
+Số phụ lục NH cấp.,The amendment number issued by the bank.
+Số phụ lục NH cấp...,Amendment number issued by the bank...
+Số phụ lục...,Addendum number...
+Số serial / khung,Serial / chassis number
+Số serial / khung (mới),Serial / chassis number (new)
+Số sổ hồng / sổ đỏ issued by Sở TN&MT.,Title certificate number issued by the Department of Natural Resources and Environment.
+Số tháng khấu hao,Depreciation months
+Số tháng khấu hao phải lớn hơn 0.,The number of depreciation months must be greater than 0.
+Số tiền,Amount
+"Số tiền = 0, không cần post.","The amount is 0, nothing to post."
+Số tiền NH cam kết trả nếu vi phạm. CHIẾM HẠN MỨC facility khi state=active.,The amount the bank undertakes to pay on default. It CONSUMES the facility limit while the state is active.
+Số tiền NH thực tế trả cho beneficiary khi BL bị thu.,The amount the bank actually paid the beneficiary when the guarantee was called.
+Số tiền NH đã trả thay,Amount paid by the bank
 Số tiền còn lại,Remaining amount
+Số tiền dự kiến phải trả NH cho đợt này.,The amount expected to be paid to the bank for this instalment.
+"Số tiền khế ước vượt hạn mức khả dụng của mục đích — tức là TSĐB đã phân bổ cho mục đích đó chưa đỡ đủ. CHỈ CẢNH BÁO, không chặn: ngân hàng mới là bên quyết định cuối.","The note amount exceeds the facility availability — the collateral allocated to that facility does not cover it. WARNING ONLY, not a block: the bank has the final say."
+Số tiền ký quỹ,Margin deposit amount
+Số tiền ký quỹ phải nộp,Margin deposit payable
+Số tiền phân bổ,Allocated amount
+Số tiền phải trả,Amount payable
+Số tiền phải trả của đợt phải > 0.,The amount payable of an instalment must be > 0.
 Số tiền sẽ thanh toán kỳ này,Amount to pay this time
 Số tiền sẽ thanh toán kỳ này (%(amount)s) vượt số tiền còn lại của hoá đơn (%(remaining)s). Hoá đơn %(invoice)s đã được phân bổ ở hồ sơ giải ngân khác.,The amount to pay this time (%(amount)s) exceeds the remaining amount of the invoice (%(remaining)s). Invoice %(invoice)s is already allocated on another disbursement dossier.
 Số tiền sẽ thanh toán phải > 0.,The amount to pay must be > 0.
 Số tiền thanh toán cho hoá đơn này trong lần giải ngân hiện tại. Tự điền bằng số còn lại của hoá đơn khi chọn hoá đơn — sửa được. Σ các hồ sơ = số tiền giải ngân.,Amount paid against this invoice in the current disbursement. Filled in automatically with the invoice remaining amount when an invoice is selected — editable. Σ dossiers = disbursement amount.
+Số tiền thanh toán phải > 0.,The payment amount must be > 0.
+Số tiền thuê,Rent amount
+Số tiền đã thanh toán,Amount paid
+Số tài khoản,Account number
+Số đang ghi sổ,Carrying amount
+Số đề nghị,Request number
 Số đề nghị tạm ứng / số hợp đồng làm căn cứ tạm ứng — số NH đọc trên bộ hồ sơ.,Advance payment request number / contract number the advance is based on — the reference the bank reads on the file.
+Số đồng tiền hạch toán cho 1 đơn vị nguyên tệ. Mặc định lấy từ bảng tỷ giá tại ngày đánh giá lại; sửa tay được khi dùng tỷ giá ngân hàng công bố.,Accounting currency per unit of foreign currency. Defaults to the rate table at the revaluation date; editable when the bank published rate is used instead.
+"Số đợt thanh toán ĐÃ xác nhận nhưng chưa sinh phiếu chi. Thường là đợt ghi nhận trước khi có tính năng này, hoặc ghi lúc chưa khai tài khoản kế toán.","Number of confirmed instalments with no payment generated. Usually instalments recorded before this feature existed, or recorded while the accounts were not configured."
+Sổ Nhật ký,Journal
+Sổ Nhật ký (override),Journal (override)
+Sổ Nhật ký Vay,Loan Journal
+Sổ nhật ký,Journal
+Sổ nhật ký (bút toán),Journal (entries)
+Sổ nhật ký chi (BL),Payment journal (guarantees)
+"Sổ nhật ký dùng khi sinh phiếu chi cho các đợt thanh toán chứng thư BL. Nếu đợt thanh toán có khai ""Tài khoản chuyển tiền"" thì hệ thống ưu tiên sổ của đúng tài khoản đó; ô này là mức dự phòng.","The journal used when generating payments for guarantee certificate instalments. If an instalment has a ""Transfer account"", the journal of that account wins; this field is the fallback."
+Sử dụng thực tế: measured at handover. May trigger price rebate/charge if it differs from area_sellable on HĐMB.,Actual sellable area measured at handover. May trigger a price rebate or surcharge if it differs from the sellable area on the sale contract.
+TK CP lãi vay (Expense),Interest expense account
+TK CP lãi vay (override),Interest expense account (override)
+TK Chênh lệch tỷ giá,FX difference account
+TK Lãi phải trả (override),Interest payable account (override)
+TK Lãi tỷ giá (kết chuyển),FX gain account (closing)
+TK Lãi vay phải trả,Interest payable account
+TK Lỗ tỷ giá (kết chuyển),FX loss account (closing)
+TK NH của doanh nghiệp...,Company bank account...
+TK Tiền gửi NH (Bank),Bank account
+TK Tiền gửi NH (override),Bank account (override)
+TK XDCB dở dang (Capitalized),Construction in progress account (capitalised)
+TK chi phí khấu hao (627/641/642),Depreciation expense account (627/641/642)
+TK chi phí — Phí BL,Expense account — guarantee fee
+TK chi phí — Phạt quá hạn,Expense account — late penalty
+TK hao mòn lũy kế (2142),Accumulated depreciation account (2142)
+TK hoàn gốc BL bị thu,Account for repaying a called guarantee
+TK kiểm soát dòng tiền,Cash-flow control account
+TK ký quỹ,Margin deposit account
+TK lãi thuê (635 / 515),Lease interest account (635 / 515)
+TK nợ gốc thuê TC (341x...),Finance lease liability account (341x...)
+TK phải thu thuê TC,Finance lease receivable account
+TK tiền thuê (627.../511x),Rent account (627... / 511x)
+TK tài sản thuê TC (212...),Finance lease asset account (212...)
+TS thuê TC %(n)s,Finance lease asset %(n)s
+"TSBĐ KHÔNG gắn dự án mà facility này với tới được, trừ phần các dự án khác (và KW không gắn dự án) đang tựa vào.","Collateral with NO project that this facility can reach, less what the other projects (and notes with no project) are already leaning on."
+TSBĐ chung toàn HĐTD,Collateral shared across the credit contract
+TSBĐ phân bổ cho mục đích này,Collateral allocated to this facility
+"TSBĐ quyền đòi nợ thuộc dự án nào. Có bộ thi công thì tự lấy từ IPC/HĐ CĐT; không có thì chọn tay. TRỐNG = tài sản chung của doanh nghiệp, bảo đảm chung cho toàn bộ gói tín dụng (bể dùng chung).",Which project a receivable-type collateral belongs to. With the construction suite it comes from the IPC / owner contract; otherwise pick it manually. EMPTY = a corporate asset securing the whole credit package (shared pool).
+TSBĐ riêng dự án,Project-specific collateral
+TSBĐ riêng facility,Facility-specific collateral
+"TSBĐ đang thế chấp chưa khai ""Tỷ lệ cho vay (%)""","Pledged collateral with no ""Advance rate (%)"" recorded"
+TSBĐ đã phân bổ,Collateral allocated
+Thanh lý,Settle
+Thanh lý HĐ thuê,Lease contract settlement
+Thanh lý ngày %(d)s. Hoàn ký cược: %(r)s. Quyết toán cuối: %(f)s.,Settled on %(d)s. Security deposit refunded: %(r)s. Final settlement: %(f)s.
+Thanh toán,Payment
+Thanh toán kỳ %s,Payment of period %s
 Thanh toán kỳ này,Paid this time
+Thanh toán một phần,Partially paid
+Thanh toán — %s,Payment — %s
+Thay thế tài sản,Replace an asset
+Thay thế tài sản: %(o)s → %(n)s,Asset replaced: %(o)s → %(n)s
+Theo dõi,Tracking
+Theo dõi thanh toán,Payment tracking
+This partner is a bank or lender (bên cho vay). Used to filter the lender field on credit contracts (re_loan).,This partner is a bank or lender. Used to filter the lender field on credit contracts (re_loan).
+"This partner is a contractor (NT — nhà thầu xây dựng). Used to filter contractor_id field on rp.contract, rp.tender.package, etc. Chuẩn Odoo dùng res.partner cho mọi nghiệp vụ kế toán; flag này thay cho rp.contractor model riêng.","This partner is a construction contractor. Used to filter the contractor_id field on rp.contract, rp.tender.package and the like. Odoo uses res.partner for all accounting operations; this flag replaces a separate rp.contractor model."
+Thiếu bảo đảm,Under-collateralised
+Thiếu bảo đảm (margin call):,Under-collateralised (margin call):
+Thuê tài chính: Giá trị tài trợ phải lớn hơn 0.,Finance lease: the financed value must be greater than 0.
+Thuê tài chính: gốc chưa nằm trên hóa đơn đã vào sổ.,Finance lease: the principal is not on a posted invoice yet.
+Thuê tài sản — Dashboard,Asset Leasing — Dashboard
+Thuê tài sản: ghi sổ khấu hao đến hạn,Asset leasing: post due depreciation
+Thuần (lỗ − lãi),Net (loss − gain)
+Thuế VAT,VAT
+Thuế áp lên dòng tiền thuê / lãi trên hóa đơn (nếu có).,Tax applied to the rent / interest line on the invoice (if any).
+Tháng,Months
+Thông thuỷ thực tế: measured at handover.,Actual net area measured at handover.
+Thông tin phụ lục,Amendment details
+Thư nhắc,Reminder
+Thư nhắc bảo lãnh,Guarantee reminders
+Thường là chính company (tổng thầu).,Usually the company itself (the main contractor).
+Thế chấp tài sản,Pledge assets
+Thế chấp tài sản ở màn hình,Pledge assets on the screen
+Thời hạn,Term
+Thời điểm,Timestamp
+Thụ hưởng:,Beneficiary:
+Tim tường thực tế: measured at handover.,Actual gross area measured at handover.
+Tiền gốc,Principal
+Tiền gốc còn phải trả,Principal outstanding
+Tiền gốc đã trả,Principal paid
+Tiền gốc: hoàn trả NH số tiền NH đã trả thay cho beneficiary (khi BL bị thu / forfeited).,Principal: repaying the bank the amount it paid the beneficiary when the guarantee was called.
+Tiền phạt phải trả,Penalty payable
+Tiền ra,Money out
+Tiền thuê / kỳ (trước thuế),Rent per period (before tax)
+Tiền thuê kỳ,Rent of the period
+Tiền thuê — %(l)s,Rent — %(l)s
+Tiền vào,Money in
+Toàn bộ TSBĐ của HĐTD này chia xuống từng mục đích. Giá trị phân bổ là phần,All collateral of this credit contract split across the facilities. The allocated value is the
+Toàn bộ pledge (mọi cấp),All pledges (every level)
+"True khi cả 3 nhóm (phí + ký quỹ + phạt) đều paid >= amount. Auto chuyển settled khi True + state ∈ (issued, extended).","True when all three (fee, margin deposit, penalty) are paid in full. Moves to settled automatically when true and the state is issued or extended."
+True khi cả 3 nhóm (phí + ký quỹ + phạt) đều paid >= amount. Khi True + state=active → tự tất toán.,"True when all three (fee, margin deposit, penalty) are paid in full. When true and the state is active, it settles automatically."
+True nếu còn ≤ 30 ngày tới hết hạn.,True when 30 days or fewer remain to expiry.
+True nếu đã quá ngày hết hạn.,True when the expiry date has passed.
+Trước,Before
+Trạng thái,Status
+Trạng thái chứng thư,Certificate status
+Trả gốc,Principal repayment
+Trả gốc %s,Principal repayment %s
+Trả lãi,Interest payment
+Trả lãi %s,Interest payment %s
+Trả lần đầu - Phí BL (%(d)s),Up-front payment - guarantee fee (%(d)s)
+Trả nợ %(kw)s — %(ref)s,Repayment %(kw)s — %(ref)s
+Trả nợ %s,Repayment %s
+Trả nợ này đã có bút toán %s.,This repayment already has journal entry %s.
+Trần rút thực tế của HĐTD theo cơ sở bảo đảm (borrowing base). Hạn mức hợp đồng có thể lớn hơn số này — phần vượt chỉ rút được khi bổ sung TSBĐ / nghiệm thu thêm với CĐT.,The real drawing ceiling of the credit contract per the borrowing base. The contractual limit can be higher — the excess is only drawable once more collateral is pledged or more work is certified with the owner.
+Tài chính,Finance
+"Tài chính: chuyển giao phần lớn rủi ro/lợi ích (thuê mua, quyền mua lại giá ưu đãi...) — lịch tách gốc+lãi. Hoạt động: thuê thường, tiền thuê đều theo kỳ.","Finance: substantially all risks and rewards are transferred (hire purchase, bargain purchase option...) — the schedule splits principal and interest. Operating: ordinary rental with a flat rent per period."
+Tài khoản,Account
+Tài khoản NH của doanh nghiệp dùng để thanh toán đợt này (khách hàng #16). Chỉ hiện TK của công ty hiện tại.,The company bank account used to pay this instalment. Only accounts of the current company are shown.
+Tài khoản Quản lý Vay (Realty Loan),Loan Management accounts
+Tài khoản chuyển tiền,Transfer account
+Tài khoản chênh lệch tỷ giá đánh giá lại cuối kỳ (vd TK 4131). Bắt buộc để chạy Đánh giá lại tỷ giá.,Account for period-end FX revaluation differences (e.g. 4131). Required to run an FX revaluation.
+Tài khoản kế toán (override company default),Accounts (override the company default)
+"Tài khoản kế toán dùng theo dõi dòng tiền chủ đầu tư thanh toán về theo HĐTD này.
+LƯU Ý: từ backlog 754, ô này là TÀI KHOẢN KẾ TOÁN (COA) chứ không còn là số tài khoản ngân hàng. Vì vậy điều kiện giải ngân số 7 không tự chấm được nữa — số hiệu tài khoản kế toán không so được với số tài khoản trên sao kê — và chuyển sang ô tick tay ""7. Tiền về đúng TK (xác nhận tay)"".","The accounting account used to track the money the owner pays back under this credit contract.
+NOTE: this field is an ACCOUNT in the chart of accounts, no longer a bank account number. Disbursement condition 7 can therefore no longer be scored automatically — an account code cannot be compared with the account number on a bank statement — and moved to the manual tick box ""7. Money received in the right account (manual confirmation)""."
+Tài khoản kế toán — Quản lý Vay,Accounts — Loan Management
+Tài khoản lãi vay,Interest account
+Tài khoản nợ vay,Loan liability account
+Tài khoản nợ vay (vd TK 3411 Vay ngắn hạn / 3412 Vay dài hạn).,Loan liability account (e.g. 3411 short-term borrowings / 3412 long-term borrowings).
+Tài khoản phải trả lãi vay (vd TK 33531).,Interest payable account (e.g. 33531).
+Tài khoản tiền gửi ngân hàng (vd TK 1121).,Bank deposit account (e.g. 1121).
 Tài liệu đính kèm,Attached documents
+Tài sản,Asset
+Tài sản bảo đảm,Collateral
+Tài sản mục tiêu,Target asset
+Tài sản thuê,Leased assets
+Tài sản × Mục đích,Asset × Facility
+Tài sản đảm bảo,Collateral
+Tên tài sản (mới),Asset name (new)
+"Tình trạng tài sản khi thanh lý, ghi chú quyết toán...","Asset condition at settlement, settlement notes..."
+Tình trạng tài sản khi thanh lý: %s,Asset condition at settlement: %s
+Tình trạng tài sản: đã,Asset condition:
 Tạm ứng,Advance payment
+Tạo hóa đơn,Create invoice
+Tạo hợp đồng thuê tài sản đầu tiên,Create the first asset lease contract
+Tạo lịch Phí BL theo tần suất đã chọn? Các đợt Phí BL CHƯA thanh toán sẽ bị thay thế.,Generate the guarantee fee schedule at the chosen frequency? UNPAID fee instalments will be replaced.
+Tạo lịch khấu hao,Generate the depreciation schedule
+Tạo lịch thanh toán,Generate the payment schedule
+Tạo lịch thanh toán trước khi kích hoạt.,Generate the payment schedule before activating.
+Tạo phiếu chi,Create the payment
+Tạo đề nghị phát hành BL mới,Create a new guarantee issuance request
+Tất toán BL — khôi phục hạn mức %(f)s.,Guarantee settled — facility %(f)s limit restored.
+Tất toán thủ công,Settle manually
+Tần suất trả phí BL,Guarantee fee frequency
+Tỉnh / Thành,Province / City
+Tổng,Total
+Tổng BL đang chiếm hạn mức,Total guarantees consuming limit
+Tổng HM khả dụng,Total limit available
+Tổng Phí BL = 0 — nhập Tỷ lệ phí hoặc số tiền phí trước.,The total guarantee fee is 0 — enter a fee rate or a fee amount first.
+Tổng dư nợ dự án,Total project outstanding
+Tổng dư nợ vượt cơ sở bảo đảm toàn HĐTD.,Total outstanding exceeds the borrowing base of the whole credit contract.
+Tổng dư nợ đã dùng,Total outstanding used
 Tổng giá trị các hồ sơ — phải bằng số tiền giải ngân.,Total value of the dossiers — must equal the disbursement amount.
+Tổng giá trị tài sản,Total asset value
+Tổng hạn mức HĐTD,Total credit contract limit
+Tổng hạn mức dự án,Total project limit
+Tổng hạn mức mới vượt khả dụng thực tế theo TSBĐ.,The new total limit exceeds the actual availability from collateral.
+Tổng hợp phát sinh theo KW,Movements summarised by promissory note
+Tổng khả dụng dự án,Total project availability
+Tổng khả dụng thực tế,Total actual availability
+Tổng ký cược,Total security deposits
+Tổng kỳ (trước thuế),Period total (before tax)
+Tổng lãi tỷ giá,Total FX gain
+Tổng lỗ tỷ giá,Total FX loss
+"Tổng phân bổ dự án đang lớn hơn số tiền hạn mức — phần vượt hiện ở ô ""Chưa phân bổ"" dưới dạng số âm. Hệ thống vẫn cho lưu (phân bổ tạm), nhưng cần điều chỉnh lại phân bổ hoặc tăng hạn mức trước khi trình ngân hàng.","Total project allocation is larger than the limit — the excess shows in ""Not allocated"" as a negative number. Saving is still allowed (provisional allocation), but the allocation must be adjusted or the limit raised before going to the bank."
+Tổng phân bổ đang,Total allocation is
+Tổng phân bổ đang lớn hơn đóng góp base. Thường do định giá lại làm giá trị tài sản giảm sau khi đã phân bổ. Hệ thống KHÔNG chặn lúc định giá — phải vào sửa lại phân bổ.,Total allocation is larger than the base contribution. Usually because a revaluation lowered the asset value after the allocation was made. The system does NOT block the revaluation — the allocation has to be corrected.
+Tổng phải thanh toán,Total payable
+Tổng quan,Overview
+Tổng Đề nghị BL đã kích hoạt,Total activated guarantee requests
+Tổng đã thanh toán,Total paid
+Tự sinh khi save...,Generated on save...
+"Tự tổng ""Số tiền thuê"" của các tài sản khi đã khai đơn giá theo tài sản; nếu chưa khai thì nhập tay.","Sums the ""Rent amount"" of the assets automatically once a unit rent is recorded per asset; otherwise enter it by hand."
+TỶ LỆ SỬ DỤNG HẠN MỨC,LIMIT UTILISATION
+Tỷ giá đang ghi sổ,Carrying rate
+Tỷ giá đánh giá lại,Revaluation rate
+Tỷ lệ CV (%),Adv. rate (%)
+"Tỷ lệ NH cho vay trên giá trị TSBĐ loại này (BĐS ~70, quyền đòi nợ ~50-70, tiền gửi ~95). Mặc định cho pledge — override được từng pledge. 0 = chưa khai → KHÔNG tính vào borrowing base.","The rate the bank lends against this collateral type (real estate ~70, receivables ~50-70, deposits ~95). Used as the pledge default — overridable per pledge. 0 = not recorded → EXCLUDED from the borrowing base."
+"Tỷ lệ NH cho vay trên giá trị tài sản, theo loại tài sản. 0 = chưa khai → tài sản KHÔNG được tính vào cơ sở bảo đảm. Khai ở Cấu hình → Loại tài sản bảo đảm.","The rate the bank lends against the asset value, by asset type. 0 = not recorded → the asset is EXCLUDED from the borrowing base. Set it in Configuration → Collateral types."
+Tỷ lệ cho vay (%),Advance rate (%)
+Tỷ lệ ký quỹ (%),Margin deposit rate (%)
+Tỷ lệ ký quỹ trên giá trị BL.,The margin deposit rate on the guarantee amount.
+Tỷ lệ phí BL (%/năm),Guarantee fee rate (%/year)
+Tỷ lệ phí NH thu trên giá trị BL theo năm.,The annual rate the bank charges on the guarantee amount.
+Tỷ lệ phạt trả chậm (%/năm),Late penalty rate (%/year)
+Tỷ lệ sử dụng hạn mức,Limit utilisation
+"Upload file, bấm","Upload the file, click"
+User nhập khi kích hoạt. Mặc định = ngày kích hoạt.,Entered on activation. Defaults to the activation date.
+"VD: ""IPC0006 CDT thanh toan dot 1"" — mã IPC trong nội dung sẽ được tự khớp.","E.g. ""IPC0006 CDT thanh toan dot 1"" — the IPC reference inside the description is matched automatically."
+"Vd ""Cẩu tháp QTZ63"", ""Máy đào PC200"".","E.g. ""Tower crane QTZ63"", ""Excavator PC200""."
+Vì sao chưa nhắc được,Why no reminder was sent
+Văn bản thế chấp,Pledge agreement
+"Vượt giá trị còn lại của tài sản bảo đảm.
+
+Tài sản: %(c)s
+Giá trị hiện hành: %(v)s
+Đang thế chấp ở nơi khác: %(u)s
+Còn có thể thế chấp: %(r)s
+Đang khai: %(s)s","Exceeds the remaining value of the collateral.
+
+Asset: %(c)s
+Current value: %(v)s
+Already pledged elsewhere: %(u)s
+Still pledgeable: %(r)s
+Being recorded: %(s)s"
+Vượt hạn mức bảo lãnh,Guarantee limit exceeded
+Vượt hạn mức khả dụng,Exceeds the available limit
+Về Nháp,Back to draft
+Vợ/Chồng,Spouse
+Ward / Phường-Xã,Ward
+West (Tây),West
+Wizard chấm dứt sớm HĐ thuê,Lease early termination wizard
+Wizard thanh lý HĐ thuê,Lease settlement wizard
+Xem HĐ hiệu lực »,View active contracts »
+Xem HĐ đi thuê tài chính »,View finance lease contracts »
+Xem HĐơn,View invoice
+Xem facility thiếu bảo đảm »,View under-collateralised facilities »
+Xem kỳ đến hạn »,View periods due »
+Xác nhận BL bị thu? NH sẽ phải trả tiền cho beneficiary.,Confirm the guarantee was called? The bank will have to pay the beneficiary.
+Xác nhận chấm dứt,Confirm termination
+"Xác nhận kích hoạt đề nghị? Bắt đầu tính phí BL, và hạn mức bảo lãnh BỊ CHIẾM NGAY TỪ BƯỚC NÀY — không chờ tới lúc phát hành chứng thư. Huỷ đề nghị thì hạn mức được trả lại.",Activate this request? The guarantee fee starts accruing and the guarantee limit is CONSUMED FROM THIS STEP — not when the certificate is issued. Cancelling the request returns the limit.
+Xác nhận phát hành chứng thư BL? Hệ thống sẽ tạo chứng thư BL chi tiết và đề nghị chuyển trạng thái Đã phát hành.,Issue the guarantee certificate? The system creates the detailed certificate and moves the request to Issued.
+Xác nhận thanh lý,Confirm settlement
+Xác nhận tất toán BL? Hạn mức facility sẽ được khôi phục. (Có thể bỏ qua nếu chưa thanh toán đủ — bình thường nên đợi auto-settle khi đủ phí + ký quỹ + phạt + tiền gốc.),"Settle the guarantee? The facility limit will be restored. (It can be forced before everything is paid, but normally you wait for automatic settlement once fee, deposit, penalty and principal are all paid.)"
+You've entered gross or net area but left Sellable Area (Diện tích sử dụng) blank. This is the area that will appear on the sale contract (HĐMB) — please fill it in before activating the unit.,You entered a gross or net area but left the Sellable Area blank. That is the area printed on the sale contract — please fill it in before activating the unit.
+[Bảo lãnh] {{ object.name }} hết hạn ngày {{ object.date_expiry }},[Guarantee] {{ object.name }} expires on {{ object.date_expiry }}
+bán,sold
+bị cap bởi phần umbrella còn lại của HĐTD,capped by the umbrella headroom left on the credit contract
+chu kỳ %(o)s → %(n)s,frequency %(o)s → %(n)s
+chưa có bút toán nào trên tài khoản vay,have no entry at all on the loan account
+chưa có phiếu chi,no payment yet
+chưa có sổ nhật ký chi,no payment journal
+chưa khai PIC thì không được nhắc,without a person in charge no reminder is sent
+chưa khai tài khoản đối ứng,no counter-account configured
+chưa phân bổ,not allocated
+"chứng thư BL — xem theo dõi thanh toán, tất toán trên chứng thư:",the guarantee certificate — payment tracking and settlement are on the certificate:
+còn,remaining
 "cần bên nhận tạm ứng (trả trước thì chưa có hoá đơn), và Σ giá trị hồ sơ phải bằng số tiền giải ngân.","needs an advance payee (money paid up front has no invoice yet), and Σ dossier values must equal the disbursement amount."
 "cần một hoá đơn của nhà thầu, hồ sơ loại","needs an invoice from the contractor, a dossier of type"
+của HĐTD.,of the credit contract.
+của HĐTD. Chưa chia thì không mục đích nào tăng khả dụng.,"of the credit contract. Until it is split, no facility gains availability."
+dư nợ facility vượt base riêng (TSBĐ ring-fence của facility). Nghiệm thu thêm sản lượng với CĐT hoặc bổ sung TSBĐ.,facility outstanding exceeds its own base (collateral ring-fenced to the facility). Certify more work with the owner or pledge more collateral.
+dự án %(o)s → %(n)s,project %(o)s → %(n)s
+"e.g., The Green Bay - Vịnh Ngọc",e.g. The Green Bay - Ngoc Bay
+ghi trên chứng thư. Chứng thư,recorded on the certificate. The certificate
+"khách hàng #12: khoản phí NH thu NGAY khi phát hành (như ký quỹ) — thành Đợt 1 riêng, hạn = ngày kích hoạt/phát hành. Phần còn lại (tổng phí − lần đầu) chia vào các kỳ theo tần suất. Để 0 nếu NH không thu trước.","The fee the bank charges IMMEDIATELY on issuance (like the deposit) — it becomes instalment 1 on its own, due on the activation / issue date. The rest (total fee − up-front amount) is spread over the periods at the chosen frequency. Leave 0 if the bank charges nothing up front."
+không cộng,cannot be added up
+"không vượt quá phần còn lại chưa thế chấp của tài sản — tính trên mọi HĐTD, không riêng HĐTD này.","must not exceed the unpledged remainder of the asset — counted across every credit contract, not just this one."
+khế ước,promissory note
+ký cược %(o)s → %(n)s,security deposit %(o)s → %(n)s
+ký quỹ,margin deposit
+là,is
+"là chi phí (642 / 811),","is an expense (642 / 811),"
+"là khoản đi vay khi NH trả thay cho beneficiary (3411). Chưa khai thì đợt thanh toán vẫn ghi nhận được, nhưng","is a borrowing when the bank pays the beneficiary on your behalf (3411). Without it an instalment can still be recorded, but"
+"là số khai tay, cộng THÊM vào phần TSBĐ đã phân bổ chi tiết. Khi tách được tài sản nào ra khai phân bổ riêng, nhớ trừ bớt số khai tay xuống tương ứng — không thì cùng một tài sản được đếm hai lần.","is entered by hand and ADDED ON TOP of the collateral allocated in detail. Whenever an asset can be separated out and allocated on its own, reduce this manual figure accordingly — otherwise the same asset is counted twice."
+lỗ,loss
+mà chưa giải tỏa! Cron tự đặt expired sau 7 ngày. Phí phạt:,and has not been released. A cron marks it expired after 7 days. Penalty:
+mục đích,facility
+ngày,days
+ngày (đến,days (until
+ngày. Phí phạt phải trả:,days. Penalty payable:
+nhận/trả lại đầy đủ,received / returned in full
+"nên khi lưu, hệ thống",so on save the system
+"nên không có số ghi sổ để so sánh. Các dòng đó bị loại khỏi bút toán đánh giá lại — post bút toán giải ngân cho chúng trước, rồi nạp lại.","so there is no carrying amount to compare against. Those lines are excluded from the revaluation entry — post their disbursement entries first, then load again."
+phiếu chi thật,a real payment
+phát hành,issued
+phí BL,guarantee fee
+phạt,penalty
+re.guarantee.request state đang chờ.,Guarantee issuance requests still pending.
+tiền gốc,principal
+"trên chứng thư), còn","on the certificate), while"
+tài sản,asset
+tổng dư nợ đã vượt cơ sở bảo đảm toàn HĐTD — NH sẽ yêu cầu bổ sung TSBĐ hoặc trả bớt nợ. Tăng base bằng nghiệm thu thêm sản lượng với CĐT (quyền đòi nợ) hoặc thế chấp thêm tài sản.,total outstanding exceeds the borrowing base of the whole credit contract — the bank will require more collateral or partial repayment. Raise the base by certifying more work with the owner (receivables) or pledging more assets.
+tự phân bổ toàn bộ đóng góp base,allocates the entire base contribution automatically
+tỷ giá — ghi,FX — posted as
+và,and
+"và chứng thư ra đời — kích hoạt đề nghị thì chưa. Hạn mức bị chiếm là hạn mức có mục đích ""Bảo lãnh ngân hàng"" trong HĐTD. Khi tất toán đủ (phí + ký quỹ + phạt) → tự khôi phục hạn mức.","and the certificate exists — merely activating the request does not. The limit consumed is the facility whose purpose is ""Bank guarantee"" in the credit contract. Once fee, deposit and penalty are all settled, the limit is restored automatically."
+vượt,exceeds
+vượt Khả dụng thực tế theo TSBĐ,exceeds the actual availability from collateral
+vượt hạn mức khả dụng của mục đích,exceeds the facility availability
+về mục đích đã chọn — không cần thêm dòng bên dưới. Muốn chia cho nhiều mục đích thì sửa lại các dòng này sau khi lưu.,"to the chosen facility — no extra line is needed below. To split it across several facilities, edit those lines after saving."
+Áp dụng,Apply
+Áp dụng phụ lục %(n)s (%(t)s): %(o)s → %(v)s,Amendment %(n)s applied (%(t)s): %(o)s → %(v)s
+Áp dụng phụ lục này vào hợp đồng? Thao tác điều chỉnh HĐ và tạo lại các kỳ chưa lên hóa đơn.,Apply this addendum to the contract? It amends the contract and regenerates the periods not yet invoiced.
+Ông/Bà,Grandparent
+Đang bị chặn bởi,Blocked by
+Đang ghi sổ,Carried
+Đang hiệu lực,Active
+Đang quá hạn,Currently overdue
+Đem thế chấp,Pledge
+Đi thuê,Lease-in
+"Đi thuê / Cho thuê lại × Hoạt động / Tài chính. Lịch gốc+lãi, hóa đơn từng kỳ, back-to-back cho thuê lại.","Lease-in / sublease × operating / finance. Principal-and-interest schedule, per-period invoicing, back-to-back subleasing."
+Đi thuê hoạt động: TK chi phí thuê. Cho thuê lại hoạt động: TK doanh thu cho thuê. Bỏ trống → TK mặc định của sổ nhật ký hóa đơn.,Operating lease-in: the rent expense account. Operating sublease: the rental revenue account. Empty → the default account of the invoice journal.
+Đi thuê tài chính: TK ghi nhận tài sản thuê tài chính.,Finance lease-in: the account the finance lease asset is recognised in.
+Đi thuê tài chính: TK nợ gốc; dòng GỐC trên hóa đơn NCC từng kỳ ghi vào TK này → giảm nợ.,"Finance lease-in: the liability account; the PRINCIPAL line of each period supplier invoice posts here, reducing the liability."
+Đi thuê: bên cho thuê (công ty leasing / chủ thiết bị). Cho thuê lại: bên thuê (nhà thầu phụ / công ty nội bộ).,Lease-in: the lessor (leasing company / equipment owner). Sublease: the lessee (subcontractor / group company).
+Đi thuê: chi phí lãi (635). Cho thuê lại: doanh thu tài chính (515).,Lease-in: interest expense (635). Sublease: financial income (515).
+Điền data vào file Excel,Fill the data into the Excel file
+Điều chỉnh khác,Other amendment
+Điều chỉnh trách nhiệm / chi phí bảo trì,Amend maintenance responsibility / cost
+Điều chỉnh trách nhiệm bảo trì,Amend maintenance responsibility
+Điều chỉnh điều khoản thanh toán,Amend the payment terms
+Điều chỉnh đơn giá hiện hỗ trợ thuê hoạt động.,Unit-rent amendments currently support operating leases.
+Điều chỉnh đơn giá thuê,Amend the unit rent
+Điều khoản thanh toán: %s,Payment terms: %s
+"Điều khoản đặc biệt, mô tả mục đích BL...","Special terms, description of the guarantee purpose..."
+Điều khoản đặc biệt...,Special terms...
+Điều kiện thuê,Lease terms
+Điều kiện tài chính,Financial terms
+Đánh dấu Bị thu,Mark as called
+Đánh giá lại tỷ giá,FX revaluation
+Đánh giá lại tỷ giá %(d)s — %(kw)s,FX revaluation %(d)s — %(kw)s
+Đánh giá lại tỷ giá khoản vay ngoại tệ,FX revaluation of foreign-currency loans
+Đã bảo lãnh,Guaranteed
+Đã cho vay,Lent
+Đã chuyển giao tài sản sang phải thu thuê TC: %(a)s (bút toán %(m)s).,Asset transferred to the finance lease receivable: %(a)s (entry %(m)s).
+Đã có %(n)s kỳ khấu hao ghi sổ — không tạo lại lịch được.,%(n)s depreciation period(s) are already posted — the schedule cannot be regenerated.
+Đã có bút toán chuyển giao (%(m)s).,A transfer entry already exists (%(m)s).
+Đã có bút toán ghi nhận (%(m)s).,A recognition entry already exists (%(m)s).
+Đã có đợt Phí BL thanh toán (một phần) — không regen tự động được. Xoá/điều chỉnh tay các đợt chưa trả nếu cần.,Some fee instalments are already (partly) paid — the schedule cannot be regenerated automatically. Delete or adjust the unpaid instalments by hand if needed.
+Đã cấp cho facility,Allocated to facilities
+"Đã ghi nhận NH hoàn %(a)s ₫ ký quỹ — phiếu thu %(p)s, tất toán số dư %(acc)s.","Recorded the bank refunding %(a)s ₫ of margin deposit — receipt %(p)s, clearing the %(acc)s balance."
+Đã ghi nhận hoàn ký quỹ bằng phiếu thu %s.,Deposit refund recorded with receipt %s.
+Đã ghi nhận tài sản thuê TC: %(a)s (bút toán %(m)s).,Finance lease asset recognised: %(a)s (entry %(m)s).
+Đã ghi sổ,Posted
+Đã ghi sổ %(n)s kỳ khấu hao đến hạn.,%(n)s due depreciation period(s) posted.
+Đã gia hạn,Extended
+Đã giải chấp,Released
+Đã gửi thư nhắc hết hạn tới %(email)s.,Expiry reminder sent to %(email)s.
+Đã gửi thư nhắc tới %(email)s.,Reminder sent to %(email)s.
+Đã hoàn tất,Completed
+Đã huỷ,Cancelled
+Đã huỷ / giải toả,Cancelled / released
+Đã khấu hao,Depreciated
+Đã khớp,Matched
+Đã kích hoạt,Activated
+Đã kết chuyển,Closed out
+Đã lên hóa đơn,Invoiced
+Đã lên hóa đơn (trước thuế),Invoiced (before tax)
+Đã nhận/trả lại tài sản,Asset received / returned
+"Đã nhắc rồi thì bao nhiêu ngày sau nhắc lại, chừng nào chứng thư chưa được xử lý. Để 0 thì dùng mặc định %s ngày.","Once a reminder has been sent, how many days before the next one, as long as the certificate is still untreated. 0 uses the default of %s days."
+Đã phát hành,Issued
+Đã phát sinh thanh toán trên BL này — không huỷ được. Tất toán thay vì huỷ.,Payments already exist on this guarantee — it cannot be cancelled. Settle it instead.
+Đã phân bổ,Allocated
+Đã post,Posted
+Đã quá hạn,Overdue
+"Đã sinh phiếu chi %(p)s — %(k)s %(a)s ₫, hạch toán vào %(acc)s.","Payment %(p)s generated — %(k)s %(a)s ₫, posted to %(acc)s."
+Đã thanh lý,Settled
+Đã thanh toán,Paid
+Đã thanh toán (kỳ đã trả),Paid (periods settled)
+Đã thanh toán đủ,Paid in full
+Đã trả phí BL (legacy),Guarantee fee paid (legacy)
+"Đã tạo lịch Phí BL: %(n)s đợt (%(freq)s), tổng %(amt)s ₫ — trả lần đầu %(first)s ₫, còn lại pro-rata theo số ngày từng đợt.","Guarantee fee schedule generated: %(n)s instalments (%(freq)s), total %(amt)s ₫ — %(first)s ₫ up front, the rest prorated by the days of each instalment."
+Đã tạo lịch khấu hao %(m)s tháng × %(a)s.,Depreciation schedule generated: %(m)s months × %(a)s.
+Đã tạo lịch thanh toán %(n)s kỳ.,Payment schedule generated: %(n)s periods.
+Đã tất toán,Settled
+Đã tất toán (legacy),Settled (legacy)
+Đã xác nhận,Confirmed
+Đã áp dụng,Applied
+Đã đối soát,Reconciled
+Đóng góp base,Base contribution
+Đơn giá thuê,Unit rent
+Đơn giá thuê (mới),Unit rent (new)
+Đơn giá thuê / kỳ cho 1 đơn vị tài sản (trước thuế).,Rent per period for one unit of the asset (before tax).
+Đơn giá thuê / kỳ cho tài sản bổ sung.,Rent per period for the added asset.
+Đơn giá thuê / kỳ mới (áp dụng cho các kỳ chưa lên hóa đơn).,New rent per period (applies to the periods not yet invoiced).
+Đơn giá thuê mới,New unit rent
+Đơn giá: %(o)s → %(n)s,Unit rent: %(o)s → %(n)s
+Đơn vị:,Entity:
+Đường thẳng theo tháng. 0 = lấy bằng thời hạn thuê (số kỳ × chu kỳ).,Straight line by month. 0 = equal to the lease term (periods × frequency).
+Được ghi sổ từ khế ước,Posted from the promissory note
+ĐẠI DIỆN BÊN A,FOR PARTY A
+ĐẠI DIỆN BÊN B,FOR PARTY B
+Đảo đánh giá lại tỷ giá %s,Reversal of FX revaluation %s
+Đặt lại (Mới),Reset to New
+Đến hạn ≤30 ngày,Due ≤30 days
+Đề nghị BL,Guarantee request
+Đề nghị BL chờ phát hành,Guarantee requests awaiting issuance
+Đề nghị BL — %s,Guarantee request — %s
+Đề nghị này đã có chứng thư BL — không phát hành mới.,This request already has a guarantee certificate — it cannot be issued again.
+Đề nghị phát hành BL,Guarantee issuance request
+Đề nghị phát hành BL chỉ chiếm hạn mức khi đã,A guarantee issuance request only consumes limit once it is
+Đề nghị phát hành BL đã tạo ra chứng thư này. Link 2 chiều.,The issuance request that produced this certificate. Two-way link.
+Đề nghị phát hành Bảo lãnh,Guarantee issuance request
 Để gửi NH duyệt,To submit to the bank
+Địa điểm mới,New location
+Đối chiếu,Reconcile
+Đối chiếu dư nợ loan-side vs accounting-side (TK Vay).,Reconcile the loan-side outstanding against the accounting side (loan account).
+Đối soát vào,Reconciled against
+Đối tác,Counterparty
+Đối tác công ty,Company partner
+Đối ứng phiếu chi khi hoàn lại ngân hàng số tiền NH đã trả thay cho beneficiary (3411).,Counter-account of the payment repaying the bank what it paid the beneficiary (3411).
+"Đối ứng phiếu chi khi nộp ký quỹ, và đối ứng phiếu thu khi ngân hàng hoàn ký quỹ lúc giải toả BL (244). Đây là TÀI SẢN, không phải chi phí.","Counter-account of the payment placing the margin deposit, and of the receipt when the bank refunds it on release (244). This is an ASSET, not an expense."
+Đối ứng phiếu chi khi trả phí bảo lãnh (642).,Counter-account of the payment of the guarantee fee (642).
+Đối ứng phiếu chi khi trả phạt quá hạn (811).,Counter-account of the payment of the late penalty (811).
+Đồng tiền hạch toán,Accounting currency
+Đổi giá trị BL,Change the guarantee amount
+Đổi người thụ hưởng,Change the beneficiary
+Đổi địa điểm / dự án,Change location / project
+Đổi địa điểm: %s,Location changed: %s
+"Đợt %(n)s - Phí BL (%(f)s → %(t)s, %(d)s ngày)","Instalment %(n)s - guarantee fee (%(f)s → %(t)s, %(d)s days)"
+Đợt %s - %s,Instalment %s - %s
+Đợt chưa có phiếu chi,Instalments with no payment
+Đợt này đã thanh toán đủ. Không cần tạo lần thanh toán mới.,This instalment is already paid in full. No further payment is needed.
+Đợt thanh toán,Instalment
+"Đợt thanh toán %(k)s %(a)s ₫ ngày %(d)s CHƯA sinh được phiếu chi: %(why)s. Khai xong rồi bấm ""Tạo phiếu chi"" trên dòng đó.","Instalment %(k)s %(a)s ₫ dated %(d)s has NO payment generated: %(why)s. Fix that, then click ""Create the payment"" on the line."
+Đợt thanh toán BL,Guarantee instalments
+Đợt thanh toán Chứng thư BL (kế hoạch),Guarantee certificate instalment (planned)
+Đợt thanh toán chưa được lưu — bấm Lưu (Ctrl+S) Chứng thư trước khi ghi nhận thanh toán.,The instalment is not saved — save the certificate (Ctrl+S) before recording a payment.
+Đợt thanh toán còn Nháp — xác nhận trước đã.,The instalment is still draft — confirm it first.
+Đợt thanh toán mà lần này thuộc về. Có thể để trống nếu là thanh toán ngoài kế hoạch.,The instalment this payment belongs to. May be left empty for an unplanned payment.
+Đợt thanh toán này đã có phiếu chi %s.,This instalment already has payment %s.
+Đợt thanh toán phải thuộc cùng chứng thư BL.,The instalment must belong to the same guarantee certificate.
+Đợt thanh toán Đề nghị BL,Guarantee request instalments
+Đủ,Complete
+đã nhân tỷ lệ cho vay,already multiplied by the advance rate
+"đóng góp base, thường do định giá lại làm giá trị tài sản giảm sau khi đã chia. Sửa lại các dòng bên dưới.","the base contribution, usually because a revaluation lowered the asset value after the split. Correct the lines below."
+được với nhau — TSBĐ chung là bể dùng chung. IPC dự án nào chỉ gánh dự án đó. Muốn xem TỔNG của dự án trên toàn HĐTD: mở HĐTD → tab,with each other — shared collateral is a common pool. An IPC only carries its own project. To see a project TOTAL across the whole credit contract: open the credit contract → tab
+để kiểm tra,to validate
+để tác động vào HĐ + tạo lại các kỳ chưa lên hóa đơn. Mở dòng để khai chi tiết theo loại phụ lục.,to apply it to the contract and regenerate the periods not yet invoiced. Open a line to fill in the details for that addendum type.
+để tạo units,to create the units
+địa điểm: %s,location: %s
+"đọc thẳng từ sổ cái (Σ Có − Σ Nợ trên tài khoản vay của khế ước), không quy đổi lại từ sổ vay — nhờ vậy lần đánh giá sau không tính trùng phần chênh lệch của lần trước.","read straight from the ledger (Σ credits − Σ debits on the note loan account), never re-derived from the loan ledger — so the next revaluation does not count the previous difference twice."
+Σ Có,Σ credits
+Σ HM bảo lãnh,Σ guarantee limit
+Σ Nợ,Σ debits
+Σ Số dư,Σ balance
+Σ amount_paid của interest_line trong năm hiện tại.,Σ amount_paid of the interest lines in the current year.
+Σ borrowing base (giá trị TSBĐ × tỷ lệ cho vay) của các HĐTD đang hiệu lực có quản TSBĐ.,Σ borrowing base (collateral value × advance rate) of the active credit contracts that track collateral.
+Σ cho vay được,Σ lendable
+Σ chênh lệch,Σ difference
+Σ các kỳ thuê (đi thuê) chưa thanh toán đến hạn trong 30 ngày tới.,Σ unpaid lease instalments (as lessee) falling due in the next 30 days.
+Σ dư nợ gốc,Σ outstanding principal
+Σ dư nợ gốc các HĐ ĐI THUÊ tài chính đang hiệu lực (app Thuê tài sản) — nghĩa vụ tín dụng ngoài vay NH.,Σ outstanding principal of active finance lease contracts AS LESSEE (Asset Leasing app) — credit obligations outside bank loans.
+Σ dư nợ gốc các KW của dự án này trên facility (KW nháp/huỷ/tất toán không tính).,Σ outstanding principal of this project's notes on the facility (draft / cancelled / settled notes excluded).
+Σ dư nợ gốc các KW của dự án này trên toàn HĐTD.,Σ outstanding principal of this project's notes across the whole credit contract.
+Σ giá trị,Σ amount
+"Σ giá trị TSBĐ (đã nhân tỷ lệ cho vay) phân bổ cho mục đích này, chỉ tính văn bản thế chấp đang hiệu lực.","Σ collateral value (already multiplied by the advance rate) allocated to this facility, counting active pledges only."
+"Σ giá trị chứng thư BL ở trạng thái Đã phát hành, Đã gia hạn hoặc BỊ THU. Chứng thư bị thu vẫn chiếm hạn mức cho tới khi tất toán.","Σ amount of guarantee certificates that are issued, extended or CALLED. A called certificate keeps consuming limit until it is settled."
 Σ giá trị hồ sơ,Σ dossier value
 Σ giá trị hồ sơ (%(d)s) khác số tiền giải ngân (%(a)s). Chênh lệch: %(b)s. Điều chỉnh cho khớp trước khi gửi NH.,Σ dossier value (%(d)s) differs from the disbursement amount (%(a)s). Difference: %(b)s. Reconcile them before submitting to the bank.
+"Σ giá trị đề nghị BL đã kích hoạt nhưng CHƯA phát hành chứng thư. Phần này ĐÃ CHIẾM hạn mức (backlog 732): kích hoạt là giữ chỗ, không chờ tới lúc ngân hàng phát hành chứng thư. Phát hành xong thì chứng thư chiếm thay, tổng không đổi.","Σ amount of guarantee requests that are activated but NOT yet issued. This already CONSUMES limit: activation reserves it, without waiting for the bank to issue the certificate. Once issued, the certificate consumes it instead and the total is unchanged."
+Σ hóa đơn NCC đã vào sổ của chính HĐ này (trước thuế).,Σ posted supplier invoices of this contract itself (before tax).
+Σ hóa đơn bán đã vào sổ của các HĐ cho thuê lại link về HĐ này (trước thuế).,Σ posted sales invoices of the sublease contracts linked back to this contract (before tax).
+"Σ khả dụng của dự án qua các facility, NHƯNG bị CAP bởi phần umbrella còn lại của HĐTD (borrowing base tổng − dư nợ tổng). Không phải phép cộng đơn thuần: các facility dùng chung bể TSBĐ nên cộng thẳng sẽ thổi phồng.","Σ project availability across the facilities, BUT CAPPED by the umbrella headroom of the credit contract (total borrowing base − total outstanding). Not a plain sum: the facilities share one collateral pool, so adding them up would inflate the figure."
+"Σ khả dụng thực tế các HĐTD active = min(hạn mức, cơ sở bảo đảm) − dư nợ. Số RÚT ĐƯỢC hôm nay theo TSBĐ hiện hữu.","Σ actual availability of the active credit contracts = min(limit, borrowing base) − outstanding. What can be DRAWN today against the collateral on hand."
+Σ phân bổ,Σ allocated
+Σ phí,Σ fee
+Σ số tiền phân bổ cho dự án này trên MỌI facility của cùng HĐTD.,Σ amount allocated to this project across EVERY facility of the same credit contract.
+Σ đã sử dụng của các facility dưới HĐTD.,Σ amount used by the facilities under the credit contract.
+Σ đã trả,Σ paid
+Σ đóng góp của MỌI pledge đang thế chấp thuộc HĐTD (cấp HĐTD + facility + KW) = trần theo tài sản.,Σ contribution of EVERY active pledge under the credit contract (contract level + facility + note) = the asset-side ceiling.
+"— BL sẽ tự tất toán khi lưu, hạn mức được khôi phục.",— the guarantee will settle itself on save and the limit will be restored.
+"— các TS này CHƯA tham gia cơ sở bảo đảm, định giá lại chúng sẽ không làm đổi Khả dụng thực tế. Khai tỷ lệ ở tab","— these assets are NOT yet in the borrowing base, and revaluing them will not change the actual availability. Record the rate on the tab"
+— hệ thống nhắc trong nhật ký chứng thư.,— the system logs a reminder in the certificate history.
+"— không biết gửi cho ai, mà gửi cả nhóm thì thành thư rác.","— there is nobody to send it to, and mailing the whole group would just be spam."
+"— không phải phép cộng đơn thuần, vì các facility dùng chung bể TSBĐ.","— not a plain sum, because the facilities share one collateral pool."
+— phần đó không làm tăng khả dụng của mục đích nào.,— that part raises no facility's availability.
+— thế chấp khai ở màn hình,— pledges are recorded on the screen
+"— tài sản 100 tỷ, tỷ lệ 70% thì chia tối đa 70 tỷ. Sửa ở đây hay ở form văn bản thế chấp đều được, cùng một bảng dữ liệu.","— an asset of 100bn at a 70% rate can be split up to 70bn. Edit it here or on the pledge form, it is the same table."
+"— tài sản bảo đảm đã phân bổ cho mục đích này chưa đỡ đủ. Ngân hàng nhiều khả năng chưa duyệt rút phần vượt. Muốn tăng khả dụng: phân bổ thêm TSĐB cho mục đích, nghiệm thu thêm sản lượng với chủ đầu tư, hoặc trả bớt dư nợ.","— the collateral allocated to this facility does not cover it. The bank is unlikely to approve drawing the excess. To raise availability: allocate more collateral to the facility, certify more work with the owner, or repay part of the outstanding debt."
+→ BL sắp hết hạn ≤30d,→ Guarantees expiring ≤30d
+→ Giấy báo nợ chờ áp dụng,→ Debit advices awaiting posting
+→ HĐTD hiệu lực,→ Active credit contracts
+→ HĐTD sắp hết hạn ≤90d,→ Credit contracts expiring ≤90d
+→ Hạn mức bảo lãnh,→ Guarantee limits
+→ Hạn mức cho vay,→ Lending limits
+→ Hồ sơ giải ngân chờ duyệt,→ Disbursement dossiers awaiting approval
+→ KW còn dư nợ,→ PNs with outstanding balance
+→ KW sắp đáo hạn ≤30d,→ PNs maturing ≤30d
+→ KW sắp đáo hạn ≤90d,→ PNs maturing ≤90d
+→ Xử lý BL hết hạn,→ Handle expired guarantees
+→ Xử lý KW quá hạn,→ Handle overdue PNs
+→ Xử lý kỳ lãi quá hạn,→ Handle overdue interest periods
+→ Đề nghị BL chờ phát hành,→ Guarantee requests awaiting issuance
+⏳ Workflow đang chờ xử lý,⏳ Pending workflow items
+⚙ Tạo lịch phí BL,⚙ Generate the fee schedule
+⚠ BL hết hạn chưa gia hạn,⚠ Expired guarantees not renewed
+⚠ Có,⚠ There are
+⚠ Cảnh báo (cần xử lý ngay),⚠ Alerts (act now)
+⚠ Dư nợ KW quá hạn,⚠ Overdue PN principal
+⚠ KW quá hạn,⚠ Overdue PNs
+⚠ Kỳ lãi quá hạn chưa trả,⚠ Unpaid overdue interest periods
+⚠ Số tiền khế ước,⚠ The note amount
+⚠ Tổng hạn mức mới,⚠ The new total limit
+🏗 Borrowing base — khả dụng theo TSBĐ,🏗 Borrowing base — availability from collateral
+🏗 Thuê tài chính (tham khảo — app Thuê tài sản),🏗 Finance leases (reference — Asset Leasing app)
+🏦 Bảo lãnh,🏦 Guarantees
+💼 Hạn mức (Facility) — tách Cho vay vs Bảo lãnh,💼 Facilities — lending vs guarantee split
+📊 Tổng quan trực quan,📊 Visual overview
+📋 Hợp đồng tín dụng (HĐTD),📋 Credit contracts
+📝 Khế ước nhận nợ (KW),📝 Promissory notes

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Hồ sơ giải ngân',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.4.0',
     'category': 'Realty/Finance',
     'summary': 'Hồ sơ giải ngân theo hoá đơn: mỗi lần giải ngân gồm '
                'nhiều hồ sơ, mỗi hồ sơ một hoá đơn nhà thầu.',

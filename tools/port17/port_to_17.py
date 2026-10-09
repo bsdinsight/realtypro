@@ -691,7 +691,10 @@ def step_partner_project(dst):
 # `vn_administrative_units` KHÔNG bao giờ vào đây: nội dung của nó là
 # TÊN RIÊNG đơn vị hành chính (Phường Bến Nghé...), dịch là sai.
 I18N_DONE = [
-    're_loan_dossier',
+    're_loan', 're_guarantee', 're_lease', 're_loan_account',
+    're_bank_sync', 're_base', 're_party', 're_loan_dashboard',
+    're_loan_dossier', 're_loan_borrowing_base', 're_lease_loan_bridge',
+    're_loan_menu_reorg', 're_integration_hub',
 ]
 
 

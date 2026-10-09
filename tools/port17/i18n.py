@@ -26,6 +26,7 @@ import os
 import re
 
 from lxml import etree
+from xml.sax.saxutils import escape as xml_escape
 
 VIET = re.compile(
     '[àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợ'
@@ -207,9 +208,14 @@ def xml_apply(text, mapping, missing):
         if en is None:
             missing.add(val)
             continue
-        body = r'\s+'.join(re.escape(w) for w in val.split())
+        # Nguyên văn trong tệp còn ở dạng thực thể (&amp;), còn giá trị
+        # lxml trả về đã giải mã (&). Tìm theo bản ĐÃ MÃ HOÁ LẠI, không
+        # thì chuỗi nào có dấu & sẽ không bao giờ khớp — và im lặng.
+        raw = xml_escape(val)
+        body = r'\s+'.join(re.escape(w) for w in raw.split())
         pat = re.compile(r'(>\s*)%s(\s*<)' % body)
-        text, k = pat.subn(lambda m: m.group(1) + en + m.group(2), text)
+        en_raw = xml_escape(en)
+        text, k = pat.subn(lambda m: m.group(1) + en_raw + m.group(2), text)
         n[0] += k
     return text, n[0]
 

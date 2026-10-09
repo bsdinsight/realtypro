@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Bridge Thuê tài sản ↔ Dashboard Vay',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Lease',
     'summary': 'Hiện dư nợ thuê tài chính trên dashboard Quản lý Vay — '
                'bức tranh tổng nghĩa vụ tín dụng.',

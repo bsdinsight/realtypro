@@ -39,9 +39,13 @@
         </field>
     </record>
 
+    <!-- Đặt trong Project Master, KHÔNG phải trong Xây dựng › Hiện trường.
+         Người mở màn này là quản lý nhìn toàn dự án — "30 cây đang ở
+         bước nào" — chứ không phải đội hiện trường đang ghi nhật ký thi
+         công. Chỗ của menu đi theo người dùng, không theo chủ đề. -->
     <menuitem id="menu_rp_site_map" name="Bản đồ hiện trường"
-              parent="rp_site.menu_rp_site_root"
+              parent="rp_estimate.menu_project_master"
               action="eam_map.action_eam_plant_map"
-              sequence="5"/>
+              sequence="30"/>
 
 </odoo>

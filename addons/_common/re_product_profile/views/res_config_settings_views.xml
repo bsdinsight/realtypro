@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_product_profile"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.form.product.profile</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">120</field>
+        <field name="arch" type="xml">
+            <form string="Hồ sơ sản phẩm" class="o_base_settings">
+                <header>
+                    <button string="Lưu" type="object" name="execute"
+                            class="oe_highlight"/>
+                    <button string="Bỏ" type="object" name="cancel"
+                            class="oe_link"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Hồ sơ sản phẩm</h1>
+                    </div>
+                    <group>
+                        <group name="ho_so">
+                            <field name="rp_product_profile"/>
+                            <field name="rp_profile_extra_hidden"
+                                   placeholder="utm.menu_link_tracker_root"/>
+                        </group>
+                    </group>
+                    <group string="Xem trước">
+                        <field name="rp_profile_preview" nolabel="1"
+                               readonly="1" colspan="2"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <h5><i class="fa fa-info-circle"
+                               title="Thông tin"/> Ẩn menu, KHÔNG gỡ
+                        module</h5>
+                        <p style="margin-bottom: 0;">
+                            Hồ sơ chỉ quyết định <b>menu nào hiện ra</b>.
+                            Module vẫn cài, dữ liệu vẫn nguyên, mọi liên
+                            kết và báo cáo vẫn chạy — chỉ là người dùng
+                            không phải nhìn nhánh họ không dùng. Đổi về
+                            <b>Đầy đủ</b> là mọi thứ hiện lại ngay, không
+                            mất gì.<br/>
+                            Menu <b>Cấu hình</b> và <b>Ứng dụng</b> không
+                            bao giờ bị ẩn, kể cả khi khai tay — ẩn chúng
+                            thì không còn đường quay lại để đổi hồ sơ.
+                        </p>
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        <h5><i class="fa fa-exclamation-triangle"
+                               title="Lưu ý"/> Đặt theo từng bản triển
+                        khai, không đặt trong mã</h5>
+                        <p style="margin-bottom: 0;">
+                            Có khách chạy <b>nhiều dòng sản phẩm trên
+                            cùng một cơ sở dữ liệu</b> — vừa thi công dự
+                            án vừa bán căn hộ. Với họ thì hồ sơ phải là
+                            <b>Đầy đủ</b>. Vì vậy việc ẩn nằm ở tham số
+                            của từng bản triển khai chứ không gắn cứng
+                            vào module: gắn cứng là ẩn cho tất cả mọi
+                            người.
+                        </p>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_profile_settings"
+            model="ir.actions.act_window">
+        <field name="name">Hồ sơ sản phẩm</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id"
+               ref="res_config_settings_view_form_product_profile"/>
+        <field name="target">current</field>
+        <field name="context">{'module': 're_product_profile'}</field>
+    </record>
+
+    <menuitem id="menu_product_profile_settings"
+              name="Hồ sơ sản phẩm"
+              parent="base.menu_administration"
+              action="action_product_profile_settings"
+              sequence="4"
+              groups="base.group_system"/>
+
+</odoo>

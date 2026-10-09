@@ -6,10 +6,28 @@
         <div class="eam-map-side">
             <div t-if="state.loading" class="p-3 text-muted">Đang nạp…</div>
             <t t-if="state.data">
+                <div class="eam-trong" t-if="state.data.not_found">
+                    Không tìm thấy nhà máy <b t-esc="state.data.not_found"/>,
+                    hoặc nhà máy đó chưa có vị trí nào được khai toạ độ.
+                    Hệ thống <b>không tự chuyển sang nhà máy khác</b> —
+                    hỏi nhà máy này mà nhận số của nhà máy kia là loại sai
+                    không nhìn ra được.
+                </div>
                 <div class="eam-box">
                     <div class="eam-box-h">
                         <t t-esc="state.data.plant and state.data.plant.name or 'Toàn bộ vị trí'"/>
                     </div>
+                    <select class="form-select form-select-sm mb-2"
+                            t-if="state.data.plants.length > 1"
+                            t-on-change="doiNhaMay">
+                        <t t-foreach="state.data.plants" t-as="nm"
+                           t-key="nm.code">
+                            <option t-att-value="nm.code"
+                                    t-att-selected="state.plantCode === nm.code">
+                                <t t-esc="nm.name"/> (<t t-esc="nm.n"/> vị trí)
+                            </option>
+                        </t>
+                    </select>
                     <div class="eam-kv"><span>Số vị trí</span>
                         <b t-esc="state.data.summary.n"/></div>
                     <div class="eam-kv"><span>Công suất đặt</span>

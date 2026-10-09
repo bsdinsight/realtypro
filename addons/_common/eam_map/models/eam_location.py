@@ -273,14 +273,37 @@ class EamLocation(models.Model):
                else fields.Datetime.now())
         tu = den - relativedelta(months=months or 12)
 
-        mien = [('has_coords', '=', True)]
+        # Danh sách nhà máy để người dùng chuyển qua lại.
+        #
+        # KHÔNG gộp nhiều nhà máy vào một bản đồ. Hai nhà máy cách nhau
+        # 400 km thì tâm rơi vào giữa hư không và ở mức thu nhỏ đó chẳng
+        # nhìn thấy gì — mà các con số gộp lại cũng vô nghĩa: khả dụng
+        # bình quân của một nhà máy đang chạy và một nhà máy đang xây là
+        # con số không nói lên điều gì.
+        ds_nm = self.search([('location_type', '=', 'plant'),
+                             ('has_coords', '=', True)],
+                            order='complete_code')
+        ds_nm = ds_nm.filtered(
+            lambda n: self.search_count([('id', 'child_of', n.id),
+                                         ('location_type', '=', 'position'),
+                                         ('has_coords', '=', True)]))
         nha_may = False
+        khong_thay = False
         if plant_code:
-            nha_may = self.search([('complete_code', '=', plant_code)],
-                                  limit=1)
-            if nha_may:
-                mien.append(('id', 'child_of', nha_may.id))
-        vt = self.search(mien)
+            nha_may = ds_nm.filtered(
+                lambda n: n.complete_code == plant_code)[:1]
+            # KHÔNG âm thầm quay về nhà máy khác khi mã không khớp. Hỏi
+            # nhà máy A mà nhận dữ liệu nhà máy B là loại sai tệ nhất:
+            # mọi con số đều đúng, chỉ là của sai chỗ, và không có gì
+            # trên màn hình nói ra. Trả về rỗng kèm lý do.
+            khong_thay = not nha_may
+        elif ds_nm:
+            nha_may = ds_nm[:1]
+
+        mien = [('has_coords', '=', True)]
+        if nha_may:
+            mien.append(('id', 'child_of', nha_may.id))
+        vt = self.browse() if khong_thay else self.search(mien)
         # Chỉ cắm vị trí THIẾT BỊ; vị trí cấu phần nằm trong vỏ máy.
         vt = vt.filtered(lambda l: l.location_type in ('plant', 'position'))
         cay = vt.filtered(lambda l: l.location_type == 'position')
@@ -329,12 +352,19 @@ class EamLocation(models.Model):
             'plant': nha_may and {
                 'code': nha_may.complete_code, 'name': nha_may.name,
                 'lat': nha_may.latitude, 'lon': nha_may.longitude} or False,
+            'plants': [{'code': n.complete_code, 'name': n.name,
+                        'n': self.search_count([
+                            ('id', 'child_of', n.id),
+                            ('location_type', '=', 'position'),
+                            ('has_coords', '=', True)])}
+                       for n in ds_nm],
             'center': tam,
             'points': diem,
             'pairs': cap,
             'spacing_d': boi,
             'months': months or 12,
             'as_of': fields.Datetime.to_string(den),
+            'not_found': khong_thay and plant_code or False,
             'data_span': self._map_khoang_du_lieu(),
             'summary': {
                 'n': len(diem),

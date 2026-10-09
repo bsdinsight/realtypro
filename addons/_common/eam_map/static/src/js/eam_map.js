@@ -63,6 +63,7 @@ export class EamPlantMap extends Component {
             selected: null,
             months: 12,
             asOf: "",
+            plantCode: null,
             lop: { wake: true, pairs: true, nhan: true },
             nen: "sat",
             toMau: "state",
@@ -113,10 +114,16 @@ export class EamPlantMap extends Component {
         try {
             this.state.data = await this.orm.call(
                 "eam.location", "map_data",
-                [], { plant_code: this.plantCode, months: this.state.months,
+                [], { plant_code: this.state.plantCode || this.plantCode,
+                      months: this.state.months,
                       as_of: this.state.asOf || null });
             if (!this.state.asOf && this.state.data.as_of) {
                 this.state.asOf = this.state.data.as_of.slice(0, 10);
+            }
+            // Máy chủ có thể chọn giúp nhà máy mặc định — ghi lại để ô
+            // chọn hiện đúng cái đang xem.
+            if (this.state.data.plant) {
+                this.state.plantCode = this.state.data.plant.code;
             }
         } finally {
             this.state.loading = false;
@@ -345,6 +352,27 @@ export class EamPlantMap extends Component {
         this.state.months = parseInt(ev.target.value, 10) || 12;
         await this._napDuLieu();
         this._ve();
+    }
+
+    async doiNhaMay(ev) {
+        this.state.plantCode = ev.target.value;
+        this.state.selected = null;
+        await this._napDuLieu();
+        this._ve();
+        this._veVua();
+    }
+
+    // Kéo khung nhìn về đúng cụm điểm. Phải gọi lại sau mỗi lần đổi nhà
+    // máy — không thì bản đồ vẫn đứng ở toạ độ nhà máy cũ, cách đó vài
+    // trăm cây số, và người dùng tưởng bản đồ trống.
+    _veVua() {
+        const d = this.state.data;
+        if (!this._map || !d) { return; }
+        const b = d.points.filter((p) => p.lat && p.lon)
+            .map((p) => [p.lat, p.lon]);
+        if (b.length) {
+            this._map.fitBounds(window.L.latLngBounds(b).pad(0.15));
+        }
     }
 
     async doiMoc(ev) {

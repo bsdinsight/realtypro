@@ -9,6 +9,11 @@ import { _t } from "@web/core/l10n/translation";
 // Bản đồ hiện trường — Leaflet nhúng sẵn trong module (không gọi CDN),
 // ảnh vệ tinh lấy từ dịch vụ nền của trình duyệt người dùng.
 //
+// Hai chế độ tô màu: theo TRẠNG THÁI (vận hành) và theo TIẾN ĐỘ DỰNG
+// MÁY (xây dựng). Cùng một bản đồ, hai người đọc khác nhau — quản lý dự
+// án hỏi "cây nào đang ở bước nào", người vận hành hỏi "cây nào đang
+// dừng". Ép chung một thang màu thì một trong hai sẽ đọc sai.
+//
 // Toàn bộ dữ liệu về trong MỘT lần gọi `map_data`. Gọi từng điểm thì
 // 30 tua-bin thành 30 vòng truy vấn và bản đồ giật mỗi lần kéo.
 
@@ -60,6 +65,7 @@ export class EamPlantMap extends Component {
             asOf: "",
             lop: { wake: true, pairs: true, nhan: true },
             nen: "sat",
+            toMau: "state",
             loc: Object.fromEntries(Object.keys(MAU).map((k) => [k, true])),
         });
 
@@ -184,10 +190,9 @@ export class EamPlantMap extends Component {
         }
 
         for (const p of hien) {
-            const m = MAU[p.state] || MAU.standby;
             const mk = L.circleMarker([p.lat, p.lon], {
                 radius: 9, color: "#ffffff", weight: 2,
-                fillColor: m.c, fillOpacity: 0.95,
+                fillColor: this.mauDiem(p), fillOpacity: 0.95,
             }).addTo(this._lopDiem);
             mk.bindPopup(this._popup(p), { maxWidth: 380, minWidth: 320 });
             mk.on("click", () => { this.state.selected = p; });
@@ -230,6 +235,14 @@ export class EamPlantMap extends Component {
             L.push(`<div class="eam-canh">⚠ Nằm gần máy khác dưới `
                 + `${d.spacing_d}D — xem đường nối đỏ</div>`);
         }
+        if (p.extra && p.extra.length) {
+            L.push(`<hr/>`);
+            for (const x of p.extra) {
+                L.push(`<div${x.warn ? ' class="eam-canh"' : ''}>`
+                    + `${this._esc(x.label)}: <b>${this._esc(x.value)}</b>`
+                    + `</div>`);
+            }
+        }
         L.push(`<hr/>`);
         L.push(`<div class="eam-pop-t">${d.months} tháng gần nhất</div>`);
         if (p.avail === null) {
@@ -269,6 +282,37 @@ export class EamPlantMap extends Component {
         }
         L.push(`</div></div>`);
         return L.join("");
+    }
+
+    // Thang màu tiến độ: đỏ 0% → hổ phách 50% → xanh 100%. Vị trí CHƯA
+    // CÓ SỔ dựng máy để xám, không tô đỏ — chưa khai khác với chưa làm,
+    // và tô đỏ sẽ biến một lỗ hổng dữ liệu thành một báo động giả.
+    mauTienDo(v) {
+        if (v === null || v === undefined) { return "#b9bcbf"; }
+        const t = Math.max(0, Math.min(100, v)) / 100;
+        const a = t < 0.5
+            ? [[215, 48, 39], [227, 160, 8], t / 0.5]
+            : [[227, 160, 8], [26, 152, 80], (t - 0.5) / 0.5];
+        const c = a[0].map((x, i) => Math.round(x + (a[1][i] - x) * a[2]));
+        return `rgb(${c[0]},${c[1]},${c[2]})`;
+    }
+
+    mauDiem(p) {
+        if (this.state.toMau === "erect") {
+            return this.mauTienDo(p.erect_pct);
+        }
+        return (MAU[p.state] || MAU.standby).c;
+    }
+
+    doiToMau(k) {
+        this.state.toMau = k;
+        this._ve();
+    }
+
+    get coTienDo() {
+        const d = this.state.data;
+        return !!(d && d.points.some((p) => p.erect_pct !== null
+                                            && p.erect_pct !== undefined));
     }
 
     _esc(s) {

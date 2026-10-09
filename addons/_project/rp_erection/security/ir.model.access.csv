@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_erection_gate_user,rp.erection.gate.user,model_rp_erection_gate,base.group_user,1,0,0,0
+access_rp_erection_gate_mgr,rp.erection.gate.mgr,model_rp_erection_gate,base.group_system,1,1,1,1
+access_rp_erection_step_user,rp.erection.step.user,model_rp_erection_step,base.group_user,1,1,1,0
+access_rp_erection_step_mgr,rp.erection.step.mgr,model_rp_erection_step,base.group_system,1,1,1,1
+access_rp_erection_generate,rp.erection.generate,model_rp_erection_generate,base.group_user,1,1,1,1

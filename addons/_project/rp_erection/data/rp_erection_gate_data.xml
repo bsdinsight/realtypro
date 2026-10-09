@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Chín cổng dựng một tua-bin gió trên bờ, theo đúng thứ tự thi công.
+
+        noupdate="1": mỗi dự án một khác — có dự án tách "lắp nacelle" và
+        "lắp hub" thành hai bước, có dự án gộp. Khách sửa rồi thì bản nâng
+        cấp không được đạp lên.
+
+        TRỌNG SỐ không chia đều. Đổ móng một trụ tua-bin 6 MW là vài trăm
+        mét khối bê tông và vài tuần; đấu một đầu cáp vào feeder là một
+        ngày. Đếm "7/9 cổng = 78%" sẽ vẽ ra đường cong tiến độ không
+        giống thực tế chút nào.
+    -->
+    <data noupdate="1">
+        <record id="gate_access" model="rp.erection.gate">
+            <field name="code">G1-ROAD</field>
+            <field name="name">Đường vào &amp; mặt bằng</field>
+            <field name="sequence">10</field>
+            <field name="weight">1.0</field>
+            <field name="note">Đường công vụ tới chân trụ chịu được tải
+                xe siêu trường và cẩu bánh xích.</field>
+        </record>
+        <record id="gate_hardstand" model="rp.erection.gate">
+            <field name="code">G2-HARD</field>
+            <field name="name">Hardstand &amp; bãi cẩu lắp</field>
+            <field name="sequence">20</field>
+            <field name="weight">1.5</field>
+            <field name="note">Nền cẩu đủ sức chịu tải, đã nghiệm thu độ
+                chặt.</field>
+        </record>
+        <record id="gate_foundation" model="rp.erection.gate">
+            <field name="code">G3-FOUND</field>
+            <field name="name">Móng tua-bin</field>
+            <field name="sequence">30</field>
+            <field name="weight">4.0</field>
+            <field name="note">Đổ bê tông, bảo dưỡng đủ ngày, nghiệm thu
+                cường độ và cao độ bu-lông neo.</field>
+        </record>
+        <record id="gate_tower" model="rp.erection.gate">
+            <field name="code">G4-TOWER</field>
+            <field name="name">Dựng tháp</field>
+            <field name="sequence">40</field>
+            <field name="weight">2.5</field>
+            <field name="note">Lắp đủ các đoạn tháp, siết bu-lông đủ lực
+                theo quy trình.</field>
+        </record>
+        <record id="gate_nacelle" model="rp.erection.gate">
+            <field name="code">G5-NAC</field>
+            <field name="name">Lắp nacelle</field>
+            <field name="sequence">50</field>
+            <field name="weight">2.0</field>
+        </record>
+        <record id="gate_blade" model="rp.erection.gate">
+            <field name="code">G6-BLADE</field>
+            <field name="name">Lắp hub &amp; cánh</field>
+            <field name="sequence">60</field>
+            <field name="weight">2.5</field>
+            <field name="note">Cửa sổ thời tiết là ràng buộc chính — gió
+                phải dưới ngưỡng cho phép của nhà sản xuất.</field>
+        </record>
+        <record id="gate_feeder" model="rp.erection.gate">
+            <field name="code">G7-ELEC</field>
+            <field name="name">Đấu nối điện &amp; cáp ngầm</field>
+            <field name="sequence">70</field>
+            <field name="weight">1.5</field>
+        </record>
+        <record id="gate_mc" model="rp.erection.gate">
+            <field name="code">G8-MC</field>
+            <field name="name">Chạy thử &amp; hoàn thành cơ khí (MC)</field>
+            <field name="sequence">80</field>
+            <field name="weight">2.0</field>
+            <field name="note">Quay không tải, kiểm tra hệ thống, sẵn
+                sàng hoà lưới.</field>
+        </record>
+        <record id="gate_toc" model="rp.erection.gate">
+            <field name="code">G9-TOC</field>
+            <field name="name">Nghiệm thu bàn giao (TOC)</field>
+            <field name="sequence">90</field>
+            <field name="weight">1.0</field>
+            <field name="note">Bàn giao từng trụ — mốc bắt đầu chạy đồng
+                hồ bảo hành của chính trụ đó.</field>
+        </record>
+    </data>
+</odoo>

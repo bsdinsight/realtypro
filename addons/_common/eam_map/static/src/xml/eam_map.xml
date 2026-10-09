@@ -79,7 +79,29 @@
                     </div>
                 </div>
 
-                <div class="eam-box">
+                <div class="eam-box" t-if="coTienDo">
+                    <div class="eam-box-h">Tô màu theo</div>
+                    <div class="btn-group btn-group-sm w-100">
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.toMau === 'state'}"
+                                t-on-click="() => this.doiToMau('state')">
+                            Trạng thái</button>
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.toMau === 'erect'}"
+                                t-on-click="() => this.doiToMau('erect')">
+                            Tiến độ dựng máy</button>
+                    </div>
+                    <div class="eam-thang" t-if="state.toMau === 'erect'">
+                        <span>0%</span><i/><span>100%</span>
+                    </div>
+                    <div class="eam-note" t-if="state.toMau === 'erect'">
+                        Vị trí <b>chưa có sổ dựng máy</b> để xám, không tô
+                        đỏ — chưa khai khác với chưa làm, tô đỏ sẽ biến
+                        một lỗ hổng dữ liệu thành báo động giả.
+                    </div>
+                </div>
+
+                <div class="eam-box" t-if="state.toMau === 'state'">
                     <div class="eam-box-h">Trạng thái</div>
                     <t t-foreach="mauList" t-as="m" t-key="m.k">
                         <label class="eam-chk">
@@ -154,6 +176,9 @@
                             <span class="eam-dot"
                                   t-attf-style="background:{{mauCua(p.state)}}"/>
                             <b t-esc="p.code"/>
+                            <span class="small text-muted"
+                                  t-if="state.toMau === 'erect' and p.erect_pct !== null">
+                                <t t-esc="p.erect_pct"/>%</span>
                             <span class="ms-auto small text-muted"
                                   t-if="p.avail === null">—</span>
                             <span t-else="" class="ms-auto small"

@@ -247,6 +247,12 @@ class EamLocation(models.Model):
                        for a in ts[:8]],
             'warranty_days': bh_con,
             'ccy': tien_te[:1].name or '',
+            # Chỗ cho GÓI NGÀNH bơm thêm dòng vào popup mà lõi không cần
+            # biết nội dung: mỗi dòng {label, value, warn}. Nhờ vậy bản
+            # đồ dùng được cho cả nhà máy điện lẫn dây chuyền nhà xưởng
+            # mà không phải khai trước mọi thứ có thể hiện.
+            'extra': [],
+            'erect_pct': None,
         }
 
     @api.model

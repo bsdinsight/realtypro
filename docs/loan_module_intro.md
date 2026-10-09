@@ -228,7 +228,7 @@ Cấu hình N ngày, gửi mail / activity tuỳ team.
 ```
 re_loan                          (FOUNDATION — module này)
   ├── re_loan_account            (Bridge kế toán VAS TT 200)
-  └── rp_loan_bridge             (Bridge với Realty Project — phân bổ công trình)
+  └── rp_loan_bridge             (Bridge với EPCOne — phân bổ công trình)
 
 re_party                         (Dependency — extend res.partner với is_bank, ...)
 re_base                          (Dependency — re.project, re.subzone, ...)
@@ -238,7 +238,7 @@ rp_contract / rp_estimate        (Dependency — chỉ với rp_loan_bridge)
 - **`re_loan`**: foundation độc lập, có thể dùng cho mọi DN — không
   ràng buộc dự án bất động sản.
 - **`re_loan_account`**: thêm khi cần định khoản tự động.
-- **`rp_loan_bridge`**: thêm khi DN dùng cả Realty Project và muốn
+- **`rp_loan_bridge`**: thêm khi DN dùng cả EPCOne và muốn
   phân bổ vay theo công trình.
 
 > Cài đặt linh động: KH chỉ Loan thì cài `re_loan` thôi. KH có project

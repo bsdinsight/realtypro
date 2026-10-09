@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Bán điện (PPA)",
+    "name": "EPCOne — Bán điện (PPA)",
     "version": "19.0.1.2.1",
     "category": "Realty/Project",
     "summary": "Hợp đồng mua bán điện, sản lượng theo kỳ và hoá đơn tiền "

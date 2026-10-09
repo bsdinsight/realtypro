@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Tender × Contract Bridge',
+    'name': 'EPCOne — Tender × Contract Bridge',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Auto-tạo HĐ nhà thầu khi gói thầu chuyển sang "Đã ký HĐ"',

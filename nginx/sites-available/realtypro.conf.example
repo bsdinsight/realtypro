@@ -1,4 +1,4 @@
-# Realty Project — nginx reverse proxy template.
+# EPCOne — nginx reverse proxy template.
 #
 # Copy to /etc/nginx/sites-available/realtypro.conf and customize:
 #   - server_name → your domain

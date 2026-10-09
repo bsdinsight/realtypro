@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Quản lý Tiến độ',
+    'name': 'EPCOne — Quản lý Tiến độ',
     'version': '19.0.2.1.0',
     'category': 'Realty/Project',
     'summary': 'Quản lý tiến độ thi công: BBN Nghiệm thu Khối lượng (BBN KLCV) '
                'theo HĐ nhà thầu, rolled-up tiến độ theo hạng mục/dự án.',
     'description': """
-Realty Project — Quản lý Tiến độ (rp_progress)
+EPCOne — Quản lý Tiến độ (rp_progress)
 ================================================
 
 Module quản lý tiến độ thi công cho tổng thầu / chủ đầu tư VN. Xương sống

@@ -1,4 +1,4 @@
-# Realty Project Community — Docker Compose stack.
+# EPCOne Community — Docker Compose stack.
 #
 # 1 customer = 1 Docker stack = 1 Postgres DB = 1 optional Cloudflare
 # Tunnel hostname. Isolation per stack:

@@ -276,82 +276,82 @@ ON  Realty Core → Master Data → Projects
 ON  Realty Core → Master Data → Subzones
 ON  Realty Core → Master Data → Units
 ON  Realty Core → Master Data → Unit Types
-ON  Realty Project
-ON  Realty Project → Cấu hình
-ON  Realty Project → Cấu hình → Chủ đầu tư
-ON  Realty Project → Cấu hình → Chuyên môn nhà thầu
-ON  Realty Project → Cấu hình → Cost Categories
-ON  Realty Project → Cấu hình → Danh mục chi phí chuẩn (Master)
-ON  Realty Project → Cấu hình → Nhà thầu
-ON  Realty Project → Doanh thu
-ON  Realty Project → Doanh thu → Dashboard Doanh thu
-ON  Realty Project → Doanh thu → HĐ với Chủ đầu tư
-ON  Realty Project → Doanh thu → Hoá đơn phát hành CĐT
-ON  Realty Project → Doanh thu → IPC (hồ sơ thanh toán)
-ON  Realty Project → Doanh thu → Kế hoạch dòng tiền thu
-ON  Realty Project → Doanh thu → Nghiệm thu gửi CĐT
-ON  Realty Project → Doanh thu → Tạm ứng CĐT
-ON  Realty Project → Doanh thu → Thu tiền (Receipt)
-ON  Realty Project → Estimate
-ON  Realty Project → EVM
-ON  Realty Project → Hợp đồng
-ON  Realty Project → Hợp đồng → Bảo lãnh HĐ nhà thầu
-ON  Realty Project → Hợp đồng → Chấm dứt / Thanh lý
-ON  Realty Project → Hợp đồng → Công nợ nhà thầu / NCC
-ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu
-ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu → Gói thầu
-ON  Realty Project → Hợp đồng → Đấu thầu / Chọn thầu → Nhà thầu nộp HSDT
-ON  Realty Project → Hợp đồng → HĐ nhà thầu
-ON  Realty Project → Hợp đồng → Phụ lục HĐ
-ON  Realty Project → Project Master
-ON  Realty Project → Project Master → Buildings
-ON  Realty Project → Project Master → Floors
-ON  Realty Project → Project Master → Hạng mục dự án
-ON  Realty Project → Project Master → Projects
-ON  Realty Project → Project Master → Subzones
-ON  Realty Project → Project Master → Units
-ON  Realty Project → Project Master → Unit Types
-ON  Realty Project → Tài chính
-ON  Realty Project → Tài chính → Báo cáo
-ON  Realty Project → Tài chính → Báo cáo → Bảo lãnh sắp / đã hết hạn
-ON  Realty Project → Tài chính → Báo cáo → Mốc thanh toán đến hạn
-ON  Realty Project → Tài chính → Báo cáo → Phân bổ vay theo công trình
-ON  Realty Project → Tài chính → Báo cáo → Pivot HĐ nhà thầu
-ON  Realty Project → Tài chính → Dashboard Tài chính
-ON  Realty Project → Tài chính → Dự toán (BOQ)
-ON  Realty Project → Tài chính → Giải ngân qua khế ước
-ON  Realty Project → Tài chính → Hoá đơn nhà thầu
-ON  Realty Project → Tài chính → Hồ sơ thanh toán
-ON  Realty Project → Tài chính → Khái toán
-ON  Realty Project → Tài chính → Tạm ứng
-ON  Realty Project → Tài chính → Thanh toán
-ON  Realty Project → Trợ lý AI
-ON  Realty Project → Trợ lý AI → AI đọc báo cáo tiến độ
-ON  Realty Project → Trợ lý AI → AI đọc dự toán
-ON  Realty Project → Trợ lý AI → AI hỏi đáp số liệu
-ON  Realty Project → Xây dựng
-ON  Realty Project → Xây dựng → Báo cáo
-ON  Realty Project → Xây dựng → Báo cáo → Punch theo nhà thầu
-ON  Realty Project → Xây dựng → Báo cáo → Tiến độ công việc theo HĐ
-ON  Realty Project → Xây dựng → Dashboard Xây dựng
-ON  Realty Project → Xây dựng → Hiện trường
-ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động
-ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Kiểm tra an toàn
-ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Sự cố / near-miss
-ON  Realty Project → Xây dựng → Hiện trường → An toàn lao động → Toolbox meeting
-ON  Realty Project → Xây dựng → Hiện trường → Nhật ký thi công
-ON  Realty Project → Xây dựng → Hiện trường → Punch list (lỗi & khắc phục)
-ON  Realty Project → Xây dựng → Hiện trường → Rủi ro (Risk)
-ON  Realty Project → Xây dựng → Hiện trường → Thay đổi (Change)
-ON  Realty Project → Xây dựng → Lịch thi công
-ON  Realty Project → Xây dựng → Lịch thi công → Công việc của tôi
-ON  Realty Project → Xây dựng → Lịch thi công → Công việc (lịch thi công)
-ON  Realty Project → Xây dựng → RFI & Trình duyệt
-ON  Realty Project → Xây dựng → RFI & Trình duyệt → Chỉ thị công trường
-ON  Realty Project → Xây dựng → RFI & Trình duyệt → RFI — Yêu cầu làm rõ
-ON  Realty Project → Xây dựng → RFI & Trình duyệt → Trình duyệt (Submittal)
-ON  Realty Project → Xây dựng → Tiến độ
-ON  Realty Project → Xây dựng → Tiến độ → BBN Nghiệm thu KL
+ON  EPCOne
+ON  EPCOne → Cấu hình
+ON  EPCOne → Cấu hình → Chủ đầu tư
+ON  EPCOne → Cấu hình → Chuyên môn nhà thầu
+ON  EPCOne → Cấu hình → Cost Categories
+ON  EPCOne → Cấu hình → Danh mục chi phí chuẩn (Master)
+ON  EPCOne → Cấu hình → Nhà thầu
+ON  EPCOne → Doanh thu
+ON  EPCOne → Doanh thu → Dashboard Doanh thu
+ON  EPCOne → Doanh thu → HĐ với Chủ đầu tư
+ON  EPCOne → Doanh thu → Hoá đơn phát hành CĐT
+ON  EPCOne → Doanh thu → IPC (hồ sơ thanh toán)
+ON  EPCOne → Doanh thu → Kế hoạch dòng tiền thu
+ON  EPCOne → Doanh thu → Nghiệm thu gửi CĐT
+ON  EPCOne → Doanh thu → Tạm ứng CĐT
+ON  EPCOne → Doanh thu → Thu tiền (Receipt)
+ON  EPCOne → Estimate
+ON  EPCOne → EVM
+ON  EPCOne → Hợp đồng
+ON  EPCOne → Hợp đồng → Bảo lãnh HĐ nhà thầu
+ON  EPCOne → Hợp đồng → Chấm dứt / Thanh lý
+ON  EPCOne → Hợp đồng → Công nợ nhà thầu / NCC
+ON  EPCOne → Hợp đồng → Đấu thầu / Chọn thầu
+ON  EPCOne → Hợp đồng → Đấu thầu / Chọn thầu → Gói thầu
+ON  EPCOne → Hợp đồng → Đấu thầu / Chọn thầu → Nhà thầu nộp HSDT
+ON  EPCOne → Hợp đồng → HĐ nhà thầu
+ON  EPCOne → Hợp đồng → Phụ lục HĐ
+ON  EPCOne → Project Master
+ON  EPCOne → Project Master → Buildings
+ON  EPCOne → Project Master → Floors
+ON  EPCOne → Project Master → Hạng mục dự án
+ON  EPCOne → Project Master → Projects
+ON  EPCOne → Project Master → Subzones
+ON  EPCOne → Project Master → Units
+ON  EPCOne → Project Master → Unit Types
+ON  EPCOne → Tài chính
+ON  EPCOne → Tài chính → Báo cáo
+ON  EPCOne → Tài chính → Báo cáo → Bảo lãnh sắp / đã hết hạn
+ON  EPCOne → Tài chính → Báo cáo → Mốc thanh toán đến hạn
+ON  EPCOne → Tài chính → Báo cáo → Phân bổ vay theo công trình
+ON  EPCOne → Tài chính → Báo cáo → Pivot HĐ nhà thầu
+ON  EPCOne → Tài chính → Dashboard Tài chính
+ON  EPCOne → Tài chính → Dự toán (BOQ)
+ON  EPCOne → Tài chính → Giải ngân qua khế ước
+ON  EPCOne → Tài chính → Hoá đơn nhà thầu
+ON  EPCOne → Tài chính → Hồ sơ thanh toán
+ON  EPCOne → Tài chính → Khái toán
+ON  EPCOne → Tài chính → Tạm ứng
+ON  EPCOne → Tài chính → Thanh toán
+ON  EPCOne → Trợ lý AI
+ON  EPCOne → Trợ lý AI → AI đọc báo cáo tiến độ
+ON  EPCOne → Trợ lý AI → AI đọc dự toán
+ON  EPCOne → Trợ lý AI → AI hỏi đáp số liệu
+ON  EPCOne → Xây dựng
+ON  EPCOne → Xây dựng → Báo cáo
+ON  EPCOne → Xây dựng → Báo cáo → Punch theo nhà thầu
+ON  EPCOne → Xây dựng → Báo cáo → Tiến độ công việc theo HĐ
+ON  EPCOne → Xây dựng → Dashboard Xây dựng
+ON  EPCOne → Xây dựng → Hiện trường
+ON  EPCOne → Xây dựng → Hiện trường → An toàn lao động
+ON  EPCOne → Xây dựng → Hiện trường → An toàn lao động → Kiểm tra an toàn
+ON  EPCOne → Xây dựng → Hiện trường → An toàn lao động → Sự cố / near-miss
+ON  EPCOne → Xây dựng → Hiện trường → An toàn lao động → Toolbox meeting
+ON  EPCOne → Xây dựng → Hiện trường → Nhật ký thi công
+ON  EPCOne → Xây dựng → Hiện trường → Punch list (lỗi & khắc phục)
+ON  EPCOne → Xây dựng → Hiện trường → Rủi ro (Risk)
+ON  EPCOne → Xây dựng → Hiện trường → Thay đổi (Change)
+ON  EPCOne → Xây dựng → Lịch thi công
+ON  EPCOne → Xây dựng → Lịch thi công → Công việc của tôi
+ON  EPCOne → Xây dựng → Lịch thi công → Công việc (lịch thi công)
+ON  EPCOne → Xây dựng → RFI & Trình duyệt
+ON  EPCOne → Xây dựng → RFI & Trình duyệt → Chỉ thị công trường
+ON  EPCOne → Xây dựng → RFI & Trình duyệt → RFI — Yêu cầu làm rõ
+ON  EPCOne → Xây dựng → RFI & Trình duyệt → Trình duyệt (Submittal)
+ON  EPCOne → Xây dựng → Tiến độ
+ON  EPCOne → Xây dựng → Tiến độ → BBN Nghiệm thu KL
 ON  Tests
 ON  Thảo luận
 ON  Thảo luận → Cấu hình

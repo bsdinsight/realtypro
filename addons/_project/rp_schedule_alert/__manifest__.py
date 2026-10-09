@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Cảnh báo trượt tiến độ',
+    'name': 'EPCOne — Cảnh báo trượt tiến độ',
     'version': '19.0.2.0.0',
     'category': 'Realty/Project',
     'summary': 'Quét hằng ngày: việc hết dư địa, việc trượt kế hoạch gốc, '
                'điểm bàn giao mâu thuẫn, dự án trễ mốc — có lịch sử, tự đóng.',
     'description': """
-Realty Project — Cảnh báo trượt tiến độ (rp_schedule_alert)
+EPCOne — Cảnh báo trượt tiến độ (rp_schedule_alert)
 ===========================================================
 
 Lịch thi công và sổ ranh giới gói thầu đã đủ số để biết dự án hỏng ở đâu, nhưng

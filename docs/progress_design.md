@@ -31,7 +31,7 @@ rp_progress
   └── (optional) re_loan + rp_loan_bridge — bật khi cần link loan
 ```
 
-### 2.2 Vị trí trong suite Realty Project
+### 2.2 Vị trí trong suite EPCOne
 
 - Foundation độc lập với `re_loan` — KH chỉ Project (không Loan) cũng dùng được
 - Bridge `rp_progress_loan` (nếu cần tách) hoặc tích hợp soft-dependency

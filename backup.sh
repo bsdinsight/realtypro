@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Realty Project — back up the `dev` database + filestore.
+# EPCOne — back up the `dev` database + filestore.
 #
 # Run from the stack directory (where docker-compose.yml lives) on the
 # host where the realtypro stack is up.
@@ -47,7 +47,7 @@ fi
 
 # -- Manifest
 {
-  echo "Realty Project backup"
+  echo "EPCOne backup"
   echo "Database: $DB_NAME"
   echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "Stack dir: $(pwd)"

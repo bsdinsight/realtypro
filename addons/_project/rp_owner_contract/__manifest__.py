@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — HĐ với Chủ đầu tư (đầu ra)',
+    'name': 'EPCOne — HĐ với Chủ đầu tư (đầu ra)',
     'version': '19.0.2.0.6',
     'category': 'Realty/Project',
     'summary': 'HĐ thi công ĐẦU RA (tổng thầu ↔ CĐT): BBNT sản lượng với '
                'CĐT + thanh toán của CĐT → khoản phải thu (quyền đòi nợ).',
     'description': """
-Realty Project — HĐ với Chủ đầu tư (rp_owner_contract)
+EPCOne — HĐ với Chủ đầu tư (rp_owner_contract)
 ======================================================
 
 Chiều ĐẦU RA của tổng thầu (tổng thầu): hợp đồng thi công ký với Chủ đầu

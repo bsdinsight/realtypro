@@ -19,7 +19,7 @@ def _f(v):
 
 class RpOwnerDashboard(models.TransientModel):
     _name = 'rp.owner.dashboard'
-    _description = 'Realty Project — Dashboard Doanh thu'
+    _description = 'EPCOne — Dashboard Doanh thu'
 
     @api.depends_context('lang')
     def _compute_display_name(self):

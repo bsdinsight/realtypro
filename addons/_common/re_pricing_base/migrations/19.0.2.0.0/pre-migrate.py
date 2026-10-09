@@ -82,10 +82,16 @@ def migrate(cr, version):
 
     # 5. Drop v1.1 menu records that pointed at re_pricing_base.menu_xxx
     #    (already cleared by step 3, but defensive cleanup of orphans)
+    #
+    #    ĐỪNG đổi chuỗi 'Realty Project' dưới đây thành 'EPCOne'. Sản
+    #    phẩm đã đổi tên, nhưng câu này khớp DỮ LIỆU ĐÃ NẰM SẴN trong cơ
+    #    sở dữ liệu từ bản v1.1 — lúc đó menu mang tên cũ. Đổi theo tên
+    #    mới thì câu lệnh không khớp gì cả và menu mồ côi ở lại vĩnh
+    #    viễn, lặng lẽ.
     cr.execute("""
         DELETE FROM ir_ui_menu
         WHERE name IN (
-            'EPCOne',  -- v1.1 had root here; v1.4 moved to rp_estimate
+            'Realty Project',  -- v1.1 had root here; v1.4 moved to rp_estimate
             'Project Master',
             'Cost Categories'
         )

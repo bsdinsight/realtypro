@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Công nợ phải thu & phải trả",
+    "name": "EPCOne — Công nợ phải thu & phải trả",
     "version": "19.0.1.0.0",
     "category": "Realty/Project",
     "summary": "Hoá đơn bán ra, thu tiền, và tuổi nợ cả hai chiều phải thu / phải trả.",
     "description": """
-Realty Project — Công nợ phải thu (rp_receivable)
+EPCOne — Công nợ phải thu (rp_receivable)
 =================================================
 
 Gom ba màn vào nhánh Tài chính: hoá đơn bán ra, thu tiền, và công nợ

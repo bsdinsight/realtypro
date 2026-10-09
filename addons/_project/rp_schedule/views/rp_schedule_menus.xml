@@ -6,7 +6,7 @@
          công dựng trên project.task mở rộng (WBS, HĐ nhà thầu, hạng mục,
          quan hệ trước-sau, mốc). Nhưng MENU của nó thì có hại:
 
-         • trùng tên tiếng Việt với "Realty Project" — người dùng bấm
+         • trùng tên tiếng Việt với "EPCOne" — người dùng bấm
            "Dự án" trước vì đó là tiếng Việt tự nhiên, rồi vào nhầm app;
          • trong đó là các project.project hệ thống TỰ SINH cho mỗi HĐ
            nhà thầu ("... — Lịch thi công") — không phải dự án nghiệp vụ,
@@ -14,7 +14,7 @@
          • tạo tay project.project ở đó sẽ sinh container lịch thi công
            mồ côi, không gắn hợp đồng nào, không vào tiến độ/EVM.
 
-         Lịch thi công đã có cửa đúng: Realty Project → Xây dựng → Lịch
+         Lịch thi công đã có cửa đúng: EPCOne → Xây dựng → Lịch
          thi công. Dữ liệu KHÔNG đụng tới; gỡ rp_schedule thì menu hiện
          lại. -->
     <record id="project.menu_main_pm" model="ir.ui.menu">

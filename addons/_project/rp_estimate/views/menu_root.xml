@@ -19,7 +19,17 @@
         from the DB by Odoo's standard uninstall behavior.
     -->
 
-    <!-- Suite root — reuses iter5 xmlid to REPLACE not duplicate -->
+    <!-- Suite root — reuses iter5 xmlid to REPLACE not duplicate.
+
+         XMLID VẪN LÀ `menu_realty_project_root` DÙ SẢN PHẨM ĐÃ ĐỔI TÊN.
+         Đó là chủ ý, không phải sót. 28 chỗ ở các module khác trỏ
+         `parent="menu_realty_project_root"`; đổi xmlid thì Odoo coi là
+         một bản ghi MỚI, menu cũ trong mọi cơ sở dữ liệu đang chạy
+         thành mồ côi và trên thanh ứng dụng hiện ra HAI menu gốc —
+         đúng con bug mà chú thích v1.4.1 ở trên đang nói tới.
+
+         Tên hiển thị nằm ở thuộc tính `name`; xmlid chỉ là khoá nội bộ,
+         người dùng không bao giờ nhìn thấy. -->
     <menuitem id="menu_realty_project_root"
               name="EPCOne"
               web_icon="rp_estimate,static/description/icon.png"

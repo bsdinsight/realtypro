@@ -16,7 +16,7 @@
               action="action_rp_loan_disbursement_dossier"
               sequence="30"/>
 
-    <!-- Menu trong Realty Project: Tài chính > Báo cáo → Phân bổ vay
+    <!-- Menu trong EPCOne: Tài chính > Báo cáo → Phân bổ vay
          (container "Báo cáo HĐ" root cũ đã bỏ khi gom menu Tài chính) -->
     <menuitem id="menu_rp_loan_allocation_under_project"
               name="Phân bổ vay theo công trình"

@@ -23,7 +23,7 @@ vụ **vay nội bộ (on-lending)**: công ty mẹ vay ngân hàng rồi cho c�
 vay lại.
 
 `re_loan` là module **foundation dùng chung** (đặt tại `addons/_common/`), phục
-vụ mọi suite của Realty Pro. Realty Project bổ sung **bridge** để phân bổ gốc/lãi
+vụ mọi suite của Realty Pro. EPCOne bổ sung **bridge** để phân bổ gốc/lãi
 vay theo công trình (`rp.structure`). Module này **không** ôm trọn gói tài chính
 tổng thầu (VAS, treasury reports, biểu mẫu ngân hàng theo từng bank, bảo lãnh/L/C/tiền
 gửi) — các phần đó để domain `_finance/` xử lý sau.
@@ -98,7 +98,7 @@ cho 1..n khoản cho vay lại; dư nợ mỗi bên độc lập.
 | IN-7 | Phụ lục KW | 6 loại: gia hạn, đổi số tiền, đổi lãi suất, đổi mục đích, đổi lịch trả, đổi TS thế chấp |
 | IN-8 | Tài sản thế chấp | Master TS, định giá nhiều phương pháp, multi-pledge, giải chấp |
 | IN-9 | Vay nội bộ (on-lending) | Cho công ty con vay lại, đối ứng với KW external |
-| IN-10 | Phân bổ công trình | Phân bổ gốc/lãi theo `re.project` (generic); bridge sang `rp.structure` ở Realty Project |
+| IN-10 | Phân bổ công trình | Phân bổ gốc/lãi theo `re.project` (generic); bridge sang `rp.structure` ở EPCOne |
 | IN-11 | Báo cáo lõi | Dư nợ theo NH/HĐTD/KW, lịch trả nợ sắp đến hạn, theo dõi quá hạn (aging) |
 | IN-12 | Cảnh báo đáo hạn | Activity nhắc khi KW/HĐTD/định giá TS sắp đáo hạn |
 
@@ -153,8 +153,8 @@ addons/
 │                     re.loan.collateral (+ valuation/pledge/release),
 │                     re.loan.onlending
 ├── _project/
-│   └── rp_loan_bridge/  ◄── BRIDGE (Realty Project) — phân bổ KW ↔ rp.structure,
-│                            menu vay trong app Realty Project
+│   └── rp_loan_bridge/  ◄── BRIDGE (EPCOne) — phân bổ KW ↔ rp.structure,
+│                            menu vay trong app EPCOne
 ```
 
 **Naming convention**: theo `docs/development.md` — module shared dùng prefix
@@ -299,7 +299,7 @@ ghi nhận giá trị cũ/mới, đính kèm văn bản:
 
 ### FR nhóm J — Phân bổ công trình
 - FR-J1: Phân bổ KW (gốc và/hoặc lãi) theo `re.project` với % hoặc số tiền; tổng = 100%/số tiền KW.
-- FR-J2 (bridge): mở rộng phân bổ tới `rp.structure` / `rp.cost.category` trong Realty Project.
+- FR-J2 (bridge): mở rộng phân bổ tới `rp.structure` / `rp.cost.category` trong EPCOne.
 
 ### FR nhóm K — Báo cáo & cảnh báo (lõi)
 - FR-K1: Báo cáo **dư nợ** theo Ngân hàng / HĐTD / KW (pivot + list).
@@ -351,7 +351,7 @@ re.loan.credit.contract (HĐTD)
 | `re.loan.collateral.pledge` | Quan hệ thế chấp (multi-pledge) |
 | `re.loan.collateral.release` | Giải chấp |
 
-> Bridge `rp_loan_bridge` (Realty Project) thêm inherit `rp.structure`
+> Bridge `rp_loan_bridge` (EPCOne) thêm inherit `rp.structure`
 > (add `loan_note_ids`) và model phân bổ chi tiết tới hạng mục/mã phí.
 
 ---
@@ -385,15 +385,15 @@ re.loan.credit.contract (HĐTD)
 
 ---
 
-## 11. Tích hợp Realty Project (Bridge)
+## 11. Tích hợp EPCOne (Bridge)
 
 - Module `rp_loan_bridge` (đặt `_project/`) — **cài tùy chọn**, chỉ khi customer
   dùng cả vay + quản lý dự án xây dựng.
 - Chức năng:
   - Phân bổ gốc/lãi KW tới `rp.structure` (hạng mục) + `rp.cost.category` (mã phí).
   - Báo cáo dòng tiền vay theo công trình.
-  - Menu "Vay vốn" hiển thị trong app Realty Project.
-- **Lưu ý phối hợp**: `addons/_project/` hiện do parallel chat (Realty Project)
+  - Menu "Vay vốn" hiển thị trong app EPCOne.
+- **Lưu ý phối hợp**: `addons/_project/` hiện do parallel chat (EPCOne)
   quản lý. Việc tạo `rp_loan_bridge` cần thống nhất với owner + parallel chat
   trước khi code (xem §16).
 
@@ -463,7 +463,7 @@ re.loan.credit.contract (HĐTD)
 | OQ-1 | Multi-company | **1 DB** toàn tập đoàn (nhiều company records) |
 | OQ-2 | Phương pháp tính lãi | **Dư nợ giảm dần** mặc định (để demo), nhưng **có option cho user chọn** phương pháp — thiết kế linh động |
 | OQ-3 | Bank master | **Dùng `res.bank` chuẩn Odoo + custom thêm** (không cần `re_bank` đầy đủ ngay) |
-| OQ-4 | Bridge Realty Project | **Có** làm `rp_loan_bridge` (cần phối hợp parallel chat trước khi sửa `_project/`) |
+| OQ-4 | Bridge EPCOne | **Có** làm `rp_loan_bridge` (cần phối hợp parallel chat trước khi sửa `_project/`) |
 | OQ-5 | Phê duyệt nhiều cấp | **Để sau** — v1 tập trung logic + quy trình, chưa làm approval workflow |
 | OQ-6 | Loại tiền | **Chỉ VND** (không cần đa tiền tệ / chênh lệch tỷ giá ở v1) |
 

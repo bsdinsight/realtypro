@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Mua sắm",
+    "name": "EPCOne — Mua sắm",
     "version": "19.0.2.1.1",
     "category": "Realty/Project",
     "summary": "Nối đơn mua vào dự án và nhóm chi phí, để chi phí chủ đầu "

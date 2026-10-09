@@ -370,7 +370,7 @@ Form KW: header nút (Confirm/Restructure/Cancel) + statusbar; notebook tab
 Giải ngân / Lịch lãi / Trả nợ / Phụ lục / Phân bổ công trình / Tài sản thế chấp;
 smart button dư nợ.
 
-Bridge `rp_loan_bridge`: chèn menu "Vay vốn" vào app Realty Project + tab phân bổ
+Bridge `rp_loan_bridge`: chèn menu "Vay vốn" vào app EPCOne + tab phân bổ
 trên `rp.structure`.
 
 ---

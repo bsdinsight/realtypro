@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Báo cáo theo vai',
+    'name': 'EPCOne — Báo cáo theo vai',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Mỗi phòng ban một màn hình đã lọc sẵn, cộng bản tổng hợp '
                'dự án chốt theo kỳ để so sánh giữa các kỳ.',
     'description': """
-Realty Project — Báo cáo theo vai (rp_report)
+EPCOne — Báo cáo theo vai (rp_report)
 =============================================
 
 Dữ liệu đã có đủ ở các module nghiệp vụ, nhưng mỗi phòng ban lại cần một

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Quản lý hiện trường (Site Management)',
+    'name': 'EPCOne — Quản lý hiện trường (Site Management)',
     'version': '19.0.1.1.1',
     'category': 'Realty/Project',
     'summary': 'Nhật ký thi công, Punch list (lỗi & khắc phục), An toàn '
                'lao động (kiểm tra, toolbox meeting, sự cố) cho công trường.',
     'description': """
-Realty Project — Quản lý hiện trường (rp_site)
+EPCOne — Quản lý hiện trường (rp_site)
 ==============================================
 
 Phase 1 — 3 khối nghiệp vụ hiện trường, neo vào xương sống dự án

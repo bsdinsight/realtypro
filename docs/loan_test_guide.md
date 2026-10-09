@@ -1,4 +1,4 @@
-# Hướng dẫn Test & Demo — Quản lý Vay + Realty Project bridge
+# Hướng dẫn Test & Demo — Quản lý Vay + EPCOne bridge
 
 **Phiên bản module**:
 - `re_loan` 19.0.1.7.0 (L0–L4)
@@ -54,7 +54,7 @@ Hợp đồng tín dụng (HĐTD) → Hạn mức (Facility) → Khế ước nh
                                                    └── Bảo lãnh (TH/Tạm ứng/Bảo hành)
 ```
 
-19 model. Apps: **Quản lý Vay** + **Realty Project**.
+19 model. Apps: **Quản lý Vay** + **EPCOne**.
 
 | Phase | Nội dung | Module | Trạng thái |
 |---|---|---|---|
@@ -83,7 +83,7 @@ Hợp đồng tín dụng (HĐTD) → Hạn mức (Facility) → Khế ước nh
 | Container DB | rp-dev-db (postgres) |
 | Đường dẫn code | `~/projects/realtypro_dev/addons/{_common,_project}/` |
 
-Apps hiển thị ở launcher: **Quản lý Vay** + **Realty Project**. Cần user
+Apps hiển thị ở launcher: **Quản lý Vay** + **EPCOne**. Cần user
 thuộc nhóm *Realty Loan / User* hoặc *Manager* (admin đã có sẵn).
 
 ### Lệnh thường dùng (dev)
@@ -164,7 +164,7 @@ BIDV, Vietcombank, VietinBank, Agribank, Techcombank, SHB (6 NH).
 ### 3.6 Cấu trúc tập đoàn (vay nội bộ)
 - Tổng Công ty Xây dựng ABC (mẹ) → Công ty con Miền Nam (con, `parent_company_id`).
 
-### 3.7 Hợp đồng nhà thầu (rp.contract — Realty Project)
+### 3.7 Hợp đồng nhà thầu (rp.contract — EPCOne)
 
 | Số HĐ | Gói thầu | Nhà thầu | Giá trị HĐ (sau VAT) | Đã trả | Tiến độ | Trạng thái |
 |---|---|---|---|---|---|---|
@@ -235,7 +235,7 @@ KW-2026/0001 (BIDV revolving 200 tỷ) phân bổ:
 - ✅ Kỳ vọng: tổng cho vay lại ≤ số tiền KW nguồn; on-lending có giải ngân/lịch lãi/trả nợ như KW thường.
 
 ### TC-8: HĐ nhà thầu (rp.contract)
-1. **Realty Project → Project Master → Hợp đồng nhà thầu → New**.
+1. **EPCOne → Project Master → Hợp đồng nhà thầu → New**.
 2. Chọn Gói thầu + Nhà thầu, nhập giá trị HĐ trước thuế, VAT 8%, tạm ứng 30%, retention 5%.
    Verify computed: vat_amount, contract_value_total, amount_advance, amount_retention.
 3. Tab **Lịch thanh toán** → thêm 3 mốc (Tạm ứng 30%, Đợt 1 = 40%, Hoàn thành = 25%) — Σ ≤ 100%.
@@ -253,9 +253,9 @@ KW-2026/0001 (BIDV revolving 200 tỷ) phân bổ:
    - → Σ phân bổ lãi ≈ 17.24 tỷ
 2. Thêm dòng thứ 2: Project = Dự án KDC Vĩnh Bảo, Structure = "Tầng hầm Toà A", HĐ = HD-2026/CXCQ-01
    - Base = Gốc, Method = amount, Amount = 50,000,000,000
-3. Mở **Realty Project → Hạng mục → Tầng hầm Toà A → tab Vay phân bổ**: thấy 50 tỷ.
+3. Mở **EPCOne → Hạng mục → Tầng hầm Toà A → tab Vay phân bổ**: thấy 50 tỷ.
 4. Mở **HD-2026/CXCQ-01 → tab Vay tài trợ**: thấy 50 tỷ gốc tài trợ HĐ.
-5. **Báo cáo → Phân bổ vay theo công trình** (truy cập từ cả Realty Project lẫn Quản lý Vay):
+5. **Báo cáo → Phân bổ vay theo công trình** (truy cập từ cả EPCOne lẫn Quản lý Vay):
    pivot theo Dự án × Hạng mục × Base.
 - ✅ Kỳ vọng: rollup `loan_allocated_amount` trên hạng mục + HĐ đúng; constraint chặn nếu structure/cost cat/contract khác project.
 
@@ -417,7 +417,7 @@ theo công trình** (pivot Project × Hạng mục × Base). Cron tự đánh d�
 - **`rf_bank_guarantee`** (tổng thầu scope): module bảo lãnh đầy đủ chưa ship; HĐ nhà
   thầu lưu BL ở text fields, sẽ FK khi module này có.
 - **HĐ nhà thầu — multi-bidder/award workflow**: chưa làm (Phase 5 sau của
-  Realty Project). v1 đã đủ dùng để demo end-to-end.
+  EPCOne). v1 đã đủ dùng để demo end-to-end.
 - Lịch lãi là **dự kiến** (forecast theo số tiền KW), chưa khớp giải ngân thực
   tế từng phần — sẽ tinh chỉnh nếu tổng thầu yêu cầu chính xác từng đợt giải ngân.
 - **Capitalization tỷ lệ**: hiện đọc allocation `interest`. Future: cho phép cấu

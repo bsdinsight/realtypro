@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Lịch thi công (Schedule)',
+    'name': 'EPCOne — Lịch thi công (Schedule)',
     'version': '19.0.9.2.0',
     'category': 'Realty/Project',
     'summary': 'Tầng lịch thi công theo task (Odoo Project) cho HĐ nhà '
                'thầu: import Excel/MS Project XML, WBS, %, milestone, '
                'giao việc, rollup tiến độ.',
     'description': """
-Realty Project — Lịch thi công (rp_schedule)
+EPCOne — Lịch thi công (rp_schedule)
 ============================================
 
 Bổ sung tầng LỊCH THI CÔNG theo TASK (khác tầng nghiệm thu khối lượng

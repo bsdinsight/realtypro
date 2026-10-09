@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — RFI & Trình duyệt',
+    'name': 'EPCOne — RFI & Trình duyệt',
     'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'RFI (yêu cầu làm rõ), Chỉ thị công trường (Site '
                'Instruction), Trình duyệt mẫu vật liệu/shopdrawing '
                '(Submittal) — 3 luồng hỏi–đáp–chỉ đạo chính thức.',
     'description': """
-Realty Project — RFI & Trình duyệt (rp_rfi)
+EPCOne — RFI & Trình duyệt (rp_rfi)
 ===========================================
 
 Ba luồng văn bản chính thức giữa Nhà thầu ↔ TVGS/Thiết kế/CĐT:

@@ -5,7 +5,7 @@
     'summary': 'Common master data for the RealtyPro suite '
                '(bank registry, holidays, lookup tables).',
     'description': """
-Master data shared across Realty Project, Sales, and Living.
+Master data shared across EPCOne, Sales, and Living.
 
 This module intentionally starts as a thin shell. Existing master data
 currently lives in domain-specific modules (banks in re_sale_program,

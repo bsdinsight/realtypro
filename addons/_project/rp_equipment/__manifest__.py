@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Sổ lô thiết bị chính",
+    "name": "EPCOne — Sổ lô thiết bị chính",
     "version": "19.0.1.1.0",
     "category": "Realty/Project",
     "summary": "Theo dõi lô thiết bị chính theo chặng vận chuyển: ai chịu "

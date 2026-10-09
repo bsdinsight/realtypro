@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menu Tạm ứng: đặt trong Realty Project root -->
+    <!-- Menu Tạm ứng: đặt trong EPCOne root -->
     <!-- v1.x: Tạm ứng chuyển từ root vào Tài chính -->
     <menuitem id="menu_rp_advance_root"
               name="Tạm ứng"

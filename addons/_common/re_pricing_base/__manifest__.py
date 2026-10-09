@@ -28,7 +28,7 @@ repo to preserve the namespace and git history.
 Historical note
 ---------------
 
-In v1.1 of Realty Project, this module owned the cost-management
+In v1.1 of EPCOne, this module owned the cost-management
 schema (rp.cost.category, re.structure). That was a scope mismatch
 the v1.4 design corrected by moving cost models to ``rp_cost_base``
 and reserving this module for revenue pricing only. See

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project - Contractor Contracts',
+    'name': 'EPCOne - Contractor Contracts',
     'version': '19.0.1.9.0',
     'category': 'Realty/Project',
     'summary': 'Hợp đồng nhà thầu (rp.contract): lifecycle, BOQ lines, '
                'lịch thanh toán, phụ lục, bảo lãnh',
     'description': """
-Realty Project - Hợp đồng nhà thầu (rp.contract)
+EPCOne - Hợp đồng nhà thầu (rp.contract)
 ================================================
 
 Quản lý hợp đồng giữa Chủ đầu tư / Tổng thầu và Nhà thầu (sau khi đấu thầu).

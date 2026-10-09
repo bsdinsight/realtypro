@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project - Cost Base",
+    "name": "EPCOne - Cost Base",
     "version": "19.0.1.8.3",
     "category": "Realty/Project",
     "summary": "Cost-management foundation: structures, categories, Khái toán inline",
     "description": """
-Realty Project - Cost Base (v1.4.3-r4)
+EPCOne - Cost Base (v1.4.3-r4)
 ======================================
 
-Foundation models for cost management in Realty Project suite.
+Foundation models for cost management in EPCOne suite.
 
 Models in this module:
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Khiếu nại, gia hạn (EOT) & phạt chậm',
+    'name': 'EPCOne — Khiếu nại, gia hạn (EOT) & phạt chậm',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Sổ khiếu nại hai chiều, đếm hạn thông báo, gia hạn ra '
                'phụ lục, và phạt chậm tính trên mốc đã gia hạn.',
     'description': """
-Realty Project — Khiếu nại, gia hạn và phạt chậm (rp_claim)
+EPCOne — Khiếu nại, gia hạn và phạt chậm (rp_claim)
 ===========================================================
 
 Dự án trễ thì câu hỏi tiếp theo luôn là "lỗi của ai, ai trả tiền". Trả

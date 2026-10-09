@@ -10,7 +10,7 @@ from odoo import api, fields, models
 
 class RpConstructionDashboard(models.TransientModel):
     _name = 'rp.construction.dashboard'
-    _description = 'Realty Project — Dashboard Xây dựng'
+    _description = 'EPCOne — Dashboard Xây dựng'
 
     @api.depends_context('lang')
     def _compute_display_name(self):

@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Dashboard',
+    'name': 'EPCOne — Dashboard',
     'version': '19.0.1.0.0',
     'category': 'Realty/Dashboard',
-    'summary': 'Trang chủ KPI cho Realty Project — số liệu Dự án + HĐ '
+    'summary': 'Trang chủ KPI cho EPCOne — số liệu Dự án + HĐ '
                'thầu + Tạm ứng + Vay + Bảo lãnh + Cảnh báo, mở mặc định '
                'khi user login.',
     'description': """
-Realty Project — Dashboard (rp_dashboard)
+EPCOne — Dashboard (rp_dashboard)
 ==========================================
 
 TransientModel singleton-ish `rp.project.dashboard` tổng hợp KPI
-nghiệp vụ Realty Project. Mỗi khi user open menu Dashboard, hệ thống
+nghiệp vụ EPCOne. Mỗi khi user open menu Dashboard, hệ thống
 tạo 1 record mới với default_get() compute current KPIs.
 
 KPI groups:

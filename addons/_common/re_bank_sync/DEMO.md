@@ -11,7 +11,7 @@ Demo này **không cần tài khoản ngân hàng thật**, chạy được offl
 ## 0. Chuẩn bị (1 phút, làm trước khi khách vào)
 
 - Đăng nhập dev: https://realtypro.bsdinsights.com
-- Chọn hồ sơ demo: mở **Realty Project → Doanh thu → IPC (hồ sơ thanh
+- Chọn hồ sơ demo: mở **EPCOne → Doanh thu → IPC (hồ sơ thanh
   toán)** → mở **IPC/2026/0006** (đã ký, đề nghị CĐT thanh toán **412,5
   tỷ**, đã thu **0**).
 - Để sẵn 2 tab: (a) form IPC/2026/0006, (b) **Đối soát ngân hàng → Giao

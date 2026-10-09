@@ -85,7 +85,7 @@ def migrate(cr, version):
     cr.execute("""
         DELETE FROM ir_ui_menu
         WHERE name IN (
-            'Realty Project',  -- v1.1 had root here; v1.4 moved to rp_estimate
+            'EPCOne',  -- v1.1 had root here; v1.4 moved to rp_estimate
             'Project Master',
             'Cost Categories'
         )

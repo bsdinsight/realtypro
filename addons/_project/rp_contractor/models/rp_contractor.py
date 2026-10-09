@@ -54,7 +54,7 @@ class RpContractor(models.Model):
     # Khi tạo rp.contractor, Odoo auto-create res.partner. Mọi field
     # của res.partner truy cập trực tiếp trên rp.contractor (name,
     # phone, email, ...). Giải pháp "1 bảng" cho cả Quản lý vay và
-    # Realty Project — mỗi nhà thầu chỉ tồn tại 1 record duy nhất.
+    # EPCOne — mỗi nhà thầu chỉ tồn tại 1 record duy nhất.
     partner_id = fields.Many2one(
         'res.partner', string='Contact / res.partner',
         required=True, ondelete='restrict', auto_join=True,

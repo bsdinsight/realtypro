@@ -3,13 +3,13 @@
     'name': 'Construction Network — Connector (Tổng thầu)',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
-    'summary': 'Kết nối Realty Project (tổng thầu) với BSD Construction '
+    'summary': 'Kết nối EPCOne (tổng thầu) với BSD Construction '
                'Network: công bố gói thầu, đồng bộ hồ sơ dự thầu.',
     'description': """
 Construction Network — Connector (cn_connector)
 ===============================================
 
-Phía TỔNG THẦU (Odoo Realty Project) gọi API Hub:
+Phía TỔNG THẦU (Odoo EPCOne) gọi API Hub:
 - Cấu hình Hub URL + API key (Cấu hình → Cài đặt).
 - Nút "Công bố lên Network" trên Gói thầu (rp.tender.package) → tạo gói
   thầu trên Hub.

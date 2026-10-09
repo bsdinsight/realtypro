@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Realty Project Dashboard — KPI tổng hợp + drill-down.
+"""EPCOne Dashboard — KPI tổng hợp + drill-down.
 
 Pattern: TransientModel singleton-ish. Mỗi lần user mở menu Dashboard,
 hệ thống tạo 1 record mới với default_get() compute KPIs từ
@@ -17,7 +17,7 @@ from odoo import _, api, fields, models
 
 class RpProjectDashboard(models.TransientModel):
     _name = 'rp.project.dashboard'
-    _description = 'Realty Project — Dashboard KPI'
+    _description = 'EPCOne — Dashboard KPI'
 
     @api.depends_context('lang')
     def _compute_display_name(self):
@@ -25,7 +25,7 @@ class RpProjectDashboard(models.TransientModel):
         # cho breadcrumb. TransientModel singleton-ish KHÔNG persist
         # → không có name field, fallback xấu.
         for rec in self:
-            rec.display_name = 'Realty Project — Dashboard'
+            rec.display_name = 'EPCOne — Dashboard'
 
     # ─── 1. Dự án ──────────────────────────────────────────────────
     kpi_project_active = fields.Integer(

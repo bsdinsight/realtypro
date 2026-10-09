@@ -2,11 +2,11 @@
 <odoo>
 
     <!--
-        Leaf menu entries for Realty Project Phase 2 (v1.4.3-r4).
+        Leaf menu entries for EPCOne Phase 2 (v1.4.3-r4).
 
         Phase 2 menu structure:
 
-        Realty Project
+        EPCOne
         ├── Project Master
         │   ├── Projects              [re_base.action_re_project — shortcut]
         │   ├── Subzones              [re_base.action_re_subzone — shortcut]
@@ -73,7 +73,7 @@
               action="re_base.action_re_unit_type"
               sequence="60"/>
 
-    <!-- Realty Project domain master entities (sequences 70+) -->
+    <!-- EPCOne domain master entities (sequences 70+) -->
     <menuitem id="menu_pm_rp_structure"
               name="Hạng mục dự án"
               parent="menu_project_master"
@@ -81,7 +81,7 @@
               sequence="70"/>
 
     <!-- Cost Category (per-project + Master) là danh mục cấu hình ít đụng
-         → chuyển vào Realty Project > Cấu hình (v1.11.0) -->
+         → chuyển vào EPCOne > Cấu hình (v1.11.0) -->
     <menuitem id="menu_pm_rp_cost_category"
               name="Cost Categories"
               parent="menu_rp_configuration"

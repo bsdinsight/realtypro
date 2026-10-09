@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project - Estimate & Tender",
+    "name": "EPCOne - Estimate & Tender",
     "version": "19.0.2.1.0",
     "category": "Realty/Project",
     "summary": "Gói thầu (P5.1+P5.2+P5.3: KH lựa chọn NT + bidder "
                "+ tiêu chuẩn đánh giá + HSMT) + Khái toán",
     "description": """
-Realty Project - Estimate & Tender (v1.4.3-r4)
+EPCOne - Estimate & Tender (v1.4.3-r4)
 ===============================================
 
 Phase 2 deliverable (v1.4.3-r4). Owns:
 
 - ``rp.tender.package`` + ``rp.tender.package.line`` — Gói thầu
   basic. Phase 5 will _inherit to add awarding workflow.
-- Realty Project root menu (xmlid `menu_realty_project_root`).
+- EPCOne root menu (xmlid `menu_realty_project_root`).
 - Phase 2 submenus (Project Master + Estimate).
 - Wizard: quick_create_structures (bulk create rp.structure).
 

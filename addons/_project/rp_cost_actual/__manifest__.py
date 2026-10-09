@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Chi phí thực (AC)',
+    'name': 'EPCOne — Chi phí thực (AC)',
     'version': '19.0.1.2.0',
     'category': 'Realty/Project',
     'summary': 'Gắn chi phí thực từ hóa đơn nhà thầu vào WBS (hạng mục × '
                'nhóm chi phí) → roll-up AC cho EVM (CPI = EV/AC).',
     'description': """
-Realty Project — Chi phí thực / Actual Cost (rp_cost_actual)
+EPCOne — Chi phí thực / Actual Cost (rp_cost_actual)
 ============================================================
 
 Mắt xích **AC (Actual Cost)** của EVM. Trước module này, hóa đơn nhà

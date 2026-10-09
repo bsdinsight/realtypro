@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project - Contractors",
+    "name": "EPCOne - Contractors",
     "version": "19.0.2.3.0",
     "category": "Realty/Project",
     "summary": "Nhà thầu (contractor) master data + specialty registry",
     "description": """
-Realty Project - Contractors (v1.4.1)
+EPCOne - Contractors (v1.4.1)
 =====================================
 
 **TRANSFORMED in v1.4.1** from iter5 placeholder stub.

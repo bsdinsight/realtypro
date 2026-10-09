@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project ↔ Bank Guarantee Bridge',
+    'name': 'EPCOne ↔ Bank Guarantee Bridge',
     'version': '19.0.1.4.0',
     'category': 'Realty/Project',
     'summary': 'Link HĐ nhà thầu (rp.contract) với chứng thư BL NH '

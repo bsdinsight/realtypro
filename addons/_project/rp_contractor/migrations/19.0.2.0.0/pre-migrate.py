@@ -3,7 +3,7 @@
 Migration 19.0.2.0.0: rp.contractor → _inherits res.partner.
 
 User feedback: chỉ tồn tại 1 bảng nhà thầu cho cả Quản lý vay và
-Realty Project. Refactor rp.contractor sang dùng delegation
+EPCOne. Refactor rp.contractor sang dùng delegation
 inheritance — mỗi rp.contractor có 1 res.partner duy nhất.
 
 Pre-migrate đảm bảo TẤT CẢ rp.contractor có partner_id trước khi

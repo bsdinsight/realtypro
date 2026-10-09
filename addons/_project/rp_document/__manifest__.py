@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Sổ hồ sơ kỹ thuật (điều 5.2)',
+    'name': 'EPCOne — Sổ hồ sơ kỹ thuật (điều 5.2)',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Hồ sơ nhà thầu phải trình: đồng hồ xem xét 21 ngày, chuỗi '
                'lần trình, và cổng cho phép khởi công / bàn giao.',
     'description': """
-Realty Project — Sổ hồ sơ kỹ thuật (rp_document)
+EPCOne — Sổ hồ sơ kỹ thuật (rp_document)
 ================================================
 
 Điều 5.2 của hợp đồng thiết kế–thi công không nói về việc lưu trữ file.

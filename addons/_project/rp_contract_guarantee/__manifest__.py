@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project - Contract Guarantees',
+    'name': 'EPCOne - Contract Guarantees',
     'version': '19.0.1.7.0',
     'category': 'Realty/Project',
     'summary': 'Sổ bảo lãnh hợp đồng nhà thầu — BL nhận từ nhà thầu phụ '
                '(thực hiện HĐ / tạm ứng / bảo hành), upload tài liệu, '
                'cảnh báo hết hạn. Tách khỏi Quản lý Vay.',
     'description': """
-Realty Project - Bảo lãnh hợp đồng nhà thầu (rp_contract_guarantee)
+EPCOne - Bảo lãnh hợp đồng nhà thầu (rp_contract_guarantee)
 ==================================================================
 
 Sổ đăng ký tập trung các **bảo lãnh nhà thầu phụ nộp về** cho tổng thầu

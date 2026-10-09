@@ -10,7 +10,7 @@ class TestLoanAllocation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # ---- Realty Project skeleton ----
+        # ---- EPCOne skeleton ----
         cls.project = cls.env['re.project'].create({
             'name': 'Proj-Alloc', 'code': 'AL'})
         cls.subzone = cls.env['re.subzone'].create({

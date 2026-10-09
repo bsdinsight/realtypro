@@ -113,7 +113,7 @@ addons/
 │   ├── re_guarantee/              # Bank guarantee management
 │   ├── re_pricing_base/           # Pricing utilities
 │   └── vn_administrative_units/   # VN provinces/districts/wards
-└── _project/                      # Realty Project modules (rp_*)
+└── _project/                      # EPCOne modules (rp_*)
     ├── rp_contractor/             # Contractor master
     ├── rp_cost_base/              # Cost categories, structures
     ├── rp_estimate/               # Tender package, BOQ, estimate

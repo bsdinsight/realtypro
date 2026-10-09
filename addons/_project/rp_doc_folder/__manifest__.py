@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Bộ thư mục hồ sơ dự án (EPC)',
+    'name': 'EPCOne — Bộ thư mục hồ sơ dự án (EPC)',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Cây thư mục chuẩn theo vòng đời EPC, dựng sẵn cho mỗi '
                'dự án; chỗ neo để đẩy file sang SharePoint về sau.',
     'description': """
-Realty Project — Bộ thư mục hồ sơ dự án (rp_doc_folder)
+EPCOne — Bộ thư mục hồ sơ dự án (rp_doc_folder)
 =======================================================
 
 Vì sao dựng sẵn chứ không để trống

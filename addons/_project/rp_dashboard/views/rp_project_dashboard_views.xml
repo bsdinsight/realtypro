@@ -6,7 +6,7 @@
         <field name="name">rp.project.dashboard.form</field>
         <field name="model">rp.project.dashboard</field>
         <field name="arch" type="xml">
-            <form string="Realty Project Dashboard" create="false" edit="false" delete="false">
+            <form string="EPCOne Dashboard" create="false" edit="false" delete="false">
                 <header>
                     <button name="action_refresh" type="object"
                             string="↻ Refresh KPIs"
@@ -14,7 +14,7 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
-                        <h1>Realty Project — Dashboard</h1>
+                        <h1>EPCOne — Dashboard</h1>
                         <p class="text-muted">Số liệu thời gian thực — click vào số để xem chi tiết</p>
                     </div>
 
@@ -128,7 +128,7 @@
 
     <!-- Action: tạo record mới mỗi lần mở (recompute KPIs) -->
     <record id="action_rp_project_dashboard" model="ir.actions.act_window">
-        <field name="name">Realty Project Dashboard</field>
+        <field name="name">EPCOne Dashboard</field>
         <field name="res_model">rp.project.dashboard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_rp_project_dashboard_form"/>

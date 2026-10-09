@@ -3,7 +3,7 @@
 Phân bổ vay theo công trình (rp.loan.allocation).
 
 Một dòng phân bổ gắn 1 Khế ước (re.loan.note) với 1 hoặc nhiều đích trong
-chuỗi Realty Project:
+chuỗi EPCOne:
 
   re.project → rp.structure → rp.cost.category → rp.tender.package → rp.contract
 

@@ -1,4 +1,4 @@
-# Realty Project — Deployment guide
+# EPCOne — Deployment guide
 
 Quick-reference deployment guide for the Community edition.
 Full step-by-step with screenshots: https://docs.bsdinsight.com/vi/realtypro/project/
@@ -83,7 +83,7 @@ docker compose logs -f odoo   # Ctrl-C once "HTTP service running"
 # Create empty DB
 docker compose exec -T db createdb -U odoo dev
 
-# Install base + Realty Project modules
+# Install base + EPCOne modules
 docker compose exec odoo odoo -d dev \
   -i base,re_loan,rp_estimate,rp_contract,rp_progress,rp_contractor,rp_loan_bridge \
   --stop-after-init --no-http
@@ -280,7 +280,7 @@ Cron entry (server-local backup):
 
 ## 8. Upgrade to Enterprise
 
-Realty Project Enterprise adds:
+EPCOne Enterprise adds:
 - Bryntum Gantt (full VN localization, Critical Path, Resource Leveling)
 - Unlimited projects / contracts / structures
 - Multi-company

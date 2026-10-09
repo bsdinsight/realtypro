@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_disbursement_list" model="ir.ui.view">
+        <field name="name">rp.disbursement.line.list</field>
+        <field name="model">rp.disbursement.line</field>
+        <field name="arch" type="xml">
+            <!-- expand="1": danh sách này gần như luôn được xem ở dạng
+                 gom nhóm, mà nhóm đóng hết thì phải bấm từng cái mới
+                 thấy số. -->
+            <list string="Giải ngân theo tháng" expand="1" create="false"
+                  default_order="period, package_id"
+                  decoration-danger="status == 'under'"
+                  decoration-warning="status == 'over'"
+                  decoration-muted="status == 'future'">
+                <field name="period" string="Tháng"/>
+                <field name="package_id" string="Gói thầu" optional="show"/>
+                <field name="contract_id" string="Hợp đồng" optional="show"/>
+                <field name="amount_plan" string="Kế hoạch chi"
+                       width="190px" sum="Σ kế hoạch"/>
+                <field name="amount_actual" string="Thực chi"
+                       width="190px" sum="Σ thực chi"/>
+                <field name="variance" string="Sai lệch"
+                       width="190px" sum="Σ sai lệch"/>
+                <field name="variance_percent" string="Sai lệch %"
+                       optional="show"/>
+                <field name="amount_plan_cum" string="KH luỹ kế"
+                       width="190px" optional="hide"/>
+                <field name="amount_actual_cum" string="Thực luỹ kế"
+                       width="190px" optional="hide"/>
+                <field name="variance_cum" string="Lệch luỹ kế"
+                       width="190px" optional="hide"/>
+                <field name="status" string="Tình trạng" widget="badge"
+                       decoration-danger="status == 'under'"
+                       decoration-warning="status == 'over'"
+                       decoration-success="status == 'on_track'"
+                       decoration-muted="status == 'future'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_disbursement_pivot" model="ir.ui.view">
+        <field name="name">rp.disbursement.line.pivot</field>
+        <field name="model">rp.disbursement.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Kế hoạch so thực chi">
+                <field name="package_id" type="row"/>
+                <field name="period" interval="month" type="col"/>
+                <field name="amount_plan" type="measure"/>
+                <field name="amount_actual" type="measure"/>
+                <field name="variance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rp_disbursement_graph" model="ir.ui.view">
+        <field name="name">rp.disbursement.line.graph</field>
+        <field name="model">rp.disbursement.line</field>
+        <field name="arch" type="xml">
+            <graph string="Đường cong giải ngân" type="line">
+                <field name="period" interval="month"/>
+                <field name="amount_plan_cum" type="measure"/>
+                <field name="amount_actual_cum" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_rp_disbursement_search" model="ir.ui.view">
+        <field name="name">rp.disbursement.line.search</field>
+        <field name="model">rp.disbursement.line</field>
+        <field name="arch" type="xml">
+            <search string="Giải ngân">
+                <field name="package_id"/>
+                <field name="contract_id"/>
+                <field name="period"/>
+                <separator/>
+                <filter name="f_chi_cham" string="Chi chậm"
+                        domain="[('status', '=', 'under')]"/>
+                <filter name="f_chi_vuot" string="Chi vượt"
+                        domain="[('status', '=', 'over')]"/>
+                <filter name="f_da_qua" string="Tháng đã qua"
+                        domain="[('period', '&lt;=', 'today')]"/>
+                <!-- KHÔNG bọc trong <group expand="0">: Odoo 19 không
+                     còn chấp nhận thẻ đó trong view tìm kiếm, nạp module
+                     sẽ nổ ParseError. Khai phẳng bằng separator. -->
+                <separator/>
+                <filter name="g_goi" string="Gói thầu"
+                        context="{'group_by': 'package_id'}"/>
+                <filter name="g_hd" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'period:month'}"/>
+                <filter name="g_quy" string="Quý"
+                        context="{'group_by': 'period:quarter'}"/>
+                <filter name="g_nam" string="Năm"
+                        context="{'group_by': 'period:year'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_disbursement" model="ir.actions.act_window">
+        <field name="name">Giải ngân theo tháng</field>
+        <field name="res_model">rp.disbursement.line</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="context">{'search_default_g_goi': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có dòng giải ngân nào</p>
+            <p>
+                Bảng này dựng từ <b>điều khoản thanh toán của hợp đồng</b>
+                — tạm ứng và các đợt — chứ không phải từ đường cong ngân
+                sách. Mở form dự án và bấm <b>Dựng bảng giải ngân</b>.
+            </p>
+        </field>
+    </record>
+
+    <!-- Cảnh báo thiếu tiền + nút dựng bảng, đặt trên form dự án -->
+    <record id="view_re_project_form_disbursement" model="ir.ui.view">
+        <field name="name">re.project.form.disbursement</field>
+        <field name="model">re.project</field>
+        <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_giai_ngan" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="not disbursement_line_count">
+                    <field name="disbursement_line_count" widget="statinfo"
+                           string="Giải ngân"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <group name="rp_giai_ngan" string="DÒNG TIỀN RA">
+                    <group string="Giải ngân">
+                        <field name="disbursement_plan_total"/>
+                        <field name="disbursement_actual_total"/>
+                        <field name="disbursement_overdue_total"/>
+                        <button name="action_dung_bang_giai_ngan"
+                                type="object" class="btn-primary"
+                                icon="fa-refresh"
+                                string="Dựng bảng giải ngân"
+                                confirm="Dựng lại bảng giải ngân từ điều khoản thanh toán hiện tại? Bảng cũ sẽ bị thay."/>
+                    </group>
+                    <group string="Đủ tiền không">
+                        <field name="cash_horizon_months"/>
+                        <field name="cash_need"/>
+                        <field name="cash_overdue"/>
+                        <field name="cash_available"/>
+                        <field name="cash_gap"/>
+                        <field name="cash_alert" invisible="1"/>
+                    </group>
+                    <div colspan="2" class="alert alert-danger py-1 mb-2"
+                         role="alert" invisible="not cash_alert">
+                        <i class="fa fa-exclamation-triangle me-1"
+                           title="Thiếu tiền"/>
+                        <b>Nguồn còn rút được không đủ cho phần phải chi
+                        sắp tới.</b> Con số "nguồn" chỉ gồm hạn mức tín
+                        dụng còn khả dụng đã phân bổ cho dự án — chưa
+                        tính vốn chủ, tiền mặt đang có hay tiền thu về,
+                        nên hãy đọc nó là <b>khoảng hở tài trợ</b> chứ
+                        không phải dự báo ngân quỹ.
+                    </div>
+                    <div colspan="2" class="text-muted"
+                         invisible="disbursement_line_count">
+                        Chưa dựng bảng giải ngân. Kế hoạch chi lấy từ
+                        <b>đợt thanh toán của hợp đồng</b>, không phải từ
+                        đường cong ngân sách — hai thứ lệch pha nhau vì
+                        tạm ứng trả trước khi có khối lượng, còn tiền giữ
+                        lại bảo hành trả sau khi xong rất lâu.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Gói thầu: tiến độ giải ngân của riêng gói -->
+    <record id="view_rp_tender_package_form_disbursement" model="ir.ui.view">
+        <field name="name">rp.tender.package.form.disbursement</field>
+        <field name="model">rp.tender.package</field>
+        <field name="inherit_id" ref="rp_estimate.view_rp_tender_package_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Giải ngân" name="gr_giai_ngan">
+                    <group>
+                        <field name="disbursement_plan_total"/>
+                        <field name="disbursement_actual_total"/>
+                        <field name="disbursement_percent"
+                               widget="progressbar"/>
+                    </group>
+                    <group>
+                        <button name="action_mo_giai_ngan" type="object"
+                                class="btn-link" icon="fa-money"
+                                string="Xem giải ngân theo tháng"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_cron_canh_bao_thieu_tien" model="ir.cron">
+        <field name="name">EPCOne: cảnh báo thiếu tiền</field>
+        <field name="model_id" ref="re_base.model_re_project"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_canh_bao_thieu_tien()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <menuitem id="menu_rp_disbursement" name="Giải ngân theo tháng"
+              parent="menu_finance_budget"
+              action="action_rp_disbursement" sequence="30"/>
+
+</odoo>

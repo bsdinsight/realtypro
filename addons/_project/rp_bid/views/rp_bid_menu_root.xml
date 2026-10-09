@@ -10,13 +10,13 @@
       file nạp CUỐI — chạy được trên máy đã cài sẵn, nhưng cài mới từ đầu
       sẽ chết vì con tìm cha chưa tồn tại.)
 
-      TÊN "DỰ THẦU", KHÔNG PHẢI "NHÀ THẦU": trong Realty Project chữ
+      TÊN "DỰ THẦU", KHÔNG PHẢI "NHÀ THẦU": trong EPCOne chữ
       "nhà thầu" đã có nghĩa ngược lại — `rp_contractor` dùng nó cho
       THẦU PHỤ MÀ TA THUÊ (HĐ nhà thầu, Hồ sơ năng lực nhà thầu, Công nợ
       nhà thầu). Đặt trùng thì người dùng mở ra sẽ tưởng là danh sách
       thầu phụ, tức là hiểu ngược hẳn chiều nghiệp vụ.
 
-      ĐỂ Ở ROOT, KHÔNG NẰM DƯỚI REALTY PROJECT. Nó từng là menu con ở
+      ĐỂ Ở ROOT, KHÔNG NẰM DƯỚI EPCONE. Nó từng là menu con ở
       đó, nhưng sau khi Dự án / Gói thầu chuyển hẳn về sổ của nhà thầu
       thì cấp menu không còn phản ánh cấp dữ liệu nào nữa: ngoài nút
       "Chuyển sang dự án thi công" (một lần một gói, sau khi trúng), cụm

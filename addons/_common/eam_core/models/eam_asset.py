@@ -15,7 +15,7 @@ class EamAsset(models.Model):
     lại dấu vết.
 
     Nguồn gốc (từ hợp đồng nào, dòng BOQ nào, nghiệm thu ngày nào) KHÔNG
-    khai ở lõi — lõi không được biết tới Realty Project. Cầu bàn giao kế
+    khai ở lõi — lõi không được biết tới EPCOne. Cầu bàn giao kế
     thừa model này và thêm các trường đó.
     """
     _name = 'eam.asset'

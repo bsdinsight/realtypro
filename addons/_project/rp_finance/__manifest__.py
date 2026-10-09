@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Tài chính',
+    'name': 'EPCOne — Tài chính',
     'version': '19.0.1.3.0',
     'category': 'Realty/Project',
     'summary': 'Menu Tài chính hợp nhất: Dashboard, Khái toán, Dự toán (BOQ), '
                'Tạm ứng, Hoá đơn nhà thầu, Hồ sơ thanh toán, Thanh toán, Báo cáo.',
     'description': """
-Realty Project — Tài chính (rp_finance)
+EPCOne — Tài chính (rp_finance)
 ========================================
 
-Gom toàn bộ dòng tiền dự án về 1 menu "Tài chính" trong Realty Project:
+Gom toàn bộ dòng tiền dự án về 1 menu "Tài chính" trong EPCOne:
 
   Tài chính
   ├── Dashboard Tài chính     [rp.finance.dashboard — KPI realtime]

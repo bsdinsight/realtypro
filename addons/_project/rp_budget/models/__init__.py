@@ -6,3 +6,5 @@ from . import rp_tender_package_cost
 from . import account_move
 from . import re_project
 from . import rp_variation
+from . import rp_disbursement
+from . import rp_cash_alert

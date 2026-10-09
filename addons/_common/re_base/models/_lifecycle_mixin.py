@@ -89,7 +89,7 @@ class RealtyLifecycleMixin(models.AbstractModel):
     requires either buildings or units).
     """
     _name = 'realty.lifecycle.mixin'
-    _description = 'Realty Project Lifecycle Mixin'
+    _description = 'EPCOne Lifecycle Mixin'
 
     state = fields.Selection(
         LIFECYCLE_STATES,

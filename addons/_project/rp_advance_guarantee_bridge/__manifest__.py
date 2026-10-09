@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project - Advance ↔ Guarantee Bridge',
+    'name': 'EPCOne - Advance ↔ Guarantee Bridge',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Giải ngân tạm ứng → chọn bảo lãnh nhận từ nhà thầu '

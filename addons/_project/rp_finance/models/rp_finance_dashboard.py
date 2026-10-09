@@ -11,7 +11,7 @@ from odoo import api, fields, models
 
 class RpFinanceDashboard(models.TransientModel):
     _name = 'rp.finance.dashboard'
-    _description = 'Realty Project — Dashboard Tài chính'
+    _description = 'EPCOne — Dashboard Tài chính'
 
     @api.depends_context('lang')
     def _compute_display_name(self):

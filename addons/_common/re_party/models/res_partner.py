@@ -96,7 +96,7 @@ class ResPartner(models.Model):
     )
     is_re_contractor = fields.Boolean(
         string='Contractor',
-        help='Construction contractor or subcontractor for Realty Project.',
+        help='Construction contractor or subcontractor for EPCOne.',
     )
     is_re_resident = fields.Boolean(
         string='Resident',

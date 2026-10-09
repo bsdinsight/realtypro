@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project ↔ Loan Bridge',
+    'name': 'EPCOne ↔ Loan Bridge',
     'version': '19.0.1.38.0',
     'category': 'Realty/Project',
     'summary': 'Phân bổ vay/lãi vay theo công trình: Project / Khu vực / '
                'Hạng mục / Gói thầu / HĐ nhà thầu',
     'description': """
-Bridge giữa re_loan (Quản lý Vay) và Realty Project.
+Bridge giữa re_loan (Quản lý Vay) và EPCOne.
 
 Phân bổ Khế ước nhận nợ (KW) — gốc / lãi / cả hai — theo công trình. Hạt mịn
 chọn được:

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Tạm ứng (Advance Payment)',
+    'name': 'EPCOne — Tạm ứng (Advance Payment)',
     'version': '19.0.1.9.0',
     'category': 'Realty/Finance',
     'summary': 'Quản lý Tạm ứng cho HĐ nhà thầu / NCC với workflow '
                'phê duyệt + giải ngân bằng KW + cấn trừ thủ công vào hóa đơn',
     'description': """
-Realty Project — Tạm ứng (rp_advance_payment)
+EPCOne — Tạm ứng (rp_advance_payment)
 ==============================================
 
 Quy trình nghiệp vụ:

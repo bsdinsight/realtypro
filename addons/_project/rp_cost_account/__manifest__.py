@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Realty Project — Chi phí ↔ Tài khoản kế toán",
+    "name": "EPCOne — Chi phí ↔ Tài khoản kế toán",
     "version": "19.0.1.0.0",
     "category": "Realty/Project",
     "summary": "Gắn tài khoản kế toán (TT200) vào danh mục chi phí, "
@@ -9,7 +9,7 @@
 Chi phí ↔ Tài khoản kế toán (rp_cost_account)
 =============================================
 
-Danh mục chi phí của Realty Project chia theo cách NGƯỜI LÀM DỰ ÁN nghĩ
+Danh mục chi phí của EPCOne chia theo cách NGƯỜI LÀM DỰ ÁN nghĩ
 (đất, tư vấn, kết cấu, cơ điện, thiết bị…). Phần mềm kế toán lại chia
 theo hệ thống tài khoản. Module này nối hai cách chia đó: mỗi mã chi phí
 mang một tài khoản kế toán, nên mọi chứng từ gắn mã chi phí đều biết

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Hồ sơ dự thầu (nhà thầu)',
+    'name': 'EPCOne — Hồ sơ dự thầu (nhà thầu)',
     'version': '19.0.15.0.0',
     'category': 'Realty/Project',
     'summary': 'Nhà thầu nhận gói thầu, chia hạng mục của mình và dựng '
@@ -9,7 +9,7 @@
 Hồ sơ dự thầu — phía NHÀ THẦU
 =============================
 
-Realty Project vốn mô tả chiều **mời thầu**: chủ đầu tư / tổng thầu chia
+EPCOne vốn mô tả chiều **mời thầu**: chủ đầu tư / tổng thầu chia
 dự án thành hạng mục, ra BoQ, lập gói thầu rồi chấm nhà thầu. Module này
 bổ sung chiều còn lại — **đi dự thầu**::
 

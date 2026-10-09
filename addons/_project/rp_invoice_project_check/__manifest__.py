@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Realty Project — Hoá đơn phải gắn dự án',
+    'name': 'EPCOne — Hoá đơn phải gắn dự án',
     'version': '19.0.1.0.0',
     'category': 'Realty/Project',
     'summary': 'Cảnh báo mềm khi hoá đơn mua vào / bán ra chưa gắn dự án '

@@ -9,7 +9,7 @@
 EAMOne Core
 ===========
 
-Lõi KHÔNG BIẾT GÌ về điện gió, và cũng không biết gì về Realty Project.
+Lõi KHÔNG BIẾT GÌ về điện gió, và cũng không biết gì về EPCOne.
 Đó là chủ ý: nội dung chuyên ngành nằm ở gói ngành (Wind Pack), còn mọi
 thứ riêng của một khách nằm ở cấu hình. Lõi mà biết tên một khách hàng
 là lúc sản phẩm bắt đầu hỏng.

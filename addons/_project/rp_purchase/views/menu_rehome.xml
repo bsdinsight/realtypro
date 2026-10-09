@@ -28,10 +28,16 @@
     <menuitem id="menu_procure_config_vendor" name="Nhà cung cấp"
               parent="menu_procure_config"
               action="account.res_partner_action_supplier" sequence="10"/>
-    <menuitem id="menu_procure_config_product" name="Sản phẩm mua"
-              parent="menu_procure_config"
-              action="purchase.product_normal_action_puchased"
-              sequence="20"/>
+    <!-- KHÔNG khai "Sản phẩm mua" ở đây.
+         Nhánh Kho đã có "Vật tư & phụ tùng" trỏ cùng model
+         `product.template`, cùng domain rỗng, cùng bộ lọc mặc định
+         `filter_to_purchase` — tức y hệt. Thêm vào là dựng cửa thứ ba
+         vào cùng một danh sách.
+
+         Khác hẳn vụ "Mua hàng": ở đó hai cửa vào cùng bảng GIAO DỊCH
+         với bộ lọc KHÁC nhau nên bản ghi trốn được. Ở đây chỉ là hai
+         lối tắt vào cùng dữ liệu tham chiếu — không nguy hiểm, chỉ
+         rườm rà, và cách chữa là bớt lối chứ không phải ẩn màn. -->
     <menuitem id="menu_procure_config_pricelist" name="Bảng giá nhà cung cấp"
               parent="menu_procure_config"
               action="product.product_supplierinfo_type_action"

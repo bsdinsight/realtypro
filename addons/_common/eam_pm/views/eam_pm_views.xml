@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ LỊCH BẢO TRÌ (màn chính, mở mỗi sáng) ============ -->
+    <record id="view_eam_pm_schedule_list" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.list</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Lịch bảo trì" expand="1"
+                  decoration-danger="state == 'overdue'"
+                  decoration-warning="state == 'due_soon'"
+                  decoration-info="state == 'wo_open'"
+                  decoration-muted="state == 'no_data'">
+                <field name="location_code" string="Vị trí" width="150px"/>
+                <field name="plan_id" width="280px"/>
+                <field name="state" widget="badge" width="150px"
+                       decoration-danger="state == 'overdue'"
+                       decoration-warning="state == 'due_soon'"
+                       decoration-success="state == 'ok'"/>
+                <field name="due_by" string="Tới hạn vì" width="140px"/>
+                <field name="date_next" string="Hạn" width="130px"/>
+                <field name="days_to_due" string="Còn (ngày)" width="120px"/>
+                <field name="meter_now" string="Đồng hồ" optional="show"/>
+                <field name="meter_next" string="Hạn đồng hồ" optional="hide"/>
+                <field name="meter_to_due" string="Còn (đồng hồ)"
+                       optional="show"/>
+                <field name="date_last_done" string="Làm gần nhất"
+                       optional="show" width="140px"/>
+                <field name="wo_count" string="Đã làm" optional="hide"/>
+                <field name="wo_id" string="Lệnh đang mở" optional="show"
+                       width="160px"/>
+                <field name="active" column_invisible="1"/>
+                <button name="action_sinh_lenh_ngay" type="object"
+                        icon="fa-wrench" title="Sinh lệnh ngay"
+                        invisible="state == 'wo_open'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_pm_schedule_form" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.form</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Lịch bảo trì">
+                <header>
+                    <button name="action_sinh_lenh_ngay" type="object"
+                            string="Sinh lệnh ngay" class="oe_highlight"
+                            invisible="state == 'wo_open'"/>
+                    <button name="action_ghi_da_lam" type="object"
+                            string="Ghi nhận đã làm"
+                            confirm="Ghi nhận đã bảo trì xong hôm nay mà không qua lệnh công việc? Chu kỳ tiếp theo sẽ đếm từ hôm nay."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="ok,due_soon,overdue,wo_open"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Áp dụng">
+                            <field name="plan_id" options="{'no_create': True}"/>
+                            <field name="location_id"
+                                   options="{'no_create': True}"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Lần gần nhất">
+                            <field name="date_last_done"/>
+                            <field name="meter_at_last"/>
+                            <field name="date_start"/>
+                            <field name="wo_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Hạn theo lịch">
+                            <field name="date_next"/>
+                            <field name="days_to_due"/>
+                        </group>
+                        <group string="Hạn theo đồng hồ">
+                            <field name="meter_now"/>
+                            <field name="meter_next"/>
+                            <field name="meter_to_due"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="due_by"/>
+                        <field name="wo_id" readonly="1"/>
+                    </group>
+                    <div class="alert alert-warning" role="status"
+                         invisible="state != 'no_data'">
+                        Kế hoạch này <b>chỉ chạy theo đồng hồ</b> nhưng vị
+                        trí chưa có số đọc nào. Nó sẽ <b>im lặng không bao
+                        giờ tới hạn</b> — không phải "còn hạn", mà là không
+                        đo được. Nhập số đọc đồng hồ cho vị trí này.
+                    </div>
+                    <notebook>
+                        <page string="Lịch sử lệnh" name="wo">
+                            <field name="wo_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="date_end"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="cost_total"
+                                           widget="monetary" width="190px"/>
+                                    <field name="currency_id"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_pm_schedule_search" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.search</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Lịch bảo trì">
+                <field name="location_code"/>
+                <field name="location_id"/>
+                <field name="plan_id"/>
+                <separator/>
+                <filter name="f_qua" string="QUÁ HẠN"
+                        domain="[('state', '=', 'overdue')]"/>
+                <filter name="f_sap" string="Sắp tới hạn"
+                        domain="[('state', '=', 'due_soon')]"/>
+                <filter name="f_can" string="Cần xử lý"
+                        domain="[('state', 'in', ('overdue', 'due_soon'))]"/>
+                <filter name="f_lenh" string="Đã có lệnh"
+                        domain="[('state', '=', 'wo_open')]"/>
+                <separator/>
+                <filter name="f_thieu" string="Thiếu số đọc đồng hồ"
+                        domain="[('state', '=', 'no_data')]"/>
+                <filter name="f_chua" string="Chưa từng bảo trì"
+                        domain="[('date_last_done', '=', False)]"/>
+                <separator/>
+                <filter name="g_kh" string="Kế hoạch"
+                        context="{'group_by': 'plan_id'}"/>
+                <filter name="g_vt" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_tt" string="Tình trạng"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_vi" string="Tới hạn vì"
+                        context="{'group_by': 'due_by'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_pm_schedule" model="ir.actions.act_window">
+        <field name="name">Lịch bảo trì</field>
+        <field name="res_model">eam.pm.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_kh': 1}</field>
+    </record>
+
+    <record id="action_eam_pm_due" model="ir.actions.act_window">
+        <field name="name">Sắp tới hạn &amp; quá hạn</field>
+        <field name="res_model">eam.pm.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ('overdue', 'due_soon'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có kế hoạch nào
+            tới hạn</p>
+            <p>Đây là màn hình đội vận hành mở <b>mỗi sáng</b>: hôm nay
+            phải bảo trì máy nào.</p>
+            <p>Một kế hoạch tới hạn vì <b>lịch</b> hoặc vì <b>đồng hồ</b> —
+            cái nào đến trước thắng. Cột <i>Tới hạn vì</i> nói rõ cái nào
+            đang quyết định, để khỏi phải đoán.</p>
+        </field>
+    </record>
+
+    <!-- ============ KẾ HOẠCH ============ -->
+    <record id="view_eam_pm_plan_list" model="ir.ui.view">
+        <field name="name">eam.pm.plan.list</field>
+        <field name="model">eam.pm.plan</field>
+        <field name="arch" type="xml">
+            <list string="Kế hoạch bảo trì">
+                <field name="sequence" widget="handle"/>
+                <field name="code" width="120px"/>
+                <field name="name" width="300px"/>
+                <field name="work_type" width="170px"/>
+                <field name="plant_id" string="Nhà máy" optional="show"/>
+                <field name="category_id" optional="show"/>
+                <field name="use_calendar" string="Lịch" optional="show"/>
+                <field name="calendar_months" string="Tháng" optional="show"/>
+                <field name="use_meter" string="Đồng hồ" optional="show"/>
+                <field name="meter_interval" string="Mỗi" optional="show"/>
+                <field name="lead_days" string="Báo trước" optional="hide"/>
+                <field name="schedule_count" string="Vị trí"/>
+                <field name="due_count" string="Cần xử lý"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_pm_plan_form" model="ir.ui.view">
+        <field name="name">eam.pm.plan.form</field>
+        <field name="model">eam.pm.plan</field>
+        <field name="arch" type="xml">
+            <form string="Kế hoạch bảo trì">
+                <header>
+                    <button name="action_ap_dung" type="object"
+                            string="Áp dụng cho các vị trí"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_lich" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="schedule_count" widget="statinfo"
+                                   string="Vị trí"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="Mã"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Tên kế hoạch"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Phân loại">
+                            <field name="work_type"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="trade"/>
+                            <field name="est_hours"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Áp cho đâu">
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="category_id"/>
+                            <field name="location_ids"
+                                   widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Chu kỳ theo lịch">
+                            <field name="use_calendar"/>
+                            <field name="calendar_months"
+                                   invisible="not use_calendar"/>
+                            <field name="calendar_days"
+                                   invisible="not use_calendar"/>
+                            <field name="anchor"
+                                   invisible="not use_calendar"/>
+                        </group>
+                        <group string="Chu kỳ theo đồng hồ">
+                            <field name="use_meter"/>
+                            <field name="meter_type"
+                                   invisible="not use_meter"
+                                   required="use_meter"/>
+                            <field name="meter_interval"
+                                   invisible="not use_meter"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status"
+                         invisible="not (use_calendar and use_meter)">
+                        Bật cả hai thì <b>cái nào đến trước thắng</b> — ví
+                        dụ <i>12 tháng hoặc 8.000 giờ chạy, tuỳ cái nào tới
+                        trước</i>. Cột <i>Tới hạn vì</i> trên màn lịch nói
+                        rõ cái nào đang quyết định.
+                    </div>
+                    <group>
+                        <group string="Thời điểm sinh lệnh">
+                            <field name="lead_days"/>
+                            <field name="grace_days"/>
+                        </group>
+                        <group string="An toàn">
+                            <field name="requires_permit"/>
+                            <field name="requires_isolation"/>
+                            <field name="work_at_height"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Các bước công việc" name="tasks">
+                            <field name="task_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" width="420px"/>
+                                    <field name="spec" width="300px"/>
+                                    <field name="is_critical"/>
+                                </list>
+                            </field>
+                            <div class="text-muted">
+                                Các bước được chép sang phần diễn giải của
+                                lệnh công việc khi sinh lệnh. Ô <b>tiêu
+                                chuẩn / trị số</b> (lực siết, khe hở, ngưỡng
+                                rung) để người làm khỏi phải tra sổ tay và
+                                người kiểm biết lấy gì đối chiếu.
+                            </div>
+                        </page>
+                        <page string="Mô tả" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_pm_plan" model="ir.actions.act_window">
+        <field name="name">Kế hoạch bảo trì</field>
+        <field name="res_model">eam.pm.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============ ĐỒNG HỒ ============ -->
+    <record id="view_eam_meter_list" model="ir.ui.view">
+        <field name="name">eam.meter.list</field>
+        <field name="model">eam.meter</field>
+        <field name="arch" type="xml">
+            <list string="Đồng hồ thiết bị">
+                <field name="location_code" width="160px"/>
+                <field name="meter_type" width="200px"/>
+                <field name="current_value" string="Giá trị liên tục"/>
+                <field name="uom_label" string="ĐV"/>
+                <field name="raw_value" string="Số đọc thô" optional="hide"/>
+                <field name="date_last_reading" string="Đọc ngày"/>
+                <field name="suspect_count" string="Nghi sai"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_meter_form" model="ir.ui.view">
+        <field name="name">eam.meter.form</field>
+        <field name="model">eam.meter</field>
+        <field name="arch" type="xml">
+            <form string="Đồng hồ">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="location_id"/>
+                            <field name="meter_type"/>
+                            <field name="uom_label"/>
+                        </group>
+                        <group>
+                            <field name="current_value"/>
+                            <field name="raw_value"/>
+                            <field name="date_last_reading"/>
+                            <field name="suspect_count"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="status"
+                         invisible="not suspect_count">
+                        Có số đọc <b>thấp hơn lần trước</b> mà chưa ai xác
+                        nhận là thay đồng hồ. Hệ thống <b>không cộng bù</b>
+                        cho những dòng đó, vì nhiều khả năng là gõ nhầm —
+                        cộng bù một lần gõ nhầm sẽ làm mọi kế hoạch theo
+                        giờ tự lùi hạn, im lặng.
+                    </div>
+                    <field name="reading_ids">
+                        <list editable="bottom">
+                            <field name="date"/>
+                            <field name="value" string="Số đọc (thô)"/>
+                            <field name="effective_value"
+                                   string="Liên tục" readonly="1"/>
+                            <field name="is_reset" string="Đã thay đồng hồ"/>
+                            <field name="source"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_meter" model="ir.actions.act_window">
+        <field name="name">Đồng hồ thiết bị</field>
+        <field name="res_model">eam.meter</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============ GẮN VÀO VỊ TRÍ ============ -->
+    <record id="view_eam_location_form_pm" model="ir.ui.view">
+        <field name="name">eam.location.form.pm</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Bảo trì phòng ngừa" name="gr_pm"
+                       invisible="location_type != 'position'">
+                    <field name="meter_ids" nolabel="1" colspan="2">
+                        <list editable="bottom">
+                            <field name="meter_type"/>
+                            <field name="current_value"/>
+                            <field name="uom_label"/>
+                            <field name="date_last_reading"/>
+                            <field name="suspect_count"/>
+                        </list>
+                    </field>
+                    <field name="pm_schedule_ids" nolabel="1" colspan="2"
+                           readonly="1">
+                        <list>
+                            <field name="plan_id"/>
+                            <field name="state" widget="badge"
+                                   decoration-danger="state == 'overdue'"
+                                   decoration-warning="state == 'due_soon'"/>
+                            <field name="due_by"/>
+                            <field name="date_next"/>
+                            <field name="days_to_due"/>
+                            <field name="date_last_done"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============ GẮN VÀO LỆNH CÔNG VIỆC ============ -->
+    <record id="view_eam_work_order_form_pm" model="ir.ui.view">
+        <field name="name">eam.work.order.form.pm</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_type']" position="after">
+                <field name="is_pm" invisible="1"/>
+                <field name="pm_plan_id" invisible="not is_pm" readonly="1"/>
+                <field name="pm_schedule_id" invisible="not is_pm"
+                       readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_work_order_list_pm" model="ir.ui.view">
+        <field name="name">eam.work.order.list.pm</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_type']" position="after">
+                <field name="is_pm" string="Từ kế hoạch" optional="hide"/>
+                <field name="pm_plan_id" string="Kế hoạch" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============ MENU ============ -->
+    <menuitem id="menu_eam_pm" name="Bảo trì phòng ngừa"
+              parent="eam_core.menu_eam_ops" sequence="15"/>
+    <menuitem id="menu_eam_pm_due" name="Sắp tới hạn &amp; quá hạn"
+              parent="menu_eam_pm" action="action_eam_pm_due" sequence="10"/>
+    <menuitem id="menu_eam_pm_schedule" name="Lịch bảo trì"
+              parent="menu_eam_pm" action="action_eam_pm_schedule"
+              sequence="20"/>
+    <menuitem id="menu_eam_meter" name="Đồng hồ thiết bị"
+              parent="menu_eam_pm" action="action_eam_meter" sequence="30"/>
+    <menuitem id="menu_eam_pm_plan" name="Kế hoạch bảo trì"
+              parent="eam_core.menu_eam_config" action="action_eam_pm_plan"
+              sequence="15"/>
+
+</odoo>

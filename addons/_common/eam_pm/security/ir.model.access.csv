@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_meter_user,eam.meter.user,model_eam_meter,base.group_user,1,1,1,0
+access_eam_meter_mgr,eam.meter.mgr,model_eam_meter,base.group_system,1,1,1,1
+access_eam_meter_reading_user,eam.meter.reading.user,model_eam_meter_reading,base.group_user,1,1,1,0
+access_eam_meter_reading_mgr,eam.meter.reading.mgr,model_eam_meter_reading,base.group_system,1,1,1,1
+access_eam_pm_plan_user,eam.pm.plan.user,model_eam_pm_plan,base.group_user,1,0,0,0
+access_eam_pm_plan_mgr,eam.pm.plan.mgr,model_eam_pm_plan,base.group_system,1,1,1,1
+access_eam_pm_task_user,eam.pm.task.user,model_eam_pm_task,base.group_user,1,0,0,0
+access_eam_pm_task_mgr,eam.pm.task.mgr,model_eam_pm_task,base.group_system,1,1,1,1
+access_eam_pm_schedule_user,eam.pm.schedule.user,model_eam_pm_schedule,base.group_user,1,1,1,0
+access_eam_pm_schedule_mgr,eam.pm.schedule.mgr,model_eam_pm_schedule,base.group_system,1,1,1,1

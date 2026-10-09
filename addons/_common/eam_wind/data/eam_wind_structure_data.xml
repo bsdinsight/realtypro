@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Mẫu cấu trúc một tua-bin gió trên bờ — 18 vị trí, hai cấp.
+
+        Chọn gì đưa vào, chọn gì bỏ ra
+        ~~~~~~~~~~
+        Không phải mọi chi tiết đều xứng một vị trí chức năng riêng. Tiêu
+        chí: vị trí chỉ lập cho thứ **thay được tại chỗ và đáng theo dõi
+        lịch sử theo sê-ri**. Con bu-lông cũng hỏng, nhưng lập vị trí cho
+        bu-lông thì bốn trăm vị trí một trụ và không ai ghi nổi.
+
+        Ba cánh tách thành BA vị trí riêng chứ không gộp một "bộ cánh":
+        cánh hỏng và thay từng chiếc, và biết *chiếc số 2 của trụ 7* mới
+        truy được vết sét đánh hay vết nứt mép sau.
+
+        noupdate="1": mỗi hãng một cách chia cụm. Khách sửa rồi thì bản
+        nâng cấp không được đạp lên.
+    -->
+    <data noupdate="1">
+
+        <record id="tpl_wtg" model="eam.structure.template">
+            <field name="code">WTG-STD</field>
+            <field name="name">Tua-bin gió trên bờ — cấu trúc chuẩn</field>
+            <field name="category_id" ref="cat_wtg"/>
+            <field name="note">18 vị trí, hai cấp. Chỉ lập vị trí cho thứ
+                thay được tại chỗ và đáng theo dõi theo sê-ri.</field>
+        </record>
+
+        <!-- ===== Cấp 1 ===== -->
+        <record id="tpl_l_rot" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">10</field>
+            <field name="code">ROT</field>
+            <field name="name">Cụm rotor</field>
+            <field name="category_id" ref="cat_wtg_rot"/>
+        </record>
+        <record id="tpl_l_drv" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">20</field>
+            <field name="code">DRV</field>
+            <field name="name">Cụm truyền động</field>
+            <field name="category_id" ref="cat_wtg_drv"/>
+        </record>
+        <record id="tpl_l_gbx" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">30</field>
+            <field name="code">GBX</field>
+            <field name="name">Hộp số</field>
+            <field name="category_id" ref="cat_wtg_gbx"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_gen" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">40</field>
+            <field name="code">GEN</field>
+            <field name="name">Máy phát</field>
+            <field name="category_id" ref="cat_wtg_gen"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_ele" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">50</field>
+            <field name="code">ELE</field>
+            <field name="name">Cụm điện</field>
+            <field name="category_id" ref="cat_wtg_ele"/>
+        </record>
+        <record id="tpl_l_yaw" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">60</field>
+            <field name="code">YAW</field>
+            <field name="name">Hệ yaw</field>
+            <field name="category_id" ref="cat_wtg_yaw"/>
+        </record>
+        <record id="tpl_l_hyd" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">70</field>
+            <field name="code">HYD</field>
+            <field name="name">Hệ thuỷ lực</field>
+            <field name="category_id" ref="cat_wtg_hyd"/>
+        </record>
+        <record id="tpl_l_ctl" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">80</field>
+            <field name="code">CTL</field>
+            <field name="name">Hệ điều khiển</field>
+            <field name="category_id" ref="cat_wtg_ctl"/>
+            <field name="is_rotable_slot" eval="True"/>
+            <field name="note">Thay bộ điều khiển là đồng hồ giờ máy về 0
+                — nhớ đánh dấu "đã thay đồng hồ" khi nhập số đọc.</field>
+        </record>
+        <record id="tpl_l_sns" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">90</field>
+            <field name="code">SNS</field>
+            <field name="name">Cụm cảm biến &amp; đo gió</field>
+            <field name="category_id" ref="cat_wtg_sns"/>
+        </record>
+        <record id="tpl_l_str" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">100</field>
+            <field name="code">STR</field>
+            <field name="name">Cụm kết cấu</field>
+            <field name="category_id" ref="cat_wtg_str"/>
+        </record>
+        <record id="tpl_l_nac" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="sequence">110</field>
+            <field name="code">NAC</field>
+            <field name="name">Vỏ nacelle &amp; thiết bị nâng</field>
+            <field name="category_id" ref="cat_wtg_nac"/>
+        </record>
+
+        <!-- ===== Cấp 2 — dưới rotor ===== -->
+        <record id="tpl_l_hub" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_rot"/>
+            <field name="sequence">11</field>
+            <field name="code">HUB</field>
+            <field name="name">Moay-ơ</field>
+            <field name="category_id" ref="cat_wtg_rot_hub"/>
+        </record>
+        <record id="tpl_l_bld1" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_rot"/>
+            <field name="sequence">12</field>
+            <field name="code">BLD1</field>
+            <field name="name">Cánh số 1</field>
+            <field name="category_id" ref="cat_wtg_rot_bld"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_bld2" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_rot"/>
+            <field name="sequence">13</field>
+            <field name="code">BLD2</field>
+            <field name="name">Cánh số 2</field>
+            <field name="category_id" ref="cat_wtg_rot_bld"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_bld3" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_rot"/>
+            <field name="sequence">14</field>
+            <field name="code">BLD3</field>
+            <field name="name">Cánh số 3</field>
+            <field name="category_id" ref="cat_wtg_rot_bld"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_pch" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_rot"/>
+            <field name="sequence">15</field>
+            <field name="code">PCH</field>
+            <field name="name">Hệ pitch</field>
+            <field name="category_id" ref="cat_wtg_rot_pch"/>
+        </record>
+
+        <!-- ===== Cấp 2 — dưới truyền động ===== -->
+        <record id="tpl_l_shf" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_drv"/>
+            <field name="sequence">21</field>
+            <field name="code">SHF</field>
+            <field name="name">Trục chính &amp; ổ trục</field>
+            <field name="category_id" ref="cat_wtg_drv_shf"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_mbr" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_drv"/>
+            <field name="sequence">22</field>
+            <field name="code">MBR</field>
+            <field name="name">Phanh cơ</field>
+            <field name="category_id" ref="cat_wtg_drv_mbr"/>
+        </record>
+
+        <!-- ===== Cấp 2 — dưới cụm điện ===== -->
+        <record id="tpl_l_cnv" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_ele"/>
+            <field name="sequence">51</field>
+            <field name="code">CNV</field>
+            <field name="name">Bộ biến đổi công suất</field>
+            <field name="category_id" ref="cat_wtg_ele_cnv"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_l_trf" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_ele"/>
+            <field name="sequence">52</field>
+            <field name="code">TRF</field>
+            <field name="name">Máy biến áp máy</field>
+            <field name="category_id" ref="cat_wtg_ele_trf"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+
+        <!-- ===== Cấp 2 — dưới kết cấu ===== -->
+        <record id="tpl_l_twr" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_str"/>
+            <field name="sequence">101</field>
+            <field name="code">TWR</field>
+            <field name="name">Tháp</field>
+            <field name="category_id" ref="cat_wtg_str_twr"/>
+        </record>
+        <record id="tpl_l_fnd" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_wtg"/>
+            <field name="parent_line_id" ref="tpl_l_str"/>
+            <field name="sequence">102</field>
+            <field name="code">FND</field>
+            <field name="name">Móng</field>
+            <field name="category_id" ref="cat_wtg_str_fnd"/>
+        </record>
+
+    </data>
+</odoo>

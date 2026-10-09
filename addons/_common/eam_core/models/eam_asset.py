@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class EamAsset(models.Model):
@@ -80,6 +81,24 @@ class EamAsset(models.Model):
          ('expiring', 'Sắp hết'), ('expired', 'Hết hạn')],
         string='Tình trạng bảo hành', compute='_compute_warranty')
 
+    # ── Cây LẮP RÁP: vật nằm trong vật, ĐI THEO VẬT.
+    #
+    # Khác hẳn cây vị trí chức năng. Cây vị trí trả lời "vị trí 7 hỏng
+    # hộp số mấy lần" — lỗi nền móng, dòng gió hay lắp đặt. Cây lắp ráp
+    # trả lời câu NGƯỢC LẠI: "con hộp số này đã hỏng ở mấy vị trí" —
+    # lỗi lô hàng. Tháo hộp số đem đi đại tu thì ổ trục bên trong đi
+    # theo nó, chứ không ở lại chỗ cũ. Trộn hai cây làm một là mất một
+    # trong hai câu hỏi.
+    parent_id = fields.Many2one(
+        'eam.asset', string='Lắp trong tài sản', ondelete='restrict',
+        index=True, tracking=True,
+        help='Cấu phần nằm BÊN TRONG một tài sản khác và đi theo nó khi '
+             'tháo ra. Khác với vị trí chức năng — chỗ thì ở lại.')
+    child_ids = fields.One2many(
+        'eam.asset', 'parent_id', string='Cấu phần bên trong')
+    child_count = fields.Integer(
+        string='Số cấu phần bên trong', compute='_compute_child_count',
+        store=True)
     installation_ids = fields.One2many(
         'eam.installation', 'asset_id', string='Lịch sử lắp đặt')
     current_installation_id = fields.Many2one(
@@ -112,6 +131,17 @@ class EamAsset(models.Model):
     _uniq_serial = models.Constraint(
         'UNIQUE(company_id, category_id, serial_no)',
         'Số sê-ri đã tồn tại cho loại cấu phần này.')
+
+    @api.depends('child_ids')
+    def _compute_child_count(self):
+        for a in self:
+            a.child_count = len(a.child_ids)
+
+    @api.constrains('parent_id')
+    def _check_vong_lap_rap(self):
+        if self._has_cycle('parent_id'):
+            raise ValidationError(_(
+                'Cấu phần không được lắp lồng vòng vào chính nó.'))
 
     @api.depends('installation_ids.is_current',
                  'installation_ids.location_id')

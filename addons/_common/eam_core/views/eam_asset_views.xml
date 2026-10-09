@@ -12,6 +12,10 @@
                 <field name="name" width="300px"/>
                 <field name="serial_no" string="Sê-ri" width="160px"/>
                 <field name="category_id" string="Loại" width="220px"/>
+                <field name="parent_id" string="Lắp trong" optional="hide"
+                       width="200px"/>
+                <field name="child_count" string="Cấu phần trong"
+                       optional="hide"/>
                 <field name="current_location_id" string="Đang lắp tại"
                        width="220px"/>
                 <field name="is_rotable" string="Quay vòng"/>
@@ -76,6 +80,31 @@
                             <field name="is_refurbished"/>
                             <field name="owner_partner_id"/>
                             <field name="criticality"/>
+                        </group>
+                        <group string="Cây lắp ráp" colspan="2">
+                            <field name="parent_id"
+                                   options="{'no_create': True}"/>
+                            <field name="child_count"/>
+                            <field name="child_ids" nolabel="1" colspan="2"
+                                   invisible="not child_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="serial_no"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                            <div class="text-muted" colspan="2">
+                                <b>Cây lắp ráp đi THEO VẬT</b>, khác cây vị
+                                trí chức năng vốn ở lại CHỖ. Tháo hộp số
+                                đem đại tu thì ổ trục bên trong đi theo
+                                nó. Hai cây trả lời hai câu khác nhau:
+                                <i>"vị trí này hỏng hộp số mấy lần"</i>
+                                (lỗi nền móng, dòng gió, lắp đặt) và
+                                <i>"con hộp số này hỏng ở mấy vị trí"</i>
+                                (lỗi lô hàng).
+                            </div>
                         </group>
                         <group string="Vị trí">
                             <field name="is_installed"/>

@@ -11,3 +11,7 @@ access_eam_time_category_user,eam.time.category.user,model_eam_time_category,bas
 access_eam_time_category_mgr,eam.time.category.mgr,model_eam_time_category,base.group_system,1,1,1,1
 access_eam_outage_user,eam.outage.user,model_eam_outage,base.group_user,1,1,1,0
 access_eam_outage_mgr,eam.outage.mgr,model_eam_outage,base.group_system,1,1,1,1
+access_eam_struct_tpl_user,eam.structure.template.user,model_eam_structure_template,base.group_user,1,0,0,0
+access_eam_struct_tpl_mgr,eam.structure.template.mgr,model_eam_structure_template,base.group_system,1,1,1,1
+access_eam_struct_line_user,eam.structure.template.line.user,model_eam_structure_template_line,base.group_user,1,0,0,0
+access_eam_struct_line_mgr,eam.structure.template.line.mgr,model_eam_structure_template_line,base.group_system,1,1,1,1

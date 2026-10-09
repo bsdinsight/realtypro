@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_structure_template_list" model="ir.ui.view">
+        <field name="name">eam.structure.template.list</field>
+        <field name="model">eam.structure.template</field>
+        <field name="arch" type="xml">
+            <list string="Mẫu cấu trúc cấu phần">
+                <field name="code" width="140px"/>
+                <field name="name" width="320px"/>
+                <field name="category_id"/>
+                <field name="line_count" string="Số vị trí"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_structure_template_form" model="ir.ui.view">
+        <field name="name">eam.structure.template.form</field>
+        <field name="model">eam.structure.template</field>
+        <field name="arch" type="xml">
+            <form string="Mẫu cấu trúc cấu phần">
+                <header>
+                    <button name="action_ap_dung_toan_bo" type="object"
+                            string="Sinh vị trí cho toàn bộ thiết bị"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_inline"
+                                   placeholder="Mã"/>
+                            <field name="name" class="oe_inline"
+                                   placeholder="Tên mẫu"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="line_count"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        Mẫu sinh ra <b>cây VỊ TRÍ chức năng</b> — tức CHỖ,
+                        tồn tại suốt đời nhà máy. Hộp số thay mấy lần thì
+                        chỗ đó vẫn thế. Lịch sử bám vào đây trả lời câu
+                        <i>"vị trí này hỏng hộp số mấy lần"</i> — câu chỉ
+                        ra lỗi nền móng, dòng gió hay lắp đặt.<br/>
+                        Khác với <b>cây lắp ráp tài sản</b> (ô "Lắp trong
+                        tài sản") vốn trả lời câu ngược lại: <i>"con hộp
+                        số này đã hỏng ở mấy vị trí"</i> — câu chỉ ra lỗi
+                        lô hàng.
+                    </div>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="code" width="130px"/>
+                            <field name="name" width="300px"/>
+                            <field name="category_id" width="260px"/>
+                            <field name="parent_line_id" width="220px"
+                                   domain="[('template_id', '=', parent.id)]"/>
+                            <field name="level" string="Cấp"/>
+                            <field name="is_rotable_slot"
+                                   string="Quay vòng"/>
+                            <field name="note" optional="hide"/>
+                        </list>
+                    </field>
+                    <group string="Ghi chú">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_structure_template" model="ir.actions.act_window">
+        <field name="name">Mẫu cấu trúc cấu phần</field>
+        <field name="res_model">eam.structure.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_eam_structure_template" name="Mẫu cấu trúc cấu phần"
+              parent="menu_eam_config"
+              action="action_eam_structure_template" sequence="15"/>
+
+</odoo>

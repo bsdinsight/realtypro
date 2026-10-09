@@ -75,6 +75,12 @@ class EamLocation(models.Model):
         string='Số tài sản đang lắp', compute='_compute_asset_count',
         store=True)
 
+    # Nhà máy của vị trí này — leo ngược cây tới nút gốc. LƯU lại vì
+    # pane lọc và mọi báo cáo theo nhà máy đều cần lọc được bằng domain,
+    # mà trường tính không lưu thì không đưa vào domain được.
+    plant_id = fields.Many2one(
+        'eam.location', string='Thuộc nhà máy', compute='_compute_plant',
+        store=True, recursive=True, index=True)
     company_id = fields.Many2one(
         'res.company', string='Công ty', required=True,
         default=lambda self: self.env.company, index=True)
@@ -104,6 +110,12 @@ class EamLocation(models.Model):
                 l.complete_code = l.code or ''
                 l.complete_name = l.name or ''
                 l.level = 1
+
+    @api.depends('location_type', 'parent_id.plant_id')
+    def _compute_plant(self):
+        for l in self:
+            l.plant_id = (l if l.location_type == 'plant'
+                          else l.parent_id.plant_id)
 
     @api.depends('location_type')
     def _compute_allow_multiple(self):

@@ -111,6 +111,9 @@ class EamAsset(models.Model):
         string='Đang lắp trên máy', compute='_compute_current', store=True)
     install_count = fields.Integer(
         string='Số lần lắp', compute='_compute_current', store=True)
+    plant_id = fields.Many2one(
+        'eam.location', string='Thuộc nhà máy',
+        related='current_location_id.plant_id', store=True, index=True)
 
     origin = fields.Char(
         string='Nguồn gốc',

@@ -16,6 +16,8 @@
                        width="200px"/>
                 <field name="child_count" string="Cấu phần trong"
                        optional="hide"/>
+                <field name="plant_id" string="Nhà máy" optional="hide"
+                       width="190px"/>
                 <field name="current_location_id" string="Đang lắp tại"
                        width="220px"/>
                 <field name="is_rotable" string="Quay vòng"/>
@@ -163,7 +165,37 @@
                 <field name="code"/>
                 <field name="serial_no"/>
                 <field name="category_id"/>
+                <field name="plant_id"/>
                 <field name="current_location_id"/>
+                <!--
+                    Pane lọc bên trái.
+
+                    Ba điều đã học về `searchpanel` và đều phải né:
+
+                    ① Chỉ nhận m2o / m2m / selection **của chính model**.
+                       Trường related hoặc trường tính KHÔNG LƯU thì đưa
+                       vào là vỡ — đó là lý do `plant_id` phải là trường
+                       lưu trên chính tài sản, và vì sao không có ô "tình
+                       trạng bảo hành" ở đây (nó phụ thuộc hôm nay nên
+                       không được lưu).
+                    ② KHÔNG dùng `groupby`: nó sinh lỗi `group_domain=None`.
+                    ③ Pane không tự co theo lựa chọn ở ô khác — chọn một
+                       nhà máy thì danh sách loại cấu phần vẫn hiện đủ.
+                       Bật `enable_counters` để người dùng thấy ngay ô nào
+                       bằng 0 thay vì bấm vào rồi mới biết trống.
+                -->
+                <searchpanel>
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="category_id" string="Loại cấu phần"
+                           icon="fa-sitemap" enable_counters="1"
+                           expand="1"/>
+                    <field name="state" string="Vòng đời" select="multi"
+                           icon="fa-heartbeat" enable_counters="1"/>
+                    <field name="criticality" string="Mức quan trọng"
+                           select="multi" icon="fa-exclamation-triangle"
+                           enable_counters="1"/>
+                </searchpanel>
                 <filter name="f_lap" string="Đang lắp trên máy"
                         domain="[('is_installed', '=', True)]"/>
                 <filter name="f_kho" string="Không lắp trên máy"
@@ -179,6 +211,8 @@
                 <filter name="f_bh_het" string="Bảo hành đã hết"
                         domain="[('warranty_end', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
                 <filter name="g_cat" string="Loại cấu phần"
                         context="{'group_by': 'category_id'}"/>
                 <filter name="g_loc" string="Vị trí đang lắp"

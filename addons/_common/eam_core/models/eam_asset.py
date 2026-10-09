@@ -99,6 +99,17 @@ class EamAsset(models.Model):
     child_count = fields.Integer(
         string='Số cấu phần bên trong', compute='_compute_child_count',
         store=True)
+    # Cấp tài sản — thứ cứu sổ tài sản khỏi chết chìm.
+    #
+    # Một nhà máy 30 trụ × 22 cấu phần là gần bảy trăm dòng, trong đó
+    # chỉ 30 dòng là CÁI MÁY. Mở danh sách ra mà không tách cấp thì hai
+    # mươi dòng đầu toàn cánh quạt, và người dùng tưởng mất máy. Mặc
+    # định màn hình chỉ hiện thiết bị chính; muốn xem cấu phần thì bấm
+    # vào máy, hoặc đổi ô lọc.
+    asset_level = fields.Selection(
+        [('main', 'Thiết bị chính'), ('component', 'Cấu phần')],
+        string='Cấp tài sản', compute='_compute_child_count', store=True,
+        index=True)
     installation_ids = fields.One2many(
         'eam.installation', 'asset_id', string='Lịch sử lắp đặt')
     current_installation_id = fields.Many2one(
@@ -135,10 +146,11 @@ class EamAsset(models.Model):
         'UNIQUE(company_id, category_id, serial_no)',
         'Số sê-ri đã tồn tại cho loại cấu phần này.')
 
-    @api.depends('child_ids')
+    @api.depends('child_ids', 'parent_id')
     def _compute_child_count(self):
         for a in self:
             a.child_count = len(a.child_ids)
+            a.asset_level = 'component' if a.parent_id else 'main'
 
     @api.constrains('parent_id')
     def _check_vong_lap_rap(self):

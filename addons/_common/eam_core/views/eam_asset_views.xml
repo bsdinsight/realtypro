@@ -12,10 +12,12 @@
                 <field name="name" width="300px"/>
                 <field name="serial_no" string="Sê-ri" width="160px"/>
                 <field name="category_id" string="Loại" width="220px"/>
-                <field name="parent_id" string="Lắp trong" optional="hide"
-                       width="200px"/>
                 <field name="child_count" string="Cấu phần trong"
                        optional="hide"/>
+                <field name="asset_level" string="Cấp" optional="show"
+                       width="130px"/>
+                <field name="parent_id" string="Lắp trong" optional="hide"
+                       width="200px"/>
                 <field name="plant_id" string="Nhà máy" optional="hide"
                        width="190px"/>
                 <field name="current_location_id" string="Đang lắp tại"
@@ -185,6 +187,9 @@
                        bằng 0 thay vì bấm vào rồi mới biết trống.
                 -->
                 <searchpanel>
+                    <field name="asset_level" string="Cấp tài sản"
+                           select="multi" icon="fa-layer-group"
+                           enable_counters="1"/>
                     <field name="plant_id" string="Nhà máy"
                            icon="fa-industry" enable_counters="1"/>
                     <field name="category_id" string="Loại cấu phần"
@@ -196,6 +201,11 @@
                            select="multi" icon="fa-exclamation-triangle"
                            enable_counters="1"/>
                 </searchpanel>
+                <filter name="f_chinh" string="Chỉ thiết bị chính"
+                        domain="[('parent_id', '=', False)]"/>
+                <filter name="f_cauphan" string="Chỉ cấu phần"
+                        domain="[('parent_id', '!=', False)]"/>
+                <separator/>
                 <filter name="f_lap" string="Đang lắp trên máy"
                         domain="[('is_installed', '=', True)]"/>
                 <filter name="f_kho" string="Không lắp trên máy"
@@ -226,6 +236,10 @@
         <field name="name">Tài sản</field>
         <field name="res_model">eam.asset</field>
         <field name="view_mode">list,form</field>
+        <!-- Mặc định CHỈ hiện thiết bị chính. Gần bảy trăm cấu phần đổ
+             vào một danh sách phẳng thì hai mươi dòng đầu toàn cánh
+             quạt và người dùng tưởng mất máy. -->
+        <field name="context">{'search_default_f_chinh': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiley_face">Chưa có tài sản nào</p>
             <p>Tài sản là <b>vật</b>, mang theo lịch sử của chính nó qua mọi

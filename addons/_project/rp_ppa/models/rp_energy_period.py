@@ -77,9 +77,30 @@ class RpEnergyPeriod(models.Model):
              'là khoản đòi NHÀ THẦU, không phải doanh thu bán điện.')
     currency_id = fields.Many2one(
         'res.currency', string='Đồng tiền',
-        default=lambda self: self.env.ref('base.USD',
-                                          raise_if_not_found=False)
-        or self.env.company.currency_id)
+        compute='_compute_currency', store=True, readonly=False,
+        help='Lấy từ HỢP ĐỒNG mua bán điện của dự án. Sửa được, nhưng '
+             'sửa lệch khỏi hợp đồng là tự chuốc một con số sai.')
+
+    @api.depends('project_id')
+    def _compute_currency(self):
+        """Đồng tiền của kỳ đi theo HỢP ĐỒNG, không mặc định cứng.
+
+        Trước đây trường này mặc định đô la Mỹ. Dự án bán trong nước thu
+        bằng đồng thì mọi con số vẫn là đồng, nhưng nhãn hiện ra là đô —
+        "200.316.567.540 USD" cho một nhà máy 48 MW. Sai hơn hai vạn lần
+        mà màn hình trông vẫn bình thường, vì chỉ có cái nhãn sai.
+
+        KHÔNG khai ``default``: trường vừa tính vừa cho sửa mà có default
+        thì Odoo đưa default vào vals lúc tạo và hàm tính KHÔNG chạy —
+        đúng cái bẫy đã gặp ở ``cost_bearer``.
+        """
+        Ppa = self.env['rp.ppa']
+        cty = self.env.company.currency_id
+        for rec in self:
+            hd = Ppa.search([('project_id', '=', rec.project_id.id)],
+                            order='allocation_percent desc', limit=1)
+            rec.currency_id = (hd.currency_id or rec.project_id.currency_id
+                               or cty)
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, index=True)
 

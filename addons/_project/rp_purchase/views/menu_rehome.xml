@@ -28,16 +28,21 @@
     <menuitem id="menu_procure_config_vendor" name="Nhà cung cấp"
               parent="menu_procure_config"
               action="account.res_partner_action_supplier" sequence="10"/>
-    <!-- KHÔNG khai "Sản phẩm mua" ở đây.
-         Nhánh Kho đã có "Vật tư & phụ tùng" trỏ cùng model
-         `product.template`, cùng domain rỗng, cùng bộ lọc mặc định
-         `filter_to_purchase` — tức y hệt. Thêm vào là dựng cửa thứ ba
-         vào cùng một danh sách.
+    <!-- "Sản phẩm mua" và "Vật tư & phụ tùng" (nhánh Kho) trỏ CÙNG model
+         `product.template`, cùng domain rỗng, cùng bộ lọc mặc định. Nhìn
+         như thừa, nhưng CỐ Ý GIỮ CẢ HAI: chúng là cửa của hai bộ phận
+         khác nhau — mua hàng khai nhà cung cấp và giá, kho khai tồn và
+         vị trí. Triển khai thật thì mỗi menu thuộc về một bộ phận, và
+         gộp lại thành một cửa là bắt hai đội đi chung một lối.
 
-         Khác hẳn vụ "Mua hàng": ở đó hai cửa vào cùng bảng GIAO DỊCH
-         với bộ lọc KHÁC nhau nên bản ghi trốn được. Ở đây chỉ là hai
-         lối tắt vào cùng dữ liệu tham chiếu — không nguy hiểm, chỉ
-         rườm rà, và cách chữa là bớt lối chứ không phải ẩn màn. -->
+         Ranh giới cần nhớ: cái KHÔNG được phép không phải là trùng cửa,
+         mà là cửa GIẤU BẢN GHI — như "Mua hàng" gốc của Odoo, nơi hai
+         lối vào cùng bảng giao dịch mang bộ lọc khác nhau nên đơn mua
+         trốn được. Trùng cửa vào dữ liệu tham chiếu thì vô hại. -->
+    <menuitem id="menu_procure_config_product" name="Sản phẩm mua"
+              parent="menu_procure_config"
+              action="purchase.product_normal_action_puchased"
+              sequence="20"/>
     <menuitem id="menu_procure_config_pricelist" name="Bảng giá nhà cung cấp"
               parent="menu_procure_config"
               action="product.product_supplierinfo_type_action"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty Loan — Borrowing Base (Hạn mức khả dụng)',
-    'version': '19.0.2.2.0',
+    'version': '19.0.2.3.0',
     'category': 'Realty/Loan',
     'summary': 'Cơ sở bảo đảm 2 tầng cho tổng thầu: quyền đòi nợ tự định '
                'giá theo sản lượng + tỷ lệ cho vay + khả dụng thực tế + '
@@ -58,6 +58,7 @@ có đủ các module đó.
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/re_loan_borrowing_base_rules.xml',
         # re_loan_project_axis_views.xml nạp TRƯỚC: cả nó và
         # re_loan_borrowing_views.xml cùng kế thừa form HĐTD, mà Odoo
         # xác thực view trên trạng thái DB HIỆN TẠI. Khi nâng cấp bản

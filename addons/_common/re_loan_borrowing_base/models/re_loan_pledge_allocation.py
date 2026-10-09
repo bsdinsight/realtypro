@@ -68,6 +68,13 @@ class ReLoanPledgeAllocation(models.Model):
     pledge_state = fields.Selection(
         related='pledge_id.state', string='Trạng thái', store=True, index=True)
     currency_id = fields.Many2one(related='pledge_id.currency_id')
+    # CÓ LƯU, không phải related thường: luật bản ghi đa công ty lọc
+    # bằng SQL trên chính bảng này. Không lưu thì tìm kiếm thẳng trên
+    # bảng phân bổ vẫn trả về dòng của công ty khác — ACL chỉ nói được
+    # đọc MODEL nào, không nói được đọc DÒNG nào.
+    company_id = fields.Many2one(
+        related='pledge_id.company_id', string='Công ty',
+        store=True, index=True)
 
     amount = fields.Monetary(
         string='Giá trị phân bổ', currency_field='currency_id',

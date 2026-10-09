@@ -44,7 +44,11 @@ class ReLeaseAnnex(models.Model):
     applied = fields.Boolean(
         string='Đã áp dụng', readonly=True, copy=False)
     currency_id = fields.Many2one(related='contract_id.currency_id')
-    company_id = fields.Many2one(related='contract_id.company_id')
+    # CÓ LƯU: luật bản ghi đa công ty lọc bằng SQL trên chính bảng
+    # này. Related không lưu thì tìm kiếm thẳng trên phụ lục vẫn trả
+    # về phụ lục của công ty khác.
+    company_id = fields.Many2one(
+        related='contract_id.company_id', store=True, index=True)
 
     # --- Trường theo loại ---
     new_rent_per_period = fields.Monetary(

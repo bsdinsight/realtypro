@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Luật bản ghi đa công ty cho Bút toán phân hệ vay.
+
+    Mỗi bản ghi mang `company_id`, nên áp đúng mẫu đa công ty chuẩn của
+    Odoo: lọc theo `company_ids` của phiên (các công ty người dùng đang
+    được phép xem trên thanh chuyển công ty).
+
+    Luật khai `global="True"` — áp cho MỌI người dùng, kể cả nhóm quản
+    trị nghiệp vụ. Không có luật này thì một quản lý thuộc Công ty A
+    đọc được dữ liệu của Công ty B: ACL chỉ nói ĐƯỢC ĐỌC MODEL NÀO,
+    không nói ĐƯỢC ĐỌC DÒNG NÀO. Super user (base.group_system) vẫn
+    vượt ir.rule nên quản trị hệ thống giữ được tầm nhìn xuyên công ty.
+
+    Mẫu: ('company_id', 'in', company_ids) — chạy đúng cả khi người
+    dùng được gán nhiều công ty và chuyển qua lại trên thanh công ty.
+-->
+<odoo>
+
+    <record id="rule_re_loan_fx_revaluation_company" model="ir.rule">
+        <field name="name">re.loan.fx.revaluation: multi-company</field>
+        <field name="model_id" ref="model_re_loan_fx_revaluation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_fx_revaluation_line_company" model="ir.rule">
+        <field name="name">re.loan.fx.revaluation.line: multi-company</field>
+        <field name="model_id" ref="model_re_loan_fx_revaluation_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

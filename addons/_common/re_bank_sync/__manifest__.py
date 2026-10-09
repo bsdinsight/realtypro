@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty - Bank Sync (SePay)',
-    'version': '19.0.1.0.3',
+    'version': '19.0.1.0.4',
     'category': 'Realty/Finance',
     'summary': 'Sổ đệm giao dịch ngân hàng + webhook SePay + đối soát. '
                'Nguồn-bất-khả-tri: SePay / file / AI / thủ công.',
@@ -25,6 +25,7 @@ Tầng đệm nhận giao dịch ngân hàng và đối soát vào chứng từ 
     'depends': ['base', 'mail', 're_integration_hub'],
     'data': [
         'security/ir.model.access.csv',
+        'security/re_bank_sync_rules.xml',
         # views TRƯỚC wizards: wizards/sepay_simulate_views.xml gắn menu vào
         # menu_re_bank_sync_root khai trong views/ — đảo thứ tự thì cài mới
         # sẽ nổ "External ID not found" (cài lại trên DB đã có menu thì

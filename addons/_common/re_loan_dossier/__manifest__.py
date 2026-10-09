@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Hồ sơ giải ngân',
-    'version': '19.0.1.1.1',
+    'version': '19.0.1.2.0',
     'category': 'Realty/Finance',
     'summary': 'Hồ sơ giải ngân theo hoá đơn: mỗi lần giải ngân gồm '
                'nhiều hồ sơ, mỗi hồ sơ một hoá đơn nhà thầu.',
@@ -33,6 +33,7 @@ dùng bộ Thi công của Realty thì cài `rp_loan_bridge`; khách có hệ h�
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/re_loan_dossier_rules.xml',
         'views/re_loan_disbursement_dossier_views.xml',
     ],
     'installable': True,

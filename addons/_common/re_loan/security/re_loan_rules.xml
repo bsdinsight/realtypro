@@ -100,4 +100,39 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="rule_re_loan_adjustment_note_company" model="ir.rule">
+        <field name="name">re.loan.adjustment.note: multi-company</field>
+        <field name="model_id" ref="model_re_loan_adjustment_note"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_bank_advice_company" model="ir.rule">
+        <field name="name">re.loan.bank.advice: multi-company</field>
+        <field name="model_id" ref="model_re_loan_bank_advice"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_bank_advice_line_company" model="ir.rule">
+        <field name="name">re.loan.bank.advice.line: multi-company</field>
+        <field name="model_id" ref="model_re_loan_bank_advice_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_rate_delta_line_company" model="ir.rule">
+        <field name="name">re.loan.rate.delta.line: multi-company</field>
+        <field name="model_id" ref="model_re_loan_rate_delta_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_re_loan_payment_plan_report_company" model="ir.rule">
+        <field name="name">re.loan.payment.plan.report: multi-company</field>
+        <field name="model_id" ref="model_re_loan_payment_plan_report"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
 </odoo>

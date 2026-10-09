@@ -130,3 +130,61 @@ class TestLoanMultiCompanyIsolation(TransactionCase):
         facs_for_a = Facility.with_user(self.user_a).search([])
         self.assertIn(fac_a, facs_for_a)
         self.assertNotIn(fac_b, facs_for_a)
+
+
+@tagged('post_install', '-at_install', 're_loan', 're_loan_security')
+class TestCompanyRuleCoverage(TransactionCase):
+    """Không để sót model nào mang dữ liệu công ty mà thiếu luật.
+
+    ACL chỉ nói ĐƯỢC ĐỌC MODEL NÀO, không nói ĐƯỢC ĐỌC DÒNG NÀO. Một
+    model mang `company_id` mà thiếu ir.rule toàn cục là người dùng
+    công ty A đọc được dữ liệu công ty B — kể cả quản lý nghiệp vụ,
+    vì nhóm quản lý không vượt được ir.rule.
+
+    Bài kiểm quét MỌI model của bộ Realty đang cài trong DB kiểm thử,
+    nên thêm model mới mà quên luật là nổ ngay tại đây, không chờ ai
+    phát hiện trên môi trường khách.
+    """
+
+    # Model cố ý KHÔNG có luật — kèm lý do. Thêm vào đây là một quyết
+    # định, không phải cách làm cho bài kiểm im lặng.
+    EXEMPT = {
+        # Dữ liệu danh mục dùng chung mọi công ty.
+        're.loan.collateral.type',
+        're.loan.purpose',
+    }
+
+    def test_every_company_model_has_global_rule(self):
+        IrModel = self.env['ir.model']
+        Rule = self.env['ir.rule']
+        missing = []
+        for model_name in sorted(self.env.registry.keys()):
+            model = self.env[model_name]
+            # Transient: bản ghi riêng từng người dùng, Odoo tự dọn và
+            # tự chặn. Abstract: không có bảng để lọc.
+            if model._transient or model._abstract:
+                continue
+            if model_name in self.EXEMPT:
+                continue
+            rec = IrModel.search([('model', '=', model_name)], limit=1)
+            modules = set((rec.modules or '').replace(' ', '').split(','))
+            if not any(m.startswith(('re_', 'rp_')) for m in modules):
+                continue
+            field = model._fields.get('company_id')
+            if not field:
+                continue
+            if not field.store:
+                missing.append('%s (company_id KHÔNG lưu — luật không '
+                               'lọc được bằng SQL)' % model_name)
+                continue
+            rules = Rule.sudo().search([
+                ('model_id.model', '=', model_name),
+                ('global', '=', True),
+            ])
+            if not any('company_id' in (r.domain_force or '')
+                       for r in rules):
+                missing.append('%s (thiếu ir.rule toàn cục)' % model_name)
+        self.assertFalse(
+            missing,
+            'Model mang dữ liệu công ty nhưng không lọc theo công ty:\n  '
+            + '\n  '.join(missing))

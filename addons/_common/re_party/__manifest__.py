@@ -1,6 +1,6 @@
 {
     'name': 'Realty - Party',
-    'version': '19.0.0.5.0',
+    'version': '19.0.0.6.0',
     'category': 'Realty',
     'summary': 'Vietnam-specific identity fields on res.partner '
                '(tax code, national ID, household registration) shared '

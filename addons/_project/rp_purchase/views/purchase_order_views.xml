@@ -72,8 +72,16 @@
         <field name="name">Đơn mua (chủ đầu tư)</field>
         <field name="res_model">purchase.order</field>
         <field name="view_mode">list,form</field>
-        <field name="domain">[('rp_project_id', '!=', False)]</field>
-        <field name="context">{'search_default_group_project': 1}</field>
+        <!-- KHÔNG lọc cứng ở action nữa.
+             Trước đây domain là [('rp_project_id','!=',False)]: đơn nào
+             không gắn dự án thì màn này KHÔNG BAO GIỜ hiện — tiền đã cam
+             kết mà không ai nhìn thấy, và không có cách nào biết là
+             mình đang thiếu. Giờ lọc bằng BỘ LỌC MẶC ĐỊNH: mở ra vẫn chỉ
+             thấy đơn có dự án, nhưng bỏ bộ lọc là thấy hết, và có sẵn
+             một bộ lọc chỉ ra đúng những đơn đang lọt. -->
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_f_co_du_an': 1,
+                               'search_default_group_project': 1}</field>
         <field name="search_view_id"
                ref="view_purchase_order_search_procure"/>
         <field name="view_id" ref="view_purchase_order_list_procure"/>
@@ -102,6 +110,15 @@
                  gốc của Odoo; `draft` thì không tồn tại (tên thật là
                  `draft_rfqs`). -->
             <filter name="my_purchases" position="before">
+                <filter name="f_co_du_an" string="Có gắn dự án"
+                        domain="[('rp_project_id', '!=', False)]"/>
+                <!-- Bộ lọc làm lộ ra chỗ tiền chảy đi mà không ai thấy:
+                     đơn mua không gắn dự án không vào được chi phí dự án,
+                     không vào EVM, không vào đối chiếu dự toán. Bày nó ra
+                     như một việc cần sửa, thay vì lọc cho khuất mắt. -->
+                <filter name="f_chua_du_an" string="CHƯA gắn dự án"
+                        domain="[('rp_project_id', '=', False)]"/>
+                <separator/>
                 <filter name="group_project" string="Dự án"
                         context="{'group_by': 'rp_project_id'}"/>
             </filter>

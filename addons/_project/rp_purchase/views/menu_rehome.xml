@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Dọn nhà TRƯỚC khi ẩn "Mua hàng" gốc của Odoo.
+
+        Bốn màn hình dưới đây hiện chỉ có đường vào qua ứng dụng gốc đó.
+        Ẩn nó mà chưa có chỗ khác là cắt mất đường vào cấu hình — người
+        dùng không đặt được bảng giá nhà cung cấp, không mở được thiết
+        lập mua hàng, và không ai hiểu vì sao.
+
+        KHÔNG đổi cha của các menu lõi. `<menuitem>` của module `purchase`
+        ghi đè `parent_id` VÔ ĐIỀU KIỆN mỗi lượt nâng cấp, nên dời chúng
+        đi là chúng tự quay về — âm thầm, vào một lúc nâng cấp vì việc
+        khác. Ở đây khai menu MỚI trỏ vào CÙNG action; menu lõi cứ nằm
+        yên chỗ cũ và bị ẩn cùng cả nhánh.
+    -->
+
+    <menuitem id="menu_procure_reports" name="Báo cáo"
+              parent="menu_procurement" sequence="80"/>
+    <menuitem id="menu_procure_report_purchase" name="Phân tích mua hàng"
+              parent="menu_procure_reports"
+              action="purchase.action_purchase_order_report_all"
+              sequence="10"/>
+
+    <menuitem id="menu_procure_config" name="Cấu hình"
+              parent="menu_procurement" sequence="90"
+              groups="base.group_system"/>
+    <menuitem id="menu_procure_config_vendor" name="Nhà cung cấp"
+              parent="menu_procure_config"
+              action="account.res_partner_action_supplier" sequence="10"/>
+    <menuitem id="menu_procure_config_product" name="Sản phẩm mua"
+              parent="menu_procure_config"
+              action="purchase.product_normal_action_puchased"
+              sequence="20"/>
+    <menuitem id="menu_procure_config_pricelist" name="Bảng giá nhà cung cấp"
+              parent="menu_procure_config"
+              action="product.product_supplierinfo_type_action"
+              sequence="30"/>
+    <menuitem id="menu_procure_config_settings" name="Thiết lập mua hàng"
+              parent="menu_procure_config"
+              action="purchase.action_purchase_configuration"
+              sequence="90"/>
+
+</odoo>

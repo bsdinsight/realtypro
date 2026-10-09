@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Nhánh gốc "Mua sắm", sequence 20 — sau Tài chính (12), trước
-         Hợp đồng (30).
+    <!--
+        "Mua sắm" là ỨNG DỤNG GỐC, không nằm trong EPCOne.
 
-         Để trong Tài chính thì người dùng tưởng nó nhỏ, mà không đúng:
-         giai đoạn xây dựng chủ đầu tư mua ít vì nhà thầu mua hộ, nhưng
-         sau COD thì nhà máy tự mua suốt 25 năm — phụ tùng, dịch vụ bảo
-         trì, vật tư vận hành. Quy mô thật của phân hệ nằm ở phần đời
-         sau, không ở hai năm xây dựng.
+        Lý do quyết định: khách chỉ mua EAMOne — nhà máy đang vận hành,
+        không xây gì — vẫn mua phụ tùng suốt 25 năm. Để nhánh này trong
+        EPCOne thì họ phải mở một ứng dụng họ không mua chỉ để đặt một
+        con vòng bi. Cùng lý do với "Quản lý Vay" và "Đối soát ngân
+        hàng": thứ dùng chung giữa các sản phẩm thì đứng riêng.
 
-         Chuỗi đầy đủ ở đây:
-           Yêu cầu mua → Đơn mua → Nhận hàng & nghiệm thu
-             → Đề nghị thanh toán → Hoá đơn → Thanh toán -->
+        Lý do cũ vẫn đúng và vẫn nên nhớ — vì sao nó không nằm trong
+        Tài chính: giai đoạn xây dựng chủ đầu tư mua ít vì nhà thầu mua
+        hộ, nhưng sau COD thì nhà máy tự mua suốt 25 năm — phụ tùng,
+        dịch vụ bảo trì, vật tư vận hành. Quy mô thật của phân hệ nằm ở
+        phần đời sau, không ở hai năm xây dựng.
+
+        BỎ thuộc tính `parent` là ĐỦ để đưa lên gốc, kể cả trên cơ sở dữ
+        liệu đã chạy: `_tag_menuitem` khởi tạo `values` với
+        `parent_id: False` rồi mới ghi đè nếu có `parent`. Không cần bản
+        chuyển đổi. Lưu ý `web_icon` chỉ được ghi khi KHÔNG có `parent`
+        (nó nằm trong cùng chuỗi elif) — thêm lại `parent` là mất icon.
+
+        Chuỗi đầy đủ:
+          Yêu cầu mua → Đơn mua → Nhận hàng & nghiệm thu
+            → Đề nghị thanh toán → Hoá đơn → Thanh toán
+    -->
     <menuitem id="menu_procurement" name="Mua sắm"
-              parent="rp_estimate.menu_realty_project_root" sequence="20"/>
+              web_icon="rp_purchase,static/description/icon.png"
+              sequence="22"/>
 </odoo>

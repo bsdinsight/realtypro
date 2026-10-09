@@ -48,6 +48,7 @@ sẽ không tách — họ sẽ chọn bừa một nhóm.
     "data": [
         "security/ir.model.access.csv",
         "data/ir_sequence.xml",
+        "data/rp_purchase_param_data.xml",
         "views/menu_root.xml",
         "views/rp_procure_panes.xml",
         "views/rp_purchase_request_views.xml",
@@ -55,8 +56,11 @@ sẽ không tách — họ sẽ chọn bừa một nhóm.
         "views/rp_goods_receipt_views.xml",
         "views/rp_payment_request_views.xml",
         "views/re_project_views.xml",
+        # Nạp SAU cùng: các mục ở đây trỏ vào action của module `purchase`
+        # và `product`, và trỏ vào nhánh gốc khai ở menu_root.xml.
+        "views/menu_rehome.xml",
     ],
     "installable": True,
-    "application": False,
+    "application": True,
     "auto_install": False,
 }

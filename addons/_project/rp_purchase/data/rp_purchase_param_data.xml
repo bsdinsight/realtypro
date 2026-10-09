@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Đặt 0 thì ứng dụng "Mua hàng" gốc của Odoo hiện lại. Dành cho
+             khách muốn dùng song song luồng mua hàng chuẩn.
+             noupdate="1": khách đã bật lại thì nâng cấp không đạp lên. -->
+        <record id="param_hide_native_purchase" model="ir.config_parameter">
+            <field name="key">rp_purchase.hide_native_purchase</field>
+            <field name="value">1</field>
+        </record>
+    </data>
+</odoo>

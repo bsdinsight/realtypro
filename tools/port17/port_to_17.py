@@ -679,6 +679,60 @@ def step_partner_project(dst):
         ', '.join(sorted(touched))))
 
 
+# ----------------------------------------------------------------------
+# Chuỗi giao diện: tiếng Việt -> tiếng Anh + i18n/vi_VN.po
+# ----------------------------------------------------------------------
+# Module đã dịch XONG. Chỉ module nằm trong danh sách này mới được đổi
+# ngôn ngữ, và với chúng thì phải phủ 100%: thiếu một chuỗi là dừng.
+# Nửa Anh nửa Việt trên cùng một màn hình còn khó dùng hơn là để
+# nguyên tiếng Việt, nên không có chế độ "dịch được chừng nào hay
+# chừng ấy".
+#
+# `vn_administrative_units` KHÔNG bao giờ vào đây: nội dung của nó là
+# TÊN RIÊNG đơn vị hành chính (Phường Bến Nghé...), dịch là sai.
+I18N_DONE = [
+    're_loan_dossier',
+]
+
+
+def step_i18n(dst):
+    import csv as _csv
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import i18n as _i18n
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'i18n_data', 'vi_en.csv')
+    if not os.path.exists(path):
+        raise SystemExit('Thiếu từ điển dịch: %s' % path)
+    mapping = {}
+    with io.open(path, encoding='utf-8') as f:
+        for row in _csv.DictReader(f):
+            if row.get('en'):
+                mapping[row['vi']] = row['en']
+    bad_ph = [vi for vi, en in mapping.items()
+              if _i18n.placeholders(vi) != _i18n.placeholders(en)]
+    if bad_ph:
+        raise SystemExit(
+            'Từ điển dịch lệch tham số thay thế (%%s, %%(x)s) ở %s chuỗi, '
+            'vd: %s' % (len(bad_ph), bad_ph[0][:70]))
+    total = po_total = 0
+    for mod in I18N_DONE:
+        n, missing, used = _i18n.apply_module(dst, mod, mapping)
+        if missing:
+            raise SystemExit(
+                'Module %s khai là ĐÃ DỊCH nhưng thiếu %s chuỗi trong từ '
+                'điển, vd: %s' % (mod, len(missing), sorted(missing)[0][:70]))
+        left = _i18n.scan(dst, [mod])
+        if left:
+            raise SystemExit(
+                'Module %s còn %s chuỗi tiếng Việt sau khi dịch, vd: %s'
+                % (mod, len(left), sorted(left)[0][:70]))
+        po_total += _i18n.write_po(dst, mod, used)
+        total += n
+    note('  %-46s %s chỗ / %s mục po / %s module'
+         % ('chuỗi giao diện -> tiếng Anh', total, po_total,
+            len(I18N_DONE)))
+
+
 def step_check_syntax(dst):
     bad = 0
     for p in walk_files(dst, '.py'):
@@ -780,6 +834,7 @@ def main():
     step_files17(dst)
     step_partner_profile(dst)
     step_partner_project(dst)
+    step_i18n(dst)
     bad = step_check_syntax(dst)
     if prev:
         step_version_guard(dst, prev)

@@ -1,0 +1,45 @@
+vi,en
+"%(n)s hồ sơ thiếu Hóa đơn. NH yêu cầu mỗi hồ sơ phải có hoá đơn của nhà thầu — nếu đây là tiền trả trước khi có hoá đơn, đổi ""Loại hồ sơ"" sang Tạm ứng.","%(n)s dossier(s) have no Invoice. The bank requires an invoice from the contractor on every dossier — if this is money paid before any invoice exists, switch ""Dossier type"" to Advance payment."
+%(n)s hồ sơ tạm ứng chưa khai Bên nhận tạm ứng. NH cần biết tiền đi đâu.,%(n)s advance-payment dossier(s) have no Advance payee. The bank needs to know where the money goes.
+: hồ sơ loại,: a dossier of type
+= Số tiền giải ngân − Σ hồ sơ. Phải bằng 0 khi gửi NH.,= Disbursement amount − Σ dossiers. Must be 0 when submitting to the bank.
+Bên nhận tạm ứng,Advance payee
+"Bản scan hoá đơn, biên bản nghiệm thu, chứng từ NH.","Scanned invoice, acceptance report, bank document."
+Bắt buộc,Required
+Chênh lệch,Difference
+Chứng từ tạm ứng,Advance payment document
+Còn lại HĐ,Invoice remaining
+Cần ít nhất 1 hồ sơ giải ngân trước khi gửi NH.,At least 1 disbursement dossier is required before submitting to the bank.
+Diễn giải,Description
+File đính kèm,Attachments
+Giá trị HĐ,Invoice total
+Giá trị hoá đơn − Σ các hồ sơ giải ngân khác đang gắn cùng hoá đơn này (bỏ hồ sơ đã huỷ).,Invoice total − Σ of the other disbursement dossiers linked to this same invoice (cancelled dossiers excluded).
+Giá trị hóa đơn,Invoice total
+Giải ngân,Disbursement
+Hoá đơn,Invoice
+"Hoá đơn: giải ngân trả hoá đơn nhà thầu đã xuất.
+Tạm ứng: trả trước theo hợp đồng, chưa có hoá đơn.","Invoice: disbursement pays an invoice already issued by the contractor.
+Advance payment: paid up front under the contract, no invoice yet."
+Hóa đơn,Invoice
+Hóa đơn từ nhà thầu (vendor bill). Lọc theo bên nhận tiền trên giải ngân. Chọn được hoá đơn CHƯA thanh toán và ĐÃ thanh toán MỘT PHẦN; bỏ hoá đơn đã trả đủ hoặc đã đảo.,Vendor bill from the contractor. Filtered by the payee on the disbursement. Unpaid and PARTIALLY paid invoices can be selected; fully paid or reversed invoices are excluded.
+Hồ sơ giải ngân,Disbursement dossiers
+Hồ sơ giải ngân (hoá đơn),Disbursement dossier (invoice)
+Loại hồ sơ,Dossier type
+Nhà thầu,Contractor
+Nhà thầu (từ GN),Contractor (from disbursement)
+Nhà thầu / nhà cung cấp nhận tiền tạm ứng. Mặc định lấy theo Bên nhận tiền của lần giải ngân.,Contractor / supplier receiving the advance payment. Defaults to the payee of the disbursement.
+Số tiền còn lại,Remaining amount
+Số tiền sẽ thanh toán kỳ này,Amount to pay this time
+Số tiền sẽ thanh toán kỳ này (%(amount)s) vượt số tiền còn lại của hoá đơn (%(remaining)s). Hoá đơn %(invoice)s đã được phân bổ ở hồ sơ giải ngân khác.,The amount to pay this time (%(amount)s) exceeds the remaining amount of the invoice (%(remaining)s). Invoice %(invoice)s is already allocated on another disbursement dossier.
+Số tiền sẽ thanh toán phải > 0.,The amount to pay must be > 0.
+Số tiền thanh toán cho hoá đơn này trong lần giải ngân hiện tại. Tự điền bằng số còn lại của hoá đơn khi chọn hoá đơn — sửa được. Σ các hồ sơ = số tiền giải ngân.,Amount paid against this invoice in the current disbursement. Filled in automatically with the invoice remaining amount when an invoice is selected — editable. Σ dossiers = disbursement amount.
+Số đề nghị tạm ứng / số hợp đồng làm căn cứ tạm ứng — số NH đọc trên bộ hồ sơ.,Advance payment request number / contract number the advance is based on — the reference the bank reads on the file.
+Thanh toán kỳ này,Paid this time
+Tài liệu đính kèm,Attached documents
+Tạm ứng,Advance payment
+Tổng giá trị các hồ sơ — phải bằng số tiền giải ngân.,Total value of the dossiers — must equal the disbursement amount.
+"cần bên nhận tạm ứng (trả trước thì chưa có hoá đơn), và Σ giá trị hồ sơ phải bằng số tiền giải ngân.","needs an advance payee (money paid up front has no invoice yet), and Σ dossier values must equal the disbursement amount."
+"cần một hoá đơn của nhà thầu, hồ sơ loại","needs an invoice from the contractor, a dossier of type"
+Để gửi NH duyệt,To submit to the bank
+Σ giá trị hồ sơ,Σ dossier value
+Σ giá trị hồ sơ (%(d)s) khác số tiền giải ngân (%(a)s). Chênh lệch: %(b)s. Điều chỉnh cho khớp trước khi gửi NH.,Σ dossier value (%(d)s) differs from the disbursement amount (%(a)s). Difference: %(b)s. Reconcile them before submitting to the bank.

@@ -1,6 +1,6 @@
 {
     'name': 'Realty - Base',
-    'version': '19.0.5.4.0',
+    'version': '19.0.5.5.0',
     'category': 'Realty',
     'summary': 'Master data: Project, Subzone, Building, Floor, Unit Type, Unit',
     'description': """
@@ -50,7 +50,6 @@ Vietnam-specific:
         'data/ir_sequence_data.xml',
 
         # Language date format (DD/MM/YYYY for real estate)
-        'data/res_lang_data.xml',
 
         # Seed data
         'data/re_unit_type_data.xml',

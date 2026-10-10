@@ -13,7 +13,7 @@ import {
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
-import { loadEj2 } from "@rp_progress/js/bsd_gantt/ej2_loader";
+import { loadEj2 } from "@bsd_syncfusion/js/ej2_loader";
 
 const TY = 1e9; // 1 tỷ
 
@@ -85,7 +85,7 @@ export class RpEvmDashboard extends Component {
         await loadEj2();
         if (this._licenseDone) return;
         try {
-            const resp = await rpc("/rp_progress/syncfusion/license_key", {});
+            const resp = await rpc("/bsd_syncfusion/license_key", {});
             if (resp && resp.key && window.ej && window.ej.base
                 && window.ej.base.registerLicense) {
                 window.ej.base.registerLicense(resp.key);

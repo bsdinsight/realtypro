@@ -36,6 +36,7 @@ Ban QLDA → Phase 3b.
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
     'depends': [
+        'bsd_syncfusion',
         'rp_progress',
         'rp_cost_actual',
         'rp_site',       # heat/QA/an toàn/nhân lực + gắn menu Rủi ro dưới Hiện trường

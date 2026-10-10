@@ -29,6 +29,7 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
     'depends': [
+        'bsd_syncfusion',
         'project',
         'rp_contract',
         'rp_cost_base',

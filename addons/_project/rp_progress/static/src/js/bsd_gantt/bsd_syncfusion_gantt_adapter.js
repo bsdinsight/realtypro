@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { BSDGanttAdapter } from "./bsd_gantt_adapter";
-import { loadEj2 } from "./ej2_loader";
+import { loadEj2 } from "@bsd_syncfusion/js/ej2_loader";
 
 /**
  * BSDSyncfusionGanttAdapter — Syncfusion EJ2 Gantt implementation
@@ -13,7 +13,7 @@ import { loadEj2 } from "./ej2_loader";
  *   - Community / Paid license: gọi ej.base.registerLicense(key) trước
  *     khi render. Nếu KHÔNG register → component vẫn render nhưng kèm
  *     watermark "Trial" + console warning.
- *   - Key fetch từ controller /rp_progress/syncfusion/license_key
+ *   - Key fetch từ controller /bsd_syncfusion/license_key
  *     (xem bsd_gantt_view.js).
  *
  * Field mapping (frappe-gantt task → ej2 task):
@@ -41,7 +41,7 @@ export class BSDSyncfusionGanttAdapter extends BSDGanttAdapter {
         if (!window.ej || !window.ej.base || !window.ej.base.registerLicense) {
             throw new Error(
                 "Syncfusion EJ2 chưa nạp — kiểm tra bundle " +
-                "rp_progress.assets_syncfusion và " +
+                "bsd_syncfusion.assets_syncfusion và " +
                 "static/lib/syncfusion/ej2-slim.min.js " +
                 "(dựng lại bằng scripts/build_syncfusion_slim.py)"
             );

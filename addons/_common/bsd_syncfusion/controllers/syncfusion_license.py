@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Controller expose Syncfusion license key cho frontend.
+"""Controller cấp khoá giấy phép Syncfusion cho phía trình duyệt.
 
 License key lưu ở ir.config_parameter `syncfusion.license_key`. Admin
 set qua menu Settings → System Parameters (hoặc qua Settings view của
@@ -15,7 +15,14 @@ from odoo.http import request
 class SyncfusionLicenseController(http.Controller):
 
     @http.route(
-        '/rp_progress/syncfusion/license_key',
+        [
+            '/bsd_syncfusion/license_key',
+            # GIỮ route cũ. Trình duyệt đang mở vẫn giữ mã JS cũ trong
+            # bộ nhớ đệm và sẽ gọi địa chỉ này; bỏ đi là màn Gantt của
+            # người đang làm việc gãy ngay giữa chừng, mà họ không hiểu
+            # vì sao. Xoá được khi mọi phiên đã nạp lại.
+            '/rp_progress/syncfusion/license_key',
+        ],
         type='jsonrpc',
         auth='user',
         methods=['POST'],

@@ -33,6 +33,10 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
     'depends': [
+        # Lib Syncfusion + bộ nạp + khoá giấy phép đã tách ra module
+        # dùng chung ở _common, để EAMOne dùng được mà không phải phụ
+        # thuộc ngược lên EPCOne.
+        'bsd_syncfusion',
         're_base',
         're_core',   # mount menu ĐVT (Xây dựng) vào Realty Core > Configuration
         'account',
@@ -59,20 +63,6 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/menu.xml',
     ],
     'assets': {
-        # Syncfusion EJ2 v33.1.44 — bundle RIÊNG, nạp theo yêu cầu qua
-        # loadEj2() (static/src/js/bsd_gantt/ej2_loader.js). Để trong
-        # assets_backend thì mọi trang Odoo phải tải 33 MB lib dù không
-        # ai mở Gantt: bundle web lên 38 MB (9,4 MB sau nén) và màn hình
-        # quay mấy chục giây sau mỗi lần nâng cấp module.
-        # Bản RÚT GỌN: chỉ Gantt + Charts và cây phụ thuộc của chúng,
-        # dựng lại được bằng scripts/build_syncfusion_slim.py. Bản global
-        # của Syncfusion gộp mọi component (spreadsheet, pdfviewer,
-        # diagram, maps…) nên nặng 28,8 MB / 7,28 MB nén, trong khi bộ
-        # này chỉ dùng hai thứ — bản rút gọn còn 8,1 MB / 1,72 MB nén.
-        'rp_progress.assets_syncfusion': [
-            'rp_progress/static/lib/syncfusion/ej2-slim-material.css',
-            'rp_progress/static/lib/syncfusion/ej2-slim.min.js',
-        ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
             # Frappe-Gantt giữ lại làm fallback nếu Syncfusion fail
@@ -80,7 +70,6 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.css',
             'rp_progress/static/lib/frappe-gantt/frappe-gantt.js',
             'rp_progress/static/src/scss/bsd_gantt.scss',
-            'rp_progress/static/src/js/bsd_gantt/ej2_loader.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_gantt_adapter.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_frappe_gantt_adapter.js',
             'rp_progress/static/src/js/bsd_gantt/bsd_syncfusion_gantt_adapter.js',

@@ -654,7 +654,7 @@ export class RpGanttAction extends Component {
     async _render() {
         // License key — cùng nguồn rp_progress (param syncfusion.license_key)
         if (!this._licenseKey) {
-            const resp = await rpc("/rp_progress/syncfusion/license_key", {});
+            const resp = await rpc("/bsd_syncfusion/license_key", {});
             if (!resp.configured) {
                 this.state.error = _t(
                     "Syncfusion license key chưa cấu hình — Settings → "

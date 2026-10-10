@@ -295,7 +295,7 @@ export class BSDGanttView extends Component {
         if (!this._licenseKey) {
             try {
                 const resp = await rpc(
-                    "/rp_progress/syncfusion/license_key", {});
+                    "/bsd_syncfusion/license_key", {});
                 if (!resp.configured) {
                     this.state.licenseError = true;
                     this.state.error = _t(

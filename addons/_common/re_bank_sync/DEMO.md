@@ -10,7 +10,10 @@ Demo này **không cần tài khoản ngân hàng thật**, chạy được offl
 
 ## 0. Chuẩn bị (1 phút, làm trước khi khách vào)
 
-- Đăng nhập dev: https://realtypro.bsdinsights.com
+- Đăng nhập demo: https://demo.realtypro.vn bằng tài khoản **quản trị**
+  (admin hoặc demo) — menu mô phỏng chỉ hiện cho Integration Admin / quản trị hệ
+  thống, và chỉ trên DB có tham số `realtypro.is_demo = 1` (script dựng
+  demo đã đặt sẵn). DB khách thật không có menu này.
 - Chọn hồ sơ demo: mở **EPCOne → Doanh thu → IPC (hồ sơ thanh
   toán)** → mở **IPC/2026/0006** (đã ký, đề nghị CĐT thanh toán **412,5
   tỷ**, đã thu **0**).
@@ -91,6 +94,10 @@ cộng dồn lên.)*
 Mô phỏng 1 giao dịch **nội dung không có mã IPC** (vd `chuyen tien`):
 → giao dịch để trạng thái **Mới nhận**, không gắn IPC nào.
 
+Tương tự, **số tiền vượt "Còn phải thu"** hoặc nội dung ghi **mã của nhiều
+IPC** → giao dịch dừng ở **Đã khớp**, người đối soát chọn IPC rồi bấm
+**Xác nhận đối soát IPC**.
+
 **Nói:** *"Tiền vào mà không rõ của hồ sơ nào thì hệ thống KHÔNG đoán bừa —
 để đó cho người đối soát tay. Không có chuyện khớp nhầm khối lượng vào sai
 hồ sơ."*
@@ -102,7 +109,7 @@ hồ sơ."*
 Xoá giao dịch mô phỏng để `amount_received` về 0:
 
 **Đối soát ngân hàng → Giao dịch ngân hàng** → chọn các dòng vừa tạo (nguồn
-= SePay) → **Xoá**. IPC tự tính lại về 0.
+= Mô phỏng (demo)) → **Xoá**. IPC tự tính lại về 0.
 
 *(Xoá giao dịch chỉ gỡ đối soát, KHÔNG đụng gì tới IPC/BBNT.)*
 

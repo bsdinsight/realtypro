@@ -26,6 +26,8 @@ class ReBankTransaction(models.Model):
         ('file_import', 'Nhập từ file (sao kê)'),
         ('ai_advice', 'AI đọc chứng từ'),
         ('manual', 'Nhập tay'),
+        # tách khỏi 'sepay' để giao dịch giả không lẫn vào tiền thật
+        ('demo_simulate', 'Mô phỏng (demo)'),
     ], string='Nguồn', required=True, default='manual', index=True,
         tracking=True)
 

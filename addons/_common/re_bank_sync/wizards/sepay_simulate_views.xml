@@ -39,10 +39,15 @@
         <field name="res_model">re.bank.sepay.simulate.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="group_ids" eval="[(6, 0, [
+            ref('re_integration_hub.group_integration_admin'),
+            ref('base.group_system')])]"/>
     </record>
 
+    <!-- ngoài DB demo menu còn bị ẩn thêm: xem models/ir_ui_menu.py -->
     <menuitem id="menu_sepay_simulate" name="Mô phỏng giao dịch (demo)"
               parent="menu_re_bank_sync_root"
-              action="action_sepay_simulate" sequence="20"/>
+              action="action_sepay_simulate" sequence="20"
+              groups="re_integration_hub.group_integration_admin,base.group_system"/>
 
 </odoo>

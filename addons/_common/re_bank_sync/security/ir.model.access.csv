@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_re_bank_transaction_user,re.bank.transaction.user,model_re_bank_transaction,base.group_user,1,0,0,0
 access_re_bank_transaction_manager,re.bank.transaction.manager,model_re_bank_transaction,base.group_system,1,1,1,1
-access_sepay_simulate_wizard,re.bank.sepay.simulate.wizard,model_re_bank_sepay_simulate_wizard,base.group_user,1,1,1,1
+access_sepay_simulate_wizard,re.bank.sepay.simulate.wizard,model_re_bank_sepay_simulate_wizard,re_integration_hub.group_integration_admin,1,1,1,1
+access_sepay_simulate_wizard_system,re.bank.sepay.simulate.wizard.system,model_re_bank_sepay_simulate_wizard,base.group_system,1,1,1,1

@@ -95,8 +95,10 @@ class TestOnlending(TransactionCase):
         ol = self._onlend(1_000_000_000.0, rate=8.0)
         ol.action_activate()
         self.assertEqual(ol.state, 'active')
+        # Tìm theo TÊN KW nguồn, không theo chữ trong câu cảnh báo:
+        # bản giao cho đối tác đổi chuỗi sang tiếng Anh.
         msgs = ol.message_ids.filtered(
-            lambda m: m.body and 'Cảnh báo' in m.body)
+            lambda m: m.body and self.src.name in m.body)
         self.assertTrue(msgs)
 
     # ----- Full intercompany flow ----------------------------------------

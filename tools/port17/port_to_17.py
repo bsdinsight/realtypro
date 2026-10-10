@@ -729,7 +729,11 @@ def step_i18n(dst):
             raise SystemExit(
                 'Module %s còn %s chuỗi tiếng Việt sau khi dịch, vd: %s'
                 % (mod, len(left), sorted(left)[0][:70]))
-        po_total += _i18n.write_po(dst, mod, used)
+        if used:
+            # Module không có chuỗi nào để dịch thì KHÔNG đẻ tệp .po
+            # rỗng: tệp mới = module đổi nội dung = buộc tăng phiên bản
+            # và bắt đối tác nâng cấp một module chẳng đổi gì.
+            po_total += _i18n.write_po(dst, mod, used)
         total += n
     note('  %-46s %s chỗ / %s mục po / %s module'
          % ('chuỗi giao diện -> tiếng Anh', total, po_total,

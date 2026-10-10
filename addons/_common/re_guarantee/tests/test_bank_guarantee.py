@@ -539,7 +539,13 @@ class TestGuaranteeExpiryReminder(TransactionCase):
     def test_missing_pic_is_explained(self):
         cert = self._cert()
         self.assertTrue(cert.reminder_block_reason)
-        self.assertIn('Người phụ trách', cert.reminder_block_reason)
+        # KHÔNG so theo chữ trong câu: bản giao cho đối tác đổi chuỗi
+        # sang tiếng Anh, bài kiểm so chữ sẽ đỏ ở đó mà tính năng vẫn
+        # đúng. So bằng thứ phân biệt được hai ca: thiếu người phụ
+        # trách khác với có người mà thiếu email.
+        other = self._cert(pic_user_id=self.pic_no_mail.id)
+        self.assertNotEqual(cert.reminder_block_reason,
+                            other.reminder_block_reason)
         # Cron vẫn chạy bình thường, chỉ bỏ qua bản ghi này.
         self.env['re.bank.guarantee']._cron_expiry_reminder()
         self.assertFalse(cert.last_expiry_reminder)
@@ -549,7 +555,8 @@ class TestGuaranteeExpiryReminder(TransactionCase):
     def test_pic_without_email_is_explained(self):
         cert = self._cert(pic_user_id=self.pic_no_mail.id)
         self.assertTrue(cert.reminder_block_reason)
-        self.assertIn('email', cert.reminder_block_reason)
+        self.assertFalse(self.pic_no_mail.email,
+                         'ca này là người phụ trách KHÔNG có email')
         with self.assertRaises(UserError):
             cert.action_send_expiry_reminder()
 

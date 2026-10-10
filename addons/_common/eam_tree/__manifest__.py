@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Lưới cây sổ tài sản',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'EAMOne',
     'summary': 'Vừa thấy cây vừa thấy cột: lọc, sắp xếp, xuất Excel ngay '
                'trên lưới.',

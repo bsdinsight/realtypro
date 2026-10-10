@@ -19,7 +19,41 @@
     }
     .eam-tree-nm { width: auto; min-width: 200px; }
 
+    // Hàng nút lọc nhanh tự xuống dòng khi màn hình hẹp, chứ không đẩy
+    // ô "bấm đúp để mở" ra khỏi khung.
+    .eam-tree-dem {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+
+    .eam-tree-loc {
+        font-family: var(--bs-font-monospace, monospace);
+        max-width: 28ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     // min-height:0 để lưới co theo khung thay vì đẩy dài cả trang —
     // thiếu nó thì thanh cuộn của lưới không bao giờ xuất hiện.
     .eam-tree-grid { flex: 1 1 auto; min-height: 0; }
+
+    // Tô dòng. Rất nhạt, và chỉ hai trạng thái.
+    //
+    // Nền đậm thì chữ trong ô mất tương phản, và nhiều màu cùng lúc thì
+    // không màu nào còn nghĩa. Màu của từng ô (bảo hành, bảo trì) đã lo
+    // phần chi tiết; nền dòng chỉ để mắt bắt được từ xa.
+    .e-treegrid .e-row {
+        &.eam-row-qua > .e-rowcell:first-child {
+            box-shadow: inset 3px 0 0 var(--bs-danger, #dc3545);
+        }
+        &.eam-row-mo > .e-rowcell {
+            opacity: .55;
+            text-decoration: line-through;
+            text-decoration-color: rgba(0, 0, 0, .25);
+        }
+    }
 }

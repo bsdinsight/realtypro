@@ -4,7 +4,6 @@
 <t t-name="eam_tree.AssetTree">
     <div class="eam-tree-root">
         <div class="eam-tree-bar">
-            <span class="fw-bold">Sổ tài sản — lưới cây</span>
             <select class="form-select form-select-sm eam-tree-nm"
                     t-if="state.plants.length > 1" t-on-change="doiNhaMay">
                 <option value="">Tất cả nhà máy</option>
@@ -15,12 +14,102 @@
                     </option>
                 </t>
             </select>
-            <button class="btn btn-sm btn-outline-secondary"
-                    t-on-click="bungHet">Bung hết</button>
-            <button class="btn btn-sm btn-outline-secondary"
-                    t-on-click="thuHet">Thu hết</button>
-            <span class="ms-auto text-muted small">
-                <t t-esc="state.count"/> dòng · bấm đúp để mở hồ sơ
+            <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-secondary"
+                        t-on-click="bungHet" title="Bung hết các nhánh">
+                    <i class="fa fa-plus-square-o me-1"/>Bung
+                </button>
+                <button class="btn btn-outline-secondary"
+                        t-on-click="thuHet" title="Thu hết các nhánh">
+                    <i class="fa fa-minus-square-o me-1"/>Thu
+                </button>
+            </div>
+            <span class="text-muted small ms-1">
+                <t t-esc="state.count"/> dòng
+            </span>
+
+            <!--
+                Mấy con số này vừa là BÁO CÁO vừa là NÚT LỌC.
+
+                Mở sổ tài sản ra, câu hỏi đầu tiên không phải "có bao
+                nhiêu tài sản" mà "có gì đang cần tôi để ý" — hết bảo
+                hành, quá hạn bảo trì, đang có lệnh mở. Bày sẵn con số
+                rồi bấm vào là thấy đúng mấy dòng đó, đỡ phải tự dựng
+                bộ lọc mỗi lần.
+
+                Ô nào bằng 0 thì ẩn hẳn: một hàng toàn số 0 không nói
+                thêm gì mà lại chiếm chỗ của những ô có số.
+            -->
+            <div class="eam-tree-dem ms-2">
+                <button t-if="state.dem.bt_qua"
+                        class="btn btn-sm btn-outline-danger"
+                        t-on-click="locBtQua"
+                        title="Vị trí có kế hoạch bảo trì đã quá hạn">
+                    <i class="fa fa-wrench me-1"/>Quá hạn bảo trì
+                    <span class="badge text-bg-danger ms-1"
+                          t-esc="state.dem.bt_qua"/>
+                </button>
+                <button t-if="state.dem.bt_tre"
+                        class="btn btn-sm btn-outline-danger"
+                        t-on-click="locBtTre"
+                        title="Đã sinh lệnh công việc nhưng vẫn chưa làm, và đã quá hạn">
+                    <i class="fa fa-clock-o me-1"/>Có lệnh, đã trễ
+                    <span class="badge text-bg-danger ms-1"
+                          t-esc="state.dem.bt_tre"/>
+                </button>
+                <button t-if="state.dem.wo"
+                        class="btn btn-sm btn-outline-warning"
+                        t-on-click="locWo"
+                        title="Lệnh công việc chưa xong, đếm theo vị trí">
+                    <i class="fa fa-tasks me-1"/>Lệnh đang mở
+                    <span class="badge text-bg-warning ms-1"
+                          t-esc="state.dem.wo"/>
+                </button>
+                <button t-if="state.dem.bh_het"
+                        class="btn btn-sm btn-outline-danger"
+                        t-on-click="locBhHet" title="Bảo hành đã hết hạn">
+                    <i class="fa fa-shield me-1"/>Hết bảo hành
+                    <span class="badge text-bg-danger ms-1"
+                          t-esc="state.dem.bh_het"/>
+                </button>
+                <button t-if="state.dem.bh_sap"
+                        class="btn btn-sm btn-outline-warning"
+                        t-on-click="locBhSap"
+                        title="Bảo hành còn dưới 90 ngày — còn kịp gửi thông báo">
+                    <i class="fa fa-hourglass-half me-1"/>BH sắp hết
+                    <span class="badge text-bg-warning ms-1"
+                          t-esc="state.dem.bh_sap"/>
+                </button>
+                <button t-if="state.dem.chua_lap"
+                        class="btn btn-sm btn-outline-secondary"
+                        t-on-click="locChuaLap"
+                        title="Tài sản không nằm trên máy nào — trong kho hoặc đang đại tu">
+                    <i class="fa fa-archive me-1"/>Chưa lắp
+                    <span class="badge text-bg-secondary ms-1"
+                          t-esc="state.dem.chua_lap"/>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary"
+                        t-on-click="locTrongYeu"
+                        title="Chỉ tài sản ở mức trọng yếu">
+                    <i class="fa fa-exclamation-triangle me-1"/>Trọng yếu
+                </button>
+                <button class="btn btn-sm btn-link text-decoration-none"
+                        t-on-click="boLoc" title="Bỏ mọi bộ lọc và ô tìm kiếm">
+                    Bỏ lọc
+                </button>
+            </div>
+
+            <span class="ms-auto d-flex align-items-center gap-2">
+                <span class="text-muted small eam-tree-loc"
+                      t-if="state.loc" t-esc="state.loc"/>
+                <span class="text-muted small">
+                    bấm đúp để mở · chuột phải để xem lịch sử
+                </span>
+                <button class="btn btn-sm btn-link text-muted"
+                        t-on-click="datLaiLuoi"
+                        title="Trả cột, độ rộng và bộ lọc về mặc định">
+                    <i class="fa fa-refresh"/>
+                </button>
             </span>
         </div>
         <div t-if="state.error" class="alert alert-danger m-3">

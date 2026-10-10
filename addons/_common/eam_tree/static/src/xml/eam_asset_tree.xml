@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="eam_tree.AssetTree">
+    <div class="eam-tree-root">
+        <div class="eam-tree-bar">
+            <span class="fw-bold">Sổ tài sản — lưới cây</span>
+            <select class="form-select form-select-sm eam-tree-nm"
+                    t-if="state.plants.length > 1" t-on-change="doiNhaMay">
+                <option value="">Tất cả nhà máy</option>
+                <t t-foreach="state.plants" t-as="nm" t-key="nm.code">
+                    <option t-att-value="nm.code"
+                            t-att-selected="state.plantCode === nm.code">
+                        <t t-esc="nm.name"/>
+                    </option>
+                </t>
+            </select>
+            <button class="btn btn-sm btn-outline-secondary"
+                    t-on-click="bungHet">Bung hết</button>
+            <button class="btn btn-sm btn-outline-secondary"
+                    t-on-click="thuHet">Thu hết</button>
+            <span class="ms-auto text-muted small">
+                <t t-esc="state.count"/> dòng · bấm đúp để mở hồ sơ
+            </span>
+        </div>
+        <div t-if="state.error" class="alert alert-danger m-3">
+            <t t-esc="state.error"/>
+        </div>
+        <div t-if="state.loading" class="p-3 text-muted">Đang nạp…</div>
+        <div class="eam-tree-grid" t-ref="grid"/>
+    </div>
+</t>
+
+</templates>

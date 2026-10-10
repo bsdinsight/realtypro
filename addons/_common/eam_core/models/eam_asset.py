@@ -248,6 +248,22 @@ class EamAsset(models.Model):
             'context': {'default_asset_id': self.id},
         }
 
+    def action_xem_cay(self):
+        """Mở kiểu xem CÂY, neo vào chính con này và các cấu phần dưới nó.
+
+        Trên form chỉ thấy được MỘT tầng con. Muốn nhìn cả cụm rotor rồi
+        xuống ba cánh thì phải có cây — mà nút chuyển kiểu xem của Odoo
+        chỉ hiện ở màn danh sách, nên từ form không có đường nào tới.
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Cây lắp ráp — %s', self.display_name),
+            'res_model': 'eam.asset',
+            'view_mode': 'hierarchy,list,form',
+            'domain': [('id', 'child_of', self.id)],
+        }
+
     def action_mo_lich_su(self):
         self.ensure_one()
         return {

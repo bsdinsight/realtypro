@@ -24,6 +24,9 @@
             <form string="Vị trí chức năng">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_cay" type="object"
+                                class="oe_stat_button" icon="fa-sitemap"
+                                string="Xem cây vị trí"/>
                         <button name="action_mo_lich_su" type="object"
                                 class="oe_stat_button" icon="fa-history">
                             <span class="o_stat_text">Lịch sử lắp đặt</span>

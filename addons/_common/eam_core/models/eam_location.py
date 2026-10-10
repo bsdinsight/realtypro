@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class EamLocation(models.Model):
@@ -140,6 +140,17 @@ class EamLocation(models.Model):
     def _compute_display_name(self):
         for l in self:
             l.display_name = '[%s] %s' % (l.complete_code or '', l.name or '')
+
+    def action_xem_cay(self):
+        """Mở kiểu xem CÂY, neo vào chính vị trí này và các vị trí dưới nó."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Cây vị trí — %s', self.display_name),
+            'res_model': 'eam.location',
+            'view_mode': 'hierarchy,list,form',
+            'domain': [('id', 'child_of', self.id)],
+        }
 
     def action_mo_lich_su(self):
         self.ensure_one()

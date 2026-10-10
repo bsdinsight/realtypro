@@ -50,6 +50,12 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_cay" type="object"
+                                class="oe_stat_button" icon="fa-sitemap"
+                                invisible="not child_count and not parent_id">
+                            <field name="child_count" widget="statinfo"
+                                   string="Xem cây lắp ráp"/>
+                        </button>
                         <button name="action_mo_lich_su" type="object"
                                 class="oe_stat_button" icon="fa-history">
                             <field name="install_count" widget="statinfo"

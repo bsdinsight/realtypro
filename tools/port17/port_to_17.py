@@ -365,6 +365,24 @@ def step_security(dst):
             n += 1
     note('  %-46s %s file' % ('privilege / user_ids / sequence', n))
 
+    # Odoo 19 đổi tên trường nhóm quyền trên MỌI model dùng nó
+    # (ir.ui.menu, ir.actions.*, ir.ui.view, field trong view) từ
+    # groups_id sang group_ids. Trước đây chỉ đổi ngược ở mã Python,
+    # nên XML nào khai <field name="group_ids"> là cài chết trên 17:
+    #   ValueError: Invalid field 'group_ids' on model
+    #   'ir.actions.act_window'
+    # Bẫy này chỉ lộ khi cài các module nằm ngoài bộ kiểm — đúng một
+    # ca thật: wizard mô phỏng của re_bank_sync.
+    k = 0
+    for p in walk_files(dst, '.xml'):
+        s = io.open(p, encoding='utf-8').read()
+        if 'name="group_ids"' not in s:
+            continue
+        io.open(p, 'w', encoding='utf-8').write(
+            s.replace('name="group_ids"', 'name="groups_id"'))
+        k += 1
+    note('  %-46s %s file' % ('group_ids -> groups_id (xml)', k))
+
 
 # ----------------------------------------------------------------------
 def scopes_in(root_el):
@@ -729,15 +747,13 @@ def step_i18n(dst):
             raise SystemExit(
                 'Module %s còn %s chuỗi tiếng Việt sau khi dịch, vd: %s'
                 % (mod, len(left), sorted(left)[0][:70]))
-        if used:
-            # Module không có chuỗi nào để dịch thì KHÔNG đẻ tệp .po
-            # rỗng: tệp mới = module đổi nội dung = buộc tăng phiên bản
-            # và bắt đối tác nâng cấp một module chẳng đổi gì.
-            po_total += _i18n.write_po(dst, mod, used)
+        po_total += len(used)
         total += n
-    note('  %-46s %s chỗ / %s mục po / %s module'
+    note('  %-46s %s chỗ / %s chuỗi / %s module'
          % ('chuỗi giao diện -> tiếng Anh', total, po_total,
             len(I18N_DONE)))
+    note('    tệp i18n/vi_VN.po do Odoo xuất khung rồi fill_po.py điền '
+         '— xem RELEASE.md')
 
 
 def step_check_syntax(dst):

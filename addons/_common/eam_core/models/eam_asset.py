@@ -158,6 +158,54 @@ class EamAsset(models.Model):
             raise ValidationError(_(
                 'Cấu phần không được lắp lồng vòng vào chính nó.'))
 
+    @api.constrains('parent_id', 'current_location_id')
+    def _check_cay_khop_vi_tri(self):
+        """Không được NHẢY CÓC qua cụm trung gian trong cây lắp ráp.
+
+        Cha phải là tài sản ở vị trí tổ tiên GẦN NHẤT có tài sản, chứ
+        không phải một tổ tiên bất kỳ. Soát lỏng kiểu "miễn là tổ tiên"
+        thì gán cánh thẳng lên tua-bin vẫn lọt — vị trí tua-bin đúng là
+        tổ tiên của vị trí cánh — và hai cây vẫn đá nhau: cây vị trí nói
+        cánh nằm trong cụm rotor, cây lắp ráp nói cánh đứng NGANG HÀNG
+        với chính cụm chứa nó.
+
+        Đã xảy ra thật: 462 cấu phần bị gán cha là con tua-bin ở gốc
+        thay vì cụm trung gian, và không màn hình nào chặn.
+
+        Chỉ soát khi cả hai đang lắp trên máy. Cấu phần tháo ra đem đại
+        tu vẫn thuộc cụm cũ nhưng không còn ở vị trí nào — ép khớp là
+        buộc người dùng gỡ quan hệ lắp ráp mỗi lần tháo, tức xoá mất
+        đúng thứ cần giữ.
+        """
+        for a in self:
+            cha = a.parent_id
+            if not (cha and a.current_location_id
+                    and cha.current_location_id):
+                continue
+            # Leo ngược từ vị trí con, dừng ở tổ tiên ĐẦU TIÊN có tài sản
+            p = a.current_location_id.parent_id
+            dung = None
+            while p:
+                c = self.search([('current_location_id', '=', p.id)],
+                                limit=1)
+                if c:
+                    dung = c
+                    break
+                p = p.parent_id
+            if dung and dung != cha:
+                raise ValidationError(_(
+                    'Tài sản "%(con)s" lắp tại %(vtc)s thì cụm chứa nó '
+                    'phải là "%(dung)s" (ở %(vtd)s), không phải '
+                    '"%(cha)s".\n\n'
+                    'Gán vượt cấp là để con đứng NGANG HÀNG với chính '
+                    'cụm chứa nó — cây vị trí nói một đằng, cây lắp ráp '
+                    'nói một nẻo, và người xem thấy ngay.',
+                    con=a.display_name,
+                    vtc=a.current_location_id.complete_code,
+                    dung=dung.display_name,
+                    vtd=dung.current_location_id.complete_code,
+                    cha=cha.display_name))
+
     @api.depends('installation_ids.is_current',
                  'installation_ids.location_id')
     def _compute_current(self):

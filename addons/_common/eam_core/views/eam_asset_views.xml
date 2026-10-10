@@ -235,7 +235,7 @@
     <record id="action_eam_asset" model="ir.actions.act_window">
         <field name="name">Tài sản</field>
         <field name="res_model">eam.asset</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,hierarchy,form</field>
         <!-- Mặc định CHỈ hiện thiết bị chính. Gần bảy trăm cấu phần đổ
              vào một danh sách phẳng thì hai mươi dòng đầu toàn cánh
              quạt và người dùng tưởng mất máy. -->

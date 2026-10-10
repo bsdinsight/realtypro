@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Hai kiểu xem CÂY.
+
+        Danh sách phẳng không cho nhìn ra cấu trúc: muốn biết trong cụm
+        rotor có gì thì phải mở form rồi bấm xuống từng tầng. Kiểu xem
+        cây bày cả ba cấp ra một màn hình, bung ra thu vào tại chỗ.
+
+        draggable="0" ở CẢ HAI, và đây là chủ ý:
+
+        · Kéo một cấu phần sang cụm khác trong cây LẮP RÁP nghĩa là ngoài
+          hiện trường có người vừa tháo nó ra lắp sang chỗ khác. Việc đó
+          phải đi qua một bản ghi LẮP ĐẶT để còn lịch sử; cho kéo thả là
+          mở cửa cho việc dời chỗ không để lại dấu vết — đúng thứ mà cả
+          hệ thống này dựng ra để chống.
+        · Kéo một VỊ TRÍ sang chỗ khác là sửa lại cấu trúc nhà máy. Hiếm,
+          và không nên hiếm mà lại dễ.
+    -->
+
+    <record id="view_eam_asset_hierarchy" model="ir.ui.view">
+        <field name="name">eam.asset.hierarchy</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" draggable="0">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="serial_no"/>
+                <field name="category_id"/>
+                <field name="criticality"/>
+                <field name="child_count"/>
+                <field name="is_installed"/>
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div class="o_hierarchy_node_header d-flex justify-content-center align-items-center">
+                            <field name="code"/>
+                        </div>
+                        <div class="o_hierarchy_node_body d-flex flex-column p-2">
+                            <div class="fw-bold"><field name="name"/></div>
+                            <div class="small text-muted">
+                                <field name="category_id"/>
+                            </div>
+                            <div class="small" t-if="record.serial_no.raw_value">
+                                SN <field name="serial_no"/>
+                            </div>
+                            <div class="small text-danger"
+                                 t-if="!record.is_installed.raw_value">
+                                Chưa lắp trên máy
+                            </div>
+                            <div class="small text-muted"
+                                 t-if="record.child_count.raw_value">
+                                <t t-out="record.child_count.raw_value"/>
+                                cấu phần bên trong
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
+    <record id="view_eam_location_hierarchy" model="ir.ui.view">
+        <field name="name">eam.location.hierarchy</field>
+        <field name="model">eam.location</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" draggable="0">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="location_type"/>
+                <field name="category_id"/>
+                <field name="asset_count"/>
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div class="o_hierarchy_node_header d-flex justify-content-center align-items-center">
+                            <field name="code"/>
+                        </div>
+                        <div class="o_hierarchy_node_body d-flex flex-column p-2">
+                            <div class="fw-bold"><field name="name"/></div>
+                            <div class="small text-muted">
+                                <field name="location_type"/>
+                            </div>
+                            <div class="small"
+                                 t-if="record.asset_count.raw_value">
+                                <t t-out="record.asset_count.raw_value"/>
+                                tài sản đang lắp
+                            </div>
+                            <div class="small text-muted"
+                                 t-else="">Chưa lắp gì</div>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
+</odoo>

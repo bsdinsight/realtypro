@@ -141,12 +141,26 @@ class RpContract(models.Model):
     def action_open_schedule(self):
         self.ensure_one()
         proj = self._get_or_create_schedule_project()
+        # Không khai view_id thì Odoo lấy danh sách công việc MẶC ĐỊNH
+        # của project — không mã WBS, không ngày kế hoạch, không dư địa:
+        # đúng những cột làm nên một lịch thi công. Phải trỏ thẳng vào
+        # `view_rp_schedule_task_list` (nó để priority 99 cốt để KHÔNG bị
+        # chọn mặc định ở các màn project khác, nên ở đây phải gọi tên).
+        # Và mở toàn màn hình thay vì hộp thoại: 46 dòng × 10 cột không
+        # có cửa nào đọc được trong một khung dialog.
         return {
             'type': 'ir.actions.act_window',
-            'target': 'new',
             'name': _('Lịch thi công — %s', self.name),
             'res_model': 'project.task',
             'view_mode': 'list,form',
+            'views': [
+                (self.env.ref('rp_schedule.view_rp_schedule_task_list').id,
+                 'list'),
+                (False, 'form'),
+            ],
+            'search_view_id': (
+                self.env.ref('rp_schedule.view_task_search_rp_panel').id,
+                'search'),
             'domain': [('rp_contract_id', '=', self.id)],
             'context': {
                 'default_rp_contract_id': self.id,

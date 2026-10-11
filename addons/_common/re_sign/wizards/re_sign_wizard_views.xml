@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_sign_wizard_form" model="ir.ui.view">
+        <field name="name">re.sign.wizard.form</field>
+        <field name="model">re.sign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ký duyệt">
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <div class="alert alert-info" role="alert">
+                    <p style="margin-bottom:0;">
+                        Chữ ký này bảo chứng <b>đúng những dòng bên dưới</b>.
+                        Sau khi ký, sửa bất kỳ dòng nào thì hệ thống tự báo
+                        chữ ký <b>không còn hợp lệ</b> — không âm thầm giữ
+                        lại một chữ ký đã mất căn cứ.
+                    </p>
+                </div>
+                <group>
+                    <field name="doc_name" readonly="1"/>
+                </group>
+                <group string="Nội dung chữ ký bảo chứng">
+                    <field name="payload_preview" nolabel="1" readonly="1"
+                           class="font-monospace"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="role"/>
+                        <field name="signer_name"/>
+                        <field name="signer_title"
+                               placeholder="Giám đốc dự án, Chỉ huy trưởng…"/>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="signature" widget="signature"
+                               options="{'full_name': 'signer_name'}"
+                               nolabel="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_ky" type="object" string="Ký duyệt"
+                            class="btn-primary"/>
+                    <button string="Đóng" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

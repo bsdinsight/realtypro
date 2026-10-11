@@ -48,6 +48,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         # án. Module này nhẹ (chỉ re_base + rp_estimate), không có
         # vòng phụ thuộc vì nó KHÔNG biết tới rp_progress.
         'rp_doc_folder',
+        're_sign',
     ],
     'data': [
         'views/rp_tender_package_boq_views.xml',
@@ -65,6 +66,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/re_project_views.xml',
         'views/rp_cost_reconcile_views.xml',
         'views/menu.xml',
+        'views/rp_acceptance_sign_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

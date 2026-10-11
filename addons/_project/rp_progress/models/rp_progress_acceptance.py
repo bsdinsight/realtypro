@@ -22,7 +22,8 @@ class RpProgressAcceptance(models.Model):
     _description = 'Biên bản nghiệm thu khối lượng (BBN KLCV)'
     # rp.doc.filing: đường nộp hồ sơ đã ký vào đúng thư mục hồ sơ
     # dự án (06.3 Quantity acceptance) rồi lên SharePoint.
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'rp.doc.filing']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'rp.doc.filing',
+                're.signable']
     _order = 'date_submitted desc, id desc'
 
     # Hộp thả hồ sơ đã ký. Khai ở ĐÂY chứ không ở mixin, và nêu
@@ -216,6 +217,41 @@ class RpProgressAcceptance(models.Model):
             if rec.payment_milestone_id and not rec.payment_milestone_id.acceptance_id:
                 rec.payment_milestone_id.acceptance_id = rec.id
         return recs
+
+    def _sign_payload(self):
+        """Những gì chữ ký trên biên bản nghiệm thu bảo chứng.
+
+        Có CẢ TỪNG DÒNG khối lượng, không chỉ tổng: hai dòng bù trừ cho
+        nhau thì tổng không đổi mà nội dung nghiệm thu đã khác hẳn —
+        băm mỗi tổng là chừa đúng cửa đó.
+        """
+        self.ensure_one()
+        tt = dict(self._fields['state'].selection)
+        dong = []
+        for l in self.line_ids.sorted('id'):
+            dong.append('  %s | %s | đơn giá %.2f | KL kỳ %s | luỹ kế %s '
+                        '| tiền kỳ %.2f' % (
+                            (l.structure_id.display_name
+                             if l.structure_id else ''),
+                            (l.description or ''),
+                            (l.unit_price or 0.0),
+                            (l.quantity_this_period or 0.0),
+                            (l.quantity_to_date or 0.0),
+                            (l.amount_this_period or 0.0)))
+        return '\n'.join([
+            'Số biên bản: %s' % (self.name or ''),
+            'Hợp đồng: %s' % (self.contract_id.name or ''),
+            'Nhà thầu: %s' % (self.contractor_id.display_name or ''),
+            'Kỳ: %s/%s' % (self.report_month or '', self.report_year or ''),
+            'Ngày trình: %s' % (self.date_submitted or ''),
+            'Ngày duyệt: %s' % (self.date_approved or ''),
+            'Đại diện nhà thầu: %s' % (self.representative_contractor or ''),
+            'Đại diện chủ đầu tư: %s' % (self.representative_owner or ''),
+            'Giá trị kỳ này: %.2f' % (self.total_value_period or 0.0),
+            'Giá trị luỹ kế: %.2f' % (self.total_value_to_date or 0.0),
+            'Trạng thái: %s' % tt.get(self.state, self.state or ''),
+            'Số dòng khối lượng: %s' % len(self.line_ids),
+        ] + dong)
 
     # ------------------------------------------------------------------
     # State machine

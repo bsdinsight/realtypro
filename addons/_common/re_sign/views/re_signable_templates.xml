@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Danh sách chữ ký nhúng trong form chứng từ. Khai một lần ở đây,
+         các module chỉ cần trỏ tới bằng `context` hoặc chép 3 dòng field
+         — không phải định nghĩa lại cột ở từng nơi. -->
+    <record id="view_re_signature_embedded_list" model="ir.ui.view">
+        <field name="name">re.signature.embedded.list</field>
+        <field name="model">re.signature</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list string="Chữ ký" create="false" edit="false" delete="false"
+                  decoration-danger="not is_valid">
+                <field name="role" string="Vai"/>
+                <field name="signer_name" string="Người ký"/>
+                <field name="signer_title" string="Chức danh"/>
+                <field name="signature" widget="image" width="130px"
+                       string="Chữ ký"/>
+                <field name="signed_on" string="Ký lúc"/>
+                <field name="is_valid" string="Còn hợp lệ"/>
+                <field name="invalid_reason" string="Ghi chú"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

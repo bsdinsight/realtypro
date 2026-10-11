@@ -25,7 +25,7 @@ GRANTED_STATES = ('agreed', 'partial')
 class RpClaim(models.Model):
     _name = 'rp.claim'
     _description = 'Khiếu nại hợp đồng (EOT / chi phí)'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 're.signable']
     _order = 'date_event desc, id desc'
 
     name = fields.Char(string='Nội dung khiếu nại', required=True,
@@ -164,6 +164,33 @@ class RpClaim(models.Model):
     # ------------------------------------------------------------------
     # Quy trình
     # ------------------------------------------------------------------
+    def _sign_payload(self):
+        """Những gì chữ ký trên hồ sơ khiếu nại bảo chứng.
+
+        Gồm CẢ số xin lẫn số được duyệt: nếu chỉ băm số được duyệt thì
+        sửa số xin xong tỷ lệ chấp thuận đổi hẳn mà chữ ký vẫn báo hợp
+        lệ. Và gồm `decision_note` vì lý do từ chối một phần chính là
+        phần hay bị sửa lại nhất sau khi đã ký.
+        """
+        self.ensure_one()
+        tt = dict(self._fields['state'].selection)
+        return '\n'.join([
+            'Mã hồ sơ: %s' % (self.code or ''),
+            'Hợp đồng: %s' % (self.contract_id.name or ''),
+            'Chiều: %s' % (self.direction or ''),
+            'Loại: %s' % (self.claim_type or ''),
+            'Ngày sự việc: %s' % (self.date_event or ''),
+            'Ngày gửi thông báo: %s' % (self.date_notice or ''),
+            'Còn quyền khiếu nại: %s' % ('có' if self.notice_ok else 'không'),
+            'Số ngày xin gia hạn: %s' % (self.eot_days_claimed or 0),
+            'Số ngày được gia hạn: %s' % (self.eot_days_granted or 0),
+            'Số tiền yêu cầu: %.2f' % (self.amount_claimed or 0.0),
+            'Số tiền chấp thuận: %.2f' % (self.amount_granted or 0.0),
+            'Trạng thái: %s' % tt.get(self.state, self.state or ''),
+            'Ngày quyết định: %s' % (self.decision_date or ''),
+            'Lý do quyết định: %s' % (self.decision_note or ''),
+        ])
+
     def action_notify(self):
         for rec in self:
             rec.write({

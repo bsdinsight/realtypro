@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Khối ký cho BIÊN BẢN NGHIỆM THU -->
+    <record id="view_rp_acceptance_form_sign" model="ir.ui.view">
+        <field name="name">rp.progress.acceptance.form.sign</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="inherit_id"
+               ref="rp_progress.view_rp_progress_acceptance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_sign_wizard" type="object"
+                        string="Ký duyệt" icon="fa-pencil-square-o"
+                        class="btn-primary"
+                        invisible="state == 'draft'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Chữ ký duyệt" name="chu_ky">
+                    <div class="alert alert-danger" role="alert"
+                         invisible="sign_state != 'broken'">
+                        <field name="sign_warning" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="sign_state != 'unsigned'">
+                        <p style="margin-bottom:0;">
+                            Biên bản chưa có chữ ký. Chữ ký bảo chứng cả
+                            <b>từng dòng khối lượng</b>, không chỉ số tổng —
+                            sửa một dòng sau khi ký là chữ ký tự báo không
+                            còn hợp lệ.
+                        </p>
+                    </div>
+                    <field name="sign_state" invisible="1"/>
+                    <field name="signature_ids" nolabel="1"
+                           readonly="1"
+                           context="{'list_view_ref':
+                                     're_sign.view_re_signature_embedded_list'}"/>
+                    <group>
+                        <div colspan="2">
+                            <button name="action_huy_chu_ky" type="object"
+                                    string="Huỷ toàn bộ chữ ký"
+                                    class="btn-secondary"
+                                    invisible="sign_count == 0"
+                                    confirm="Huỷ toàn bộ chữ ký của biên bản này? Sau khi sửa nội dung thì phải ký lại."/>
+                            <field name="sign_count" invisible="1"/>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

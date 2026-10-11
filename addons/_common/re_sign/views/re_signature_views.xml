@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_signature_list" model="ir.ui.view">
+        <field name="name">re.signature.list</field>
+        <field name="model">re.signature</field>
+        <field name="arch" type="xml">
+            <list string="Chữ ký" create="false" edit="false"
+                  decoration-danger="not is_valid">
+                <field name="role" string="Vai"/>
+                <field name="signer_name" string="Người ký"/>
+                <field name="signer_title" string="Chức danh"
+                       optional="show"/>
+                <field name="partner_id" string="Đơn vị" optional="show"/>
+                <field name="signature" widget="image" width="120px"
+                       string="Chữ ký"/>
+                <field name="signed_on" string="Ký lúc"/>
+                <field name="signed_uid" string="Tài khoản"
+                       optional="hide"/>
+                <field name="signed_ip" string="IP" optional="hide"/>
+                <field name="is_valid" string="Còn hợp lệ" widget="boolean"/>
+                <field name="invalid_reason" string="Ghi chú"
+                       optional="show"/>
+                <field name="doc_hash" string="Mã băm" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_signature_form" model="ir.ui.view">
+        <field name="name">re.signature.form</field>
+        <field name="model">re.signature</field>
+        <field name="arch" type="xml">
+            <form string="Chữ ký" create="false" edit="false">
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="is_valid">
+                        <field name="invalid_reason" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="res_name" string="Chứng từ"/>
+                            <field name="role"/>
+                            <field name="signer_name"/>
+                            <field name="signer_title"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="signed_on"/>
+                            <field name="signed_uid"/>
+                            <field name="signed_ip"/>
+                            <field name="is_valid"/>
+                        </group>
+                    </group>
+                    <group string="Chữ ký">
+                        <field name="signature" widget="image" nolabel="1"
+                               options="{'size': [300, 120]}"/>
+                    </group>
+                    <group string="Mã băm nội dung lúc ký">
+                        <field name="doc_hash" nolabel="1" readonly="1"
+                               class="font-monospace"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_signature" model="ir.actions.act_window">
+        <field name="name">Chữ ký duyệt</field>
+        <field name="res_model">re.signature</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

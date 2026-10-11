@@ -6,7 +6,14 @@
         <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_open_schedule" type="object"
+                <!-- Mở thẳng Gantt, KHÔNG phải danh sách Odoo. Lịch
+                     thi công là cây WBS; danh sách Odoo 19 không dựng
+                     được cây lồng nhau nên thế nào cũng dàn phẳng, còn
+                     Gantt Syncfusion đã có TreeGrid thu/bung sẵn. Cần
+                     sửa hàng loạt (giao việc cho một đội) thì vào
+                     Tiến độ → Công việc (lịch thi công), nơi danh sách
+                     có multi_edit đúng chỗ của nó. -->
+                <button name="action_open_gantt" type="object"
                         class="oe_stat_button" icon="fa-tasks">
                     <field name="task_count" widget="statinfo"
                            string="Công việc"/>

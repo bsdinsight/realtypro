@@ -4,3 +4,4 @@ from . import project_task
 from . import rp_contract
 from . import re_project
 from . import rp_schedule_baseline
+from . import rp_doc_filing_ext

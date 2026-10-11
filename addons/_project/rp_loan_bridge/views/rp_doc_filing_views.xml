@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_loan_note_form_doc_filing" model="ir.ui.view">
+        <field name="name">re.loan.note.form.doc.filing</field>
+        <field name="model">re.loan.note</field>
+        <field name="inherit_id" ref="re_loan.view_re_loan_note_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Hồ sơ dự án" name="rp_doc_filing">
+                    <field name="doc_folder_id" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="doc_folder_id">
+                        Cây hồ sơ của dự án chưa có thư mục nào nhận sổ này.
+                        Vào <b>Dự án → Hồ sơ</b>, mở thư mục cần dùng rồi
+                        chọn sổ ở ô <b>Sổ phụ trách</b>.
+                    </div>
+                    <group invisible="not doc_folder_id">
+                        <field name="doc_folder_path" readonly="1"/>
+                    </group>
+                    <separator string="Hồ sơ chưa nộp"
+                               invisible="not doc_folder_id"/>
+                    <field name="doc_pending_ids" widget="many2many_binary" nolabel="1"
+                           invisible="not doc_folder_id"/>
+                    <button name="action_nop_ho_so" type="object"
+                            string="Nộp vào hồ sơ dự án"
+                            class="btn-primary mt-2"
+                            invisible="not doc_pending_ids"/>
+                    <separator string="Đã nộp" invisible="not doc_file_ids"/>
+                    <field name="doc_file_ids" nolabel="1" readonly="1"
+                           invisible="not doc_file_ids">
+                        <list create="false" delete="false">
+                            <field name="name" string="Tên tệp"/>
+                            <field name="size_human" string="Dung lượng"/>
+                            <field name="date_modified" string="Sửa lần cuối"
+                                   optional="show"/>
+                            <button name="action_xem" type="object"
+                                    icon="fa-eye" string="Xem"
+                                    title="Xem ngay trong trình duyệt"/>
+                            <button name="action_tai_ve" type="object"
+                                    icon="fa-download" string="Tải"
+                                    title="Tải tệp về máy"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_loan_disbursement_dossier_form_doc_filing" model="ir.ui.view">
+        <field name="name">rp.loan.disbursement.dossier.form.doc.filing</field>
+        <field name="model">rp.loan.disbursement.dossier</field>
+        <field name="inherit_id" ref="re_loan_dossier.view_rp_loan_disbursement_dossier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <separator string="HỒ SƠ DỰ ÁN"/>
+                    <field name="doc_folder_id" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="doc_folder_id">
+                        Cây hồ sơ của dự án chưa có thư mục nào nhận sổ này.
+                        Vào <b>Dự án → Hồ sơ</b>, mở thư mục cần dùng rồi
+                        chọn sổ ở ô <b>Sổ phụ trách</b>.
+                    </div>
+                    <group invisible="not doc_folder_id">
+                        <field name="doc_folder_path" readonly="1"/>
+                    </group>
+                    <separator string="Hồ sơ chưa nộp"
+                               invisible="not doc_folder_id"/>
+                    <field name="attachment_ids" widget="many2many_binary" nolabel="1"
+                           invisible="not doc_folder_id"/>
+                    <button name="action_nop_ho_so" type="object"
+                            string="Nộp vào hồ sơ dự án"
+                            class="btn-primary mt-2"
+                            invisible="not attachment_ids"/>
+                    <separator string="Đã nộp" invisible="not doc_file_ids"/>
+                    <field name="doc_file_ids" nolabel="1" readonly="1"
+                           invisible="not doc_file_ids">
+                        <list create="false" delete="false">
+                            <field name="name" string="Tên tệp"/>
+                            <field name="size_human" string="Dung lượng"/>
+                            <field name="date_modified" string="Sửa lần cuối"
+                                   optional="show"/>
+                            <button name="action_xem" type="object"
+                                    icon="fa-eye" string="Xem"
+                                    title="Xem ngay trong trình duyệt"/>
+                            <button name="action_tai_ve" type="object"
+                                    icon="fa-download" string="Tải"
+                                    title="Tải tệp về máy"/>
+                        </list>
+                    </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

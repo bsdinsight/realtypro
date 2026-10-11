@@ -39,11 +39,14 @@ theo lịch; khi cần chốt thì lập **biên bản tính phạt** — số l
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         'rp_contract',
         'rp_schedule',
         'rp_interface',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/rp_claim_views.xml',

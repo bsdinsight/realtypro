@@ -29,6 +29,8 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         'bsd_syncfusion',
         'project',
         'rp_contract',
@@ -38,6 +40,7 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'rp_progress',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'wizards/rp_schedule_import_views.xml',
         'views/rp_task_link_views.xml',

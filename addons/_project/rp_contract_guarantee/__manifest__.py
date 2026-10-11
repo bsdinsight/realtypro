@@ -38,9 +38,12 @@ Thông tư 11/2022/TT-NHNN.
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         'rp_contract',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/rp_contract_guarantee_views.xml',

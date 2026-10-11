@@ -9,3 +9,4 @@ from . import rp_contract
 from . import account_move
 from . import rp_contract_payment_milestone
 from . import rp_milestone_funding_line
+from . import rp_doc_filing_ext

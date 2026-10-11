@@ -34,6 +34,8 @@ NGOÀI scope v1 (làm sau):
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         'base',
         'mail',
         're_base',
@@ -47,6 +49,7 @@ NGOÀI scope v1 (làm sau):
         'rp_estimate',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_change.xml',
         'views/rp_contract_views.xml',

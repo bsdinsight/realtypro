@@ -6,3 +6,4 @@ from . import rp_contract_closure
 from . import rp_contract_change
 from . import rp_tender_package
 from . import re_project
+from . import rp_doc_filing_ext

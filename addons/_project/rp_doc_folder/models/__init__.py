@@ -5,3 +5,4 @@ from . import rp_doc_file
 from . import rp_doc_filing
 from . import re_project
 from . import rp_sharepoint
+from . import rp_doc_filing_ext

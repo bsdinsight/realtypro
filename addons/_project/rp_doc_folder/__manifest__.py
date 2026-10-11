@@ -47,6 +47,7 @@ toán → 12 bàn giao.
     'license': 'AGPL-3',
     'depends': ['re_base', 'rp_estimate'],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/rp_doc_folder_template_data.xml',
         'views/rp_doc_folder_views.xml',

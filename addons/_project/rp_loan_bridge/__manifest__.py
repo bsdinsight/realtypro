@@ -30,6 +30,8 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
     'website': 'https://bsdinsight.com',
     'license': 'AGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         're_loan',
         # Lõi hồ sơ giải ngân (hoá đơn) — tách ra để khách chỉ mua
         # phân hệ vay vẫn dùng được; ở đây chỉ thêm BBNT + HĐ nhà thầu.
@@ -47,6 +49,7 @@ Cài tùy chọn — chỉ customer dùng cả Loan + Project mới cần.
         'rp_owner_contract',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'security/rp_loan_rules.xml',
         'views/rp_loan_allocation_views.xml',

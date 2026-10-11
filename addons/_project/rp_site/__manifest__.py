@@ -29,12 +29,15 @@ Người nhập: kỹ sư hiện trường CĐT/tổng thầu (backend Odoo).
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
     'depends': [
+        # Mixin rp.doc.filing — nộp hồ sơ vào cây thư mục dự án.
+        'rp_doc_folder',
         'mail',
         'rp_contract',
         'rp_cost_base',
         'rp_schedule',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'views/rp_site_diary_views.xml',

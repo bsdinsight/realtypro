@@ -63,6 +63,7 @@ Những thứ còn lại chỉ là hệ quả của ba điều trên:
         'rp_doc_folder',
     ],
     'data': [
+        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/rp_document_views.xml',

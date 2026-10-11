@@ -3,3 +3,4 @@ from . import rp_contract_guarantee
 from . import rp_contract_guarantee_amendment
 from . import rp_contract_guarantee_claim_wizard
 from . import rp_contract
+from . import rp_doc_filing_ext

@@ -59,6 +59,8 @@ Những thứ còn lại chỉ là hệ quả của ba điều trên:
         'rp_contract',
         'rp_schedule',
         'rp_claim',
+        # Mixin rp.doc.filing — nộp hồ sơ trình vào thư mục 04.5 của dự án.
+        'rp_doc_folder',
     ],
     'data': [
         'security/ir.model.access.csv',

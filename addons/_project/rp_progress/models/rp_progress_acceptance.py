@@ -25,6 +25,15 @@ class RpProgressAcceptance(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'rp.doc.filing']
     _order = 'date_submitted desc, id desc'
 
+    # Hộp thả hồ sơ đã ký. Khai ở ĐÂY chứ không ở mixin, và nêu
+    # relation= tường minh: mixin dùng chung mà khai m2m ir.attachment
+    # thì model nào đã có sẵn một m2m ir.attachment khác sẽ trùng tên
+    # bảng quan hệ và registry chết hẳn.
+    doc_pending_ids = fields.Many2many(
+        'ir.attachment', 'rp_acceptance_doc_pending_rel',
+        'acceptance_id', 'attachment_id', string='Hồ sơ chưa nộp',
+        help='Thả tệp vào đây rồi bấm "Nộp vào hồ sơ dự án".')
+
     name = fields.Char(
         string='Số BBNT', required=False, copy=False, tracking=True,
         help='Auto sinh sequence per contract khi save lần đầu. '

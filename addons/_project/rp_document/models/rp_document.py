@@ -475,6 +475,10 @@ class RpDocument(models.Model):
 class RpDocumentRevision(models.Model):
     _name = 'rp.document.revision'
     _description = 'Lần trình hồ sơ'
+    # rp.doc.filing: nộp tệp lên thư mục 04.5 của dự án. Đặt ở LẦN TRÌNH
+    # chứ không ở hồ sơ: tệp thuộc Rev nào là chuyện cốt lõi của sổ trình
+    # duyệt — Rev 0 bị trả và Rev 1 được duyệt là hai bản khác hẳn nhau.
+    _inherit = ['rp.doc.filing']
     _order = 'document_id, rev_no desc, id desc'
 
     document_id = fields.Many2one(
@@ -508,3 +512,57 @@ class RpDocumentRevision(models.Model):
                      if rec.date_submitted and rec.date_notice else False)
             rec.days_used = ((rec.date_reviewed - start).days
                              if start and rec.date_reviewed else 0)
+
+    # --- nộp hồ sơ vào thư mục dự án (rp.doc.filing) ------------------
+    def _rp_doc_project(self):
+        self.ensure_one()
+        return self.document_id.project_id
+
+    def _rp_doc_folder_model(self):
+        # Thư mục 04.5 khai sổ cha, không khai bảng lần trình.
+        return 'rp.document'
+
+    def _rp_doc_nguon_tep(self):
+        # Dùng luôn ô đính kèm sẵn có của lần trình, đừng đẻ thêm ô thứ
+        # hai: hai hộp thả tệp cạnh nhau thì không ai đoán được hộp nào
+        # mới là hộp đi lên SharePoint.
+        self.ensure_one()
+        return self.attachment_ids
+
+    def _rp_doc_ten_nguon(self):
+        self.ensure_one()
+        d = self.document_id
+        return '%s Rev%s — %s' % (d.doc_ref or d.code or '', self.rev_no,
+                                  d.name or '')
+
+    def _rp_doc_ten_tep(self, att):
+        """Gắn số hiệu và Rev vào tên tệp.
+
+        Thư mục 04.5 nhận hồ sơ của cả dự án. Giữ nguyên tên nhà thầu
+        đặt thì nó đầy "ban-ve.pdf", "ban-ve(1).pdf" — mở ra không biết
+        cái nào của hồ sơ nào, Rev mấy. Số hiệu là thứ hai bên dẫn chiếu
+        trong công văn nên đặt lên đầu.
+        """
+        self.ensure_one()
+        d = self.document_id
+        dau = (d.doc_ref or d.code or '').strip()
+        goc = att.name or 'tep'
+        return '%s Rev%s - %s' % (dau, self.rev_no, goc) if dau else goc
+
+    def action_mo_ho_so(self):
+        """Mở form riêng của lần trình.
+
+        KHÔNG đặt nút nộp thẳng trong hộp thoại o2m: nút type=object
+        trong đó buộc lưu bản ghi cha và nổ required ở những trường
+        chẳng liên quan.
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Hồ sơ %s', self.name),
+            'res_model': 'rp.document.revision',
+            'res_id': self.id, 'view_mode': 'form',
+            'view_id': self.env.ref(
+                'rp_document.view_rp_document_revision_form').id,
+            'target': 'new',
+        }

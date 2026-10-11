@@ -70,8 +70,10 @@
                             <field name="progress_percent"
                                    string="% hoàn thành"
                                    widget="progressbar"/>
-                            <field name="total_float" string="Dư địa (ngày)"
-                                   optional="show"/>
+                            <field name="total_float"
+                                   string="Dư địa trong HĐ" optional="show"/>
+                            <field name="project_float"
+                                   string="Dư địa toàn DA" optional="show"/>
                             <field name="is_critical" string="Găng"
                                    optional="show"/>
                             <field name="exec_status" string="Tình trạng"

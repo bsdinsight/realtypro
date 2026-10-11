@@ -203,7 +203,17 @@
                 <field name="user_ids" string="Người thực hiện"
                        widget="many2many_avatar_user" optional="show"
                        width="140px"/>
-                <field name="total_float" string="Dư địa (ngày)"
+                <!-- HAI dư địa khác nhau, và chúng LỆCH nhau là đúng:
+                     `total_float` tính trong nội bộ một hợp đồng, còn
+                     `project_float` tính xuyên hợp đồng nên bị mốc dự án
+                     siết. Main Road: 0 ngày trong HĐ BOP, −325 ngày trên
+                     toàn dự án. Nhãn cũ chỉ ghi "Dư địa (ngày)" rồi bị
+                     cắt cụt thành "Dư địa (...", nên nhìn sang sổ cảnh
+                     báo (đọc project_float) là tưởng hệ thống tự chửi
+                     nhau. Gọi tên rõ cả hai. -->
+                <field name="total_float" string="Dư địa trong HĐ"
+                       optional="show"/>
+                <field name="project_float" string="Dư địa toàn DA"
                        optional="show"/>
                 <field name="is_critical" string="Găng" optional="show"/>
                 <field name="exec_status" string="Tình trạng"

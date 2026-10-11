@@ -76,6 +76,10 @@
                     <button name="action_create_review_claim" type="object"
                             string="Mở khiếu nại chậm xem xét" icon="fa-gavel"
                             invisible="claim_id or (not is_review_overdue and not review_late_days)"/>
+                    <button name="action_nop_ho_so_hien_tai" type="object"
+                            string="Nộp vào hồ sơ dự án"
+                            invisible="not submit_file_ids"
+                            help="Đưa tệp của lần trình mới nhất lên SharePoint, vào đúng thư mục hồ sơ trình của dự án."/>
                     <button name="action_cancel" type="object"
                             string="Không áp dụng"
                             invisible="state in ['cancelled','approved','approved_comment']"/>
@@ -191,6 +195,52 @@
                                            string="Được làm từ"/>
                                     <field name="doc_gate_slip_days"
                                            string="Chờ hồ sơ (ngày)"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hồ sơ" name="ho_so">
+                            <field name="current_revision_id" invisible="1"/>
+                            <field name="submit_file_ids" invisible="1"/>
+                            <div class="alert alert-info" role="status"
+                                 invisible="current_revision_id">
+                                Hồ sơ này <b>chưa trình lần nào</b> nên chưa
+                                có chỗ gắn tệp. Bấm <b>Trình hồ sơ</b> ở thanh
+                                trên để ghi nhận nhà thầu đã trình — hệ thống
+                                mở lần trình và chỗ thả tệp hiện ra ngay đây.
+                            </div>
+                            <group invisible="not current_revision_id">
+                                <field name="current_revision_id"
+                                       string="Tệp thuộc lần trình"
+                                       readonly="1" nolabel="0"/>
+                                <field name="doc_folder_path" readonly="1"/>
+                            </group>
+                            <separator string="Tệp nhà thầu trình — chưa nộp"
+                                       invisible="not current_revision_id"/>
+                            <field name="submit_file_ids"
+                                   widget="many2many_binary" nolabel="1"
+                                   invisible="not current_revision_id"/>
+                            <div class="text-muted"
+                                 invisible="not submit_file_ids">
+                                Bấm <b>Nộp vào hồ sơ dự án</b> ở thanh trên.
+                            </div>
+                            <separator string="Đã nộp vào thư mục dự án"
+                                       invisible="not filed_file_ids"/>
+                            <field name="filed_file_ids" nolabel="1"
+                                   readonly="1"
+                                   invisible="not filed_file_ids">
+                                <list create="false" delete="false">
+                                    <field name="name" string="Tên tệp"/>
+                                    <field name="size_human"
+                                           string="Dung lượng"/>
+                                    <field name="source_name"
+                                           string="Nộp từ"/>
+                                    <button name="action_xem" type="object"
+                                            icon="fa-eye" string="Xem"
+                                            title="Xem ngay trong trình duyệt"/>
+                                    <button name="action_tai_ve"
+                                            type="object" icon="fa-download"
+                                            string="Tải"
+                                            title="Tải tệp về máy"/>
                                 </list>
                             </field>
                         </page>

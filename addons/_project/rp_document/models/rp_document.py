@@ -198,6 +198,28 @@ class RpDocument(models.Model):
 
     revision_ids = fields.One2many(
         'rp.document.revision', 'document_id', string='Các lần trình')
+    # --- Hồ sơ đính kèm: nhìn thẳng vào lần trình MỚI NHẤT ------------
+    # Tệp thuộc về một LẦN TRÌNH chứ không thuộc về hồ sơ (Rev 0 bị trả
+    # và Rev 1 được duyệt là hai bản khác hẳn nhau). Nhưng bắt người ta
+    # vào tab "Các lần trình" rồi mở hộp thoại mới thấy chỗ thả tệp thì
+    # không ai tìm ra. Mấy trường dưới đây là CỬA SỔ nhìn vào lần trình
+    # mới nhất, không phải chỗ chứa thứ hai.
+    # store=True bắt buộc: trường liên quan ghi-được bên dưới phải đi
+    # qua đây, mà hàm ghi ngược của nó dựng câu SQL — trường không lưu
+    # thì nổ "Cannot convert ... to SQL because it is not stored".
+    current_revision_id = fields.Many2one(
+        'rp.document.revision', string='Lần trình mới nhất',
+        compute='_compute_current_revision', store=True)
+    submit_file_ids = fields.Many2many(
+        'ir.attachment', related='current_revision_id.attachment_ids',
+        readonly=False, string='Tệp của lần trình mới nhất')
+    filed_file_ids = fields.Many2many(
+        'rp.doc.file', string='Hồ sơ đã nộp vào thư mục dự án',
+        compute='_compute_filed_files')
+    filed_file_count = fields.Integer(compute='_compute_filed_files')
+    doc_folder_path = fields.Char(
+        string='Nộp vào', compute='_compute_doc_folder_path')
+
     revision = fields.Integer(
         string='Lần trình', default=0, readonly=True, copy=False,
         help='Rev 0 là lần trình đầu. Mỗi lần bị trả lại rồi trình lại là '
@@ -324,6 +346,39 @@ class RpDocument(models.Model):
     # ------------------------------------------------------------------
     # Luồng xử lý
     # ------------------------------------------------------------------
+    @api.depends('revision_ids', 'revision_ids.rev_no')
+    def _compute_current_revision(self):
+        # _order của bảng lần trình là rev_no desc nên [:1] là mới nhất.
+        for rec in self:
+            rec.current_revision_id = rec.revision_ids[:1]
+
+    def _compute_filed_files(self):
+        File = self.env['rp.doc.file']
+        for rec in self:
+            f = File.search([
+                ('source_model', '=', 'rp.document.revision'),
+                ('source_id', 'in', rec.revision_ids.ids or [0])])
+            rec.filed_file_ids = f
+            rec.filed_file_count = len(f)
+
+    def _compute_doc_folder_path(self):
+        Folder = self.env['rp.doc.folder']
+        for rec in self:
+            f = Folder.search(
+                [('project_id', '=', rec.project_id.id),
+                 ('tool_model_id.model', '=', 'rp.document')], limit=1)
+            rec.doc_folder_path = f.full_path or False
+
+    def action_nop_ho_so_hien_tai(self):
+        """Nộp tệp của lần trình mới nhất vào thư mục hồ sơ dự án."""
+        self.ensure_one()
+        if not self.current_revision_id:
+            raise UserError(_(
+                'Hồ sơ này chưa trình lần nào nên chưa có chỗ gắn tệp. '
+                'Bấm "Trình hồ sơ" ở thanh trên để ghi nhận nhà thầu đã '
+                'trình, hệ thống sẽ mở lần trình Rev %s.', self.revision))
+        return self.current_revision_id.action_nop_ho_so()
+
     def _log_revision(self, transmittal=None):
         """Mở một lần trình mới trong chuỗi hồ sơ."""
         self.ensure_one()

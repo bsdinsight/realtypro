@@ -19,7 +19,7 @@ Nên việc ẩn là lựa chọn của TỪNG bản triển khai, đặt ở C�
   có nghiệp vụ đó — doanh thu của họ đến từ việc khai thác công trình
   (nhà máy điện bán điện theo PPA), hoàn toàn khác.
 
-Bốn tổ hợp đều có thật: chủ đầu tư điện gió (AMI, bật cả hai), nhà thầu
+Bốn tổ hợp đều có thật: chủ đầu tư điện gió (bật cả hai), nhà thầu
 EPC điện gió (bật cờ ngành, TẮT cờ vai vì họ cần Doanh thu), chủ đầu tư
 bất động sản, tổng thầu xây dựng dân dụng.
 

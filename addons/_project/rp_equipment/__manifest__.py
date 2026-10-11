@@ -13,8 +13,9 @@ Trong giai đoạn xây dựng, **vật tư là của nhà thầu** — chủ đ
 có kho và không nên có. Dựng phân hệ kho cho chủ đầu tư lúc này là dựng
 một cái kho rỗng.
 
-Nhưng với 75,8 triệu USD tua-bin đang đi từ nhà máy ở châu Âu về một
-cánh đồng ở Savannakhet, có một câu hỏi phải trả lời được hằng tuần:
+Nhưng với hàng chục triệu USD tua-bin đang đi từ nhà máy ở châu Âu về
+một cánh đồng cách đó nửa vòng trái đất, có một câu hỏi phải trả lời
+được hằng tuần:
 **"kiện hàng này đang ở đâu, và nếu nó hỏng thì ai chịu?"**. Phiếu nhập
 xuất kho không trả lời được câu đó.
 

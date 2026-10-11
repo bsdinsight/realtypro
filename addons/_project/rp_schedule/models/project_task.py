@@ -49,6 +49,10 @@ class ProjectTask(models.Model):
         string='Cấp', compute='_compute_wbs_level', store=True, index=True,
         help='Độ sâu trong cây WBS: "2" là cấp 1, "2.3" là cấp 2, '
              '"2.3.5" là cấp 3.')
+    wbs_name_indent = fields.Char(
+        string='Tên công việc', compute='_compute_wbs_name_indent',
+        help='Tên việc có thụt lề theo cấp WBS — chỉ để NHÌN. Sửa tên '
+             'thì bật cột "Tên công việc (sửa)".')
     planned_start = fields.Date(string='Bắt đầu (KH)')
     planned_end = fields.Date(string='Kết thúc (KH)')
     planned_days = fields.Integer(
@@ -141,7 +145,8 @@ class ProjectTask(models.Model):
            bắt đầu hoặc đã xong; gộp lại là mất chiều tiến độ;
          · và nhất là: KHÔNG suy găng từ `total_float <= 0`. Dư địa là
            Integer, mặc định 0 khi CPM chưa từng chạy cho việc đó — trên
-           dữ liệu AMI có 148/228 việc dư địa bằng 0 kiểu đó, trong khi
+           một lịch thi công thật có 148/228 việc dư địa bằng 0 kiểu
+           đó, trong khi
            CPM chỉ đánh dấu đúng 3 việc găng thật. Lấy 0 làm bằng chứng
            găng thì 63% lịch hoá găng và cảnh báo thành vô dụng.
         """
@@ -162,6 +167,22 @@ class ProjectTask(models.Model):
         for t in self:
             code = (t.wbs_code or '').strip()
             t.wbs_level = len([p for p in code.split('.') if p]) if code else 0
+
+    @api.depends('name', 'wbs_level')
+    def _compute_wbs_name_indent(self):
+        """Thụt lề tên theo cấp WBS.
+
+        Danh sách Odoo 19 không dựng được cây lồng nhau, nên 89 dòng
+        "2 / 2.1 / 2.1.1 / 2.1.2" nằm dàn phẳng một mép: mắt phải tự
+        ghép lại cấu trúc từ dấu chấm trong mã. Thụt lề trả lại đúng
+        hình dáng của bản WBS trên giấy.
+
+        Dùng khoảng trắng không ngắt — khoảng trắng thường bị HTML gộp
+        lại thành một, thụt lề biến mất.
+        """
+        for t in self:
+            cap = max((t.wbs_level or 1) - 1, 0)
+            t.wbs_name_indent = ' ' * (cap * 4) + (t.name or '')
 
     @api.model
     def _wbs_sort_key(self, code):
@@ -792,7 +813,7 @@ class ProjectTask(models.Model):
         Mốc (milestone) bị loại khỏi trọng số vì chúng không mang khối
         lượng. NHƯNG nếu một dòng tổng mà MỌI con đều là mốc thì phải
         lấy chính các mốc đó: bỏ hết thì dòng tổng vĩnh viễn đứng 0.
-        Trên lịch AMI có 28 mốc, và "Site Handover" là đúng kiểu dòng
+        Một lịch thật có 28 mốc, và "Site Handover" là đúng kiểu dòng
         tổng toàn mốc — bản cũ bỏ qua nên nó không bao giờ nhúc nhích.
         """
         cha = self.mapped('parent_id')

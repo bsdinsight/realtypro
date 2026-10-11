@@ -124,7 +124,7 @@ class ReProjectCashAlert(models.Model):
                                       ('facility_id', 'not in', rieng.ids)]):
                 f = a.facility_id
                 # Một hạn mức có thể có NHIỀU dòng phân bổ cho cùng dự
-                # án (demo AMI đang có đúng thế). Cộng từng dòng là cộng
+                # án (đã gặp trên dữ liệu thật). Cộng từng dòng là cộng
                 # đúp phần khả dụng của chính hạn mức đó.
                 if f.id in da_tinh:
                     continue

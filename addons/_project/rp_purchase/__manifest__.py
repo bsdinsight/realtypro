@@ -9,8 +9,9 @@
 Đơn mua của chủ đầu tư (rp_purchase)
 ====================================
 
-Chủ đầu tư nhà máy điện **không mua vật tư** — nhà thầu mua. Trên dự án
-AMI, 98,2% tiền đi qua ba hợp đồng EPC trọn gói, chỉ 1,8% là chủ đầu tư
+Chủ đầu tư nhà máy điện **không mua vật tư** — nhà thầu mua. Trên một
+dự án điện gió thực tế, 98,2% tiền đi qua ba hợp đồng EPC trọn gói,
+chỉ 1,8% là chủ đầu tư
 tự mua: tư vấn giám sát độc lập (OE), bảo hiểm công trình, kiểm định,
 chi phí ban quản lý dự án.
 

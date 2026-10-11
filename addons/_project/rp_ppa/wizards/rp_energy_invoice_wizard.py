@@ -9,7 +9,8 @@ class RpEnergyInvoiceWizard(models.TransientModel):
     Hai luật không đổi được, và chúng kéo nhau:
 
     * **Một hoá đơn chỉ một bên mua.** Một kỳ sản lượng phân bổ cho nhiều
-      hợp đồng (AMI bán cho cả EVN lẫn EDL), nên không bao giờ được xuất
+      hợp đồng (một chủ đầu tư có thể bán cho hai bên mua ở hai nước),
+      nên không bao giờ được xuất
       hoá đơn "theo kỳ" — phải xuất theo DÒNG phân bổ, mỗi bên mua một tờ.
     * **Một hoá đơn có thể gồm nhiều kỳ.** Thực tế hiếm khi phát hành
       tháng nào tờ nấy: chốt công-tơ xong còn đối soát, nên thường dồn

@@ -89,7 +89,7 @@ class EamLocation(models.Model):
 
     # Định danh thật là ĐƯỜNG DẪN ĐẦY ĐỦ, không phải mã lẻ: mã "GBX"
     # (vị trí hộp số) phải lặp lại ở cả 30 tua-bin, nhưng
-    # SAVA1/WTG/T07/GBX thì chỉ có một. Ràng buộc trên complete_code
+    # NM01/WTG/T07/GBX thì chỉ có một. Ràng buộc trên complete_code
     # đồng thời chặn luôn hai vị trí con trùng mã dưới cùng một cha.
     _uniq_path = models.Constraint(
         'UNIQUE(company_id, complete_code)',

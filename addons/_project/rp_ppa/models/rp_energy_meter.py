@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """Điểm giao nhận và công-tơ.
 
-Điểm giao nhận quyết định ai chịu tổn thất đường dây: AMI phát ở Lào và
-bán TẠI BIÊN GIỚI, nên tổn thất trên đoạn 220kV tới biên giới là của
-AMI, còn từ biên giới trở đi là của bên mua. Ghi sai điểm giao là ghi
+Điểm giao nhận quyết định ai chịu tổn thất đường dây: chủ đầu tư phát
+điện ở nước láng giềng và bán TẠI BIÊN GIỚI thì tổn thất trên đoạn
+220kV tới biên giới là của bên bán, còn từ biên giới trở đi là của bên
+mua. Ghi sai điểm giao là ghi
 sai tiền ngay từ con số đầu tiên.
 
 Công-tơ đối chứng (check meter) để riêng vì đối soát hai số là việc có

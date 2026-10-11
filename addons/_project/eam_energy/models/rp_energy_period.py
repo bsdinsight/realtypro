@@ -18,7 +18,8 @@ class RpEnergyPeriod(models.Model):
     * ``unavail_mwh`` (thêm ở đây) — **toàn bộ** sản lượng mất vì máy
       không khả dụng.
 
-    Số liệu thật của SAVA1 cho thấy khoảng cách: một kỳ khả dụng 97,90%
+    Số liệu thật từ một nhà máy điện gió cho thấy khoảng cách: một kỳ
+    khả dụng 97,90%
     so với cam kết 98,00% có ``shortfall_mwh`` 46,9 MWh, trong khi tổn
     thất do không khả dụng là **985,3 MWh** — lệch 21 lần. Lấy
     ``shortfall_mwh`` làm mẫu số thì độ bao phủ nhảy lên 348%, và người

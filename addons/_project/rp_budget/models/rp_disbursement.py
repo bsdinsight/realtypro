@@ -190,14 +190,19 @@ class ReProjectDisbursement(models.Model):
         for c in hd:
             khoa = (c.tender_package_id.id or False, c.id)
             for m in c.payment_milestone_ids:
+                # Quy đổi về tiền dự án: hợp đồng có thể ký bằng ngoại
+                # tệ, mà các dòng giải ngân đều mang `currency_id` lấy
+                # theo dự án — cộng số thô là dán nhãn tiền dự án lên
+                # con số ngoại tệ.
+                tien = self._rp_doi_tien(m, m.amount or 0.0)
                 if m.due_date:
-                    o[khoa + (_dau_thang(m.due_date),)][0] += m.amount or 0.0
+                    o[khoa + (_dau_thang(m.due_date),)][0] += tien
                 if m.state == 'paid':
                     ng = m.paid_date or m.due_date
                     if not m.paid_date:
                         thieu_ngay += 1
                     if ng:
-                        o[khoa + (_dau_thang(ng),)][1] += m.amount or 0.0
+                        o[khoa + (_dau_thang(ng),)][1] += tien
 
         Advance = self.env.get('rp.advance.payment')
         if Advance is not None:
@@ -206,9 +211,11 @@ class ReProjectDisbursement(models.Model):
                 khoa = (c.tender_package_id.id or False, c.id)
                 kh = a.date_approval or a.date_request
                 if kh:
-                    o[khoa + (_dau_thang(kh),)][0] += a.amount or 0.0
+                    o[khoa + (_dau_thang(kh),)][0] += self._rp_doi_tien(
+                        a, a.amount or 0.0)
                 if a.date_paid and a.amount_paid:
-                    o[khoa + (_dau_thang(a.date_paid),)][1] += a.amount_paid
+                    o[khoa + (_dau_thang(a.date_paid),)][1] += \
+                        self._rp_doi_tien(a, a.amount_paid)
         return o, thieu_ngay
 
     def action_dung_bang_giai_ngan(self):

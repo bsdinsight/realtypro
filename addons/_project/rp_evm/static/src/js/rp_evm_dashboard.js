@@ -15,20 +15,15 @@ import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { loadEj2 } from "@bsd_syncfusion/js/ej2_loader";
 
-const TY = 1e9; // 1 tỷ
-
 function ymToDate(ym) {
     return new Date(parseInt(ym.slice(0, 4), 10), parseInt(ym.slice(5, 7), 10) - 1, 1);
 }
 
-/** Định dạng tiền VN gọn: 1.284 tỷ / 320 tr / 45.000 */
-function fmtMoney(v) {
-    const n = Math.round(v || 0);
-    const a = Math.abs(n);
-    if (a >= TY) return (n / TY).toLocaleString("vi-VN", { maximumFractionDigits: 1 }) + " tỷ";
-    if (a >= 1e6) return (n / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 0 }) + " tr";
-    return n.toLocaleString("vi-VN");
-}
+// Đơn vị rút gọn do SERVER chọn theo độ lớn của số (currency.div/unit).
+// Trước đây chỗ này chia cứng cho 1e9 và dán chữ "tỷ": đúng với dự án
+// ghi bằng đồng, nhưng dự án ghi bằng USD 189 triệu thì trục biểu đồ
+// hiện "0,2 tỷ". Mặc định dưới đây chỉ dùng khi chưa có dữ liệu.
+const MAC_DINH = { div: 1e9, unit: "tỷ" };
 
 export class RpEvmDashboard extends Component {
     static template = "rp_evm.Dashboard";
@@ -37,12 +32,17 @@ export class RpEvmDashboard extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.state = useState({ loading: true, error: null, data: null, projectId: false });
+        this.state = useState({
+            loading: true, error: null, data: null, projectId: false,
+            tab: "tong-quan",
+        });
         this.scurveRef = useRef("scurve");
         this.donutRef = useRef("donut");
         this.cashRef = useRef("cash");
         this.manpowerRef = useRef("manpower");
         this.qaRef = useRef("qa");
+        this.disbRef = useRef("disb");
+        this.payableRef = useRef("payable");
         this._charts = [];
         this._needRender = false;
 
@@ -57,11 +57,45 @@ export class RpEvmDashboard extends Component {
     }
 
     // ---- helpers exposed to template ----
-    fmt(v) { return fmtMoney(v); }
-    fmtTy(v) { return (Math.round((v || 0) / TY * 10) / 10).toLocaleString("vi-VN"); }
+    get cur() {
+        return (this.state.data && this.state.data.currency) || MAC_DINH;
+    }
+    get div() { return this.cur.div || 1; }
+    get unit() { return this.cur.unit || ""; }
+    /** Trục biểu đồ: "{value} tr" — đơn vị theo tiền tệ dự án. */
+    get axisFmt() { return this.unit ? "{value} " + this.unit : "{value}"; }
+
+    fmt(v) {
+        const n = Math.round(v || 0);
+        const d = this.div;
+        if (d <= 1) return n.toLocaleString("vi-VN");
+        const so = (n / d).toLocaleString("vi-VN", {
+            maximumFractionDigits: Math.abs(n / d) >= 100 ? 0 : 1,
+        });
+        return this.unit ? so + " " + this.unit : so;
+    }
+    /** Có kèm ký hiệu tiền — dùng cho các số đứng một mình. */
+    fmtCur(v) {
+        const s = this.cur.symbol || "";
+        return this.cur.position === "before" ? s + " " + this.fmt(v)
+            : this.fmt(v) + " " + s;
+    }
     pct(v) { return (Math.round((v || 0) * 10) / 10).toLocaleString("vi-VN") + "%"; }
 
     get k() { return (this.state.data && this.state.data.kpi) || {}; }
+    get m() { return (this.state.data && this.state.data.money) || {}; }
+    get mk() { return this.m.kpi || {}; }
+
+    onTab(t) {
+        if (this.state.tab === t) return;
+        this.state.tab = t;
+        // Mỗi tab dựng DOM riêng bằng t-if, nên biểu đồ của tab vừa hiện
+        // chưa tồn tại — phải vẽ lại sau khi OWL gắn DOM. Giữ t-if thay
+        // vì ẩn bằng CSS là có lý do: Syncfusion vẽ vào thẻ đang
+        // display:none sẽ ra biểu đồ rộng 0px.
+        this._needRender = true;
+    }
+    tabClass(t) { return this.state.tab === t ? "is-active" : ""; }
 
     cpiClass(v) { return v >= 1 ? "is-good" : v >= 0.9 ? "is-warn" : "is-bad"; }
     healthClass(v) { return v >= 75 ? "is-good" : v >= 50 ? "is-warn" : "is-bad"; }
@@ -136,11 +170,15 @@ export class RpEvmDashboard extends Component {
         }
         this.destroyCharts();
         try {
+            // Mỗi hàm tự bỏ qua khi thẻ chứa không có trên DOM — tab
+            // không hiện thì ref của nó là null.
             this._renderScurve(ej);
             this._renderDonut(ej);
             this._renderCashflow(ej);
             this._renderManpower(ej);
             this._renderQa(ej);
+            this._renderDisbursement(ej);
+            this._renderPayable(ej);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error("EVM charts render error", e);
@@ -148,13 +186,15 @@ export class RpEvmDashboard extends Component {
     }
 
     _renderScurve(ej) {
+        if (!this.scurveRef.el) return;
         const C = ej.charts;
         C.Chart.Inject(C.LineSeries, C.DateTime, C.Legend, C.Tooltip, C.Category);
+        const D = this.div;
         const src = this.state.data.scurve.map((p) => ({
             x: ymToDate(p.ym),
-            pv: p.pv != null ? p.pv / TY : null,
-            ev: p.ev != null ? p.ev / TY : null,
-            ac: p.ac != null ? p.ac / TY : null,
+            pv: p.pv != null ? p.pv / D : null,
+            ev: p.ev != null ? p.ev / D : null,
+            ac: p.ac != null ? p.ac / D : null,
         }));
         const chart = new C.Chart({
             primaryXAxis: {
@@ -163,7 +203,7 @@ export class RpEvmDashboard extends Component {
                 majorGridLines: { width: 0 },
             },
             primaryYAxis: {
-                labelFormat: "{value} tỷ", title: "Giá trị lũy kế",
+                labelFormat: this.axisFmt, title: "Giá trị lũy kế",
                 majorGridLines: { width: 1, color: "#eee" },
                 lineStyle: { width: 0 }, majorTickLines: { width: 0 },
             },
@@ -186,7 +226,10 @@ export class RpEvmDashboard extends Component {
                 },
             ],
             legendSettings: { visible: true, position: "Top" },
-            tooltip: { enable: true, shared: true, format: "${series.name}: ${point.y} tỷ" },
+            tooltip: {
+                enable: true, shared: true,
+                format: "${series.name}: ${point.y} " + this.unit,
+            },
             width: "100%", height: "300px",
         });
         chart.appendTo(this.scurveRef.el);
@@ -194,14 +237,16 @@ export class RpEvmDashboard extends Component {
     }
 
     _renderDonut(ej) {
+        if (!this.donutRef.el) return;
         const C = ej.charts;
         C.AccumulationChart.Inject(
             C.PieSeries, C.AccumulationLegend, C.AccumulationTooltip,
             C.AccumulationDataLabel);
         const palette = ["#34617a", "#c9873d", "#2e7d5b", "#8a6fb0", "#c0453b", "#5a7d8c"];
+        const D = this.div;
         const src = this.state.data.cost_breakdown.map((d, i) => ({
-            name: d.name, value: Math.round(d.value / TY * 10) / 10,
-            label: fmtMoney(d.value), fill: palette[i % palette.length],
+            name: d.name, value: Math.round(d.value / D * 10) / 10,
+            label: this.fmt(d.value), fill: palette[i % palette.length],
         }));
         const donut = new C.AccumulationChart({
             series: [{
@@ -214,7 +259,7 @@ export class RpEvmDashboard extends Component {
                 },
             }],
             legendSettings: { visible: true, position: "Bottom", textWrap: "Wrap", maximumLabelWidth: 140 },
-            tooltip: { enable: true, format: "${point.x}: ${point.y} tỷ" },
+            tooltip: { enable: true, format: "${point.x}: ${point.y} " + this.unit },
             enableSmartLabels: true,
             width: "100%", height: "300px",
         });
@@ -223,13 +268,15 @@ export class RpEvmDashboard extends Component {
     }
 
     _renderCashflow(ej) {
+        if (!this.cashRef.el) return;
         const C = ej.charts;
         C.Chart.Inject(C.ColumnSeries, C.LineSeries, C.DateTime, C.Legend, C.Tooltip);
+        const D = this.div;
         const src = this.state.data.cashflow.map((p) => ({
             x: ymToDate(p.ym),
-            inflow: p.inflow / TY,
-            outflow: -p.outflow / TY,
-            net: p.net_cum / TY,
+            inflow: p.inflow / D,
+            outflow: -p.outflow / D,
+            net: p.net_cum / D,
         }));
         const chart = new C.Chart({
             primaryXAxis: {
@@ -238,7 +285,7 @@ export class RpEvmDashboard extends Component {
                 majorGridLines: { width: 0 },
             },
             primaryYAxis: {
-                labelFormat: "{value} tỷ",
+                labelFormat: this.axisFmt,
                 majorGridLines: { width: 1, color: "#eee" },
                 lineStyle: { width: 0 }, majorTickLines: { width: 0 },
             },
@@ -323,6 +370,117 @@ export class RpEvmDashboard extends Component {
         });
         donut.appendTo(this.qaRef.el);
         this._charts.push(donut);
+    }
+
+    /** Đường cong giải ngân: kế hoạch vs thực chi, luỹ kế. */
+    _renderDisbursement(ej) {
+        if (!this.disbRef.el) return;
+        const C = ej.charts;
+        C.Chart.Inject(C.LineSeries, C.ColumnSeries, C.DateTime, C.Legend, C.Tooltip);
+        const D = this.div;
+        const src = (this.m.disbursement || []).map((p) => ({
+            x: ymToDate(p.ym),
+            plan: p.plan / D,
+            actual: p.actual / D,
+            plan_cum: p.plan_cum / D,
+            // null để đường thực chi DỪNG ở tháng hiện tại — vẽ tiếp là
+            // vẽ một đường phẳng trông như dự án đã ngừng chi tiền.
+            actual_cum: p.actual_cum != null ? p.actual_cum / D : null,
+        }));
+        const chart = new C.Chart({
+            primaryXAxis: {
+                valueType: "DateTime", intervalType: "Months", interval: 3,
+                labelFormat: "MM/yy", edgeLabelPlacement: "Shift",
+                majorGridLines: { width: 0 },
+            },
+            primaryYAxis: {
+                labelFormat: this.axisFmt, title: "Luỹ kế",
+                majorGridLines: { width: 1, color: "#eee" },
+                lineStyle: { width: 0 }, majorTickLines: { width: 0 },
+            },
+            // Trục phụ cho cột THEO THÁNG. Dùng chung một trục với đường
+            // luỹ kế thì cột bị dẹp xuống gần mặt đất — luỹ kế lên tới
+            // 215 trong khi tháng cao nhất chỉ 27, tức cột chiếm chưa
+            // tới 1/8 chiều cao và không đọc được tháng nào hơn tháng nào.
+            axes: [{
+                name: "thang", opposedPosition: true,
+                labelFormat: this.axisFmt, title: "Theo tháng",
+                majorGridLines: { width: 0 },
+                lineStyle: { width: 0 }, majorTickLines: { width: 0 },
+            }],
+            chartArea: { border: { width: 0 } },
+            series: [
+                {
+                    type: "Column", dataSource: src, xName: "x", yName: "plan",
+                    name: "Kế hoạch chi (tháng)", fill: "#cfd8dd",
+                    columnWidth: 0.6, yAxisName: "thang",
+                    cornerRadius: { topLeft: 3, topRight: 3 },
+                },
+                {
+                    type: "Column", dataSource: src, xName: "x", yName: "actual",
+                    name: "Thực chi (tháng)", fill: "#2e7d5b", columnWidth: 0.6,
+                    yAxisName: "thang",
+                    cornerRadius: { topLeft: 3, topRight: 3 },
+                },
+                {
+                    type: "Line", dataSource: src, xName: "x", yName: "plan_cum",
+                    name: "Kế hoạch luỹ kế", width: 2.5, fill: "#34617a",
+                    dashArray: "6,4",
+                },
+                {
+                    type: "Line", dataSource: src, xName: "x",
+                    yName: "actual_cum", name: "Thực chi luỹ kế",
+                    width: 3, fill: "#c9873d",
+                    marker: { visible: true, width: 6, height: 6 },
+                },
+            ],
+            legendSettings: { visible: true, position: "Top" },
+            tooltip: { enable: true, shared: true },
+            width: "100%", height: "320px",
+        });
+        chart.appendTo(this.disbRef.el);
+        this._charts.push(chart);
+    }
+
+    /** Lịch phải trả 12 kỳ tới — đợt đến hạn chưa trả, theo tháng. */
+    _renderPayable(ej) {
+        if (!this.payableRef.el) return;
+        const C = ej.charts;
+        C.Chart.Inject(C.ColumnSeries, C.Category, C.Tooltip, C.DataLabel);
+        const D = this.div;
+        const src = (this.m.payable || []).map((p) => ({
+            x: p.ym.slice(5) + "/" + p.ym.slice(2, 4),
+            y: p.amount / D,
+            lbl: this.fmt(p.amount),
+        }));
+        const chart = new C.Chart({
+            primaryXAxis: {
+                valueType: "Category", majorGridLines: { width: 0 },
+                labelIntersectAction: "Rotate45",
+            },
+            primaryYAxis: {
+                labelFormat: this.axisFmt,
+                majorGridLines: { width: 1, color: "#eee" },
+                lineStyle: { width: 0 }, majorTickLines: { width: 0 },
+            },
+            chartArea: { border: { width: 0 } },
+            series: [{
+                type: "Column", dataSource: src, xName: "x", yName: "y",
+                name: "Phải trả", fill: "#34617a", columnWidth: 0.55,
+                cornerRadius: { topLeft: 3, topRight: 3 },
+                marker: {
+                    dataLabel: {
+                        visible: true, position: "Top", name: "lbl",
+                        font: { size: "10px" },
+                    },
+                },
+            }],
+            legendSettings: { visible: false },
+            tooltip: { enable: true },
+            width: "100%", height: "320px",
+        });
+        chart.appendTo(this.payableRef.el);
+        this._charts.push(chart);
     }
 }
 

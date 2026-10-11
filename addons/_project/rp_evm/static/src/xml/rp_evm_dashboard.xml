@@ -43,6 +43,24 @@
             <!-- Body -->
             <t t-elif="state.data and state.data.ok">
 
+                <!-- Thanh tab: hai câu hỏi khác nhau, không thay nhau được.
+                     "Tổng quan" trả lời làm ra bao nhiêu so với chi bao
+                     nhiêu; "Tiền" trả lời tháng sau có tiền trả nhà thầu
+                     không. -->
+                <div class="rp-evm-tabs">
+                    <button class="rp-evm-tab" t-att-class="tabClass('tong-quan')"
+                            t-on-click="() => this.onTab('tong-quan')">
+                        Tổng quan · Chi phí &amp; Tiến độ
+                    </button>
+                    <button class="rp-evm-tab" t-att-class="tabClass('tien')"
+                            t-on-click="() => this.onTab('tien')">
+                        Tiền · Tài trợ &amp; Giải ngân
+                        <span class="rp-evm-tab-dot" t-if="mk.alert"/>
+                    </button>
+                </div>
+
+                <t t-if="state.tab === 'tong-quan'">
+
                 <!-- KPI cards -->
                 <div class="rp-evm-kpis">
                     <div class="rp-evm-card rp-evm-hero" t-att-class="healthClass(k.health)">
@@ -351,6 +369,225 @@
                         </tbody>
                     </table>
                 </div>
+
+                </t><!-- /tab Tổng quan -->
+
+                <!-- ==================== TAB TIỀN ==================== -->
+                <t t-if="state.tab === 'tien'">
+
+                <div class="rp-evm-kpis">
+                    <div class="rp-evm-card rp-evm-hero"
+                         t-att-class="mk.alert ? 'is-bad' : 'is-good'">
+                        <div class="rp-evm-card-label">
+                            <t t-if="mk.alert">Thiếu tiền</t>
+                            <t t-else="">Đủ tiền trong tầm nhìn</t>
+                        </div>
+                        <div class="rp-evm-card-value">
+                            <t t-if="mk.alert" t-esc="fmt(mk.gap)"/>
+                            <t t-else="">+<t t-esc="fmt(mk.surplus)"/></t>
+                        </div>
+                        <div class="rp-evm-card-sub">
+                            nhìn trước <t t-esc="mk.horizon_months"/> tháng ·
+                            chỉ tính hạn mức tín dụng
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Cần chi (tầm nhìn)</div>
+                        <div class="rp-evm-card-value" t-esc="fmt(mk.need)"/>
+                        <div class="rp-evm-card-sub"
+                             t-att-class="mk.overdue ? 'is-bad-text' : ''">
+                            trong đó quá hạn <t t-esc="fmt(mk.overdue)"/>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Nguồn còn rút được</div>
+                        <div class="rp-evm-card-value" t-esc="fmt(mk.available)"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="mk.facility_count"/> hạn mức tín dụng
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Đã giải ngân / Kế hoạch</div>
+                        <div class="rp-evm-card-value"
+                             t-esc="pct(mk.plan_total ? mk.actual_total / mk.plan_total * 100 : 0)"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="fmt(mk.actual_total)"/> /
+                            <t t-esc="fmt(mk.plan_total)"/>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Tạm ứng chưa hoàn</div>
+                        <div class="rp-evm-card-value"
+                             t-esc="fmt(mk.advance_outstanding)"/>
+                        <div class="rp-evm-card-sub">thu hồi dần theo đợt</div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Giữ lại theo hợp đồng</div>
+                        <div class="rp-evm-card-value" t-esc="fmt(mk.retention)"/>
+                        <div class="rp-evm-card-sub">trả khi hết bảo hành</div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Bảo lãnh đang giữ</div>
+                        <div class="rp-evm-card-value"
+                             t-esc="fmt(mk.guarantee_total)"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="m.guarantees.length"/> thư từ nhà thầu
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đường cong giải ngân + Lịch phải trả -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Giải ngân — Kế hoạch vs Thực chi</h3>
+                            <span class="rp-evm-panel-note">
+                                Kế hoạch lấy từ đợt thanh toán hợp đồng và tạm
+                                ứng · thực chi dừng ở tháng hiện tại
+                            </span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="disb"/>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Phải trả 12 kỳ tới</h3>
+                            <span class="rp-evm-panel-note">
+                                Đợt đến hạn chưa trả, theo tháng
+                            </span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="payable"/>
+                    </div>
+                </div>
+
+                <!-- Quá hạn -->
+                <div class="rp-evm-panel" t-if="m.overdue_rows.length">
+                    <div class="rp-evm-panel-head">
+                        <h3>Đợt thanh toán đã quá hạn chưa trả</h3>
+                        <span class="rp-evm-panel-note">
+                            Chậm trả là rủi ro nhà thầu dừng việc — và là căn cứ
+                            để họ đòi gia hạn tiến độ
+                        </span>
+                    </div>
+                    <table class="rp-evm-table">
+                        <thead>
+                            <tr>
+                                <th>Hợp đồng</th>
+                                <th>Đợt</th>
+                                <th class="c">Đến hạn</th>
+                                <th class="num">Trễ (ngày)</th>
+                                <th class="num">Số tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="m.overdue_rows" t-as="r" t-key="r_index">
+                                <tr>
+                                    <td t-esc="r.contract"/>
+                                    <td class="muted" t-esc="r.name"/>
+                                    <td class="c" t-esc="r.due_date"/>
+                                    <td class="num">
+                                        <span class="rp-evm-lv"
+                                              t-att-class="r.days >= 60 ? 'lv-critical' : r.days >= 30 ? 'lv-high' : 'lv-medium'"
+                                              t-esc="r.days"/>
+                                    </td>
+                                    <td class="num" t-esc="fmt(r.amount)"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Hạn mức + Bảo lãnh -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Hạn mức tín dụng</h3>
+                            <span class="rp-evm-panel-note">
+                                Giữ cả số gốc theo loại tiền đã ký và số đã quy
+                                đổi về <t t-esc="cur.name"/>
+                            </span>
+                        </div>
+                        <table class="rp-evm-table">
+                            <thead>
+                                <tr>
+                                    <th>Hạn mức</th>
+                                    <th class="num">Hạn mức (gốc)</th>
+                                    <th class="num">Còn rút (gốc)</th>
+                                    <th class="num">Còn rút (<t t-esc="cur.name"/>)</th>
+                                    <th class="num">Đã dùng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="m.facilities" t-as="f" t-key="f_index">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="f.name"/>
+                                            <span class="rp-evm-chip" t-if="f.pooled">liên thông</span>
+                                        </td>
+                                        <td class="num muted">
+                                            <t t-esc="f.limit_raw.toLocaleString('vi-VN')"/>
+                                            <span class="u" t-esc="f.currency"/>
+                                        </td>
+                                        <td class="num muted">
+                                            <t t-esc="f.available_raw.toLocaleString('vi-VN')"/>
+                                        </td>
+                                        <td class="num" t-esc="fmt(f.available)"/>
+                                        <td class="num">
+                                            <div class="rp-evm-bar-track rp-evm-bar-inline">
+                                                <div class="rp-evm-bar-fill"
+                                                     t-att-style="'width:' + Math.min(Math.max(f.used_pct, 1), 100) + '%'"/>
+                                            </div>
+                                            <t t-esc="pct(f.used_pct)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Bảo lãnh nhận từ nhà thầu</h3>
+                            <span class="rp-evm-panel-note">Sắp hết hạn lên trước</span>
+                        </div>
+                        <table class="rp-evm-table rp-evm-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Thư bảo lãnh</th>
+                                    <th class="num">Giá trị</th>
+                                    <th class="c">Hết hạn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="m.guarantees" t-as="g" t-key="g_index">
+                                    <tr>
+                                        <td t-esc="g.name"/>
+                                        <td class="num" t-esc="fmt(g.amount)"/>
+                                        <td class="c">
+                                            <t t-esc="g.expiry or '—'"/>
+                                            <span class="rp-evm-lv"
+                                                  t-if="g.days_left !== null and g.days_left &lt; 60"
+                                                  t-att-class="g.days_left &lt; 30 ? 'lv-critical' : 'lv-high'">
+                                                còn <t t-esc="g.days_left"/>n
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="rp-evm-panel rp-evm-note-panel">
+                    <p>
+                        <b>Phạm vi con số "còn rút được":</b> chỉ gồm hạn mức
+                        tín dụng còn khả dụng đã phân bổ cho dự án này. Không
+                        gồm vốn chủ sở hữu sẽ góp, tiền mặt đang có, hay tiền
+                        thu về từ bán điện. Đây là <b>khoảng hở tài trợ</b>,
+                        không phải dự báo ngân quỹ — nói rõ phạm vi quan trọng
+                        hơn là làm con số trông toàn diện.
+                    </p>
+                </div>
+
+                </t><!-- /tab Tiền -->
 
             </t>
         </div>

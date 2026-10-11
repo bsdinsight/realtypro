@@ -225,4 +225,44 @@
     .rp-evm-ms.ms-done { background: #e4f3ea; color: var(--good); }
     .rp-evm-ms.ms-ontrack { background: #eaf0f4; color: var(--steel); }
     .rp-evm-ms.ms-overdue { background: #fbe9e7; color: var(--bad); }
+
+    // ---- Thanh tab ----
+    .rp-evm-tabs {
+        display: flex; gap: 4px; margin: 0 0 14px;
+        border-bottom: 1px solid #dfe5e9;
+    }
+    .rp-evm-tab {
+        appearance: none; background: transparent; border: 0;
+        border-bottom: 3px solid transparent;
+        padding: 9px 16px; font-size: 13px; font-weight: 650;
+        color: #6b7a84; cursor: pointer; position: relative;
+        white-space: nowrap;
+
+        &:hover { color: var(--steel); background: #f4f7f9; }
+        &.is-active { color: var(--steel); border-bottom-color: var(--nang); }
+    }
+    // Chấm đỏ báo dự án đang thiếu tiền — thấy ngay mà không phải mở tab.
+    .rp-evm-tab-dot {
+        display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+        background: var(--bad); margin-left: 6px; vertical-align: middle;
+    }
+
+    // ---- Thanh tiến trình nằm trong ô bảng ----
+    .rp-evm-bar-track.rp-evm-bar-inline {
+        display: inline-block; width: 64px; height: 6px;
+        margin-right: 7px; vertical-align: middle;
+    }
+
+    .is-bad-text { color: var(--bad) !important; font-weight: 650; }
+
+    // ---- Khung ghi chú phạm vi số liệu ----
+    .rp-evm-note-panel {
+        background: #f7f9fa; border-left: 3px solid var(--steel);
+
+        p { margin: 0; font-size: 12px; color: #4a5860; line-height: 1.55; }
+    }
+
+    .rp-evm-table .u {
+        font-size: 10px; color: #8a979f; margin-left: 3px;
+    }
 }

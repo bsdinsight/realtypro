@@ -108,13 +108,14 @@ class ReProjectCashAlert(models.Model):
             return 0.0
         rieng = F.sudo().search([('project_id', '=', self.id)])
         # Hạn mức không liên thông: cộng bình thường.
-        tong = sum(max(f.amount_available or 0.0, 0.0)
+        tong = sum(self._rp_doi_tien(f, max(f.amount_available or 0.0, 0.0))
                    for f in rieng.filtered(lambda x: not x.flexible_limits))
         # Hạn mức liên thông: mỗi BỂ (theo hợp đồng tín dụng) chỉ đếm
         # một lần.
         be = {}
         for f in rieng.filtered('flexible_limits'):
-            be[f.credit_contract_id.id] = max(f.amount_available or 0.0, 0.0)
+            be[f.credit_contract_id.id] = self._rp_doi_tien(
+                f, max(f.amount_available or 0.0, 0.0))
         tong += sum(be.values())
 
         A = self.env.get('re.loan.facility.project.allocation')
@@ -129,11 +130,46 @@ class ReProjectCashAlert(models.Model):
                 if f.id in da_tinh:
                     continue
                 da_tinh.add(f.id)
+                # So phần được phân bổ với phần hạn mức còn lại TRƯỚC khi
+                # quy đổi: cả hai đang ở loại tiền của hạn mức, lấy min
+                # sau khi quy đổi một bên là so hai thước đo khác nhau.
                 phan_bo = sum(A.sudo().search([
                     ('project_id', '=', self.id),
                     ('facility_id', '=', f.id)]).mapped('amount'))
-                tong += max(min(phan_bo, f.amount_available or 0.0), 0.0)
+                tong += self._rp_doi_tien(
+                    f, max(min(phan_bo, f.amount_available or 0.0), 0.0))
         return tong
+
+    def _rp_doi_tien(self, ban_ghi, so_tien):
+        """Quy đổi ``so_tien`` từ loại tiền của ``ban_ghi`` về tiền dự án.
+
+        Hạn mức tín dụng của một dự án có thể ký bằng nhiều loại tiền —
+        một hạn mức đầu tư bằng USD cùng ba hạn mức xây dựng bằng VND là
+        chuyện bình thường. Cộng thẳng ``amount_available`` là cộng
+        125.000.000 với 300.000.000.000 ra "300.125.000.000", rồi con số
+        đó được so với nhu cầu chi tính bằng USD.
+
+        Sai số đi đúng hướng nguy hiểm nhất: nguồn bị phóng lên hàng
+        chục nghìn lần nên ``cash_gap`` luôn bằng 0 và cờ cảnh báo IM
+        LẶNG — hỏng đúng vào lúc cần nó nhất. Thiếu tỷ giá thì Odoo
+        cũng không ném lỗi (loại tiền chưa khai tỷ giá có rate 1,0, quy
+        đổi thành 1:1), nên đây là chỗ phải chủ động quy đổi, không thể
+        chờ hệ thống báo.
+        """
+        tien_da = self.currency_id
+        tien_nguon = ban_ghi.currency_id if 'currency_id' in ban_ghi._fields \
+            else None
+        if not so_tien or not tien_da or not tien_nguon \
+                or tien_nguon == tien_da:
+            return so_tien or 0.0
+        try:
+            # `re.project` KHÔNG có cột company_id — lấy công ty đang
+            # đăng nhập, đọc `self.company_id` ở đây là nổ AttributeError.
+            return tien_nguon._convert(
+                so_tien, tien_da, self.env.company,
+                fields.Date.context_today(self))
+        except Exception:
+            return so_tien
 
     @api.model
     def _cron_canh_bao_thieu_tien(self):
@@ -145,8 +181,13 @@ class ReProjectCashAlert(models.Model):
         ngày nó được tính lần cuối — im lặng và sai.
         """
         du_an = self.search([('disbursement_line_ids', '!=', False)])
+        du_an.invalidate_recordset(['cash_alert'])
         du_an._compute_cash()
         du_an.flush_recordset(['cash_alert'])
+        # Phải xoá bộ nhớ đệm TRƯỚC khi gọi hàm tính: giá trị cũ còn
+        # trong đệm thì hàm tính ghi lại đúng giá trị đó, cron chạy mà
+        # cờ không nhúc nhích — im lặng y như lúc không có cron.
+        du_an.modified(['cash_alert'])
         return True
 
     def action_mo_nguon_von(self):

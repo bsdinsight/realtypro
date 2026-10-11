@@ -255,6 +255,25 @@ class RpEvmDashboard(models.TransientModel):
             tong += self._doi(r, r[amount_field] or 0.0, cur, d)
         return tong
 
+    @staticmethod
+    def _thang_don_vi(lon_nhat):
+        """Chọn đơn vị rút gọn theo ĐỘ LỚN của số, không theo loại tiền.
+
+        Giao diện trước đây chia cứng cho 1e9 và dán chữ "tỷ" — đúng cho
+        dự án ghi bằng đồng, nhưng một dự án ghi bằng USD 189 triệu sẽ
+        hiện ra "0,2 tỷ" trên trục biểu đồ và không ai đọc nổi. Để server
+        chọn đơn vị thì cả thẻ KPI, trục biểu đồ và bảng đều rút gọn
+        giống nhau, và đổi loại tiền dự án là đổi theo.
+        """
+        lon_nhat = abs(lon_nhat or 0.0)
+        if lon_nhat >= 1e9:
+            return {'div': 1e9, 'unit': 'tỷ'}
+        if lon_nhat >= 1e6:
+            return {'div': 1e6, 'unit': 'tr'}
+        if lon_nhat >= 1e4:
+            return {'div': 1e3, 'unit': 'ng'}
+        return {'div': 1.0, 'unit': ''}
+
     def _hoa_don_du_an(self, pid):
         """Hoá đơn nhà thầu đã vào sổ thuộc dự án ``pid``.
 
@@ -638,6 +657,8 @@ class RpEvmDashboard(models.TransientModel):
             })
 
         # ---- Cảnh báo & khuyến nghị (tự động) ----
+        money = self._khoi_tien(project, contracts, cur)
+
         insights = []
         thieu_rate = self._thieu_ty_gia(cur, [contracts, accepts, bills])
         if thieu_rate:
@@ -703,8 +724,11 @@ class RpEvmDashboard(models.TransientModel):
 
         return {
             'ok': True,
-            'currency': {'symbol': cur.symbol or '₫',
-                         'position': cur.position or 'after'},
+            'currency': dict(
+                self._thang_don_vi(max(abs(bac), abs(eac), abs(ac))),
+                symbol=cur.symbol or '₫',
+                position=cur.position or 'after',
+                name=cur.name or ''),
             'projects': [{'id': p.id, 'name': p.display_name}
                          for p in projects],
             'project': {
@@ -743,4 +767,149 @@ class RpEvmDashboard(models.TransientModel):
             },
             'milestones': milestones,
             'insights': insights,
+            # ---- Tab Tiền ----
+            'money': money,
+        }
+
+    # ==================================================================
+    # Tab Tiền — "có đủ tiền giải ngân đúng hạn không"
+    # ==================================================================
+    def _khoi_tien(self, project, contracts, cur):
+        """Số liệu tài trợ & giải ngân của dự án.
+
+        Đây là câu hỏi KHÁC với CPI/SPI. CPI trả lời "làm ra bao nhiêu so
+        với chi bao nhiêu"; tab này trả lời "tháng sau có tiền trả nhà
+        thầu không". Một dự án CPI 1,0 vẫn chết nếu hạn mức hết trước khi
+        tới đợt thanh toán — nên hai bên không thay nhau được.
+
+        Mọi khoản đều quy đổi về tiền dự án qua `_doi`. Riêng bảng hạn
+        mức giữ CẢ số gốc lẫn số đã quy đổi: hạn mức ký bằng VND thì
+        người đọc cần thấy "120 tỷ VND" để đối chiếu với hợp đồng tín
+        dụng, chứ không chỉ thấy "4,56 triệu USD".
+        """
+        hom_nay = fields.Date.context_today(self)
+        dau_thang = hom_nay.replace(day=1)
+
+        # ---- Đường cong giải ngân: kế hoạch vs thực chi ----
+        duong = []
+        D = self.env.get('rp.disbursement.line')
+        if D is not None:
+            thang = defaultdict(lambda: [0.0, 0.0])
+            for d in D.sudo().search([('project_id', '=', project.id)]):
+                if not d.period:
+                    continue
+                o = thang[self._ym(d.period)]
+                o[0] += d.amount_plan or 0.0
+                o[1] += d.amount_actual or 0.0
+            kh_luy = tt_luy = 0.0
+            for ym in sorted(thang):
+                kh, tt = thang[ym]
+                kh_luy += kh
+                tt_luy += tt
+                qua = ym <= self._ym(hom_nay)
+                duong.append({
+                    'ym': ym, 'plan': round(kh, 0), 'actual': round(tt, 0),
+                    'plan_cum': round(kh_luy, 0),
+                    # Thực chi chỉ vẽ tới tháng hiện tại — vẽ tiếp là vẽ
+                    # một đường phẳng trông như đã dừng chi.
+                    'actual_cum': round(tt_luy, 0) if qua else None,
+                })
+
+        # ---- Lịch phải trả 12 kỳ tới (đợt đến hạn, chưa trả) ----
+        M = self.env['rp.contract.payment.milestone']
+        sap_tra = defaultdict(float)
+        qua_han = []
+        for m in M.sudo().search([('contract_id', 'in', contracts.ids)],
+                                 order='due_date'):
+            if not m.due_date or m.state == 'paid':
+                continue
+            tien = self._doi(m, m.amount or 0.0, cur, m.due_date)
+            if m.due_date < dau_thang:
+                qua_han.append({
+                    'contract': m.contract_id.display_name or '',
+                    'name': m.name or '',
+                    'due_date': m.due_date.strftime('%d/%m/%Y'),
+                    'days': (hom_nay - m.due_date).days,
+                    'amount': round(tien, 0),
+                })
+            else:
+                sap_tra[self._ym(m.due_date)] += tien
+        payable = [{'ym': ym, 'amount': round(sap_tra[ym], 0)}
+                   for ym in sorted(sap_tra)[:12]]
+        qua_han.sort(key=lambda r: r['days'], reverse=True)
+
+        # ---- Hạn mức tín dụng ----
+        facilities = []
+        F = self.env.get('re.loan.facility')
+        if F is not None:
+            for f in F.sudo().search([('project_id', '=', project.id)]):
+                han = f.amount_limit or 0.0
+                con = max(f.amount_available or 0.0, 0.0)
+                facilities.append({
+                    'name': f.display_name or '',
+                    'currency': f.currency_id.name or '',
+                    'limit_raw': round(han, 0),
+                    'available_raw': round(con, 0),
+                    'limit': round(self._doi(f, han, cur, hom_nay), 0),
+                    'available': round(self._doi(f, con, cur, hom_nay), 0),
+                    'used_pct': round((han - con) / han * 100.0, 1) if han else 0.0,
+                    'pooled': bool(f.flexible_limits),
+                })
+
+        # ---- Bảo lãnh NHẬN từ nhà thầu (tài sản bảo vệ chủ đầu tư) ----
+        guarantees = []
+        G = self.env.get('rp.contract.guarantee')
+        if G is not None:
+            for g in G.sudo().search([('contract_id', 'in', contracts.ids)]):
+                tien = next((g[k] for k in ('amount', 'amount_guarantee')
+                             if k in G._fields), 0.0) or 0.0
+                het = next((g[k] for k in ('date_expiry', 'date_end', 'expiry_date')
+                            if k in G._fields and g[k]), False)
+                guarantees.append({
+                    'name': g.display_name or '',
+                    'amount': round(self._doi(g, tien, cur, hom_nay), 0),
+                    'state': g.state if 'state' in G._fields else '',
+                    'expiry': het.strftime('%d/%m/%Y') if het else '',
+                    'days_left': (het - hom_nay).days if het else None,
+                })
+            guarantees.sort(key=lambda r: (r['days_left'] is None,
+                                           r['days_left'] or 0))
+
+        ung_con = sum(self._doi(c, c.advance_amount_remaining or 0.0, cur,
+                                c.date_start) for c in contracts)
+        giu_lai = sum(self._doi(c, c.amount_retention or 0.0, cur,
+                                c.date_start) for c in contracts)
+        thieu = project.cash_gap or 0.0 if 'cash_gap' in project._fields else 0.0
+        con_rut = project.cash_available or 0.0 \
+            if 'cash_available' in project._fields else 0.0
+        can_chi = project.cash_need or 0.0 \
+            if 'cash_need' in project._fields else 0.0
+
+        return {
+            'kpi': {
+                'need': round(can_chi, 0),
+                'overdue': round(project.cash_overdue or 0.0, 0)
+                if 'cash_overdue' in project._fields else 0.0,
+                'available': round(con_rut, 0),
+                'gap': round(thieu, 0),
+                'surplus': round(max(con_rut - can_chi, 0.0), 0),
+                'alert': bool(thieu > 0),
+                'horizon_months': project.cash_horizon_months or 3
+                if 'cash_horizon_months' in project._fields else 3,
+                'plan_total': round(project.disbursement_plan_total or 0.0, 0)
+                if 'disbursement_plan_total' in project._fields else 0.0,
+                'actual_total': round(
+                    project.disbursement_actual_total or 0.0, 0)
+                if 'disbursement_actual_total' in project._fields else 0.0,
+                'advance_outstanding': round(ung_con, 0),
+                'retention': round(giu_lai, 0),
+                'guarantee_total': round(
+                    sum(g['amount'] for g in guarantees), 0),
+                'facility_count': len(facilities),
+            },
+            'disbursement': duong,
+            'payable': payable,
+            'overdue_rows': qua_han[:10],
+            'facilities': facilities,
+            'guarantees': guarantees[:8],
         }

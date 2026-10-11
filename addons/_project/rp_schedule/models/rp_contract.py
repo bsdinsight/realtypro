@@ -158,13 +158,17 @@ class RpContract(models.Model):
                  'list'),
                 (False, 'form'),
             ],
+            # KHÔNG dùng search view có panel trái: panel đó để lọc theo
+            # dự án / gói thầu / hợp đồng, mà ở đây đã mở sẵn đúng MỘT
+            # hợp đồng rồi — nó chỉ còn là 250px lặp lại cái vừa bấm.
             'search_view_id': (
-                self.env.ref('rp_schedule.view_task_search_rp_panel').id,
+                self.env.ref('rp_schedule.view_task_search_rp_schedule').id,
                 'search'),
             'domain': [('rp_contract_id', '=', self.id)],
             'context': {
                 'default_rp_contract_id': self.id,
                 'default_project_id': proj.id,
+                'rp_an_cot_hop_dong': True,
             },
         }
 

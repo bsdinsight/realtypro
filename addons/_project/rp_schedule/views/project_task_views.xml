@@ -169,13 +169,25 @@
                   multi_edit="1" sample="1"
                   decoration-danger="exec_status == 'late'"
                   decoration-warning="is_critical and exec_status != 'done'"
-                  decoration-muted="exec_status == 'done'">
+                  decoration-muted="exec_status == 'done'"
+                  decoration-bf="child_ids">
                 <field name="wbs_seq" string="STT" optional="show"/>
                 <field name="wbs_code" string="Mã WBS" optional="show"/>
                 <field name="wbs_level" string="Cấp" optional="hide"/>
-                <field name="name" string="Tên công việc"/>
+                <!-- Cột NHÌN là bản thụt lề; cột SỬA là `name` thật, để
+                     ẩn sẵn vì multi_edit tên việc là thao tác hiếm, còn
+                     đọc cho ra cấu trúc thì lúc nào cũng cần. -->
+                <field name="wbs_name_indent" string="Tên công việc"
+                       readonly="1"/>
+                <field name="name" string="Tên công việc (sửa)"
+                       optional="hide"/>
+                <field name="child_ids" column_invisible="1"/>
+                <!-- Mở từ form hợp đồng thì cột này lặp đúng một giá trị
+                     trên mọi dòng mà ăn mất ~350px, trong khi % hoàn
+                     thành và Dư địa đang bị cắt cụt. -->
                 <field name="rp_contract_id" string="Hợp đồng"
-                       optional="show"/>
+                       optional="show"
+                       column_invisible="context.get('rp_an_cot_hop_dong')"/>
                 <field name="planned_start" string="Bắt đầu (KH)"/>
                 <field name="planned_end" string="Kết thúc (KH)"/>
                 <field name="planned_days" string="Thời lượng"

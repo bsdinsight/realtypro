@@ -58,9 +58,11 @@
                         <list default_order="wbs_seq, id"
                               create="false" delete="false"
                               decoration-warning="is_critical"
-                              decoration-muted="exec_status == 'done'">
+                              decoration-muted="exec_status == 'done'"
+                              decoration-bf="child_ids">
                             <field name="wbs_code" string="Mã WBS"/>
-                            <field name="name" string="Công việc"/>
+                            <field name="wbs_name_indent" string="Công việc"/>
+                            <field name="child_ids" column_invisible="1"/>
                             <field name="planned_start" string="Bắt đầu (KH)"/>
                             <field name="planned_end" string="Kết thúc (KH)"/>
                             <field name="planned_days" string="Thời lượng"

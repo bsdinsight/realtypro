@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Mặc định: chứng thư thử. Khai tường minh để lần cài đầu tiên
+         không rơi vào trạng thái "chưa chọn gì" rồi nổ lúc có người bấm
+         ký. noupdate="1" để lượt nâng cấp sau không ghi đè lựa chọn
+         thật mà khách đã đặt. -->
+    <data noupdate="1">
+        <record id="param_re_ca_provider" model="ir.config_parameter">
+            <field name="key">re_ca_sign.provider</field>
+            <field name="value">test</field>
+        </record>
+    </data>
+
+</odoo>

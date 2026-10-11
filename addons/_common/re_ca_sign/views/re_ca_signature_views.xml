@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_ca_signature_list" model="ir.ui.view">
+        <field name="name">re.ca.signature.list</field>
+        <field name="model">re.ca.signature</field>
+        <field name="arch" type="xml">
+            <list string="Bản PDF đã ký số" create="false">
+                <field name="file_name" string="Tệp"/>
+                <field name="signer_name" string="Người ký"/>
+                <field name="signed_on" string="Ký lúc"/>
+                <field name="provider" string="Đường ký" widget="badge"/>
+                <field name="res_name" string="Chứng từ" optional="show"/>
+                <button name="action_kiem_tra" type="object"
+                        string="Kiểm tra lại" icon="fa-search"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_ca_signature_form" model="ir.ui.view">
+        <field name="name">re.ca.signature.form</field>
+        <field name="model">re.ca.signature</field>
+        <field name="arch" type="xml">
+            <form string="Bản PDF đã ký số" create="false">
+                <header>
+                    <button name="action_kiem_tra" type="object"
+                            string="Kiểm tra lại chữ ký"
+                            class="btn-primary" icon="fa-search"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <p style="margin-bottom:0;">
+                            Chữ ký nằm <b>trong chính tệp PDF</b>. Tải về rồi
+                            mở bằng Adobe Reader là thấy bảng chữ ký — không
+                            cần vào hệ thống này.
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="res_name" string="Chứng từ"/>
+                            <field name="signer_name"/>
+                            <field name="signed_on"/>
+                            <field name="signed_uid"/>
+                        </group>
+                        <group>
+                            <field name="provider"/>
+                            <field name="file_data" filename="file_name"
+                                   string="Tải bản đã ký"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Kết quả kiểm tra chữ ký trong tệp">
+                        <field name="verify_note" nolabel="1" readonly="1"
+                               class="font-monospace"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_re_ca_signature" model="ir.actions.act_window">
+        <field name="name">Bản PDF đã ký số</field>
+        <field name="res_model">re.ca.signature</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

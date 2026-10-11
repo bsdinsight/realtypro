@@ -49,6 +49,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         # vòng phụ thuộc vì nó KHÔNG biết tới rp_progress.
         'rp_doc_folder',
         're_sign',
+        're_ca_sign',
     ],
     'data': [
         'views/rp_tender_package_boq_views.xml',
@@ -67,6 +68,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/rp_cost_reconcile_views.xml',
         'views/menu.xml',
         'views/rp_acceptance_sign_views.xml',
+        'reports/rp_acceptance_report.xml',
     ],
     'assets': {
         'web.assets_backend': [

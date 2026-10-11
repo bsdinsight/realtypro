@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_rp_acceptance" model="ir.actions.report">
+        <field name="name">Biên bản nghiệm thu khối lượng</field>
+        <field name="model">rp.progress.acceptance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rp_progress.report_rp_acceptance</field>
+        <field name="report_file">rp_progress.report_rp_acceptance</field>
+        <field name="binding_model_id" ref="model_rp_progress_acceptance"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">
+            'BBNT - %s' % (object.name or object.id)
+        </field>
+    </record>
+
+    <template id="report_rp_acceptance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3 class="text-center" style="margin-bottom:4px;">
+                            BIÊN BẢN NGHIỆM THU KHỐI LƯỢNG HOÀN THÀNH
+                        </h3>
+                        <p class="text-center" style="margin-top:0;">
+                            <b>Số: <span t-field="o.name"/></b>
+                            — Kỳ <span t-field="o.report_month"/>/<span
+                                t-field="o.report_year"/>
+                        </p>
+
+                        <table class="table table-sm" style="margin-top:16px;">
+                            <tr>
+                                <td style="width:30%;">Dự án</td>
+                                <td><span t-field="o.project_id"/></td>
+                            </tr>
+                            <tr>
+                                <td>Hợp đồng</td>
+                                <td><span t-field="o.contract_id"/></td>
+                            </tr>
+                            <tr>
+                                <td>Nhà thầu</td>
+                                <td><span t-field="o.contractor_id"/></td>
+                            </tr>
+                            <tr>
+                                <td>Ngày trình / ngày duyệt</td>
+                                <td>
+                                    <span t-field="o.date_submitted"/> /
+                                    <span t-field="o.date_approved"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h5 style="margin-top:16px;">Khối lượng nghiệm thu</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Hạng mục</th>
+                                    <th>Diễn giải</th>
+                                    <th class="text-end">Đơn giá</th>
+                                    <th class="text-end">KL kỳ này</th>
+                                    <th class="text-end">KL luỹ kế</th>
+                                    <th class="text-end">Thành tiền kỳ này</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="l">
+                                    <td><span t-field="l.structure_id"/></td>
+                                    <td><span t-field="l.description"/></td>
+                                    <td class="text-end">
+                                        <span t-field="l.unit_price"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.quantity_this_period"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.quantity_to_date"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.amount_this_period"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-end">
+                                        <b>Giá trị nghiệm thu kỳ này</b>
+                                    </td>
+                                    <td class="text-end">
+                                        <b><span t-field="o.total_value_period"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-end">
+                                        Giá trị luỹ kế đến nay
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="o.total_value_to_date"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <t t-if="o.note">
+                            <h5 style="margin-top:12px;">Ghi chú</h5>
+                            <p t-field="o.note"/>
+                        </t>
+
+                        <div class="row" style="margin-top:42px;">
+                            <div class="col-4 text-center">
+                                <b>ĐẠI DIỆN NHÀ THẦU</b>
+                                <p style="margin-top:58px;">
+                                    <span t-field="o.representative_contractor"/>
+                                </p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <b>TƯ VẤN GIÁM SÁT</b>
+                                <p style="margin-top:58px;">(ký, ghi rõ họ tên)</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <b>ĐẠI DIỆN CHỦ ĐẦU TƯ</b>
+                                <p style="margin-top:58px;">
+                                    <span t-field="o.representative_owner"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

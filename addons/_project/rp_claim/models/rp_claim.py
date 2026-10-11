@@ -164,6 +164,9 @@ class RpClaim(models.Model):
     # ------------------------------------------------------------------
     # Quy trình
     # ------------------------------------------------------------------
+    def _ca_report_ref(self):
+        return 'rp_claim.action_report_rp_claim'
+
     def _sign_payload(self):
         """Những gì chữ ký trên hồ sơ khiếu nại bảo chứng.
 

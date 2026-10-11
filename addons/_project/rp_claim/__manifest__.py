@@ -45,6 +45,7 @@ theo lịch; khi cần chốt thì lập **biên bản tính phạt** — số l
         'rp_schedule',
         'rp_interface',
         're_sign',
+        're_ca_sign',
     ],
     'data': [
         'views/rp_doc_filing_views.xml',
@@ -54,6 +55,7 @@ theo lịch; khi cần chốt thì lập **biên bản tính phạt** — số l
         'views/rp_contract_views.xml',
         'views/rp_claim_menus.xml',
         'views/rp_claim_sign_views.xml',
+        'reports/rp_claim_report.xml',
     ],
     'installable': True,
     'application': False,

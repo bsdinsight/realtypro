@@ -218,6 +218,9 @@ class RpProgressAcceptance(models.Model):
                 rec.payment_milestone_id.acceptance_id = rec.id
         return recs
 
+    def _ca_report_ref(self):
+        return 'rp_progress.action_report_rp_acceptance'
+
     def _sign_payload(self):
         """Những gì chữ ký trên biên bản nghiệm thu bảo chứng.
 

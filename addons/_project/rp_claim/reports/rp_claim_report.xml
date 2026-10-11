@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_rp_claim" model="ir.actions.report">
+        <field name="name">Quyết định về khiếu nại / gia hạn</field>
+        <field name="model">rp.claim</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rp_claim.report_rp_claim</field>
+        <field name="report_file">rp_claim.report_rp_claim</field>
+        <field name="binding_model_id" ref="model_rp_claim"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">
+            'Quyet dinh - %s' % (object.code or object.id)
+        </field>
+    </record>
+
+    <template id="report_rp_claim">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3 class="text-center" style="margin-bottom:4px;">
+                            QUYẾT ĐỊNH VỀ KHIẾU NẠI
+                        </h3>
+                        <p class="text-center" style="margin-top:0;">
+                            <b>Số: <span t-field="o.code"/></b>
+                        </p>
+
+                        <table class="table table-sm" style="margin-top:18px;">
+                            <tr>
+                                <td style="width:32%;">Dự án</td>
+                                <td><span t-field="o.project_id"/></td>
+                            </tr>
+                            <tr>
+                                <td>Hợp đồng</td>
+                                <td><span t-field="o.contract_id"/></td>
+                            </tr>
+                            <tr>
+                                <td>Bên khiếu nại</td>
+                                <td><span t-field="o.direction"/></td>
+                            </tr>
+                            <tr>
+                                <td>Nội dung</td>
+                                <td><span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <td>Nguyên nhân</td>
+                                <td><span t-field="o.cause"/></td>
+                            </tr>
+                            <tr>
+                                <td>Ngày xảy ra sự việc</td>
+                                <td><span t-field="o.date_event"/></td>
+                            </tr>
+                            <tr>
+                                <td>Ngày gửi thông báo</td>
+                                <td>
+                                    <span t-field="o.date_notice"/>
+                                    <t t-if="not o.notice_ok">
+                                        <span class="text-danger">
+                                            — QUÁ HẠN THÔNG BÁO
+                                            <span t-field="o.notice_late_days"/>
+                                            ngày (hạn:
+                                            <span t-field="o.notice_deadline"/>)
+                                        </span>
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h5 style="margin-top:18px;">Nội dung yêu cầu và quyết định</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Khoản mục</th>
+                                    <th class="text-end">Nhà thầu yêu cầu</th>
+                                    <th class="text-end">Được chấp thuận</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gia hạn thời gian (ngày)</td>
+                                    <td class="text-end">
+                                        <span t-field="o.eot_days_claimed"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <b><span t-field="o.eot_days_granted"/></b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Chi phí</td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_claimed"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <b><span t-field="o.amount_granted"/></b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p><b>Trạng thái:</b> <span t-field="o.state"/>
+                           — <b>Ngày quyết định:</b>
+                           <span t-field="o.decision_date"/></p>
+
+                        <t t-if="o.decision_note">
+                            <h5 style="margin-top:14px;">Lý do quyết định</h5>
+                            <p t-field="o.decision_note"/>
+                        </t>
+
+                        <t t-if="o.description">
+                            <h5 style="margin-top:14px;">Diễn giải &amp; căn cứ</h5>
+                            <div t-field="o.description"/>
+                        </t>
+
+                        <div class="row" style="margin-top:46px;">
+                            <div class="col-6 text-center">
+                                <b>ĐẠI DIỆN NHÀ THẦU</b>
+                                <p style="margin-top:62px;">(ký, ghi rõ họ tên)</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <b>ĐẠI DIỆN CHỦ ĐẦU TƯ</b>
+                                <p style="margin-top:62px;">(ký, ghi rõ họ tên)</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

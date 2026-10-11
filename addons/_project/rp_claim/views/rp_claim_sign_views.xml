@@ -34,6 +34,32 @@
                            readonly="1"
                            context="{'list_view_ref':
                                      're_sign.view_re_signature_embedded_list'}"/>
+                    <separator string="Ký số lên bản PDF (PAdES)"/>
+                    <div class="alert alert-secondary" role="alert">
+                        <p style="margin-bottom:0;">
+                            Khác với chữ ký ở trên: chữ ký số nằm
+                            <b>trong chính tệp PDF</b>, nên gửi tệp đi đâu
+                            người ta cũng mở Adobe Reader kiểm được —
+                            không cần vào hệ thống này.
+                        </p>
+                    </div>
+                    <group>
+                        <div colspan="2">
+                            <button name="action_ky_so" type="object"
+                                    string="Ký số bản PDF"
+                                    class="btn-secondary"
+                                    icon="fa-certificate"/>
+                        </div>
+                    </group>
+                    <field name="ca_signature_ids" nolabel="1" readonly="1">
+                        <list create="false" delete="false">
+                            <field name="file_name" string="Tệp"/>
+                            <field name="signer_name" string="Người ký"/>
+                            <field name="signed_on" string="Ký lúc"/>
+                            <field name="provider" string="Đường ký"
+                                   widget="badge"/>
+                        </list>
+                    </field>
                     <group>
                         <div colspan="2">
                             <button name="action_huy_chu_ky" type="object"

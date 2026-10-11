@@ -10,7 +10,12 @@
             <xpath expr="//notebook" position="before">
                 <group name="evm_control" string="EVM — Kiểm soát chi phí dự án">
                     <group>
-                        <field name="currency_id" invisible="1"/>
+                        <!-- Hiện ra để sửa được: dự án nước ngoài ký hợp
+                             đồng bằng ngoại tệ thì toàn bộ chỉ số EVM
+                             phải quy chiếu theo loại tiền của dự án,
+                             không phải tiền tệ công ty. -->
+                        <field name="currency_id" string="Loại tiền dự án"
+                               options="{'no_create': True}"/>
                         <field name="total_bac" string="Tổng ngân sách (BAC)"/>
                         <field name="total_ev" string="Giá trị làm ra (EV)"/>
                         <field name="total_ac" string="Chi phí thực (AC)"/>

@@ -10,7 +10,21 @@ class ReProject(models.Model):
 
     currency_id = fields.Many2one(
         'res.currency', string='Loại tiền',
-        compute='_compute_currency_id', store=True, readonly=True)
+        default=lambda s: s.env.company.currency_id,
+        help="Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ số EVM "
+             "đều hiện theo loại tiền này. Dự án ở nước ngoài hoặc ký hợp "
+             "đồng bằng ngoại tệ thì đặt đúng loại tiền của dự án; các "
+             "khoản ghi bằng tiền khác sẽ được QUY ĐỔI về đây.")
+    # LỊCH SỬ: trường này từng khai compute='_compute_currency_id' kèm
+    # store=True readonly=True, mà hàm tính lại tự tham chiếu chính nó
+    # (`proj.currency_id or default`) và KHÔNG có @api.depends. Hệ quả là
+    # nó không bao giờ chạy lại trên bản ghi đã có, nên dự án tạo trước
+    # khi cài rp_evm giữ cột NULL vĩnh viễn — bảng điều khiển rơi về tiền
+    # tệ công ty và dán ký hiệu đó lên số ngoại tệ: một dự án ký hợp
+    # đồng bằng USD trong công ty hạch toán VND sẽ hiện ngân sách
+    # 187,89 triệu USD thành "187.890.411 ₫". readonly=True còn chặn
+    # đường sửa tay. Nay là trường thường, ghi được, có default; bản ghi
+    # cũ được điền bằng pre-migrate.
     total_bac = fields.Monetary(
         string='Tổng ngân sách (BAC)', compute='_compute_project_evm',
         store=True, currency_field='currency_id')
@@ -61,11 +75,6 @@ class ReProject(models.Model):
             proj.total_pv_today = pv
             proj.total_sv = ev - pv
             proj.project_spi = (ev / pv) if pv else 0.0
-
-    def _compute_currency_id(self):
-        default = self.env.company.currency_id
-        for proj in self:
-            proj.currency_id = proj.currency_id or default
 
     def _bac_breakdown(self):
         """Các dòng cấu thành BAC, mỗi dòng một khoản ngân sách.

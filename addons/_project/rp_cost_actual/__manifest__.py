@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Chi phí thực (AC)',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'Realty/Project',
     'summary': 'Gắn chi phí thực từ hóa đơn nhà thầu vào WBS (hạng mục × '
                'nhóm chi phí) → roll-up AC cho EVM (CPI = EV/AC).',

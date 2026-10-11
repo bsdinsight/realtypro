@@ -170,18 +170,160 @@ class RpEvmDashboard(models.TransientModel):
             monthly['%04d-%02d' % (y, m)] += val * seg_days / total
             seg_start, y, m = next_first, ny, nm
 
+    # ------------------------------------------------------------------
+    # Quy đổi tiền tệ
+    # ------------------------------------------------------------------
+    # `sum(records.mapped('amount'))` là phép cộng SAI ngay khi dự án có
+    # hai loại tiền, mà nó sai KHÔNG BÁO LỖI: nó trả về một con số rồi
+    # con số đó được dán ký hiệu tiền tệ của dự án. Một dự án có 4 hợp
+    # đồng USD, cộng thô ra 187.890.412 và hiện ra "187.890.411 ₫" —
+    # lệch khoảng 26.000 lần so với giá trị thật, trong khi CPI/SPI vẫn
+    # "đúng" vì tử và mẫu cùng sai một kiểu. Vì vậy mọi khoản tiền vào
+    # bảng điều khiển đều phải đi qua `_doi`, kể cả khi hôm nay cả dự án
+    # chỉ dùng một loại tiền: hợp đồng thứ năm ký bằng tiền khác là đủ
+    # làm hỏng con số mà không ai thấy.
+
+    def _doi(self, rec, val, cur, ngay=None):
+        """Quy đổi ``val`` từ loại tiền của ``rec`` về ``cur``.
+
+        Tỷ giá lấy theo NGÀY của chính bản ghi (ngày hoá đơn, ngày duyệt
+        biên bản…) chứ không phải hôm nay — một hoá đơn tháng 7 phải
+        được quy đổi bằng tỷ giá tháng 7, nếu không số quá khứ trên
+        đường S sẽ đổi mỗi lần mở bảng.
+
+        Bản ghi không có trường ``currency_id`` thì coi như đã ở ``cur``.
+        """
+        if not val:
+            return 0.0
+        src = rec.currency_id if 'currency_id' in rec._fields else None
+        if not src or not cur or src == cur:
+            return val
+        cty = getattr(rec, 'company_id', False) or self.env.company
+        try:
+            return src._convert(
+                val, cur, cty, ngay or fields.Date.context_today(self))
+        except Exception:
+            # Thiếu tỷ giá thì `_convert` ném UserError. KHÔNG để nó nổ
+            # giữa buổi demo, nhưng cũng không được âm thầm trả số thô
+            # như thể đã quy đổi — `_thieu_ty_gia` đã dò trước và bảng
+            # sẽ hiện cảnh báo đỏ ngay trên đầu phần Nhận định.
+            return val
+
+    def _thieu_ty_gia(self, cur, records_list):
+        """Loại tiền xuất hiện trong dữ liệu mà KHÔNG quy đổi được về ``cur``.
+
+        Kiểm bằng SỰ TỒN TẠI của bản ghi tỷ giá, không bằng try/except —
+        vì Odoo không ném lỗi khi thiếu tỷ giá. Loại tiền chưa khai tỷ
+        giá nào có ``rate = 1,0``, nên ``_convert`` trả về đúng con số cũ
+        y như thể 1 USD = 1 VND. Đó là kiểu sai tệ nhất: im lặng, và
+        càng im lặng hơn khi tử số với mẫu số cùng sai một kiểu nên
+        CPI/SPI vẫn trông bình thường.
+
+        Dò MỘT lần trước khi cộng để bảng vẫn vẽ được, và người xem được
+        nói thẳng là con số chưa quy đổi — thà hiện số kèm cảnh báo đỏ
+        hơn là hiện một con số trông như đã quy đổi.
+        """
+        Rate = self.env['res.currency.rate']
+        tien_cty = self.env.company.currency_id
+
+        def khai_roi(c):
+            # Tiền tệ công ty là gốc quy chiếu, rate 1,0 của nó là đúng.
+            # Loại tiền khác phải có ít nhất một bản ghi tỷ giá, vì Odoo
+            # quy đổi chéo đều đi qua tiền tệ công ty.
+            return bool(c) and (
+                c == tien_cty or Rate.search_count([('currency_id', '=', c.id)]))
+
+        bo = set()
+        for records in records_list:
+            for r in records:
+                c = r.currency_id if 'currency_id' in r._fields else None
+                if c and cur and c != cur:
+                    bo.add(c)
+        if not bo:
+            return []
+        return sorted(c.name for c in bo
+                      if not (khai_roi(c) and khai_roi(cur)))
+
+    def _tong_quy_doi(self, records, amount_field, cur,
+                      date_field=None, fallback_field=None):
+        """Σ ``amount_field`` của records, quy đổi từng bản ghi về ``cur``."""
+        tong = 0.0
+        for r in records:
+            d = r[date_field] if date_field and r[date_field] else None
+            if not d and fallback_field and r[fallback_field]:
+                d = r[fallback_field]
+            tong += self._doi(r, r[amount_field] or 0.0, cur, d)
+        return tong
+
+    def _hoa_don_du_an(self, pid):
+        """Hoá đơn nhà thầu đã vào sổ thuộc dự án ``pid``.
+
+        Hai đường vào, phải lấy CẢ HAI rồi hợp lại:
+
+        * qua **mốc thanh toán** → hợp đồng → dự án: tiền trả theo đợt
+          của hợp đồng thầu;
+        * qua **hạng mục** trên dòng hoá đơn: chi phí trực tiếp không
+          đi theo đợt nào — huy động công trường, mua thẳng vật tư,
+          lán trại.
+
+        Trước đây chỉ truy theo mốc thanh toán, nên mọi chi phí trực
+        tiếp biến mất khỏi AC của bảng điều khiển trong khi vẫn nằm
+        trong AC của form dự án (trường ``rp.structure.actual_cost``
+        cộng theo hạng mục). Hai con số AC cùng một dự án khác nhau mà
+        không ai thấy: cùng một dự án ra 42,39 triệu ở bảng và 30,93 tỷ
+        ở form, đọc trên hai cửa sổ cạnh nhau.
+        """
+        Move = self.env['account.move']
+        mien = [('move_type', '=', 'in_invoice'), ('state', '=', 'posted')]
+        hd = Move.search(
+            mien + [('payment_milestone_id.contract_id.project_id', '=', pid)])
+        if 'structure_id' in self.env['account.move.line']._fields:
+            hd |= Move.search(
+                mien + [('invoice_line_ids.structure_id.project_id', '=', pid)])
+        return hd
+
+    def _du_thu_chua_xuat(self, accepts, bills, cur):
+        """{ym: Σ} giá trị ĐÃ nghiệm thu mà nhà thầu CHƯA xuất hoá đơn.
+
+        AC phải theo cơ sở DỒN TÍCH, không theo tiền đã xuất hoá đơn:
+        khối lượng chủ đầu tư đã ký nghiệm thu là khoản phải trả, phát
+        sinh ngay tại ngày duyệt biên bản, chứ không phải lúc nhà thầu
+        nhớ ra mà xuất hoá đơn.
+
+        Bỏ phần này ra thì AC luôn đi sau EV đúng bằng độ trễ xuất hoá
+        đơn, nên CPI = EV/AC đo ĐỘ TRỄ HOÁ ĐƠN chứ không đo hiệu quả
+        chi phí. Thực tế đã gặp CPI 3,41 — nghe như dự án lãi gấp ba
+        — chỉ vì 7,5 triệu USD đã nghiệm thu đầu tháng 10 còn chưa được
+        xuất hoá đơn.
+        """
+        moc_da_xuat = set(bills.mapped('payment_milestone_id').ids)
+        out = defaultdict(float)
+        for a in accepts:
+            moc = a.payment_milestone_id | a.milestone_ids
+            if moc and set(moc.ids) & moc_da_xuat:
+                continue        # đã nằm trong hoá đơn — không cộng hai lần
+            d = a.date_approved or a.date_submitted
+            if not d:
+                continue
+            out[self._ym(d)] += self._doi(
+                a, a.total_value_period or 0.0, cur, d)
+        return out
+
     def _bucket_by_month(self, records, date_field, amount_field,
-                         fallback_field=None):
-        """Gộp records → {ym: Σ amount} theo tháng của date_field."""
+                         fallback_field=None, cur=None):
+        """Gộp records → {ym: Σ amount} theo tháng của date_field.
+
+        ``cur`` có thì quy đổi từng bản ghi về loại tiền đó.
+        """
         out = defaultdict(float)
         for r in records:
             d = r[date_field] or (r[fallback_field] if fallback_field else False)
             if not d:
                 continue
-            out[self._ym(d)] += r[amount_field] or 0.0
+            out[self._ym(d)] += self._doi(r, r[amount_field] or 0.0, cur, d)
         return out
 
-    def _monthly_pv(self, contracts):
+    def _monthly_pv(self, contracts, cur=None):
         """PV time-phased: mỗi HĐ rải giá trị theo lịch thi công của HĐ đó.
 
         Giá trị 1 task = value_HĐ × (ngày KH của task / Σ ngày KH các task).
@@ -191,7 +333,8 @@ class RpEvmDashboard(models.TransientModel):
         monthly = defaultdict(float)
         Task = self.env['project.task']
         for c in contracts:
-            val = c.contract_value_total or 0.0
+            val = self._doi(c, c.contract_value_total or 0.0, cur,
+                            c.date_start)
             if not val:
                 continue
             tasks = Task.search([
@@ -260,25 +403,35 @@ class RpEvmDashboard(models.TransientModel):
             ('project_id', '=', pid),
             ('state', 'not in', ('draft', 'cancel', 'cancelled', 'rejected')),
         ])
-        bac = sum(contracts.mapped('contract_value_total'))
+        bac = self._tong_quy_doi(
+            contracts, 'contract_value_total', cur, date_field='date_start')
 
         # ---- EV (nghiệm thu đã duyệt) ----
         accepts = self.env['rp.progress.acceptance'].search([
             ('project_id', '=', pid), ('state', '=', 'approved')])
-        ev = sum(accepts.mapped('total_value_period'))
+        ev = self._tong_quy_doi(
+            accepts, 'total_value_period', cur,
+            date_field='date_approved', fallback_field='date_submitted')
 
-        # ---- AC (hóa đơn nhà thầu qua mốc thanh toán → HĐ → dự án) ----
-        bills = self.env['account.move'].search([
-            ('move_type', '=', 'in_invoice'), ('state', '=', 'posted'),
-            ('payment_milestone_id.contract_id.project_id', '=', pid)])
-        ac = sum(bills.mapped('amount_untaxed'))
+        # ---- AC (chi phí thực, cơ sở DỒN TÍCH) ----
+        bills = self._hoa_don_du_an(pid)
 
         # ---- Chuỗi thời gian theo tháng ----
-        pv_m = self._monthly_pv(contracts)
+        pv_m = self._monthly_pv(contracts, cur)
         ev_m = self._bucket_by_month(
             accepts, 'date_approved', 'total_value_period',
-            fallback_field='date_submitted')
-        ac_m = self._bucket_by_month(bills, 'invoice_date', 'amount_untaxed')
+            fallback_field='date_submitted', cur=cur)
+        # AC gộp hai nguồn, và KPI lấy đúng tổng của chuỗi tháng này —
+        # tính riêng hai chỗ là cách chắc chắn để thẻ KPI lệch khỏi điểm
+        # cuối đường S mà không chỗ nào báo.
+        ac_m = defaultdict(float)
+        for nguon in (self._bucket_by_month(bills, 'invoice_date',
+                                            'amount_untaxed', cur=cur),
+                      self._du_thu_chua_xuat(accepts, bills, cur)):
+            for k, v in nguon.items():
+                ac_m[k] += v
+        ac = sum(ac_m.values())
+        ac_du_thu = sum(self._du_thu_chua_xuat(accepts, bills, cur).values())
 
         # Dòng tiền THU (hóa đơn phát hành CĐT) — chỉ khi có rp_owner_contract
         inflow_m = defaultdict(float)
@@ -288,7 +441,7 @@ class RpEvmDashboard(models.TransientModel):
                 ('move_type', '=', 'out_invoice'), ('state', '=', 'posted'),
                 ('owner_project_id', '=', pid)])
             inflow_m = self._bucket_by_month(
-                owner_inv, 'invoice_date', 'amount_untaxed')
+                owner_inv, 'invoice_date', 'amount_untaxed', cur=cur)
 
         # ---- Trục tháng: từ đầu lịch tới cuối lịch (bao trọn PV) ----
         all_ym = set(pv_m) | set(ev_m) | set(ac_m) | set(inflow_m)
@@ -349,7 +502,11 @@ class RpEvmDashboard(models.TransientModel):
         # ---- Tiến độ theo gói thầu ----
         packages = [{
             'name': c.display_name,
-            'value': round(c.contract_value_total or 0.0, 0),
+            # Giá trị đã quy đổi về loại tiền dự án — donut và danh sách
+            # gói phải cộng lại đúng bằng BAC ở thẻ KPI, nếu lấy số thô
+            # thì hai chỗ lệch nhau mà không chỗ nào báo.
+            'value': round(self._doi(
+                c, c.contract_value_total or 0.0, cur, c.date_start), 0),
             'percent': round(c.acceptance_progress_percent or 0.0, 1),
             'contractor': c.contractor_id.display_name if c.contractor_id
             else '',
@@ -482,6 +639,22 @@ class RpEvmDashboard(models.TransientModel):
 
         # ---- Cảnh báo & khuyến nghị (tự động) ----
         insights = []
+        thieu_rate = self._thieu_ty_gia(cur, [contracts, accepts, bills])
+        if thieu_rate:
+            insights.append({'type': 'danger', 'icon': '⚠',
+                'title': 'Chưa quy đổi được tiền tệ: %s' % ', '.join(thieu_rate),
+                'text': 'Dự án quy chiếu theo %s nhưng thiếu tỷ giá cho %s, '
+                        'nên BAC/EV/AC đang cộng số thô — ĐỪNG đọc các chỉ '
+                        'số này cho tới khi khai tỷ giá (Kế toán › Cấu hình '
+                        '› Loại tiền).' % (cur.name, ', '.join(thieu_rate))})
+        if ac_du_thu and ac > 0 and ac_du_thu / ac >= 0.15:
+            insights.append({'type': 'warn', 'icon': '◳',
+                'title': 'Nhà thầu chưa xuất hoá đơn %s đã nghiệm thu'
+                         % _fmt(ac_du_thu),
+                'text': 'Khối lượng đã ký nghiệm thu nhưng chưa có hoá đơn '
+                        'nên đã được tính vào AC theo cơ sở dồn tích (%.0f%% '
+                        'AC). Đôn đốc nhà thầu xuất hoá đơn để khớp sổ và '
+                        'giải ngân đúng đợt.' % (ac_du_thu / ac * 100.0)})
         if cpi and cpi < 0.95:
             insights.append({'type': 'danger', 'icon': '⚠',
                 'title': 'Chi phí vượt kế hoạch',

@@ -232,9 +232,6 @@
                             <div class="text-muted"
                                  invisible="not doc_pending_ids">
                                 Bấm <b>Nộp vào hồ sơ dự án</b> ở thanh trên.
-                                Tệp lên SharePoint đúng thư mục rồi được
-                                <b>gỡ khỏi Odoo</b> — chỉ một bản, không bao
-                                giờ phải hỏi bản nào mới đúng.
                             </div>
                             <separator string="Đã nộp"
                                        invisible="not doc_file_ids"/>
@@ -246,10 +243,16 @@
                                     <field name="date_modified" string="Sửa lần cuối"/>
                                     <field name="modified_by" string="Người sửa"
                                            optional="show"/>
+                                    <button name="action_xem" type="object"
+                                            icon="fa-eye" string="Xem"
+                                            title="Xem ngay trong trình duyệt"/>
+                                    <button name="action_tai_ve" type="object"
+                                            icon="fa-download" string="Tải"
+                                            title="Tải tệp về máy"/>
                                     <button name="action_mo" type="object"
                                             icon="fa-external-link"
-                                            title="Mở trên SharePoint"
-                                            string="Mở"/>
+                                            title="Mở trang tệp trên SharePoint (cần tài khoản ở đó)"
+                                            string="SharePoint"/>
                                 </list>
                             </field>
                         </page>

@@ -99,8 +99,15 @@
                                             icon="fa-book"
                                             title="Mở bản ghi đã nộp tệp này"
                                             invisible="not source_model"/>
+                                    <button name="action_xem" type="object"
+                                            string="Xem" icon="fa-eye"
+                                            title="Xem ngay trong trình duyệt"/>
+                                    <button name="action_tai_ve"
+                                            type="object" string="Tải"
+                                            icon="fa-download"
+                                            title="Tải tệp về máy"/>
                                     <field name="sp_url" widget="url"
-                                           string="Mở"/>
+                                           string="SharePoint"/>
                                 </list>
                             </field>
                         </page>

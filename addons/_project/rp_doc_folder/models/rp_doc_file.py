@@ -73,9 +73,25 @@ class RpDocFile(models.Model):
                 n /= 1024
 
     def action_mo(self):
+        """Mở trang của tệp trên SharePoint — cần tài khoản ở đó."""
         self.ensure_one()
         return {'type': 'ir.actions.act_url', 'url': self.sp_url,
                 'target': 'new'}
+
+    def action_xem(self):
+        """Xem ngay trong trình duyệt, không cần tài khoản SharePoint.
+
+        Odoo gọi Graph bằng danh nghĩa ứng dụng nên luôn đọc được tệp;
+        bộ điều khiển chỉ chuyển tiếp dòng byte sau khi đã kiểm quyền.
+        """
+        self.ensure_one()
+        return {'type': 'ir.actions.act_url', 'target': 'new',
+                'url': '/rp_doc/file/%s' % self.id}
+
+    def action_tai_ve(self):
+        self.ensure_one()
+        return {'type': 'ir.actions.act_url', 'target': 'self',
+                'url': '/rp_doc/file/%s?dl=1' % self.id}
 
     def action_mo_nguon(self):
         """Mở bản ghi đã nộp tệp này."""

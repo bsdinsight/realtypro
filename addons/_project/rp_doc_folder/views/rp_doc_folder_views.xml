@@ -41,6 +41,10 @@
                             string="Làm mới từ SharePoint"
                             invisible="not sp_item_id"
                             help="Đọc ngược danh sách tệp từ SharePoint — tệp ai thả thẳng vào đó cũng hiện ra ở đây."/>
+                    <button name="action_mo_so" type="object"
+                            string="Mở sổ" class="btn-primary"
+                            invisible="not tool_model_id"
+                            help="Sang thẳng sổ phụ trách, lọc sẵn theo dự án này."/>
                 </header>
                 <sheet>
                     <div class="alert alert-info" role="status"
@@ -86,6 +90,15 @@
                                     <field name="size_human"/>
                                     <field name="date_modified"/>
                                     <field name="modified_by"/>
+                                    <field name="source_name" string="Nộp từ"
+                                           optional="show"/>
+                                    <field name="source_model"
+                                           column_invisible="1"/>
+                                    <button name="action_mo_nguon"
+                                            type="object" string="Sổ"
+                                            icon="fa-book"
+                                            title="Mở bản ghi đã nộp tệp này"
+                                            invisible="not source_model"/>
                                     <field name="sp_url" widget="url"
                                            string="Mở"/>
                                 </list>

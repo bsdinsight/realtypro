@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Bộ thư mục hồ sơ dự án (EPC)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Cây thư mục chuẩn theo vòng đời EPC, dựng sẵn cho mỗi '
                'dự án; chỗ neo để đẩy file sang SharePoint về sau.',

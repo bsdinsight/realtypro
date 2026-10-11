@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class RpDocFolder(models.Model):
@@ -74,3 +75,30 @@ class RpDocFolder(models.Model):
     def _compute_tool(self):
         for f in self:
             f.tool_name = f.tool_model_id.name or False
+
+    def action_mo_so(self):
+        """Nhảy thẳng sang sổ phụ trách, lọc sẵn theo dự án.
+
+        Phân vai "thư mục giữ file, sổ giữ ý nghĩa" chỉ dùng được khi đi
+        từ thư mục sang sổ mất đúng một cú bấm; bắt người ta tự mò lại
+        trong thực đơn thì họ quay về thả hồ sơ rời vào thư mục.
+        """
+        self.ensure_one()
+        mo = self.tool_model_id.model
+        if not mo:
+            raise UserError(_('Thư mục này chưa khai sổ phụ trách.'))
+        if mo not in self.env:
+            raise UserError(_(
+                'Sổ "%s" thuộc một module hiện không cài.', mo))
+        Model = self.env[mo]
+        linh = 'project_id' in Model._fields
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.tool_model_id.name,
+            'res_model': mo,
+            'view_mode': 'list,form',
+            'domain': [('project_id', '=', self.project_id.id)] if linh
+            else [],
+            'context': {'default_project_id': self.project_id.id} if linh
+            else {},
+        }

@@ -44,6 +44,10 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'rp_contractor',
         'rp_estimate',
         'rp_contract',
+        # Mixin rp.doc.filing — nộp hồ sơ đã ký vào cây thư mục dự
+        # án. Module này nhẹ (chỉ re_base + rp_estimate), không có
+        # vòng phụ thuộc vì nó KHÔNG biết tới rp_progress.
+        'rp_doc_folder',
     ],
     'data': [
         'views/rp_tender_package_boq_views.xml',

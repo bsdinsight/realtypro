@@ -106,6 +106,11 @@
                     <button name="action_cancel" type="object"
                             string="Huỷ"
                             invisible="state in ('approved','cancelled')"/>
+                    <button name="action_nop_ho_so" type="object"
+                            string="Nộp vào hồ sơ dự án"
+                            invisible="not doc_pending_ids"
+                            help="Đưa hồ sơ đã ký lên SharePoint đúng thư mục của sổ nghiệm thu, rồi gỡ bản trong Odoo."/>
+                    <field name="doc_pending_ids" invisible="1"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,proposed,approved"/>
                 </header>
@@ -204,6 +209,47 @@
                                            optional="hide"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hồ sơ" name="ho_so">
+                            <field name="doc_folder_id" invisible="1"/>
+                            <div class="alert alert-warning" role="alert"
+                                 invisible="doc_folder_id">
+                                Cây hồ sơ của dự án chưa có thư mục nào nhận
+                                sổ nghiệm thu. Vào <b>Dự án → Hồ sơ</b>, mở
+                                thư mục cần dùng rồi chọn sổ ở ô
+                                <b>Sổ phụ trách</b>.
+                            </div>
+                            <group invisible="not doc_folder_id">
+                                <field name="doc_folder_path" readonly="1"/>
+                            </group>
+                            <separator string="Hồ sơ đã ký — chưa nộp"
+                                       invisible="not doc_folder_id"/>
+                            <field name="doc_pending_ids"
+                                   widget="many2many_binary" nolabel="1"
+                                   invisible="not doc_folder_id"/>
+                            <div class="text-muted"
+                                 invisible="not doc_pending_ids">
+                                Bấm <b>Nộp vào hồ sơ dự án</b> ở thanh trên.
+                                Tệp lên SharePoint đúng thư mục rồi được
+                                <b>gỡ khỏi Odoo</b> — chỉ một bản, không bao
+                                giờ phải hỏi bản nào mới đúng.
+                            </div>
+                            <separator string="Đã nộp"
+                                       invisible="not doc_file_ids"/>
+                            <field name="doc_file_ids" nolabel="1"
+                                   readonly="1" invisible="not doc_file_ids">
+                                <list create="false" delete="false">
+                                    <field name="name" string="Tên tệp"/>
+                                    <field name="size_human" string="Dung lượng"/>
+                                    <field name="date_modified" string="Sửa lần cuối"/>
+                                    <field name="modified_by" string="Người sửa"
+                                           optional="show"/>
+                                    <button name="action_mo" type="object"
+                                            icon="fa-external-link"
+                                            title="Mở trên SharePoint"
+                                            string="Mở"/>
                                 </list>
                             </field>
                         </page>

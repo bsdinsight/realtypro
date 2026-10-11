@@ -46,6 +46,17 @@ class RpDocFile(models.Model):
     modified_by = fields.Char(string='Người sửa')
     mimetype = fields.Char(string='Kiểu tệp')
 
+    # --- tệp nộp từ một sổ thì nhớ nó thuộc bản ghi nào
+    # Không dùng Reference: sổ nguồn có thể thuộc module chưa cài, mà một
+    # Reference trỏ vào model không tồn tại thì hỏng cả danh sách.
+    source_model = fields.Char(string='Sổ nguồn', index=True, copy=False)
+    source_id = fields.Integer(string='Bản ghi nguồn', index=True,
+                               copy=False)
+    source_name = fields.Char(
+        string='Nộp từ', copy=False,
+        help='Tên bản ghi lúc nộp — giữ lại để còn truy được nguồn kể cả '
+             'khi bản ghi đã bị xoá.')
+
     _uniq_item = models.Constraint(
         'UNIQUE(folder_id, sp_item_id)',
         'Một tệp SharePoint chỉ được ghi một lần trong thư mục.')
@@ -65,6 +76,22 @@ class RpDocFile(models.Model):
         self.ensure_one()
         return {'type': 'ir.actions.act_url', 'url': self.sp_url,
                 'target': 'new'}
+
+    def action_mo_nguon(self):
+        """Mở bản ghi đã nộp tệp này."""
+        self.ensure_one()
+        if not self.source_model or not self.source_id:
+            raise UserError(_('Tệp này không nộp từ sổ nào.'))
+        if self.source_model not in self.env:
+            raise UserError(_(
+                'Sổ "%s" thuộc một module hiện không cài.', self.source_model))
+        if not self.env[self.source_model].browse(self.source_id).exists():
+            raise UserError(_(
+                'Bản ghi nguồn "%s" đã bị xoá.', self.source_name or ''))
+        return {
+            'type': 'ir.actions.act_window', 'res_model': self.source_model,
+            'res_id': self.source_id, 'view_mode': 'form',
+        }
 
 
 class RpDocFolderFiles(models.Model):

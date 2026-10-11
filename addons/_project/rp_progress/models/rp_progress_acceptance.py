@@ -20,7 +20,9 @@ from odoo.exceptions import UserError, ValidationError
 class RpProgressAcceptance(models.Model):
     _name = 'rp.progress.acceptance'
     _description = 'Biên bản nghiệm thu khối lượng (BBN KLCV)'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    # rp.doc.filing: đường nộp hồ sơ đã ký vào đúng thư mục hồ sơ
+    # dự án (06.3 Quantity acceptance) rồi lên SharePoint.
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'rp.doc.filing']
     _order = 'date_submitted desc, id desc'
 
     name = fields.Char(

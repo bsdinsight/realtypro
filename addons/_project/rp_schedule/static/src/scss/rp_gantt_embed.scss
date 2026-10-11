@@ -1,0 +1,6 @@
+// Gantt nhúng trong tab form. Màn Gantt riêng cao bằng cả vùng hành
+// động; trong một tab thì không có chiều cao nào để kế thừa, EJ2 đo ra
+// 0 và không vẽ hàng nào — phải cho một chiều cao tường minh.
+.rp_gantt_embed {
+    .rp-gantt-container { height: 620px; }
+}

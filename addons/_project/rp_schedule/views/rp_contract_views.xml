@@ -54,41 +54,16 @@
                      thấy mình vừa làm vỡ cái gì. -->
                 <page string="Lịch thi công" name="schedule_tasks"
                       invisible="task_count == 0">
-                    <field name="task_ids" nolabel="1" readonly="1">
-                        <list default_order="wbs_seq, id"
-                              create="false" delete="false"
-                              decoration-warning="is_critical"
-                              decoration-muted="exec_status == 'done'"
-                              decoration-bf="child_ids">
-                            <field name="wbs_code" string="Mã WBS"/>
-                            <field name="wbs_name_indent" string="Công việc"/>
-                            <field name="child_ids" column_invisible="1"/>
-                            <field name="planned_start" string="Bắt đầu (KH)"/>
-                            <field name="planned_end" string="Kết thúc (KH)"/>
-                            <field name="planned_days" string="Thời lượng"
-                                   sum="Σ ngày"/>
-                            <field name="progress_percent"
-                                   string="% hoàn thành"
-                                   widget="progressbar"/>
-                            <field name="total_float"
-                                   string="Dư địa trong HĐ" optional="show"/>
-                            <field name="project_float"
-                                   string="Dư địa toàn DA" optional="show"/>
-                            <field name="is_critical" string="Găng"
-                                   optional="show"/>
-                            <field name="exec_status" string="Tình trạng"
-                                   widget="badge" optional="show"/>
-                            <field name="user_ids" string="Người thực hiện"
-                                   widget="many2many_avatar_user"
-                                   optional="hide"/>
-                            <field name="wbs_seq" column_invisible="1"/>
-                        </list>
-                    </field>
-                    <div class="text-muted mt8">
-                        Danh sách chỉ đọc, xếp theo mã WBS. Sửa tiến độ,
-                        chốt <b>baseline</b> hay xem <b>đường găng</b> thì mở
-                        <b>Xem Gantt</b> trên thanh nút ở đầu form.
-                    </div>
+                    <!-- Chính component Gantt của màn riêng, nhúng
+                         vào đây. Gantt Syncfusion đã là TreeGrid bên
+                         trái + biểu đồ bên phải, kéo thanh chia là thu
+                         gọn biểu đồ — nên thu/bung theo nhánh có sẵn,
+                         không cần dựng TreeGrid thứ hai để nuôi song
+                         song. Lib EJ2 nạp LƯỜI (8,1 MB, không được nằm
+                         trong assets_backend), nên tab này chỉ tốn khi
+                         có người mở. -->
+                    <field name="task_ids" nolabel="1" readonly="1"
+                           widget="rp_gantt_embed"/>
                 </page>
                 <page string="Phân tích tiến độ" name="schedule_analysis"
                       invisible="task_count == 0">

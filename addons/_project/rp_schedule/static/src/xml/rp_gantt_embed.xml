@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="rp_schedule.RpGanttEmbed">
+        <div class="rp_gantt_embed">
+            <div t-if="!resId" class="text-muted p-3">
+                Lưu hợp đồng trước thì mới dựng được lịch thi công.
+            </div>
+            <RpGanttAction t-else="" action="ganttAction"/>
+        </div>
+    </t>
+
+</templates>

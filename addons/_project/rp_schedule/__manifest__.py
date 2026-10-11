@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Lịch thi công (Schedule)',
-    'version': '19.0.9.5.0',
+    'version': '19.0.9.7.0',
     'category': 'Realty/Project',
     'summary': 'Tầng lịch thi công theo task (Odoo Project) cho HĐ nhà '
                'thầu: import Excel/MS Project XML, WBS, %, milestone, '
@@ -54,6 +54,9 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
             'rp_schedule/static/src/scss/rp_gantt.scss',
             'rp_schedule/static/src/js/rp_gantt.js',
             'rp_schedule/static/src/xml/rp_gantt.xml',
+            'rp_schedule/static/src/scss/rp_gantt_embed.scss',
+            'rp_schedule/static/src/js/rp_gantt_embed.js',
+            'rp_schedule/static/src/xml/rp_gantt_embed.xml',
         ],
     },
     'installable': True,

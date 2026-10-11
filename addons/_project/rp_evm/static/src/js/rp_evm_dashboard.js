@@ -43,6 +43,8 @@ export class RpEvmDashboard extends Component {
         this.qaRef = useRef("qa");
         this.disbRef = useRef("disb");
         this.payableRef = useRef("payable");
+        this.wlRef = useRef("workload");
+        this.statusRef = useRef("status");
         this._charts = [];
         this._needRender = false;
 
@@ -85,6 +87,19 @@ export class RpEvmDashboard extends Component {
     get k() { return (this.state.data && this.state.data.kpi) || {}; }
     get m() { return (this.state.data && this.state.data.money) || {}; }
     get mk() { return this.m.kpi || {}; }
+    get s() { return (this.state.data && this.state.data.schedule) || {}; }
+    get sk() { return this.s.kpi || {}; }
+
+    execLabel(st) {
+        return {
+            not_started: "Chưa bắt đầu", in_progress: "Đang làm",
+            late: "Trễ", done: "Xong",
+        }[st] || st;
+    }
+    sevLabel(sv) {
+        return { critical: "Nghiêm trọng", warning: "Cảnh báo",
+            info: "Thông tin" }[sv] || sv;
+    }
 
     onTab(t) {
         if (this.state.tab === t) return;
@@ -179,6 +194,8 @@ export class RpEvmDashboard extends Component {
             this._renderQa(ej);
             this._renderDisbursement(ej);
             this._renderPayable(ej);
+            this._renderWorkload(ej);
+            this._renderStatus(ej);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error("EVM charts render error", e);
@@ -481,6 +498,85 @@ export class RpEvmDashboard extends Component {
         });
         chart.appendTo(this.payableRef.el);
         this._charts.push(chart);
+    }
+
+    /** Khối lượng việc đến hạn 12 tháng tới — thấy chỗ dồn việc. */
+    _renderWorkload(ej) {
+        if (!this.wlRef.el) return;
+        const C = ej.charts;
+        C.Chart.Inject(C.ColumnSeries, C.StackingColumnSeries, C.Category,
+            C.Legend, C.Tooltip);
+        const src = (this.s.workload || []).map((p) => ({
+            x: p.ym.slice(5) + "/" + p.ym.slice(2, 4),
+            done: p.done,
+            // Phần CÒN LẠI, không phải tổng — xếp chồng mà lấy tổng là
+            // vẽ cột cao gấp đôi sự thật.
+            rest: Math.max(p.total - p.done, 0),
+        }));
+        const chart = new C.Chart({
+            primaryXAxis: {
+                valueType: "Category", majorGridLines: { width: 0 },
+                labelIntersectAction: "Rotate45",
+            },
+            primaryYAxis: {
+                title: "Số việc đến hạn",
+                majorGridLines: { width: 1, color: "#eee" },
+                lineStyle: { width: 0 }, majorTickLines: { width: 0 },
+            },
+            chartArea: { border: { width: 0 } },
+            series: [
+                {
+                    type: "StackingColumn", dataSource: src, xName: "x",
+                    yName: "done", name: "Đã xong", fill: "#2e7d5b",
+                    columnWidth: 0.55,
+                },
+                {
+                    type: "StackingColumn", dataSource: src, xName: "x",
+                    yName: "rest", name: "Chưa xong", fill: "#cfd8dd",
+                    columnWidth: 0.55,
+                    cornerRadius: { topLeft: 3, topRight: 3 },
+                },
+            ],
+            legendSettings: { visible: true, position: "Top" },
+            tooltip: { enable: true, shared: true },
+            width: "100%", height: "300px",
+        });
+        chart.appendTo(this.wlRef.el);
+        this._charts.push(chart);
+    }
+
+    /** Trạng thái thực hiện toàn dự án. */
+    _renderStatus(ej) {
+        if (!this.statusRef.el) return;
+        const C = ej.charts;
+        C.AccumulationChart.Inject(
+            C.PieSeries, C.AccumulationLegend, C.AccumulationTooltip,
+            C.AccumulationDataLabel);
+        const st = this.sk.status || {};
+        const mau = {
+            done: "#2e7d5b", in_progress: "#34617a",
+            late: "#c0453b", not_started: "#cfd8dd",
+        };
+        const src = Object.keys(mau)
+            .filter((k) => st[k])
+            .map((k) => ({ name: this.execLabel(k), value: st[k], fill: mau[k] }));
+        const donut = new C.AccumulationChart({
+            series: [{
+                dataSource: src.length ? src
+                    : [{ name: "Chưa có việc", value: 1, fill: "#cfd8dd" }],
+                xName: "name", yName: "value", pointColorMapping: "fill",
+                innerRadius: "58%", radius: "86%",
+                dataLabel: {
+                    visible: true, position: "Outside", name: "name",
+                    font: { size: "11px" },
+                },
+            }],
+            legendSettings: { visible: true, position: "Bottom" },
+            tooltip: { enable: true, format: "${point.x}: ${point.y} việc" },
+            width: "100%", height: "300px",
+        });
+        donut.appendTo(this.statusRef.el);
+        this._charts.push(donut);
     }
 }
 

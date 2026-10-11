@@ -57,6 +57,12 @@
                         Tiền · Tài trợ &amp; Giải ngân
                         <span class="rp-evm-tab-dot" t-if="mk.alert"/>
                     </button>
+                    <button class="rp-evm-tab" t-att-class="tabClass('lich')"
+                            t-on-click="() => this.onTab('lich')">
+                        Đường găng · Tiến độ tới COD
+                        <span class="rp-evm-tab-dot"
+                              t-if="sk.deadline_slip > 0 or sk.violated_severe"/>
+                    </button>
                 </div>
 
                 <t t-if="state.tab === 'tong-quan'">
@@ -588,6 +594,320 @@
                 </div>
 
                 </t><!-- /tab Tiền -->
+
+                <!-- ================= TAB ĐƯỜNG GĂNG ================= -->
+                <t t-if="state.tab === 'lich'">
+
+                <!-- Mạng lịch hỏng thì MỌI số dưới đây đều không đọc
+                     được — nói trước, đặt trên cùng. -->
+                <div class="rp-evm-banner is-bad" t-if="!sk.float_reliable">
+                    <div class="rp-evm-banner-icon">‼</div>
+                    <div>
+                        <b>Mạng lịch còn <t t-esc="sk.violated_severe"/> quan hệ
+                        ngược chiều</b> — việc sau được xếp bắt đầu trước khi
+                        việc trước kết thúc hàng trăm ngày. Đó không phải chậm
+                        tiến độ mà là khai sai chiều phụ thuộc, và nó kéo lượt
+                        tính lùi của CPM đi theo.<br/>
+                        <b>Dư địa và đường găng bên dưới chưa đọc được</b>
+                        (dư địa đang là <t t-esc="sk.critical_float"/> ngày).
+                        Sửa các quan hệ ở bảng “Mạng lịch bị vi phạm” rồi chạy
+                        lại đường găng.
+                    </div>
+                </div>
+
+                <div class="rp-evm-kpis">
+                    <div class="rp-evm-card rp-evm-hero"
+                         t-att-class="sk.deadline_slip > 0 ? 'is-bad' : 'is-good'">
+                        <div class="rp-evm-card-label">
+                            <t t-esc="sk.deadline_name or 'Hạn hoàn thành'"/> —
+                            dự báo so với hạn
+                        </div>
+                        <div class="rp-evm-card-value">
+                            <t t-if="sk.deadline_slip > 0">trễ <t t-esc="sk.deadline_slip"/> ngày</t>
+                            <t t-else="">đúng hạn</t>
+                        </div>
+                        <div class="rp-evm-card-sub">
+                            hạn <t t-esc="sk.deadline"/> · dự báo
+                            <t t-esc="sk.forecast"/>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card"
+                         t-att-class="sk.violated_severe ? 'is-bad' : sk.violated ? 'is-warn' : 'is-good'">
+                        <div class="rp-evm-card-label">Mạng lịch bị vi phạm</div>
+                        <div class="rp-evm-card-value" t-esc="sk.violated"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-if="sk.violated_severe">
+                                <t t-esc="sk.violated_severe"/> quan hệ ngược chiều
+                            </t>
+                            <t t-else="">chỉ lệch nhỏ, đọc được đường găng</t>
+                        </div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Việc trên đường găng</div>
+                        <div class="rp-evm-card-value" t-esc="sk.critical_count"/>
+                        <div class="rp-evm-card-sub">
+                            trên tổng <t t-esc="sk.task_count"/> việc
+                        </div>
+                    </div>
+                    <div class="rp-evm-card"
+                         t-att-class="sk.alert_critical ? 'is-bad' : sk.alert_count ? 'is-warn' : 'is-good'">
+                        <div class="rp-evm-card-label">Cảnh báo trượt đang mở</div>
+                        <div class="rp-evm-card-value" t-esc="sk.alert_count"/>
+                        <div class="rp-evm-card-sub">
+                            <t t-esc="sk.alert_critical"/> mức nghiêm trọng
+                        </div>
+                    </div>
+                    <div class="rp-evm-card"
+                         t-att-class="sk.gate_count ? 'is-warn' : 'is-good'">
+                        <div class="rp-evm-card-label">Hồ sơ chặn khởi công</div>
+                        <div class="rp-evm-card-value" t-esc="sk.gate_count"/>
+                        <div class="rp-evm-card-sub">việc chưa đủ cổng hồ sơ</div>
+                    </div>
+                    <div class="rp-evm-card">
+                        <div class="rp-evm-card-label">Trượt so mốc chuẩn</div>
+                        <div class="rp-evm-card-value" t-esc="sk.slip_count"/>
+                        <div class="rp-evm-card-sub">
+                            trượt nhiều nhất <t t-esc="sk.slip_max"/> ngày
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mạng lịch bị vi phạm — đặt TRƯỚC đường găng -->
+                <div class="rp-evm-panel" t-if="s.violations.length">
+                    <div class="rp-evm-panel-head">
+                        <h3>Mạng lịch bị vi phạm</h3>
+                        <span class="rp-evm-panel-note">
+                            Hở thực &lt; lag đã khai · hở âm lớn là khai sai
+                            chiều phụ thuộc, không phải chậm tiến độ
+                        </span>
+                    </div>
+                    <table class="rp-evm-table">
+                        <thead>
+                            <tr>
+                                <th>Việc trước</th>
+                                <th>Việc sau</th>
+                                <th class="c">Loại</th>
+                                <th class="num">Lag khai</th>
+                                <th class="num">Hở thực</th>
+                                <th class="c">Nguồn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="s.violations" t-as="v" t-key="v_index">
+                                <tr t-att-class="v.severe ? 'is-severe' : ''">
+                                    <td t-esc="v.pred"/>
+                                    <td t-esc="v.succ"/>
+                                    <td class="c">
+                                        <span class="rp-evm-chip" t-esc="v.type"/>
+                                        <span class="rp-evm-chip" t-if="v.cross">liên HĐ</span>
+                                    </td>
+                                    <td class="num" t-esc="v.lag"/>
+                                    <td class="num">
+                                        <span class="rp-evm-lv"
+                                              t-att-class="v.severe ? 'lv-critical' : 'lv-medium'"
+                                              t-esc="v.gap"/>
+                                    </td>
+                                    <td class="c muted" t-esc="v.source"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Chuỗi găng -->
+                <div class="rp-evm-panel">
+                    <div class="rp-evm-panel-head">
+                        <h3>Chuỗi găng cấp dự án — xuyên hợp đồng</h3>
+                        <span class="rp-evm-panel-note">
+                            Theo thứ tự thời gian · chậm một việc ở đây là chậm
+                            <t t-esc="sk.deadline_name or 'ngày hoàn thành'"/>
+                        </span>
+                    </div>
+                    <table class="rp-evm-table">
+                        <thead>
+                            <tr>
+                                <th>Công việc</th>
+                                <th>Hợp đồng</th>
+                                <th class="c">Bắt đầu</th>
+                                <th class="c">Kết thúc</th>
+                                <th class="num">Dư địa</th>
+                                <th class="c">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="s.chain" t-as="cp" t-key="cp_index">
+                                <tr>
+                                    <td>
+                                        <t t-esc="cp.name"/>
+                                        <span class="rp-evm-chip" t-if="cp.milestone">mốc</span>
+                                    </td>
+                                    <td class="muted" t-esc="cp.contract or '—'"/>
+                                    <td class="c" t-esc="cp.start"/>
+                                    <td class="c" t-esc="cp.end"/>
+                                    <td class="num">
+                                        <t t-if="sk.float_reliable" t-esc="cp.float"/>
+                                        <span class="muted" t-else="">—</span>
+                                    </td>
+                                    <td class="c">
+                                        <span class="rp-evm-ms"
+                                              t-att-class="'ms-' + (cp.status === 'done' ? 'done' : cp.status === 'late' ? 'overdue' : 'ontrack')"
+                                              t-esc="execLabel(cp.status)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Khối lượng + trạng thái -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide">
+                        <div class="rp-evm-panel-head">
+                            <h3>Khối lượng việc đến hạn — 12 tháng tới</h3>
+                            <span class="rp-evm-panel-note">
+                                Không tính mốc · thấy trước chỗ dồn việc
+                            </span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="workload"/>
+                    </div>
+                    <div class="rp-evm-panel">
+                        <div class="rp-evm-panel-head">
+                            <h3>Trạng thái thực hiện</h3>
+                            <span class="rp-evm-panel-note">Toàn dự án</span>
+                        </div>
+                        <div class="rp-evm-chart" t-ref="status"/>
+                    </div>
+                </div>
+
+                <!-- Cảnh báo + điểm bàn giao -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel rp-evm-panel-wide"
+                         t-if="s.alerts.length">
+                        <div class="rp-evm-panel-head">
+                            <h3>Cảnh báo trượt tiến độ đang mở</h3>
+                            <span class="rp-evm-panel-note">
+                                Nghiêm trọng trước · trong mỗi mức thì cũ trước
+                            </span>
+                        </div>
+                        <table class="rp-evm-table">
+                            <thead>
+                                <tr>
+                                    <th>Cảnh báo</th>
+                                    <th class="c">Mức</th>
+                                    <th class="num">Giá trị</th>
+                                    <th class="num">Ngưỡng</th>
+                                    <th class="num">Tuổi (ngày)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="s.alerts" t-as="a" t-key="a_index">
+                                    <tr>
+                                        <td t-esc="a.name"/>
+                                        <td class="c">
+                                            <span class="rp-evm-lv"
+                                                  t-att-class="a.severity === 'critical' ? 'lv-critical' : 'lv-high'"
+                                                  t-esc="sevLabel(a.severity)"/>
+                                        </td>
+                                        <td class="num" t-esc="a.value"/>
+                                        <td class="num muted" t-esc="a.threshold"/>
+                                        <td class="num" t-esc="a.age"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="rp-evm-panel" t-if="s.interfaces.length">
+                        <div class="rp-evm-panel-head">
+                            <h3>Điểm bàn giao giữa hai hợp đồng</h3>
+                            <span class="rp-evm-panel-note">Hở nhỏ nhất lên trước</span>
+                        </div>
+                        <table class="rp-evm-table rp-evm-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Điểm bàn giao</th>
+                                    <th class="num">Hở (ngày)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="s.interfaces" t-as="itf" t-key="itf_index">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="itf.name"/>
+                                            <span class="rp-evm-chip" t-if="itf.conflict">mâu thuẫn</span>
+                                        </td>
+                                        <td class="num">
+                                            <span class="rp-evm-lv"
+                                                  t-att-class="itf.gap &lt;= 0 ? 'lv-critical' : itf.gap &lt;= 7 ? 'lv-high' : 'lv-low'"
+                                                  t-esc="itf.gap"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Cổng hồ sơ + trượt baseline -->
+                <div class="rp-evm-row">
+                    <div class="rp-evm-panel" t-if="s.gates.length">
+                        <div class="rp-evm-panel-head">
+                            <h3>Hồ sơ đang chặn khởi công</h3>
+                            <span class="rp-evm-panel-note">
+                                Việc không được phép bắt đầu khi chưa đủ hồ sơ
+                            </span>
+                        </div>
+                        <table class="rp-evm-table rp-evm-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Công việc</th>
+                                    <th class="c">Kế hoạch bắt đầu</th>
+                                    <th class="num">Chặn (ngày)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="s.gates" t-as="g" t-key="g_index">
+                                    <tr>
+                                        <td t-esc="g.name"/>
+                                        <td class="c" t-esc="g.start"/>
+                                        <td class="num">
+                                            <span class="rp-evm-lv lv-high" t-esc="g.slip"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="rp-evm-panel rp-evm-panel-wide" t-if="s.slips.length">
+                        <div class="rp-evm-panel-head">
+                            <h3>Trượt so với mốc chuẩn (baseline)</h3>
+                            <span class="rp-evm-panel-note">
+                                So ngày kết thúc hiện hành với mốc chuẩn đã đóng băng
+                            </span>
+                        </div>
+                        <table class="rp-evm-table rp-evm-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Công việc</th>
+                                    <th class="c">Mốc chuẩn</th>
+                                    <th class="c">Hiện hành</th>
+                                    <th class="num">Trượt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="s.slips" t-as="sl" t-key="sl_index">
+                                    <tr>
+                                        <td t-esc="sl.name"/>
+                                        <td class="c muted" t-esc="sl.baseline_end"/>
+                                        <td class="c" t-esc="sl.end"/>
+                                        <td class="num" t-esc="sl.days"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                </t><!-- /tab Đường găng -->
 
             </t>
         </div>

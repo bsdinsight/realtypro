@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — EVM (Kiểm soát chi phí)',
-    'version': '19.0.2.0.0',
+    'version': '19.0.2.1.2',
     'category': 'Realty/Project',
     'summary': 'Earned Value Management: CPI/CV/EAC/VAC + cảnh báo vượt chi '
                'theo hạng mục, rollup dự án.',

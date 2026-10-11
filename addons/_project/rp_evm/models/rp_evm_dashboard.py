@@ -10,7 +10,7 @@ tiền thu/chi. Toàn bộ số liệu tính trực tiếp từ chứng từ ngu
 (HĐ thầu phụ = BAC · BBN nghiệm thu = EV · hóa đơn nhà thầu = AC ·
 lịch thi công = PV) để nhất quán, không phụ thuộc rollup.
 """
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date, timedelta
 
 from odoo import api, fields, models
@@ -658,6 +658,7 @@ class RpEvmDashboard(models.TransientModel):
 
         # ---- Cảnh báo & khuyến nghị (tự động) ----
         money = self._khoi_tien(project, contracts, cur)
+        schedule = self._khoi_lich(project, contracts)
 
         insights = []
         thieu_rate = self._thieu_ty_gia(cur, [contracts, accepts, bills])
@@ -769,6 +770,196 @@ class RpEvmDashboard(models.TransientModel):
             'insights': insights,
             # ---- Tab Tiền ----
             'money': money,
+            # ---- Tab Đường găng ----
+            'schedule': schedule,
+        }
+
+    # ==================================================================
+    # Tab Đường găng — "COD có trễ không, và trễ vì khâu nào"
+    # ==================================================================
+    # NGƯỠNG hở âm coi là hỏng mạng lịch, không phải chậm tiến độ. Một
+    # quan hệ mà việc sau bắt đầu trước việc trước cả tháng thì không
+    # phải "trễ": nó là khai sai chiều phụ thuộc, và nó kéo lượt tính
+    # lùi của CPM đi theo. Khi còn quan hệ như thế thì dư địa và đường
+    # găng KHÔNG đọc được — bảng phải nói thẳng điều đó thay vì in ra
+    # một con số âm trông như thảm hoạ tiến độ.
+    HO_AM_HONG_MANG = -30
+
+    def _khoi_lich(self, project, contracts):
+        """Đường găng, mạng lịch, cảnh báo trượt và các cổng chặn.
+
+        Thứ tự trình bày có chủ ý: SỨC KHOẺ MẠNG LỊCH đứng trước đường
+        găng. Đọc đường găng trên một mạng còn quan hệ ngược chiều là
+        đọc kết quả của phép tính sai đầu vào — và vì CPM vẫn chạy trót
+        lọt, cái sai đó không báo gì cả, chỉ hiện ra dưới dạng một con
+        số dư địa âm rất lớn.
+        """
+        hom_nay = fields.Date.context_today(self)
+        T = self.env['project.task']
+        viec = T.search([('rp_project_id', '=', project.id)])
+
+        # ---- Sức khoẻ mạng lịch ----
+        vi_pham = []
+        hong_nang = 0
+        L = self.env.get('rp.task.link')
+        if L is not None:
+            for l in L.sudo().search([('project_id', '=', project.id),
+                                      ('is_violated', '=', True)]):
+                ho = l.lag_gap or 0
+                if ho <= self.HO_AM_HONG_MANG:
+                    hong_nang += 1
+                vi_pham.append({
+                    'pred': l.predecessor_id.name or '',
+                    'succ': l.task_id.name or '',
+                    'type': l.link_type or '',
+                    'lag': l.lag_days or 0,
+                    'lag_actual': l.lag_actual or 0,
+                    'gap': ho,
+                    'source': dict(L._fields['source'].selection).get(
+                        l.source, l.source or ''),
+                    'cross': bool(l.is_cross_contract),
+                    'severe': ho <= self.HO_AM_HONG_MANG,
+                })
+            vi_pham.sort(key=lambda r: r['gap'])
+
+        # ---- Chuỗi găng cấp dự án ----
+        gang = []
+        for t in viec.filtered('is_project_critical').sorted(
+                lambda x: (x.planned_start or hom_nay, x.id)):
+            gang.append({
+                'name': t.name or '',
+                'contract': t.rp_contract_id.display_name or '',
+                'start': t.planned_start.strftime('%d/%m/%Y')
+                if t.planned_start else '',
+                'end': t.planned_end.strftime('%d/%m/%Y')
+                if t.planned_end else '',
+                'float': t.project_float or 0,
+                'status': t.exec_status or '',
+                'milestone': bool(t.is_milestone),
+                'slip': t.baseline_slip_days or 0,
+            })
+
+        # ---- Cảnh báo trượt đang mở ----
+        canh_bao = []
+        A = self.env.get('rp.schedule.alert')
+        if A is not None:
+            loai = dict(A._fields['alert_type'].selection) \
+                if 'alert_type' in A._fields else {}
+            # `age_days` là trường TÍNH KHÔNG LƯU — đưa vào `order` là
+            # Odoo ném ValueError ngay, nên sắp theo mức độ bằng SQL rồi
+            # sắp theo tuổi bằng Python.
+            mo = A.sudo().search(
+                [('project_id', '=', project.id), ('state', '=', 'open')],
+                order='severity_order')
+            for a in mo.sorted(lambda x: -(x.age_days or 0)):
+                canh_bao.append({
+                    'name': a.name or '',
+                    'severity': a.severity or '',
+                    'type': loai.get(a.alert_type, a.alert_type or ''),
+                    'age': a.age_days or 0,
+                    'value': a.days_value or 0,
+                    'threshold': a.threshold or 0,
+                })
+            canh_bao.sort(key=lambda r: (
+                {'critical': 0, 'warning': 1}.get(r['severity'], 2), -r['age']))
+
+        # ---- Điểm bàn giao giữa hai hợp đồng ----
+        ban_giao = []
+        I = self.env.get('rp.interface')
+        if I is not None:
+            for i in I.sudo().search([('project_id', '=', project.id)]):
+                ban_giao.append({
+                    'code': i.code or '',
+                    'name': i.name or '',
+                    'from': i.from_contract_id.display_name or '',
+                    'to': i.to_contract_id.display_name or '',
+                    'gap': i.gap_days if i.gap_days is not None else 0,
+                    'conflict': bool(i.is_conflict),
+                    'state': i.state or '',
+                })
+            # Hở nhỏ nhất lên trước: đó là chỗ sắp vỡ, không phải chỗ
+            # rộng rãi.
+            ban_giao.sort(key=lambda r: (not r['conflict'], r['gap']))
+
+        # ---- Cổng hồ sơ đang chặn khởi công ----
+        cong_ho_so = [{
+            'name': t.name or '',
+            'contract': t.rp_contract_id.display_name or '',
+            'slip': t.doc_gate_slip_days or 0,
+            'start': t.planned_start.strftime('%d/%m/%Y')
+            if t.planned_start else '',
+        } for t in viec.filtered(lambda x: (x.doc_gate_slip_days or 0) > 0)
+            .sorted(lambda x: -(x.doc_gate_slip_days or 0))[:8]]
+
+        # ---- Trượt so với mốc chuẩn ----
+        truot = [{
+            'name': t.name or '',
+            'contract': t.rp_contract_id.display_name or '',
+            'days': t.baseline_slip_days or 0,
+            'baseline_end': t.baseline_end.strftime('%d/%m/%Y')
+            if t.baseline_end else '',
+            'end': t.planned_end.strftime('%d/%m/%Y')
+            if t.planned_end else '',
+        } for t in viec.filtered(lambda x: (x.baseline_slip_days or 0) > 0)
+            .sorted(lambda x: -(x.baseline_slip_days or 0))[:8]]
+
+        # ---- Khối lượng việc đến hạn 12 tháng tới ----
+        den_han = defaultdict(lambda: [0, 0])
+        for t in viec:
+            if not t.planned_end or t.is_milestone:
+                continue
+            o = den_han[self._ym(t.planned_end)]
+            o[0] += 1
+            if t.exec_status == 'done':
+                o[1] += 1
+        moc_thang = [ym for ym in sorted(den_han)
+                     if ym >= self._ym(hom_nay)][:12]
+        workload = [{'ym': ym, 'total': den_han[ym][0],
+                     'done': den_han[ym][1]} for ym in moc_thang]
+
+        tt = Counter(viec.mapped('exec_status'))
+        han = project.schedule_deadline if 'schedule_deadline' in project._fields \
+            else False
+        du_bao = project.schedule_forecast_end \
+            if 'schedule_forecast_end' in project._fields else False
+        truot_han = (du_bao - han).days if (han and du_bao) else 0
+
+        return {
+            'kpi': {
+                'deadline': han.strftime('%d/%m/%Y') if han else '',
+                'forecast': du_bao.strftime('%d/%m/%Y') if du_bao else '',
+                'deadline_slip': truot_han,
+                'deadline_name': project.schedule_deadline_task_id.name or ''
+                if 'schedule_deadline_task_id' in project._fields else '',
+                'critical_count': len(gang),
+                'task_count': len(viec),
+                'violated': len(vi_pham),
+                'violated_severe': hong_nang,
+                'alert_count': len(canh_bao),
+                'alert_critical': len(
+                    [a for a in canh_bao if a['severity'] == 'critical']),
+                'gate_count': len(cong_ho_so),
+                'slip_count': len(truot),
+                'slip_max': max([r['days'] for r in truot] or [0]),
+                # Dư địa chỉ đọc được khi mạng lịch lành; còn quan hệ
+                # ngược chiều thì con số này là rác, và nói ra điều đó
+                # có giá trị hơn là in nó ra.
+                'float_reliable': hong_nang == 0,
+                'critical_float': gang[0]['float'] if gang else 0,
+                'status': {
+                    'not_started': tt.get('not_started', 0),
+                    'in_progress': tt.get('in_progress', 0),
+                    'late': tt.get('late', 0),
+                    'done': tt.get('done', 0),
+                },
+            },
+            'chain': gang,
+            'violations': vi_pham[:10],
+            'alerts': canh_bao[:10],
+            'interfaces': ban_giao[:10],
+            'gates': cong_ho_so,
+            'slips': truot,
+            'workload': workload,
         }
 
     # ==================================================================

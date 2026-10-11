@@ -265,4 +265,21 @@
     .rp-evm-table .u {
         font-size: 10px; color: #8a979f; margin-left: 3px;
     }
+
+    // ---- Băng cảnh báo đầu tab ----
+    .rp-evm-banner {
+        display: flex; gap: 12px; align-items: flex-start;
+        padding: 12px 14px; border-radius: 8px; margin-bottom: 14px;
+        font-size: 12.5px; line-height: 1.55;
+        background: #fbe9e7; color: #7a2b23;
+        border-left: 4px solid var(--bad);
+
+        &.is-warn { background: #fdf3e0; color: #7a5a1e;
+                    border-left-color: var(--warn); }
+    }
+    .rp-evm-banner-icon { font-size: 20px; line-height: 1; flex: 0 0 auto; }
+
+    // Dòng vi phạm nặng — nền nhạt để tách khỏi các vi phạm lệch nhỏ.
+    .rp-evm-table tr.is-severe { background: #fdf0ee; }
+    .rp-evm-table tr.is-severe td { font-weight: 600; }
 }

@@ -230,6 +230,12 @@
                      thêm mục menu. display="always" để bấm được khi chưa
                      tích dòng nào — nút chạy cho cả lịch. -->
                 <header>
+                    <!-- Lối sang Gantt ngay trên màn danh sách: hai màn
+                         bổ cho nhau chứ không thay nhau, nhưng trước đây
+                         muốn đổi thì phải quay ra menu. -->
+                    <button name="rp_action_xem_gantt" type="object"
+                            string="Xem Gantt" display="always"
+                            class="btn-primary"/>
                     <button name="rp_action_tinh_duong_gang" type="object"
                             string="Tính đường găng" display="always"
                             class="btn-secondary"/>

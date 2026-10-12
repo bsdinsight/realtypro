@@ -381,6 +381,29 @@ class ProjectTask(models.Model):
             _('Đã xoá baseline của %s công việc. Độ trượt không còn đo '
               'được cho tới khi chốt lại.', tong), 'warning')
 
+    def rp_action_xem_gantt(self):
+        """Mở Gantt cho đúng tập việc đang xem.
+
+        Danh sách và Gantt BỔ cho nhau chứ không thay nhau: danh sách để
+        sửa hàng loạt, lọc xuyên dự án và xuất Excel; Gantt để nhìn ra
+        hình dáng tiến độ. Trước đây muốn đổi giữa hai màn phải quay ra
+        menu, nên người dùng tưởng mỗi màn là một thế giới riêng.
+
+        Truyền dự án đang xem nếu mọi việc được chọn/lọc cùng một dự án
+        — mở Gantt trộn nhiều dự án thì trục thời gian không có gốc
+        chung, nhìn không ra gì.
+        """
+        du_an = self.mapped('rp_contract_id.project_id')
+        ctx = {}
+        if len(du_an) == 1:
+            ctx['rp_project_id'] = du_an.id
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'rp_schedule.gantt',
+            'name': _('Gantt lịch thi công'),
+            'context': ctx,
+        }
+
     def rp_action_tinh_duong_gang(self):
         """Chạy CPM ở phạm vi DỰ ÁN, không phải từng hợp đồng.
 

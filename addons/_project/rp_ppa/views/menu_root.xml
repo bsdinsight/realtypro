@@ -11,6 +11,16 @@
          KHÔNG mount vào nhánh "Doanh thu" của rp_owner_contract: nhánh
          đó là doanh thu của TỔNG THẦU bán cho chủ đầu tư, và đã được tắt
          trên bản triển khai vai chủ đầu tư. Hai thứ khác hẳn nhau. -->
+<!-- 2026-10-12: đưa lên cấp ỨNG DỤNG, không còn nằm trong EPCOne.
+         Cùng lý do đã áp cho "Mua sắm": quy mô thật của phân hệ này nằm
+         ở 25 năm BÁN ĐIỆN sau COD, không ở 2 năm xây dựng — bắt người
+         vận hành mở ứng dụng xây dựng để tra sản lượng bán là ngược.
+
+         Bỏ `parent` là ĐỦ để lên gốc, kể cả trên DB đã chạy: `_tag_menuitem`
+         khởi tạo values với parent_id False rồi mới ghi đè nếu có `parent`.
+         KHÔNG cần migration. Và `web_icon` nằm cùng chuỗi elif nên CHỈ
+         ghi được khi không có `parent` — thêm `parent` lại là mất icon. -->
     <menuitem id="menu_energy_sale" name="Kinh doanh"
-              parent="rp_estimate.menu_realty_project_root" sequence="45"/>
+              web_icon="rp_ppa,static/description/icon.png"
+              sequence="24"/>
 </odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EPCOne — Bán điện (PPA)",
-    "version": "19.0.1.2.2",
+    "version": "19.0.1.3.0",
     "category": "Realty/Project",
     "summary": "Hợp đồng mua bán điện, sản lượng theo kỳ và hoá đơn tiền "
                "điện cho chủ đầu tư nhà máy điện.",

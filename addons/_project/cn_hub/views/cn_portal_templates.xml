@@ -53,7 +53,16 @@
                                    t-esc="t.name"/></td>
                             <td t-esc="t.gc_partner_id.name or '—'"/>
                             <td t-esc="t.specialty or '—'"/>
-                            <td t-field="t.deadline"/>
+                            <!-- Bọc trong span: QWeb dựng trường ngày bằng
+                                 widget, mà widget đặt thẳng trên <td> thì
+                                 Odoo ném AssertionError "QWeb widgets do not
+                                 work correctly on 'td' elements" và cả trang
+                                 trả 500. Cột Dự toán bên dưới đã bọc sẵn,
+                                 cột này thì sót. -->
+                            <td>
+                                <span t-if="t.deadline" t-field="t.deadline"/>
+                                <t t-else="">—</t>
+                            </td>
                             <td class="text-end">
                                 <span t-field="t.budget"
                                       t-options="{'widget': 'monetary', 'display_currency': t.currency_id}"/>
@@ -210,8 +219,8 @@
                                     <tr t-foreach="existing_bid.schedule_task_ids" t-as="tk">
                                         <td t-esc="tk.wbs_code or ''"/>
                                         <td><t t-if="tk.is_milestone"><i class="fa fa-flag text-warning me-1"/></t><t t-esc="tk.name"/></td>
-                                        <td t-field="tk.date_start"/>
-                                        <td t-field="tk.date_end"/>
+                                        <td><span t-field="tk.date_start"/></td>
+                                        <td><span t-field="tk.date_end"/></td>
                                         <td><t t-esc="int(tk.progress_percent)"/>%</td>
                                     </tr>
                                 </tbody>
@@ -284,7 +293,7 @@
                                 <span t-field="b.price"
                                       t-options="{'widget': 'monetary', 'display_currency': b.currency_id}"/>
                             </td>
-                            <td t-field="b.date_submit"/>
+                            <td><span t-field="b.date_submit"/></td>
                             <td><span t-field="b.state"/></td>
                         </tr>
                     </tbody>

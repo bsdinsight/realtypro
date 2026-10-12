@@ -10,6 +10,14 @@
         <field name="name">Công việc đang trượt tiến độ</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">list,form</field>
+        <!-- PHẢI khai view_id. Không khai thì Odoo lấy danh sách
+             công việc MẶC ĐỊNH của project — ra Title/Priority/
+             Tags, không có mã WBS, ngày kế hoạch hay dư địa, tức
+             đúng những cột làm nên một báo cáo tiến độ. Chú thích
+             đầu tệp vẫn ghi "dùng lại đúng view của module nghiệp
+             vụ" — ý đúng, nhưng thiếu dòng này thì không thành. -->
+        <field name="view_id"
+                ref="rp_schedule.view_rp_schedule_task_list"/>
         <field name="search_view_id"
                 ref="rp_schedule.view_task_search_rp_panel"/>
         <field name="domain">[('rp_contract_id','!=',False),('baseline_slip_days','&gt;',0)]</field>
@@ -25,6 +33,8 @@
         <field name="name">Công việc trên đường găng toàn dự án</field>
         <field name="res_model">project.task</field>
         <field name="view_mode">list,form</field>
+        <field name="view_id"
+                ref="rp_schedule.view_rp_schedule_task_list"/>
         <field name="search_view_id"
                 ref="rp_schedule.view_task_search_rp_panel"/>
         <field name="domain">[('is_project_critical','=',True)]</field>

@@ -177,8 +177,12 @@
                 <!-- Cột NHÌN là bản thụt lề; cột SỬA là `name` thật, để
                      ẩn sẵn vì multi_edit tên việc là thao tác hiếm, còn
                      đọc cho ra cấu trúc thì lúc nào cũng cần. -->
+                <!-- Tên việc là cột người ta ĐỌC, mọi cột khác chỉ để
+                     liếc. Không đặt width thì Odoo chia đều theo số cột
+                     và tên bị cắt ngay từ chữ thứ ba, nhất là khi còn
+                     phải chừa chỗ cho thụt lề WBS. -->
                 <field name="wbs_name_indent" string="Tên công việc"
-                       readonly="1"/>
+                       readonly="1" width="360px"/>
                 <field name="name" string="Tên công việc (sửa)"
                        optional="hide"/>
                 <field name="child_ids" column_invisible="1"/>

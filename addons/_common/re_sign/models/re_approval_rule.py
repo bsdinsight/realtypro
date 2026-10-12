@@ -15,13 +15,21 @@ from odoo import _, api, fields, models
 
 from odoo.addons.re_sign.models.re_signature import VAI
 
-# Chứng từ ký được. Thêm chứng từ mới thì khai thêm ở đây — cố ý KHÔNG
-# tự dò mọi model kế thừa re.signable: danh sách tự dò sẽ lặng lẽ dài ra
-# mỗi lần có module mới, và người cấu hình gặp một ô chọn đầy tên model
-# họ chưa từng nghe.
-MODEL_KY = [
-    ('rp.progress.acceptance', 'Biên bản nghiệm thu khối lượng'),
-    ('rp.claim', 'Khiếu nại / gia hạn hợp đồng'),
+# Ô chọn chứng từ để MỞ, không bó vào vài model định sẵn: một màn cấu
+# hình chỉ cho chọn hai thứ thì nhìn như đồ gắn cứng chứ không phải cấu
+# hình, và mỗi lần khách muốn thêm chứng từ lại phải sửa mã.
+#
+# Đổi lại phải nói thật: luật chỉ CÓ HIỆU LỰC trên model đã bật ký (kế
+# thừa ``re.signable``). Khai cho model chưa bật thì luật vẫn lưu nhưng
+# không ràng buộc gì — nên có cờ ``is_signable`` và dải cảnh báo, chứ
+# không để người dùng khai xong tưởng đã xong.
+DOMAIN_MODEL = [
+    ('transient', '=', False),
+    ('abstract', '=', False),
+    '|', '|',
+    ('model', '=like', 'rp.%'),
+    ('model', '=like', 're.%'),
+    ('model', '=like', 'eam.%'),
 ]
 
 
@@ -34,8 +42,17 @@ class ReApprovalRule(models.Model):
         string='Tên bước duyệt', required=True,
         help='Viết cho người đọc hiểu ngay, ví dụ "Trên 10 tỷ: Giám đốc '
              'dự án phải ký".')
-    res_model = fields.Selection(
-        MODEL_KY, string='Áp cho chứng từ', required=True, index=True)
+    res_model_id = fields.Many2one(
+        'ir.model', string='Áp cho chứng từ', required=True,
+        ondelete='cascade', domain=DOMAIN_MODEL,
+        help='Chọn loại chứng từ muốn đặt luật phê duyệt.')
+    res_model = fields.Char(
+        string='Mã model', related='res_model_id.model',
+        store=True, index=True, readonly=True)
+    is_signable = fields.Boolean(
+        string='Đã bật ký', compute='_compute_is_signable', store=True,
+        help='Chứng từ đã gắn chức năng ký hay chưa. Chưa gắn thì luật '
+             'vẫn lưu được nhưng chưa ràng buộc gì.')
     sequence = fields.Integer(
         string='Thứ tự', default=10,
         help='Thứ tự trình bày và thứ tự ký mong muốn. KHÔNG ép ký theo '
@@ -77,7 +94,7 @@ class ReApprovalRule(models.Model):
     @api.model
     def _luat_cho(self, doc):
         """Các luật áp cho một chứng từ cụ thể."""
-        if doc._name not in dict(MODEL_KY):
+        if 'signature_ids' not in doc._fields:
             return self.browse()
         tien = doc._approval_amount()
         du_an = doc._approval_project()
@@ -87,6 +104,14 @@ class ReApprovalRule(models.Model):
             and (not r.amount_max or tien < r.amount_max)
             and (not r.project_id or r.project_id == du_an)
         ))
+
+    @api.depends('res_model')
+    def _compute_is_signable(self):
+        for r in self:
+            m = r.res_model
+            r.is_signable = bool(
+                m and m in self.env
+                and 'signature_ids' in self.env[m]._fields)
 
     @api.constrains('amount_min', 'amount_max')
     def _check_nguong(self):

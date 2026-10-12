@@ -113,6 +113,31 @@
                         context="{'group_by': 'recipient'}"/>
                 <filter string="Trạng thái" name="group_state"
                         context="{'group_by': 'state'}"/>
+
+                <!-- Pane lọc. CHỈ nhận m2o/m2m/selection của chính model
+                     — trường tính không lưu hay trường của model khác thì
+                     pane không dựng được.
+                     Trạng thái để `select="multi"` vì người điều phối hay
+                     xem "chờ trả lời + quá hạn" cùng lúc; dự án và hợp
+                     đồng để `one` vì xem RFI trộn nhiều dự án thì không
+                     so sánh được gì. -->
+                <searchpanel>
+                    <field name="project_id" icon="fa-folder-open"
+                           enable_counters="1" select="one"
+                           string="Dự án"/>
+                    <field name="contract_id" icon="fa-file-text-o"
+                           enable_counters="1" select="one"
+                           string="Hợp đồng"/>
+                    <field name="contractor_id" icon="fa-truck"
+                           enable_counters="1" select="one"
+                           string="Nhà thầu"/>
+                    <field name="recipient" icon="fa-paper-plane"
+                           enable_counters="1" select="multi"
+                           string="Gửi tới"/>
+                    <field name="state" icon="fa-tasks"
+                           enable_counters="1" select="multi"
+                           string="Trạng thái"/>
+                </searchpanel>
             </search>
         </field>
     </record>

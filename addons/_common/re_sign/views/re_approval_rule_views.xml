@@ -7,9 +7,12 @@
         <field name="arch" type="xml">
             <list string="Luật phê duyệt" editable="bottom"
                   default_order="res_model, sequence, id"
-                  decoration-muted="not required">
+                  decoration-muted="not required"
+                  decoration-warning="not is_signable">
                 <field name="sequence" widget="handle"/>
-                <field name="res_model" string="Chứng từ"/>
+                <field name="res_model_id" string="Chứng từ"/>
+                <field name="is_signable" string="Đã bật ký"
+                       widget="boolean_toggle" readonly="1"/>
                 <field name="name" string="Tên bước duyệt"/>
                 <field name="role" string="Vai phải ký"/>
                 <field name="amount_min" string="Giá trị từ"
@@ -38,7 +41,8 @@
                         <group>
                             <field name="name"
                                    placeholder="Trên 10 tỷ: Giám đốc dự án phải ký"/>
-                            <field name="res_model"/>
+                            <field name="res_model_id"/>
+                            <field name="is_signable" invisible="1"/>
                             <field name="role"/>
                             <field name="required"/>
                             <field name="sequence"/>
@@ -57,6 +61,12 @@
                         <field name="note" nolabel="1"
                                placeholder="Ghi chú cho người cấu hình sau đọc"/>
                     </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="is_signable or not res_model_id">
+                        Chứng từ này <b>chưa bật chức năng ký</b>. Luật vẫn
+                        lưu được và sẽ có hiệu lực ngay khi chứng từ được
+                        gắn ký — nhưng <b>hiện giờ chưa ràng buộc gì</b>.
+                    </div>
                     <div class="text-muted mt8">
                         Để trống <b>Giá trị từ</b> và <b>Đến dưới</b> là luật
                         áp cho mọi giá trị. Điền ngưỡng khi muốn phân quyền
@@ -74,12 +84,13 @@
         <field name="arch" type="xml">
             <search string="Luật phê duyệt">
                 <field name="name"/>
+                <field name="res_model_id"/>
                 <field name="project_id"/>
                 <separator/>
-                <filter name="f_bb" string="Biên bản nghiệm thu"
-                        domain="[('res_model', '=', 'rp.progress.acceptance')]"/>
-                <filter name="f_kn" string="Khiếu nại hợp đồng"
-                        domain="[('res_model', '=', 'rp.claim')]"/>
+                <filter name="f_live" string="Đã bật ký"
+                        domain="[('is_signable', '=', True)]"/>
+                <filter name="f_chua" string="Chưa bật ký"
+                        domain="[('is_signable', '=', False)]"/>
                 <separator/>
                 <filter name="f_bb_buoc" string="Bắt buộc"
                         domain="[('required', '=', True)]"/>
@@ -89,7 +100,7 @@
                      Filter gom nhóm khai phẳng, ngăn bằng <separator/>. -->
                 <separator/>
                 <filter name="g_model" string="Gom theo chứng từ"
-                        context="{'group_by': 'res_model'}"/>
+                        context="{'group_by': 'res_model_id'}"/>
                 <filter name="g_role" string="Gom theo vai phải ký"
                         context="{'group_by': 'role'}"/>
             </search>

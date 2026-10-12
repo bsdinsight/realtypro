@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Realty — Ký duyệt điện tử',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty',
     'summary': 'Ký duyệt chứng từ trong hệ thống, kèm mã băm phát hiện '
                'sửa nội dung sau khi ký.',

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Màn cấu hình nằm ở re_sign (dùng chung), nhưng MENU phải đặt ở
+         đây: re_sign ở _common không được biết tới menu của EPCOne. -->
+    <menuitem id="menu_re_approval_rule"
+              name="Phê duyệt &amp; chữ ký"
+              parent="rp_estimate.menu_rp_configuration"
+              action="re_sign.action_re_approval_rule"
+              sequence="60"
+              groups="re_base.group_re_manager"/>
+
+</odoo>

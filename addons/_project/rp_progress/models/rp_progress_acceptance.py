@@ -218,6 +218,11 @@ class RpProgressAcceptance(models.Model):
                 rec.payment_milestone_id.acceptance_id = rec.id
         return recs
 
+    def _approval_amount(self):
+        """Giá trị kỳ này — con số quyết định biên bản cần ai ký."""
+        self.ensure_one()
+        return self.total_value_period or 0.0
+
     def _ca_report_ref(self):
         return 'rp_progress.action_report_rp_acceptance'
 

@@ -30,6 +30,7 @@ CA — lớp này vẫn dùng lại được khi lên tới đó.
     'depends': ['re_base'],
     'data': [
         'security/ir.model.access.csv',
+        'views/re_approval_rule_views.xml',
         'views/re_signature_views.xml',
         'views/re_signable_templates.xml',
         'wizards/re_sign_wizard_views.xml',

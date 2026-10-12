@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_approval_rule_list" model="ir.ui.view">
+        <field name="name">re.approval.rule.list</field>
+        <field name="model">re.approval.rule</field>
+        <field name="arch" type="xml">
+            <list string="Luật phê duyệt" editable="bottom"
+                  default_order="res_model, sequence, id"
+                  decoration-muted="not required">
+                <field name="sequence" widget="handle"/>
+                <field name="res_model" string="Chứng từ"/>
+                <field name="name" string="Tên bước duyệt"/>
+                <field name="role" string="Vai phải ký"/>
+                <field name="amount_min" string="Giá trị từ"
+                       sum="Σ" optional="show"/>
+                <field name="amount_max" string="Đến dưới"
+                       optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="project_id" string="Chỉ dự án"
+                       optional="show"/>
+                <field name="group_id" string="Nhóm được ký"
+                       optional="hide"/>
+                <field name="required" string="Bắt buộc"
+                       widget="boolean_toggle"/>
+                <field name="note" string="Ghi chú" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_approval_rule_form" model="ir.ui.view">
+        <field name="name">re.approval.rule.form</field>
+        <field name="model">re.approval.rule</field>
+        <field name="arch" type="xml">
+            <form string="Luật phê duyệt">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"
+                                   placeholder="Trên 10 tỷ: Giám đốc dự án phải ký"/>
+                            <field name="res_model"/>
+                            <field name="role"/>
+                            <field name="required"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Ngưỡng giá trị">
+                            <field name="amount_min"/>
+                            <field name="amount_max"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="project_id"
+                                   options="{'no_create': True}"/>
+                            <field name="group_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" nolabel="1"
+                               placeholder="Ghi chú cho người cấu hình sau đọc"/>
+                    </group>
+                    <div class="text-muted mt8">
+                        Để trống <b>Giá trị từ</b> và <b>Đến dưới</b> là luật
+                        áp cho mọi giá trị. Điền ngưỡng khi muốn phân quyền
+                        theo tiền — chứng từ nhỏ chỉ huy trưởng ký là xong,
+                        chứng từ lớn phải lên giám đốc.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_approval_rule_search" model="ir.ui.view">
+        <field name="name">re.approval.rule.search</field>
+        <field name="model">re.approval.rule</field>
+        <field name="arch" type="xml">
+            <search string="Luật phê duyệt">
+                <field name="name"/>
+                <field name="project_id"/>
+                <separator/>
+                <filter name="f_bb" string="Biên bản nghiệm thu"
+                        domain="[('res_model', '=', 'rp.progress.acceptance')]"/>
+                <filter name="f_kn" string="Khiếu nại hợp đồng"
+                        domain="[('res_model', '=', 'rp.claim')]"/>
+                <separator/>
+                <filter name="f_bb_buoc" string="Bắt buộc"
+                        domain="[('required', '=', True)]"/>
+                <!-- KHÔNG bọc trong <group expand="0">: Odoo 19 bỏ cách
+                     khai đó trong search view và nổ ParseError lúc nạp
+                     module — đủ để registry của cả DB không dựng nổi.
+                     Filter gom nhóm khai phẳng, ngăn bằng <separator/>. -->
+                <separator/>
+                <filter name="g_model" string="Gom theo chứng từ"
+                        context="{'group_by': 'res_model'}"/>
+                <filter name="g_role" string="Gom theo vai phải ký"
+                        context="{'group_by': 'role'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_approval_rule" model="ir.actions.act_window">
+        <field name="name">Phê duyệt &amp; chữ ký</field>
+        <field name="res_model">re.approval.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_model': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai bước duyệt nào</p>
+            <p>
+                Khai ở đây <b>ai phải ký</b> một chứng từ thì nó mới được
+                coi là đủ phê duyệt — theo vai, và theo ngưỡng giá trị.
+                Biên bản vài trăm triệu với biên bản vài chục tỷ thường
+                không cùng một cấp duyệt.
+            </p>
+            <p>
+                Trên mỗi biên bản nghiệm thu và hồ sơ khiếu nại sẽ hiện
+                <b>còn thiếu chữ ký của vai nào</b>.
+            </p>
+        </field>
+    </record>
+
+</odoo>

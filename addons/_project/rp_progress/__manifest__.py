@@ -69,6 +69,7 @@ Phase tiếp theo (P2-P4) sẽ bổ sung:
         'views/menu.xml',
         'views/rp_acceptance_sign_views.xml',
         'reports/rp_acceptance_report.xml',
+        'views/re_approval_rule_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [

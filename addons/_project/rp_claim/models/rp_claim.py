@@ -164,6 +164,16 @@ class RpClaim(models.Model):
     # ------------------------------------------------------------------
     # Quy trình
     # ------------------------------------------------------------------
+    def _approval_amount(self):
+        """Giá trị khiếu nại.
+
+        Lấy số ĐƯỢC CHẤP THUẬN nếu đã có, chưa có thì lấy số yêu cầu:
+        lúc chưa quyết thì mức duyệt phải tính theo thứ nhà thầu đang
+        đòi, không ai biết trước sẽ duyệt bao nhiêu.
+        """
+        self.ensure_one()
+        return self.amount_granted or self.amount_claimed or 0.0
+
     def _ca_report_ref(self):
         return 'rp_claim.action_report_rp_claim'
 

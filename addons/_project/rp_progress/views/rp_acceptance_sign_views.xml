@@ -29,6 +29,35 @@
                             còn hợp lệ.
                         </p>
                     </div>
+                    <group string="Phê duyệt theo luật">
+                        <field name="approval_ok" invisible="1"/>
+                        <div colspan="2">
+                            <div class="alert alert-warning" role="alert"
+                                 invisible="approval_ok or not approval_rule_ids">
+                                Còn thiếu chữ ký của:
+                                <b><field name="approval_missing"
+                                          readonly="1" class="oe_inline"/></b>
+                            </div>
+                            <div class="alert alert-success" role="alert"
+                                 invisible="not approval_ok or not approval_rule_ids">
+                                Đã đủ chữ ký theo luật phê duyệt đang áp dụng.
+                            </div>
+                        </div>
+                        <field name="approval_rule_ids" nolabel="1" colspan="2"
+                               readonly="1"
+                               invisible="not approval_rule_ids">
+                            <list create="false" delete="false"
+                                  decoration-muted="not required">
+                                <field name="name" string="Bước duyệt"/>
+                                <field name="role" string="Vai phải ký"/>
+                                <field name="required" string="Bắt buộc"/>
+                                <field name="amount_min" string="Từ"
+                                       optional="show"/>
+                                <field name="amount_max" string="Đến dưới"
+                                       optional="show"/>
+                            </list>
+                        </field>
+                    </group>
                     <field name="sign_state" invisible="1"/>
                     <field name="signature_ids" nolabel="1"
                            readonly="1"

@@ -2,3 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_re_signature_user,re.signature.user,model_re_signature,re_base.group_re_user,1,0,1,0
 access_re_signature_manager,re.signature.manager,model_re_signature,re_base.group_re_manager,1,1,1,1
 access_re_sign_wizard_user,re.sign.wizard.user,model_re_sign_wizard,re_base.group_re_user,1,1,1,1
+access_re_approval_rule_user,re.approval.rule.user,model_re_approval_rule,re_base.group_re_user,1,0,0,0
+access_re_approval_rule_manager,re.approval.rule.manager,model_re_approval_rule,re_base.group_re_manager,1,1,1,1

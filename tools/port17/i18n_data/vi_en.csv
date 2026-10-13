@@ -2612,3 +2612,5 @@ It tells you how much is sitting at the bank — if ""Awaiting bank approval"" i
 📋 Hợp đồng tín dụng (HĐTD),📋 Credit contracts
 📝 Khế ước nhận nợ (KW),📝 Promissory notes
 🔄 Tải danh sách KW theo bộ lọc,🔄 Load the notes matching the filter
+"HĐTD ""%(n)s"" đã có khế ước: không đổi được ngân hàng, tiền tệ và công ty nữa (%(f)s). Huỷ khế ước trước, hoặc lập HĐTD mới.","Credit contract ""%(n)s"" already has promissory notes: the bank, currency and company can no longer be changed (%(f)s). Cancel the notes first, or create a new credit contract."
+"Số HĐTD ""%(n)s"" đã tồn tại cho ngân hàng ""%(b)s"" trong công ty ""%(c)s"".","Credit contract number ""%(n)s"" already exists for bank ""%(b)s"" in company ""%(c)s""."

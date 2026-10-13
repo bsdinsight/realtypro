@@ -80,8 +80,13 @@
               sequence="50"/>
 
     <!-- ===== Báo cáo (3): Tổng hợp phát sinh theo KW ===== -->
+    <!-- Ưu tiên 1000: giữ cho ba view báo cáo này KHÔNG trở thành
+         view mặc định của Bút toán sổ cái (view lõi ưu tiên 99/100,
+         cùng ưu tiên thì xếp theo tên). Action bên dưới gắn thẳng
+         view vào để chắc chắn (XBOSS báo, PR #7). -->
     <record id="view_account_move_line_loan_pivot" model="ir.ui.view">
         <field name="name">account.move.line.loan.pivot</field>
+        <field name="priority">1000</field>
         <field name="model">account.move.line</field>
         <field name="arch" type="xml">
             <pivot string="Tổng hợp phát sinh theo KW">
@@ -97,6 +102,7 @@
 
     <record id="view_account_move_line_loan_list" model="ir.ui.view">
         <field name="name">account.move.line.loan.list</field>
+        <field name="priority">1000</field>
         <field name="model">account.move.line</field>
         <field name="arch" type="xml">
             <list>
@@ -114,6 +120,7 @@
 
     <record id="view_account_move_line_loan_search" model="ir.ui.view">
         <field name="name">account.move.line.loan.search</field>
+        <field name="priority">1000</field>
         <field name="model">account.move.line</field>
         <field name="arch" type="xml">
             <search>
@@ -137,6 +144,9 @@
         <field name="domain">[('loan_note_id', '!=', False), ('parent_state', '=', 'posted')]</field>
         <field name="context">{'search_default_g_note': 1}</field>
         <field name="search_view_id" ref="view_account_move_line_loan_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_account_move_line_loan_pivot')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_account_move_line_loan_list')})]"/>
     </record>
 
     <menuitem id="menu_loan_move_line_summary"

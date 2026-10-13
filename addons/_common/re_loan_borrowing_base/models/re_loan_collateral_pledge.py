@@ -74,7 +74,9 @@ class ReLoanCollateralPledge(models.Model):
         người dùng vào chia. Đoán trong ca này là sai tiền, mà lại sai
         lặng lẽ.
         """
-        Alloc = self.env['re.loan.pledge.allocation']
+        # Dòng do hệ thống sinh: người dùng Vay được tạo cầm cố nhưng
+        # chỉ ĐỌC bảng phân bổ, nên ghi bằng quyền hệ thống.
+        Alloc = self.env['re.loan.pledge.allocation'].sudo()
         vals = []
         for p in self:
             if p.state != 'active' or not p.base_contribution:

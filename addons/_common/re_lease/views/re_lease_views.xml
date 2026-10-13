@@ -423,7 +423,10 @@
         <field name="context">{'search_default_f_open': 1}</field>
     </record>
 
-    <menuitem id="menu_re_lease_root" name="Thuê tài sản" sequence="26"/>
+    <!-- Chỉ nhóm người dùng Realty — nhóm duy nhất được cấp quyền
+         trên bộ Thuê tài sản (security/ir.model.access.csv). -->
+    <menuitem id="menu_re_lease_root" name="Thuê tài sản" sequence="26"
+              groups="re_base.group_re_user"/>
     <menuitem id="menu_re_lease_contract" name="Hợp đồng thuê"
               parent="menu_re_lease_root"
               action="action_re_lease_contract" sequence="10"/>

@@ -319,6 +319,102 @@ def step_account_payment_api(dst):
     ], "account.payment: 'memo' -> 'ref'")
 
 
+def step_cron_numbercall(dst):
+    """Mỗi `ir.cron` phải khai `numbercall = -1` trên Odoo 17.
+
+    Odoo 17 mặc định `numbercall = 1`: tác vụ CHẠY ĐÚNG MỘT LẦN rồi
+    đếm về 0 và không bao giờ được chọn lại (`AND numbercall != 0`
+    trong câu truy vấn lấy việc của bộ lập lịch). Odoo 19 đã bỏ hẳn
+    trường này nên nguồn 19 không khai — và bản 17 sinh ra thừa hưởng
+    mặc định 1: nhắc hạn, cập nhật quá hạn, ghi khấu hao đều chết im
+    sau ngày đầu tiên, không báo lỗi gì.
+
+    Đối tác phát hiện khi vận hành (PR #7). Vá ở đây chứ không ở nguồn
+    19: đó là khác biệt phiên bản, không phải lỗi nghiệp vụ.
+    """
+    rec_open = re.compile(
+        r'(<record[^>]*model="ir\.cron"[^>]*>)(.*?)(</record>)', re.S)
+    n = 0
+
+    def add(m):
+        nonlocal n
+        head, body, tail = m.group(1), m.group(2), m.group(3)
+        if 'name="numbercall"' in body:
+            return m.group(0)
+        anchor = '<field name="interval_type">'
+        if anchor not in body:
+            return m.group(0)
+        i = body.index(anchor)
+        line_start = body.rindex('\n', 0, i) + 1
+        indent = body[line_start:i]
+        end = body.index('\n', i) + 1
+        n += 1
+        return (head + body[:end]
+                + '%s<field name="numbercall">-1</field>\n' % indent
+                + body[end:] + tail)
+
+    for p in walk_files(dst, '.xml'):
+        s = io.open(p, encoding='utf-8').read()
+        if 'ir.cron' not in s:
+            continue
+        s2 = rec_open.sub(add, s)
+        if s2 != s:
+            io.open(p, 'w', encoding='utf-8').write(s2)
+    note('  %-46s %s tác vụ' % ('ir.cron: numbercall = -1 (17 mặc định 1)', n))
+
+
+def step_kanban_card(dst):
+    """Bản mẫu thẻ kanban: `card` (Odoo 18+) trở lại `kanban-box` (17).
+
+    Odoo 18 đổi tên bản mẫu `kanban-box` thành `card` và tự thêm phần
+    bấm-mở-bản-ghi. Trên 17, thẻ mang tên `card` KHÔNG được dựng: màn
+    hình kanban ra trống trơn, không báo lỗi. Lớp
+    `oe_kanban_global_click` cũng phải tự thêm, vì 17 không tự gắn.
+
+    Đối tác tự sửa tay trong PR #7 cho 5 màn hình; làm ở đây để mọi
+    kanban về sau không phải sửa lại.
+    """
+    tmpl = re.compile(r'<t\s+t-name="card"\s*>')
+    first_div = re.compile(r'(<t\s+t-name="kanban-box"\s*>\s*)<div\b([^>]*)>')
+    n = 0
+
+    def fix_div(m):
+        head, attrs = m.group(1), m.group(2)
+        if 'oe_kanban_global_click' in attrs:
+            return m.group(0)
+        if 'class="' in attrs:
+            attrs = attrs.replace(
+                'class="', 'class="oe_kanban_global_click ', 1)
+        else:
+            attrs = ' class="oe_kanban_global_click"' + attrs
+        return '%s<div%s>' % (head, attrs)
+
+    for p in walk_files(dst, '.xml'):
+        s = io.open(p, encoding='utf-8').read()
+        if 't-name="card"' not in s:
+            continue
+        s2, k = tmpl.subn('<t t-name="kanban-box">', s)
+        s2 = first_div.sub(fix_div, s2)
+        io.open(p, 'w', encoding='utf-8').write(s2)
+        n += k
+    note('  %-46s %s thẻ' % ("kanban: t-name 'card' -> 'kanban-box'", n))
+
+
+def step_access_api(dst):
+    """API quyền + nhóm người dùng của Odoo 19 trở về dạng 17.
+
+    - `has_access('read')` (19) chưa có ở 17 → `check_access_rights(
+      'read', raise_exception=False)`.
+    - `res.groups.user_ids` (19) ở 17 tên là `users`; gọi sai thì nổ
+      AttributeError ngay trong tác vụ nhắc hạn.
+    """
+    sub_in_files(dst, '.py', [
+        (re.compile(r"\.has_access\((['\"])read\1\)"),
+         r".check_access_rights(\g<1>read\g<1>, raise_exception=False)"),
+        ('else managers.user_ids', 'else managers.users'),
+    ], 'API quyền 19 -> 17 (has_access, res.groups.users)')
+
+
 def step_view_mode_xml(dst):
     sub_in_files(dst, '.xml', [
         (re.compile(r'(<field name="view_mode">)([^<]*)list([^<]*)(</field>)'),
@@ -563,6 +659,30 @@ def step_files17(dst):
 # lặng lẽ bỏ qua thì bản giao sẽ đè mất sửa của đối tác — đúng thứ phần
 # này sinh ra để tránh.
 PARTNER_EDITS = [
+    # Danh mục đối tác của đối tác suy `is_bank` từ LOẠI liên hệ: mở
+    # menu Ngân hàng rồi bấm Mới mà chỉ đặt default_is_bank thì loại
+    # liên hệ rơi về mặc định và cờ ngân hàng bị gỡ ngay khi lưu. Đặt
+    # sẵn loại liên hệ "Ngân hàng" (đối tác tự sửa ở PR #7, gộp vào
+    # đây để bản sau không đè mất).
+    ('re_loan/views/res_partner_views.xml',
+     "        <field name=\"context\">{'default_is_bank': True,\n"
+     "                               'default_is_company': True}</field>",
+     "        <field name=\"context\" eval=\"{'default_is_bank': True,\n"
+     "                                     'default_is_company': True,\n"
+     "                                     'default_partner_type_id':"
+     " ref('xb_partner_type.partner_type_bank')}\"/>",
+     'ngân hàng: đặt sẵn loại liên hệ'),
+    # Bản vá định dạng ngày của re_base: đối tác KHÔNG dùng (đã gỡ hai
+    # lần, PR #3 và #7). Bỏ hẳn khỏi bản giao thay vì để họ gỡ lại sau
+    # mỗi lần phát hành.
+    ('re_base/__manifest__.py',
+     "    'assets': {\n"
+     "        'web.assets_backend': [\n"
+     "            're_base/static/src/js/date_format_override.js',\n"
+     "        ],\n"
+     "    },\n",
+     "    # assets — bỏ ở bản đối tác: bản vá định dạng ngày không dùng\n",
+     'bỏ bản vá định dạng ngày'),
     ('re_loan/__manifest__.py',
      "        'mail',\n        're_party',\n        're_base',",
      "        'mail',\n        'xb_partner_extend',\n        're_base',",
@@ -644,6 +764,12 @@ def step_partner_profile(dst):
                 raise SystemExit(
                     'HỒ SƠ ĐỐI TÁC: không khớp mẫu ở %s — %s.' % (rel, why))
         io.open(p, 'w', encoding='utf-8').write(s)
+        n += 1
+    # Tệp đi kèm phần vừa bỏ khỏi manifest — để lại thì thành tệp mồ côi.
+    orphan = os.path.join(
+        dst, 're_base/static/src/js/date_format_override.js')
+    if os.path.exists(orphan):
+        os.remove(orphan)
         n += 1
     note('  %-46s %s chỗ' % ('hồ sơ đối tác: đối tác / địa chỉ', n))
 
@@ -850,6 +976,9 @@ def main():
     step_constraints(dst)
     step_misc_py(dst)
     step_account_payment_api(dst)
+    step_cron_numbercall(dst)
+    step_kanban_card(dst)
+    step_access_api(dst)
     step_view_mode_xml(dst)
     step_security(dst)
     step_inject_fields(dst)

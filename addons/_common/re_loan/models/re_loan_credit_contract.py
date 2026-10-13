@@ -54,7 +54,10 @@ class ReLoanCreditContract(models.Model):
          ('expired', 'Hết hạn'),
          ('closed', 'Đã tất toán'),
          ('cancelled', 'Đã huỷ')],
-        string='Trạng thái', default='draft', required=True, tracking=True)
+        string='Trạng thái', default='draft', required=True, tracking=True,
+        # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
+        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        copy=False)
 
     # copy=False: nhân bản HĐTD chỉ lấy phần đầu hợp đồng. Hạn mức
     # mang theo liên kết HĐ nhà thầu vốn phải DUY NHẤT (mỗi hợp đồng
@@ -222,6 +225,54 @@ class ReLoanCreditContract(models.Model):
                     "— 'Hạn mức liên thông' trên facility chỉ chia sẻ "
                     "phần thừa trong pool, không cho phép vượt total.",
                     fac=rec.amount_facility_total, total=rec.amount_total))
+
+    @api.constrains('name', 'partner_id', 'company_id', 'state')
+    def _check_unique_number(self):
+        """Số HĐTD do ngân hàng cấp — cùng số, cùng ngân hàng, cùng công
+        ty là nhập trùng (XBOSS báo, PR #7).
+
+        Hợp đồng ĐÃ HUỶ không tính: giữ lại để lưu vết, và số đó có thể
+        được ký lại cho hợp đồng mới.
+        """
+        for rec in self:
+            if rec.state == 'cancelled' or not rec.name:
+                continue
+            dup = self.search_count([
+                ('id', '!=', rec.id),
+                ('name', '=', rec.name.strip()),
+                ('partner_id', '=', rec.partner_id.id),
+                ('company_id', '=', rec.company_id.id),
+                ('state', '!=', 'cancelled'),
+            ])
+            if dup:
+                raise ValidationError(_(
+                    'Số HĐTD "%(n)s" đã tồn tại cho ngân hàng "%(b)s" '
+                    'trong công ty "%(c)s".',
+                    n=rec.name, b=rec.partner_id.display_name,
+                    c=rec.company_id.display_name))
+
+    def write(self, vals):
+        """Khoá ngân hàng / tiền tệ / công ty khi HĐTD đã có khế ước.
+
+        Khế ước chép ba thứ này từ hợp đồng lúc tạo và KHÔNG chạy theo
+        thay đổi sau đó: đổi ở hợp đồng khi đã có khế ước thì khế ước
+        nằm lại giá trị cũ, không ai thấy (XBOSS báo, PR #7).
+        """
+        locked = {'partner_id', 'currency_id', 'company_id'} & set(vals)
+        if locked:
+            for rec in self:
+                if not rec.note_ids:
+                    continue
+                changed = [f for f in locked if rec[f].id != vals[f]]
+                if changed:
+                    raise UserError(_(
+                        'HĐTD "%(n)s" đã có khế ước: không đổi được ngân '
+                        'hàng, tiền tệ và công ty nữa (%(f)s). Huỷ khế ước '
+                        'trước, hoặc lập HĐTD mới.',
+                        n=rec.name,
+                        f=', '.join(rec._fields[f]._description_string(rec.env)
+                                    for f in changed)))
+        return super().write(vals)
 
     @api.constrains('date_start', 'date_end', 'sign_date')
     def _check_dates(self):

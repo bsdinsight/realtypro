@@ -6,8 +6,14 @@
         (loaded later). See docs/development.md "menu file split pattern".
     -->
 
+    <!-- Chỉ người dùng phân hệ Vay thấy ứng dụng: các menu cấu hình
+         (ngân hàng, chi nhánh, đơn vị thẩm định) đọc res.partner /
+         res.bank mà ai trong công ty cũng đọc được, nên không gắn
+         nhóm ở đây thì cả công ty thấy ứng dụng rồi vấp lỗi quyền
+         ngay ở bảng điều khiển (XBOSS báo, PR #7). -->
     <menuitem id="menu_re_loan_root"
               name="Quản lý Vay"
+              groups="group_loan_user"
               sequence="55"/>
 
     <!-- 3 group containers — cấu trúc menu gom nhóm sống TRONG XML

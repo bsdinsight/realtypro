@@ -9,7 +9,8 @@
                   decoration-info="state == 'draft'">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company"
+                                   readonly="note_count"/>
                 <field name="sign_date"/>
                 <field name="date_end"/>
                 <field name="amount_total" sum="Tổng hạn mức"
@@ -57,7 +58,11 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id"/>
+                            <!-- Khoá khi đã có khế ước: khế ước giữ ngân
+                                 hàng / tiền tệ / công ty của lúc tạo và
+                                 không chạy theo thay đổi sau (PR #7). -->
+                            <field name="note_count" invisible="1"/>
+                            <field name="partner_id" readonly="note_count"/>
                             <field name="bank_id"
                                    readonly="not partner_id"
                                    options="{'no_create': True, 'no_quick_create': True}"
@@ -75,7 +80,8 @@
                          "5.500.000.000.000" hiện ra thành
                          "5.500.000.000.000,01". -->
                     <field name="currency_id" invisible="1"/>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="currency_id" groups="base.group_multi_currency"
+                                   readonly="note_count"/>
                             <field name="sign_date"/>
                             <field name="date_start"/>
                             <field name="date_end"/>

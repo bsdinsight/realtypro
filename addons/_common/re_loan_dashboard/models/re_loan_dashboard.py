@@ -163,8 +163,12 @@ class ReLoanDashboard(models.TransientModel):
             paid_lines_ytd.mapped('amount_interest_paid') or [0])
 
         # 4. Bảo lãnh
+        # Người dùng phân hệ Vay không có quyền Bảo lãnh vẫn mở được
+        # bảng điều khiển: chỉ tiêu bảo lãnh để trống thay vì ném lỗi
+        # quyền chặn cả trang (XBOSS báo, PR #7).
         BG = self.env['re.bank.guarantee']
-        active_bg = BG.search([('state', 'in', ('issued', 'extended'))])
+        active_bg = (BG.search([('state', 'in', ('issued', 'extended'))])
+                     if BG.has_access('read') else BG.browse())
         res['kpi_bg_count_active'] = len(active_bg)
         res['kpi_bg_outstanding'] = sum(active_bg.mapped('amount') or [0])
         res['kpi_bg_expiring_30d'] = len(active_bg.filtered(
@@ -183,7 +187,8 @@ class ReLoanDashboard(models.TransientModel):
         res['kpi_pending_bank_advice'] = BankAdvice.search_count([
             ('state', '=', 'draft')])
 
-        if 're.guarantee.request' in self.env:
+        if ('re.guarantee.request' in self.env
+                and self.env['re.guarantee.request'].has_access('read')):
             BGRequest = self.env['re.guarantee.request']
             res['kpi_pending_bg_request'] = BGRequest.search_count([
                 ('state', 'not in', ('issued', 'cancelled', 'rejected'))])

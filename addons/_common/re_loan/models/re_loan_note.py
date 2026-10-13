@@ -203,7 +203,10 @@ class ReLoanNote(models.Model):
          ('overdue', 'Quá hạn'),
          ('restructured', 'Đã cơ cấu'),
          ('cancelled', 'Đã huỷ')],
-        string='Trạng thái', default='draft', required=True, tracking=True)
+        string='Trạng thái', default='draft', required=True, tracking=True,
+        # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
+        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        copy=False)
 
     # copy=False trên toàn bộ dòng phát sinh: nhân bản một khế ước là
     # để lấy lại ĐIỀU KIỆN VAY (hạn mức, số tiền, lãi suất, kỳ hạn),
@@ -540,7 +543,11 @@ class ReLoanNote(models.Model):
                     'được trên HĐTD đang Hiệu lực.',
                     c=cc.display_name,
                     s=dict(cc._fields['state'].selection).get(cc.state)))
-            if cc.date_end and cc.date_end < today:
+            # Khế ước có ngày NẰM TRONG kỳ hạn hợp đồng vẫn được nhập
+            # sau khi hợp đồng hết hạn (nhập liệu khế ước cũ); chỉ chặn
+            # khoản vay mới phát sinh sau ngày hết hạn.
+            if cc.date_end and cc.date_end < today and (
+                    not rec.date_note or rec.date_note > cc.date_end):
                 raise ValidationError(_(
                     'HĐTD "%(c)s" đã hết hạn ngày %(d)s — không nhận nợ '
                     'thêm được. Cần ký phụ lục gia hạn, hoặc dùng HĐTD '
@@ -587,7 +594,11 @@ class ReLoanNote(models.Model):
             return self.principal_outstanding
         return self.amount
 
-    @api.constrains('amount', 'facility_id', 'state', 'loan_type')
+    # 'state' CỐ Ý không nằm trong trigger: hạn mức tuần hoàn chỉ giữ
+    # phần dư nợ, nên kiểm lại trọn số tiền mỗi lần đổi trạng thái
+    # (ghi trả nợ, cron quá hạn) sẽ chặn chính những khoản trả nợ hợp
+    # lệ. Lúc KÍCH HOẠT, action_activate vẫn kiểm hạn mức (XBOSS báo).
+    @api.constrains('amount', 'facility_id', 'loan_type')
     def _check_amount_within_facility(self):
         """KW không được nhập amount vượt 'Còn lại' của facility.
 

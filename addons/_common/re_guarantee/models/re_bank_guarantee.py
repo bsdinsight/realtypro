@@ -251,7 +251,10 @@ class ReBankGuarantee(models.Model):
          ('released',  'Đã huỷ / giải toả'),
          ('expired',   'Hết hạn'),
          ('forfeited', 'Bị thu (NH trả thay)')],
-        string='Trạng thái', default='draft', required=True, tracking=True)
+        string='Trạng thái', default='draft', required=True, tracking=True,
+        # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
+        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        copy=False)
 
     # ── Người phụ trách ───────────────────────────────────────────
     # Không có PIC thì cảnh báo sắp hết hạn không biết gửi cho ai —

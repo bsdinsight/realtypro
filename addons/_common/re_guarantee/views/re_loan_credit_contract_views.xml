@@ -13,14 +13,19 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
                 <div class="oe_button_box" name="button_box">
+                    <!-- Hai nút này đọc re.bank.guarantee / đề nghị:
+                         người dùng Vay không có quyền Bảo lãnh mà thấy
+                         nút thì form HĐTD không mở được (PR #7). -->
                     <button name="action_view_guarantee_requests"
                             type="object" class="oe_stat_button"
-                            icon="fa-file-text-o">
+                            icon="fa-file-text-o"
+                            groups="re_guarantee.group_guarantee_user">
                         <field name="guarantee_request_count"
                                widget="statinfo" string="Đề nghị BL"/>
                     </button>
                     <button name="action_view_guarantees" type="object"
-                            class="oe_stat_button" icon="fa-shield">
+                            class="oe_stat_button" icon="fa-shield"
+                            groups="re_guarantee.group_guarantee_user">
                         <field name="guarantee_count" widget="statinfo"
                                string="Chứng thư BL"/>
                     </button>

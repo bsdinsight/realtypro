@@ -20,6 +20,10 @@ class ReLoanDashboard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
+        # Cùng lý do như chỉ tiêu bảo lãnh: thiếu quyền Thuê tài sản
+        # thì bỏ trống chỉ tiêu, đừng chặn cả bảng điều khiển.
+        if not self.env['re.lease.contract'].has_access('read'):
+            return res
         today = fields.Date.context_today(self)
         fin_in = self.env['re.lease.contract'].search([
             ('state', '=', 'active'), ('direction', '=', 'in'),

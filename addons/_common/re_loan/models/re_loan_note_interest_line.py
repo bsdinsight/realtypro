@@ -421,7 +421,16 @@ class ReLoanNoteInterestLine(models.Model):
                 line.principal_due = 0.0
                 continue
             if plan == 'equal_principal':
-                line.principal_due = note.amount / n
+                # Tiền được làm tròn theo từng kỳ, nên n phần bằng nhau
+                # cộng lại có thể lệch số tiền khế ước (5 tỷ / 36 dư 4đ)
+                # — đủ để chặn lịch hoặc để lại phần thừa không bao giờ
+                # trả hết. Làm tròn từng kỳ, kỳ cuối nhận phần dư.
+                each = note.amount / n
+                if note.currency_id:
+                    each = note.currency_id.round(each)
+                line.principal_due = (
+                    note.amount - each * (n - 1)
+                    if line.period_no == n else each)
             elif plan == 'bullet':
                 line.principal_due = (
                     note.amount if line.period_no == n else 0.0)

@@ -659,19 +659,14 @@ def step_files17(dst):
 # lặng lẽ bỏ qua thì bản giao sẽ đè mất sửa của đối tác — đúng thứ phần
 # này sinh ra để tránh.
 PARTNER_EDITS = [
-    # Danh mục đối tác của đối tác suy `is_bank` từ LOẠI liên hệ: mở
-    # menu Ngân hàng rồi bấm Mới mà chỉ đặt default_is_bank thì loại
-    # liên hệ rơi về mặc định và cờ ngân hàng bị gỡ ngay khi lưu. Đặt
-    # sẵn loại liên hệ "Ngân hàng" (đối tác tự sửa ở PR #7, gộp vào
-    # đây để bản sau không đè mất).
-    ('re_loan/views/res_partner_views.xml',
-     "        <field name=\"context\">{'default_is_bank': True,\n"
-     "                               'default_is_company': True}</field>",
-     "        <field name=\"context\" eval=\"{'default_is_bank': True,\n"
-     "                                     'default_is_company': True,\n"
-     "                                     'default_partner_type_id':"
-     " ref('xb_partner_type.partner_type_bank')}\"/>",
-     'ngân hàng: đặt sẵn loại liên hệ'),
+    # KHÔNG gộp ở đây: đối tác sửa action Ngân hàng để đặt sẵn loại
+    # liên hệ `xb_partner_type.partner_type_bank` (PR #7). Module
+    # `xb_partner_type` KHÔNG nằm trong kho bàn giao, nên viết thẳng
+    # `ref(...)` vào view của BSD làm mọi môi trường thiếu module đó
+    # không cài nổi re_loan — bộ kiểm 17 vấp ngay. Việc đặt mặc định
+    # thuộc về chính module của đối tác: nó ghi đè context của action
+    # `re_loan.action_re_loan_bank` từ phía mình là xong, và không bị
+    # bản phát hành sau đè mất.
     # Bản vá định dạng ngày của re_base: đối tác KHÔNG dùng (đã gỡ hai
     # lần, PR #3 và #7). Bỏ hẳn khỏi bản giao thay vì để họ gỡ lại sau
     # mỗi lần phát hành.

@@ -877,6 +877,25 @@ def step_i18n(dst):
          '— xem RELEASE.md')
 
 
+def step_po_reminder(dst):
+    """Nhắc to: bản 17 chưa có bộ dịch tiếng Việt.
+
+    Khung .po phải do CHÍNH Odoo 17 xuất ra sau khi cài bản tiếng Anh
+    (bước 3 trong RELEASE.md) nên không sinh được trong công cụ này.
+    Quên bước đó thì bản giao đi với giao diện tiếng Anh trống trơn —
+    đã xảy ra ở bản 2026-10-13 (a).
+    """
+    missing = [m for m in I18N_DONE
+               if not os.path.exists(os.path.join(dst, m, 'i18n', 'vi_VN.po'))]
+    if not missing:
+        return
+    note('')
+    note('  !! CHƯA CÓ BỘ DỊCH: %s/%s module thiếu i18n/vi_VN.po'
+         % (len(missing), len(I18N_DONE)))
+    note('  !! Chạy bước 3 trong tools/port17/RELEASE.md (xuất khung .po'
+         ' bằng Odoo 17 rồi fill_po.py) TRƯỚC KHI ĐẨY.')
+
+
 def step_check_syntax(dst):
     bad = 0
     for p in walk_files(dst, '.py'):
@@ -985,6 +1004,7 @@ def main():
     bad = step_check_syntax(dst)
     if prev:
         step_version_guard(dst, prev)
+    step_po_reminder(dst)
     note('XONG' if not bad else 'XONG (còn %s lỗi cú pháp)' % bad)
     return 1 if bad else 0
 

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bộ chứng chỉ thường gặp của O&M điện gió / điện mặt trời.
+         noupdate="1" để lần `-u` sau KHÔNG ghi đè tên hay hiệu lực mà
+         khách đã sửa — danh mục này là điểm khởi đầu, không phải thứ
+         BSD áp đặt. -->
+    <data noupdate="1">
+
+        <record id="skill_type_om" model="hr.skill.type">
+            <field name="name">Chứng chỉ vận hành &amp; bảo trì (O&amp;M)</field>
+            <field name="is_certification" eval="True"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Chứng chỉ chỉ có một mức: hoặc có hiệu lực, hoặc không. Khai
+             mức "Có hiệu lực" làm mặc định vì hr.employee.skill bắt buộc
+             phải có mức — không khai thì không nhập được dòng nào. -->
+        <record id="skill_level_om" model="hr.skill.level">
+            <field name="name">Có hiệu lực</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="level_progress">100</field>
+            <field name="default_level" eval="True"/>
+        </record>
+
+        <record id="skill_gwo_bst" model="hr.skill">
+            <field name="name">GWO — An toàn cơ bản (BST)</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="skill_gwo_wah" model="hr.skill">
+            <field name="name">GWO — Làm việc trên cao</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">15</field>
+        </record>
+        <record id="skill_gwo_btt" model="hr.skill">
+            <field name="name">GWO — Kỹ thuật cơ bản (BTT)</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">20</field>
+        </record>
+        <record id="skill_rope" model="hr.skill">
+            <field name="name">Tiếp cận bằng dây (rope access)</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">25</field>
+        </record>
+        <record id="skill_blade" model="hr.skill">
+            <field name="name">Sửa chữa cánh quạt</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">30</field>
+        </record>
+        <record id="skill_hv" model="hr.skill">
+            <field name="name">Thao tác điện cao áp (có thẻ an toàn điện)</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">35</field>
+        </record>
+        <record id="skill_dien_bac5" model="hr.skill">
+            <field name="name">Thẻ an toàn điện bậc 4/5</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">40</field>
+        </record>
+        <record id="skill_firstaid" model="hr.skill">
+            <field name="name">Sơ cấp cứu</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">45</field>
+        </record>
+        <record id="skill_rescue" model="hr.skill">
+            <field name="name">Cứu hộ trên cao, hạ người từ tháp</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">50</field>
+        </record>
+        <record id="skill_confined" model="hr.skill">
+            <field name="name">Làm việc trong không gian hạn chế</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">55</field>
+        </record>
+        <record id="skill_crane" model="hr.skill">
+            <field name="name">Vận hành cẩu, thiết bị nâng</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">60</field>
+        </record>
+        <record id="skill_oem_turbine" model="hr.skill">
+            <field name="name">Đào tạo nền tảng tua-bin của hãng</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">65</field>
+        </record>
+        <record id="skill_inverter" model="hr.skill">
+            <field name="name">Bảo trì inverter điện mặt trời</field>
+            <field name="skill_type_id" ref="skill_type_om"/>
+            <field name="sequence">70</field>
+        </record>
+
+    </data>
+
+    <!-- Mức siết cổng năng lực. Mặc định CẢNH BÁO: bật chặn hẳn trên hệ
+         đang chạy sẽ dừng công việc vốn hôm qua vẫn làm bình thường, chỉ
+         vì hồ sơ chứng chỉ chưa kịp nhập. -->
+    <record id="param_enforce" model="ir.config_parameter">
+        <field name="key">eam_competency.enforce</field>
+        <field name="value">warn</field>
+    </record>
+
+    <record id="cron_eam_competency_nhac" model="ir.cron">
+        <field name="name">EAMOne: nhắc chứng chỉ sắp hết hạn</field>
+        <field name="model_id" ref="model_hr_employee_skill"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_nhac_het_han()</field>
+        <field name="interval_number">7</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=7, minute=0, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+</odoo>

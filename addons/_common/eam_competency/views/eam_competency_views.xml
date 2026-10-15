@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Lệnh công việc: tổ, năng lực, và chỗ thiếu -->
+    <record id="view_eam_work_order_form_competency" model="ir.ui.view">
+        <field name="name">eam.work.order.form.competency</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Tổ &amp; năng lực" name="competency">
+                    <div class="alert alert-danger" role="alert"
+                         invisible="crew_ok or not crew_gap">
+                        <b>Tổ chưa đủ năng lực.</b>
+                        <field name="crew_gap" readonly="1" nolabel="1"
+                               widget="text"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="crew_ids or not skill_ids">
+                        Lệnh có yêu cầu năng lực nhưng <b>chưa khai tổ</b> —
+                        chưa kiểm được ai sẽ làm.
+                    </div>
+                    <group>
+                        <group string="Năng lực lệnh này đòi">
+                            <field name="skill_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Tổ được phân công">
+                            <field name="crew_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="crew_ok"/>
+                            <field name="crew_gap_expired"/>
+                            <field name="crew_gap_missing"/>
+                        </group>
+                    </group>
+                    <div>
+                        <button name="action_goi_y_nguoi" type="object"
+                                string="Ai đủ năng lực?"
+                                class="btn-secondary"
+                                invisible="not skill_ids"/>
+                        <button name="action_mo_nang_luc_to" type="object"
+                                string="Chứng chỉ của tổ"
+                                class="btn-secondary"
+                                invisible="not crew_ids"/>
+                    </div>
+                    <div class="text-muted mt-3">
+                        Hiệu lực chứng chỉ được soi tại <b>ngày làm</b> của
+                        lệnh, không phải hôm nay — chứng chỉ còn hạn hôm nay
+                        mà hết hạn trước ngày làm thì vẫn bị chặn.<br/>
+                        <b>Hết hạn</b> là lỗi xếp lịch đào tạo, gia hạn được
+                        trong tuần. <b>Thiếu hẳn</b> là lỗi kế hoạch nhân
+                        lực, mất hàng tháng để bù — nên hai cái được tách
+                        riêng chứ không gộp thành "không đủ năng lực".
+                    </div>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_eam_work_order_list_competency" model="ir.ui.view">
+        <field name="name">eam.work.order.list.competency</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_list"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="crew_ok" string="Tổ đủ năng lực"
+                       optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kế hoạch bảo trì: năng lực yêu cầu -->
+    <record id="view_eam_pm_plan_form_competency" model="ir.ui.view">
+        <field name="name">eam.pm.plan.form.competency</field>
+        <field name="model">eam.pm.plan</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_plan_form"/>
+        <field name="arch" type="xml">
+            <field name="trade" position="after">
+                <field name="skill_ids" widget="many2many_tags"
+                       options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Hồ sơ chứng chỉ: tình trạng hiệu lực -->
+    <record id="view_hr_employee_skill_list_eam" model="ir.ui.view">
+        <field name="name">hr.employee.skill.list.eam</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <list string="Chứng chỉ &amp; hiệu lực" editable="bottom"
+                  decoration-danger="eam_state == 'expired'"
+                  decoration-warning="eam_state == 'expiring'"
+                  decoration-muted="eam_state == 'future'"
+                  default_order="eam_days_left asc">
+                <field name="employee_id" string="Nhân viên" width="200px"/>
+                <field name="skill_type_id" string="Nhóm" optional="show"/>
+                <field name="skill_id" string="Chứng chỉ / kỹ năng"
+                       width="240px"/>
+                <field name="skill_level_id" string="Mức" optional="hide"/>
+                <field name="valid_from" string="Hiệu lực từ"/>
+                <field name="valid_to" string="Hết hạn"/>
+                <field name="eam_days_left" string="Còn (ngày)"/>
+                <field name="eam_state" string="Tình trạng" widget="badge"
+                       decoration-danger="eam_state == 'expired'"
+                       decoration-warning="eam_state == 'expiring'"
+                       decoration-success="eam_state == 'valid'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_skill_search_eam" model="ir.ui.view">
+        <field name="name">hr.employee.skill.search.eam</field>
+        <field name="model">hr.employee.skill</field>
+        <field name="arch" type="xml">
+            <search string="Tìm chứng chỉ">
+                <field name="employee_id"/>
+                <field name="skill_id"/>
+                <field name="skill_type_id"/>
+                <filter name="f_het" string="ĐÃ HẾT HẠN"
+                        domain="[('eam_state', '=', 'expired')]"/>
+                <filter name="f_sap_het" string="Sắp hết hạn (60 ngày)"
+                        domain="[('eam_state', '=', 'expiring')]"/>
+                <filter name="f_con" string="Còn hiệu lực"
+                        domain="[('eam_state', 'in', ('valid', 'no_expiry'))]"/>
+                <separator/>
+                <filter name="f_khong_han" string="Không khai thời hạn"
+                        domain="[('valid_to', '=', False)]"/>
+                <separator/>
+                    <filter name="g_nv" string="Nhân viên"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="g_kn" string="Chứng chỉ"
+                            context="{'group_by': 'skill_id'}"/>
+                    <filter name="g_tt" string="Tình trạng"
+                            context="{'group_by': 'eam_state'}"/>
+                    <filter name="g_han" string="Tháng hết hạn"
+                            context="{'group_by': 'valid_to:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_competency_matrix" model="ir.actions.act_window">
+        <field name="name">Chứng chỉ &amp; hiệu lực</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_hr_employee_skill_list_eam"/>
+        <field name="search_view_id" ref="view_hr_employee_skill_search_eam"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa nhập chứng chỉ
+               nào</p>
+            <p>Đây là bảng kỹ năng <b>sẵn có của Odoo</b>, không phải một
+               bảng riêng của EAMOne — để phòng nhân sự và đội bảo trì
+               không có hai nguồn sự thật về cùng một tờ giấy.</p>
+            <p>Nhập <b>ngày hết hạn</b> thì cổng năng lực mới soi được. Để
+               trống là coi như vô thời hạn.</p>
+        </field>
+    </record>
+
+    <record id="action_eam_competency_expiring"
+            model="ir.actions.act_window">
+        <field name="name">Chứng chỉ hết hạn &amp; sắp hết</field>
+        <field name="res_model">hr.employee.skill</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_hr_employee_skill_list_eam"/>
+        <field name="search_view_id" ref="view_hr_employee_skill_search_eam"/>
+        <field name="domain">[('eam_state', 'in', ('expired', 'expiring'))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có chứng chỉ nào
+               hết hạn hay sắp hết</p>
+            <p>Phát hiện hết hạn vào đúng buổi sáng đội đã lên tới chân trụ
+               thì thông tin đó không còn dùng được để làm gì. Danh sách
+               này để nhìn trước.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_competency" name="Chứng chỉ &amp; năng lực"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_competency_matrix" sequence="40"/>
+
+    <menuitem id="menu_eam_competency_expiring"
+              name="Chứng chỉ hết hạn &amp; sắp hết"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_competency_expiring" sequence="41"/>
+
+</odoo>

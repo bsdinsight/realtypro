@@ -143,6 +143,23 @@ class EamWorkRequest(models.Model):
     company_id = fields.Many2one(
         related='location_id.company_id', store=True, index=True)
 
+    # Khoá do APP sinh ra, để gửi lại không tạo trùng.
+    #
+    # Ngoài hiện trường mất sóng là chuyện thường: app gửi lệnh tạo, sóng
+    # rớt đúng lúc máy chủ đã ghi xong nhưng câu trả lời không về tới
+    # máy. App không có cách nào biết, nên nó sẽ gửi lại — và thành hai
+    # yêu cầu y hệt. Cập nhật theo id thì gửi lại bao nhiêu lần cũng vô
+    # hại, nhưng TẠO MỚI thì không: đây là chỗ duy nhất trong hàng đợi
+    # offline cần khoá chống trùng.
+    client_key = fields.Char(
+        string='Khoá chống trùng', copy=False, index=True, readonly=True,
+        help='Do app hiện trường sinh ra, duy nhất cho mỗi lần nêu. Gửi '
+             'lại cùng khoá thì máy chủ trả về bản ghi cũ chứ không tạo '
+             'thêm.')
+
+    _uniq_client_key = models.Constraint(
+        'UNIQUE(client_key)', 'Khoá chống trùng đã được dùng.')
+
     # ------------------------------------------------------------------
     @api.depends('location_id', 'date_request')
     def _compute_asset(self):
@@ -220,6 +237,21 @@ class EamWorkRequest(models.Model):
                     'lời được câu "hiện trường đã báo chuyện này mấy lần '
                     'và vì sao lần nào cũng bị gạt" — không có lý do thì '
                     'câu đó vô nghĩa.', r.title or ''))
+
+    @api.model
+    def ghi_tu_hien_truong(self, vals):
+        """Cửa vào cho app hiện trường — CHỐNG TRÙNG theo ``client_key``.
+
+        Trả về id của bản ghi. Gửi lại cùng khoá thì trả về id cũ, không
+        tạo thêm. Phải đi qua đây chứ không gọi thẳng ``create``, vì
+        ``create`` không biết gì về việc gửi lại.
+        """
+        khoa = (vals or {}).get('client_key')
+        if khoa:
+            cu = self.search([('client_key', '=', khoa)], limit=1)
+            if cu:
+                return cu.id
+        return self.create(vals).id
 
     @api.model_create_multi
     def create(self, vals_list):

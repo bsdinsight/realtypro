@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_location_form_qr" model="ir.ui.view">
+        <field name="name">eam.location.form.qr</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Tem quét hiện trường" name="qr">
+                    <group>
+                        <field name="qr_token" readonly="1"/>
+                        <field name="qr_url" readonly="1" widget="url"
+                               invisible="not qr_token"/>
+                        <div colspan="2">
+                            <button name="action_sinh_qr" type="object"
+                                    string="Cấp mã quét"
+                                    class="btn-primary"
+                                    invisible="qr_token"/>
+                            <button name="action_in_tem_qr" type="object"
+                                    string="In tem" class="btn-secondary"
+                                    invisible="not qr_token"/>
+                            <button name="action_doi_qr" type="object"
+                                    string="Đổi mã"
+                                    class="btn-link text-danger"
+                                    confirm="Đổi mã sẽ làm CHẾT mọi tem đang dán ngoài hiện trường của vị trí này — phải in và dán lại. Chỉ làm khi tem bị sao chép hoặc dán sai chỗ."
+                                    invisible="not qr_token"/>
+                        </div>
+                    </group>
+                    <group>
+                        <!-- Form view là OWL, không phải QWeb phía máy
+                             chủ — `t-if`/`t-att-src` ở đây không chạy.
+                             Ảnh QR hiện bằng widget `image_url` trên
+                             chính trường giữ đường dẫn. -->
+                        <field name="qr_image_url" widget="image_url"
+                               nolabel="1" readonly="1"
+                               options="{'size': [150, 150]}"
+                               invisible="not qr_token"/>
+                        <div class="text-muted" colspan="2">
+                            Tem <b>vị trí</b>: quét ra thiết bị đang lắp ở
+                            chỗ này <b>hôm nay</b>, tra qua lịch sử lắp đặt.
+                            Thay thiết bị không cần in lại tem.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_asset_form_qr" model="ir.ui.view">
+        <field name="name">eam.asset.form.qr</field>
+        <field name="model">eam.asset</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Tem quét hiện trường" name="qr">
+                    <group>
+                        <field name="qr_token" readonly="1"/>
+                        <field name="qr_url" readonly="1" widget="url"
+                               invisible="not qr_token"/>
+                        <div colspan="2">
+                            <button name="action_sinh_qr" type="object"
+                                    string="Cấp mã quét"
+                                    class="btn-primary"
+                                    invisible="qr_token"/>
+                            <button name="action_in_tem_qr" type="object"
+                                    string="In tem" class="btn-secondary"
+                                    invisible="not qr_token"/>
+                            <button name="action_doi_qr" type="object"
+                                    string="Đổi mã"
+                                    class="btn-link text-danger"
+                                    confirm="Đổi mã sẽ làm CHẾT mọi tem đang dán trên thiết bị này — phải in và dán lại."
+                                    invisible="not qr_token"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="qr_image_url" widget="image_url"
+                               nolabel="1" readonly="1"
+                               options="{'size': [150, 150]}"
+                               invisible="not qr_token"/>
+                        <div class="text-muted" colspan="2">
+                            Tem <b>thiết bị</b>: dán lên chính thiết bị, theo
+                            nó đi khắp nơi. Khác tem vị trí — tem vị trí dán
+                            trên tháp và không đi đâu cả.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_location_list_qr" model="ir.ui.view">
+        <field name="name">eam.location.list.qr</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_list"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="qr_token" string="Mã quét" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_asset_list_qr" model="ir.ui.view">
+        <field name="name">eam.asset.list.qr</field>
+        <field name="model">eam.asset</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_list"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="qr_token" string="Mã quét" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

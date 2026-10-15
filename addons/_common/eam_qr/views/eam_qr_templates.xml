@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Trang thông báo khi tem không giải được ra bản ghi nào.
+         Cố ý KHÔNG trả 404 trần: người đang đứng dưới chân trụ với điện
+         thoại cần biết nên làm gì tiếp, không cần một mã lỗi HTTP. -->
+    <template id="page_thong_bao" name="EAMOne — Kết quả quét tem">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <div class="container my-5" style="max-width: 640px;">
+                <h3 t-esc="tieu_de"/>
+                <p class="text-muted" t-esc="noi_dung"/>
+                <div t-if="lien_ket" class="mt-4">
+                    <t t-foreach="lien_ket" t-as="lk">
+                        <a t-att-href="lk[1]" class="btn btn-primary me-2"
+                           t-esc="lk[0]"/>
+                    </t>
+                </div>
+                <div class="mt-4">
+                    <a href="/odoo" class="btn btn-link">Về trang chính</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

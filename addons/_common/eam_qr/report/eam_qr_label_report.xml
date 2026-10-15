@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tem in ra để dán ngoài hiện trường.
+         MÃ CHỮ in kèm QR có chủ đích: tem ngoài trụ gió chịu nắng, mưa,
+         bụi và dầu — QR xước một góc là máy không đọc được nữa, nhưng
+         người vẫn đọc được dòng chữ và tra tay. Tem chỉ có QR là tem
+         dùng được một năm. -->
+
+    <template id="report_location_label_document">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <div class="row">
+                    <t t-foreach="docs" t-as="vt">
+                        <div class="col-4 text-center"
+                             style="border: 1px dashed #999; padding: 8px; margin-bottom: 6px;">
+                            <div style="font-size: 9px; color: #666;"
+                                 t-esc="vt.plant_id.name or ''"/>
+                            <!-- Dùng `qr_image_url` chứ KHÔNG dựng lại
+                                 đường dẫn ở đây: dựng lại là hai chỗ
+                                 phải nhớ mã hoá tham số, và chỗ nào
+                                 quên thì tem in ra mã sai. -->
+                            <img t-if="vt.qr_token"
+                                 t-att-src="vt.qr_image_url"
+                                 style="width: 110px; height: 110px;"/>
+                            <div t-if="not vt.qr_token"
+                                 style="height: 110px; color: #c00; font-size: 10px;">
+                                CHƯA CẤP MÃ
+                            </div>
+                            <div style="font-weight: bold; font-size: 13px;"
+                                 t-esc="vt.complete_code or vt.code or ''"/>
+                            <div style="font-size: 10px;"
+                                 t-esc="vt.name or ''"/>
+                            <div style="font-size: 8px; color: #888;"
+                                 t-esc="vt.qr_token or ''"/>
+                        </div>
+                    </t>
+                </div>
+                <p style="font-size: 8px; color: #888; margin-top: 10px;">
+                    Tem VỊ TRÍ (mã bắt đầu bằng L): quét ra thiết bị đang
+                    lắp ở chỗ này <b>hôm nay</b>. Thay thiết bị không cần
+                    in lại tem.
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_asset_label_document">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <div class="row">
+                    <t t-foreach="docs" t-as="ts">
+                        <div class="col-4 text-center"
+                             style="border: 1px dashed #999; padding: 8px; margin-bottom: 6px;">
+                            <div style="font-size: 9px; color: #666;"
+                                 t-esc="ts.category_id.name or ''"/>
+                            <img t-if="ts.qr_token"
+                                 t-att-src="ts.qr_image_url"
+                                 style="width: 110px; height: 110px;"/>
+                            <div t-if="not ts.qr_token"
+                                 style="height: 110px; color: #c00; font-size: 10px;">
+                                CHƯA CẤP MÃ
+                            </div>
+                            <div style="font-weight: bold; font-size: 13px;"
+                                 t-esc="ts.code or ''"/>
+                            <div style="font-size: 10px;"
+                                 t-esc="ts.name or ''"/>
+                            <div t-if="ts.serial_no"
+                                 style="font-size: 9px; color: #444;">
+                                S/N: <t t-esc="ts.serial_no"/>
+                            </div>
+                            <div style="font-size: 8px; color: #888;"
+                                 t-esc="ts.qr_token or ''"/>
+                        </div>
+                    </t>
+                </div>
+                <p style="font-size: 8px; color: #888; margin-top: 10px;">
+                    Tem THIẾT BỊ (mã bắt đầu bằng A): dán lên chính thiết
+                    bị, theo nó đi khắp nơi. Khác tem vị trí.
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <record id="action_report_location_label" model="ir.actions.report">
+        <field name="name">Tem QR vị trí</field>
+        <field name="model">eam.location</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eam_qr.report_location_label_document</field>
+        <field name="report_file">eam_qr.report_location_label_document</field>
+        <field name="binding_model_id" ref="eam_core.model_eam_location"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Tem QR vi tri'</field>
+    </record>
+
+    <record id="action_report_asset_label" model="ir.actions.report">
+        <field name="name">Tem QR thiết bị</field>
+        <field name="model">eam.asset</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eam_qr.report_asset_label_document</field>
+        <field name="report_file">eam_qr.report_asset_label_document</field>
+        <field name="binding_model_id" ref="eam_core.model_eam_asset"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Tem QR thiet bi'</field>
+    </record>
+
+</odoo>

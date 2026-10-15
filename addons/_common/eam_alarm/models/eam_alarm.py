@@ -104,6 +104,11 @@ class EamAlarm(models.Model):
         tracking=True, ondelete='set null')
     wo_state = fields.Selection(
         related='wo_id.state', string='Trạng thái lệnh')
+    request_id = fields.Many2one(
+        'eam.work.request', string='Yêu cầu công việc', copy=False,
+        index=True, ondelete='set null',
+        help='Dùng cho cảnh báo mức thấp: vào sổ yêu cầu để người điều độ '
+             'phân loại, thay vì vào thẳng danh sách việc phải làm.')
 
     ack_user_id = fields.Many2one('res.users', string='Người xác nhận',
                                   readonly=True, copy=False)
@@ -237,6 +242,8 @@ class EamAlarm(models.Model):
                 d=truoc.date_cleared and truoc.date_cleared.date() or ''))
         if rule and rule.auto_wo == 'immediate':
             a._tao_lenh()
+        elif rule and rule.auto_wo == 'request':
+            a._tao_yeu_cau()
         return a
 
     @api.model
@@ -318,6 +325,41 @@ class EamAlarm(models.Model):
         return w
 
     # ------------------------------------------------------------------
+    def _tao_yeu_cau(self):
+        """Đưa cảnh báo vào sổ YÊU CẦU thay vì mở lệnh thẳng.
+
+        Đúng cho cảnh báo mức thấp: chưa chắc đáng mở lệnh, nhưng cũng
+        không được rơi vào im lặng. Người điều độ phân loại rồi quyết.
+        """
+        self.ensure_one()
+        if self.request_id:
+            return self.request_id
+        R = self.env['eam.work.request']
+        r = R.create({
+            'title': self.message[:120],
+            'description': self.message,
+            'source': 'alarm',
+            'location_id': self.location_id.id,
+            'asset_id': self.asset_id.id or False,
+            'urgency': {'low': 'low', 'medium': 'normal',
+                        'high': 'high', 'critical': 'immediate'}.get(
+                            self.severity, 'normal'),
+            'requester_id': self.env.uid,
+        })
+        self.request_id = r.id
+        r.message_post(body=_(
+            'Mở từ cảnh báo %(m)s (đã nổ %(n)d lần).',
+            m=self.display_name, n=self.occurrence_count))
+        return r
+
+    def action_tao_yeu_cau(self):
+        for a in self:
+            if a.state not in ('new', 'ack'):
+                raise UserError(_(
+                    'Cảnh báo "%s" đã được xử lý rồi.', a.message))
+            a._tao_yeu_cau()
+        return True
+
     def action_xac_nhan(self):
         for a in self:
             if a.state != 'new':
@@ -327,6 +369,8 @@ class EamAlarm(models.Model):
                      'ack_date': fields.Datetime.now()})
             if a.rule_id and a.rule_id.auto_wo == 'on_ack':
                 a._tao_lenh()
+            elif a.rule_id and a.rule_id.auto_wo == 'request':
+                a._tao_yeu_cau()
         return True
 
     def action_tao_lenh(self):

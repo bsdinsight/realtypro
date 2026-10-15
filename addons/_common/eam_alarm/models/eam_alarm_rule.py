@@ -129,14 +129,18 @@ class EamAlarmRule(models.Model):
     # Sinh lệnh
     # ------------------------------------------------------------------
     auto_wo = fields.Selection(
-        [('off', 'Không tạo lệnh'),
-         ('on_ack', 'Tạo sau khi người trực xác nhận'),
-         ('immediate', 'Tạo ngay')],
-        string='Tự tạo lệnh công việc', required=True, default='on_ack',
+        [('off', 'Không tạo gì'),
+         ('request', 'Mở YÊU CẦU để người điều độ phân loại'),
+         ('on_ack', 'Tạo lệnh sau khi người trực xác nhận'),
+         ('immediate', 'Tạo lệnh ngay')],
+        string='Khi nổ thì làm gì', required=True, default='on_ack',
         tracking=True,
-        help='"Tạo ngay" chỉ nên dùng cho mức nghiêm trọng. Một đầu đo bị '
-             'nhiễu nổ 500 cảnh báo một đêm sẽ thành 500 lệnh rác, và sau '
-             'đó không ai đọc danh sách lệnh nữa.')
+        help='"Tạo lệnh ngay" chỉ nên dùng cho mức nghiêm trọng. Một đầu '
+             'đo bị nhiễu nổ 500 cảnh báo một đêm sẽ thành 500 lệnh rác, '
+             'và sau đó không ai đọc danh sách lệnh nữa.\n\n'
+             '"Mở YÊU CẦU" là lựa chọn đúng cho cảnh báo mức thấp: nó vào '
+             'sổ yêu cầu để người điều độ xem có đáng mở lệnh không, thay '
+             'vì vào thẳng danh sách việc phải làm.')
     wo_work_type = fields.Selection(
         [('corrective', 'Sửa chữa khắc phục'),
          ('predictive', 'Bảo trì theo trạng thái'),

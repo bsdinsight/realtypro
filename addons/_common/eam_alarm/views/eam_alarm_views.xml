@@ -44,6 +44,9 @@
                     <button name="action_tao_lenh" type="object"
                             string="Mở lệnh công việc" class="btn-primary"
                             invisible="state not in ('new', 'ack')"/>
+                    <button name="action_tao_yeu_cau" type="object"
+                            string="Đưa vào sổ yêu cầu"
+                            invisible="state not in ('new', 'ack') or request_id"/>
                     <button name="action_bo_qua" type="object"
                             string="Bỏ qua"
                             invisible="state not in ('new', 'ack')"/>
@@ -103,6 +106,7 @@
                         <group string="Xử lý">
                             <field name="wo_id" readonly="1"/>
                             <field name="wo_state" invisible="not wo_id"/>
+                            <field name="request_id" readonly="1"/>
                             <field name="ack_user_id"/>
                             <field name="ack_date"/>
                             <field name="ignore_reason" readonly="1"

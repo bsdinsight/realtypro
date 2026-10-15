@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Cảnh báo tự sinh lệnh',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'EAMOne',
     'summary': 'Sổ cảnh báo bất khả tri về nguồn, tự mở lệnh công việc, '
                'và đếm số lần tái phát sau sửa.',

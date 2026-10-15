@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Bảo trì phòng ngừa',
-    'version': '19.0.1.2.0',
+    'version': '19.0.1.3.0',
     'category': 'EAMOne',
     'summary': 'Kế hoạch bảo trì theo lịch và theo giờ máy chạy, tự sinh '
                'lệnh công việc trước hạn, có luật theo mùa và KPI độ tin '
@@ -124,6 +124,7 @@ sửa tức thì.
         'data/eam_pm_cron.xml',
         'views/eam_pm_views.xml',
         'views/eam_season_views.xml',
+        'views/eam_pm_form_views.xml',
         'views/eam_reliability_views.xml',
     ],
     'installable': True,

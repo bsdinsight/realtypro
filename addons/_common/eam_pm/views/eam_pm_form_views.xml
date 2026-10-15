@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Phần mở rộng view kế hoạch bảo trì phải nằm Ở ĐÂY chứ không
+         nằm bên eam_work_order: eam_pm phụ thuộc eam_work_order, nên
+         bên kia kế thừa view của bên này là tham chiếu tới thứ chưa
+         được nạp. -->
+    <record id="view_eam_pm_plan_form_typed" model="ir.ui.view">
+        <field name="name">eam.pm.plan.form.typed</field>
+        <field name="model">eam.pm.plan</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_plan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_ids']/list/field[@name='spec']"
+                   position="after">
+                <field name="field_type" string="Kiểu ô"/>
+                <field name="uom_label" string="Đơn vị"
+                       invisible="field_type != 'number'"/>
+                <field name="value_min" string="Cận dưới"
+                       invisible="field_type != 'number'"/>
+                <field name="value_max" string="Cận trên"
+                       invisible="field_type != 'number'"/>
+                <field name="selection_values" string="Các lựa chọn"
+                       invisible="field_type != 'selection'"
+                       optional="hide"/>
+                <field name="requires_photo" string="Bắt buộc ảnh"
+                       widget="boolean_toggle" optional="show"/>
+                <field name="has_range" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='task_ids']" position="after">
+                <group string="Mẫu biểu kèm theo mọi lệnh">
+                    <field name="form_template_ids" nolabel="1"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

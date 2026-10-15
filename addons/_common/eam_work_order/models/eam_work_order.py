@@ -459,6 +459,33 @@ class EamWorkOrder(models.Model):
     # ------------------------------------------------------------------
     # Chuyển trạng thái
     # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Bước công việc
+    # ------------------------------------------------------------------
+    step_ids = fields.One2many(
+        'eam.work.order.step', 'wo_id', string='Các bước')
+    step_count = fields.Integer(string='Số bước', compute='_compute_step')
+    step_done_count = fields.Integer(
+        string='Bước đã làm', compute='_compute_step')
+    step_progress = fields.Float(
+        string='% bước đã làm', compute='_compute_step')
+    step_blocking = fields.Char(
+        string='Bước chịu lực còn dở', compute='_compute_step',
+        help='Bước chịu lực chưa làm hoặc không đạt — lệnh không đóng '
+             'được khi còn.')
+
+    @api.depends('step_ids.result', 'step_ids.is_critical')
+    def _compute_step(self):
+        for o in self:
+            b = o.step_ids
+            xong = b.filtered(lambda s: s.result in ('ok', 'na'))
+            o.step_count = len(b)
+            o.step_done_count = len(xong)
+            o.step_progress = (len(xong) * 100.0 / len(b)) if b else 0.0
+            ket = b.filtered(
+                lambda s: s.is_critical and s.result in ('pending', 'not_ok'))
+            o.step_blocking = ', '.join(ket.mapped('name'))[:200] or False
+
     def action_duyet(self):
         for o in self:
             if o.state != 'draft':
@@ -523,6 +550,15 @@ class EamWorkOrder(models.Model):
                     'bao giờ vào được thống kê độ tin cậy — và không có '
                     'cách nào lấy lại, vì người biết đã đi làm việc '
                     'khác.', ten=o.name))
+            # Bước CHỊU LỰC còn dở thì không cho đóng. Kế hoạch đã ghi
+            # "bỏ bước này là hỏng cả lần bảo trì" — tới đây vẫn đóng
+            # được thì cái cờ đó chỉ để trang trí.
+            if o.step_blocking:
+                raise UserError(_(
+                    'Lệnh "%(ten)s" còn bước CHỊU LỰC chưa đạt: %(buoc)s.'
+                    '\n\nLàm xong rồi tick, hoặc ghi KHÔNG ĐẠT kèm lý do '
+                    'rồi mở lệnh khắc phục — đừng đóng lệnh để đó.',
+                    ten=o.name, buoc=o.step_blocking))
             o.write({'state': 'done', 'is_on_hold': False,
                      'date_hold_start': False, 'hold_reason': False,
                      'date_end': o.date_end or fields.Datetime.now()})

@@ -5,3 +5,4 @@ access_eam_work_order_user,eam.work.order.user,model_eam_work_order,base.group_u
 access_eam_work_order_mgr,eam.work.order.mgr,model_eam_work_order,base.group_system,1,1,1,1
 access_eam_wo_labour_user,eam.work.order.labour.user,model_eam_work_order_labour,base.group_user,1,1,1,1
 access_eam_wo_part_user,eam.work.order.part.user,model_eam_work_order_part,base.group_user,1,1,1,1
+access_eam_wo_step_user,eam.work.order.step.user,model_eam_work_order_step,base.group_user,1,1,1,1

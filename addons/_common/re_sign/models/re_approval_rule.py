@@ -12,6 +12,7 @@ hoặc là chặn những thứ lẽ ra trôi được, hoặc là thả những
 phải chặn.
 """
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 from odoo.addons.re_sign.models.re_signature import VAI
 
@@ -117,7 +118,7 @@ class ReApprovalRule(models.Model):
     def _check_nguong(self):
         for r in self:
             if r.amount_max and r.amount_min and r.amount_max <= r.amount_min:
-                raise models.ValidationError(_(
+                raise ValidationError(_(
                     'Bước "%s": "Đến dưới" phải lớn hơn "Giá trị từ", nếu '
                     'không thì luật không bao giờ khớp chứng từ nào.'
                 ) % r.name)

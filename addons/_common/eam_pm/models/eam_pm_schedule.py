@@ -202,13 +202,19 @@ class EamPmSchedule(models.Model):
         self.ensure_one()
         p = self.plan_id
         W = self.env['eam.work.order']
-        buoc = '\n'.join(
-            '%d. %s%s' % (i + 1, t.name,
-                          ' — %s' % t.spec if t.spec else '')
-            for i, t in enumerate(p.task_ids.sorted('sequence')))
+        # Bước của kế hoạch chép sang lệnh thành DÒNG CÓ CẤU TRÚC, không
+        # làm phẳng thành chữ nữa. Làm phẳng thì người thợ không tick
+        # được, không ghi được trị số đo cạnh tiêu chuẩn, và cờ "bước
+        # chịu lực" mất sạch — tức câu "bỏ bước này là hỏng cả lần bảo
+        # trì" không còn chỗ nào siết.
         mo = p.note or ''
-        if buoc:
-            mo = (mo + '\n\n' if mo else '') + 'CÁC BƯỚC:\n' + buoc
+        dong_buoc = [(0, 0, {
+            'sequence': t.sequence,
+            'name': t.name,
+            'spec': t.spec,
+            'is_critical': t.is_critical,
+            'pm_task_id': t.id,
+        }) for t in p.task_ids.sorted('sequence')]
         w = W.create({
             'title': '%s — %s' % (p.name, self.location_id.code or ''),
             'work_type': p.work_type,
@@ -224,6 +230,7 @@ class EamPmSchedule(models.Model):
             'description': mo,
             'pm_plan_id': p.id,
             'pm_schedule_id': self.id,
+            'step_ids': dong_buoc,
         })
         self.wo_id = w.id
         return w

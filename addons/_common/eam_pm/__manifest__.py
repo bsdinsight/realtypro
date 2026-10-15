@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Bảo trì phòng ngừa',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'EAMOne',
     'summary': 'Kế hoạch bảo trì theo lịch và theo giờ máy chạy, tự sinh '
                'lệnh công việc trước hạn.',

@@ -145,6 +145,59 @@
                         </group>
                     </group>
                     <notebook>
+                        <!-- Bước công việc đứng TRƯỚC mọi tab khác: đây
+                             là thứ người thợ mở ra đầu tiên khi tới hiện
+                             trường, không phải chi phí hay giờ công. -->
+                        <page string="Các bước" name="steps"
+                              invisible="not step_ids">
+                            <div class="alert alert-danger" role="alert"
+                                 invisible="not step_blocking">
+                                Còn bước <b>chịu lực</b> chưa đạt:
+                                <field name="step_blocking" readonly="1"
+                                       class="oe_inline"/>.
+                                Lệnh chưa đóng được.
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="step_done_count"/>
+                                    <field name="step_count"/>
+                                </group>
+                                <group>
+                                    <field name="step_progress"
+                                           widget="progressbar"/>
+                                </group>
+                            </group>
+                            <field name="step_ids" nolabel="1">
+                                <list editable="bottom"
+                                      decoration-danger="result == 'not_ok'"
+                                      decoration-success="result == 'ok'"
+                                      decoration-muted="result == 'na'"
+                                      decoration-bf="is_critical">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="is_critical"
+                                           string="Chịu lực"
+                                           widget="boolean_toggle"/>
+                                    <field name="name" string="Bước"/>
+                                    <field name="spec"
+                                           string="Tiêu chuẩn / trị số"
+                                           readonly="1"/>
+                                    <field name="result" string="Kết quả"
+                                           widget="badge"
+                                           decoration-success="result == 'ok'"
+                                           decoration-danger="result == 'not_ok'"/>
+                                    <field name="value"
+                                           string="Đo được"/>
+                                    <field name="note" string="Ghi chú"/>
+                                    <field name="user_id" string="Người làm"
+                                           readonly="1" optional="show"/>
+                                    <field name="date_done" string="Lúc"
+                                           readonly="1" optional="hide"/>
+                                    <field name="attachment_ids"
+                                           string="Ảnh" widget="many2many_binary"
+                                           optional="show"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="An toàn" name="safety">
                             <div class="alert alert-info" role="status">
                                 <b>Lệnh công việc này KHÔNG phải phiếu công

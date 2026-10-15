@@ -66,6 +66,37 @@ class RpSitePunch(models.Model):
                 rec.deadline and rec.deadline < today
                 and rec.state in ('open', 'in_progress'))
 
+    # Khoá do APP hiện trường sinh ra, để gửi lại không tạo trùng.
+    #
+    # Ngoài công trường mất sóng là chuyện thường: app gửi lệnh tạo,
+    # sóng rớt đúng lúc máy chủ đã ghi xong nhưng câu trả lời không về
+    # tới máy. App không có cách nào biết nên sẽ gửi lại — và thành hai
+    # punch y hệt nhau cho cùng một lỗi. Cập nhật theo id thì gửi lại
+    # bao nhiêu lần cũng vô hại; TẠO MỚI thì không.
+    client_key = fields.Char(
+        string='Khoá chống trùng', copy=False, index=True, readonly=True,
+        help='Do app hiện trường sinh ra, duy nhất cho mỗi lần ghi. Gửi '
+             'lại cùng khoá thì máy chủ trả về bản ghi cũ chứ không tạo '
+             'thêm.')
+
+    _uniq_client_key = models.Constraint(
+        'UNIQUE(client_key)', 'Khoá chống trùng đã được dùng.')
+
+    @api.model
+    def ghi_tu_hien_truong(self, vals):
+        """Cửa vào cho app hiện trường — CHỐNG TRÙNG theo ``client_key``.
+
+        Trả về id bản ghi. Gửi lại cùng khoá thì trả về id cũ, không tạo
+        thêm. Phải đi qua đây chứ không gọi thẳng ``create``, vì
+        ``create`` không biết gì về việc gửi lại.
+        """
+        khoa = (vals or {}).get('client_key')
+        if khoa:
+            cu = self.search([('client_key', '=', khoa)], limit=1)
+            if cu:
+                return cu.id
+        return self.create(vals).id
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_alarm_rule_list" model="ir.ui.view">
+        <field name="name">eam.alarm.rule.list</field>
+        <field name="model">eam.alarm.rule</field>
+        <field name="arch" type="xml">
+            <list string="Luật cảnh báo">
+                <field name="sequence" widget="handle"/>
+                <field name="code" string="Mã"/>
+                <field name="name" string="Tên luật" width="260px"/>
+                <field name="source" string="Nguồn"/>
+                <field name="meter_type" string="Đồng hồ" optional="show"/>
+                <field name="threshold" string="Ngưỡng" optional="show"/>
+                <field name="severity" string="Mức" widget="badge"
+                       decoration-danger="severity == 'critical'"
+                       decoration-warning="severity == 'high'"/>
+                <field name="auto_wo" string="Tự tạo lệnh"/>
+                <field name="open_count" string="Đang mở"/>
+                <field name="repeat_count" string="Tái phát"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_alarm_rule_form" model="ir.ui.view">
+        <field name="name">eam.alarm.rule.form</field>
+        <field name="model">eam.alarm.rule</field>
+        <field name="arch" type="xml">
+            <form string="Luật cảnh báo">
+                <header>
+                    <button name="action_quet_ngay" type="object"
+                            string="Quét ngay" class="btn-primary"
+                            invisible="source in ('external', 'manual')"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_canh_bao" type="object"
+                                class="oe_stat_button" icon="fa-bell">
+                            <field name="open_count" widget="statinfo"
+                                   string="Đang mở"/>
+                        </button>
+                        <button name="action_mo_canh_bao" type="object"
+                                class="oe_stat_button" icon="fa-repeat">
+                            <field name="repeat_count" widget="statinfo"
+                                   string="Tái phát"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Đã nghỉ" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Độ rung hộp số vượt ngưỡng"/></h1>
+                    </div>
+                    <group>
+                        <group string="Nhận dạng">
+                            <field name="code"/>
+                            <field name="source"/>
+                            <field name="severity"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Áp cho đâu">
+                            <field name="plant_id"/>
+                            <field name="category_id"/>
+                            <field name="location_ids"
+                                   widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Điều kiện"
+                           invisible="source in ('external', 'manual')">
+                        <group>
+                            <field name="meter_type"/>
+                            <field name="operator"
+                                   invisible="source != 'meter_threshold'"/>
+                            <field name="threshold"
+                                   invisible="source != 'meter_threshold'"/>
+                            <field name="window_days"
+                                   invisible="source == 'meter_threshold'"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert"
+                                 colspan="2"
+                                 invisible="source != 'feed_silent'">
+                                <b>Mất số đọc</b> là đường truyền chết, không
+                                phải máy chết. Việc phải làm là kiểm tra kết
+                                nối — đừng cử người leo trụ.
+                            </div>
+                            <div class="alert alert-info" role="alert"
+                                 colspan="2"
+                                 invisible="source != 'meter_stall'">
+                                <b>Đồng hồ đứng im</b> là số đọc vẫn về đều
+                                mà giờ chạy không tăng: máy dừng thật. Khác
+                                hẳn mất số đọc — lẫn hai cái là chạy nhầm
+                                hướng.
+                            </div>
+                            <div class="alert alert-warning" role="alert"
+                                 colspan="2"
+                                 invisible="meter_type != 'operating_hours' or source != 'meter_threshold'">
+                                Đặt ngưỡng trên <b>giờ máy chạy</b> là trùng
+                                việc với kế hoạch bảo trì phòng ngừa — rồi
+                                hai cơ chế cùng sinh lệnh cho một việc.
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Khi nổ thì làm gì">
+                        <group>
+                            <field name="auto_wo"/>
+                            <field name="wo_work_type"/>
+                            <field name="wo_priority"/>
+                            <field name="wo_detection"/>
+                            <field name="pm_plan_id"/>
+                        </group>
+                        <group>
+                            <field name="wo_requires_permit"/>
+                            <field name="wo_requires_isolation"/>
+                            <field name="wo_work_at_height"/>
+                            <field name="clear_on_wo_done"/>
+                            <field name="repeat_window_days"/>
+                        </group>
+                        <div class="alert alert-warning" role="alert"
+                             colspan="2" invisible="auto_wo != 'immediate'">
+                            <b>Tạo ngay</b> chỉ nên dùng cho mức nghiêm
+                            trọng. Một đầu đo bị nhiễu nổ 500 cảnh báo một
+                            đêm sẽ thành 500 lệnh rác, và sau đó không ai
+                            đọc danh sách lệnh nữa — kể cả lệnh thật.
+                        </div>
+                    </group>
+                    <group string="Diễn giải">
+                        <field name="note" nolabel="1"
+                               placeholder="Ghi vào đây thứ người ra hiện trường cần biết: xem cái gì, so với cái gì."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_alarm_rule_search" model="ir.ui.view">
+        <field name="name">eam.alarm.rule.search</field>
+        <field name="model">eam.alarm.rule</field>
+        <field name="arch" type="xml">
+            <search string="Tìm luật">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="plant_id"/>
+                <filter name="f_tu_dong" string="Nguồn tự động"
+                        domain="[('source', 'in', ('meter_threshold', 'meter_stall', 'feed_silent'))]"/>
+                <filter name="f_tao_ngay" string="Tạo lệnh ngay"
+                        domain="[('auto_wo', '=', 'immediate')]"/>
+                <separator/>
+                <filter name="f_nghi" string="Đã nghỉ"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                    <filter name="g_nguon" string="Nguồn"
+                            context="{'group_by': 'source'}"/>
+                    <filter name="g_nm" string="Nhà máy"
+                            context="{'group_by': 'plant_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_alarm_rule" model="ir.actions.act_window">
+        <field name="name">Luật cảnh báo</field>
+        <field name="res_model">eam.alarm.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_alarm_rule_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai luật cảnh báo
+               nào</p>
+            <p>Luật quyết định cái gì là bất thường và khi nổ thì làm gì.
+               Sổ cảnh báo <b>bất khả tri về nguồn</b>: hôm nay chạy bằng
+               đồng hồ và người trực, khi có SCADA thì nó chỉ là thêm một
+               nguồn nữa.</p>
+        </field>
+    </record>
+
+</odoo>

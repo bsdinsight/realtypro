@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_alarm_rule_user,eam.alarm.rule.user,model_eam_alarm_rule,base.group_user,1,0,0,0
+access_eam_alarm_rule_mgr,eam.alarm.rule.mgr,model_eam_alarm_rule,base.group_system,1,1,1,1
+access_eam_alarm_user,eam.alarm.user,model_eam_alarm,base.group_user,1,1,1,0
+access_eam_alarm_mgr,eam.alarm.mgr,model_eam_alarm,base.group_system,1,1,1,1
+access_eam_alarm_ignore_wizard_user,eam.alarm.ignore.wizard.user,model_eam_alarm_ignore_wizard,base.group_user,1,1,1,1

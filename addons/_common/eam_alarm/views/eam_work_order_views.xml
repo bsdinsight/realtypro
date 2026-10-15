@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_work_order_form_alarm" model="ir.ui.view">
+        <field name="name">eam.work.order.form.alarm</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_canh_bao" type="object"
+                        class="oe_stat_button" icon="fa-bell"
+                        invisible="alarm_count == 0">
+                    <field name="alarm_count" widget="statinfo"
+                           string="Cảnh báo"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <field name="alarm_repeat_max" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Cảnh báo" name="alarms"
+                      invisible="alarm_count == 0">
+                    <div class="alert alert-danger" role="alert"
+                         invisible="alarm_repeat_max == 0">
+                        Cảnh báo trong lệnh này đã <b>tái phát
+                        <field name="alarm_repeat_max" readonly="1"
+                               class="oe_inline"/> lần</b> sau sửa. Lần
+                        trước không giữ được — làm lại y như cũ thì kết quả
+                        sẽ y như cũ.
+                    </div>
+                    <field name="alarm_ids" readonly="1">
+                        <list>
+                            <field name="date_raised" string="Nổ lúc"/>
+                            <field name="severity" string="Mức"
+                                   widget="badge"/>
+                            <field name="message" string="Nội dung"/>
+                            <field name="occurrence_count"
+                                   string="Số lần nổ"/>
+                            <field name="repeat_after_fix"
+                                   string="Tái phát sau sửa"/>
+                            <field name="state" string="Trạng thái"
+                                   widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

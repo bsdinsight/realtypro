@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_alarm_list" model="ir.ui.view">
+        <field name="name">eam.alarm.list</field>
+        <field name="model">eam.alarm</field>
+        <field name="arch" type="xml">
+            <list string="Sổ cảnh báo"
+                  decoration-danger="severity == 'critical' or is_repeat"
+                  decoration-warning="severity == 'high'"
+                  decoration-muted="state in ('cleared', 'ignored')">
+                <field name="date_raised" string="Nổ lúc"/>
+                <field name="location_id" string="Vị trí" width="180px"/>
+                <field name="asset_id" string="Thiết bị" optional="show"
+                       width="180px"/>
+                <field name="severity" string="Mức"
+                       widget="badge"
+                       decoration-danger="severity == 'critical'"
+                       decoration-warning="severity == 'high'"/>
+                <field name="message" string="Nội dung"/>
+                <field name="occurrence_count" string="Số lần nổ"/>
+                <field name="repeat_after_fix" string="Tái phát sau sửa"/>
+                <field name="rule_id" string="Luật" optional="hide"/>
+                <field name="source" string="Nguồn" optional="hide"/>
+                <field name="wo_id" string="Lệnh" optional="show"
+                       width="160px"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-success="state == 'cleared'"/>
+                <field name="is_repeat" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_alarm_form" model="ir.ui.view">
+        <field name="name">eam.alarm.form</field>
+        <field name="model">eam.alarm</field>
+        <field name="arch" type="xml">
+            <form string="Cảnh báo">
+                <header>
+                    <button name="action_xac_nhan" type="object"
+                            string="Xác nhận là thật" class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_tao_lenh" type="object"
+                            string="Mở lệnh công việc" class="btn-primary"
+                            invisible="state not in ('new', 'ack')"/>
+                    <button name="action_bo_qua" type="object"
+                            string="Bỏ qua"
+                            invisible="state not in ('new', 'ack')"/>
+                    <button name="action_het" type="object"
+                            string="Đánh dấu đã hết"
+                            invisible="state not in ('new', 'ack', 'wo')"/>
+                    <button name="action_mo_lai" type="object"
+                            string="Mở lại"
+                            invisible="state not in ('cleared', 'ignored')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,ack,wo,cleared"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_repeat">
+                        Cảnh báo này đã <b>tái phát
+                        <field name="repeat_after_fix" readonly="1"
+                               class="oe_inline"/> lần</b> sau khi đã đóng
+                        lệnh sửa. Lần sửa trước không giữ được — xem lại
+                        nguyên nhân gốc thay vì sửa lại y như cũ.
+                        <field name="prev_id" readonly="1"
+                               class="oe_inline" invisible="not prev_id"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="occurrence_count &lt; 10">
+                        Đã nổ <field name="occurrence_count" readonly="1"
+                                     class="oe_inline"/> lần mà chưa khép.
+                        Nếu đây là nhiễu đầu đo thì sửa ngưỡng ở luật; nếu
+                        là thật thì nó đã bị để lâu.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_mo_lenh" type="object"
+                                class="oe_stat_button" icon="fa-wrench"
+                                invisible="not wo_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Lệnh công việc</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Bất thường gì, ở đâu">
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="message"/>
+                            <field name="severity"/>
+                            <field name="value_seen"/>
+                        </group>
+                        <group string="Nguồn và dòng thời gian">
+                            <field name="rule_id"/>
+                            <field name="source"/>
+                            <field name="date_raised"/>
+                            <field name="date_last_seen" readonly="1"/>
+                            <field name="occurrence_count" readonly="1"/>
+                            <field name="date_cleared" readonly="1"
+                                   invisible="not date_cleared"/>
+                        </group>
+                        <group string="Xử lý">
+                            <field name="wo_id" readonly="1"/>
+                            <field name="wo_state" invisible="not wo_id"/>
+                            <field name="ack_user_id"/>
+                            <field name="ack_date"/>
+                            <field name="ignore_reason" readonly="1"
+                                   invisible="state != 'ignored'"/>
+                        </group>
+                        <group string="Tái phát">
+                            <field name="repeat_after_fix" readonly="1"/>
+                            <field name="prev_id" readonly="1"/>
+                            <field name="is_repeat" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_alarm_search" model="ir.ui.view">
+        <field name="name">eam.alarm.search</field>
+        <field name="model">eam.alarm</field>
+        <field name="arch" type="xml">
+            <search string="Tìm cảnh báo">
+                <field name="message"/>
+                <field name="location_id"/>
+                <field name="asset_id"/>
+                <field name="rule_id"/>
+                <filter name="f_dang_mo" string="Đang mở"
+                        domain="[('state', 'in', ('new', 'ack', 'wo'))]"/>
+                <filter name="f_moi" string="Chưa xác nhận"
+                        domain="[('state', '=', 'new')]"/>
+                <filter name="f_chua_lenh" string="Đã xác nhận, chưa có lệnh"
+                        domain="[('state', '=', 'ack')]"/>
+                <separator/>
+                <filter name="f_tai_phat" string="TÁI PHÁT sau sửa"
+                        domain="[('repeat_after_fix', '&gt;', 0)]"/>
+                <filter name="f_nang" string="Cao và nghiêm trọng"
+                        domain="[('severity', 'in', ('high', 'critical'))]"/>
+                <filter name="f_nhieu_lan" string="Nổ trên 10 lần"
+                        domain="[('occurrence_count', '&gt;', 10)]"/>
+                <separator/>
+                <filter name="f_bo_qua" string="Đã bỏ qua"
+                        domain="[('state', '=', 'ignored')]"/>
+                <separator/>
+                    <filter name="g_vt" string="Vị trí"
+                            context="{'group_by': 'location_id'}"/>
+                    <filter name="g_luat" string="Luật"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="g_muc" string="Mức nghiêm trọng"
+                            context="{'group_by': 'severity'}"/>
+                    <filter name="g_tt" string="Trạng thái"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="g_ngay" string="Tháng nổ"
+                            context="{'group_by': 'date_raised:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_alarm" model="ir.actions.act_window">
+        <field name="name">Sổ cảnh báo</field>
+        <field name="res_model">eam.alarm</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_alarm_search"/>
+        <field name="context">{'search_default_f_dang_mo': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có cảnh báo nào</p>
+            <p>Cảnh báo tới từ luật tự quét đồng hồ, từ hệ ngoài đẩy vào,
+               hoặc do người trực tự báo. Mỗi dòng là một <b>đợt</b> —
+               nổ lại trong đợt chỉ cộng số lần, không sinh dòng mới.</p>
+        </field>
+    </record>
+
+    <record id="action_eam_alarm_tai_phat" model="ir.actions.act_window">
+        <field name="name">Cảnh báo tái phát sau sửa</field>
+        <field name="res_model">eam.alarm</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_alarm_search"/>
+        <field name="domain">[('repeat_after_fix', '&gt;', 0)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có cảnh báo nào
+               tái phát</p>
+            <p>Đây là danh sách những lần sửa <b>không giữ được</b>: cảnh
+               báo đã được đóng bằng một lệnh công việc rồi quay lại. Đó là
+               cách duy nhất phân biệt "đã sửa" với "đã đóng lệnh".</p>
+        </field>
+    </record>
+
+    <record id="view_eam_alarm_ignore_wizard_form" model="ir.ui.view">
+        <field name="name">eam.alarm.ignore.wizard.form</field>
+        <field name="model">eam.alarm.ignore.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bỏ qua cảnh báo">
+                <p>Bỏ qua là một quyết định có hậu quả. Ghi rõ vì sao, để
+                   sáu tháng sau còn đọc lại được.</p>
+                <group>
+                    <field name="alarm_ids" widget="many2many_tags"
+                           readonly="1"/>
+                    <field name="reason" placeholder="Nhiễu đầu đo, đã hẹn hãng hiệu chuẩn ngày…"/>
+                </group>
+                <footer>
+                    <button name="action_xac_nhan" type="object"
+                            string="Bỏ qua" class="btn-primary"/>
+                    <button string="Thôi" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

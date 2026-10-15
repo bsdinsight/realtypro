@@ -94,10 +94,25 @@ class EamWorkOrderStep(models.Model):
                 vals['date_done'] = False
         return super().write(vals)
 
-    @api.constrains('result', 'note')
+    @api.constrains('result', 'note', 'value', 'value_num_set', 'value_sel',
+                    'field_type')
     def _check_not_ok_co_ly_do(self):
         for rec in self:
-            if rec.result == 'not_ok' and not (rec.note or rec.value):
+            if rec.result != 'not_ok':
+                continue
+            # SỐ ĐO đã ghi chính là lời giải thích, và là lời giải thích
+            # tốt hơn mọi câu chữ: "đo được 180, tiêu chuẩn 200–220" nói
+            # rõ sai ở đâu và sai bao nhiêu. Đòi gõ thêm ghi chú trong
+            # trường hợp đó chỉ khiến người ở trên trụ gõ một chữ "x" cho
+            # qua cổng — tức là vừa mất thời gian vừa làm bẩn dữ liệu.
+            #
+            # Phát hiện khi chạy thử trên máy thật: nhập 180 xong thì
+            # lệnh ghi bị máy chủ từ chối và nằm lại hàng đợi.
+            if rec.value_num_set:
+                continue
+            if rec.field_type == 'selection' and rec.value_sel:
+                continue
+            if not (rec.note or rec.value):
                 raise ValidationError(_(
                     'Bước "%s" ghi KHÔNG ĐẠT thì phải nói rõ sai ở đâu — '
                     'điền trị số đo được hoặc ghi chú. Một chữ "không đạt" '

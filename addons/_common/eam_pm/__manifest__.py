@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Bảo trì phòng ngừa',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'EAMOne',
     'summary': 'Kế hoạch bảo trì theo lịch và theo giờ máy chạy, tự sinh '
-               'lệnh công việc trước hạn.',
+               'lệnh công việc trước hạn, có luật theo mùa và KPI độ tin '
+               'cậy.',
     'description': """
 Bảo trì phòng ngừa
 ==================
@@ -68,6 +69,51 @@ khả năng là gõ nhầm.
 Và kế hoạch chỉ chạy theo đồng hồ mà vị trí chưa có số đọc nào thì mang
 trạng thái riêng **"thiếu số đọc"**, không phải "còn hạn". Nó sẽ im lặng
 không bao giờ tới hạn, nên phải nói ra.
+
+Lịch theo mùa: kéo lên sớm, KHÔNG đẩy lùi
+------------------------------------------
+Mùa là **cửa sổ lặp hằng năm** (chỉ khai ngày-tháng), và chạy được cả
+với mùa vắt qua năm mới — mùa gió mạnh tháng 11 tới tháng 3 là một mùa,
+không phải hai.
+
+Đây là chỗ các hệ lập lịch theo mùa làm sai, và sai theo hướng nguy
+hiểm. Hạn thay dầu hộp số rơi vào giữa mùa mưa, không leo trụ được. Lối
+xử lý tự nhiên của phần mềm là **đẩy sang sau mùa mưa** — và thế là hộp
+số chạy thêm bốn tháng quá kỳ thay dầu, *xuyên qua đúng mùa khắc nghiệt
+nhất*. Đúng phải là **kéo lên trước khi mùa bắt đầu**: với bảo trì phòng
+ngừa, làm sớm là an toàn, làm muộn là rủi ro — hai hướng không đối xứng.
+
+Nên thuật toán dời **ít nhất có thể**, và trong các ngày dời bằng nhau
+thì chọn ngày **sớm**. Phải đẩy lùi thì vẫn làm được, nhưng luôn kèm câu
+nói rõ thiết bị sẽ chạy thêm bao nhiêu ngày quá chu kỳ thiết kế.
+
+Bốn chốt nữa:
+
+* **Kiểm định bắt buộc KHÔNG bao giờ bị dời.** Hạn do pháp luật đặt;
+  quá hạn là phải dừng thiết bị, không phải chỉ số xấu đi. Nó được *báo
+  xung đột mùa* để đi chuẩn bị điều kiện khác, chứ không được hoãn.
+* **"Nên làm trong mùa này" không gây dời ngày.** Cho nó quyền đó thì hệ
+  thống sẽ sẵn sàng đẩy việc lùi ba tuần để rơi vào mùa khô — đúng hướng
+  nguy hiểm. Nó chỉ dùng để chọn giữa những ngày đã bằng điểm.
+* **Hạn gốc không bị ghi đè.** Ngày đề xuất là một cột riêng; chênh lệch
+  giữa hai cột chính là thứ cần nhìn. Ghi đè thì sau vài lần dời không ai
+  biết thiết bị đã trễ bao lâu so với chu kỳ thiết kế.
+* **Việc bị kéo lên sớm được sinh lệnh sớm hơn tương ứng.** Bỏ chốt này
+  thì tới lúc cron thấy hạn gốc tới gần, ngày đề xuất đã trôi qua từ
+  lâu — và cả tính năng chỉ còn là một dòng ghi chú.
+
+Luật mùa khớp theo **nghề**, không chỉ theo loại việc. Đó là chỗ nó đáng
+tiền nhất: mùa mưa thì *tiếp cận bằng dây* không làm được, nhưng việc
+trong tháp vẫn làm bình thường.
+
+Độ tin cậy & KPI bảo trì
+-------------------------
+MTBF chia cho **giờ máy chạy** đọc từ đồng hồ, không chia giờ lịch —
+tua-bin dừng vì lặng gió không phải thời gian "đang chạy mà không hỏng".
+MTTR **loại** giờ chờ, MDT giữ nguyên toàn bộ: khoảng cách giữa hai số
+chính là chi phí hậu cần. Mỗi dòng lưu **cả tử số lẫn mẫu số**, và thiếu
+bằng chứng thì để trống kèm lý do chứ không để 0 — "MTTR = 0" đọc như
+sửa tức thì.
 """,
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
@@ -77,6 +123,7 @@ không bao giờ tới hạn, nên phải nói ra.
         'security/ir.model.access.csv',
         'data/eam_pm_cron.xml',
         'views/eam_pm_views.xml',
+        'views/eam_season_views.xml',
         'views/eam_reliability_views.xml',
     ],
     'installable': True,

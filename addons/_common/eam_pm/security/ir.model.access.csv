@@ -11,3 +11,7 @@ access_eam_pm_schedule_user,eam.pm.schedule.user,model_eam_pm_schedule,base.grou
 access_eam_pm_schedule_mgr,eam.pm.schedule.mgr,model_eam_pm_schedule,base.group_system,1,1,1,1
 access_eam_reliability_user,eam.reliability.user,model_eam_reliability,base.group_user,1,0,0,0
 access_eam_reliability_mgr,eam.reliability.mgr,model_eam_reliability,base.group_system,1,1,1,1
+access_eam_season_user,eam.season.user,model_eam_season,base.group_user,1,0,0,0
+access_eam_season_mgr,eam.season.mgr,model_eam_season,base.group_system,1,1,1,1
+access_eam_season_rule_user,eam.season.rule.user,model_eam_season_rule,base.group_user,1,0,0,0
+access_eam_season_rule_mgr,eam.season.rule.mgr,model_eam_season_rule,base.group_system,1,1,1,1

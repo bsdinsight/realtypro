@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_season_list" model="ir.ui.view">
+        <field name="name">eam.season.list</field>
+        <field name="model">eam.season</field>
+        <field name="arch" type="xml">
+            <list string="Mùa trong năm">
+                <field name="name" string="Tên mùa" width="220px"/>
+                <field name="season_kind" string="Loại mùa"/>
+                <field name="plant_id" string="Nhà máy" width="180px"/>
+                <field name="window_label" string="Cửa sổ (lặp hằng năm)"/>
+                <field name="rule_count" string="Số luật"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_season_form" model="ir.ui.view">
+        <field name="name">eam.season.form</field>
+        <field name="model">eam.season</field>
+        <field name="arch" type="xml">
+            <form string="Mùa">
+                <sheet>
+                    <widget name="web_ribbon" title="Đã nghỉ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Mùa mưa Savannakhet"/></h1>
+                    </div>
+                    <group>
+                        <group string="Mùa nào, ở đâu">
+                            <field name="season_kind"/>
+                            <field name="plant_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Cửa sổ — lặp hằng năm">
+                            <label for="month_from" string="Từ"/>
+                            <div class="o_row">
+                                <span>ngày</span>
+                                <field name="day_from" class="oe_inline"/>
+                                <span>tháng</span>
+                                <field name="month_from" class="oe_inline"/>
+                            </div>
+                            <label for="month_to" string="Đến"/>
+                            <div class="o_row">
+                                <span>ngày</span>
+                                <field name="day_to" class="oe_inline"/>
+                                <span>tháng</span>
+                                <field name="month_to" class="oe_inline"/>
+                            </div>
+                            <field name="window_label" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Chỉ khai <b>ngày-tháng</b>, không khai năm — cửa sổ tự
+                        lặp. Mùa <b>vắt qua năm mới</b> khai bình thường:
+                        tháng 11 đến tháng 3 là MỘT mùa.
+                    </div>
+                    <notebook>
+                        <page string="Luật trong mùa" name="rules">
+                            <field name="rule_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="policy" string="Chính sách"/>
+                                    <field name="work_type"
+                                           string="Loại việc"/>
+                                    <field name="trade" string="Nghề"/>
+                                    <field name="reason" string="Lý do"/>
+                                    <field name="max_shift_days"
+                                           string="Dời tối đa (ngày)"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-warning mt-2"
+                                 role="alert">
+                                <b>Kiểm định bắt buộc</b> được báo xung đột
+                                nhưng <b>không bao giờ bị dời</b>: hạn do
+                                pháp luật đặt, quá hạn là phải dừng thiết
+                                bị. Việc phải làm là chuẩn bị khác, không
+                                phải hoãn.<br/>
+                                <b>"Nên làm trong mùa này"</b> không gây dời
+                                ngày — nếu cho nó quyền đó thì hệ thống sẽ
+                                sẵn sàng đẩy việc lùi ba tuần để rơi vào mùa
+                                đẹp, tức đúng hướng nguy hiểm.
+                            </div>
+                        </page>
+                        <page string="Điều kiện thật" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Gió trung bình bao nhiêu, đường vào có đi được không, cẩu có dựng được không."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_season" model="ir.actions.act_window">
+        <field name="name">Mùa &amp; luật theo mùa</field>
+        <field name="res_model">eam.season</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai mùa nào</p>
+            <p>Mùa là cửa sổ <b>lặp hằng năm</b>, khai một lần dùng mãi.
+               Luật trong mùa nói loại việc nào nên làm, nên tránh, hay
+               không làm được — và lịch bảo trì sẽ đề xuất
+               <b>kéo việc lên sớm</b> để ra khỏi mùa xấu, chứ không đẩy
+               lùi.</p>
+        </field>
+    </record>
+
+    <!-- Lịch bảo trì: thêm cột mùa -->
+    <record id="view_eam_pm_schedule_list_season" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.list.season</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_schedule_list"/>
+        <field name="arch" type="xml">
+            <field name="date_next" position="after">
+                <field name="date_seasonal" string="Nên làm (xét mùa)"
+                       optional="show"/>
+                <field name="season_shift_days" string="Dời (ngày)"
+                       optional="show"/>
+                <field name="season_same_day" string="Việc khác cùng ngày"
+                       optional="show"/>
+                <field name="season_note" string="Vì sao dời"
+                       optional="hide"/>
+                <field name="season_blocked" column_invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_eam_pm_schedule_form_season" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.form.season</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_schedule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Lịch theo mùa" name="season"
+                       invisible="not season_note">
+                    <field name="season_note" readonly="1" nolabel="1"
+                           colspan="2"/>
+                    <field name="date_seasonal" readonly="1"/>
+                    <field name="season_shift_days" readonly="1"/>
+                    <field name="season_same_day" readonly="1"/>
+                    <field name="season_conflict" readonly="1"/>
+                    <field name="season_blocked" readonly="1"/>
+                    <div class="alert alert-warning" role="alert" colspan="2"
+                         invisible="season_same_day &lt; 3">
+                        Có <field name="season_same_day" readonly="1"
+                                  class="oe_inline"/> việc của nhà máy này
+                        cùng rơi vào ngày đề xuất. Luật mùa tối ưu
+                        <b>từng lịch riêng lẻ</b> và không biết tổ có bao
+                        nhiêu người — chỗ dồn này phải người xếp lịch giãn
+                        ra, hệ thống không tự giãn.
+                    </div>
+                    <div class="alert alert-danger" role="alert" colspan="2"
+                         invisible="not season_blocked">
+                        Việc này <b>không tránh được mùa</b>. Phải chuẩn bị
+                        điều kiện thi công khác — hoãn không phải là một
+                        lựa chọn ở đây.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_pm_schedule_search_season" model="ir.ui.view">
+        <field name="name">eam.pm.schedule.search.season</field>
+        <field name="model">eam.pm.schedule</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_schedule_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter name="f_mua_xung_dot" string="Vướng mùa"
+                        domain="[('season_conflict', '=', True)]"/>
+                <filter name="f_mua_khong_tranh"
+                        string="Không tránh được mùa"
+                        domain="[('season_blocked', '=', True)]"/>
+                <separator/>
+                <!-- Gom theo ngày đề xuất là cách thấy chỗ DỒN NGÀY:
+                     luật mùa kéo nhiều việc về cùng ngày trước khi mùa
+                     xấu mở, và nhóm nào có 6 dòng là một va chạm nhân
+                     lực chứ không phải một lịch đẹp. -->
+                <filter name="g_ngay_mua" string="Ngày nên làm (xét mùa)"
+                        context="{'group_by': 'date_seasonal'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_pm_season_conflict" model="ir.actions.act_window">
+        <field name="name">Việc vướng mùa</field>
+        <field name="res_model">eam.pm.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('season_conflict', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có việc nào
+               vướng mùa</p>
+            <p>Danh sách việc có hạn rơi vào mùa nên tránh hoặc không làm
+               được. Những dòng <b>không tránh được</b> là nơi phải chuẩn
+               bị điều kiện thi công khác.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_pm_season_conflict" name="Việc vướng mùa"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_pm_season_conflict" sequence="25"/>
+
+    <menuitem id="menu_eam_season" name="Mùa &amp; luật theo mùa"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_season" sequence="40"/>
+
+</odoo>

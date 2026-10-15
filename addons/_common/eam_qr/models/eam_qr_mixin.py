@@ -112,6 +112,76 @@ class EamQrMixin(models.AbstractModel):
         return True
 
     @api.model
+    def giai_ma_tem(self, token):
+        """Giải một mã tem thành bản ghi, cho app hiện trường gọi.
+
+        App KHÔNG nên đi qua đường dẫn ``/eam/q/<mã>`` của trình duyệt:
+        đường đó trả về chuyển hướng HTML, mà app thì cần dữ liệu. Nên
+        có một cửa riêng trả JSON.
+
+        Tem VỊ TRÍ được giải qua lịch sử lắp đặt — trả về thiết bị đang
+        lắp ở đó HÔM NAY, kèm cả vị trí để người quét biết mình đang
+        đứng ở đâu. Đây là chỗ cả tính năng có nghĩa: dán mã theo thiết
+        bị thì sau vài lần luân chuyển phụ tùng mọi tem đều trỏ sai.
+        """
+        token = (token or '').strip()
+        if not token:
+            return {'ok': False, 'ly_do': _('Tem không mang mã nào.')}
+        loai = token[:1]
+        if loai not in ('L', 'A'):
+            return {'ok': False, 'ly_do': _(
+                'Mã phải bắt đầu bằng "L" (tem vị trí) hoặc "A" (tem '
+                'thiết bị). Nhận được: %s', token)}
+
+        vt = ts = None
+        if loai == 'L':
+            vt = self.env['eam.location'].search(
+                [('qr_token', '=', token)], limit=1)
+            if not vt:
+                return {'ok': False, 'ly_do': _(
+                    'Không có vị trí nào mang mã "%s". Tem có thể đã được '
+                    'cấp lại mã — đừng ghi số đo vào hồ sơ khác, báo người '
+                    'quản lý tài sản.', token)}
+            hn = fields.Date.context_today(vt)
+            lap = self.env['eam.installation'].search(
+                [('location_id', '=', vt.id),
+                 ('date_install', '<=', hn),
+                 '|', ('date_remove', '=', False),
+                 ('date_remove', '>=', hn)],
+                order='date_install desc', limit=1)
+            ts = lap.asset_id or None
+        else:
+            ts = self.env['eam.asset'].search(
+                [('qr_token', '=', token)], limit=1)
+            if not ts:
+                return {'ok': False, 'ly_do': _(
+                    'Không có thiết bị nào mang mã "%s".', token)}
+            vt = ts.current_location_id or None
+
+        W = self.env['eam.work.order']
+        dom = [('state', 'in', ('approved', 'planned', 'in_progress'))]
+        dom += ([('location_id', '=', vt.id)] if vt
+                else [('asset_id', '=', ts.id)])
+        lenh = W.search(dom, order='date_planned_start', limit=20)
+
+        return {
+            'ok': True,
+            'loai_tem': 'vị trí' if loai == 'L' else 'thiết bị',
+            'location_id': vt.id if vt else False,
+            'location': vt.complete_name if vt else '',
+            'location_code': vt.complete_code if vt else '',
+            'asset_id': ts.id if ts else False,
+            'asset': ts.display_name if ts else '',
+            'asset_code': ts.code if ts else '',
+            'serial_no': (ts.serial_no or '') if ts else '',
+            'warranty_state': (ts.warranty_state or '') if ts else '',
+            # Vị trí trống KHÔNG phải lỗi — nó là một sự thật cần nói ra.
+            'trong': bool(vt and not ts),
+            'wo': [{'id': w.id, 'name': w.name, 'title': w.title,
+                    'state': w.state} for w in lenh],
+        }
+
+    @api.model
     def _cap_ma_thieu(self):
         """Cấp mã cho mọi bản ghi còn thiếu. Gọi từ nút hoặc cron."""
         ds = self.search([('qr_token', '=', False)])

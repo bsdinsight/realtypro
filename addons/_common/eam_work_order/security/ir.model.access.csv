@@ -6,3 +6,12 @@ access_eam_work_order_mgr,eam.work.order.mgr,model_eam_work_order,base.group_sys
 access_eam_wo_labour_user,eam.work.order.labour.user,model_eam_work_order_labour,base.group_user,1,1,1,1
 access_eam_wo_part_user,eam.work.order.part.user,model_eam_work_order_part,base.group_user,1,1,1,1
 access_eam_wo_step_user,eam.work.order.step.user,model_eam_work_order_step,base.group_user,1,1,1,1
+access_eam_work_request_user,eam.work.request.user,model_eam_work_request,base.group_user,1,1,1,0
+access_eam_work_request_mgr,eam.work.request.mgr,model_eam_work_request,base.group_system,1,1,1,1
+access_eam_wr_merge_wizard,eam.work.request.merge.wizard,model_eam_work_request_merge_wizard,base.group_user,1,1,1,1
+access_eam_wr_reject_wizard,eam.work.request.reject.wizard,model_eam_work_request_reject_wizard,base.group_user,1,1,1,1
+access_eam_form_template_user,eam.form.template.user,model_eam_form_template,base.group_user,1,0,0,0
+access_eam_form_template_mgr,eam.form.template.mgr,model_eam_form_template,base.group_system,1,1,1,1
+access_eam_form_template_line_user,eam.form.template.line.user,model_eam_form_template_line,base.group_user,1,0,0,0
+access_eam_form_template_line_mgr,eam.form.template.line.mgr,model_eam_form_template_line,base.group_system,1,1,1,1
+access_eam_form_apply_wizard,eam.form.apply.wizard,model_eam_form_apply_wizard,base.group_user,1,1,1,1

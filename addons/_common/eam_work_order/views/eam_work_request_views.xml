@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_work_request_list" model="ir.ui.view">
+        <field name="name">eam.work.request.list</field>
+        <field name="model">eam.work.request</field>
+        <field name="arch" type="xml">
+            <list string="Sổ yêu cầu công việc"
+                  decoration-danger="safety_concern or is_overdue"
+                  decoration-warning="urgency == 'immediate'"
+                  decoration-muted="state in ('rejected', 'merged')">
+                <field name="name" string="Số hiệu"/>
+                <field name="date_request" string="Nêu lúc"/>
+                <field name="title" string="Nội dung" width="260px"/>
+                <field name="location_id" string="Vị trí" width="170px"/>
+                <field name="requester_id" string="Người nêu"
+                       optional="show"/>
+                <field name="source" string="Nguồn" optional="hide"/>
+                <field name="urgency" string="Mức khẩn" widget="badge"
+                       decoration-danger="urgency == 'immediate'"
+                       decoration-warning="urgency == 'high'"/>
+                <field name="safety_concern" string="An toàn"/>
+                <field name="response_hours" string="Giờ tới phân loại"
+                       widget="float_time"/>
+                <field name="wo_id" string="Lệnh" optional="show"
+                       width="160px"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-success="state == 'converted'"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="is_overdue" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_work_request_form" model="ir.ui.view">
+        <field name="name">eam.work.request.form</field>
+        <field name="model">eam.work.request</field>
+        <field name="arch" type="xml">
+            <form string="Yêu cầu công việc">
+                <header>
+                    <button name="action_tiep_nhan" type="object"
+                            string="Tiếp nhận" class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_mo_lenh" type="object"
+                            string="Mở lệnh công việc" class="btn-primary"
+                            invisible="state not in ('new', 'in_review')"/>
+                    <button name="action_gop" type="object"
+                            string="Gộp vào lệnh khác"
+                            invisible="state not in ('new', 'in_review')"/>
+                    <button name="action_tu_choi" type="object"
+                            string="Từ chối"
+                            invisible="state not in ('new', 'in_review')"/>
+                    <button name="action_mo_lai" type="object"
+                            string="Mở lại"
+                            invisible="state not in ('rejected', 'merged')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,in_review,converted"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not safety_concern">
+                        Người nêu đánh dấu đây là <b>nguy cơ mất an toàn</b>.
+                        Việc này phải nổi lên bất kể đang xếp hàng thế nào.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not is_overdue">
+                        <b>Quá hạn phản hồi.</b> Đồng hồ ở đây đo thời gian
+                        tới lúc <b>phân loại</b>, không phải tới lúc làm
+                        xong — để sổ yêu cầu không mục rữa trong im lặng.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_trung" type="object"
+                                class="oe_stat_button" icon="fa-clone"
+                                invisible="dup_count == 0">
+                            <field name="dup_count" widget="statinfo"
+                                   string="Cùng vị trí"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h2><field name="name" readonly="1"/></h2>
+                        <label for="title"/>
+                        <h1><field name="title"
+                                   placeholder="Có vết dầu dưới chân trụ T07"/></h1>
+                    </div>
+                    <group>
+                        <group string="Thấy gì, ở đâu">
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="source"/>
+                            <field name="urgency"/>
+                            <field name="safety_concern"/>
+                        </group>
+                        <group string="Ai nêu, lúc nào">
+                            <field name="requester_id"/>
+                            <field name="date_request"/>
+                            <field name="triage_user_id"/>
+                            <field name="date_triage"/>
+                            <field name="response_hours"
+                                   widget="float_time"/>
+                            <field name="is_overdue" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Mô tả">
+                        <field name="description" nolabel="1"
+                               placeholder="Thấy gì, ở đâu, lúc nào. Càng cụ thể thì người phân loại càng ít phải đi hỏi lại."/>
+                    </group>
+                    <group string="Kết quả xử lý"
+                           invisible="state in ('new', 'in_review')">
+                        <field name="wo_id" readonly="1"/>
+                        <field name="wo_state" invisible="not wo_id"/>
+                        <field name="reject_reason" readonly="1"
+                               invisible="state != 'rejected'"/>
+                    </group>
+                    <div class="text-muted"
+                         invisible="state != 'rejected'">
+                        Yêu cầu bị từ chối <b>vẫn nằm lại trong sổ</b>. Đó
+                        là cách duy nhất sau này trả lời được câu "hiện
+                        trường đã báo chuyện này mấy lần và vì sao lần nào
+                        cũng bị gạt".
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_work_request_search" model="ir.ui.view">
+        <field name="name">eam.work.request.search</field>
+        <field name="model">eam.work.request</field>
+        <field name="arch" type="xml">
+            <search string="Tìm yêu cầu">
+                <field name="title"/>
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="requester_id"/>
+                <filter name="f_cho" string="Đang chờ phân loại"
+                        domain="[('state', 'in', ('new', 'in_review'))]"/>
+                <filter name="f_moi" string="Chưa ai tiếp nhận"
+                        domain="[('state', '=', 'new')]"/>
+                <separator/>
+                <filter name="f_antoan" string="Có nguy cơ mất an toàn"
+                        domain="[('safety_concern', '=', True)]"/>
+                <filter name="f_quahan" string="QUÁ HẠN phản hồi"
+                        domain="[('is_overdue', '=', True)]"/>
+                <filter name="f_tuchoi" string="Đã từ chối"
+                        domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+                <filter name="f_toi" string="Tôi nêu"
+                        domain="[('requester_id', '=', uid)]"/>
+                <separator/>
+                <filter name="g_vt" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+                <filter name="g_nguon" string="Nguồn"
+                        context="{'group_by': 'source'}"/>
+                <filter name="g_khan" string="Mức khẩn"
+                        context="{'group_by': 'urgency'}"/>
+                <filter name="g_thang" string="Tháng nêu"
+                        context="{'group_by': 'date_request:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_work_request" model="ir.actions.act_window">
+        <field name="name">Yêu cầu công việc</field>
+        <field name="res_model">eam.work.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_work_request_search"/>
+        <field name="context">{'search_default_f_cho': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có yêu cầu nào</p>
+            <p>Yêu cầu là <b>cửa vào</b>, khác lệnh công việc: chưa biết
+               làm gì, chưa biết ai làm, chưa biết có đáng làm không. Người
+               điều độ phân loại rồi mới thành lệnh.</p>
+            <p>Mức khẩn ở đây là mức khẩn <b>người nêu cảm thấy</b> — mức
+               ưu tiên trên lệnh do người điều độ đặt sau khi so với phần
+               việc còn lại.</p>
+        </field>
+    </record>
+
+    <record id="action_eam_work_request_rejected"
+            model="ir.actions.act_window">
+        <field name="name">Yêu cầu đã từ chối</field>
+        <field name="res_model">eam.work.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_work_request_search"/>
+        <field name="domain">[('state', '=', 'rejected')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa từ chối yêu cầu
+               nào</p>
+            <p>Gom nhóm theo <b>vị trí</b> ở đây để thấy chỗ nào hiện
+               trường báo đi báo lại mà lần nào cũng bị gạt. Đó thường là
+               chỗ sắp hỏng thật.</p>
+        </field>
+    </record>
+
+    <record id="view_eam_wr_merge_wizard_form" model="ir.ui.view">
+        <field name="name">eam.work.request.merge.wizard.form</field>
+        <field name="model">eam.work.request.merge.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gộp vào lệnh">
+                <group>
+                    <field name="request_ids" widget="many2many_tags"
+                           readonly="1"/>
+                    <field name="wo_id"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button name="action_xac_nhan" type="object"
+                            string="Gộp" class="btn-primary"/>
+                    <button string="Thôi" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_wr_reject_wizard_form" model="ir.ui.view">
+        <field name="name">eam.work.request.reject.wizard.form</field>
+        <field name="model">eam.work.request.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Từ chối yêu cầu">
+                <p>Yêu cầu bị từ chối vẫn nằm lại trong sổ. Ghi rõ vì sao,
+                   để sau này còn trả lời được người đã nêu.</p>
+                <group>
+                    <field name="request_ids" widget="many2many_tags"
+                           readonly="1"/>
+                    <field name="reason"
+                           placeholder="Đã xử lý trong lần bảo dưỡng tuần trước; vết dầu là dầu bảo quản chưa lau."/>
+                </group>
+                <footer>
+                    <button name="action_xac_nhan" type="object"
+                            string="Từ chối" class="btn-primary"/>
+                    <button string="Thôi" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Lệnh công việc: nút và tab yêu cầu đã gộp -->
+    <record id="view_eam_work_order_form_request" model="ir.ui.view">
+        <field name="name">eam.work.order.form.request</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_mo_yeu_cau" type="object"
+                        class="oe_stat_button" icon="fa-inbox"
+                        invisible="request_count == 0">
+                    <field name="request_count" widget="statinfo"
+                           string="Yêu cầu"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Yêu cầu đã gộp" name="requests"
+                      invisible="request_count == 0">
+                    <field name="request_ids" readonly="1">
+                        <list>
+                            <field name="name" string="Số hiệu"/>
+                            <field name="date_request" string="Nêu lúc"/>
+                            <field name="requester_id" string="Người nêu"/>
+                            <field name="title" string="Nội dung"/>
+                            <field name="urgency" string="Mức khẩn"
+                                   widget="badge"/>
+                            <field name="safety_concern" string="An toàn"/>
+                        </list>
+                    </field>
+                    <div class="text-muted mt-2">
+                        Đóng lệnh sẽ <b>báo lại</b> cho từng người đã nêu.
+                        Không báo lại thì lần sau họ không nêu nữa — và mất
+                        hẳn một kênh phát hiện.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_work_request" name="Yêu cầu công việc"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_work_request" sequence="8"/>
+
+    <menuitem id="menu_eam_work_request_rejected"
+              name="Yêu cầu đã từ chối"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_work_request_rejected" sequence="9"/>
+
+</odoo>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ Mẫu biểu ============ -->
+    <record id="view_eam_form_template_list" model="ir.ui.view">
+        <field name="name">eam.form.template.list</field>
+        <field name="model">eam.form.template</field>
+        <field name="arch" type="xml">
+            <list string="Mẫu biểu công việc">
+                <field name="sequence" widget="handle"/>
+                <field name="code" string="Mã"/>
+                <field name="name" string="Tên mẫu" width="280px"/>
+                <field name="category" string="Nhóm"/>
+                <field name="line_count" string="Số bước"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_form_template_form" model="ir.ui.view">
+        <field name="name">eam.form.template.form</field>
+        <field name="model">eam.form.template</field>
+        <field name="arch" type="xml">
+            <form string="Mẫu biểu">
+                <sheet>
+                    <widget name="web_ribbon" title="Đã nghỉ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Phiếu cô lập nguồn trước khi vào nacelle"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="note" placeholder="Dùng khi nào, ai ký xác nhận."/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Các bước" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom"
+                                      decoration-bf="is_critical">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="is_critical"
+                                           string="Chịu lực"
+                                           widget="boolean_toggle"/>
+                                    <field name="name" string="Bước"/>
+                                    <field name="field_type" string="Kiểu ô"/>
+                                    <field name="uom_label" string="Đơn vị"
+                                           invisible="field_type != 'number'"/>
+                                    <field name="value_min"
+                                           string="Cận dưới"
+                                           invisible="field_type != 'number'"/>
+                                    <field name="value_max"
+                                           string="Cận trên"
+                                           invisible="field_type != 'number'"/>
+                                    <field name="selection_values"
+                                           string="Các lựa chọn"
+                                           invisible="field_type != 'selection'"/>
+                                    <field name="requires_photo"
+                                           string="Bắt buộc ảnh"
+                                           widget="boolean_toggle"/>
+                                    <field name="spec" string="Ghi chú"
+                                           optional="show"/>
+                                    <field name="has_range"
+                                           column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info mt-2" role="alert">
+                                Khai <b>cận dưới / cận trên</b> cho ô số đo
+                                thì hệ thống <b>tự kết luận</b> đạt hay
+                                không, và <b>không cho tick Đạt</b> khi số
+                                đo nằm ngoài tiêu chuẩn. Không khai thì
+                                checklist chỉ là tờ giấy đã ký, chuyển từ
+                                giấy sang màn hình.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_form_template" model="ir.actions.act_window">
+        <field name="name">Mẫu biểu công việc</field>
+        <field name="res_model">eam.form.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có mẫu biểu nào</p>
+            <p>Mẫu gắn được vào <b>bất kỳ lệnh nào</b>, kể cả lệnh sửa chữa
+               đột xuất — khác với bước của kế hoạch bảo trì vốn gắn chặt
+               với một chu kỳ.</p>
+        </field>
+    </record>
+
+    <record id="view_eam_form_apply_wizard_form" model="ir.ui.view">
+        <field name="name">eam.form.apply.wizard.form</field>
+        <field name="model">eam.form.apply.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gắn mẫu biểu">
+                <group>
+                    <field name="wo_id" readonly="1"/>
+                    <field name="template_ids" widget="many2many_tags"
+                           options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button name="action_gan" type="object" string="Gắn"
+                            class="btn-primary"/>
+                    <button string="Thôi" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ Bước trên lệnh: ô có kiểu ============ -->
+    <record id="view_eam_work_order_form_typed_step" model="ir.ui.view">
+        <field name="name">eam.work.order.form.typed.step</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='steps']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='steps']/div[1]" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="step_auto_mismatch == 0">
+                    Có <field name="step_auto_mismatch" readonly="1"
+                              class="oe_inline"/> bước mà
+                    <b>người chấm lệch với số đo</b>: số nói một đằng, ô
+                    kết quả ghi một nẻo. Đây là chỗ đáng xem trước khi
+                    đóng lệnh.
+                </div>
+                <div class="text-end mb-2">
+                    <button name="action_gan_mau_bieu" type="object"
+                            string="Gắn mẫu biểu" class="btn-secondary"
+                            invisible="state in ('done','closed','cancelled')"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='step_ids']/list/field[@name='spec']"
+                   position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='step_ids']/list/field[@name='spec']"
+                   position="after">
+                <field name="spec_display" string="Tiêu chuẩn"
+                       readonly="1"/>
+                <field name="field_type" string="Kiểu ô" optional="hide"/>
+                <field name="value_num" string="Số đo"
+                       readonly="field_type != 'number'"/>
+                <field name="uom_label" string="Đơn vị" readonly="1"
+                       optional="hide"/>
+                <field name="value_bool" string="Có/Không"
+                       widget="boolean_toggle"
+                       readonly="field_type != 'bool'" optional="hide"/>
+                <field name="value_sel" string="Chọn"
+                       readonly="field_type != 'selection'"
+                       optional="hide"/>
+                <field name="auto_result" string="Máy xét" widget="badge"
+                       decoration-success="auto_result == 'ok'"
+                       decoration-danger="auto_result == 'not_ok'"
+                       decoration-muted="auto_result == 'unknown'"/>
+                <field name="value_num_set" column_invisible="1"/>
+                <field name="requires_photo" column_invisible="1"/>
+                <field name="has_range" column_invisible="1"/>
+                <field name="selection_values" column_invisible="1"/>
+                <field name="value_min" column_invisible="1"/>
+                <field name="value_max" column_invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_form_template" name="Mẫu biểu công việc"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_form_template" sequence="35"/>
+
+</odoo>

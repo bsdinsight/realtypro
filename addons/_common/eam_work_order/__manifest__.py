@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Lệnh công việc',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'category': 'EAMOne',
     'summary': 'Chứng từ cho phép tiêu giờ công, vật tư và thời gian — '
                'kèm cổng an toàn và dữ liệu độ tin cậy.',
@@ -80,6 +80,8 @@ câu cần trả lời khi đi đòi bảo hành.
         'security/ir.model.access.csv',
         'data/eam_wo_sequence_data.xml',
         'views/eam_work_order_views.xml',
+        'views/eam_form_views.xml',
+        'views/eam_work_request_views.xml',
         'views/eam_outage_views.xml',
         'views/eam_wo_menus.xml',
     ],

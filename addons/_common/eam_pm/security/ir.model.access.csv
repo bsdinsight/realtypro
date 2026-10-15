@@ -9,3 +9,5 @@ access_eam_pm_task_user,eam.pm.task.user,model_eam_pm_task,base.group_user,1,0,0
 access_eam_pm_task_mgr,eam.pm.task.mgr,model_eam_pm_task,base.group_system,1,1,1,1
 access_eam_pm_schedule_user,eam.pm.schedule.user,model_eam_pm_schedule,base.group_user,1,1,1,0
 access_eam_pm_schedule_mgr,eam.pm.schedule.mgr,model_eam_pm_schedule,base.group_system,1,1,1,1
+access_eam_reliability_user,eam.reliability.user,model_eam_reliability,base.group_user,1,0,0,0
+access_eam_reliability_mgr,eam.reliability.mgr,model_eam_reliability,base.group_system,1,1,1,1

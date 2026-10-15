@@ -77,6 +77,7 @@ không bao giờ tới hạn, nên phải nói ra.
         'security/ir.model.access.csv',
         'data/eam_pm_cron.xml',
         'views/eam_pm_views.xml',
+        'views/eam_reliability_views.xml',
     ],
     'installable': True,
 }

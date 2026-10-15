@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_reliability_list" model="ir.ui.view">
+        <field name="name">eam.reliability.list</field>
+        <field name="model">eam.reliability</field>
+        <field name="arch" type="xml">
+            <list string="Độ tin cậy &amp; KPI bảo trì" create="false"
+                  default_order="mtbf_hours asc"
+                  decoration-danger="failure_count > 0 and pm_ratio &lt; 50"
+                  decoration-muted="failure_count == 0">
+                <field name="asset_id" string="Tài sản" width="220px"/>
+                <field name="date_from" string="Từ" optional="hide"/>
+                <field name="date_to" string="Đến" optional="show"/>
+                <field name="failure_count" string="Số lần hỏng" sum="Σ"/>
+                <field name="operating_hours" string="Giờ chạy" sum="Σ"
+                       optional="show"/>
+                <field name="mtbf_hours" string="MTBF (giờ chạy)"/>
+                <field name="mttr_hours" string="MTTR (giờ sửa)"/>
+                <field name="mdt_hours" string="MDT (giờ nằm)"/>
+                <field name="wait_share" string="% nằm là chờ"
+                       optional="show"/>
+                <field name="pm_ratio" string="% phòng ngừa"/>
+                <field name="detect_early_pct" string="% bắt sớm"
+                       optional="show"/>
+                <field name="cost_total" string="Chi phí" sum="Σ"
+                       widget="monetary" optional="show" width="185px"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="kpi_note" string="Vì sao để trống"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_reliability_form" model="ir.ui.view">
+        <field name="name">eam.reliability.form</field>
+        <field name="model">eam.reliability</field>
+        <field name="arch" type="xml">
+            <form string="Độ tin cậy" create="false" edit="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not kpi_note">
+                        Có chỉ số để trống:
+                        <field name="kpi_note" readonly="1" class="oe_inline"/>.
+                        Để trống là <b>chưa đủ căn cứ</b>, không phải bằng 0.
+                    </div>
+                    <group>
+                        <group string="Tử số / mẫu số">
+                            <field name="asset_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="operating_hours"/>
+                            <field name="has_meter"/>
+                            <field name="failure_count"/>
+                            <field name="repair_hours"/>
+                            <field name="hold_hours"/>
+                            <field name="downtime_hours"/>
+                        </group>
+                        <group string="Chỉ số">
+                            <field name="mtbf_hours"/>
+                            <field name="mttr_hours"/>
+                            <field name="mdt_hours"/>
+                            <field name="wait_share"/>
+                            <field name="wo_pm_count"/>
+                            <field name="wo_cm_count"/>
+                            <field name="pm_ratio"/>
+                            <field name="detect_early_pct"/>
+                            <field name="cost_total"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="text-muted mt8">
+                        <b>MTBF</b> chia cho <b>giờ máy chạy</b>, không phải
+                        giờ theo lịch — tua-bin đứng yên phần lớn thời gian,
+                        lấy giờ lịch thì máy ít chạy trông lại bền hơn.<br/>
+                        <b>MTTR</b> KHÔNG gồm giờ chờ cẩu, chờ vật tư, chờ
+                        lặng gió; phần đó nằm ở <b>MDT</b>. Khoảng cách giữa
+                        hai số là chi phí hậu cần, không phải tay nghề thợ.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_reliability_search" model="ir.ui.view">
+        <field name="name">eam.reliability.search</field>
+        <field name="model">eam.reliability</field>
+        <field name="arch" type="xml">
+            <search string="Độ tin cậy">
+                <field name="asset_id"/>
+                <field name="location_id"/>
+                <separator/>
+                <filter name="f_hong" string="Có hỏng trong kỳ"
+                        domain="[('failure_count', '&gt;', 0)]"/>
+                <filter name="f_chaysc" string="Đang chạy theo sự cố"
+                        domain="[('pm_ratio', '&lt;', 50),
+                                 ('wo_cm_count', '&gt;', 0)]"/>
+                <filter name="f_cho" string="Nằm chờ quá nửa thời gian"
+                        domain="[('wait_share', '&gt;', 50)]"/>
+                <separator/>
+                <filter name="g_asset" string="Gom theo tài sản"
+                        context="{'group_by': 'asset_id'}"/>
+                <filter name="g_loc" string="Gom theo vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <searchpanel>
+                    <field name="location_id" icon="fa-map-marker"
+                           enable_counters="1" select="one" string="Vị trí"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_reliability" model="ir.actions.act_window">
+        <field name="name">Độ tin cậy &amp; KPI bảo trì</field>
+        <field name="res_model">eam.reliability</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa tính kỳ nào</p>
+            <p>
+                MTBF, MTTR, MDT và bộ KPI bảo trì theo từng tài sản.
+                Mỗi dòng lưu <b>cả tử số lẫn mẫu số</b> — ai cãi con số thì
+                mở ra đối chiếu được.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_reliability" name="Độ tin cậy &amp; KPI bảo trì"
+              parent="eam_core.menu_eam_root"
+              action="action_eam_reliability" sequence="60"/>
+
+</odoo>

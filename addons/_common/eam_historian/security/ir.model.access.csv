@@ -2,3 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_eam_tag_user,eam.tag.user,model_eam_tag,base.group_user,1,0,0,0
 access_eam_tag_mgr,eam.tag.mgr,model_eam_tag,base.group_system,1,1,1,1
 access_eam_trend_wizard,eam.trend.wizard,model_eam_trend_wizard,base.group_user,1,1,1,1
+access_eam_data_exclusion_user,eam.data.exclusion.user,model_eam_data_exclusion,base.group_user,1,1,1,0
+access_eam_data_exclusion_mgr,eam.data.exclusion.mgr,model_eam_data_exclusion,base.group_system,1,1,1,1
+access_eam_quality_wizard,eam.quality.wizard,model_eam_quality_wizard,base.group_user,1,1,1,1

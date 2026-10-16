@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_data_exclusion_list" model="ir.ui.view">
+        <field name="name">eam.data.exclusion.list</field>
+        <field name="model">eam.data.exclusion</field>
+        <field name="arch" type="xml">
+            <list string="Khoảng loại trừ khỏi KPI"
+                  decoration-muted="not exclude_kpi"
+                  decoration-info="ngoai_tam">
+                <field name="date_from" string="Từ"/>
+                <field name="date_to" string="Đến"/>
+                <field name="gio" string="Số giờ" sum="Σ"/>
+                <field name="name" string="Diễn giải" width="240px"/>
+                <field name="reason" string="Lý do" widget="badge"/>
+                <field name="ngoai_tam" string="Ngoài tầm"/>
+                <field name="plant_id" string="Nhà máy" optional="show"/>
+                <field name="location_ids" string="Vị trí"
+                       widget="many2many_tags" optional="show"/>
+                <field name="exclude_kpi" string="Loại khỏi KPI"/>
+                <field name="outage_id" string="Từ sổ dừng" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_data_exclusion_form" model="ir.ui.view">
+        <field name="name">eam.data.exclusion.form</field>
+        <field name="model">eam.data.exclusion</field>
+        <field name="arch" type="xml">
+            <form string="Khoảng loại trừ">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Khoảng loại trừ <b>khác hẳn</b> cờ chất lượng. Cờ
+                        chất lượng nói <i>số đo này có thể SAI</i>. Khoảng
+                        loại trừ nói <i>số đo hoàn toàn ĐÚNG, nhưng kỳ này
+                        không tính vào KPI</i> — tua-bin đang bảo trì theo
+                        kế hoạch thì sản lượng bằng 0 là đúng, tính vào hệ
+                        số khả dụng là phạt nhà máy vì đã làm đúng việc
+                        phải làm.<br/>
+                        Số đo thô <b>không bị đụng tới</b>: việc loại trừ
+                        chỉ áp lúc đọc, nên sửa lý do sau này là mọi chỉ số
+                        tính lại đúng ngay.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Bảo dưỡng định kỳ T07"/></h1>
+                    </div>
+                    <group>
+                        <group string="Khi nào">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="gio" readonly="1"/>
+                        </group>
+                        <group string="Vì sao">
+                            <field name="reason"/>
+                            <field name="ngoai_tam" readonly="1"/>
+                            <field name="exclude_kpi"/>
+                            <field name="outage_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Áp cho đâu">
+                        <field name="plant_id"/>
+                        <field name="location_ids" widget="many2many_tags"/>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="plant_id or location_ids or tag_ids">
+                        Chưa khoanh phạm vi nào — khoảng này sẽ áp cho
+                        <b>MỌI điểm đo của mọi nhà máy</b>. Gần như luôn là
+                        khai sót.
+                    </div>
+                    <group string="Ghi chú">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_data_exclusion_search" model="ir.ui.view">
+        <field name="name">eam.data.exclusion.search</field>
+        <field name="model">eam.data.exclusion</field>
+        <field name="arch" type="xml">
+            <search string="Tìm khoảng loại trừ">
+                <field name="name"/>
+                <field name="plant_id"/>
+                <field name="location_ids"/>
+                <filter name="f_ap" string="Đang loại khỏi KPI"
+                        domain="[('exclude_kpi', '=', True)]"/>
+                <filter name="f_ghi" string="Chỉ ghi nhận, chưa loại"
+                        domain="[('exclude_kpi', '=', False)]"/>
+                <separator/>
+                <filter name="f_ngoai" string="Ngoài tầm kiểm soát"
+                        domain="[('ngoai_tam', '=', True)]"/>
+                <separator/>
+                <filter name="g_ly_do" string="Lý do"
+                        context="{'group_by': 'reason'}"/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date_from:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_data_exclusion" model="ir.actions.act_window">
+        <field name="name">Khoảng loại trừ khỏi KPI</field>
+        <field name="res_model">eam.data.exclusion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_data_exclusion_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có khoảng loại
+               trừ nào</p>
+            <p>Ghi lại những kỳ mà số đo <b>đúng</b> nhưng <b>không tính
+               vào KPI</b>: bảo trì theo kế hoạch, tiết giảm theo lệnh điều
+               độ, mất kết nối thu thập.</p>
+            <p>Tạo nhanh từ <b>Sổ dừng máy</b> — nút "Loại khỏi KPI" trên
+               từng khoảng dừng.</p>
+        </field>
+    </record>
+
+    <!-- Sổ dừng máy: nút tạo khoảng loại trừ -->
+    <record id="view_eam_outage_form_exclusion" model="ir.ui.view">
+        <field name="name">eam.outage.form.exclusion</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Loại khỏi KPI" name="kpi_exclusion">
+                    <field name="exclusion_count" readonly="1"/>
+                    <field name="exclusion_ids" nolabel="1" colspan="2"
+                           readonly="1"
+                           invisible="exclusion_count == 0">
+                        <list>
+                            <field name="date_from" string="Từ"/>
+                            <field name="date_to" string="Đến"/>
+                            <field name="reason" string="Lý do"
+                                   widget="badge"/>
+                            <field name="exclude_kpi" string="Đang loại"/>
+                        </list>
+                    </field>
+                    <div colspan="2" invisible="exclusion_count != 0">
+                        <button name="action_loai_khoi_kpi" type="object"
+                                string="Loại khoảng này khỏi KPI"
+                                class="btn-secondary"
+                                invisible="not date_start or not date_end"/>
+                        <div class="text-muted mt-2">
+                            Ghi sổ dừng máy mà không loại khỏi KPI thì hai
+                            sổ sống tách nhau: người ghi tưởng đã xong, còn
+                            chỉ số vẫn tính cả khoảng đó — và vì chỉ số vẫn
+                            ra số nên không ai phát hiện là đã thiếu bước.
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Chỉ số chất lượng dữ liệu ===== -->
+    <record id="view_eam_quality_wizard_form" model="ir.ui.view">
+        <field name="name">eam.quality.wizard.form</field>
+        <field name="model">eam.quality.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Chất lượng dữ liệu">
+                <group>
+                    <group>
+                        <field name="plant_id"/>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <field name="bao_cao" readonly="1" nolabel="1"/>
+                <footer>
+                    <button string="Đóng" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_quality" model="ir.actions.act_window">
+        <field name="name">Chất lượng dữ liệu</field>
+        <field name="res_model">eam.quality.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_eam_quality" name="Chất lượng dữ liệu"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_quality" sequence="51"/>
+
+    <menuitem id="menu_eam_data_exclusion" name="Khoảng loại trừ KPI"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_data_exclusion" sequence="52"/>
+
+</odoo>

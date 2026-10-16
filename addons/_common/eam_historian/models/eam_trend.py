@@ -31,6 +31,10 @@ from odoo.exceptions import UserError
 MAU = ['#0E8C99', '#D98E3B', '#2E7D5B', '#9B4D6B', '#4A5FA5', '#8A6D3B']
 
 BUOC = [
+    # '0' = KHÔNG gộp, trả số đo thô. Yêu cầu C09 đòi chọn được độ phân
+    # giải raw/1h/1d, và "raw" không phải là một khoảng gộp nhỏ hơn —
+    # nó là *không gộp*, nên phải là một nhánh riêng.
+    ('0', 'Thô (không gộp)'),
     ('60', '1 phút'),
     ('300', '5 phút'),
     ('900', '15 phút'),
@@ -51,6 +55,11 @@ class EamTrendWizard(models.TransientModel):
         string='Đến', required=True, default=fields.Datetime.now)
     buoc = fields.Selection(
         BUOC, string='Gộp theo', default='3600', required=True)
+    bo_loai_tru = fields.Boolean(
+        string='Bỏ khoảng không tính KPI',
+        help='Loại các khoảng bảo trì, tiết giảm, mất kết nối đã ghi ở '
+             'sổ khoảng loại trừ. KHÁC với bỏ số đo bị đánh dấu: ở đây '
+             'số đo vẫn ĐÚNG, chỉ là kỳ đó không tính vào chỉ số.')
     bo_nghi = fields.Boolean(
         string='Bỏ số đo bị đánh dấu',
         help='Mặc định KHÔNG bỏ. Người đọc phải thấy dữ liệu thật trước '
@@ -60,7 +69,8 @@ class EamTrendWizard(models.TransientModel):
                           sanitize=False)
 
     # ------------------------------------------------------------------
-    @api.depends('tag_ids', 'date_from', 'date_to', 'buoc', 'bo_nghi')
+    @api.depends('tag_ids', 'date_from', 'date_to', 'buoc', 'bo_nghi',
+                 'bo_loai_tru')
     def _compute_bieu_do(self):
         for w in self:
             w.bieu_do = w._ve() if w.tag_ids and w.date_from and w.date_to \
@@ -69,9 +79,22 @@ class EamTrendWizard(models.TransientModel):
     def _ve(self):
         self.ensure_one()
         H = self.env['eam.historian']
-        du = H.doc_gop(self.tag_ids.ids, self.date_from, self.date_to,
-                       int(self.buoc), bo_nghi=self.bo_nghi)
-        co_du = {t: du.get(t.id, []) for t in self.tag_ids}
+        if self.buoc == '0':
+            # Thô: mỗi số đo một điểm. Giới hạn để một tháng dữ liệu
+            # nhịp giây không dựng ra một SVG vài chục megabyte mà
+            # trình duyệt treo khi mở.
+            co_du = {}
+            for t in self.tag_ids:
+                ds = H.doc_tho(t.id, self.date_from, self.date_to, 4000)
+                if self.bo_nghi:
+                    ds = [d for d in ds if not d['q']]
+                co_du[t] = [{'ts': d['ts'], 'gt': d['gt'], 'n': 1,
+                             'n_nghi': 1 if d['q'] else 0} for d in ds]
+        else:
+            du = H.doc_gop(self.tag_ids.ids, self.date_from, self.date_to,
+                           int(self.buoc), bo_nghi=self.bo_nghi,
+                           bo_loai_tru=self.bo_loai_tru)
+            co_du = {t: du.get(t.id, []) for t in self.tag_ids}
         if not any(co_du.values()):
             return ('<div style="padding:12px;color:#777">Không có số đo '
                     'nào trong khoảng này.</div>')

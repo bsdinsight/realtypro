@@ -337,7 +337,27 @@ class EamHistorian(models.AbstractModel):
         return 'avg(value)'
 
     @api.model
-    def doc_gop(self, tag_ids, tu, den, buoc_giay, bo_nghi=False):
+    def _loc_loai_tru(self, tag_id, tu, den):
+        """Mảnh SQL loại bỏ các khoảng không tính vào KPI.
+
+        Nối LÚC ĐỌC chứ không đóng dấu vào từng dòng: khoảng loại trừ
+        được ghi SAU (cuối ca, có khi hôm sau), và lý do còn đổi về
+        sau nữa. Đóng dấu vào dòng thì mỗi lần ghi sổ phải đi sửa
+        hàng chục nghìn bản ghi đã lưu — chậm, khoá bảng, và phá
+        chính luật 'không sửa dữ liệu gốc'."""
+        khoang = self.env['eam.data.exclusion'].khoang_ap_dung(
+            [tag_id], tu, den).get(tag_id) or []
+        if not khoang:
+            return '', []
+        dieu, tham = [], []
+        for a, b in khoang:
+            dieu.append('(ts >= %s AND ts < %s)')
+            tham += [a, b]
+        return ' AND NOT (' + ' OR '.join(dieu) + ')', tham
+
+    @api.model
+    def doc_gop(self, tag_ids, tu, den, buoc_giay, bo_nghi=False,
+                bo_loai_tru=False):
         """Đọc theo khoảng thời gian, gộp theo đúng cách của từng tag.
 
         ``bo_nghi=True`` thì loại số đo có cờ chất lượng. Mặc định là
@@ -351,12 +371,20 @@ class EamHistorian(models.AbstractModel):
         that = tags.filtered(lambda t: not t.is_virtual)
         ao = tags - that
 
+        # Có loại trừ thì mỗi tag mang khoảng riêng, không gom chung
+        # một câu được nữa — chạy từng tag.
         theo_cach = {}
         for t in that:
-            theo_cach.setdefault(t.aggregation, []).append(t.id)
+            khoa = (t.aggregation, t.id) if bo_loai_tru \
+                else (t.aggregation,)
+            theo_cach.setdefault(khoa, []).append(t.id)
 
         cr = self.env.cr
-        for cach, ids in theo_cach.items():
+        for khoa, ids in theo_cach.items():
+            cach = khoa[0]
+            loc_lt, tham_lt = '', []
+            if bo_loai_tru:
+                loc_lt, tham_lt = self._loc_loai_tru(ids[0], tu, den)
             # Dùng `.format()` nên chỗ cắm tham số phải là `%s` ĐƠN.
             # Viết `%%s` ở đây là sai: `.format()` không đụng tới dấu `%`,
             # nên psycopg2 đọc `%%` thành một dấu `%` thường và câu SQL
@@ -369,11 +397,13 @@ class EamHistorian(models.AbstractModel):
                        count(*) AS n,
                        count(*) FILTER (WHERE quality <> 0) AS n_nghi
                 FROM {bang}
-                WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s {loc}
+                WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s{loc}{lt}
                 GROUP BY 1, 2 ORDER BY 1, 2
             """.format(gop=self._bieu_thuc_gop(cach), bang=BANG,
-                       loc='AND quality = 0' if bo_nghi else '')
-            cr.execute(sql, (buoc_giay, buoc_giay, ids, tu, den))
+                       loc=' AND quality = 0' if bo_nghi else '',
+                       lt=loc_lt)
+            cr.execute(
+                sql, [buoc_giay, buoc_giay, ids, tu, den] + tham_lt)
             for tag_id, buc, gt, n, n_nghi in cr.fetchall():
                 kq.setdefault(tag_id, []).append({
                     'ts': buc, 'gt': float(gt) if gt is not None else None,
@@ -381,11 +411,70 @@ class EamHistorian(models.AbstractModel):
                 })
 
         for t in ao:
-            kq[t.id] = self._tinh_tag_ao(t, tu, den, buoc_giay, bo_nghi)
+            kq[t.id] = self._tinh_tag_ao(t, tu, den, buoc_giay,
+                                         bo_nghi, bo_loai_tru)
         return kq
 
+    # ------------------------------------------------------------------
     @api.model
-    def _tinh_tag_ao(self, tag, tu, den, buoc_giay, bo_nghi):
+    def chi_so_chat_luong(self, tag_ids, tu, den):
+        """Chỉ số chất lượng dữ liệu theo điểm đo (C07).
+
+        BA con số, và chúng trả lời ba câu khác hẳn nhau:
+
+        * **độ phủ** — có bao nhiêu số đo so với số đáng lẽ phải có
+          (suy từ nhịp lấy mẫu đã khai). Thấp nghĩa là MẤT dữ liệu,
+          tức vấn đề ở đường truyền hoặc bộ thu thập.
+        * **tỷ lệ tốt** — trong số đã có, bao nhiêu phần không mang
+          cờ chất lượng. Thấp nghĩa là ĐẦU ĐO có vấn đề.
+        * **tỷ lệ loại trừ** — bao nhiêu phần nằm trong khoảng không
+          tính KPI. Cao KHÔNG phải vấn đề, nhưng phải biết để đọc
+          hai con số kia cho đúng.
+
+        Gộp ba thứ thành một điểm 'chất lượng' duy nhất là mất thông
+        tin: mất dữ liệu và đầu đo hỏng cần hai cách xử lý khác
+        hẳn nhau, mà một con số gộp thì không phân biệt được."""
+        self._dam_bao_bang()
+        T = self.env['eam.tag']
+        cr = self.env.cr
+        ra = []
+        giay = max((den - tu).total_seconds(), 1)
+        for t in T.browse(tag_ids).exists():
+            if t.is_virtual:
+                continue
+            cr.execute(
+                'SELECT count(*), count(*) FILTER (WHERE quality <> 0) '
+                'FROM ' + BANG + ' WHERE tag_id = %s AND ts >= %s AND ts < %s',
+                (t.id, tu, den))
+            n, n_co = cr.fetchone()
+            n = n or 0
+            n_co = n_co or 0
+            mong = giay / max(t.sample_seconds or 60, 1)
+            khoang = self.env['eam.data.exclusion'].khoang_ap_dung(
+                [t.id], tu, den).get(t.id) or []
+            n_lt = 0
+            for a, b in khoang:
+                cr.execute(
+                    'SELECT count(*) FROM ' + BANG + ' WHERE tag_id = %s'
+                    ' AND ts >= %s AND ts < %s',
+                    (t.id, max(a, tu), min(b, den)))
+                n_lt += cr.fetchone()[0]
+            ra.append({
+                'tag_id': t.id, 'ma': t.code, 'ten': t.name,
+                'n': n, 'mong_doi': int(mong),
+                'do_phu': round(100.0 * n / mong, 1) if mong else 0.0,
+                'n_co': n_co,
+                'ty_le_tot': round(100.0 * (n - n_co) / n, 1)
+                if n else 0.0,
+                'n_loai_tru': n_lt,
+                'ty_le_loai_tru': round(100.0 * n_lt / n, 1)
+                if n else 0.0,
+            })
+        return ra
+
+    @api.model
+    def _tinh_tag_ao(self, tag, tu, den, buoc_giay, bo_nghi,
+                     bo_loai_tru=False):
         """Tính tag ảo theo từng khoảng, từ các tag nó trỏ tới.
 
         Tính lúc ĐỌC chứ không lưu sẵn: sửa công thức thì mọi biểu đồ cũ
@@ -399,7 +488,8 @@ class EamHistorian(models.AbstractModel):
         nguon = self.env['eam.tag'].search([('code', 'in', list(ma_can))])
         if len(nguon) != len(ma_can):
             return []
-        du = self.doc_gop(nguon.ids, tu, den, buoc_giay, bo_nghi)
+        du = self.doc_gop(nguon.ids, tu, den, buoc_giay, bo_nghi,
+                          bo_loai_tru)
         theo_ma = {t.code: du.get(t.id, []) for t in nguon}
 
         # Xếp theo khoảng. Khoảng nào THIẾU một tag nguồn thì BỎ, không

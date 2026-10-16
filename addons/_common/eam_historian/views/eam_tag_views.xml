@@ -195,6 +195,7 @@
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="bo_nghi"/>
+                        <field name="bo_loai_tru"/>
                     </group>
                 </group>
                 <field name="bieu_do" readonly="1" nolabel="1"/>

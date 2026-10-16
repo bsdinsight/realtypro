@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EAMOne — Kho chuỗi thời gian (Historian)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'EAMOne',
     'summary': 'Lưu số đo tần suất giây–phút cho toàn bộ điểm đo, ngoài '
                'ORM, có làm sạch dữ liệu và tag tính toán.',
@@ -95,6 +95,7 @@ lại vô hạn.
         'security/ir.model.access.csv',
         'data/eam_historian_cron.xml',
         'views/eam_tag_views.xml',
+        'views/eam_exclusion_views.xml',
     ],
     'post_init_hook': 'post_init_hook',
     'installable': True,

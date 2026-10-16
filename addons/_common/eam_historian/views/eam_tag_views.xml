@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_tag_list" model="ir.ui.view">
+        <field name="name">eam.tag.list</field>
+        <field name="model">eam.tag</field>
+        <field name="arch" type="xml">
+            <list string="Điểm đo">
+                <field name="code" string="Mã tag"/>
+                <field name="name" string="Tên" width="230px"/>
+                <field name="location_id" string="Vị trí" width="170px"/>
+                <field name="tag_type" string="Loại đo"/>
+                <field name="uom_label" string="Đơn vị"/>
+                <field name="aggregation" string="Cách gộp"/>
+                <field name="sample_seconds" string="Nhịp (giây)"
+                       optional="hide"/>
+                <field name="is_virtual" string="Tính toán"/>
+                <field name="reading_count" string="Số bản ghi"/>
+                <field name="suspect_count" string="Bị đánh dấu"/>
+                <field name="last_ts" string="Số đo cuối"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_tag_form" model="ir.ui.view">
+        <field name="name">eam.tag.form</field>
+        <field name="model">eam.tag</field>
+        <field name="arch" type="xml">
+            <form string="Điểm đo">
+                <header>
+                    <button name="action_xem_bieu_do" type="object"
+                            string="Xem xu hướng" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Đã nghỉ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Công suất tác dụng tua-bin T01"/></h1>
+                    </div>
+                    <group>
+                        <group string="Đo cái gì, ở đâu">
+                            <field name="code"/>
+                            <field name="location_id"/>
+                            <field name="asset_id"/>
+                            <field name="source"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Đơn vị &amp; cách gộp">
+                            <field name="tag_type"/>
+                            <field name="uom_label"/>
+                            <field name="aggregation"/>
+                            <field name="sample_seconds"/>
+                            <field name="retention_years"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning" role="alert"
+                         invisible="aggregation not in ('avg','sum','min','max')
+                                    or tag_type not in ('energy','counter','wind_dir','status')">
+                        <b>Cách gộp có thể đang sai.</b> Điện năng luỹ kế
+                        gộp bằng trung bình ra một con số vô nghĩa; hướng
+                        gió gộp bằng trung bình số học ra NGƯỢC hướng thật
+                        (trung bình của 350° và 10° là 180°); trạng thái
+                        0/1 lấy trung bình thì không có nghĩa gì. Đây là
+                        chỗ sai <b>im lặng</b> nhất — biểu đồ vẫn mượt.
+                    </div>
+
+                    <notebook>
+                        <page string="Làm sạch dữ liệu" name="clean">
+                            <div class="alert alert-info" role="alert">
+                                Luật ở đây chỉ <b>đóng cờ chất lượng</b>,
+                                KHÔNG xoá số đo. Lọc xong xoá bản gốc thì
+                                không bao giờ chứng minh lại được — và yêu
+                                cầu lưu trữ nói rõ không xoá, không nén mất
+                                mát dữ liệu gốc.
+                            </div>
+                            <group>
+                                <group string="Dải hợp lý">
+                                    <field name="check_range"/>
+                                    <field name="value_min"
+                                           invisible="not check_range"/>
+                                    <field name="value_max"
+                                           invisible="not check_range"/>
+                                </group>
+                                <group string="Bất thường khác">
+                                    <field name="max_rate"/>
+                                    <field name="stuck_count"/>
+                                    <field name="stuck_run" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Tag tính toán" name="virtual">
+                            <group>
+                                <field name="is_virtual"/>
+                                <field name="formula"
+                                       invisible="not is_virtual"
+                                       placeholder="(E_AC / (G_POA * P_NOM)) * 100"/>
+                            </group>
+                            <div class="text-muted"
+                                 invisible="not is_virtual">
+                                Viết bằng <b>mã tag</b>. Tính lúc ĐỌC chứ
+                                không lưu sẵn, nên sửa công thức là mọi
+                                biểu đồ cũ cũng đổi theo — công thức sai
+                                phải sai ở mọi chỗ, không để lại số cũ tính
+                                bằng công thức cũ mà không ai biết.<br/>
+                                Khoảng nào <b>thiếu</b> một tag nguồn thì bị
+                                BỎ, không thay bằng 0: số 0 ở mẫu ra vô cực,
+                                ở tử ra một hiệu suất bằng 0 trông như sự cố
+                                thật.
+                            </div>
+                        </page>
+                        <page string="Trong kho" name="stat">
+                            <group>
+                                <group>
+                                    <field name="reading_count"/>
+                                    <field name="suspect_count"/>
+                                </group>
+                                <group>
+                                    <field name="first_ts"/>
+                                    <field name="last_ts"/>
+                                    <field name="last_value"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Diễn giải" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_tag_search" model="ir.ui.view">
+        <field name="name">eam.tag.search</field>
+        <field name="model">eam.tag</field>
+        <field name="arch" type="xml">
+            <search string="Tìm điểm đo">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="location_id"/>
+                <field name="plant_id"/>
+                <filter name="f_that" string="Điểm đo thật"
+                        domain="[('is_virtual', '=', False)]"/>
+                <filter name="f_ao" string="Tag tính toán"
+                        domain="[('is_virtual', '=', True)]"/>
+                <separator/>
+                <filter name="f_chua_co" string="Chưa có số đo nào"
+                        domain="[('reading_count', '=', 0)]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_vt" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_loai" string="Loại đo"
+                        context="{'group_by': 'tag_type'}"/>
+                <filter name="g_nguon" string="Nguồn"
+                        context="{'group_by': 'source'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_tag" model="ir.actions.act_window">
+        <field name="name">Điểm đo (tag)</field>
+        <field name="res_model">eam.tag</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_tag_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai điểm đo nào</p>
+            <p>Đây là <b>siêu dữ liệu</b> của kho chuỗi thời gian: điểm đo
+               là gì, đơn vị gì, gộp lên biểu đồ bằng cách nào, thế nào là
+               số vô lý. Bản thân số đo nằm trong bảng riêng ngoài ORM —
+               một nhà máy 12 trụ lấy mẫu từng phút sinh hơn 300 triệu
+               dòng một năm.</p>
+        </field>
+    </record>
+
+    <!-- ===== Xu hướng ===== -->
+    <record id="view_eam_trend_wizard_form" model="ir.ui.view">
+        <field name="name">eam.trend.wizard.form</field>
+        <field name="model">eam.trend.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xu hướng">
+                <group>
+                    <group>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="buoc"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="bo_nghi"/>
+                    </group>
+                </group>
+                <field name="bieu_do" readonly="1" nolabel="1"/>
+                <footer>
+                    <button string="Đóng" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_trend" model="ir.actions.act_window">
+        <field name="name">Xu hướng nhiều điểm đo</field>
+        <field name="res_model">eam.trend.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_eam_trend" name="Xu hướng điểm đo"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_trend" sequence="50"/>
+
+    <menuitem id="menu_eam_tag" name="Điểm đo (tag)"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_tag" sequence="45"/>
+
+</odoo>

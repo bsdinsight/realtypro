@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tạo trước phân mảnh cho 3 tháng tới.
+         Tạo theo nhu cầu lúc nạp vẫn chạy, nhưng tạo bảng trong chính
+         giao dịch đang nạp sẽ KHOÁ bảng cha một nhịp — làm trước vào
+         lúc rảnh thì lượt nạp đầu tháng không bị khựng. -->
+    <record id="cron_eam_historian_phan_manh" model="ir.cron">
+        <field name="name">EAMOne: tạo trước phân mảnh kho chuỗi thời gian</field>
+        <field name="model_id" ref="model_eam_historian"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_phan_manh_truoc()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=4, minute=0, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

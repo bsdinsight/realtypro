@@ -5,3 +5,8 @@ access_eam_trend_wizard,eam.trend.wizard,model_eam_trend_wizard,base.group_user,
 access_eam_data_exclusion_user,eam.data.exclusion.user,model_eam_data_exclusion,base.group_user,1,1,1,0
 access_eam_data_exclusion_mgr,eam.data.exclusion.mgr,model_eam_data_exclusion,base.group_system,1,1,1,1
 access_eam_quality_wizard,eam.quality.wizard,model_eam_quality_wizard,base.group_user,1,1,1,1
+access_eam_power_curve_user,eam.power.curve.user,model_eam_power_curve,base.group_user,1,0,0,0
+access_eam_power_curve_mgr,eam.power.curve.mgr,model_eam_power_curve,base.group_system,1,1,1,1
+access_eam_power_curve_point_user,eam.power.curve.point.user,model_eam_power_curve_point,base.group_user,1,0,0,0
+access_eam_power_curve_point_mgr,eam.power.curve.point.mgr,model_eam_power_curve_point,base.group_system,1,1,1,1
+access_eam_power_curve_run,eam.power.curve.run,model_eam_power_curve_run,base.group_user,1,1,1,1

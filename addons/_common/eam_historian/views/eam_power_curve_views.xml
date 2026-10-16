@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_power_curve_list" model="ir.ui.view">
+        <field name="name">eam.power.curve.list</field>
+        <field name="model">eam.power.curve</field>
+        <field name="arch" type="xml">
+            <list string="Đường cong công suất">
+                <field name="name" string="Tên" width="260px"/>
+                <field name="curve_type" string="Loại" widget="badge"
+                       decoration-success="curve_type == 'warranted'"/>
+                <field name="model_ref" string="Model tua-bin"/>
+                <field name="rated_kw" string="Định mức (kW)"/>
+                <field name="air_density_ref" string="Mật độ quy chiếu"/>
+                <field name="regulation" string="Điều khiển"/>
+                <field name="point_count" string="Số điểm"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_power_curve_form" model="ir.ui.view">
+        <field name="name">eam.power.curve.form</field>
+        <field name="model">eam.power.curve</field>
+        <field name="arch" type="xml">
+            <form string="Đường cong công suất">
+                <sheet>
+                    <widget name="web_ribbon" title="Đã nghỉ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Cam kết hợp đồng — tua-bin 4,0 MW"/></h1>
+                    </div>
+                    <group>
+                        <group string="Đường cong này là gì">
+                            <field name="curve_type"/>
+                            <field name="model_ref"/>
+                            <field name="category_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Thông số">
+                            <field name="rated_kw"/>
+                            <field name="rotor_d"/>
+                            <field name="air_density_ref"/>
+                            <field name="regulation"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <b>Kiểu điều khiển quyết định hiệu chỉnh CÁI GÌ.</b>
+                        Tua-bin <i>pitch</i> thì chuẩn hoá <b>tốc độ gió</b>
+                        theo căn bậc ba của tỷ số mật độ; tua-bin
+                        <i>stall</i> thì chuẩn hoá <b>công suất</b>. Làm
+                        ngược chiều là sai cả đường cong.
+                    </div>
+                    <notebook>
+                        <page string="Các điểm" name="points">
+                            <field name="point_ids">
+                                <list editable="bottom">
+                                    <field name="wind_speed"
+                                           string="Tốc độ gió (m/s)"/>
+                                    <field name="power_kw"
+                                           string="Công suất (kW)"/>
+                                    <field name="ct" string="Ct"
+                                           optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Nguồn &amp; ghi chú" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Trích từ phụ lục kỹ thuật hợp đồng số…, ngày…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_power_curve" model="ir.actions.act_window">
+        <field name="name">Đường cong công suất</field>
+        <field name="res_model">eam.power.curve</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai đường cong
+               nào</p>
+            <p>Đây là dữ liệu gốc mà <b>bảo lãnh sản lượng dựa vào</b>.
+               Khai rõ nó là cam kết hợp đồng, đường cong catalogue, hay
+               đường cong đo khi nghiệm thu — ba thứ khác nhau về giá trị
+               pháp lý, trộn lẫn thì lúc đòi bảo hành không ai biết đang
+               so với cái gì.</p>
+        </field>
+    </record>
+
+    <!-- ===== Phân tích ===== -->
+    <record id="view_eam_power_curve_run_form" model="ir.ui.view">
+        <field name="name">eam.power.curve.run.form</field>
+        <field name="model">eam.power.curve.run</field>
+        <field name="arch" type="xml">
+            <form string="Đường cong công suất thực tế">
+                <group>
+                    <group string="Tua-bin &amp; kỳ">
+                        <field name="location_id"/>
+                        <field name="curve_id"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Điểm đo">
+                        <field name="tag_power_id"
+                               options="{'no_create': True}"/>
+                        <field name="tag_wind_id"
+                               options="{'no_create': True}"/>
+                        <field name="tag_temp_id"
+                               options="{'no_create': True}"/>
+                        <field name="tag_press_id"
+                               options="{'no_create': True}"/>
+                        <field name="elevation_m"
+                               invisible="tag_press_id"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Phương pháp (IEC 61400-12-1)">
+                        <field name="avg_seconds"/>
+                        <field name="bin_width"/>
+                        <field name="min_samples"/>
+                    </group>
+                    <group string="Lọc">
+                        <field name="bo_nghi"/>
+                        <field name="bo_loai_tru"/>
+                    </group>
+                </group>
+                <div class="alert alert-warning" role="alert"
+                     invisible="tag_temp_id">
+                    Chưa chọn điểm đo <b>nhiệt độ môi trường</b> — sẽ
+                    KHÔNG hiệu chỉnh được mật độ không khí. Nhà máy không
+                    ở mực nước biển thì kết quả thiên lệch có hệ thống, và
+                    thiên theo hướng đổ lỗi cho tua-bin.
+                </div>
+                <field name="ket_qua" readonly="1" nolabel="1"/>
+                <footer>
+                    <button string="Đóng" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_power_curve_run" model="ir.actions.act_window">
+        <field name="name">Đường cong công suất thực tế</field>
+        <field name="res_model">eam.power.curve.run</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_eam_power_curve_run" name="Đường cong công suất"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_power_curve_run" sequence="53"/>
+
+    <menuitem id="menu_eam_power_curve" name="Đường cong cam kết"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_power_curve" sequence="46"/>
+
+</odoo>

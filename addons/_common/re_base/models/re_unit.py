@@ -79,7 +79,28 @@ class ReUnit(models.Model):
              "rebate/charge if it differs from area_sellable on HĐMB.",
     )
 
-    direction = fields.Selection(DIRECTION_SELECTION, string='Direction', tracking=True)
+    # HAI HƯỚNG, HAI NGHĨA — ĐỪNG GỘP VÀO MỘT Ô
+    #
+    # Bảng hàng và tờ rơi của chủ đầu tư ghi hướng BAN CÔNG (view). Môi
+    # giới và khách thì nói "hướng nhà" là nói hướng CỬA CHÍNH — thứ dùng
+    # để xem tuổi theo Bát trạch. Hai hướng này thường ngược nhau, nên một
+    # ô duy nhất thì khai kiểu nào cũng sai một nửa, mà sai im lặng: màn
+    # hình vẫn hiện một hướng trông hợp lý.
+    #
+    # `direction` GIỮ NGUYÊN tên và nguyên nghĩa cũ (ban công) — đã có
+    # nhiều chỗ dùng và 505/1161 căn khai theo nó; chỉ sửa NHÃN cho nói rõ
+    # nó là hướng gì. Hướng cửa là ô mới, khai thêm khi biết.
+    direction = fields.Selection(
+        DIRECTION_SELECTION, string='Balcony Direction (Hướng ban công)',
+        tracking=True,
+        help="Hướng ban công / view — hướng ghi trên bảng hàng. KHÔNG phải "
+             "hướng cửa chính.")
+    direction_door = fields.Selection(
+        DIRECTION_SELECTION, string='Main Door Direction (Hướng cửa chính)',
+        tracking=True,
+        help="Hướng cửa chính — thứ khách hỏi khi hỏi 'hướng nhà', và thứ "
+             "dùng để xem tuổi theo Bát trạch. Để trống thì việc xem tuổi "
+             "lùi về hướng ban công và nói rõ là đang lấy ban công.")
     view_type = fields.Selection(VIEW_SELECTION, string='View', tracking=True)
     bedroom_count = fields.Integer(string='Bedrooms', tracking=True)
     bathroom_count = fields.Integer(string='Bathrooms', tracking=True)

@@ -99,7 +99,10 @@ class ReUnitImportWizard(models.TransientModel):
             '',
             'LUU Y:',
             '- unit_code phai UNIQUE trong ca du an',
-            '- direction: East, North, Dong, Bac (deu duoc)',
+            '- direction: huong BAN CONG / view (East, North, Dong, Bac deu duoc)',
+            '- direction_door: huong CUA CHINH, cung cach ghi nhu tren.',
+            '  Hai cot khac nhau va thuong nguoc nhau. Xem tuoi (Bat trach)',
+            '  lay cot direction_door; de trong thi tam lay direction.',
             '- view_type: lake, river, sea, mountain, city, park, pool, internal, garden',
             '- area_net <= area_gross',
             '- Unit sau import se o trang thai Draft - chi available sau khi mo ban',
@@ -112,7 +115,7 @@ class ReUnitImportWizard(models.TransientModel):
         ws = wb.create_sheet('Units')
         headers = [
             'unit_code', 'building_code', 'floor_code', 'floor_name', 'unit_type_code',
-            'area_net', 'area_gross', 'direction', 'view_type',
+            'area_net', 'area_gross', 'direction', 'direction_door', 'view_type',
             'bedroom_count', 'bathroom_count', 'balcony_count',
             'original_price', 'notes',
         ]
@@ -127,7 +130,7 @@ class ReUnitImportWizard(models.TransientModel):
             ws.cell(row=row_idx, column=4, value=floor.name)
             row_idx += 1
 
-        widths = [16, 14, 12, 22, 14, 12, 12, 12, 12, 10, 10, 10, 16, 22]
+        widths = [16, 14, 12, 22, 14, 12, 12, 12, 14, 12, 10, 10, 10, 16, 22]
         for col_idx, width in enumerate(widths, start=1):
             ws.column_dimensions[openpyxl.utils.get_column_letter(col_idx)].width = width
         ws.freeze_panes = 'A2'
@@ -141,15 +144,18 @@ class ReUnitImportWizard(models.TransientModel):
 
         headers = [
             'unit_code', 'building_code', 'floor_code', 'unit_type_code',
-            'area_net', 'area_gross', 'direction', 'view_type',
+            'area_net', 'area_gross', 'direction', 'direction_door', 'view_type',
             'bedroom_count', 'bathroom_count', 'balcony_count',
             'original_price', 'notes',
         ]
         for col, header in enumerate(headers, start=1):
             ws.cell(row=1, column=col, value=header)
 
+        # Dòng mẫu cố tình cho hai hướng NGƯỢC nhau: ban công Đông thì cửa
+        # thường là Tây. Một dòng mẫu ghi trùng hai ô sẽ dạy người nhập
+        # liệu chép qua chép lại, và từ đó việc xem tuổi sai mà không kêu.
         sample = ['DSM-001', 'B', '02', 'STUDIO', 156.03, 162.50,
-                  'East', 'lake', 1, 1, 1, 3914934843, '']
+                  'East', 'West', 'lake', 1, 1, 1, 3914934843, '']
         for col_idx, val in enumerate(sample, start=1):
             ws.cell(row=2, column=col_idx, value=val)
 
@@ -273,6 +279,7 @@ class ReUnitImportWizard(models.TransientModel):
             }
 
         direction = self._map_direction(row_data.get('direction'))
+        direction_door = self._map_direction(row_data.get('direction_door'))
         view_type = self._map_view(row_data.get('view_type'))
 
         vals = {
@@ -288,6 +295,7 @@ class ReUnitImportWizard(models.TransientModel):
             'balcony_count': balcony_count,
             'original_price': original_price,
             'direction': direction,
+            'direction_door': direction_door,
             'view_type': view_type,
             'notes': str(row_data.get('notes', '')).strip() or False,
             'state': 'draft',

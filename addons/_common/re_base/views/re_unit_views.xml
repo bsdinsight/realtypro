@@ -20,6 +20,7 @@
                 <field name="area_sellable" optional="show"/>
                 <field name="bedroom_count"/>
                 <field name="direction"/>
+                <field name="direction_door" optional="show"/>
                 <field name="original_price" widget="monetary"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="state" widget="badge"/>
@@ -128,6 +129,7 @@
                                     <field name="bathroom_count"/>
                                     <field name="balcony_count"/>
                                     <field name="direction"/>
+                                    <field name="direction_door"/>
                                     <field name="view_type"/>
                                 </group>
                             </group>
@@ -244,6 +246,7 @@
                 <field name="floor_id"/>
                 <field name="unit_type_id"/>
                 <field name="direction"/>
+                <field name="direction_door"/>
                 <field name="view_type"/>
 
                 <separator/>

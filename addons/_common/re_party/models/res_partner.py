@@ -51,6 +51,32 @@ class ResPartner(models.Model):
     )
 
     # ------------------------------------------------------------------
+    # Ngày sinh & giới tính — thân nhân, không phải dữ liệu bán hàng
+    # ------------------------------------------------------------------
+    # Hai trường này trước đây nằm trong `rs_leasing` (khách trung tâm
+    # thương mại). Nhưng chúng là dữ liệu NHÂN THÂN như CCCD: hợp đồng in
+    # ra cần, chống trùng cần (luật "tên + năm sinh + điện thoại"), và
+    # bán hàng cần (xem tuổi chọn hướng). Để ở một module chuyên đề nghĩa
+    # là ba nơi khác phải khai lại, và ngày nào đó hai bản khai lệch nhau.
+    # Nên dời lên đây, cùng chỗ với các khoá nhân thân khác, giữ nguyên
+    # tên trường và giá trị để dữ liệu đã có không phải chuyển đổi gì.
+    gender = fields.Selection(
+        [('male', 'Nam'), ('female', 'Nữ'), ('other', 'Khác')],
+        string='Giới tính',
+    )
+    birth_year = fields.Integer(
+        string='Năm sinh',
+        help='Dùng khi chỉ biết năm. Có ngày sinh đầy đủ thì ngày sinh '
+             'thắng — năm sinh dương lịch không đủ để biết năm âm.',
+    )
+    birth_date = fields.Date(
+        string='Ngày sinh',
+        help='Ngày sinh dương lịch. Người sinh tháng 1–2 phần lớn vẫn '
+             'thuộc năm âm trước đó, nên muốn ra đúng tuổi âm thì phải có '
+             'ngày đầy đủ, không chỉ năm.',
+    )
+
+    # ------------------------------------------------------------------
     # Canonical identity keys — never shown, never typed
     # ------------------------------------------------------------------
     # Users type "079 123 456 789" and "079123456789" for the same person.
@@ -198,6 +224,53 @@ class ResPartner(models.Model):
         for rec in self:
             rec.vn_national_id_norm = self.norm_national_id(rec.vn_national_id)
             rec.vn_tax_code_norm = self.norm_tax_code(rec.vn_tax_code)
+
+    # ------------------------------------------------------------------
+    # CCCD đã mang sẵn giới tính và năm sinh
+    # ------------------------------------------------------------------
+    @api.model
+    def doc_cccd(self, so):
+        """CCCD 12 số → {'gender', 'birth_year'}, hoặc False nếu không đọc được.
+
+        Theo Thông tư 07/2016/TT-BCA, 12 số của CCCD là: 3 số mã tỉnh,
+        **1 số mã thế kỷ kiêm giới tính**, **2 số cuối của năm sinh**, 6 số
+        ngẫu nhiên. Số thứ tư: 0/1 cho thế kỷ 20 (nam/nữ), 2/3 cho thế kỷ
+        21, cứ thế. Nghĩa là mỗi khách đã khai CCCD là đã khai luôn giới
+        tính và năm sinh — chỉ chưa ai lấy ra.
+
+        CÓ CỬA KIỂM TUỔI, VÌ SỐ GIẢ CŨNG ĐỌC ĐƯỢC
+        Số đã bị bóc danh tính (bản demo) hay gõ bừa vẫn ra một năm sinh
+        trông như thật: 079000004521 ra năm 1900. Nên chỉ nhận kết quả
+        nằm trong khoảng tuổi người còn sống; ngoài khoảng đó thì trả về
+        False và để người nhập tự khai, thay vì rót số rác vào hồ sơ.
+        """
+        s = self.norm_national_id(so) or ''
+        if len(s) != 12:
+            return False
+        ma = int(s[3])
+        nam = 1900 + (ma // 2) * 100 + int(s[4:6])
+        nay = fields.Date.context_today(self).year
+        if not (nay - 110 <= nam <= nay):
+            return False
+        return {'gender': 'male' if ma % 2 == 0 else 'female',
+                'birth_year': nam}
+
+    @api.onchange('vn_national_id')
+    def _onchange_cccd_doan_nhan_than(self):
+        """Gõ CCCD xong là giới tính và năm sinh tự điền — nếu còn trống.
+
+        Chỉ điền vào ô TRỐNG: người nhập đã gõ tay thì họ biết rõ hơn số
+        giấy tờ, và ghi đè lên thứ người ta vừa gõ là cách nhanh nhất để
+        mất niềm tin vào ô tự điền.
+        """
+        for rec in self:
+            doc = self.doc_cccd(rec.vn_national_id)
+            if not doc:
+                continue
+            if not rec.gender:
+                rec.gender = doc['gender']
+            if not rec.birth_year and not rec.birth_date:
+                rec.birth_year = doc['birth_year']
 
     # ------------------------------------------------------------------
     # Constraints

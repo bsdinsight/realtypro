@@ -915,14 +915,24 @@ def step_check_syntax(dst):
 
 
 def _module_digest(root):
-    """Nội dung một module, bỏ __pycache__ và khoảng trắng cuối file."""
+    """Nội dung một module, bỏ __pycache__ và khoảng trắng cuối file.
+
+    BỎ QUA `i18n/*.po`: bộ dịch được sinh ở bước 3 của RELEASE.md, SAU
+    khi công cụ này chạy xong, nên bản vừa sinh luôn thiếu .po còn bản
+    đã giao thì có. So cả .po thì mọi module đều "đổi mã" và chốt chặn
+    đòi tăng phiên bản vô cớ — đúng cái đã làm bản 2026-10-13 tăng
+    version bốn module chẳng vì lý do gì.
+    """
     out = {}
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d != '__pycache__']
         for f in fn:
             p = os.path.join(dp, f)
+            rel = os.path.relpath(p, root)
+            if rel.startswith('i18n' + os.sep) and rel.endswith('.po'):
+                continue
             with open(p, 'rb') as fh:
-                out[os.path.relpath(p, root)] = fh.read().rstrip()
+                out[rel] = fh.read().rstrip()
     return out
 
 

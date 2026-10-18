@@ -25,6 +25,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DICT = os.path.join(HERE, 'i18n_data', 'vi_en.csv')
+FILL_ONLY = os.path.join(HERE, 'i18n_data', 'en_vi_fill.csv')
 
 ESCAPES = {'n': '\n', 't': '\t', '"': '"', '\\': '\\'}
 
@@ -111,6 +112,16 @@ def main():
                 # khác nhau mà ra cùng một câu tiếng Anh thì về tiếng
                 # Việt chọn bản nào cũng đúng nghĩa.
                 en_to_vi.setdefault(row['en'], row['vi'])
+    # Tệp MỘT CHIỀU: dành cho chuỗi vốn viết tiếng Anh ngay trong nguồn
+    # 19 (re_party, phần trợ giúp của re_loan_account…), nên từ điển
+    # vi→en của công cụ port không có gì để tra. Để riêng tệp này vì
+    # nhét chung vào vi_en.csv sẽ ĐỔI LUÔN chiều Việt→Anh: "Trạng thái"
+    # đang ra "Status" sẽ thành "State" trên toàn bộ bản giao.
+    if os.path.exists(FILL_ONLY):
+        with io.open(FILL_ONLY, encoding='utf-8') as f:
+            for row in csv.DictReader(f):
+                if row.get('en') and row.get('vi'):
+                    en_to_vi.setdefault(row['en'], row['vi'])
     total_filled = total_empty = 0
     for fn in sorted(os.listdir(skel_dir)):
         if not fn.endswith('.po'):

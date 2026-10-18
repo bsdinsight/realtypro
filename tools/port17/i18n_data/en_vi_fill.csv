@@ -1,0 +1,179 @@
+en,vi
+# Pledge,Số cầm cố
+. The bank will require a new valuation before allowing any further drawdown — add a line on the tab <b>Valuation</b>.,. Ngân hàng sẽ đòi định giá lại trước khi cho rút vốn tiếp — thêm một dòng ở tab <b>Định giá</b>.
+"<b>Plan</b> comes from the interest schedule (each period becomes three rows: principal, interest and fee). <b>Paid</b> comes from the actual repayments (also split into principal, interest and fee).
+                <b>Period status</b>
+                (Planned / Recognised / Partly paid / Fully paid) → switch to the list view for per-period detail and quick filters.","<b>Kế hoạch</b> lấy từ lịch lãi (mỗi kỳ thành ba dòng: gốc, lãi và phí). <b>Đã trả</b> lấy từ các lần trả nợ thực tế (cũng tách gốc, lãi và phí).
+                <b>Trạng thái kỳ</b>
+                (Dự kiến / Đã ghi nhận / Trả một phần / Đã trả đủ) → chuyển sang chế độ danh sách để xem chi tiết từng kỳ và lọc nhanh."
+"<b>This purpose is in the restricted group.</b> Article 8, clauses 8/9/10 of Circular 39/2016/TT-NHNN forbids this funding need, but it is <b>suspended since 01/9/2023</b> under Circular 10/2023/TT-NHNN. Check the current state of the rules before granting it.","<b>Mục đích này thuộc nhóm hạn chế.</b> Điều 8 khoản 8/9/10 Thông tư 39/2016/TT-NHNN cấm nhóm nhu cầu vốn này, nhưng <b>đang ngưng hiệu lực từ 01/9/2023</b> theo Thông tư 10/2023/TT-NHNN. Kiểm tra trạng thái quy định hiện hành trước khi cấp."
+Asset <b>disposed of</b> days,Tài sản <b>đã thanh lý</b> ngày
+Audit,Vết kiểm
+Auto sequence GBC/YYYY/NNNNN khi save.,Tự sinh số GBC/YYYY/NNNNN khi lưu.
+Basis & rate,Cơ sở & lãi suất
+Collateral type code must be unique.,Mã loại tài sản bảo đảm không được trùng.
+Company Partner,Đối tác của công ty
+Contact,Liên hệ
+Delta (±%),Chênh lệch (±%)
+"Disposed assets <b>is still shown</b> in the list for historical reference, but it can no longer be pledged and counts for nothing as security.","Tài sản đã thanh lý <b>vẫn hiện</b> trong danh sách để tra cứu lịch sử, nhưng không cầm cố được nữa và không còn giá trị bảo đảm."
+"Each line is a branch of a bank. Once recorded, the field <b>Branch / bank code</b> on the credit contract has something to pick from — it only lists the branches of the bank chosen above.",Mỗi dòng là một chi nhánh của ngân hàng. Khai rồi thì ô <b>Chi nhánh / mã ngân hàng</b> trên hợp đồng tín dụng mới có cái để chọn — và chỉ liệt kê chi nhánh của ngân hàng đã chọn ở trên.
+File Excel/CSV,Tệp Excel/CSV
+KW match,Khế ước khớp
+Line Count,Số dòng
+Loan & note configuration,Cấu hình Vay & Khế ước
+"Make sure to pick the right <b>Classification</b>: a promissory note can only pick a facility in the group <b>Vay</b>. Untick whichever item is no longer used <b>In use</b> to hide it from the selection — do not delete it, existing facilities still reference it.","Nhớ chọn đúng <b>Phân loại</b>: khế ước chỉ chọn được hạn mức thuộc nhóm <b>Vay</b>. Mục nào không dùng nữa thì bỏ tích <b>Đang dùng</b> để ẩn khỏi danh sách chọn — đừng xoá, hạn mức cũ vẫn đang tham chiếu tới."
+Net-off,Bù trừ
+"On the tab <b>Interest schedule</b> of the note, the button
+                            <b>Net off the difference</b> only runs while what the period still owes (principal + interest) <b>does not exceed</b>
+                            this threshold. Beyond it you must create a
+                            <b>formal repayment</b> to keep the audit trail. Setting the threshold to <b>= 0</b> switches netting off entirely.","Trên tab <b>Lịch lãi</b> của khế ước, nút
+                            <b>Bù trừ chênh lệch</b> chỉ chạy khi phần kỳ còn phải trả (gốc + lãi) <b>không vượt</b>
+                            ngưỡng này. Vượt ngưỡng thì phải lập
+                            <b>phiếu trả nợ chính thức</b> để giữ vết. Đặt ngưỡng <b>= 0</b> là tắt hẳn cơ chế bù trừ."
+Partner,Đối tác
+Pledge Count,Số lần cầm cố
+Preview,Xem trước
+Realty Loan,Realty — Vay
+Repayment Count,Số lần trả nợ
+Repayments,Các lần trả nợ
+Repayments — %s,Trả nợ — %s
+Required khi pledge_target=note.,Bắt buộc khi pledge_target=note.
+State,Trạng thái
+The activation date is <b>the basis for interest</b>.,Ngày kích hoạt là <b>mốc tính lãi</b>.
+The banks that grant credit or issue guarantees. Record them in <b>% promissory note fee on interest</b> so it loads automatically when a note is created.,Các ngân hàng cấp tín dụng hoặc phát hành bảo lãnh. Khai sẵn <b>% phí KW trên lãi</b> để khi tạo khế ước hệ thống tự điền.
+The note has no fee recorded (<i>Fee method</i> = None) no fee line is generated and the report stays exactly as before.,Khế ước không khai phí (<i>Cách tính phí</i> = Không) thì không sinh dòng phí nào và báo cáo giữ nguyên như trước.
+"This screen lists <b>the whole</b> purposes currently available — including the 25 <b>built-in</b> covering main-contractor practice, plus whatever the company adds itself. You can change the <b>name</b> of every entry; only <b>code</b> of a built-in entry is locked, because existing data references the code.","Màn hình này liệt kê <b>toàn bộ</b> mục đích đang dùng được — gồm 25 mục <b>có sẵn</b> theo thực tế tổng thầu, cộng với những mục công ty tự thêm. Sửa được <b>tên</b> của mọi mục; chỉ <b>mã</b> của mục có sẵn là khoá, vì dữ liệu cũ tham chiếu theo mã."
+"This table <b>only computes and records</b> — it does not touch the interest schedule, post any entry or offset anything. Paid periods are usually closed, and where the difference goes is a policy decision, not the result of a subtraction.
+                                            <br/>
+                                            Period <b>straddles the effective date</b>
+                                            is split in two: the earlier part keeps the old rate and the later part takes the new one. A period whose interest was <b>edited by hand</b>
+                                            are left as they are, with Δ at 0.","Bảng này <b>chỉ tính và ghi nhận</b> — không đụng vào lịch lãi, không ghi sổ, không bù trừ gì. Kỳ đã trả thường đã chốt, và chênh lệch đi về đâu là quyết định chính sách chứ không phải kết quả một phép trừ.
+                                            <br/>
+                                            Kỳ <b>vắt qua ngày hiệu lực</b>
+                                            bị tách đôi: phần trước giữ lãi suất cũ, phần sau theo lãi suất mới. Kỳ nào có lãi <b>sửa tay</b>
+                                            thì giữ nguyên, Δ bằng 0."
+"Three-level pivot: <b>Credit contract → note → principal / interest / fee</b> (rows) ×
+                <b>Month × {plan / paid}</b> (columns).","Pivot ba tầng: <b>HĐTD → khế ước → gốc / lãi / phí</b> (dòng) ×
+                <b>Tháng × {kế hoạch / đã trả}</b> (cột)."
+Type Name,Tên loại
+Upload file,Tải tệp lên
+Valuation certificate <b>has expired</b> days,Chứng thư định giá <b>đã hết hạn</b> ngày
+Wizard,Trợ lý
+Amendment Count,Số phụ lục
+"Each guarantee certificate instalment generates one
+                        <b>a real payment</b>. The counter-account depends on what is being paid, so it cannot be guessed:
+                        <b>guarantee fee</b> and <b>penalty</b> is an expense (642 / 811), <b>margin deposit</b> is <b>asset</b> (244 — the bank returns it on release, hence the button
+                        <b>Record the deposit refund</b> on the certificate), while <b>principal</b> is a borrowing when the bank pays the beneficiary on your behalf (3411). Without it an instalment can still be recorded, but <b>no payment yet</b> — the system logs a reminder in the certificate history.","Mỗi đợt thanh toán của chứng thư bảo lãnh sinh ra một
+                        <b>phiếu chi thật</b>. Tài khoản đối ứng tuỳ theo khoản đang trả nên không đoán được:
+                        <b>phí bảo lãnh</b> và <b>phạt</b> là chi phí (642 / 811), <b>ký quỹ</b> là <b>tài sản</b> (244 — ngân hàng trả lại khi giải toả, nên có nút
+                        <b>Ghi nhận hoàn ký quỹ</b> trên chứng thư), còn <b>gốc</b> là khoản vay khi ngân hàng trả thay cho bên thụ hưởng (3411). Thiếu khai thì vẫn ghi được đợt thanh toán, nhưng <b>chưa có phiếu chi</b> — hệ thống ghi một dòng nhắc vào lịch sử chứng thư."
+"Every morning the system reviews the certificates expiring soon and emails <b>Person in charge</b> recorded on the certificate. The certificate <b>without a person in charge no reminder is sent</b> — there is nobody to send it to, and mailing the whole group would just be spam.","Mỗi sáng hệ thống rà các chứng thư sắp hết hạn và gửi thư cho <b>Người phụ trách</b> khai trên chứng thư. Chứng thư <b>không có người phụ trách thì không gửi nhắc</b> — không biết gửi cho ai, mà gửi cả nhóm thì thành thư rác."
+Guarantee Count,Số chứng thư BL
+Guarantee Request Count,Số đề nghị phát hành BL
+How many days before expiry the reminder emails start. 0 uses the default of 30 days.,Bắt đầu gửi thư nhắc trước bao nhiêu ngày so với ngày hết hạn. Để 0 thì dùng mặc định 30 ngày.
+Is Expired,Đã hết hạn
+Is Expiring Soon,Sắp hết hạn
+"Once a reminder has been sent, how many days before the next one, as long as the certificate is still untreated. 0 uses the default of 7 days.","Đã gửi một lần rồi thì bao nhiêu ngày sau nhắc tiếp, chừng nào chứng thư vẫn chưa được xử. Để 0 thì dùng mặc định 7 ngày."
+Payment Count,Số lần thanh toán
+Realty / Guarantee Manager,Realty / Quản trị Bảo lãnh
+Realty / Guarantee User,Realty / Người dùng Bảo lãnh
+Schedule Count,Số đợt thanh toán
+Transaction Count,Số giao dịch
+"<b>Difference = revalued amount − carrying amount.</b> A positive figure means the liability increases, i.e. a <b>loss</b> FX — posted as
+                                <b>Dr FX difference account / Cr loan account</b>. A negative figure is a gain and is posted the other way round.
+                                <br/>
+                                <b>Carrying amount</b> read straight from the ledger (Σ credits − Σ debits on the note loan account), never re-derived from the loan ledger — so the next revaluation does not count the previous difference twice.","<b>Chênh lệch = số đánh giá lại − giá trị ghi sổ.</b> Số dương nghĩa là nợ phải trả tăng, tức <b>lỗ</b> tỷ giá — ghi
+                                <b>Nợ TK chênh lệch tỷ giá / Có TK vay</b>. Số âm là lãi và ghi ngược lại.
+                                <br/>
+                                <b>Giá trị ghi sổ</b> đọc thẳng từ sổ cái (Σ phát sinh Có − Σ phát sinh Nợ trên TK vay của khế ước), không suy lại từ sổ vay — nhờ vậy lần đánh giá sau không tính trùng chênh lệch lần trước."
+<b>Disbursement</b>: Dr 1121 / Cr 3411 (or 3412 for long term),<b>Giải ngân</b>: Nợ 1121 / Có 3411 (hoặc 3412 nếu dài hạn)
+<b>Interest accrual</b>: Dr 635 (or 241 when capitalised) / Cr 33531,<b>Ghi nhận lãi</b>: Nợ 635 (hoặc 241 khi vốn hoá) / Có 33531
+<b>Interest payment</b>: Dr 33531 / Cr 1121,<b>Trả lãi</b>: Nợ 33531 / Có 1121
+<b>Principal repayment</b>: Dr 3411/3412 / Cr 1121,<b>Trả gốc</b>: Nợ 3411/3412 / Có 1121
+"At period end, loan balances denominated in a foreign currency must be revalued at the closing rate (Circular 200, Article 69). Create a sheet, click
+                <b>Load foreign-currency notes</b>, check the rates, then post.","Cuối kỳ, dư nợ vay bằng ngoại tệ phải đánh giá lại theo tỷ giá cuối kỳ (Thông tư 200, Điều 69). Lập một bảng, bấm
+                <b>Nạp khế ước ngoại tệ</b>, kiểm tra tỷ giá rồi ghi sổ."
+Companies,Các công ty
+Is Posted,Đã ghi sổ
+Journal Entry,Bút toán
+Journal Item,Dòng bút toán
+Move Count,Số bút toán
+TK Vay (Loan Principal),TK Vay (gốc vay)
+TK Vay (override),TK Vay (ghi đè)
+TK XDCB capitalize (override),TK XDCB vốn hoá (ghi đè)
+"promissory note
+                        <b>have no entry at all on the loan account</b> so there is no carrying amount to compare against. Those lines are excluded from the revaluation entry — post their disbursement entries first, then load again.","khế ước
+                        <b>chưa có bút toán nào trên tài khoản vay</b> nên không có giá trị ghi sổ để so. Những dòng đó bị loại khỏi bút toán đánh giá lại — ghi sổ giải ngân cho chúng trước, rồi nạp lại."
+"<b>Opening collateral</b> is entered by hand and ADDED ON TOP of the collateral allocated in detail. Whenever an asset can be separated out and allocated on its own, reduce this manual figure accordingly — otherwise the same asset is counted twice.",<b>Bảo đảm khai ban đầu</b> do người dùng nhập tay và được CỘNG THÊM vào phần tài sản bảo đảm đã phân bổ chi tiết. Khi nào tách được một tài sản ra phân bổ riêng thì giảm con số nhập tay này xuống tương ứng — không thì cùng một tài sản bị đếm hai lần.
+"<b>Total project limit</b> = Σ allocated to that project across every facility of this credit contract (the value repeats on the lines of the same project). <b>Total project availability</b> = Σ availability across the facilities, but <b>capped by the umbrella headroom left on the credit contract</b> — not a plain sum, because the facilities share one collateral pool.","<b>Tổng hạn mức dự án</b> = Σ phân bổ cho dự án đó trên mọi hạn mức của HĐTD này (giá trị lặp lại ở các dòng cùng một dự án). <b>Tổng khả dụng dự án</b> = Σ khả dụng trên các hạn mức, nhưng <b>bị chặn bởi phần trống còn lại của cả HĐTD</b> — không phải phép cộng thuần, vì các hạn mức dùng chung một bể tài sản bảo đảm."
+Has Any Pledges,Có cầm cố bất kỳ
+Has Own Pledges,Có cầm cố riêng
+Over Borrowing Base,Vượt cơ sở bảo đảm
+"Pledge assets on the screen <b>Collateral</b>, then split its base contribution across each <b>facility</b> of the credit contract. Until it is split, no facility gains availability.","Cầm cố tài sản ở màn hình <b>Tài sản bảo đảm</b>, rồi chia phần đóng góp của nó cho từng <b>hạn mức</b> của HĐTD. Chưa chia thì không hạn mức nào tăng khả dụng."
+"Project availability = min(allocation remaining; project BB + shared pool still free − project outstanding; facility availability). The lines <b>cannot be added up</b> with each other — shared collateral is a common pool. An IPC only carries its own project. To see a project TOTAL across the whole credit contract: open the credit contract → tab
+                    <b>Limits by project</b>.","Khả dụng dự án = min(phân bổ còn lại; cơ sở bảo đảm riêng dự án + bể chung còn trống − dư nợ dự án; khả dụng hạn mức). Các dòng <b>không cộng được</b> với nhau — tài sản bảo đảm chung là bể dùng chung. Quyền đòi nợ của dự án nào chỉ gánh dự án đó. Muốn xem TỔNG của dự án trên toàn HĐTD: mở HĐTD → tab
+                    <b>Hạn mức theo dự án</b>."
+Realty Loan — Dashboard KPI,Realty Vay — Chỉ tiêu bảng điều khiển
+Remaining part <b>not allocated</b> — that part raises no facility's availability.,Phần còn lại <b>chưa phân bổ</b> — phần đó không làm tăng khả dụng của hạn mức nào.
+"Total allocation is <b>exceeds</b> the base contribution, usually because a revaluation lowered the asset value after the split. Correct the lines below.","Tổng phân bổ <b>vượt</b> phần đóng góp của tài sản, thường vì định giá lại làm giảm giá trị sau khi đã chia. Chỉnh lại các dòng bên dưới."
+⚠ <b>Margin call:</b> facility outstanding exceeds its own base (collateral ring-fenced to the facility). Certify more work with the owner or pledge more collateral.,⚠ <b>Cảnh báo bổ sung bảo đảm:</b> dư nợ của hạn mức vượt phần bảo đảm riêng của chính nó (tài sản khoanh riêng cho hạn mức). Nghiệm thu thêm với chủ đầu tư hoặc cầm cố thêm tài sản.
+⚠ <b>Under-collateralised (margin call):</b> total outstanding exceeds the borrowing base of the whole credit contract — the bank will require more collateral or partial repayment. Raise the base by certifying more work with the owner (receivables) or pledging more assets.,⚠ <b>Thiếu bảo đảm (phải bổ sung):</b> tổng dư nợ vượt cơ sở bảo đảm của cả HĐTD — ngân hàng sẽ đòi thêm tài sản hoặc trả bớt nợ. Nâng cơ sở bảo đảm bằng cách nghiệm thu thêm với chủ đầu tư (quyền đòi nợ) hoặc cầm cố thêm tài sản.
+"⚠ The new total limit <b>exceeds the actual availability from collateral</b>. It can still be recorded (contractual limit), but the excess can only be drawn once more collateral is pledged or more work is certified with the owner.","⚠ Tổng hạn mức mới <b>vượt phần khả dụng thực tế từ tài sản bảo đảm</b>. Vẫn ghi nhận được (hạn mức theo hợp đồng), nhưng phần vượt chỉ rút được khi cầm cố thêm tài sản hoặc nghiệm thu thêm với chủ đầu tư."
+⚠ The note amount <b>exceeds the facility availability</b>,⚠ Số tiền khế ước <b>vượt phần khả dụng của hạn mức</b>
+Dashboard,Bảng điều khiển
+"Interest line state ∈ {accrued, partial_paid}, date_due < today.","Kỳ lãi ở trạng thái {đã ghi nhận, trả một phần}, ngày đến hạn < hôm nay."
+Σ BL outstanding,Σ BL còn hiệu lực
+→ BL outstanding,→ BL còn hiệu lực
+↻ Refresh KPIs,↻ Tính lại chỉ tiêu
+Dossier Count,Số hồ sơ
+0123456789 or 0123456789-001,0123456789 hoặc 0123456789-001
+9 digits (CMND) or 12 digits (CCCD),9 số (CMND) hoặc 12 số (CCCD)
+A partner cannot have a relationship to themselves.,Một đối tác không thể có quan hệ với chính mình.
+A partner with this tax code already exists in this company.,Đã có đối tác mang mã số thuế này trong công ty.
+A relationship already exists between these two partners. Edit the existing record instead of creating a duplicate.,Hai đối tác này đã có quan hệ. Sửa bản ghi sẵn có thay vì tạo thêm bản trùng.
+Bank / Lender,Ngân hàng / Bên cho vay
+Bank Partner,Đối tác ngân hàng
+Broker / Salesperson,Môi giới / Nhân viên bán hàng
+"Buys / has bought a unit. Flagged automatically when a sale operations record (booking, contract) is linked.","Đang mua hoặc đã mua sản phẩm. Tự đánh dấu khi có hồ sơ bán hàng (đặt chỗ, hợp đồng) gắn vào."
+Construction contractor or subcontractor for EPCOne.,Nhà thầu hoặc nhà thầu phụ xây dựng cho EPCOne.
+Corporate group parent for on-lending (holding company). Independent of the contact hierarchy (parent_id) and of Subsidiaries & Affiliated Companies.,Công ty mẹ của tập đoàn dùng cho vay nội bộ (holding). Độc lập với cây liên hệ (parent_id) và với danh sách Công ty con & liên kết.
+Distribution partner with portal access.,Đối tác phân phối có quyền vào cổng thông tin.
+Distributor (NPP),Nhà phân phối (NPP)
+Family / Personal Relationships,Quan hệ gia đình / cá nhân
+Family / personal relationships (sale contract buyer / co-owner).,Quan hệ gia đình / cá nhân (người mua / đồng sở hữu trên hợp đồng mua bán).
+For foreign nationals.,Dành cho người nước ngoài.
+"Generic vendor (supplier of materials, services, etc.).","Nhà cung cấp chung (vật tư, dịch vụ, v.v.)."
+ID Issue Date,Ngày cấp
+ID Issue Place,Nơi cấp
+Legal / Contact,Pháp lý / Liên hệ
+"Legal entity that lends (credit contracts / guarantees). When Partner Organisation is installed, this follows Contact Type Bank.",Pháp nhân cho vay (hợp đồng tín dụng / bảo lãnh). Khi có cài module Tổ chức đối tác thì giá trị này theo Loại liên hệ Ngân hàng.
+National ID '%s' is not a valid Vietnamese CMND (9 digits) or CCCD (12 digits).,Số CMND/CCCD '%s' không hợp lệ: CMND 9 số hoặc CCCD 12 số.
+National ID (CMND/CCCD),Số CMND/CCCD
+Owns or rents a unit and uses Realty Living services.,Sở hữu hoặc thuê căn hộ và dùng dịch vụ Realty Living.
+Parent Company (Group),Công ty mẹ (Tập đoàn)
+Passport Number,Số hộ chiếu
+Property Customer,Khách hàng bất động sản
+Realty Identity,Định danh Realty
+Realty Party Relationship,Quan hệ đối tác Realty
+Related Partner,Đối tác liên quan
+Relationship,Quan hệ
+Relationships,Các quan hệ
+Resident,Cư dân
+Roles in RealtyPro,Vai trò trong RealtyPro
+"Salesperson, internal or external, who can earn commission.",Nhân viên bán hàng (nội bộ hoặc bên ngoài) được hưởng hoa hồng.
+Secondary Phone,Điện thoại phụ
+Spouse / household contact / alternate number.,"Vợ/chồng, người trong hộ, hoặc số liên hệ dự phòng."
+Subsidiaries,Công ty con
+Tax Code (MST),Mã số thuế (MST)
+"Tax code '%s' is invalid. Use 10 digits, or 10-3 digits for a branch (e.g. 0123456789-001).","Mã số thuế '%s' không hợp lệ. Dùng 10 số, hoặc 10-3 số cho chi nhánh (vd 0123456789-001)."
+Vendor,Nhà cung cấp
+Vietnam Identity,Định danh Việt Nam
+"Vietnamese national identity card number. 9 digits for old CMND, 12 digits for new CCCD.","Số căn cước công dân / chứng minh nhân dân. CMND cũ 9 số, CCCD mới 12 số."
+Vietnamese tax code. 10 digits for primary entity; add a 3-digit suffix (e.g. 0123456789-001) for branches.,Mã số thuế Việt Nam. 10 số cho đơn vị chính; thêm đuôi 3 số (vd 0123456789-001) cho chi nhánh.
+<strong>Entity:</strong><br/>,<strong>Đơn vị:</strong><br/>
+<strong>FOR PARTY A</strong>,<strong>ĐẠI DIỆN BÊN A</strong>
+<strong>FOR PARTY B</strong>,<strong>ĐẠI DIỆN BÊN B</strong>
+<strong>Lessor / lessee (counterparty):</strong><br/>,<strong>Bên cho thuê / bên thuê (đối tác):</strong><br/>
+"An addendum records a change to the contract (Article 403, Civil Code 2015); click <b>Apply</b> to apply it to the contract and regenerate the periods not yet invoiced. Open a line to fill in the details for that addendum type.","Phụ lục ghi nhận một thay đổi của hợp đồng (Điều 403, Bộ luật Dân sự 2015); bấm <b>Áp dụng</b> để áp vào hợp đồng và sinh lại các kỳ chưa xuất hoá đơn. Mở một dòng để khai chi tiết theo đúng loại phụ lục."
+Child Lease Count,Số hợp đồng thuê con
+Next 30 days & back-to-back,30 ngày tới & thuê lại liên tiếp

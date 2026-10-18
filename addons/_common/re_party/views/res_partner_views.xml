@@ -29,8 +29,14 @@
                                invisible="is_company">
                             <field name="birth_date"/>
                             <field name="gender"/>
+                            <!-- Năm sinh là NHÃN, không phải số lượng. Để
+                                 Odoo định dạng theo ngôn ngữ thì 1978 hiện
+                                 ra "1.978" — đọc như một con số chứ không
+                                 như một năm, và nó nằm ngay cạnh ô CCCD
+                                 vốn cũng là dãy số không được chấm phẩy. -->
                             <field name="birth_year"
                                    invisible="birth_date"
+                                   options="{'enable_formatting': false}"
                                    placeholder="Khi chỉ biết năm"/>
                         </group>
                         <!-- Lối thoát cho trường hợp trùng có chủ ý. Không

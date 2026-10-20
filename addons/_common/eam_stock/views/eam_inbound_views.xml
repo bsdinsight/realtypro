@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_inbound_check_list" model="ir.ui.view">
+        <field name="name">eam.inbound.check.list</field>
+        <field name="model">eam.inbound.check</field>
+        <field name="arch" type="xml">
+            <list string="Kiểm tra đầu vào"
+                  decoration-danger="co_sai_lech and state == 'done'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name" string="Số phiếu"/>
+                <field name="date" string="Ngày kiểm"/>
+                <field name="source" string="Nguồn"/>
+                <field name="partner_id" string="Bên giao" width="200px"/>
+                <field name="warehouse_id" string="Kho nhận"/>
+                <field name="picking_id" string="Phiếu nhập" optional="show"/>
+                <field name="inspector_id" string="Người kiểm"/>
+                <field name="so_dong_sai" string="Dòng sai lệch"/>
+                <field name="co_sai_lech" column_invisible="1"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_inbound_check_form" model="ir.ui.view">
+        <field name="name">eam.inbound.check.form</field>
+        <field name="model">eam.inbound.check</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu kiểm tra đầu vào">
+                <header>
+                    <button name="action_xac_nhan" type="object"
+                            string="Xác nhận kiểm tra" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_huy" type="object" string="Huỷ"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Hàng từ đâu">
+                            <field name="source"/>
+                            <field name="picking_id"
+                                   invisible="source != 'po'"
+                                   options="{'no_create': True}"/>
+                            <field name="origin"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Ai kiểm, kiểm ở đâu">
+                            <field name="warehouse_id"
+                                   options="{'no_create': True}"/>
+                            <field name="inspector_id"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-info" role="status"
+                         invisible="state != 'draft'">
+                        Hàng đang nằm ở <b>Chờ kiểm tra</b> và
+                        <b>chưa tính vào tồn khả dụng</b>. Xác nhận xong,
+                        phần nghiệm thu về ô chứa, phần từ chối vào
+                        <b>Cách ly</b> — không trả thẳng nhà cung cấp, vì
+                        trả hàng là chứng từ riêng.
+                    </div>
+
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="product_id" string="Vật tư"
+                                   width="260px"/>
+                            <field name="lot_id" string="Sê-ri / lô"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="qty_ordered" string="SL đặt"
+                                   optional="show"/>
+                            <field name="qty_received" string="SL nhận"/>
+                            <field name="qty_accepted" string="Nghiệm thu"/>
+                            <field name="qty_rejected" string="Từ chối"/>
+                            <field name="ly_do_sai_lech" string="Lý do sai lệch"/>
+                            <field name="dest_location_id" string="Về ô chứa"
+                                   options="{'no_create': True}"/>
+                            <field name="has_cert" string="Có chứng chỉ"
+                                   optional="show"/>
+                            <field name="uom_id" string="ĐVT" optional="hide"/>
+                            <field name="note" string="Ghi chú" optional="hide"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Có hàng từ chối thì <b>bắt buộc khai lý do</b>.
+                        Không khai thì sáu tháng sau không ai trả lời được
+                        câu "nhà cung cấp này giao sai những gì".
+                    </div>
+
+                    <notebook>
+                        <page string="Chứng chỉ &amp; hồ sơ" name="cert">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Kết luận" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Kết luận chung, cam kết khắc phục của bên giao…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_inbound_check_search" model="ir.ui.view">
+        <field name="name">eam.inbound.check.search</field>
+        <field name="model">eam.inbound.check</field>
+        <field name="arch" type="xml">
+            <search string="Tìm phiếu kiểm">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="picking_id"/>
+                <filter name="f_sai" string="Có sai lệch"
+                        domain="[('co_sai_lech', '=', True)]"/>
+                <filter name="f_nhap" string="Chưa kiểm"
+                        domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="g_ben_giao" string="Bên giao"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_nguon" string="Nguồn hàng"
+                        context="{'group_by': 'source'}"/>
+                <filter name="g_kho" string="Kho nhận"
+                        context="{'group_by': 'warehouse_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_inbound_check" model="ir.actions.act_window">
+        <field name="name">Kiểm tra đầu vào</field>
+        <field name="res_model">eam.inbound.check</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_inbound_check_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có phiếu kiểm nào</p>
+            <p>Phiếu nhập kho ghi <b>đã nhận bao nhiêu</b>. Phiếu này ghi
+               <b>nhận rồi thấy sao</b> — đủ hay thiếu, đúng mã hay sai mã,
+               còn nguyên hay móp vỡ, có chứng chỉ hay không.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_inbound_check" name="Kiểm tra đầu vào"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_inbound_check" sequence="35"/>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_eam_warehouse" model="ir.ui.view">
+        <field name="name">res.users.form.eam.warehouse</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Kho được giao" name="eam_warehouse"
+                      groups="eam_stock.group_eam_warehouse_limited">
+                    <field name="eam_warehouse_ids" widget="many2many_tags"
+                           options="{'no_create': True}"/>
+                    <div class="text-muted">
+                        Chỉ có tác dụng với người thuộc nhóm
+                        <b>Kho — Chỉ thấy kho được giao</b>. Bỏ trống mà
+                        vẫn ở trong nhóm đó thì <b>không thấy kho nào</b> —
+                        có chủ đích, để quên khai là lộ ra ngay chứ không
+                        âm thầm cho xem hết.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

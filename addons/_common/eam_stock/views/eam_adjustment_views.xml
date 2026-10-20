@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_adjustment_list" model="ir.ui.view">
+        <field name="name">eam.stock.adjustment.list</field>
+        <field name="model">eam.stock.adjustment</field>
+        <field name="arch" type="xml">
+            <list string="Điều chỉnh tồn"
+                  decoration-muted="state in ('cancelled','rejected')">
+                <field name="name" string="Số phiếu"/>
+                <field name="date" string="Ngày đếm"/>
+                <field name="warehouse_id" string="Kho"/>
+                <field name="reason" string="Lý do"/>
+                <field name="counter_id" string="Người đếm"/>
+                <field name="approver_id" string="Người duyệt"/>
+                <field name="amount_impact" string="Ảnh hưởng giá trị"
+                       widget="monetary" width="190px" sum="Σ"/>
+                <field name="can_duyet" string="Cần duyệt"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'to_approve'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_adjustment_form" model="ir.ui.view">
+        <field name="name">eam.stock.adjustment.form</field>
+        <field name="model">eam.stock.adjustment</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu điều chỉnh tồn">
+                <header>
+                    <button name="action_trinh" type="object"
+                            string="Trình duyệt / Áp dụng" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_duyet" type="object" string="Duyệt"
+                            class="oe_highlight" invisible="state != 'to_approve'"/>
+                    <button name="action_tu_choi" type="object" string="Từ chối"
+                            invisible="state != 'to_approve'"/>
+                    <button name="action_huy" type="object" string="Huỷ"
+                            invisible="state in ('done','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <div class="alert alert-info" role="status"
+                         invisible="state != 'draft'">
+                        Lúc duyệt, hệ thống <b>đọc lại tồn</b> và so với số
+                        đã chụp lúc đếm. Khác nhau là dừng — áp số cũ vào
+                        sẽ xoá mất những phát sinh hợp lệ trong khoảng đó.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="warehouse_id" options="{'no_create': True}"/>
+                            <field name="date"/>
+                            <field name="reason"/>
+                        </group>
+                        <group>
+                            <field name="counter_id"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="date_approved" readonly="1"/>
+                            <field name="can_duyet" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="product_id" string="Vật tư" width="250px"/>
+                            <field name="lot_id" string="Lô / sê-ri"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="location_id" string="Vị trí"
+                                   options="{'no_create': True}"/>
+                            <field name="qty_system" string="Sổ ghi" readonly="1"/>
+                            <field name="qty_counted" string="Đếm thực tế"/>
+                            <field name="qty_diff" string="Chênh lệch"/>
+                            <field name="amount_impact" string="Ảnh hưởng"
+                                   widget="monetary" width="180px" sum="Σ"/>
+                            <field name="reason" string="Lý do"/>
+                            <field name="note" string="Ghi chú" optional="hide"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="amount_impact" widget="monetary"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <separator string="Diễn giải"/>
+                    <field name="note" nolabel="1"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_adjustment" model="ir.actions.act_window">
+        <field name="name">Điều chỉnh tồn (có duyệt)</field>
+        <field name="res_model">eam.stock.adjustment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có phiếu nào</p>
+            <p>Khác với điều chỉnh tồn gốc của Odoo: ở đây <b>bắt buộc lý
+               do</b>, <b>phải duyệt khi giá trị lớn</b>, và <b>lưu cả số
+               trước lẫn số sau</b>. Số lệch do đếm nhầm và số lệch do mất
+               hàng trông giống hệt nhau nếu không ai ghi lại vì sao.</p>
+        </field>
+    </record>
+
+    <record id="view_eam_disposal_list" model="ir.ui.view">
+        <field name="name">eam.disposal.list</field>
+        <field name="model">eam.disposal</field>
+        <field name="arch" type="xml">
+            <list string="Thanh lý vật tư"
+                  decoration-muted="state in ('cancelled','rejected')">
+                <field name="name" string="Số phiếu"/>
+                <field name="date" string="Ngày đề nghị"/>
+                <field name="reason" string="Lý do"/>
+                <field name="requester_id" string="Người đề nghị"/>
+                <field name="approver_id" string="Người duyệt"/>
+                <field name="amount_total" string="Giá trị" widget="monetary"
+                       width="185px" sum="Σ"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'done'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_disposal_form" model="ir.ui.view">
+        <field name="name">eam.disposal.form</field>
+        <field name="model">eam.disposal</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu thanh lý">
+                <header>
+                    <button name="action_trinh" type="object" string="Trình duyệt"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_duyet" type="object" string="Duyệt &amp; thanh lý"
+                            class="btn-danger" invisible="state != 'to_approve'"/>
+                    <button name="action_tu_choi" type="object" string="Từ chối"
+                            invisible="state != 'to_approve'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <div class="alert alert-warning" role="status"
+                         invisible="state == 'done'">
+                        Duyệt là hàng <b>rời sổ thật</b>, không lấy lại
+                        được. Phải có bằng chứng kèm theo — thanh lý không
+                        bằng chứng thì trên sổ không khác gì mất hàng.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="reason"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="requester_id"/>
+                            <field name="approver_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="product_id" string="Vật tư" width="250px"/>
+                            <field name="lot_id" string="Lô / sê-ri"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="location_id" string="Đang ở"
+                                   options="{'no_create': True}"/>
+                            <field name="qty" string="Số lượng"/>
+                            <field name="uom_id" string="ĐVT"/>
+                            <field name="amount" string="Giá trị"
+                                   widget="monetary" width="185px" sum="Σ"/>
+                            <field name="scrap_id" string="Phiếu loại bỏ"
+                                   readonly="1" optional="show"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <notebook>
+                        <page string="Bằng chứng" name="evidence">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Diễn giải" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_disposal" model="ir.actions.act_window">
+        <field name="name">Thanh lý vật tư</field>
+        <field name="res_model">eam.disposal</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_eam_adjustment" name="Điều chỉnh tồn (có duyệt)"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_adjustment" sequence="43"/>
+    <menuitem id="menu_eam_disposal" name="Thanh lý vật tư"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_disposal" sequence="44"/>
+
+</odoo>

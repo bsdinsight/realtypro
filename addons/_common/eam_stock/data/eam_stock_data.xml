@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ===== Đích của hàng rời kho =====
+             Hai đích khác nhau cho hai thứ khác nhau. Gộp làm một thì báo
+             cáo kho không phân biệt được "đã dùng hết" với "đang nằm
+             trong máy" — mà hai cái đó khác nhau cả về tiền lẫn về việc
+             còn đòi bảo hành được hay không.
+
+             usage='production': vật tư rời sổ kho nhưng vẫn có đối ứng rõ
+             ràng, tra ngược được. Khác hẳn 'inventory' (điều chỉnh tồn) —
+             điều chỉnh chỉ nói "đếm lại thấy lệch", không nói được vì sao. -->
+
+        <record id="loc_tieu_dung_bao_tri" model="stock.location">
+            <field name="name">Tiêu dùng bảo trì</field>
+            <field name="usage">production</field>
+            <field name="location_id" eval="False"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="loc_da_lap_thiet_bi" model="stock.location">
+            <field name="name">Đã lắp lên thiết bị</field>
+            <field name="usage">production</field>
+            <field name="location_id" eval="False"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ===== Trạng thái hàng, mô hình bằng VỊ TRÍ =====
+             Hàng ở ba nơi dưới đây vẫn nằm trong sổ kho (usage internal,
+             nên còn đếm được, còn kiểm kê được, còn tra ra giá trị) nhưng
+             KHÔNG lấy ra lắp lên máy được: cờ eam_cam_xuat chặn ở cửa
+             chọn kho xuất.
+
+             Làm bằng vị trí thay vì một trường "trạng thái" riêng, vì
+             trạng thái rời khỏi vị trí là hai sổ: hàng nằm ở kệ A mà
+             trạng thái ghi "đã thanh lý" thì không ai biết tin cái nào. -->
+
+        <record id="loc_cho_kiem_tra" model="stock.location">
+            <field name="name">Chờ kiểm tra</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="eam_cam_xuat" eval="True"/>
+        </record>
+
+        <record id="loc_cach_ly" model="stock.location">
+            <field name="name">Cách ly</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="eam_cam_xuat" eval="True"/>
+        </record>
+
+        <record id="loc_hong_cho_thanh_ly" model="stock.location">
+            <field name="name">Hỏng — chờ thanh lý</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="eam_cam_xuat" eval="True"/>
+        </record>
+
+        <!-- Vật tư quay vòng đã tháo khỏi máy, đang gửi đi đại tu. Chưa
+             sửa xong thì chưa dùng được — và đây là chỗ dễ nhầm nhất, vì
+             một con hộp số "đã về kho" trông y như hàng tốt trên báo cáo
+             tồn nếu không tách ra. -->
+        <record id="loc_cho_dai_tu" model="stock.location">
+            <field name="name">Chờ đại tu</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="eam_cam_xuat" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

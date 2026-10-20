@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vật tư trên kế hoạch bảo trì (KHO-34) -->
+    <record id="view_eam_pm_plan_form_material" model="ir.ui.view">
+        <field name="name">eam.pm.plan.form.material</field>
+        <field name="model">eam.pm.plan</field>
+        <field name="inherit_id" ref="eam_pm.view_eam_pm_plan_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Vật tư mỗi lần" name="material">
+                    <field name="material_ids">
+                        <list editable="bottom">
+                            <field name="product_id" string="Vật tư" width="280px"/>
+                            <field name="qty" string="Số lượng mỗi lần"/>
+                            <field name="uom_id" string="ĐVT"/>
+                            <field name="is_optional" string="Chỉ thay khi cần"/>
+                            <field name="note" string="Ghi chú"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Khai ở đây thì mới tổng hợp được <b>nhu cầu phụ
+                        tùng từ lịch bảo trì</b>. Đánh dấu <i>chỉ thay khi
+                        cần</i> cho thứ không phải lần nào cũng thay —
+                        gộp cả vào dự trù thì mua thừa đều đặn.
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_eam_part_demand_form" model="ir.ui.view">
+        <field name="name">eam.part.demand.form</field>
+        <field name="model">eam.part.demand</field>
+        <field name="arch" type="xml">
+            <form string="Tổng hợp nhu cầu phụ tùng">
+                <group>
+                    <group>
+                        <field name="date_to"/>
+                        <field name="warehouse_id" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="gom_tuy_chon"/>
+                    </group>
+                </group>
+                <field name="ket_qua" readonly="1" nolabel="1"/>
+                <footer>
+                    <button name="action_tong_hop" type="object"
+                            string="Tổng hợp" class="btn-primary"/>
+                    <button string="Đóng" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_part_demand" model="ir.actions.act_window">
+        <field name="name">Nhu cầu phụ tùng từ lịch bảo trì</field>
+        <field name="res_model">eam.part.demand</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Tối ưu tồn (KHO-36) -->
+    <record id="view_product_template_list_toiuu" model="ir.ui.view">
+        <field name="name">product.template.list.toiuu</field>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <list string="Tối ưu tồn kho" create="false">
+                <field name="default_code" string="Mã"/>
+                <field name="name" string="Vật tư" width="280px"/>
+                <field name="eam_criticality" string="Quan trọng" widget="badge"
+                       decoration-danger="eam_criticality == 'critical'"/>
+                <field name="qty_available" string="Tồn"/>
+                <field name="eam_months_idle" string="Nằm im (tháng)"/>
+                <field name="eam_slow_moving" string="Chậm luân chuyển"/>
+                <field name="eam_excess_qty" string="Vượt mức tối đa"/>
+                <field name="eam_excess_value" string="Giá trị dư thừa"
+                       widget="monetary" width="185px" sum="Σ"/>
+                <field name="eam_discontinued" string="Ngừng sản xuất"/>
+                <field name="eam_lead_days" string="Cung ứng (ngày)"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_stock_toiuu" model="ir.actions.act_window">
+        <field name="name">Tối ưu tồn kho</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_product_template_list_toiuu"/>
+        <field name="domain">[('is_storable', '=', True),
+                              ('eam_part_kind', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có vật tư nào</p>
+            <p><b>Ba thứ khác nhau, đừng gộp.</b> <i>Chậm luân chuyển</i>
+               có thể vẫn đúng — phụ tùng cho sự cố hiếm thì nằm im là
+               bình thường. <i>Dư thừa</i> mới là tiền chết.
+               <i>Ngừng sản xuất</i> thì xử ngược lại: phải mua thêm
+               trước khi hết.</p>
+        </field>
+    </record>
+
+    <!-- Chi phí phụ tùng theo chiều (KHO-37) -->
+    <record id="view_eam_part_cost_list" model="ir.ui.view">
+        <field name="name">eam.part.cost.report.list</field>
+        <field name="model">eam.part.cost.report</field>
+        <field name="arch" type="xml">
+            <list string="Chi phí phụ tùng" create="false">
+                <field name="date" string="Ngày"/>
+                <field name="plant_id" string="Nhà máy"/>
+                <field name="location_id" string="Vị trí thiết bị" width="200px"/>
+                <field name="category_id" string="Loại cấu phần"/>
+                <field name="product_id" string="Vật tư" width="240px"/>
+                <field name="work_order_id" string="Lệnh công việc"/>
+                <field name="work_type" string="Loại việc"/>
+                <field name="qty" string="SL"/>
+                <field name="amount" string="Giá trị" widget="monetary"
+                       width="185px" sum="Σ"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_part_cost_search" model="ir.ui.view">
+        <field name="name">eam.part.cost.report.search</field>
+        <field name="model">eam.part.cost.report</field>
+        <field name="arch" type="xml">
+            <search string="Chi phí phụ tùng">
+                <field name="product_id"/>
+                <field name="work_order_id"/>
+                <field name="location_id"/>
+                <filter name="g_nhamay" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_vitri" string="Vị trí thiết bị"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_caupan" string="Loại cấu phần"
+                        context="{'group_by': 'category_id'}"/>
+                <filter name="g_lenh" string="Lệnh công việc"
+                        context="{'group_by': 'work_order_id'}"/>
+                <filter name="g_vattu" string="Vật tư"
+                        context="{'group_by': 'product_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_part_cost" model="ir.actions.act_window">
+        <field name="name">Chi phí phụ tùng theo chiều</field>
+        <field name="res_model">eam.part.cost.report</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_eam_part_cost_search"/>
+        <field name="context">{'search_default_g_nhamay': 1}</field>
+    </record>
+
+    <menuitem id="menu_eam_part_demand" name="Nhu cầu phụ tùng"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_part_demand" sequence="45"/>
+    <menuitem id="menu_eam_stock_toiuu" name="Tối ưu tồn kho"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_stock_toiuu" sequence="46"/>
+    <menuitem id="menu_eam_part_cost" name="Chi phí phụ tùng"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_part_cost" sequence="47"/>
+
+</odoo>

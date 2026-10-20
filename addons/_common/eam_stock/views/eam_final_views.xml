@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- KHO-06: phụ tùng tương đương -->
+    <record id="view_eam_equivalent_list" model="ir.ui.view">
+        <field name="name">eam.part.equivalent.list</field>
+        <field name="model">eam.part.equivalent</field>
+        <field name="arch" type="xml">
+            <list string="Phụ tùng tương đương" editable="bottom">
+                <field name="product_id" string="Phụ tùng gốc" width="240px"/>
+                <field name="equivalent_id" string="Thay được bằng" width="240px"/>
+                <field name="two_way" string="Hai chiều"/>
+                <field name="condition" string="Điều kiện áp dụng" width="280px"/>
+                <field name="affects_warranty" string="Ảnh hưởng bảo hành"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="approver_id" string="Kỹ thuật duyệt"/>
+                <button name="action_duyet" type="object" string="Duyệt"
+                        icon="fa-check" invisible="state != 'draft'"/>
+                <button name="action_tu_choi" type="object" string="Từ chối"
+                        icon="fa-times" invisible="state != 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_equivalent" model="ir.actions.act_window">
+        <field name="name">Phụ tùng tương đương</field>
+        <field name="res_model">eam.part.equivalent</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai cặp nào</p>
+            <p>"Hai con này thay nhau được" là một <b>kết luận kỹ
+               thuật</b>, không phải ghi chú. Khai xong là chờ duyệt —
+               chỉ khi kỹ thuật duyệt mới được dùng thay.</p>
+        </field>
+    </record>
+
+    <!-- KHO-43: bảng cảnh báo -->
+    <record id="view_eam_stock_alert_form" model="ir.ui.view">
+        <field name="name">eam.stock.alert.form</field>
+        <field name="model">eam.stock.alert</field>
+        <field name="arch" type="xml">
+            <form string="Cảnh báo kho">
+                <field name="ket_qua" readonly="1" nolabel="1"/>
+                <footer>
+                    <button name="action_xem" type="object" string="Làm mới"
+                            class="btn-primary"/>
+                    <button string="Đóng" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_stock_alert" model="ir.actions.act_window">
+        <field name="name">Cảnh báo kho</field>
+        <field name="res_model">eam.stock.alert</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- KHO-41: tồn theo kho / vị trí / lô / chủ sở hữu / trạng thái -->
+    <record id="view_eam_quant_list" model="ir.ui.view">
+        <field name="name">stock.quant.list.eam</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <list string="Tồn kho phụ tùng" create="false" edit="false">
+                <field name="location_id" string="Vị trí" width="260px"/>
+                <field name="product_id" string="Vật tư" width="260px"/>
+                <field name="lot_id" string="Lô / sê-ri"/>
+                <field name="owner_id" string="Chủ sở hữu"/>
+                <field name="quantity" string="Tồn thực tế"/>
+                <field name="reserved_quantity" string="Đang giữ chỗ"/>
+                <field name="available_quantity" string="Khả dụng"/>
+                <field name="inventory_date" string="Kiểm kê tới hạn" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_quant_search" model="ir.ui.view">
+        <field name="name">stock.quant.search.eam</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <search string="Tồn kho phụ tùng">
+                <field name="product_id"/>
+                <field name="lot_id"/>
+                <field name="location_id"/>
+                <field name="owner_id"/>
+                <filter name="f_cua_ta" string="Hàng của mình"
+                        domain="[('owner_id', '=', False)]"/>
+                <filter name="f_ky_gui" string="Hàng ký gửi"
+                        domain="[('owner_id', '!=', False)]"/>
+                <separator/>
+                <filter name="g_kho" string="Kho"
+                        context="{'group_by': 'warehouse_id'}"/>
+                <filter name="g_vt" string="Vị trí"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_sp" string="Vật tư"
+                        context="{'group_by': 'product_id'}"/>
+                <filter name="g_chu" string="Chủ sở hữu"
+                        context="{'group_by': 'owner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_quant" model="ir.actions.act_window">
+        <field name="name">Tồn kho phụ tùng</field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_eam_quant_list"/>
+        <field name="search_view_id" ref="view_eam_quant_search"/>
+        <field name="domain">[('location_id.usage', '=', 'internal')]</field>
+        <field name="context">{'search_default_g_kho': 1}</field>
+    </record>
+
+    <!-- KHO-44: dụng cụ quá hạn trả + RMA quá hạn -->
+    <record id="action_eam_tool_overdue" model="ir.actions.act_window">
+        <field name="name">Dụng cụ quá hạn trả</field>
+        <field name="res_model">eam.tool.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('qua_han', '=', True)]</field>
+    </record>
+
+    <record id="action_eam_rma_overdue" model="ir.actions.act_window">
+        <field name="name">Hàng nằm lâu ở nhà thầu / hãng</field>
+        <field name="res_model">eam.rma</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('qua_han', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có phiếu nào quá hạn</p>
+            <p>Hàng gửi đi sửa, đòi bảo hành hoặc trả lõi mà quá hạn —
+               trả lõi quá hạn bị tính thêm tiền, đòi bảo hành quá hạn
+               thì mất quyền.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_stock_alert" name="Cảnh báo kho"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_stock_alert" sequence="33"/>
+    <menuitem id="menu_eam_quant" name="Tồn kho phụ tùng"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_quant" sequence="48"/>
+    <menuitem id="menu_eam_tool_overdue" name="Dụng cụ quá hạn trả"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_tool_overdue" sequence="49"/>
+    <menuitem id="menu_eam_rma_overdue" name="Hàng nằm lâu ở bên ngoài"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_rma_overdue" sequence="50"/>
+    <menuitem id="menu_eam_equivalent" name="Phụ tùng tương đương"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_equivalent" sequence="51"/>
+
+</odoo>

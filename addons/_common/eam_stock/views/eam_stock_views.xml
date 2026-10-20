@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_work_order_form_stock" model="ir.ui.view">
+        <field name="name">eam.work.order.form.stock</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id"
+               ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_dong_lenh']"
+                   position="before">
+                <button name="action_giu_cho" type="object"
+                        string="Giữ chỗ vật tư"
+                        invisible="part_cho_giu == 0
+                                   or state in ('draft','cancelled')"/>
+                <button name="action_xuat_vat_tu" type="object"
+                        string="Xuất vật tư" class="oe_highlight"
+                        invisible="part_cho_xuat == 0
+                                   or state in ('draft','cancelled')"/>
+                <button name="action_ghi_nhan_hoan_tra" type="object"
+                        string="Ghi nhận hoàn trả"
+                        invisible="part_cho_tra == 0"/>
+            </xpath>
+
+            <xpath expr="//page[@name='parts']/field[@name='part_line_ids']"
+                   position="before">
+                <group>
+                    <group>
+                        <field name="stock_location_id"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="part_cho_giu"/>
+                        <field name="part_cho_xuat"/>
+                        <field name="part_cho_tra"/>
+                    </group>
+                </group>
+                <div class="alert alert-warning" role="status"
+                     invisible="part_cho_xuat == 0">
+                    Còn dòng vật tư <b>chưa trừ kho</b>. Đóng hồ sơ lệnh sẽ
+                    bị chặn cho tới khi xuất kho, hoặc đánh dấu
+                    <i>Không qua kho</i> cho vật tư mua thẳng và hàng hãng
+                    cấp theo bảo hành.
+                </div>
+                <div class="alert alert-info" role="status"
+                     invisible="part_cho_tra == 0">
+                    Có dòng khai <b>trả lại</b> nhưng chưa ghi nhận. Bấm
+                    <b>Ghi nhận hoàn trả</b> — nếu không, số hàng đó bị
+                    tính là đã tiêu dùng vĩnh viễn.
+                </div>
+            </xpath>
+
+            <!-- Ba số lượng tách bạch: xin bao nhiêu, kho đưa bao nhiêu,
+                 mang về bao nhiêu. Cột "Đã dùng" mới là số tính tiền. -->
+            <xpath expr="//page[@name='parts']//field[@name='qty']"
+                   position="attributes">
+                <attribute name="string">Yêu cầu</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='parts']//field[@name='uom_id']"
+                   position="after">
+                <field name="trang_thai_kho" string="Kho" widget="badge"
+                       decoration-success="trang_thai_kho == 'xuat'"
+                       decoration-info="trang_thai_kho == 'giu'"
+                       decoration-danger="trang_thai_kho == 'thieu'"
+                       decoration-muted="trang_thai_kho == 'ngoai'"/>
+                <field name="ton_kha_dung" string="Khả dụng"
+                       optional="show"/>
+                <field name="ton_giu_cho" string="Đang giữ"
+                       optional="hide"/>
+                <field name="ton_thuc_te" string="Tồn thực tế"
+                       optional="hide"/>
+                <field name="qty_xuat" string="Đã xuất" optional="show"/>
+                <field name="qty_tra_moi" string="Trả lại"
+                       readonly="qty_xuat == 0"/>
+                <field name="tinh_trang_tra" string="Tình trạng trả"
+                       optional="show" readonly="qty_tra_moi == 0"/>
+                <field name="qty_tra" string="Đã trả" optional="hide"/>
+                <field name="qty_dung" string="Đã dùng" optional="show"/>
+            </xpath>
+
+            <xpath expr="//page[@name='parts']//field[@name='is_rotable']"
+                   position="after">
+                <field name="lot_id" string="Sê-ri"
+                       options="{'no_create': True}"
+                       readonly="trang_thai_kho in ('xuat',)"/>
+            </xpath>
+
+            <xpath expr="//page[@name='parts']//field[@name='note']"
+                   position="before">
+                <field name="khong_qua_kho" string="Không qua kho"
+                       readonly="qty_xuat != 0"/>
+                <field name="move_id" string="Phiếu xuất"
+                       optional="hide" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//page[@name='parts']//list" position="after">
+                <div class="text-muted">
+                    <b>Ba số khác nhau.</b> <i>Yêu cầu</i> là số xin và là
+                    số đem đi giữ chỗ; <i>Đã xuất</i> là số kho đưa ra;
+                    <i>Đã trả</i> là số mang về. <b>Đã dùng = Đã xuất −
+                    Đã trả, và đó mới là số tính tiền.</b><br/>
+                    Hàng trả về <b>không vào thẳng tồn khả dụng</b> trừ khi
+                    chọn "Còn tốt". Tháo khỏi máy không có nghĩa là dùng
+                    lại được.
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_stock_location_form_eam" model="ir.ui.view">
+        <field name="name">stock.location.form.eam</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <field name="replenish_location" position="after">
+                <field name="eam_cam_xuat"
+                       invisible="usage != 'internal'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Bảo quản hàng lưu kho ===== -->
+    <record id="view_eam_storage_care_list" model="ir.ui.view">
+        <field name="name">eam.storage.care.list</field>
+        <field name="model">eam.storage.care</field>
+        <field name="arch" type="xml">
+            <list string="Bảo quản hàng lưu kho" decoration-danger="qua_han"
+                  decoration-muted="state != 'due'">
+                <field name="date_due" string="Đến hạn"/>
+                <field name="product_id" string="Vật tư" width="260px"/>
+                <field name="lot_id" string="Lô / sê-ri"/>
+                <field name="plan_id" string="Việc cần làm" width="240px"/>
+                <field name="location_id" string="Đang ở"/>
+                <field name="qua_han" string="Quá hạn"/>
+                <field name="date_done" string="Đã làm"/>
+                <field name="user_id" string="Người làm"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'done'"/>
+                <button name="action_hoan_thanh" type="object"
+                        string="Đã làm xong" icon="fa-check"
+                        invisible="state != 'due'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_storage_care_search" model="ir.ui.view">
+        <field name="name">eam.storage.care.search</field>
+        <field name="model">eam.storage.care</field>
+        <field name="arch" type="xml">
+            <search string="Tìm việc bảo quản">
+                <field name="product_id"/>
+                <field name="lot_id"/>
+                <filter name="f_qua_han" string="Quá hạn"
+                        domain="[('qua_han', '=', True)]"/>
+                <filter name="f_cho" string="Chờ làm"
+                        domain="[('state', '=', 'due')]"/>
+                <separator/>
+                <filter name="g_vt" string="Vật tư"
+                        context="{'group_by': 'product_id'}"/>
+                <filter name="g_viec" string="Việc"
+                        context="{'group_by': 'plan_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_storage_care" model="ir.actions.act_window">
+        <field name="name">Bảo quản hàng lưu kho</field>
+        <field name="res_model">eam.storage.care</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_storage_care_search"/>
+        <field name="context">{'search_default_f_cho': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có việc nào</p>
+            <p>Khác với bảo trì phòng ngừa — cái đó đếm theo <b>giờ máy
+               chạy</b>. Hàng nằm trong kho thì giờ máy chạy bằng 0 mãi
+               mãi, nên không bao giờ tới hạn; trong khi thực tế vẫn phải
+               xoay trục, thay hạt hút ẩm, nạp lại ắc-quy.</p>
+        </field>
+    </record>
+
+    <record id="view_eam_storage_care_plan_list" model="ir.ui.view">
+        <field name="name">eam.storage.care.plan.list</field>
+        <field name="model">eam.storage.care.plan</field>
+        <field name="arch" type="xml">
+            <list string="Lịch bảo quản" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="product_tmpl_id" string="Vật tư" width="280px"/>
+                <field name="name" string="Việc cần làm" width="260px"/>
+                <field name="care_type" string="Loại việc"/>
+                <field name="interval_months" string="Chu kỳ (tháng)"/>
+                <field name="instruction" string="Hướng dẫn" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_storage_care_plan" model="ir.actions.act_window">
+        <field name="name">Lịch bảo quản hàng lưu kho</field>
+        <field name="res_model">eam.storage.care.plan</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ===== Mượn dụng cụ ===== -->
+    <record id="view_eam_tool_loan_list" model="ir.ui.view">
+        <field name="name">eam.tool.loan.list</field>
+        <field name="model">eam.tool.loan</field>
+        <field name="arch" type="xml">
+            <list string="Mượn dụng cụ" decoration-danger="qua_han"
+                  decoration-muted="state == 'returned'">
+                <field name="name" string="Số phiếu"/>
+                <field name="product_id" string="Dụng cụ" width="260px"/>
+                <field name="lot_id" string="Sê-ri"/>
+                <field name="borrower_id" string="Người mượn"/>
+                <field name="work_order_id" string="Dùng cho lệnh" optional="show"/>
+                <field name="date_out" string="Mượn"/>
+                <field name="date_due" string="Hẹn trả"/>
+                <field name="date_in" string="Đã trả"/>
+                <field name="qua_han" string="Quá hạn"/>
+                <field name="tinh_trang_tra" string="Tình trạng" optional="hide"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'returned'"
+                       decoration-danger="state == 'lost'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_tool_loan_form" model="ir.ui.view">
+        <field name="name">eam.tool.loan.form</field>
+        <field name="model">eam.tool.loan</field>
+        <field name="arch" type="xml">
+            <form string="Phiếu mượn dụng cụ">
+                <header>
+                    <button name="action_tra" type="object" string="Nhận lại"
+                            class="oe_highlight" invisible="state != 'out'"/>
+                    <button name="action_bao_mat" type="object"
+                            string="Báo mất" invisible="state != 'out'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <div class="alert alert-danger" role="status"
+                         invisible="not qua_han">
+                        <b>Quá hạn trả.</b> Không có sổ mượn thì dụng cụ
+                        biến mất dần mà không ai biết lúc nào.
+                    </div>
+                    <group>
+                        <group string="Mượn gì">
+                            <field name="product_id"/>
+                            <field name="lot_id"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="qty"/>
+                        </group>
+                        <group string="Ai mượn, bao giờ trả">
+                            <field name="borrower_id"/>
+                            <field name="work_order_id"/>
+                            <field name="date_out"/>
+                            <field name="date_due"/>
+                            <field name="date_in" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Khi nhận lại" invisible="state == 'out'">
+                        <field name="tinh_trang_tra"/>
+                    </group>
+                    <group string="Khi nhận lại" invisible="state != 'out'">
+                        <field name="tinh_trang_tra"/>
+                    </group>
+                    <field name="note" placeholder="Ghi chú…"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_tool_loan_search" model="ir.ui.view">
+        <field name="name">eam.tool.loan.search</field>
+        <field name="model">eam.tool.loan</field>
+        <field name="arch" type="xml">
+            <search string="Tìm phiếu mượn">
+                <field name="name"/>
+                <field name="borrower_id"/>
+                <field name="product_id"/>
+                <filter name="f_qua_han" string="Quá hạn trả"
+                        domain="[('qua_han', '=', True)]"/>
+                <filter name="f_dang_muon" string="Đang mượn"
+                        domain="[('state', '=', 'out')]"/>
+                <separator/>
+                <filter name="g_nguoi" string="Người mượn"
+                        context="{'group_by': 'borrower_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_tool_loan" model="ir.actions.act_window">
+        <field name="name">Mượn dụng cụ</field>
+        <field name="res_model">eam.tool.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_tool_loan_search"/>
+    </record>
+
+    <!-- ===== Hiệu chuẩn ===== -->
+    <record id="view_eam_calib_list" model="ir.ui.view">
+        <field name="name">eam.tool.calibration.list</field>
+        <field name="model">eam.tool.calibration</field>
+        <field name="arch" type="xml">
+            <list string="Hiệu chuẩn dụng cụ đo" editable="bottom">
+                <field name="date" string="Ngày hiệu chuẩn"/>
+                <field name="product_id" string="Dụng cụ" width="240px"/>
+                <field name="lot_id" string="Sê-ri"/>
+                <field name="body" string="Đơn vị hiệu chuẩn" width="200px"/>
+                <field name="cert_no" string="Số chứng nhận"/>
+                <field name="result" string="Kết quả" widget="badge"
+                       decoration-success="result in ('pass','adjusted')"
+                       decoration-danger="result == 'fail'"/>
+                <field name="date_next" string="Hạn lần sau"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_calib" model="ir.actions.act_window">
+        <field name="name">Hiệu chuẩn dụng cụ đo</field>
+        <field name="res_model">eam.tool.calibration</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có lần hiệu chuẩn nào</p>
+            <p>Dụng cụ đo quá hạn hiệu chuẩn vẫn quay, vẫn kêu tách, vẫn
+               cho một con số — và con số đó <b>trông đúng</b>. Nên hết
+               hạn là <b>cấm mượn</b>, không phải nhắc nhở.</p>
+        </field>
+    </record>
+
+    <record id="view_stock_lot_form_tool" model="ir.ui.view">
+        <field name="name">stock.lot.form.tool</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="eam_stock.view_stock_lot_form_rotable"/>
+        <field name="arch" type="xml">
+            <field name="eam_warranty_note" position="after">
+                <field name="eam_calib_due"/>
+                <field name="eam_calib_ok"/>
+                <field name="eam_dung_duoc"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_storage_care" name="Bảo quản hàng lưu kho"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_storage_care" sequence="40"/>
+    <menuitem id="menu_eam_tool_loan" name="Mượn dụng cụ"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_tool_loan" sequence="41"/>
+    <menuitem id="menu_eam_calib" name="Hiệu chuẩn dụng cụ đo"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_calib" sequence="42"/>
+    <menuitem id="menu_eam_storage_care_plan" name="Lịch bảo quản lưu kho"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_storage_care_plan" sequence="50"/>
+
+</odoo>

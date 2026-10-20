@@ -32,7 +32,7 @@ TOI_DA = 50000
 
 class EamHistorianController(http.Controller):
 
-    @http.route('/eam/historian/nap', type='json', auth='user',
+    @http.route('/eam/historian/nap', type='jsonrpc', auth='user',
                 methods=['POST'], csrf=False)
     def nap(self, so_do=None, nguon_nghi=False, **kw):
         """Nạp một lô số đo.
@@ -74,7 +74,7 @@ class EamHistorianController(http.Controller):
             'tong_bo_qua': len(kq['bo_qua']),
         }
 
-    @http.route('/eam/historian/tags', type='json', auth='user',
+    @http.route('/eam/historian/tags', type='jsonrpc', auth='user',
                 methods=['POST'], csrf=False)
     def danh_sach_tag(self, plant=None, **kw):
         """Danh sách mã tag đang khai — để bộ kết nối tự dò, khỏi khai hai nơi."""

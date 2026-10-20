@@ -40,6 +40,7 @@ mà để ``tracking`` khác ``serial`` thì không lưu được.
     'depends': ['eam_core', 'rp_purchase', 'stock'],
     'data': [
         'views/eam_procurement_views.xml',
+        'views/eam_orderpoint_views.xml',
     ],
     'installable': True,
 }

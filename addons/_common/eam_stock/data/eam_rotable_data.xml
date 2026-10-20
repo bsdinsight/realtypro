@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_eam_rma" model="ir.sequence">
+            <field name="name">Trả hàng / bảo hành / hoàn lõi</field>
+            <field name="code">eam.rma</field>
+            <field name="prefix">RMA/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_eam_stock_transfer" model="ir.sequence">
+            <field name="name">Điều chuyển giữa kho</field>
+            <field name="code">eam.stock.transfer</field>
+            <field name="prefix">DCK/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

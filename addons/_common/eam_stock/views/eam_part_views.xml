@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== Hồ sơ phụ tùng trên sản phẩm ==================== -->
+    <record id="view_product_template_form_eam" model="ir.ui.view">
+        <field name="name">product.template.form.eam</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Hồ sơ phụ tùng" name="eam_part"
+                      invisible="type == 'service'">
+                    <group>
+                        <group string="Phân loại">
+                            <field name="eam_part_kind"/>
+                            <field name="eam_category_id"/>
+                            <field name="eam_is_rotable" readonly="1"/>
+                        </group>
+                        <group string="Hãng chế tạo &amp; mã">
+                            <field name="eam_oem_partner_id"/>
+                            <field name="eam_oem_code"/>
+                            <field name="eam_mfr_code"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Mức quan trọng">
+                            <field name="eam_criticality"/>
+                            <field name="eam_shortage_impact"/>
+                        </group>
+                        <group string="Cung ứng">
+                            <field name="eam_lead_days"/>
+                            <field name="eam_is_long_lead"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning" role="status"
+                         invisible="not eam_is_long_lead">
+                        <b>Hàng đặt dài ngày.</b> Hết hàng thì không mua
+                        kịp — mức dự trữ phải tính theo thời gian cung ứng
+                        chứ không theo nhịp tiêu dùng.
+                    </div>
+
+                    <separator string="Lắp được cho model thiết bị"/>
+                    <field name="eam_model_ids" widget="many2many_tags"
+                           options="{'no_create_edit': True}"/>
+
+                    <separator string="Thông số kỹ thuật"/>
+                    <field name="eam_spec_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name" string="Thông số"/>
+                            <field name="value" string="Giá trị"/>
+                            <field name="uom_label" string="Đơn vị"/>
+                            <field name="is_key" string="Quyết định"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Đánh dấu <b>Quyết định</b> cho thông số mà sai là
+                        lắp không vừa hoặc hỏng máy — nó sẽ hiện ngay trên
+                        danh sách phụ tùng, trước khi hàng ra khỏi kho.
+                    </div>
+
+                    <separator string="Mã chéo"/>
+                    <field name="eam_xref_ids">
+                        <list editable="bottom">
+                            <field name="code_type" string="Loại mã"/>
+                            <field name="code" string="Mã"/>
+                            <field name="partner_id" string="Của bên nào"/>
+                            <field name="note" string="Ghi chú"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Người ta tìm phụ tùng bằng cách cầm con cũ, đọc số
+                        dập trên vỏ. Số đó hiếm khi là mã nội bộ của mình.
+                    </div>
+
+                    <separator string="Tài liệu &amp; bản vẽ"/>
+                    <field name="eam_doc_ids">
+                        <list editable="bottom">
+                            <field name="doc_type" string="Loại"/>
+                            <field name="name" string="Tên tài liệu"/>
+                            <field name="revision" string="Bản sửa đổi"/>
+                            <field name="doc_date" string="Ngày phát hành"/>
+                            <field name="attachment_id" string="Tệp"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_product_template_list_eam" model="ir.ui.view">
+        <field name="name">product.template.list.eam</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field name="eam_part_kind" string="Loại PT" optional="show"/>
+                <field name="eam_criticality" string="Quan trọng"
+                       widget="badge" optional="show"
+                       decoration-danger="eam_criticality == 'critical'"
+                       decoration-warning="eam_criticality == 'high'"/>
+                <field name="eam_spec_key" string="Thông số quyết định"
+                       optional="show"/>
+                <field name="eam_oem_code" string="Mã OEM" optional="hide"/>
+                <field name="eam_lead_days" string="Cung ứng (ngày)"
+                       optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_template_search_eam" model="ir.ui.view">
+        <field name="name">product.template.search.eam</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="eam_oem_code" string="Mã OEM"/>
+                <field name="eam_xref_ids" string="Mã chéo"
+                       filter_domain="[('eam_xref_ids.code', 'ilike', self)]"/>
+            </field>
+            <filter name="inactive" position="before">
+                <filter name="f_trong_yeu" string="Phụ tùng trọng yếu"
+                        domain="[('eam_criticality', 'in',
+                                  ('high', 'critical'))]"/>
+                <filter name="f_dai_ngay" string="Hàng đặt dài ngày"
+                        domain="[('eam_is_long_lead', '=', True)]"/>
+                <separator/>
+                <filter name="g_loai_pt" string="Loại phụ tùng"
+                        context="{'group_by': 'eam_part_kind'}"/>
+                <filter name="g_quan_trong" string="Mức quan trọng"
+                        context="{'group_by': 'eam_criticality'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- ==================== Model thiết bị ==================== -->
+    <record id="view_eam_equipment_model_list" model="ir.ui.view">
+        <field name="name">eam.equipment.model.list</field>
+        <field name="model">eam.equipment.model</field>
+        <field name="arch" type="xml">
+            <list string="Model thiết bị">
+                <field name="name" string="Tên model" width="300px"/>
+                <field name="code" string="Mã"/>
+                <field name="manufacturer_id" string="Hãng chế tạo"/>
+                <field name="category_id" string="Loại cấu phần"/>
+                <field name="rated_kw" string="Định mức (kW)"/>
+                <field name="product_count" string="Số phụ tùng"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_equipment_model_form" model="ir.ui.view">
+        <field name="name">eam.equipment.model.form</field>
+        <field name="model">eam.equipment.model</field>
+        <field name="arch" type="xml">
+            <form string="Model thiết bị">
+                <sheet>
+                    <widget name="web_ribbon" title="Đã nghỉ"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="Nền tảng 6,24 MW · rô-to 171 m"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="manufacturer_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="rated_kw"/>
+                        </group>
+                    </group>
+                    <separator string="Phụ tùng lắp được"/>
+                    <field name="product_ids" widget="many2many_tags"
+                           options="{'no_create_edit': True}"/>
+                    <separator string="Ghi chú"/>
+                    <field name="note" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_eam_equipment_model" model="ir.actions.act_window">
+        <field name="name">Model thiết bị</field>
+        <field name="res_model">eam.equipment.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai model nào</p>
+            <p>Danh mục này trả lời câu người giữ kho hỏi trước khi xuất:
+               <b>phụ tùng này có lắp được cho máy đó không</b>. Để model
+               là chữ tự do thì "V150-4.2MW" và "V150 4,2 MW" là hai thứ
+               khác nhau với máy tính.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_equipment_model" name="Model thiết bị"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_equipment_model" sequence="48"/>
+
+    <!-- ==================== Lô: ngày sản xuất ==================== -->
+    <record id="view_stock_lot_form_eam" model="ir.ui.view">
+        <field name="name">stock.lot.form.eam</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <field name="ref" position="after">
+                <field name="eam_mfg_date"/>
+                <field name="eam_mfg_batch"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

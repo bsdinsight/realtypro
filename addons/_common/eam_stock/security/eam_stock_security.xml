@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_eam_warehouse_limited" model="res.groups">
+            <field name="name">Kho — Chỉ thấy kho được giao</field>
+            <field name="privilege_id" ref="stock.res_groups_privilege_inventory"/>
+            <field name="comment">Người dùng trong nhóm này chỉ thấy và chỉ
+                thao tác được trên những kho đã khai ở ô "Kho được giao".
+                Ai không ở trong nhóm thì không bị ảnh hưởng — quản trị,
+                kế toán, ban giám đốc vẫn thấy toàn bộ.</field>
+        </record>
+
+        <!-- Luật đọc: chỉ áp cho nhóm hạn chế.
+             Dòng tồn ở vị trí ẢO (tiêu dùng bảo trì, đã lắp lên thiết bị,
+             điều chỉnh kiểm kê) không thuộc kho nào — vẫn cho thấy, vì
+             che chúng đi thì tổng không khớp và người dùng tưởng mất hàng. -->
+        <record id="rule_quant_warehouse" model="ir.rule">
+            <field name="name">Tồn kho — chỉ kho được giao</field>
+            <field name="model_id" ref="stock.model_stock_quant"/>
+            <field name="groups" eval="[(4, ref('group_eam_warehouse_limited'))]"/>
+            <field name="domain_force">
+                ['|', ('location_id.warehouse_id', '=', False),
+                      ('location_id.warehouse_id', 'in',
+                       user.eam_warehouse_ids.ids)]
+            </field>
+        </record>
+
+        <record id="rule_picking_warehouse" model="ir.rule">
+            <field name="name">Phiếu kho — chỉ kho được giao</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="groups" eval="[(4, ref('group_eam_warehouse_limited'))]"/>
+            <field name="domain_force">
+                ['|', ('picking_type_id.warehouse_id', '=', False),
+                      ('picking_type_id.warehouse_id', 'in',
+                       user.eam_warehouse_ids.ids)]
+            </field>
+        </record>
+
+        <record id="rule_orderpoint_warehouse" model="ir.rule">
+            <field name="name">Định mức tồn — chỉ kho được giao</field>
+            <field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/>
+            <field name="groups" eval="[(4, ref('group_eam_warehouse_limited'))]"/>
+            <field name="domain_force">
+                [('warehouse_id', 'in', user.eam_warehouse_ids.ids)]
+            </field>
+        </record>
+
+    </data>
+</odoo>

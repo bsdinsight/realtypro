@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gom về menu Hợp đồng (container rp_estimate.menu_contracts).
+         Đặt ngay sau "HĐ nhà thầu" (10) vì nghĩa vụ là mặt sau của
+         chính hợp đồng, không phải một nghiệp vụ rời. -->
+    <menuitem id="menu_rp_obligation"
+              name="Sổ nghĩa vụ HĐ"
+              parent="rp_estimate.menu_contracts"
+              action="action_rp_obligation"
+              sequence="15"/>
+
+    <menuitem id="menu_rp_contract_clause"
+              name="Điều khoản HĐ"
+              parent="rp_estimate.menu_contracts"
+              action="action_rp_contract_clause"
+              sequence="16"/>
+</odoo>

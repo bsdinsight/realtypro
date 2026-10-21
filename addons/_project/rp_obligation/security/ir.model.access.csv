@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rp_contract_clause_user,rp.contract.clause user,model_rp_contract_clause,re_base.group_re_user,1,1,1,0
+access_rp_contract_clause_manager,rp.contract.clause manager,model_rp_contract_clause,re_base.group_re_manager,1,1,1,1
+access_rp_obligation_user,rp.obligation user,model_rp_obligation,re_base.group_re_user,1,1,1,0
+access_rp_obligation_manager,rp.obligation manager,model_rp_obligation,re_base.group_re_manager,1,1,1,1

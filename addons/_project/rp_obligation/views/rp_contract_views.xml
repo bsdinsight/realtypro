@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_contract_form_obligation" model="ir.ui.view">
+        <field name="name">rp.contract.form.obligation</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id" ref="rp_contract.view_rp_contract_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_xem_nghia_vu" type="object"
+                        class="oe_stat_button" icon="fa-list-check"
+                        invisible="not obligation_count">
+                    <field name="obligation_count" widget="statinfo"
+                           string="Nghĩa vụ"/>
+                </button>
+                <button name="action_xem_dieu_khoan" type="object"
+                        class="oe_stat_button" icon="fa-book"
+                        invisible="not clause_count">
+                    <field name="clause_count" widget="statinfo"
+                           string="Điều khoản"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Nghĩa vụ hợp đồng" name="obligations">
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not obligation_qua_han">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        <b><field name="obligation_qua_han" nolabel="1"
+                                  readonly="1" class="oe_inline"/></b>
+                        nghĩa vụ đã <b>quá hạn</b>.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not obligation_sap_den">
+                        <i class="fa fa-clock-o me-1"/>
+                        <b><field name="obligation_sap_den" nolabel="1"
+                                  readonly="1" class="oe_inline"/></b>
+                        nghĩa vụ sắp đến hạn trong 14 ngày.
+                    </div>
+                    <div class="alert alert-secondary" role="alert"
+                         invisible="not obligation_chua_neo">
+                        <i class="fa fa-unlink me-1"/>
+                        <b><field name="obligation_chua_neo" nolabel="1"
+                                  readonly="1" class="oe_inline"/></b>
+                        nghĩa vụ <b>chưa neo được vào điều khoản nào</b> —
+                        khai điều khoản ở trang bên để thư gửi nhà thầu
+                        trích được đúng điều, đúng trang.
+                    </div>
+
+                    <button name="action_dong_bo_nghia_vu_ui" type="object"
+                            string="Đồng bộ nghĩa vụ" class="btn-primary"
+                            icon="fa-refresh"/>
+                    <p class="text-muted mt-2">
+                        Dựng dòng chỉ mục cho hồ sơ phải trình, phát sinh,
+                        khiếu nại, bảo lãnh và mốc thanh toán của hợp đồng
+                        này. Hạn và tình trạng luôn đọc thẳng từ sổ gốc,
+                        nên sửa hạn ở đó <b>không</b> cần đồng bộ lại.
+                    </p>
+
+                    <field name="obligation_ids" nolabel="1" readonly="1">
+                        <list decoration-danger="trang_thai == 'qua_han'"
+                              decoration-warning="trang_thai == 'sap_den'"
+                              decoration-muted="trang_thai == 'xong'">
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="ben"/>
+                            <field name="loai"/>
+                            <field name="clause_number" string="Điều"/>
+                            <field name="han"/>
+                            <field name="so_ngay_con" string="Còn (ngày)"/>
+                            <field name="trang_thai" widget="badge"
+                                   decoration-danger="trang_thai == 'qua_han'"
+                                   decoration-warning="trang_thai == 'sap_den'"
+                                   decoration-success="trang_thai == 'xong'"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="Điều khoản" name="clauses">
+                    <field name="clause_ids" nolabel="1"
+                           context="{'default_contract_id': id}">
+                        <list editable="bottom"
+                              decoration-muted="not is_current">
+                            <field name="sequence" widget="handle"/>
+                            <field name="number"/>
+                            <field name="name"/>
+                            <field name="page"/>
+                            <field name="notice_days"
+                                   string="Số ngày quy định"/>
+                            <field name="amendment_id"/>
+                            <field name="is_current" string="Hiện hành"/>
+                            <field name="source"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

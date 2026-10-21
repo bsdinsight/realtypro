@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bắt bản ghi mới tạo trong ngày. Hạn và tình trạng là trường tính
+         nên KHÔNG cần lịch này để đúng số — lịch chỉ lo "thiếu dòng". -->
+    <record id="cron_rp_obligation_sync" model="ir.cron">
+        <field name="name">EPCOne: Đồng bộ sổ nghĩa vụ hợp đồng</field>
+        <field name="model_id" ref="rp_contract.model_rp_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_dong_bo_nghia_vu()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

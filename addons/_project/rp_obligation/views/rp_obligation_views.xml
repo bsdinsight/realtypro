@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rp_obligation_list" model="ir.ui.view">
+        <field name="name">rp.obligation.list</field>
+        <field name="model">rp.obligation</field>
+        <field name="arch" type="xml">
+            <list string="Nghĩa vụ hợp đồng"
+                  decoration-danger="trang_thai == 'qua_han'"
+                  decoration-warning="trang_thai == 'sap_den'"
+                  decoration-muted="trang_thai == 'xong'">
+                <field name="code" optional="show"/>
+                <field name="contract_id" optional="show"/>
+                <field name="name"/>
+                <field name="ben"/>
+                <field name="loai"/>
+                <field name="clause_number" string="Điều" optional="show"/>
+                <field name="han"/>
+                <field name="so_ngay_con" string="Còn (ngày)"
+                       optional="show"/>
+                <field name="trang_thai" widget="badge"
+                       decoration-danger="trang_thai == 'qua_han'"
+                       decoration-warning="trang_thai == 'sap_den'"
+                       decoration-success="trang_thai == 'xong'"/>
+                <field name="nguon" optional="hide"/>
+                <field name="nguoi_phu_trach_id" optional="hide"
+                       widget="many2one_avatar_user"/>
+                <field name="project_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_obligation_form" model="ir.ui.view">
+        <field name="name">rp.obligation.form</field>
+        <field name="model">rp.obligation</field>
+        <field name="arch" type="xml">
+            <form string="Nghĩa vụ hợp đồng">
+                <header>
+                    <button name="action_mo_ban_ghi_goc" type="object"
+                            string="Mở sổ gốc" class="btn-primary"
+                            invisible="nguon != 'so_rieng'"/>
+                    <field name="trang_thai" widget="statusbar"
+                           statusbar_visible="con_han,sap_den,qua_han,xong"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nghĩa vụ gì"/></h1>
+                        <h3><field name="code" readonly="1"/></h3>
+                    </div>
+
+                    <div class="alert alert-info" role="alert"
+                         invisible="nguon != 'so_rieng'">
+                        <i class="fa fa-link me-1"/>
+                        Dòng này là <b>chỉ mục</b> của một bản ghi ở sổ
+                        chuyên. Hạn và tình trạng đọc thẳng từ sổ gốc —
+                        muốn sửa hạn thì sửa ở đó, để một việc chỉ có một
+                        chỗ ghi.
+                    </div>
+
+                    <group>
+                        <group string="Hợp đồng">
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="contractor_id" readonly="1"/>
+                            <field name="clause_id"
+                                   options="{'no_create_edit': True}"/>
+                        </group>
+                        <group string="Phân loại">
+                            <field name="ben"/>
+                            <field name="loai"/>
+                            <field name="vai"/>
+                            <field name="nguoi_phu_trach_id"
+                                   widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Hạn">
+                            <field name="han" readonly="1"/>
+                            <field name="ngay_xong" readonly="1"/>
+                            <field name="so_ngay_con" readonly="1"/>
+                        </group>
+                        <group string="Tự quản"
+                               invisible="nguon == 'so_rieng'">
+                            <field name="han_tu_quan"/>
+                            <field name="ngay_xong_tu_quan"/>
+                        </group>
+                        <group string="Sổ gốc"
+                               invisible="nguon != 'so_rieng'">
+                            <field name="nguon" readonly="1"/>
+                            <field name="document_id" readonly="1"
+                                   invisible="not document_id"/>
+                            <field name="variation_id" readonly="1"
+                                   invisible="not variation_id"/>
+                            <field name="claim_id" readonly="1"
+                                   invisible="not claim_id"/>
+                            <field name="guarantee_id" readonly="1"
+                                   invisible="not guarantee_id"/>
+                            <field name="milestone_id" readonly="1"
+                                   invisible="not milestone_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Ghi chú">
+                        <field name="ghi_chu" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rp_obligation_search" model="ir.ui.view">
+        <field name="name">rp.obligation.search</field>
+        <field name="model">rp.obligation</field>
+        <field name="arch" type="xml">
+            <search string="Nghĩa vụ hợp đồng">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <field name="clause_number" string="Số điều"/>
+
+                <filter name="f_qua_han" string="Quá hạn"
+                        domain="[('trang_thai', '=', 'qua_han')]"/>
+                <filter name="f_sap_den" string="Sắp đến hạn"
+                        domain="[('trang_thai', '=', 'sap_den')]"/>
+                <filter name="f_chua_xong" string="Chưa xong"
+                        domain="[('trang_thai', '!=', 'xong')]"/>
+                <separator/>
+                <filter name="f_nha_thau" string="Nhà thầu gánh"
+                        domain="[('ben', '=', 'nha_thau')]"/>
+                <filter name="f_chu_dau_tu" string="Chúng ta gánh"
+                        domain="[('ben', '=', 'chu_dau_tu')]"/>
+                <separator/>
+                <filter name="f_chua_neo" string="Chưa neo điều khoản"
+                        domain="[('clause_id', '=', False)]"/>
+
+                <separator/>
+                <filter name="group_loai" string="Loại nghĩa vụ"
+                        context="{'group_by': 'loai'}"/>
+                <filter name="group_ben" string="Bên gánh"
+                        context="{'group_by': 'ben'}"/>
+                <filter name="group_trang_thai" string="Tình trạng"
+                        context="{'group_by': 'trang_thai'}"/>
+                <filter name="group_contract" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="group_han" string="Hạn (tháng)"
+                        context="{'group_by': 'han:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_obligation" model="ir.actions.act_window">
+        <field name="name">Sổ nghĩa vụ hợp đồng</field>
+        <field name="res_model">rp.obligation</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_chua_xong': 1,
+                               'search_default_group_loai': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Sổ còn trống</p>
+            <p>Mở một hợp đồng và bấm <b>Đồng bộ nghĩa vụ</b> để dựng sổ
+               từ các sổ chuyên đã có — hồ sơ phải trình, phát sinh,
+               khiếu nại, bảo lãnh, mốc thanh toán.</p>
+        </field>
+    </record>
+
+</odoo>

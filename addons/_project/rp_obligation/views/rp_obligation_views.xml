@@ -23,6 +23,12 @@
                        decoration-warning="trang_thai == 'sap_den'"
                        decoration-success="trang_thai == 'xong'"/>
                 <field name="nguon" optional="hide"/>
+                <field name="so_hieu" optional="hide"/>
+                <field name="ben_thu_ba_id" optional="hide"/>
+                <field name="hieu_luc_den" string="Hết hiệu lực"
+                       optional="hide"/>
+                <field name="la_dinh_ky" column_invisible="True"/>
+                <field name="so_ky_qua_han" column_invisible="True"/>
                 <field name="nguoi_phu_trach_id" optional="hide"
                        widget="many2one_avatar_user"/>
                 <field name="project_id" column_invisible="True"/>
@@ -39,10 +45,30 @@
                     <button name="action_mo_ban_ghi_goc" type="object"
                             string="Mở sổ gốc" class="btn-primary"
                             invisible="nguon != 'so_rieng'"/>
+                    <button name="action_sinh_ky" type="object"
+                            string="Sinh các kỳ" class="btn-primary"
+                            icon="fa-calendar-plus-o"
+                            invisible="not la_dinh_ky"/>
                     <field name="trang_thai" widget="statusbar"
-                           statusbar_visible="con_han,sap_den,qua_han,xong"/>
+                           statusbar_visible="con_han,sap_den,qua_han,xong"
+                           invisible="la_dinh_ky"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_ky" type="object"
+                                class="oe_stat_button" icon="fa-calendar"
+                                invisible="not la_dinh_ky">
+                            <field name="so_ky" widget="statinfo"
+                                   string="Kỳ"/>
+                        </button>
+                        <button name="action_xem_ky" type="object"
+                                class="oe_stat_button text-danger"
+                                icon="fa-exclamation-triangle"
+                                invisible="not so_ky_qua_han">
+                            <field name="so_ky_qua_han" widget="statinfo"
+                                   string="Kỳ quá hạn"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Nghĩa vụ gì"/></h1>
                         <h3><field name="code" readonly="1"/></h3>
@@ -102,6 +128,69 @@
                         </group>
                     </group>
 
+                    <group string="Giấy tờ bên thứ ba cấp"
+                           invisible="loai not in ('bao_hiem', 'bao_hanh',
+                                                   'giay_phep')">
+                        <group>
+                            <field name="ben_thu_ba_id"/>
+                            <field name="so_hieu"/>
+                        </group>
+                        <group>
+                            <field name="hieu_luc_tu"/>
+                            <field name="hieu_luc_den"/>
+                            <field name="gia_tri"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Lịch định kỳ">
+                        <group>
+                            <field name="la_dinh_ky"
+                                   widget="boolean_toggle"
+                                   invisible="parent_id or nguon == 'so_rieng'"/>
+                            <field name="parent_id" readonly="1"
+                                   invisible="not parent_id"/>
+                            <field name="ky_bat_dau" readonly="1"
+                                   invisible="not parent_id"/>
+                        </group>
+                        <group invisible="not la_dinh_ky">
+                            <field name="chu_ky"
+                                   required="la_dinh_ky"/>
+                            <field name="ky_tu" required="la_dinh_ky"/>
+                            <field name="ky_den"/>
+                            <field name="han_sau_ky"/>
+                        </group>
+                    </group>
+
+                    <notebook invisible="not la_dinh_ky">
+                        <page string="Các kỳ" name="ky">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle me-1"/>
+                                Mỗi kỳ là một dòng riêng có hạn riêng, nên
+                                <b>tháng nào đã nộp, tháng nào chưa</b> là
+                                câu trả lời được. Bản thân cái lịch không
+                                có hạn — một cái lịch thì không quá hạn.
+                                Sinh kỳ chạy lại <b>không đẻ thêm</b>.
+                            </div>
+                            <field name="child_ids" nolabel="1" readonly="1">
+                                <list decoration-danger="trang_thai == 'qua_han'"
+                                      decoration-warning="trang_thai == 'sap_den'"
+                                      decoration-muted="trang_thai == 'xong'">
+                                    <field name="name"/>
+                                    <field name="han_tu_quan" string="Hạn"/>
+                                    <field name="ngay_xong_tu_quan"
+                                           string="Đã nộp"/>
+                                    <field name="so_ngay_con"
+                                           string="Còn (ngày)"/>
+                                    <field name="trang_thai" widget="badge"
+                                           decoration-danger="trang_thai == 'qua_han'"
+                                           decoration-warning="trang_thai == 'sap_den'"
+                                           decoration-success="trang_thai == 'xong'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
                     <group string="Ghi chú">
                         <field name="ghi_chu" nolabel="1"/>
                     </group>
@@ -136,6 +225,14 @@
                 <separator/>
                 <filter name="f_chua_neo" string="Chưa neo điều khoản"
                         domain="[('clause_id', '=', False)]"/>
+                <separator/>
+                <filter name="f_giay_to" string="Bảo hiểm / bảo hành / giấy phép"
+                        domain="[('loai', 'in',
+                                  ['bao_hiem', 'bao_hanh', 'giay_phep'])]"/>
+                <filter name="f_lich" string="Lịch định kỳ"
+                        domain="[('la_dinh_ky', '=', True)]"/>
+                <filter name="f_an_ky" string="Ẩn các kỳ con"
+                        domain="[('parent_id', '=', False)]"/>
 
                 <separator/>
                 <filter name="group_loai" string="Loại nghĩa vụ"

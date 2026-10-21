@@ -11,4 +11,16 @@
         <field name="interval_type">days</field>
         <field name="active" eval="True"/>
     </record>
+
+    <!-- Đẩy chân trời sinh kỳ tiến lên theo thời gian. Không sinh quá
+         12 tháng tới, nên lịch dài phải được đẩy dần. -->
+    <record id="cron_rp_obligation_sinh_ky" model="ir.cron">
+        <field name="name">EPCOne: Sinh kỳ cho nghĩa vụ định kỳ</field>
+        <field name="model_id" ref="rp_obligation.model_rp_obligation"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sinh_ky()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
 </odoo>

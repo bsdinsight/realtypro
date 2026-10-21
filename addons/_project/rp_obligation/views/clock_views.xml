@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cờ "lệch điều khoản" đặt NGAY CẠNH ô số ngày, không gom lên đầu
+         form. Cảnh báo nằm xa chỗ gây ra nó thì người sửa không nối được
+         hai thứ với nhau. -->
+
+    <record id="view_rp_document_form_clause" model="ir.ui.view">
+        <field name="name">rp.document.form.clause</field>
+        <field name="model">rp.document</field>
+        <field name="inherit_id" ref="rp_document.view_rp_document_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='review_days']" position="after">
+                <field name="review_theo_dieu" readonly="1"
+                       invisible="not review_theo_dieu"/>
+                <div colspan="2" class="alert alert-warning mb-0"
+                     role="alert" invisible="not review_lech">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    Hồ sơ này dùng <b><field name="review_days"
+                        readonly="1" nolabel="1" class="oe_inline"/></b>
+                    ngày, trong khi hợp đồng quy định
+                    <b><field name="review_theo_dieu" readonly="1"
+                        nolabel="1" class="oe_inline"/></b> ngày.
+                    Hợp lệ nếu có văn bản gia hạn riêng — còn không thì
+                    <button name="action_ap_so_ngay_tu_dieu" type="object"
+                            string="áp theo điều khoản"
+                            class="btn-link p-0 align-baseline"/>.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_variation_form_clause" model="ir.ui.view">
+        <field name="name">rp.variation.form.clause</field>
+        <field name="model">rp.variation</field>
+        <field name="inherit_id" ref="rp_variation.view_rp_variation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quote_days']" position="after">
+                <field name="quote_theo_dieu" readonly="1"
+                       invisible="not quote_theo_dieu"/>
+            </xpath>
+            <xpath expr="//field[@name='objection_days']" position="after">
+                <field name="objection_theo_dieu" readonly="1"
+                       invisible="not objection_theo_dieu"/>
+                <div colspan="2" class="alert alert-warning mb-0"
+                     role="alert"
+                     invisible="not quote_lech and not objection_lech">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    Số ngày trên phiếu này khác điều khoản hợp đồng đã khai.
+                    <button name="action_ap_so_ngay_tu_dieu" type="object"
+                            string="Áp theo điều khoản"
+                            class="btn-link p-0 align-baseline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_rp_claim_form_clause" model="ir.ui.view">
+        <field name="name">rp.claim.form.clause</field>
+        <field name="model">rp.claim</field>
+        <field name="inherit_id" ref="rp_claim.view_rp_claim_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='notice_days']" position="after">
+                <field name="notice_theo_dieu" readonly="1"
+                       invisible="not notice_theo_dieu"/>
+                <div colspan="2" class="alert alert-warning mb-0"
+                     role="alert" invisible="not notice_lech">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    Khiếu nại này dùng <b><field name="notice_days"
+                        readonly="1" nolabel="1" class="oe_inline"/></b>
+                    ngày, hợp đồng quy định
+                    <b><field name="notice_theo_dieu" readonly="1"
+                        nolabel="1" class="oe_inline"/></b> ngày.
+                    Hạn thông báo tính sai là mất quyền khiếu nại, nên
+                    đừng để lệch mà không có lý do ghi lại.
+                    <button name="action_ap_so_ngay_tu_dieu" type="object"
+                            string="Áp theo điều khoản"
+                            class="btn-link p-0 align-baseline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Trang Điều khoản trên hợp đồng: nút khai mẫu + cờ lệch hạn xem xét -->
+    <record id="view_rp_contract_form_clause_clock" model="ir.ui.view">
+        <field name="name">rp.contract.form.clause.clock</field>
+        <field name="model">rp.contract</field>
+        <field name="inherit_id"
+               ref="rp_obligation.view_rp_contract_form_obligation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='clauses']/field[@name='clause_ids']"
+                   position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="not doc_review_lech">
+                    <i class="fa fa-exclamation-triangle me-1"/>
+                    Hạn xem xét hồ sơ của hợp đồng này đặt
+                    <b><field name="doc_review_days" readonly="1"
+                        nolabel="1" class="oe_inline"/></b> ngày, trong khi
+                    điều khoản đã khai nói
+                    <b><field name="doc_review_theo_dieu" readonly="1"
+                        nolabel="1" class="oe_inline"/></b> ngày.
+                    <button name="action_ap_han_xem_xet_tu_dieu"
+                            type="object" string="Áp theo điều khoản"
+                            class="btn-link p-0 align-baseline"/>
+                </div>
+
+                <button name="action_khai_dieu_khoan_mau" type="object"
+                        string="Khai điều khoản mẫu FIDIC"
+                        icon="fa-magic" class="btn-secondary"
+                        invisible="clause_count"/>
+                <p class="text-muted mt-2" invisible="clause_count">
+                    Khai nhanh bốn điều khoản hay dùng (5.2 · 13.1 · 13.3 ·
+                    20.1) với đúng số ngày mà phần mềm vẫn ngầm dùng. Nó
+                    <b>không thêm giả định nào</b> — chỉ đưa giả định sẵn
+                    có ra chỗ sửa được. Sau đó mở từng điều, điền trang và
+                    trích đoạn, sửa số ngày cho khớp bản giấy.
+                </p>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -90,6 +90,7 @@ class RpContractClause(models.Model):
     # ----- Nguồn trích ----------------------------------------------------
     source = fields.Selection(
         [('nguoi', 'Người nhập'),
+         ('mau', 'Mẫu FIDIC — chưa đối chiếu hợp đồng'),
          ('may', 'Máy trích — chờ xác nhận'),
          ('xac_nhan', 'Máy trích — đã xác nhận')],
         string='Nguồn', default='nguoi', required=True, tracking=True,

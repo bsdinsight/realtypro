@@ -101,6 +101,8 @@
                             <field name="date_quote"/>
                             <field name="quote_on_time" readonly="1"/>
                             <field name="date_instruction"/>
+                            <field name="objection_days"
+                                   invisible="not date_instruction"/>
                             <field name="objection_due_date" readonly="1"
                                    invisible="not date_instruction"/>
                             <field name="objection_date"

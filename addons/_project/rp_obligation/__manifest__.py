@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ nghĩa vụ hợp đồng',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Điều khoản thành dữ liệu, và MỘT sổ cái trả lời "hợp đồng '
                'này buộc ai làm gì, hạn nào" — chỉ mục sang các sổ đã có, '
@@ -59,6 +59,7 @@ chuyên) và lớp đọc hợp đồng bằng máy — thuộc các bản sau. 
         'views/rp_contract_clause_views.xml',
         'views/rp_obligation_views.xml',
         'views/rp_contract_views.xml',
+        'views/clock_views.xml',
         'views/menus.xml',
     ],
     'installable': True,

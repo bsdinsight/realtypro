@@ -87,10 +87,15 @@ class RpVariation(models.Model):
         string='Báo giá đúng hạn', compute='_compute_clocks', store=True)
 
     date_instruction = fields.Date(string='Ngày chỉ thị', tracking=True)
+    objection_days = fields.Integer(
+        string='Hạn phản đối (ngày)', default=14,
+        help='Điều 13.1. Trước đây số này viết cứng trong công thức nên '
+             'hợp đồng quy định khác là hệ thống âm thầm tính sai hạn — '
+             'mà không ai thấy, vì trên màn hình chỉ hiện ra ngày.')
     objection_due_date = fields.Date(
         string='Hạn phản đối chỉ thị', compute='_compute_clocks', store=True,
-        help='Điều 13.1: nhà thầu có 14 ngày để phản đối, chỉ với bốn lý '
-             'do hợp đồng cho phép.')
+        help='Điều 13.1: nhà thầu được phản đối trong thời hạn hợp đồng '
+             'quy định, chỉ với bốn lý do hợp đồng cho phép.')
     objection_date = fields.Date(string='Ngày nhà thầu phản đối',
                                  tracking=True)
     objection_ground = fields.Selection(
@@ -143,7 +148,7 @@ class RpVariation(models.Model):
 
     # ------------------------------------------------------------------
     @api.depends('date_request', 'quote_days', 'date_quote',
-                 'date_instruction')
+                 'date_instruction', 'objection_days')
     def _compute_clocks(self):
         for rec in self:
             rec.quote_due_date = (
@@ -157,8 +162,9 @@ class RpVariation(models.Model):
                 rec.quote_late_days = 0
                 rec.quote_on_time = False
             rec.objection_due_date = (
-                fields.Date.add(rec.date_instruction, days=14)
-                if rec.date_instruction else False)
+                fields.Date.add(rec.date_instruction,
+                                days=rec.objection_days)
+                if rec.date_instruction and rec.objection_days else False)
 
     @api.depends('line_ids.amount')
     def _compute_amounts(self):

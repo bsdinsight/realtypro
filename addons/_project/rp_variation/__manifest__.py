@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ phát sinh (Variation)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Realty/Project',
     'summary': 'Thay đổi phạm vi theo điều 13: đồng hồ báo giá 14 ngày, '
                'giá theo đơn giá hợp đồng, ra phụ lục và vào dự báo chi phí.',

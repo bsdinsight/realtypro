@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_chain_user,eam.chain user,model_eam_chain,re_base.group_re_user,1,1,1,0
+access_eam_chain_manager,eam.chain manager,model_eam_chain,re_base.group_re_manager,1,1,1,1
+access_eam_chain_node_user,eam.chain.node user,model_eam_chain_node,re_base.group_re_user,1,1,1,0
+access_eam_chain_node_manager,eam.chain.node manager,model_eam_chain_node,re_base.group_re_manager,1,1,1,1
+access_eam_chain_day_user,eam.chain.day user,model_eam_chain_day,re_base.group_re_user,1,1,1,0
+access_eam_chain_day_manager,eam.chain.day manager,model_eam_chain_day,re_base.group_re_manager,1,1,1,1

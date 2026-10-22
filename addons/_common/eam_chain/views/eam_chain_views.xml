@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_chain_form" model="ir.ui.view">
+        <field name="name">eam.chain.form</field>
+        <field name="model">eam.chain</field>
+        <field name="arch" type="xml">
+            <form string="Chuỗi điểm đo">
+                <header>
+                    <button name="action_sinh_ngay" type="object"
+                            string="Dựng sản lượng ngày" class="btn-primary"
+                            icon="fa-calculator"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Chuỗi đo chính"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="node_count"/>
+                            <field name="day_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Các bậc" name="nodes">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle me-1"/>
+                                Xếp bậc theo <b>đường đi của điện</b>, từ
+                                thiết bị phát ra lưới. Tổn thất tính giữa
+                                mỗi bậc và bậc đứng ngay trước nó — nên
+                                <b>thứ tự là thứ quyết định con số</b>.
+                                <br/>Bậc <b>tự dùng</b> và <b>ban đêm</b>
+                                không tham gia phép trừ: chúng là tiêu thụ
+                                có chủ đích, không phải thất thoát.
+                            </div>
+                            <field name="node_ids">
+                                <list editable="bottom"
+                                      decoration-info="is_billing"
+                                      decoration-muted="node_type != 'san_luong'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="node_type"/>
+                                    <field name="is_billing"
+                                           widget="boolean_toggle"/>
+                                    <field name="is_pr_source"
+                                           widget="boolean_toggle"/>
+                                    <field name="meter_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="tag_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="doi_chieu_nguong"/>
+                                    <field name="nhap_tay" readonly="1"
+                                           widget="boolean_toggle"/>
+                                    <field name="note" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_chain_list" model="ir.ui.view">
+        <field name="name">eam.chain.list</field>
+        <field name="model">eam.chain</field>
+        <field name="arch" type="xml">
+            <list string="Chuỗi điểm đo">
+                <field name="plant_id"/>
+                <field name="name"/>
+                <field name="node_count"/>
+                <field name="day_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_chain" model="ir.actions.act_window">
+        <field name="name">Chuỗi điểm đo</field>
+        <field name="res_model">eam.chain</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai chuỗi nào</p>
+            <p>Khai các bậc điện đi qua, từ thiết bị phát tới công-tơ bán
+               điện. Khai một lần, dùng cho mọi ngày — và cùng một cấu
+               trúc chạy được cho cả điện gió lẫn điện mặt trời.</p>
+        </field>
+    </record>
+
+    <!-- ===== Sản lượng ngày theo bậc ===== -->
+    <record id="view_eam_chain_day_list" model="ir.ui.view">
+        <field name="name">eam.chain.day.list</field>
+        <field name="model">eam.chain.day</field>
+        <field name="arch" type="xml">
+            <list string="Sản lượng theo bậc" expand="1"
+                  decoration-danger="canh_bao_lech"
+                  decoration-muted="node_type != 'san_luong'">
+                <field name="date"/>
+                <field name="plant_id" optional="show"/>
+                <field name="sequence" string="Bậc"/>
+                <field name="node_id"/>
+                <field name="node_type" optional="hide"/>
+                <field name="energy_truoc" string="Bậc trước"/>
+                <field name="energy"/>
+                <field name="loss_kwh"/>
+                <field name="loss_pct"/>
+                <field name="luy_ke_thang" optional="show"/>
+                <field name="luy_ke_nam" optional="hide"/>
+                <field name="energy_scada" optional="hide"/>
+                <field name="lech_scada_pct" optional="hide"/>
+                <field name="nguon" optional="show" widget="badge"/>
+                <field name="canh_bao_lech" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_chain_day_form" model="ir.ui.view">
+        <field name="name">eam.chain.day.form</field>
+        <field name="model">eam.chain.day</field>
+        <field name="arch" type="xml">
+            <form string="Sản lượng ngày theo bậc">
+                <sheet>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not canh_bao_lech">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        Công-tơ và SCADA lệch
+                        <b><field name="lech_scada_pct" nolabel="1"
+                                  readonly="1" class="oe_inline"/>%</b>
+                        — vượt ngưỡng đã khai. Một trong hai nguồn sai, và
+                        sai nguồn nào thì hậu quả khác nhau.
+                    </div>
+                    <group>
+                        <group string="Bậc và ngày">
+                            <field name="node_id"
+                                   options="{'no_create': True}"/>
+                            <field name="date"/>
+                            <field name="node_type" readonly="1"/>
+                            <field name="nguon"/>
+                        </group>
+                        <group string="Sản lượng">
+                            <field name="energy"/>
+                            <field name="energy_scada"/>
+                            <field name="energy_truoc" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Tổn thất so với bậc trước">
+                            <field name="loss_kwh" readonly="1"/>
+                            <field name="loss_pct" readonly="1"/>
+                        </group>
+                        <group string="Luỹ kế">
+                            <field name="luy_ke_thang" readonly="1"/>
+                            <field name="luy_ke_nam" readonly="1"/>
+                            <div colspan="2" class="text-muted">
+                                Luỹ kế <b>tính lại mỗi lần đọc</b>, không
+                                lưu. Sửa một ngày giữa tháng thì mọi ngày
+                                sau nó đúng ngay, không phải chạy lại gì.
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_chain_day_search" model="ir.ui.view">
+        <field name="name">eam.chain.day.search</field>
+        <field name="model">eam.chain.day</field>
+        <field name="arch" type="xml">
+            <search string="Sản lượng theo bậc">
+                <field name="plant_id"/>
+                <field name="node_id"/>
+                <field name="date"/>
+                <filter name="f_lech" string="Lệch SCADA quá ngưỡng"
+                        domain="[('canh_bao_lech', '=', True)]"/>
+                <filter name="f_san_luong" string="Chỉ bậc sản lượng"
+                        domain="[('node_type', '=', 'san_luong')]"/>
+                <filter name="f_ton_that" string="Có tổn thất"
+                        domain="[('loss_kwh', '!=', 0)]"/>
+                <separator/>
+                <filter name="g_ngay" string="Ngày"
+                        context="{'group_by': 'date'}"/>
+                <filter name="g_bac" string="Bậc"
+                        context="{'group_by': 'node_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+                <searchpanel>
+                    <field name="plant_id" icon="fa-industry"
+                           enable_counters="1" expand="1"/>
+                    <field name="node_type" select="multi" icon="fa-sitemap"
+                           enable_counters="1" expand="1"/>
+                    <field name="nguon" select="multi" icon="fa-database"
+                           enable_counters="1" expand="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_chain_day" model="ir.actions.act_window">
+        <field name="name">Sản lượng theo bậc đo</field>
+        <field name="res_model">eam.chain.day</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_ngay': 1}</field>
+    </record>
+
+    <!-- ===== Nút lấy sản lượng trên màn hiệu suất ===== -->
+    <record id="view_eam_solar_kpi_form_chain" model="ir.ui.view">
+        <field name="name">eam.solar.kpi.form.chain</field>
+        <field name="model">eam.solar.kpi</field>
+        <field name="inherit_id" ref="eam_solar.view_eam_solar_kpi_form"/>
+        <field name="arch" type="xml">
+            <field name="energy_ac" position="after">
+                <field name="chain_day_id" readonly="1"
+                       invisible="not chain_day_id"/>
+                <button name="action_lay_san_luong_tu_chuoi" type="object"
+                        string="Lấy từ chuỗi điểm đo" icon="fa-download"
+                        class="btn-link"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_chain_day" name="Sản lượng theo bậc đo"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_chain_day" sequence="5"/>
+    <menuitem id="menu_eam_chain" name="Chuỗi điểm đo"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_chain" sequence="47"/>
+
+</odoo>

@@ -144,13 +144,13 @@
                      kỳ con số ngày nào. -->
                 <searchpanel>
                     <field name="contract_id" string="Hợp đồng"
-                           icon="fa-file-text-o" enable_counters="1"/>
+                           icon="fa-file-text-o" enable_counters="1" expand="1"/>
                     <field name="source" string="Nguồn"
                            select="multi" icon="fa-check-square-o"
-                           enable_counters="1"/>
+                           enable_counters="1" expand="1"/>
                     <field name="amendment_id" string="Theo phụ lục"
                            select="multi" icon="fa-files-o"
-                           enable_counters="1" expand="0"/>
+                           enable_counters="1" expand="1"/>
                 </searchpanel>
             </search>
         </field>

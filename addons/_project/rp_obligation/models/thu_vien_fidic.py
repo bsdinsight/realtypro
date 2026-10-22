@@ -45,6 +45,7 @@ MOC = {
     'cuoi_ky': 'Ngày cuối kỳ',
     'nhan_phieu': 'Ngày nhận phiếu giá',
     'het_bao_hanh': 'Ngày hết thời hạn thông báo khuyết tật',
+    'nghiem_thu': 'Ngày nghiệm thu bàn giao (Taking Over)',
     'nhan_chung_chi': 'Ngày nhận Chứng chỉ thực hiện',
 }
 
@@ -174,6 +175,31 @@ THU_VIEN_FIDIC = [
                'KHÔNG đặt số ngày cứng, khác hẳn phía nhà thầu. Đây là '
                'chỗ bất đối xứng, đừng áp 28 ngày cho cả hai chiều.'),
 
+    # ---- Tiến độ: mốc và hậu quả chậm --------------------------------
+    dict(so='8.2', ten='Time for Completion — thời hạn hoàn thành',
+         ngay=0, moc='khoi_cong', loai='moc_tien_do', ben='nha_thau',
+         sinh=False, chu_ky=None,
+         mo_ta='Mốc hoàn thành của hợp đồng và từng phần việc. Các mốc cụ '
+               'thể nằm ở lịch thi công, nên điều này là chỗ NEO chứ không '
+               'tự sinh nghĩa vụ — sinh ở đây là đếm đôi với lịch.'),
+    dict(so='8.7', ten='Delay Damages — phạt chậm tiến độ',
+         ngay=0, moc='nghiem_thu', loai='moc_tien_do', ben='nha_thau',
+         sinh=False, chu_ky=None,
+         mo_ta='Hậu quả tiền của việc trượt mốc. Không phải nghĩa vụ đứng '
+               'sẵn mà là thứ kích hoạt khi mốc trượt — sổ phạt chậm giữ '
+               'bản ghi, điều này giữ căn cứ.'),
+    dict(so='4.6', ten='Co-operation — phối hợp giữa các gói thầu',
+         ngay=0, moc='khoi_cong', loai='ranh_gioi', ben='hai_ben',
+         sinh=False, chu_ky=None,
+         mo_ta='Căn cứ cho sổ ranh giới gói thầu: ai giao gì cho ai, cần '
+               'ngày nào. Từng ranh giới là một bản ghi riêng nên điều này '
+               'chỉ làm chỗ neo.'),
+    dict(so='4.4', ten='Subcontractors — nhà thầu phụ được chấp thuận',
+         ngay=28, moc='su_kien', loai='ho_so', ben='nha_thau',
+         sinh=False, chu_ky=None,
+         mo_ta='Nhà thầu phải thông báo trước khi dùng nhà thầu phụ. Mỗi '
+               'nhà thầu phụ là một lần thông báo riêng nên không sinh sẵn.'),
+
     # ---- Nghiệm thu & bảo hành ---------------------------------------
     dict(so='9.1', ten='Tests on Completion — thông báo chạy thử nghiệm thu',
          ngay=21, moc='su_kien', loai='ho_so', ben='nha_thau',
@@ -191,6 +217,20 @@ THU_VIEN_FIDIC = [
          mo_ta='Chủ đầu tư cấp Chứng chỉ thực hiện trong 28 ngày sau khi '
                'hết thời hạn thông báo khuyết tật. Đây cũng là mốc giải '
                'phóng bảo lãnh thực hiện.'),
+
+    dict(so='11.1', ten='Defects Notification Period — bảo hành, sửa khuyết tật',
+         ngay=0, moc='nghiem_thu', loai='bao_hanh', ben='nha_thau',
+         sinh=True, chu_ky=None,
+         mo_ta='Nghĩa vụ sửa khuyết tật trong thời hạn thông báo khuyết '
+               'tật, tính từ ngày nghiệm thu bàn giao. Thời hạn do Điều '
+               'kiện Riêng đặt (thường 12 hoặc 24 tháng) — khai vào ô hạn '
+               'khi biết ngày nghiệm thu.'),
+    dict(so='12.1', ten='Tests after Completion — cam kết hiệu suất',
+         ngay=0, moc='nghiem_thu', loai='hieu_suat', ben='nha_thau',
+         sinh=True, chu_ky=None,
+         mo_ta='Chạy thử sau nghiệm thu và cam kết hiệu suất (với điện gió '
+               'là đường cong công suất và mức ồn). Không đạt thì ra phạt '
+               'hiệu suất theo Điều kiện Riêng.'),
 
     # ---- Thanh toán ---------------------------------------------------
     dict(so='14.3', ten='Application for Interim Payment — hồ sơ thanh toán kỳ',

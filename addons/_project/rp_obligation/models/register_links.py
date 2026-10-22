@@ -42,3 +42,24 @@ class RpContractPaymentMilestone(models.Model):
 
     obligation_ids = fields.One2many(
         'rp.obligation', 'milestone_id', string='Nghĩa vụ trong sổ cái')
+
+
+class ProjectTask(models.Model):
+    _inherit = 'project.task'
+
+    obligation_ids = fields.One2many(
+        'rp.obligation', 'task_id', string='Nghĩa vụ trong sổ cái')
+
+
+class RpInterface(models.Model):
+    _inherit = 'rp.interface'
+
+    obligation_ids = fields.One2many(
+        'rp.obligation', 'interface_id', string='Nghĩa vụ trong sổ cái')
+
+
+class RpRfi(models.Model):
+    _inherit = 'rp.rfi'
+
+    obligation_ids = fields.One2many(
+        'rp.obligation', 'rfi_id', string='Nghĩa vụ trong sổ cái')

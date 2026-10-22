@@ -24,6 +24,10 @@ from odoo import _, api, fields, models
 #: đoán. Hợp đồng đánh số khác thì đơn giản là không nối, và màn hình
 #: hiện ra là "chưa neo điều khoản" chứ không neo bừa vào điều sai.
 DIEU_THEO_VAI = {
+    'dat_moc': '8.2',      # Time for Completion
+    'ban_giao': '4.6',     # Co-operation (bàn giao giữa các gói thầu)
+    # 'tra_loi_rfi' cố ý KHÔNG neo: FIDIC không có điều riêng cho RFI.
+    # Neo bừa vào 1.3 Communications thì sai mà trông như đúng.
     'trinh': '5.2',        # Contractor's Documents
     'xem_xet': '5.2',      # cùng điều, nhưng nghĩa vụ của bên kia
     'bao_gia': '13.3',     # Variation Procedure
@@ -34,6 +38,9 @@ DIEU_THEO_VAI = {
 
 #: Model gốc → tên trường trỏ tới nó trên ``rp.obligation``.
 TRUONG_THEO_MODEL = {
+    'project.task': 'task_id',
+    'rp.interface': 'interface_id',
+    'rp.rfi': 'rfi_id',
     'rp.document': 'document_id',
     'rp.variation': 'variation_id',
     'rp.claim': 'claim_id',
@@ -133,7 +140,44 @@ class RpContract(models.Model):
             them(m, 'thanh_toan', 'chu_dau_tu', 'thanh_toan',
                  _('Thanh toán mốc: %s', m.name or m.id))
 
+        # --- Phần RIÊNG của hợp đồng EPC ---------------------------------
+        # Ba sổ dưới là xương sống "hoàn thành" của một hợp đồng xây dựng:
+        # đạt mốc, bàn giao ranh giới giữa các gói, trả lời vướng mắc. Bỏ
+        # chúng ra thì sổ chỉ còn hành chính thường kỳ — thứ giống hệt
+        # nhau dù đang xây nhà máy hay đang vận hành nó.
+        ben_minh = self._ben_thuc_hien()
+        for t in self.env['project.task'].search(
+                [('rp_contract_id', '=', self.id),
+                 ('is_milestone', '=', True)]):
+            them(t, 'dat_moc', ben_minh, 'moc_tien_do',
+                 _('Đạt mốc: %s', t.name or t.id))
+
+        # Ranh giới: nghĩa vụ thuộc BÊN GIAO. Một ranh giới nối hai hợp
+        # đồng, nên chỉ mục nó dưới hợp đồng giao — chỉ mục cả hai bên là
+        # đếm đôi một việc.
+        for i in self.env['rp.interface'].search(
+                [('from_contract_id', '=', self.id)]):
+            them(i, 'ban_giao', ben_minh, 'ranh_gioi',
+                 _('Bàn giao ranh giới: %s', i.name or i.id))
+
+        # RFI: nghĩa vụ thuộc bên TRẢ LỜI, không phải bên hỏi.
+        for r in self.env['rp.rfi'].search(
+                [('contract_id', '=', self.id)]):
+            them(r, 'tra_loi_rfi', 'chu_dau_tu', 'rfi',
+                 _('Trả lời RFI: %s', r.name or r.id))
+
         return ra
+
+    def _ben_thuc_hien(self):
+        """Bên gánh nghĩa vụ thực hiện của chính hợp đồng này.
+
+        Hợp đồng không có nhà thầu là phần việc nội bộ của chủ đầu tư —
+        lúc đó người phải đạt mốc là CHÚNG TA, không phải nhà thầu. Gán
+        cứng 'nha_thau' thì màn "ai nợ ai" sai ở đúng những dòng chủ đầu
+        tư cần nhìn nhất.
+        """
+        self.ensure_one()
+        return 'nha_thau' if self.contractor_id else 'chu_dau_tu'
 
     def _neo_dieu_khoan(self, vals):
         """Nối vào điều khoản CHỈ KHI hợp đồng đã khai đúng số điều đó."""

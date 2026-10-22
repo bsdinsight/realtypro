@@ -128,6 +128,12 @@
                                    invisible="not guarantee_id"/>
                             <field name="milestone_id" readonly="1"
                                    invisible="not milestone_id"/>
+                            <field name="task_id" readonly="1"
+                                   invisible="not task_id"/>
+                            <field name="interface_id" readonly="1"
+                                   invisible="not interface_id"/>
+                            <field name="rfi_id" readonly="1"
+                                   invisible="not rfi_id"/>
                         </group>
                     </group>
 

@@ -48,6 +48,15 @@ from odoo.exceptions import UserError
 SAP_DEN_HAN = 14
 
 
+def _ngay(v):
+    """Ép Date/Datetime/False về Date. Trường ngày trong Odoo không nhất
+    quán giữa các module, mà so Datetime với Date thì nổ TypeError lúc
+    chạy chứ không lúc nạp — tức nổ trước mặt người dùng."""
+    if not v:
+        return False
+    return v.date() if hasattr(v, 'hour') else v
+
+
 class RpObligation(models.Model):
     _name = 'rp.obligation'
     _description = 'Nghĩa vụ hợp đồng'
@@ -85,7 +94,10 @@ class RpObligation(models.Model):
         tracking=True, index=True)
 
     loai = fields.Selection(
-        [('ho_so', 'Hồ sơ phải trình'),
+        [('moc_tien_do', 'Mốc tiến độ hợp đồng'),
+         ('ranh_gioi', 'Bàn giao ranh giới gói thầu'),
+         ('rfi', 'Trả lời RFI'),
+         ('ho_so', 'Hồ sơ phải trình'),
          ('xem_xet', 'Xem xét / phê duyệt hồ sơ'),
          ('phat_sinh', 'Phát sinh — báo giá'),
          ('khieu_nai', 'Khiếu nại — thông báo'),
@@ -101,7 +113,10 @@ class RpObligation(models.Model):
         tracking=True, index=True)
 
     vai = fields.Selection(
-        [('trinh', 'Nộp hồ sơ'),
+        [('dat_moc', 'Đạt mốc tiến độ'),
+         ('ban_giao', 'Bàn giao ranh giới'),
+         ('tra_loi_rfi', 'Trả lời RFI'),
+         ('trinh', 'Nộp hồ sơ'),
          ('xem_xet', 'Trả lời hồ sơ'),
          ('bao_gia', 'Nộp báo giá'),
          ('thong_bao', 'Gửi thông báo'),
@@ -126,6 +141,17 @@ class RpObligation(models.Model):
     milestone_id = fields.Many2one(
         'rp.contract.payment.milestone', string='Mốc thanh toán',
         ondelete='cascade', index=True)
+    # Ba sổ dưới đây là phần RIÊNG của hợp đồng EPC — O&M không có khái
+    # niệm tương đương. Thiếu chúng thì sổ nghĩa vụ chỉ còn phần hành
+    # chính thường kỳ, và đọc ra giống hợp đồng vận hành.
+    task_id = fields.Many2one(
+        'project.task', string='Mốc tiến độ', ondelete='cascade',
+        index=True)
+    interface_id = fields.Many2one(
+        'rp.interface', string='Ranh giới gói thầu', ondelete='cascade',
+        index=True)
+    rfi_id = fields.Many2one(
+        'rp.rfi', string='RFI', ondelete='cascade', index=True)
 
     nguon = fields.Selection(
         [('so_rieng', 'Có sổ chuyên — dòng này là chỉ mục'),
@@ -178,13 +204,13 @@ class RpObligation(models.Model):
     # Compute
     # ======================================================================
     @api.depends('document_id', 'variation_id', 'claim_id', 'guarantee_id',
-                 'milestone_id')
+                 'milestone_id', 'task_id', 'interface_id', 'rfi_id')
     def _compute_nguon(self):
         for rec in self:
             rec.nguon = 'so_rieng' if rec._ban_ghi_goc() else 'tai_cho'
 
     @api.depends('document_id', 'variation_id', 'claim_id', 'guarantee_id',
-                 'milestone_id', 'vai')
+                 'milestone_id', 'task_id', 'interface_id', 'rfi_id', 'vai')
     def _compute_khoa(self):
         for rec in self:
             goc = rec._ban_ghi_goc()
@@ -205,7 +231,11 @@ class RpObligation(models.Model):
         'guarantee_id.date_expiry', 'guarantee_id.state',
         'guarantee_id.date_released',
         'milestone_id.due_date', 'milestone_id.paid_date',
-        'milestone_id.state')
+        'milestone_id.state',
+        'task_id.planned_end', 'task_id.date_end', 'task_id.state',
+        'interface_id.date_required', 'interface_id.schedule_need_date',
+        'interface_id.date_actual',
+        'rfi_id.deadline', 'rfi_id.answered_date')
     def _compute_tinh_trang(self):
         hom_nay = fields.Date.context_today(self)
         for rec in self:
@@ -235,7 +265,8 @@ class RpObligation(models.Model):
         """Bản ghi ở sổ chuyên mà dòng này trỏ tới, hoặc ``False``."""
         self.ensure_one()
         return (self.document_id or self.variation_id or self.claim_id
-                or self.guarantee_id or self.milestone_id or False)
+                or self.guarantee_id or self.milestone_id or self.task_id
+                or self.interface_id or self.rfi_id or False)
 
     def _doc_han_va_ngay_xong(self):
         """(hạn, ngày hoàn thành) đọc từ bản ghi gốc — KHÔNG chép, KHÔNG lưu.
@@ -266,6 +297,24 @@ class RpObligation(models.Model):
             m = self.milestone_id
             xong = m.paid_date or (m.due_date if m.state == 'paid' else False)
             return m.due_date, xong
+        if self.task_id:
+            t = self.task_id
+            # planned_end/date_end có thể là Date hoặc Datetime tuỳ module
+            # nào khai; ép về Date để so sánh với hôm nay không vỡ.
+            return _ngay(t.planned_end), (_ngay(t.date_end)
+                                          if t.state == '1_done' else False)
+        if self.interface_id:
+            i = self.interface_id
+            # Hai nguồn ngày, và thứ tự ưu tiên có lý do: date_required là
+            # ngày bên nhận NHẬP TAY, schedule_need_date là ngày LỊCH suy
+            # ra. Nhập tay thắng vì nó là thoả thuận giữa hai bên; thiếu
+            # nó thì lịch vẫn trả lời được. Chỉ đọc date_required thì 9/9
+            # ranh giới trên bản demo đều "không đặt hạn" — đúng mã, vô
+            # dụng với người dùng.
+            return (i.date_required or i.schedule_need_date), i.date_actual
+        if self.rfi_id:
+            r = self.rfi_id
+            return r.deadline, r.answered_date
         return self.han_tu_quan, self.ngay_xong_tu_quan
 
     # ======================================================================

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ nghĩa vụ hợp đồng',
-    'version': '19.0.1.7.0',
+    'version': '19.0.2.0.0',
     'category': 'Realty/Project',
     'summary': 'Điều khoản thành dữ liệu, và MỘT sổ cái trả lời "hợp đồng '
                'này buộc ai làm gì, hạn nào" — chỉ mục sang các sổ đã có, '
@@ -51,6 +51,11 @@ chuyên) và lớp đọc hợp đồng bằng máy — thuộc các bản sau. 
         'rp_variation',
         'rp_claim',
         'rp_contract_guarantee',
+        # Ba sổ riêng của hợp đồng EPC — mốc tiến độ, ranh giới gói thầu,
+        # RFI. Không có chúng thì sổ nghĩa vụ chỉ còn phần hành chính.
+        'rp_schedule',
+        'rp_interface',
+        'rp_rfi',
     ],
     'data': [
         'security/ir.model.access.csv',

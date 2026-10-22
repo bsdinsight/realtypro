@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Hằng số nhà máy, gắn vào form vị trí ===== -->
+    <record id="view_eam_location_form_solar" model="ir.ui.view">
+        <field name="name">eam.location.form.solar</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Điện mặt trời" name="gr_solar">
+                    <field name="is_solar" widget="boolean_toggle"
+                           invisible="location_type != 'plant'"/>
+                    <div colspan="2" class="text-muted"
+                         invisible="location_type == 'plant'">
+                        Hằng số điện mặt trời chỉ khai ở vị trí cấp
+                        <b>Nhà máy</b>.
+                    </div>
+                </group>
+                <group invisible="not is_solar">
+                    <group string="Hằng số nhà máy">
+                        <field name="pv_module_area"/>
+                        <field name="pv_area_pr"
+                               placeholder="để trống = bằng diện tích mô-đun"/>
+                        <field name="pv_module_eff"/>
+                        <field name="pv_planned_temp"/>
+                        <field name="pv_tk_pmpp"/>
+                        <field name="pv_temp_ref"/>
+                        <field name="pv_pr_guaranteed"/>
+                    </group>
+                    <group string="Cách lấy bức xạ">
+                        <field name="pv_irr_mode"/>
+                        <field name="pv_irr_tag_ids" widget="many2many_tags"/>
+                        <field name="pv_irr_tag_count" invisible="1"/>
+                        <div colspan="2" class="alert alert-warning mb-0"
+                             role="alert"
+                             invisible="pv_irr_tag_count or not is_solar">
+                            <i class="fa fa-exclamation-triangle me-1"/>
+                            Chưa chọn cảm biến bức xạ nào. Bức xạ là
+                            <b>mẫu số của tỷ số hiệu suất</b> — thiếu nó thì
+                            mọi con số KPI đều không tính được.
+                        </div>
+                        <field name="weather_count" invisible="1"/>
+                        <button name="action_xem_khi_tuong" type="object"
+                                string="Xem nhật ký khí tượng"
+                                icon="fa-cloud" class="btn-link"
+                                invisible="not weather_count"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ===== Khí tượng ngày ===== -->
+    <record id="view_eam_solar_weather_list" model="ir.ui.view">
+        <field name="name">eam.solar.weather.list</field>
+        <field name="model">eam.solar.weather</field>
+        <field name="arch" type="xml">
+            <list string="Khí tượng ngày" expand="1">
+                <field name="date"/>
+                <field name="plant_id"/>
+                <field name="irradiation" sum="Tổng"/>
+                <field name="irradiance_avg"/>
+                <field name="temp_ambient"/>
+                <field name="temp_module"/>
+                <field name="wind_speed" optional="show"/>
+                <field name="sunny_hours" optional="show"/>
+                <field name="obs_12" string="Trời trưa"/>
+                <field name="nguon" widget="badge"
+                       decoration-success="nguon == 'may'"
+                       decoration-warning="nguon == 'tron'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_solar_weather_form" model="ir.ui.view">
+        <field name="name">eam.solar.weather.form</field>
+        <field name="model">eam.solar.weather</field>
+        <field name="arch" type="xml">
+            <form string="Khí tượng ngày">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="plant_id"
+                                   options="{'no_create': True}"
+                                   domain="[('is_solar','=',True)]"/></h1>
+                        <h2><field name="date"/></h2>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="nguon != 'tron'">
+                        <i class="fa fa-pencil me-1"/>
+                        Bản ghi này <b>máy lấy từ số đo, rồi người sửa</b>.
+                        Giữ dấu để sau còn biết con số nào đã bị can thiệp.
+                    </div>
+                    <group>
+                        <group string="Máy đọc được">
+                            <field name="irradiation"/>
+                            <field name="irr_source"
+                                   invisible="not irr_source"/>
+                            <field name="irradiance_avg"/>
+                            <field name="temp_ambient"/>
+                            <field name="temp_module"/>
+                            <field name="wind_speed"/>
+                            <field name="sunny_hours"/>
+                        </group>
+                        <group string="Người trực quan sát">
+                            <field name="obs_06"/>
+                            <field name="obs_09"/>
+                            <field name="obs_12"/>
+                            <field name="obs_15"/>
+                            <field name="obs_note"/>
+                            <field name="nguon"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_solar_weather_search" model="ir.ui.view">
+        <field name="name">eam.solar.weather.search</field>
+        <field name="model">eam.solar.weather</field>
+        <field name="arch" type="xml">
+            <search string="Khí tượng ngày">
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_thieu_xa" string="Thiếu tổng xạ"
+                        domain="[('irradiation', '=', 0)]"/>
+                <filter name="f_nguoi_sua" string="Người đã sửa số máy lấy"
+                        domain="[('nguon', '=', 'tron')]"/>
+                <separator/>
+                <filter name="g_plant" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+                <searchpanel>
+                    <field name="plant_id" icon="fa-industry"
+                           enable_counters="1" expand="1"/>
+                    <field name="nguon" select="multi" icon="fa-database"
+                           enable_counters="1" expand="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_solar_weather" model="ir.actions.act_window">
+        <field name="name">Khí tượng ngày</field>
+        <field name="res_model">eam.solar.weather</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_plant': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có ngày nào</p>
+            <p>Mỗi ngày một bản ghi cho mỗi nhà máy. Ô bên trái máy lấy từ
+               số đo, ô bên phải người trực quan sát bằng mắt.</p>
+        </field>
+    </record>
+
+    <!-- ===== Hiệu suất ngày ===== -->
+    <record id="view_eam_solar_kpi_list" model="ir.ui.view">
+        <field name="name">eam.solar.kpi.list</field>
+        <field name="model">eam.solar.kpi</field>
+        <field name="arch" type="xml">
+            <list string="Hiệu suất ngày" expand="1"
+                  decoration-danger="pr_guaranteed and not dat_cam_ket"
+                  decoration-success="dat_cam_ket">
+                <field name="date"/>
+                <field name="plant_id"/>
+                <field name="energy_ac"/>
+                <field name="irradiation"/>
+                <field name="ft"/>
+                <field name="pr_denominator_used"/>
+                <field name="pr"/>
+                <field name="pr_guaranteed" optional="show"/>
+                <field name="pa" optional="show"/>
+                <field name="lech_mau_so" optional="show"/>
+                <field name="dat_cam_ket" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_solar_kpi_form" model="ir.ui.view">
+        <field name="name">eam.solar.kpi.form</field>
+        <field name="model">eam.solar.kpi</field>
+        <field name="arch" type="xml">
+            <form string="Hiệu suất ngày">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="plant_id"
+                                   options="{'no_create': True}"
+                                   domain="[('is_solar','=',True)]"/></h1>
+                        <h2><field name="date"/></h2>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not lech_mau_so">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        Mẫu số ghi đè lệch
+                        <b><field name="lech_mau_so" nolabel="1" readonly="1"
+                                  class="oe_inline"/>%</b>
+                        so với mẫu số tính ra. Khác 0 nghĩa là còn chỗ ta
+                        chưa hiểu đúng công thức của nhà máy — đáng hỏi lại
+                        chứ không nên bỏ qua.
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="weather_id">
+                        <i class="fa fa-cloud me-1"/>
+                        Chưa có bản ghi <b>khí tượng</b> cùng ngày, nên thiếu
+                        tổng xạ và nhiệt độ mô-đun — không tính được tỷ số
+                        hiệu suất.
+                    </div>
+                    <group>
+                        <group string="Đầu vào">
+                            <field name="energy_ac"/>
+                            <field name="weather_id" readonly="1"/>
+                            <field name="irradiation" readonly="1"/>
+                            <field name="temp_module" readonly="1"/>
+                        </group>
+                        <group string="Kết quả">
+                            <field name="e_nominal" readonly="1"/>
+                            <field name="ft" readonly="1"/>
+                            <field name="pr_denominator" readonly="1"/>
+                            <field name="pr_denominator_manual"/>
+                            <field name="pr_denominator_used" readonly="1"/>
+                            <field name="pr" readonly="1"/>
+                            <field name="pa"/>
+                        </group>
+                    </group>
+                    <group string="Cam kết">
+                        <group>
+                            <field name="pr_guaranteed" readonly="1"/>
+                            <field name="dat_cam_ket" readonly="1"
+                                   widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Hằng số chụp lại lúc tính" col="5">
+                        <field name="module_area"/>
+                        <field name="area_pr"/>
+                        <field name="module_eff"/>
+                        <field name="tk_pmpp"/>
+                        <field name="temp_ref"/>
+                        <div colspan="5" class="text-muted">
+                            Hằng số được <b>chụp lại</b> khi tạo bản ghi, không
+                            tham chiếu sống. Sửa hằng số của nhà máy hôm nay
+                            không được làm đổi KPI đã tính của tháng trước.
+                        </div>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_solar_kpi_search" model="ir.ui.view">
+        <field name="name">eam.solar.kpi.search</field>
+        <field name="model">eam.solar.kpi</field>
+        <field name="arch" type="xml">
+            <search string="Hiệu suất ngày">
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_khong_dat" string="Không đạt cam kết"
+                        domain="[('pr_guaranteed','>',0),
+                                 ('dat_cam_ket','=',False)]"/>
+                <filter name="f_lech" string="Mẫu số bị ghi đè"
+                        domain="[('lech_mau_so','!=',0)]"/>
+                <filter name="f_thieu" string="Thiếu khí tượng"
+                        domain="[('weather_id','=',False)]"/>
+                <separator/>
+                <filter name="g_plant" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+                <searchpanel>
+                    <field name="plant_id" icon="fa-industry"
+                           enable_counters="1" expand="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_solar_kpi" model="ir.actions.act_window">
+        <field name="name">Hiệu suất ngày</field>
+        <field name="res_model">eam.solar.kpi</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_plant': 1}</field>
+    </record>
+
+</odoo>

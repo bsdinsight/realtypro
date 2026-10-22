@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_solar_weather_user,eam.solar.weather user,model_eam_solar_weather,re_base.group_re_user,1,1,1,0
+access_eam_solar_weather_manager,eam.solar.weather manager,model_eam_solar_weather,re_base.group_re_manager,1,1,1,1
+access_eam_solar_kpi_user,eam.solar.kpi user,model_eam_solar_kpi,re_base.group_re_user,1,1,1,0
+access_eam_solar_kpi_manager,eam.solar.kpi manager,model_eam_solar_kpi,re_base.group_re_manager,1,1,1,1

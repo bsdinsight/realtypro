@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Đặt dưới nhánh Vận hành: khí tượng và hiệu suất là việc đọc
+         hằng ngày, không phải cấu hình. Hằng số nhà máy thì nằm ngay
+         trên form vị trí, đúng chỗ người ta tìm. -->
+    <menuitem id="menu_eam_solar_group"
+              name="Điện mặt trời"
+              parent="eam_core.menu_eam_ops"
+              sequence="60"/>
+
+    <menuitem id="menu_eam_solar_weather"
+              name="Khí tượng ngày"
+              parent="menu_eam_solar_group"
+              action="action_eam_solar_weather"
+              sequence="10"/>
+
+    <menuitem id="menu_eam_solar_kpi"
+              name="Hiệu suất ngày (PR/PA)"
+              parent="menu_eam_solar_group"
+              action="action_eam_solar_kpi"
+              sequence="20"/>
+</odoo>

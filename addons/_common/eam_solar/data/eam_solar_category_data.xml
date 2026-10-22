@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cây cấu phần điện mặt trời.
+
+     Không có chuẩn phân loại công khai nào cho PV tương đương ReliaWind
+     của điện gió, nên cây này BSD tự dựng theo đường đi của dòng điện:
+     tấm pin → chuỗi → hộp gom → inverter → phía xoay chiều. Đi theo
+     dòng điện thì quy lỗi về đúng cấu phần dễ hơn nhiều so với chia
+     theo nhà cung cấp hay theo vị trí địa lý.
+
+     Trạm nâng áp, cáp ngầm, SCADA KHÔNG nằm ở đây — chúng thuộc nhánh
+     BOP dùng chung cho mọi loại nhà máy.
+
+     noupdate="1": nâng cấp module KHÔNG ghi đè chỉnh sửa của khách.
+-->
+<odoo>
+  <data noupdate="1">
+
+    <!-- ===== Dàn pin quang điện ===== -->
+    <record id="cat_pvm" model="eam.asset.category">
+        <field name="code">PVM</field>
+        <field name="name">Dàn pin quang điện</field>
+        <field name="alias_names">PV array, Dàn pin, Dàn tấm quang điện</field>
+    </record>
+    <record id="cat_pvm_mod" model="eam.asset.category">
+        <field name="code">PVM-MOD</field>
+        <field name="name">Tấm pin</field>
+        <field name="parent_id" ref="cat_pvm"/>
+        <field name="alias_names">PV module, Panel, Tấm quang điện</field>
+    </record>
+    <record id="cat_pvm_str" model="eam.asset.category">
+        <field name="code">PVM-STR</field>
+        <field name="name">Chuỗi tấm pin</field>
+        <field name="parent_id" ref="cat_pvm"/>
+        <field name="alias_names">String, Chuỗi</field>
+    </record>
+    <record id="cat_pvm_mnt" model="eam.asset.category">
+        <field name="code">PVM-MNT</field>
+        <field name="name">Khung giá đỡ</field>
+        <field name="parent_id" ref="cat_pvm"/>
+        <field name="alias_names">Mounting structure, Giá đỡ, Khung</field>
+    </record>
+
+    <!-- ===== Hộp gom chuỗi ===== -->
+    <record id="cat_scb" model="eam.asset.category">
+        <field name="code">SCB</field>
+        <field name="name">Hộp gom chuỗi</field>
+        <field name="alias_names">String combiner box, SCB, Tủ gom chuỗi</field>
+    </record>
+    <record id="cat_scb_fus" model="eam.asset.category">
+        <field name="code">SCB-FUS</field>
+        <field name="name">Cầu chì chuỗi</field>
+        <field name="parent_id" ref="cat_scb"/>
+        <field name="alias_names">String fuse</field>
+    </record>
+    <record id="cat_scb_mon" model="eam.asset.category">
+        <field name="code">SCB-MON</field>
+        <field name="name">Bộ giám sát dòng chuỗi</field>
+        <field name="parent_id" ref="cat_scb"/>
+        <field name="alias_names">String monitoring unit</field>
+    </record>
+
+    <!-- ===== Bộ nghịch lưu ===== -->
+    <record id="cat_pvs" model="eam.asset.category">
+        <field name="code">PVS</field>
+        <field name="name">Bộ nghịch lưu</field>
+        <field name="alias_names">Inverter, PVS, Bộ biến tần</field>
+    </record>
+    <record id="cat_pvs_dc" model="eam.asset.category">
+        <field name="code">PVS-DC</field>
+        <field name="name">Phía một chiều</field>
+        <field name="parent_id" ref="cat_pvs"/>
+        <field name="alias_names">DC side, MPPT</field>
+    </record>
+    <record id="cat_pvs_ac" model="eam.asset.category">
+        <field name="code">PVS-AC</field>
+        <field name="name">Phía xoay chiều</field>
+        <field name="parent_id" ref="cat_pvs"/>
+        <field name="alias_names">AC side</field>
+    </record>
+    <record id="cat_pvs_ctl" model="eam.asset.category">
+        <field name="code">PVS-CTL</field>
+        <field name="name">Điều khiển &amp; truyền thông</field>
+        <field name="parent_id" ref="cat_pvs"/>
+        <field name="alias_names">Controller, Communication card</field>
+    </record>
+    <record id="cat_pvs_cool" model="eam.asset.category">
+        <field name="code">PVS-COOL</field>
+        <field name="name">Làm mát</field>
+        <field name="parent_id" ref="cat_pvs"/>
+        <field name="alias_names">Cooling, Quạt làm mát</field>
+    </record>
+
+    <!-- ===== Hệ xoay theo mặt trời ===== -->
+    <record id="cat_trk" model="eam.asset.category">
+        <field name="code">TRK</field>
+        <field name="name">Hệ xoay theo mặt trời</field>
+        <field name="alias_names">Tracker, Hệ tracking</field>
+    </record>
+    <record id="cat_trk_drv" model="eam.asset.category">
+        <field name="code">TRK-DRV</field>
+        <field name="name">Cơ cấu truyền động</field>
+        <field name="parent_id" ref="cat_trk"/>
+        <field name="alias_names">Drive, Motor, Gearbox</field>
+        <field name="is_rotable_default" eval="True"/>
+    </record>
+    <record id="cat_trk_ctl" model="eam.asset.category">
+        <field name="code">TRK-CTL</field>
+        <field name="name">Điều khiển hệ xoay</field>
+        <field name="parent_id" ref="cat_trk"/>
+        <field name="alias_names">Tracker controller</field>
+    </record>
+
+    <!-- ===== Trạm khí tượng ===== -->
+    <record id="cat_wst" model="eam.asset.category">
+        <field name="code">WST</field>
+        <field name="name">Trạm khí tượng</field>
+        <field name="alias_names">Weather station, Trạm thời tiết</field>
+    </record>
+    <record id="cat_wst_irr" model="eam.asset.category">
+        <field name="code">WST-IRR</field>
+        <field name="name">Cảm biến bức xạ</field>
+        <field name="parent_id" ref="cat_wst"/>
+        <field name="alias_names">Pyranometer, Cảm biến bức xạ mặt trời</field>
+    </record>
+    <record id="cat_wst_tmp" model="eam.asset.category">
+        <field name="code">WST-TMP</field>
+        <field name="name">Cảm biến nhiệt độ</field>
+        <field name="parent_id" ref="cat_wst"/>
+        <field name="alias_names">Temperature sensor, Cảm biến nhiệt mô-đun</field>
+    </record>
+    <record id="cat_wst_wnd" model="eam.asset.category">
+        <field name="code">WST-WND</field>
+        <field name="name">Cảm biến gió</field>
+        <field name="parent_id" ref="cat_wst"/>
+        <field name="alias_names">Anemometer, Cảm biến tốc độ gió</field>
+    </record>
+
+  </data>
+</odoo>

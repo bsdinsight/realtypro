@@ -233,10 +233,10 @@
     </record>
 
     <menuitem id="menu_eam_transfer" name="Điều chuyển giữa kho"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_transfer" sequence="38"/>
+              parent="menu_eam_store_io"
+              action="action_eam_transfer" sequence="30"/>
     <menuitem id="menu_eam_rma" name="Trả hàng / bảo hành"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_rma" sequence="39"/>
+              parent="menu_eam_store_io"
+              action="action_eam_rma" sequence="40"/>
 
 </odoo>

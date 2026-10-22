@@ -145,7 +145,7 @@
     </record>
 
     <menuitem id="menu_eam_inbound_check" name="Kiểm tra đầu vào"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_inbound_check" sequence="35"/>
+              parent="menu_eam_store_io"
+              action="action_eam_inbound_check" sequence="10"/>
 
 </odoo>

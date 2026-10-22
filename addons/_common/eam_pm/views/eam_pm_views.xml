@@ -444,7 +444,7 @@
 
     <!-- ============ MENU ============ -->
     <menuitem id="menu_eam_pm" name="Bảo trì phòng ngừa"
-              parent="eam_core.menu_eam_ops" sequence="15"/>
+              parent="eam_core.menu_eam_maint" sequence="20"/>
     <menuitem id="menu_eam_pm_due" name="Sắp tới hạn &amp; quá hạn"
               parent="menu_eam_pm" action="action_eam_pm_due" sequence="10"/>
     <menuitem id="menu_eam_pm_schedule" name="Lịch bảo trì"

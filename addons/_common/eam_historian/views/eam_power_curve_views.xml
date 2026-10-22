@@ -153,8 +153,8 @@
     </record>
 
     <menuitem id="menu_eam_power_curve_run" name="Đường cong công suất"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_power_curve_run" sequence="53"/>
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_power_curve_run" sequence="40"/>
 
     <menuitem id="menu_eam_power_curve" name="Đường cong cam kết"
               parent="eam_core.menu_eam_config"

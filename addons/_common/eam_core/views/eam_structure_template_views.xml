@@ -84,6 +84,6 @@
 
     <menuitem id="menu_eam_structure_template" name="Mẫu cấu trúc cấu phần"
               parent="menu_eam_config"
-              action="action_eam_structure_template" sequence="15"/>
+              action="action_eam_structure_template" sequence="12"/>
 
 </odoo>

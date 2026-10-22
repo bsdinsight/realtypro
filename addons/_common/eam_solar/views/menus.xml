@@ -5,8 +5,8 @@
          trên form vị trí, đúng chỗ người ta tìm. -->
     <menuitem id="menu_eam_solar_group"
               name="Điện mặt trời"
-              parent="eam_core.menu_eam_ops"
-              sequence="60"/>
+              parent="eam_core.menu_eam_perf"
+              sequence="50"/>
 
     <menuitem id="menu_eam_solar_weather"
               name="Khí tượng ngày"

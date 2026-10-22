@@ -201,8 +201,8 @@
     </record>
 
     <menuitem id="menu_eam_pm_season_conflict" name="Việc vướng mùa"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_pm_season_conflict" sequence="25"/>
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_pm_season_conflict" sequence="30"/>
 
     <menuitem id="menu_eam_season" name="Mùa &amp; luật theo mùa"
               parent="eam_core.menu_eam_config"

@@ -135,17 +135,17 @@
     </record>
 
     <menuitem id="menu_eam_stock_alert" name="Cảnh báo kho"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_stock_alert" sequence="33"/>
+              parent="menu_eam_store_on"
+              action="action_eam_stock_alert" sequence="20"/>
     <menuitem id="menu_eam_quant" name="Tồn kho phụ tùng"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_quant" sequence="48"/>
+              parent="menu_eam_store_on"
+              action="action_eam_quant" sequence="10"/>
     <menuitem id="menu_eam_tool_overdue" name="Dụng cụ quá hạn trả"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_tool_overdue" sequence="49"/>
+              parent="menu_eam_store_tool"
+              action="action_eam_tool_overdue" sequence="30"/>
     <menuitem id="menu_eam_rma_overdue" name="Hàng nằm lâu ở bên ngoài"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_rma_overdue" sequence="50"/>
+              parent="menu_eam_store_io"
+              action="action_eam_rma_overdue" sequence="45"/>
     <menuitem id="menu_eam_equivalent" name="Phụ tùng tương đương"
               parent="eam_core.menu_eam_config"
               action="action_eam_equivalent" sequence="51"/>

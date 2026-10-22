@@ -280,11 +280,11 @@
 
     <menuitem id="menu_eam_work_request" name="Yêu cầu công việc"
               parent="eam_core.menu_eam_ops"
-              action="action_eam_work_request" sequence="8"/>
+              action="action_eam_work_request" sequence="30"/>
 
     <menuitem id="menu_eam_work_request_rejected"
               name="Yêu cầu đã từ chối"
               parent="eam_core.menu_eam_ops"
-              action="action_eam_work_request_rejected" sequence="9"/>
+              action="action_eam_work_request_rejected" sequence="35"/>
 
 </odoo>

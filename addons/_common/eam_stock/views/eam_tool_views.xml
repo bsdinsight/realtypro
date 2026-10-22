@@ -224,14 +224,14 @@
     </record>
 
     <menuitem id="menu_eam_storage_care" name="Bảo quản hàng lưu kho"
-              parent="eam_core.menu_eam_ops"
+              parent="menu_eam_store_on"
               action="action_eam_storage_care" sequence="40"/>
     <menuitem id="menu_eam_tool_loan" name="Mượn dụng cụ"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_tool_loan" sequence="41"/>
+              parent="menu_eam_store_tool"
+              action="action_eam_tool_loan" sequence="10"/>
     <menuitem id="menu_eam_calib" name="Hiệu chuẩn dụng cụ đo"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_calib" sequence="42"/>
+              parent="menu_eam_store_tool"
+              action="action_eam_calib" sequence="20"/>
     <menuitem id="menu_eam_storage_care_plan" name="Lịch bảo quản lưu kho"
               parent="eam_core.menu_eam_config"
               action="action_eam_storage_care_plan" sequence="50"/>

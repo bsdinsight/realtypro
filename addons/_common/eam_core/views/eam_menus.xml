@@ -13,11 +13,36 @@
     <menuitem id="menu_eam_installation" name="Lịch sử lắp đặt"
               parent="menu_eam_asset_group" action="action_eam_installation"
               sequence="30"/>
+    <!-- ===== Bảy nhánh gốc, chia theo VAI người dùng =====
+         Trước đây mọi module đều gắn menu vào "Vận hành", nên nhánh đó
+         phình lên 34 mục con và có 5 cặp trùng số thứ tự — dấu hiệu
+         không ai nhìn tổng thể. Nay mỗi nhánh một vai:
+
+           Tài sản      sổ sách tài sản
+           Vận hành     người trực ca
+           Bảo trì      thợ
+           Kho phụ tùng thủ kho
+           Hiệu suất    kỹ sư phân tích
+           Độ tin cậy   quản lý (eam_pm khai)
+           Cấu hình     quản trị
+
+         Module mới gắn menu vào ĐÚNG nhánh theo vai, không gắn bừa vào
+         Vận hành. -->
+
     <menuitem id="menu_eam_ops" name="Vận hành"
               parent="menu_eam_root" sequence="20"/>
     <menuitem id="menu_eam_outage" name="Sổ dừng máy"
               parent="menu_eam_ops" action="action_eam_outage"
-              sequence="10"/>
+              sequence="20"/>
+
+    <menuitem id="menu_eam_maint" name="Bảo trì"
+              parent="menu_eam_root" sequence="30"/>
+
+    <menuitem id="menu_eam_store" name="Kho phụ tùng"
+              parent="menu_eam_root" sequence="40"/>
+
+    <menuitem id="menu_eam_perf" name="Hiệu suất"
+              parent="menu_eam_root" sequence="50"/>
     <menuitem id="menu_eam_config" name="Cấu hình"
               parent="menu_eam_root" sequence="90"/>
     <menuitem id="menu_eam_asset_category" name="Loại cấu phần"

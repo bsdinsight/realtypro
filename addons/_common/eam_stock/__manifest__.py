@@ -64,6 +64,9 @@ lại kho khi đã sửa xong và nghiệm thu.
         'data/eam_rotable_data.xml',
         'data/eam_tool_data.xml',
         'data/eam_adjustment_data.xml',
+        # Nhóm menu phải nạp TRƯỚC mọi file view khác —
+        # 17 mục menu của kho nằm rải ở bảy file.
+        'views/eam_stock_menus.xml',
         'views/eam_stock_views.xml',
         'views/eam_part_views.xml',
         'views/eam_user_views.xml',

@@ -195,10 +195,10 @@
     </record>
 
     <menuitem id="menu_eam_adjustment" name="Điều chỉnh tồn (có duyệt)"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_adjustment" sequence="43"/>
+              parent="menu_eam_store_on"
+              action="action_eam_adjustment" sequence="30"/>
     <menuitem id="menu_eam_disposal" name="Thanh lý vật tư"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_disposal" sequence="44"/>
+              parent="menu_eam_store_on"
+              action="action_eam_disposal" sequence="50"/>
 
 </odoo>

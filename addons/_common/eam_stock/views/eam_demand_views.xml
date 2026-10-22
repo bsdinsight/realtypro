@@ -154,13 +154,13 @@
     </record>
 
     <menuitem id="menu_eam_part_demand" name="Nhu cầu phụ tùng"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_part_demand" sequence="45"/>
+              parent="menu_eam_store_ana"
+              action="action_eam_part_demand" sequence="10"/>
     <menuitem id="menu_eam_stock_toiuu" name="Tối ưu tồn kho"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_stock_toiuu" sequence="46"/>
+              parent="menu_eam_store_ana"
+              action="action_eam_stock_toiuu" sequence="20"/>
     <menuitem id="menu_eam_part_cost" name="Chi phí phụ tùng"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_part_cost" sequence="47"/>
+              parent="menu_eam_store_ana"
+              action="action_eam_part_cost" sequence="30"/>
 
 </odoo>

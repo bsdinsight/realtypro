@@ -239,11 +239,11 @@
     </record>
 
     <menuitem id="menu_eam_material_request" name="Yêu cầu vật tư"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_material_request" sequence="36"/>
+              parent="menu_eam_store_io"
+              action="action_eam_material_request" sequence="20"/>
     <menuitem id="menu_eam_material_no_hs" name="Nợ hồ sơ xuất khẩn cấp"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_material_request_no_hs" sequence="37"/>
+              parent="menu_eam_store_io"
+              action="action_eam_material_request_no_hs" sequence="25"/>
     <menuitem id="menu_eam_approval_rule" name="Luật duyệt vật tư"
               parent="eam_core.menu_eam_config"
               action="action_eam_approval_rule" sequence="49"/>

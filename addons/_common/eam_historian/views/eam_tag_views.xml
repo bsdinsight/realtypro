@@ -215,8 +215,8 @@
     </record>
 
     <menuitem id="menu_eam_trend" name="Xu hướng điểm đo"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_trend" sequence="50"/>
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_trend" sequence="10"/>
 
     <menuitem id="menu_eam_tag" name="Điểm đo (tag)"
               parent="eam_core.menu_eam_config"

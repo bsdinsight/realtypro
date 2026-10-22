@@ -177,12 +177,12 @@
     </record>
 
     <menuitem id="menu_eam_competency" name="Chứng chỉ &amp; năng lực"
-              parent="eam_core.menu_eam_ops"
+              parent="eam_core.menu_eam_maint"
               action="action_eam_competency_matrix" sequence="40"/>
 
     <menuitem id="menu_eam_competency_expiring"
               name="Chứng chỉ hết hạn &amp; sắp hết"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_competency_expiring" sequence="41"/>
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_competency_expiring" sequence="45"/>
 
 </odoo>

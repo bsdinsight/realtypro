@@ -193,11 +193,11 @@
     </record>
 
     <menuitem id="menu_eam_quality" name="Chất lượng dữ liệu"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_quality" sequence="51"/>
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_quality" sequence="20"/>
 
     <menuitem id="menu_eam_data_exclusion" name="Khoảng loại trừ KPI"
-              parent="eam_core.menu_eam_ops"
-              action="action_eam_data_exclusion" sequence="52"/>
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_data_exclusion" sequence="30"/>
 
 </odoo>

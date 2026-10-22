@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bốn nhóm con của nhánh gốc "Kho phụ tùng".
+
+     Khai ở một file RIÊNG và nạp TRƯỚC mọi file view khác, vì 17 mục
+     menu của kho nằm rải ở bảy file — nếu để nhóm lẫn vào một trong số
+     đó thì thứ tự nạp quyết định việc module cài được hay không, và
+     thêm một file mới là lại vỡ.
+
+     Chia theo việc thủ kho thật sự làm, không theo model:
+       Nhập – xuất      hàng đi vào và đi ra
+       Tồn & kiểm kê    hàng đang nằm trong kho
+       Dụng cụ          thứ cho mượn rồi đòi về
+       Phân tích kho    câu hỏi của người quản lý, không phải việc hằng ngày
+-->
+<odoo>
+    <menuitem id="menu_eam_store_io" name="Nhập – xuất"
+              parent="eam_core.menu_eam_store" sequence="10"/>
+
+    <menuitem id="menu_eam_store_on" name="Tồn &amp; kiểm kê"
+              parent="eam_core.menu_eam_store" sequence="20"/>
+
+    <menuitem id="menu_eam_store_tool" name="Dụng cụ"
+              parent="eam_core.menu_eam_store" sequence="30"/>
+
+    <menuitem id="menu_eam_store_ana" name="Phân tích kho"
+              parent="eam_core.menu_eam_store" sequence="40"/>
+</odoo>

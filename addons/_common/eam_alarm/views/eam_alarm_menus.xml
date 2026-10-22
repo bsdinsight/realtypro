@@ -3,14 +3,14 @@
 
     <menuitem id="menu_eam_alarm" name="Sổ cảnh báo"
               parent="eam_core.menu_eam_ops"
-              action="action_eam_alarm" sequence="15"/>
+              action="action_eam_alarm" sequence="10"/>
 
     <menuitem id="menu_eam_alarm_repeat" name="Cảnh báo tái phát"
               parent="eam_core.menu_eam_ops"
-              action="action_eam_alarm_tai_phat" sequence="16"/>
+              action="action_eam_alarm_tai_phat" sequence="15"/>
 
     <menuitem id="menu_eam_alarm_rule" name="Luật cảnh báo"
               parent="eam_core.menu_eam_config"
-              action="action_eam_alarm_rule" sequence="30"/>
+              action="action_eam_alarm_rule" sequence="32"/>
 
 </odoo>

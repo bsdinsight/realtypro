@@ -24,9 +24,12 @@ from odoo import _, api, fields, models
 #: đoán. Hợp đồng đánh số khác thì đơn giản là không nối, và màn hình
 #: hiện ra là "chưa neo điều khoản" chứ không neo bừa vào điều sai.
 DIEU_THEO_VAI = {
-    'trinh': '5.2',
-    'xem_xet': '5.2',
-    'bao_gia': '13.3',
+    'trinh': '5.2',        # Contractor's Documents
+    'xem_xet': '5.2',      # cùng điều, nhưng nghĩa vụ của bên kia
+    'bao_gia': '13.3',     # Variation Procedure
+    'thong_bao': '20.1',   # Contractor's Claims
+    'duy_tri': '4.2',      # Performance Security
+    'thanh_toan': '14.7',  # Payment
 }
 
 #: Model gốc → tên trường trỏ tới nó trên ``rp.obligation``.

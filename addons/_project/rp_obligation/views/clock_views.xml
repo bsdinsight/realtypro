@@ -104,15 +104,21 @@
                 </div>
 
                 <button name="action_khai_dieu_khoan_mau" type="object"
-                        string="Khai điều khoản mẫu FIDIC"
-                        icon="fa-magic" class="btn-secondary"
+                        string="Khai thư viện điều khoản FIDIC"
+                        icon="fa-book" class="btn-secondary"
                         invisible="clause_count"/>
-                <p class="text-muted mt-2" invisible="clause_count">
-                    Khai nhanh bốn điều khoản hay dùng (5.2 · 13.1 · 13.3 ·
-                    20.1) với đúng số ngày mà phần mềm vẫn ngầm dùng. Nó
-                    <b>không thêm giả định nào</b> — chỉ đưa giả định sẵn
-                    có ra chỗ sửa được. Sau đó mở từng điều, điền trang và
-                    trích đoạn, sửa số ngày cho khớp bản giấy.
+                <button name="action_dung_nghia_vu_chuan" type="object"
+                        string="Dựng nghĩa vụ chuẩn từ điều khoản"
+                        icon="fa-list-check" class="btn-secondary"
+                        invisible="not clause_count"/>
+                <p class="text-muted mt-2">
+                    Thư viện điều khoản là <b>kiến thức của BSD</b> dựng
+                    trên bộ điều kiện hợp đồng FIDIC, dùng lại được cho mọi
+                    hợp đồng EPC. Nó khai <b>Điều kiện CHUNG</b> — Điều
+                    kiện Riêng của từng hợp đồng gần như luôn sửa một vài
+                    con số, và đó là chỗ các bên mặc cả thật. Nên mọi dòng
+                    khai ra đều mang nhãn <i>chưa đối chiếu hợp đồng</i>;
+                    gỡ nhãn chỉ khi đã có người cầm bản giấy soát.
                 </p>
             </xpath>
         </field>

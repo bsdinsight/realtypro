@@ -84,6 +84,16 @@
                     </group>
 
                     <notebook>
+                        <page string="Nghĩa vụ điều này đặt ra" name="mo_ta">
+                            <div class="alert alert-secondary" role="alert">
+                                <i class="fa fa-lightbulb-o me-1"/>
+                                Đây là cách <b>ta hiểu</b> điều khoản, nói
+                                bằng lời của ta. Khi tranh chấp thì chỉ ô
+                                <b>Trích đoạn nguyên văn</b> bên cạnh mới
+                                có giá trị — giữ riêng hai thứ.
+                            </div>
+                            <field name="mo_ta" nolabel="1"/>
+                        </page>
                         <page string="Trích đoạn nguyên văn" name="text">
                             <field name="text" nolabel="1"
                                    placeholder="Chép nguyên văn từ hợp đồng — không diễn giải."/>

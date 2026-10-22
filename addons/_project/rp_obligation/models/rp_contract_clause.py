@@ -59,6 +59,12 @@ class RpContractClause(models.Model):
         string='Trích đoạn nguyên văn',
         help='Chép nguyên văn, không diễn giải. Đây là thứ sẽ đi vào thư '
              'gửi nhà thầu — diễn giải sai một chữ là mất lý.')
+    mo_ta = fields.Text(
+        string='Nghĩa vụ điều này đặt ra',
+        help='Cách HIỂU của ta, nói bằng lời của ta — khác hẳn ô trích '
+             'đoạn ở trên vốn là lời của hợp đồng. Giữ riêng hai thứ vì '
+             'khi tranh chấp, chỉ lời của hợp đồng mới có giá trị; phần '
+             'hiểu của ta có thể sai mà vẫn hữu ích cho người vận hành.')
 
     notice_days = fields.Integer(
         string='Số ngày điều này quy định',

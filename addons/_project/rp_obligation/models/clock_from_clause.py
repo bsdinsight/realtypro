@@ -42,16 +42,12 @@ Odoo không nhận, và cái giá là trường tính không tự làm mới khi
 dùng sửa số ngày. Viết thẳng ra bốn lần dài hơn nhưng đúng, và đọc một
 lượt là hiểu.
 """
+from dateutil.relativedelta import relativedelta
+
 from odoo import _, api, fields, models
 
-#: Bộ điều khoản mẫu để khai nhanh — tiêu đề và số ngày đúng bằng mặc
-#: định mà mã nguồn vẫn dùng. Trang và trích đoạn cố ý để trống.
-DIEU_KHOAN_MAU = [
-    ('5.2', 'Xem xét hồ sơ của Nhà thầu', 21),
-    ('13.1', 'Quyền thay đổi — thời hạn phản đối chỉ thị', 14),
-    ('13.3', 'Thủ tục thay đổi — thời hạn nộp báo giá', 14),
-    ('20.1', 'Khiếu nại của Nhà thầu — thời hạn thông báo', 28),
-]
+from .thu_vien_fidic import DIEU_DUNG_DUOC, MOC, THEO_SO
+
 
 DIEU_HO_SO = '5.2'
 DIEU_BAO_GIA = '13.3'
@@ -119,9 +115,11 @@ class RpContract(models.Model):
         return True
 
     def action_khai_dieu_khoan_mau(self):
-        """Khai bộ điều khoản mẫu để sửa lại theo bản giấy.
+        """Khai thư viện điều khoản FIDIC cho hợp đồng này.
 
-        Không đụng điều khoản đã có — chỉ thêm số điều còn thiếu.
+        Không đụng điều khoản đã có — chỉ thêm số điều còn thiếu. Mọi
+        dòng mang nhãn "mẫu — chưa đối chiếu hợp đồng", vì Điều kiện
+        Riêng của từng hợp đồng gần như luôn sửa một vài con số.
         """
         Clause = self.env['rp.contract.clause']
         them = 0
@@ -130,11 +128,16 @@ class RpContract(models.Model):
                 [('contract_id', '=', hd.id)]).mapped('number'))
             moi = [{
                 'contract_id': hd.id,
-                'number': so,
-                'name': ten,
-                'notice_days': ngay,
+                'number': d['so'],
+                'name': d['ten'],
+                'notice_days': d['ngay'],
+                'mo_ta': '%s%s' % (
+                    d['mo_ta'],
+                    _('\n\nĐồng hồ chạy từ: %s.', MOC[d['moc']])
+                    if d['ngay'] else ''),
                 'source': 'mau',
-            } for so, ten, ngay in DIEU_KHOAN_MAU if so not in da_co]
+                'sequence': i * 10,
+            } for i, d in enumerate(DIEU_DUNG_DUOC) if d['so'] not in da_co]
             if moi:
                 Clause.create(moi)
                 them += len(moi)
@@ -143,14 +146,118 @@ class RpContract(models.Model):
             'tag': 'display_notification',
             'params': {
                 'type': 'warning' if them else 'info',
-                'title': _('Đã khai %s điều khoản mẫu', them),
+                'title': _('Đã khai %s điều khoản từ thư viện FIDIC', them),
                 'message': _(
-                    'Đây là số ngày phần mềm vẫn ngầm dùng, nay đưa ra chỗ '
-                    'sửa được — CHƯA đối chiếu bản giấy. Mở từng điều, điền '
-                    'trang và trích đoạn, sửa số ngày cho đúng hợp đồng.'),
+                    'Đây là Điều kiện CHUNG. Điều kiện Riêng của hợp đồng '
+                    'gần như luôn sửa một vài con số — đó là chỗ các bên '
+                    'mặc cả thật. Mở từng điều, đối chiếu bản giấy, điền '
+                    'trang và trích đoạn, rồi mới gỡ nhãn "chưa đối chiếu".'),
                 'sticky': True,
             },
         }
+
+    def action_dung_nghia_vu_chuan(self):
+        """Dựng các nghĩa vụ đứng sẵn mà thư viện nói là hợp đồng nào cũng có.
+
+        Bảo hiểm, bảo lãnh, báo cáo định kỳ, giấy phép, hồ sơ phải nộp
+        một lần — những thứ không sinh ra từ một chứng từ nào nên không
+        sổ chuyên nào bắt được.
+
+        Hạn chỉ tính được khi biết MỐC khởi đồng hồ. Hợp đồng mới ký thì
+        ta mới có ngày ký và ngày khởi công; các mốc còn lại (Thư chấp
+        thuận, Chứng chỉ nghiệm thu) nằm ở chứng từ ngoài. Mốc nào chưa
+        có thì để trống hạn và ghi rõ luật tính — thà "chưa đặt hạn" còn
+        hơn một cái hạn bịa trông như thật.
+        """
+        Ob = self.env['rp.obligation']
+        them = 0
+        for hd in self:
+            trong_hd = Ob.search([('contract_id', '=', hd.id),
+                                  ('clause_id', '!=', False)])
+            # Luật 1 — bất biến: đã dựng rồi thì không dựng lại.
+            da_dung = {(o.clause_id.id, o.loai) for o in trong_hd
+                       if o.vai == 'tu_quan' and not o.parent_id}
+            # Luật 2 — có hàng thật thì thôi dòng chung chung: hợp đồng
+            # đã có bảo lãnh/hồ sơ thật ghi ở sổ chuyên, neo cùng điều
+            # khoản ấy, thì một dòng "phải có bảo lãnh" không mang thêm
+            # thông tin nào — nó chỉ làm sổ dài ra. Dòng thật có số hiệu,
+            # có ngày hết hạn; dòng chung chung không có gì.
+            da_co_that = {(o.clause_id.id, o.loai) for o in trong_hd
+                          if o.nguon == 'so_rieng'}
+            for dieu in hd.clause_ids.filtered('is_current'):
+                d = THEO_SO.get(dieu.number)
+                if not d or not d['sinh']:
+                    continue
+                if (dieu.id, d['loai']) in da_dung:
+                    continue
+                if (dieu.id, d['loai']) in da_co_that:
+                    continue
+                vals = {
+                    'name': d['ten'].split(' — ')[-1].capitalize(),
+                    'contract_id': hd.id,
+                    'clause_id': dieu.id,
+                    'loai': d['loai'],
+                    'ben': d['ben'],
+                    'vai': 'tu_quan',
+                    'ghi_chu': d['mo_ta'],
+                }
+                if d['chu_ky']:
+                    vals.update({
+                        'la_dinh_ky': True,
+                        'chu_ky': d['chu_ky'],
+                        'ky_tu': hd.date_start or hd.contract_date,
+                        'han_sau_ky': d['ngay'] or 0,
+                    })
+                else:
+                    moc, ngay = hd._moc_khoi_dong_ho(d['moc'])
+                    if moc and d['ngay']:
+                        vals['han_tu_quan'] = moc + relativedelta(
+                            days=d['ngay'])
+                        vals['ghi_chu'] += _(
+                            '\n\nHạn tính từ %(ten)s (%(ngay)s) + %(n)s '
+                            'ngày.%(luu_y)s',
+                            ten=MOC[d['moc']], ngay=moc, n=d['ngay'],
+                            luu_y=ngay or '')
+                    elif not d['ngay']:
+                        vals['ghi_chu'] += _(
+                            '\n\nCHƯA ĐẶT HẠN: Điều kiện Chung KHÔNG đặt '
+                            'số ngày cứng cho nghĩa vụ này — hạn theo thực '
+                            'tế dự án và Điều kiện Riêng. Điền bằng tay.')
+                    else:
+                        vals['ghi_chu'] += _(
+                            '\n\nCHƯA ĐẶT HẠN: luật là %(n)s ngày kể từ '
+                            '%(ten)s, nhưng hệ thống chưa biết ngày mốc đó. '
+                            'Điền hạn bằng tay khi có.',
+                            n=d['ngay'], ten=MOC[d['moc']])
+                Ob.create(vals)
+                them += 1
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success' if them else 'info',
+                'title': _('Đã dựng %s nghĩa vụ chuẩn', them),
+                'message': _('Nghĩa vụ định kỳ còn phải bấm "Sinh các kỳ" '
+                             'để ra từng kỳ. Dòng nào ghi "CHƯA ĐẶT HẠN" '
+                             'là hệ thống chưa biết ngày mốc — điền tay.'),
+                'sticky': False,
+            },
+        }
+
+    def _moc_khoi_dong_ho(self, ma_moc):
+        """(ngày mốc, lưu ý) — CHỈ những mốc hợp đồng thật sự biết.
+
+        Cố ý KHÔNG lấy ngày ký làm xấp xỉ cho Thư chấp thuận. Hai thứ
+        khác nhau, và một cái hạn suy từ ngày sai thì hiện lên màn hình
+        y hệt một cái hạn thật — người xem không có cách nào phân biệt.
+        Thà để "chưa đặt hạn" kèm luật tính, rồi ai biết ngày mốc thì
+        điền. Đã dính 2026-10-22: sáu dòng bảo lãnh/bảo hiểm báo "sắp
+        đến hạn 31/10" suy từ ngày seed dữ liệu demo.
+        """
+        self.ensure_one()
+        if ma_moc == 'khoi_cong':
+            return self.date_start, ''
+        return False, ''
 
 
 class RpDocument(models.Model):

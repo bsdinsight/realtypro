@@ -245,6 +245,24 @@
                         context="{'group_by': 'contract_id'}"/>
                 <filter name="group_han" string="Hạn (tháng)"
                         context="{'group_by': 'han:month'}"/>
+
+                <!-- Pane lọc: bốn trục người dùng thật sự cắt lát sổ này.
+                     Hợp đồng để "one" vì gần như luôn xem một hợp đồng
+                     một lúc; ba trục còn lại để "multi" vì hay phải gộp
+                     (ví dụ: quá hạn CỘNG sắp đến hạn). -->
+                <searchpanel>
+                    <field name="contract_id" string="Hợp đồng"
+                           icon="fa-file-text-o" enable_counters="1"/>
+                    <field name="trang_thai" string="Tình trạng"
+                           select="multi" icon="fa-clock-o"
+                           enable_counters="1"/>
+                    <field name="loai" string="Loại nghĩa vụ"
+                           select="multi" icon="fa-tags"
+                           enable_counters="1"/>
+                    <field name="ben" string="Bên gánh"
+                           select="multi" icon="fa-balance-scale"
+                           enable_counters="1" expand="0"/>
+                </searchpanel>
             </search>
         </field>
     </record>

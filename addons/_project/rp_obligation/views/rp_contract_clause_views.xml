@@ -137,6 +137,21 @@
                         context="{'group_by': 'contract_id'}"/>
                 <filter name="group_amendment" string="Bản ký"
                         context="{'group_by': 'amendment_id'}"/>
+
+                <!-- Pane lọc. "Nguồn" là trục quan trọng nhất ở đây: nó
+                     trả lời "điều nào đã có người cầm bản giấy soát, điều
+                     nào còn là mẫu" — việc phải làm trước khi tin vào bất
+                     kỳ con số ngày nào. -->
+                <searchpanel>
+                    <field name="contract_id" string="Hợp đồng"
+                           icon="fa-file-text-o" enable_counters="1"/>
+                    <field name="source" string="Nguồn"
+                           select="multi" icon="fa-check-square-o"
+                           enable_counters="1"/>
+                    <field name="amendment_id" string="Theo phụ lục"
+                           select="multi" icon="fa-files-o"
+                           enable_counters="1" expand="0"/>
+                </searchpanel>
             </search>
         </field>
     </record>

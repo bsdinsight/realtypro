@@ -5,7 +5,7 @@
         <field name="name">rp.contract.clause.list</field>
         <field name="model">rp.contract.clause</field>
         <field name="arch" type="xml">
-            <list string="Điều khoản hợp đồng" editable="bottom"
+            <list string="Điều khoản hợp đồng"
                   decoration-muted="not is_current"
                   decoration-info="source == 'may'">
                 <field name="sequence" widget="handle"/>

@@ -78,10 +78,14 @@
                 </page>
 
                 <page string="Điều khoản" name="clauses">
+                    <!-- KHONG editable: bam vao dong mo form day du trong
+                         dialog. Dieu khoan mang trich doan nguyen van va
+                         phan "cach ta hieu" — hai o dai, sua ngay tren dong
+                         thi khong doc duoc chung, ma do moi la thu quyet
+                         dinh dieu khoan dung hay sai. -->
                     <field name="clause_ids" nolabel="1"
                            context="{'default_contract_id': id}">
-                        <list editable="bottom"
-                              decoration-muted="not is_current">
+                        <list decoration-muted="not is_current">
                             <field name="sequence" widget="handle"/>
                             <field name="number"/>
                             <field name="name"/>

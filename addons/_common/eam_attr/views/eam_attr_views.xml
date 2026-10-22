@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Nhóm tài sản: nơi KHAI định nghĩa -->
+    <record id="view_eam_asset_category_form_attr" model="ir.ui.view">
+        <field name="name">eam.asset.category.form.attr</field>
+        <field name="model">eam.asset.category</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_category_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='gr_ghichu']" position="before">
+                <group string="Thông số kỹ thuật của nhóm" name="gr_attr">
+                    <div colspan="2" class="text-muted mb-2">
+                        Khai ở đây những thông số mà <b>mọi tài sản thuộc nhóm
+                        này</b> đều có — ví dụ máy biến áp cần điện áp sơ cấp,
+                        thứ cấp, tổ đấu dây. Thêm ô mới không cần lập trình.
+                        <br/>Thuộc tính <b>không tự chảy xuống nhóm con</b>:
+                        gộp ngầm thì sửa một chỗ làm đổi dữ liệu hàng trăm tài
+                        sản mà không ai thấy. Dùng nút bên dưới nếu muốn chép.
+                    </div>
+                    <field name="attr_definition" nolabel="1" colspan="2"/>
+                    <field name="attr_count" invisible="1"/>
+                    <button name="action_chep_thuoc_tinh_tu_cha" type="object"
+                            string="Chép thuộc tính từ nhóm cha"
+                            icon="fa-level-down" class="btn-secondary"
+                            invisible="not parent_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tài sản: nơi ĐIỀN giá trị -->
+    <record id="view_eam_asset_form_attr" model="ir.ui.view">
+        <field name="name">eam.asset.form.attr</field>
+        <field name="model">eam.asset</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='ls']" position="before">
+                <page string="Thông số kỹ thuật" name="ts">
+                    <div class="alert alert-info" role="alert"
+                         invisible="category_id">
+                        <i class="fa fa-info-circle me-1"/>
+                        Chọn <b>nhóm tài sản</b> trước — bộ thông số hiện ra
+                        là do nhóm quyết định.
+                    </div>
+                    <field name="attrs" nolabel="1"
+                           columns="2" invisible="not category_id"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Lọc tài sản theo thuộc tính -->
+    <record id="view_eam_asset_search_attr" model="ir.ui.view">
+        <field name="name">eam.asset.search.attr</field>
+        <field name="model">eam.asset</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_search"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="attrs"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

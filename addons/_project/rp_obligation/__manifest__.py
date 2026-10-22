@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ nghĩa vụ hợp đồng',
-    'version': '19.0.1.6.0',
+    'version': '19.0.1.7.0',
     'category': 'Realty/Project',
     'summary': 'Điều khoản thành dữ liệu, và MỘT sổ cái trả lời "hợp đồng '
                'này buộc ai làm gì, hạn nào" — chỉ mục sang các sổ đã có, '

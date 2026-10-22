@@ -159,7 +159,11 @@ class RpObligation(models.Model):
         index=True)
     so_ngay_con = fields.Integer(
         string='Còn (ngày)', compute='_compute_tinh_trang', store=True,
-        help='Âm là đã quá hạn bấy nhiêu ngày.')
+        aggregator=False,
+        help='Âm là đã quá hạn bấy nhiêu ngày.\n\n'
+             'Không cộng dồn theo nhóm: tổng "số ngày còn lại" của 36 '
+             'nghĩa vụ là một con số không mang nghĩa gì, mà lại nằm đúng '
+             'chỗ mắt người đọc tìm số tổng.')
 
     nguoi_phu_trach_id = fields.Many2one(
         'res.users', string='Người theo dõi', tracking=True)

@@ -52,7 +52,7 @@ class RpContractClause(models.Model):
     name = fields.Char(string='Tiêu đề điều', tracking=True)
 
     page = fields.Integer(
-        string='Trang', tracking=True,
+        string='Trang', tracking=True, aggregator=False,
         help='Trang trong file hợp đồng. Thiếu trang thì người đọc vẫn '
              'phải lật cả quyển, nên neo điều khoản mất gần hết tác dụng.')
     text = fields.Text(
@@ -67,7 +67,7 @@ class RpContractClause(models.Model):
              'hiểu của ta có thể sai mà vẫn hữu ích cho người vận hành.')
 
     notice_days = fields.Integer(
-        string='Số ngày điều này quy định',
+        string='Số ngày điều này quy định', aggregator=False,
         help='Để trống nếu điều khoản không đặt ra thời hạn nào. Có số ở '
              'đây thì các sổ nghĩa vụ đọc theo, thay vì dùng mặc định '
              'của phần mềm.')

@@ -5,7 +5,10 @@
         <field name="name">rp.obligation.list</field>
         <field name="model">rp.obligation</field>
         <field name="arch" type="xml">
-            <list string="Nghĩa vụ hợp đồng"
+            <!-- expand="1": danh sách này mặc định gom nhóm theo loại
+                 nghĩa vụ, mà nhóm đóng thì mở màn ra chỉ thấy 7 dòng tiêu
+                 đề — phải bấm thêm 7 lần mới thấy việc. -->
+            <list string="Nghĩa vụ hợp đồng" expand="1"
                   decoration-danger="trang_thai == 'qua_han'"
                   decoration-warning="trang_thai == 'sap_den'"
                   decoration-muted="trang_thai == 'xong'">

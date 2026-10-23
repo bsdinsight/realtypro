@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_om_contract_form" model="ir.ui.view">
+        <field name="name">eam.om.contract.form</field>
+        <field name="model">eam.om.contract</field>
+        <field name="arch" type="xml">
+            <form string="Hợp đồng O&amp;M">
+                <header>
+                    <button name="action_sinh_ky" type="object"
+                            string="Sinh kỳ đánh giá" icon="fa-calendar"
+                            class="btn-primary"
+                            invisible="state == 'nhap'"/>
+                    <button name="action_chay" type="object"
+                            string="Cho hiệu lực" icon="fa-play"
+                            invisible="state != 'nhap'"/>
+                    <button name="action_het_han" type="object"
+                            string="Đánh dấu hết hạn" icon="fa-stop"
+                            invisible="state != 'chay'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_ky" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="period_count" widget="statinfo"
+                                   string="Kỳ đánh giá"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="HĐ-OM-2026-001"/></h1>
+                        <field name="title" placeholder="Tên hợp đồng"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="chu_ky"/>
+                            <field name="tz"/>
+                            <field name="so_le"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="phi_moi_ky"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle me-1"/>
+                        Đây là bảng hợp đồng <b>riêng của O&amp;M</b>, không
+                        dùng chung với hợp đồng EPC. Hợp đồng EPC là hành
+                        trình một chiều có cổng chặn; hợp đồng O&amp;M là
+                        dịch vụ lặp lại, và thứ quyết định tiền là
+                        <b>con số đo được trong kỳ</b>.
+                    </div>
+                    <notebook>
+                        <page string="Phạm vi nhà máy" name="plants">
+                            <field name="plant_line_ids">
+                                <list editable="bottom">
+                                    <field name="plant_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="so_don_vi"/>
+                                    <button name="action_dem_don_vi"
+                                            type="object" icon="fa-calculator"
+                                            title="Đếm thử số vị trí thiết bị con"/>
+                                    <field name="phi_ky"/>
+                                    <field name="note"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-warning mt-2" role="alert">
+                                <b>Số đơn vị đo khả dụng</b> là mẫu số, và
+                                đây là chỗ sai im lặng nhất: ba mươi tua-bin
+                                chạy một ngày là <b>720 giờ-máy</b>, không
+                                phải 24. Để 0 nghĩa là coi cả nhà máy là một
+                                đơn vị — chỉ đúng khi hợp đồng cam kết ở cấp
+                                nhà máy. Nút máy tính chỉ <b>đếm thử</b> vị
+                                trí con; không phải vị trí nào cũng là một
+                                tổ máy nên người khai vẫn phải tự quyết.
+                            </div>
+                        </page>
+                        <page string="Cam kết" name="commitments">
+                            <field name="commitment_ids">
+                                <list editable="bottom"
+                                      decoration-muted="not do_duoc">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="loai"/>
+                                    <field name="chu_ky"/>
+                                    <field name="chu_ky_hieu_luc" optional="hide"/>
+                                    <field name="plant_id"
+                                           options="{'no_create': True}"
+                                           optional="show"/>
+                                    <field name="huong"/>
+                                    <field name="muc"/>
+                                    <field name="che_tai"/>
+                                    <field name="muc_phat"/>
+                                    <field name="tran_phat_pct" optional="show"/>
+                                    <field name="tinh_ca_chua_quy" optional="hide"/>
+                                    <field name="nguong_chua_quy" optional="hide"/>
+                                    <field name="do_duoc" optional="show"/>
+                                    <field name="ly_do_chua_do" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-secondary mt-2" role="alert">
+                                Dòng mờ là cam kết hệ <b>chưa đo được</b>.
+                                Kỳ vẫn sinh dòng kết quả cho nó, ghi rõ lý
+                                do và <b>không tính phạt</b> — chứ không
+                                lặng lẽ thay bằng cơ sở khác. Hai cơ sở ra
+                                hai con số khác nhau, lấy nhầm là tính tiền
+                                sai mà biên bản vẫn trông hoàn chỉnh.
+                            </div>
+                        </page>
+                        <page string="Ghi chú" name="note">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_om_contract_list" model="ir.ui.view">
+        <field name="name">eam.om.contract.list</field>
+        <field name="model">eam.om.contract</field>
+        <field name="arch" type="xml">
+            <list string="Hợp đồng O&amp;M"
+                  decoration-muted="state in ('het', 'cham_dut')">
+                <field name="name"/>
+                <field name="title" optional="show"/>
+                <field name="partner_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="chu_ky"/>
+                <field name="plant_count"/>
+                <field name="commitment_count"/>
+                <field name="period_count"/>
+                <field name="phi_moi_ky" sum="Phí mỗi kỳ"/>
+                <field name="state"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_om_contract_search" model="ir.ui.view">
+        <field name="name">eam.om.contract.search</field>
+        <field name="model">eam.om.contract</field>
+        <field name="arch" type="xml">
+            <search string="Hợp đồng O&amp;M">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="plant_line_ids" string="Nhà máy"/>
+                <filter name="f_chay" string="Đang hiệu lực"
+                        domain="[('state', '=', 'chay')]"/>
+                <separator/>
+                <filter name="g_nha_thau" string="Nhà thầu"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_om_contract" model="ir.actions.act_window">
+        <field name="name">Hợp đồng O&amp;M</field>
+        <field name="res_model">eam.om.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai hợp đồng O&amp;M đầu tiên</p>
+            <p>Khai phạm vi nhà máy, cam kết và chế tài một lần. Mỗi kỳ
+            sau đó chỉ còn bấm <b>Đo kỳ</b>: hệ lấy số từ sổ dừng máy,
+            đối chiếu cam kết và ra khoản phải trả theo từng nhà máy.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_om_contract" name="Hợp đồng O&amp;M"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_om_contract" sequence="60"/>
+
+</odoo>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_om_period_form" model="ir.ui.view">
+        <field name="name">eam.om.period.form</field>
+        <field name="model">eam.om.period</field>
+        <field name="arch" type="xml">
+            <form string="Kỳ đánh giá">
+                <header>
+                    <button name="action_do" type="object" string="Đo kỳ"
+                            class="btn-primary" icon="fa-calculator"
+                            invisible="state == 'chot'"/>
+                    <button name="action_chot" type="object"
+                            string="Chốt kỳ" icon="fa-lock"
+                            invisible="state != 'da_do'"
+                            confirm="Chốt kỳ sẽ đóng băng mức cam kết, số đo được và phí của kỳ này. Sửa hợp đồng sau đó không làm đổi biên bản kỳ này nữa."/>
+                    <button name="action_mo_lai" type="object"
+                            string="Mở lại" icon="fa-unlock"
+                            invisible="state != 'chot'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"
+                                   options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="chu_ky"/>
+                            <field name="la_ky_phi"/>
+                        </group>
+                        <group>
+                            <field name="tong_phi"/>
+                            <field name="tong_phat"/>
+                            <field name="tong_thanh_toan"/>
+                            <field name="so_khong_dat"/>
+                            <field name="date_measured"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="co_canh_bao" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not co_canh_bao">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        Kỳ này có dòng <b>chưa đo được</b>, hoặc có nhiều
+                        <b>giờ dừng chưa quy trách nhiệm</b>. Con số khả
+                        dụng có thể đang đẹp vì chưa ai phân loại chứ không
+                        phải vì nhà thầu làm tốt — xem cột "Chưa quy (%)"
+                        trước khi đem biên bản này đi ký.
+                    </div>
+                    <notebook>
+                        <page string="Thanh toán theo nhà máy" name="plants">
+                            <field name="plant_ids" readonly="1">
+                                <list string="Theo nhà máy">
+                                    <field name="plant_id"/>
+                                    <field name="phi" sum="Phí"/>
+                                    <field name="phat" sum="Phạt"/>
+                                    <field name="thanh_toan" sum="Phải trả"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Kết quả cam kết" name="lines">
+                            <field name="line_ids" readonly="1">
+                                <list string="Kết quả"
+                                      decoration-danger="do_duoc and not dat"
+                                      decoration-warning="canh_bao_chua_quy"
+                                      decoration-muted="not do_duoc">
+                                    <field name="plant_id"/>
+                                    <field name="ten_cam_ket"/>
+                                    <field name="loai"/>
+                                    <field name="huong"/>
+                                    <field name="muc_cam_ket"/>
+                                    <field name="gia_tri"/>
+                                    <field name="gia_tri_tho" optional="hide"/>
+                                    <field name="dat"/>
+                                    <field name="thieu_hut"/>
+                                    <field name="gio_dung_tinh" optional="show"/>
+                                    <field name="gio_chua_quy" optional="show"/>
+                                    <field name="ty_le_chua_quy" optional="show"/>
+                                    <field name="mau_so" optional="hide"/>
+                                    <field name="so_don_vi" optional="hide"/>
+                                    <field name="so_khoang" optional="hide"/>
+                                    <field name="phat" sum="Phạt"/>
+                                    <field name="ly_do_chua_do"/>
+                                    <field name="do_duoc" column_invisible="1"/>
+                                    <field name="canh_bao_chua_quy" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <button name="action_xem_khoang_dung"
+                                            type="object" icon="fa-search"
+                                            title="Xem các khoảng dừng đã đi vào con số này"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Biên bản" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Ghi chú để đưa vào biên bản nghiệm thu kỳ."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_om_period_list" model="ir.ui.view">
+        <field name="name">eam.om.period.list</field>
+        <field name="model">eam.om.period</field>
+        <field name="arch" type="xml">
+            <list string="Kỳ đánh giá"
+                  decoration-danger="so_khong_dat &gt; 0"
+                  decoration-warning="co_canh_bao and so_khong_dat == 0"
+                  decoration-muted="state == 'nhap'">
+                <field name="contract_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="chu_ky"/>
+                <field name="la_ky_phi" optional="show"/>
+                <field name="tong_phi" sum="Phí"/>
+                <field name="tong_phat" sum="Phạt"/>
+                <field name="tong_thanh_toan" sum="Phải trả"/>
+                <field name="so_khong_dat"/>
+                <field name="co_canh_bao" optional="show"/>
+                <field name="state"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_om_period_search" model="ir.ui.view">
+        <field name="name">eam.om.period.search</field>
+        <field name="model">eam.om.period</field>
+        <field name="arch" type="xml">
+            <search string="Kỳ đánh giá">
+                <field name="contract_id"/>
+                <field name="partner_id"/>
+                <filter name="f_khong_dat" string="Có cam kết không đạt"
+                        domain="[('so_khong_dat', '>', 0)]"/>
+                <filter name="f_canh_bao" string="Có cảnh báo"
+                        domain="[('co_canh_bao', '=', True)]"/>
+                <filter name="f_ky_phi" string="Kỳ tính phí"
+                        domain="[('la_ky_phi', '=', True)]"/>
+                <filter name="f_chua_do" string="Chưa đo"
+                        domain="[('state', '=', 'nhap')]"/>
+                <separator/>
+                <filter name="g_hd" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_nt" string="Nhà thầu"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_om_period" model="ir.actions.act_window">
+        <field name="name">Kỳ đánh giá O&amp;M</field>
+        <field name="res_model">eam.om.period</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- A27.7 — Tổng hợp thanh toán theo nhà máy                     -->
+    <!-- ============================================================ -->
+    <record id="view_eam_om_period_plant_list" model="ir.ui.view">
+        <field name="name">eam.om.period.plant.list</field>
+        <field name="model">eam.om.period.plant</field>
+        <field name="arch" type="xml">
+            <list string="Thanh toán O&amp;M theo nhà máy"
+                  decoration-danger="phat &gt; 0">
+                <field name="plant_id"/>
+                <field name="contract_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="period_id"/>
+                <field name="date_start"/>
+                <field name="phi" sum="Phí"/>
+                <field name="phat" sum="Phạt"/>
+                <field name="thanh_toan" sum="Phải trả"/>
+                <field name="state"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_om_period_plant_search" model="ir.ui.view">
+        <field name="name">eam.om.period.plant.search</field>
+        <field name="model">eam.om.period.plant</field>
+        <field name="arch" type="xml">
+            <search string="Thanh toán theo nhà máy">
+                <field name="plant_id"/>
+                <field name="contract_id"/>
+                <field name="partner_id"/>
+                <filter name="f_co_phat" string="Có bị phạt"
+                        domain="[('phat', '>', 0)]"/>
+                <filter name="f_chot" string="Kỳ đã chốt"
+                        domain="[('state', '=', 'chot')]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_hd" string="Hợp đồng"
+                        context="{'group_by': 'contract_id'}"/>
+                <filter name="g_ky" string="Kỳ bắt đầu"
+                        context="{'group_by': 'date_start'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_om_thanh_toan" model="ir.actions.act_window">
+        <field name="name">Thanh toán O&amp;M theo nhà máy</field>
+        <field name="res_model">eam.om.period.plant</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_g_nm': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có kỳ nào được đo</p>
+            <p>Màn này trả lời đúng câu khách hỏi: <b>nhà máy này kỳ này
+            phải trả bao nhiêu</b> — phí trừ phạt, cho từng nhà máy, kể cả
+            khi một hợp đồng phủ nhiều nhà máy.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_om_period" name="Kỳ đánh giá O&amp;M"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_om_period" sequence="20"/>
+    <menuitem id="menu_eam_om_thanh_toan" name="Thanh toán O&amp;M theo nhà máy"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_om_thanh_toan" sequence="21"/>
+
+</odoo>

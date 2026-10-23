@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Mẫu nạp                                                      -->
+    <!-- ============================================================ -->
+    <record id="view_eam_import_template_form" model="ir.ui.view">
+        <field name="name">eam.import.template.form</field>
+        <field name="model">eam.import.template</field>
+        <field name="arch" type="xml">
+            <form string="Mẫu nạp dữ liệu">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_xem_luot_nap" type="object"
+                                class="oe_stat_button" icon="fa-upload">
+                            <field name="run_count" widget="statinfo"
+                                   string="Lượt nạp"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"
+                                   placeholder="Báo cáo vận hành ngày — ĐMT"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="kieu" widget="radio"/>
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="o_ngay"
+                                   invisible="kieu != 'bieu'"
+                                   placeholder="A7"/>
+                            <field name="sheet"
+                                   invisible="kieu != 'bieu'"
+                                   placeholder="để trống = đọc mọi sheet"/>
+                            <field name="kiem_ten_sheet"
+                                   invisible="kieu != 'bieu'"
+                                   widget="boolean_toggle"/>
+                            <field name="cot_thoi_diem"
+                                   invisible="kieu != 'bang'"/>
+                            <field name="tz" invisible="kieu != 'bang'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert"
+                         invisible="kieu != 'bieu'">
+                        <i class="fa fa-info-circle me-1"/>
+                        Trong tờ biểu, <b>cột chứa số đổi theo dòng</b> vì
+                        vùng trộn của nhãn dài ngắn khác nhau. Ở tờ báo cáo
+                        thật, khối khí tượng có giá trị ở cột <b>P</b> còn
+                        khối tổn thất ngay bên dưới lại ở cột <b>O</b>. Nên
+                        mỗi dòng phải khai <b>đúng ô</b>, đừng suy theo
+                        "giá trị luôn ở cột bên phải".
+                        <br/>Khai nhầm vào giữa một vùng trộn thì Excel trả
+                        về rỗng mà <b>không báo gì</b> — nhật ký nạp sẽ nói
+                        giá trị thật nằm ở ô nào.
+                    </div>
+                    <notebook>
+                        <page string="Dòng ánh xạ" name="map">
+                            <field name="map_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="kieu" column_invisible="1"/>
+                                    <field name="model_dich" column_invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="o"
+                                           column_invisible="parent.kieu != 'bieu'"/>
+                                    <field name="o2" optional="hide"
+                                           column_invisible="parent.kieu != 'bieu'"/>
+                                    <field name="cot"
+                                           column_invisible="parent.kieu != 'bang'"/>
+                                    <field name="dich"/>
+                                    <field name="field_id"
+                                           options="{'no_create': True}"
+                                           readonly="dich not in ('weather','kpi')"/>
+                                    <field name="node_code"
+                                           readonly="dich != 'node'"/>
+                                    <field name="nguon_so" optional="hide"
+                                           readonly="dich != 'node'"/>
+                                    <field name="tag_code"
+                                           readonly="dich != 'tag'"/>
+                                    <field name="he_so"/>
+                                    <field name="bat_buoc" optional="show"/>
+                                    <field name="chi_doi_chieu" optional="show"/>
+                                    <field name="sai_so" optional="hide"/>
+                                    <field name="anh_xa_tri" optional="hide"
+                                           widget="text"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-secondary mt-2"
+                                 role="alert">
+                                <b>Hệ số</b> — tờ báo cáo ghi MWh, bảng của
+                                ta lưu kWh, nên hệ số là 1000. Thiếu nó thì
+                                255 MWh thành 255 kWh: một phần nghìn, mà
+                                con số vẫn dương và trông hợp lý.
+                                <br/><b>Chỉ đối chiếu</b> — dòng mang kết
+                                quả nhà máy tự tính (PR, mẫu số, hệ số
+                                nhiệt). Đọc lên, so với số hệ tính ra, ghi
+                                khoảng lệch vào nhật ký, <b>không ghi vào
+                                dữ liệu</b>. Mỗi lượt nạp là một lần công
+                                thức của ta được kiểm bằng số của chính họ.
+                            </div>
+                        </page>
+                        <page string="Diễn giải" name="note">
+                            <field name="note" nolabel="1"
+                                   placeholder="Mẫu này đọc tệp của nhà máy nào, do ai gửi, lấy ở đâu."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_import_template_list" model="ir.ui.view">
+        <field name="name">eam.import.template.list</field>
+        <field name="model">eam.import.template</field>
+        <field name="arch" type="xml">
+            <list string="Mẫu nạp">
+                <field name="name"/>
+                <field name="kieu"/>
+                <field name="plant_id"/>
+                <field name="map_count"/>
+                <field name="run_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_import_template" model="ir.actions.act_window">
+        <field name="name">Mẫu nạp dữ liệu</field>
+        <field name="res_model">eam.import.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai mẫu nạp đầu tiên</p>
+            <p>Mẫu nạp nói cho hệ biết <b>ô nào trong tệp đi vào trường
+            nào</b>. Khai một lần, sau đó mỗi ngày chỉ còn tải tệp lên.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Lượt nạp                                                     -->
+    <!-- ============================================================ -->
+    <record id="view_eam_import_run_form" model="ir.ui.view">
+        <field name="name">eam.import.run.form</field>
+        <field name="model">eam.import.run</field>
+        <field name="arch" type="xml">
+            <form string="Lượt nạp">
+                <header>
+                    <button name="action_thu" type="object"
+                            string="Chạy thử" class="btn-primary"
+                            icon="fa-flask"
+                            invisible="state == 'xong'"/>
+                    <button name="action_nap" type="object"
+                            string="Nạp vào dữ liệu" class="btn-primary"
+                            icon="fa-download"
+                            invisible="state == 'xong'"
+                            confirm="Chạy thử xong và nhật ký đã đúng? Lượt này sẽ ghi thật vào khí tượng, hiệu suất và các bậc đo."/>
+                    <button name="action_lam_lai" type="object"
+                            string="Về nháp" icon="fa-undo"
+                            invisible="state == 'nhap'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="template_id"
+                                   options="{'no_create': True}"/>
+                            <field name="kieu" invisible="1"/>
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="file" filename="filename"/>
+                            <field name="filename" invisible="1"/>
+                            <field name="ghi_de" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="so_ngay"/>
+                            <field name="ngay_dau" invisible="not so_ngay"/>
+                            <field name="ngay_cuoi" invisible="not so_ngay"/>
+                            <field name="so_ghi"/>
+                            <field name="so_khop"/>
+                            <field name="so_lech"
+                                   decoration-danger="so_lech &gt; 0"/>
+                            <field name="so_bo_qua"/>
+                            <field name="so_canh_bao"/>
+                            <field name="so_loi"
+                                   decoration-danger="so_loi &gt; 0"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state != 'thu'">
+                        <i class="fa fa-flask me-1"/>
+                        Đây là kết quả <b>chạy thử</b>: mọi phép ghi đã được
+                        thực hiện rồi cuộn lại, nên nhật ký bên dưới đúng
+                        bằng những gì lượt nạp thật sẽ làm — kể cả phần đối
+                        chiếu. <b>Chưa có gì vào cơ sở dữ liệu.</b>
+                    </div>
+                    <field name="tom_tat" nolabel="1" readonly="1"
+                           invisible="not tom_tat"/>
+                    <notebook>
+                        <page string="Nhật ký" name="log">
+                            <field name="log_ids" readonly="1">
+                                <list string="Nhật ký"
+                                      decoration-danger="ket_qua in ('loi','lech')"
+                                      decoration-warning="ket_qua == 'canh_bao'"
+                                      decoration-muted="ket_qua == 'bo_qua'">
+                                    <field name="ket_qua"/>
+                                    <field name="sheet" optional="show"/>
+                                    <field name="ngay"/>
+                                    <field name="dia_chi"/>
+                                    <field name="nhan"/>
+                                    <field name="tri_tho"/>
+                                    <field name="tri"/>
+                                    <field name="tri_text" optional="show"/>
+                                    <!-- Hai cột dưới chỉ có nghĩa ở dòng
+                                         đối chiếu. Để hiện sẵn thì mọi
+                                         dòng ghi đều mang "0,0000" và
+                                         chính các dòng đáng đọc bị chìm
+                                         đi; câu so sánh đầy đủ đã nằm ở
+                                         cột Lý do. -->
+                                    <field name="tri_ta" optional="hide"/>
+                                    <field name="lech_pct" optional="hide"/>
+                                    <field name="dich_text"/>
+                                    <field name="ly_do"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_import_run_list" model="ir.ui.view">
+        <field name="name">eam.import.run.list</field>
+        <field name="model">eam.import.run</field>
+        <field name="arch" type="xml">
+            <list string="Lượt nạp"
+                  decoration-danger="state == 'loi'"
+                  decoration-success="state == 'xong'">
+                <field name="create_date" string="Lúc"/>
+                <field name="template_id"/>
+                <field name="plant_id"/>
+                <field name="filename"/>
+                <field name="ngay_dau"/>
+                <field name="ngay_cuoi"/>
+                <field name="so_ghi" sum="Ô ghi"/>
+                <field name="so_lech" sum="Lệch"/>
+                <field name="so_loi" sum="Lỗi"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_import_run_search" model="ir.ui.view">
+        <field name="name">eam.import.run.search</field>
+        <field name="model">eam.import.run</field>
+        <field name="arch" type="xml">
+            <search string="Lượt nạp">
+                <field name="template_id"/>
+                <field name="plant_id"/>
+                <field name="filename"/>
+                <filter name="f_loi" string="Có lỗi"
+                        domain="[('so_loi', '>', 0)]"/>
+                <filter name="f_lech" string="Đối chiếu lệch"
+                        domain="[('so_lech', '>', 0)]"/>
+                <filter name="f_xong" string="Đã nạp"
+                        domain="[('state', '=', 'xong')]"/>
+                <separator/>
+                <filter name="g_mau" string="Mẫu nạp" context="{'group_by': 'template_id'}"/>
+                <filter name="g_nha_may" string="Nhà máy" context="{'group_by': 'plant_id'}"/>
+                <filter name="g_tt" string="Trạng thái" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_import_run" model="ir.actions.act_window">
+        <field name="name">Nạp dữ liệu vận hành</field>
+        <field name="res_model">eam.import.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nạp tệp đầu tiên</p>
+            <p>Chọn mẫu nạp, tải tệp lên, bấm <b>Chạy thử</b>. Chạy thử làm
+            đúng mọi việc của lượt nạp thật rồi cuộn lại, nên nhật ký cho
+            thấy trước kết quả mà chưa ghi gì.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <menuitem id="menu_eam_import_run" name="Nạp dữ liệu vận hành"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_import_run" sequence="8"/>
+    <menuitem id="menu_eam_import_template" name="Mẫu nạp dữ liệu"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_import_template" sequence="48"/>
+
+</odoo>

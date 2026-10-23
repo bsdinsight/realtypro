@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_import_template_user,eam.import.template user,model_eam_import_template,re_base.group_re_user,1,0,0,0
+access_eam_import_template_manager,eam.import.template manager,model_eam_import_template,re_base.group_re_manager,1,1,1,1
+access_eam_import_map_user,eam.import.map user,model_eam_import_map,re_base.group_re_user,1,0,0,0
+access_eam_import_map_manager,eam.import.map manager,model_eam_import_map,re_base.group_re_manager,1,1,1,1
+access_eam_import_run_user,eam.import.run user,model_eam_import_run,re_base.group_re_user,1,1,1,0
+access_eam_import_run_manager,eam.import.run manager,model_eam_import_run,re_base.group_re_manager,1,1,1,1
+access_eam_import_log_user,eam.import.log user,model_eam_import_log,re_base.group_re_user,1,0,0,0
+access_eam_import_log_manager,eam.import.log manager,model_eam_import_log,re_base.group_re_manager,1,1,1,1

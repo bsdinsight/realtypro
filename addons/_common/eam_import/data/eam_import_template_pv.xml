@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      Mẫu nạp dựng theo tờ "DAILY PLANT OPERATION REPORT" của một nhà máy
+      điện mặt trời đang vận hành. Mỗi địa chỉ ô dưới đây đã được đối
+      chiếu với tệp thật, không phải suy ra từ bố cục.
+
+      Ba chỗ của tờ báo cáo này mà một mẫu "đoán theo bố cục" sẽ làm sai:
+
+      * Cột chứa giá trị KHÔNG cố định. Khối khí tượng có nhãn trộn từ L
+        tới O nên giá trị ở P19..P28; khối tổn thất ngay bên dưới có nhãn
+        trộn tới N nên giá trị ở O30..O33.
+      * Đơn vị trộn trong cùng một khối. Sản lượng các bậc ghi bằng MWh
+        (hệ số 1000), còn ENAC và mẫu số PR ngay bên cạnh đã là kWh.
+      * "Planned Ambient Temp" nằm dưới nhãn SITE CONSTANTS nhưng ĐỔI
+        theo từng ngày (30 → 32,9 → 33,4 trong ba sheet liên tiếp). Nên
+        nó KHÔNG được nối vào ô nhiệt độ tham chiếu của công thức PR —
+        làm vậy là âm thầm đổi công thức theo từng ngày. Khoảng lệch mẫu
+        số đang treo chờ nhà máy trả lời, và dòng "chỉ đối chiếu" ở dưới
+        là chỗ nó hiện ra mỗi ngày.
+    -->
+
+    <record id="tpl_pv_daily" model="eam.import.template">
+        <field name="name">Báo cáo vận hành ngày — điện mặt trời</field>
+        <field name="kieu">bieu</field>
+        <field name="o_ngay">A7</field>
+        <field name="kiem_ten_sheet" eval="True"/>
+        <field name="tz">Asia/Ho_Chi_Minh</field>
+        <field name="note">Tờ "DAILY PLANT OPERATION REPORT": mỗi sheet một
+ngày, tên sheet dạng 21102026. Để trống ô "chỉ đọc sheet" thì một tệp
+gửi theo tuần nạp được cả tuần trong một lượt.
+
+Mã bậc đo mẫu này cần có trong chuỗi điểm đo của nhà máy: INV, MCB, GNT,
+PR, EVN, TD, BD. Thiếu mã nào thì nhật ký nói rõ mã nào thiếu và chuỗi
+đang có những mã gì.
+
+Dải giờ (hàng "Hourly Energy Output", D40:P40 / D41:P41) CHƯA khai ở đây
+vì cần một điểm đo cấp nhà máy đã được khai trước. Thêm một dòng đích
+"Điểm đo", ô D40:P40, vùng giá trị D41:P41, hệ số 1000 là chạy. Lưu ý:
+trong tệp thật, tổng của hàng này KHÔNG bằng sản lượng ngày, nên nó là
+chuỗi tham khảo theo giờ chứ không phải nguồn hạch toán sản lượng.</field>
+    </record>
+
+    <!-- ========== Khí tượng ========== -->
+    <record id="map_pv_irradiance" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">10</field>
+        <field name="name">Plant Irradiance</field>
+        <field name="o">P19</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__irradiance_avg"/>
+    </record>
+    <record id="map_pv_irradiation" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">11</field>
+        <field name="name">Irradiation</field>
+        <field name="o">P20</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__irradiation"/>
+        <field name="bat_buoc" eval="True"/>
+    </record>
+    <record id="map_pv_t_amb" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">12</field>
+        <field name="name">Ambient Temperature</field>
+        <field name="o">P21</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__temp_ambient"/>
+    </record>
+    <record id="map_pv_t_mod" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">13</field>
+        <field name="name">Module Temperature</field>
+        <field name="o">P27</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__temp_module"/>
+        <field name="bat_buoc" eval="True"/>
+    </record>
+    <record id="map_pv_wind" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">14</field>
+        <field name="name">Wind Speed</field>
+        <field name="o">P26</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__wind_speed"/>
+    </record>
+    <record id="map_pv_sunny" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">15</field>
+        <field name="name">Sunny hours</field>
+        <field name="o">P28</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__sunny_hours"/>
+    </record>
+
+    <!-- Quan sát bằng mắt: tệp ghi tiếng Anh tự do, hệ lưu lựa chọn. -->
+    <record id="map_pv_obs06" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">20</field>
+        <field name="name">Weather condition 6AM to 9AM</field>
+        <field name="o">P22</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__obs_06"/>
+        <field name="anh_xa_tri">Sunny = sunny
+Sunny/Cloudy = partly
+Cloudy/Sunny = partly
+Partly cloudy = partly
+Cloudy = cloudy
+Overcast = overcast
+Rain = rain
+Rainy = rain
+Storm = storm</field>
+    </record>
+    <record id="map_pv_obs09" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">21</field>
+        <field name="name">Weather condition 9AM to 12PM</field>
+        <field name="o">P23</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__obs_09"/>
+        <field name="anh_xa_tri">Sunny = sunny
+Sunny/Cloudy = partly
+Cloudy/Sunny = partly
+Partly cloudy = partly
+Cloudy = cloudy
+Overcast = overcast
+Rain = rain
+Rainy = rain
+Storm = storm</field>
+    </record>
+    <record id="map_pv_obs12" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">22</field>
+        <field name="name">Weather condition 12PM to 3PM</field>
+        <field name="o">P24</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__obs_12"/>
+        <field name="anh_xa_tri">Sunny = sunny
+Sunny/Cloudy = partly
+Cloudy/Sunny = partly
+Partly cloudy = partly
+Cloudy = cloudy
+Overcast = overcast
+Rain = rain
+Rainy = rain
+Storm = storm</field>
+    </record>
+    <record id="map_pv_obs15" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">23</field>
+        <field name="name">Weather condition 3PM to 6PM</field>
+        <field name="o">P25</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__obs_15"/>
+        <field name="anh_xa_tri">Sunny = sunny
+Sunny/Cloudy = partly
+Cloudy/Sunny = partly
+Partly cloudy = partly
+Cloudy = cloudy
+Overcast = overcast
+Rain = rain
+Rainy = rain
+Storm = storm</field>
+    </record>
+    <record id="map_pv_remarks" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">24</field>
+        <field name="name">REMARKS</field>
+        <field name="o">A43</field>
+        <field name="dich">weather</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_weather__obs_note"/>
+    </record>
+
+    <!-- ========== Hiệu suất ========== -->
+    <record id="map_pv_enac" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">30</field>
+        <field name="name">AC electrical energy, [ENAC]</field>
+        <field name="o">O36</field>
+        <field name="dich">kpi</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_kpi__energy_ac"/>
+        <field name="bat_buoc" eval="True"/>
+    </record>
+    <record id="map_pv_denom" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">31</field>
+        <field name="name">PR formula Denominator</field>
+        <field name="o">O37</field>
+        <field name="dich">kpi</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_kpi__pr_denominator_manual"/>
+    </record>
+    <record id="map_pv_pa" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">32</field>
+        <field name="name">PA</field>
+        <field name="o">I39</field>
+        <field name="dich">kpi</field>
+        <field name="field_id" ref="eam_solar.field_eam_solar_kpi__pa"/>
+    </record>
+
+    <!-- ========== Bậc đo: MWh → kWh ========== -->
+    <record id="map_pv_inv" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">40</field>
+        <field name="name">Energy Output (Inverter)</field>
+        <field name="o">B20</field>
+        <field name="dich">node</field>
+        <field name="node_code">INV</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1000</field>
+        <field name="bat_buoc" eval="True"/>
+    </record>
+    <record id="map_pv_mcb" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">41</field>
+        <field name="name">Energy Output (main Switchgear in MCB)</field>
+        <field name="o">B21</field>
+        <field name="dich">node</field>
+        <field name="node_code">MCB</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1000</field>
+    </record>
+    <record id="map_pv_gnt" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">42</field>
+        <field name="name">Plant Energy Delivered to Grid EVN (171)</field>
+        <field name="o">B23</field>
+        <field name="dich">node</field>
+        <field name="node_code">GNT</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1000</field>
+    </record>
+    <record id="map_pv_evn" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">43</field>
+        <field name="name">Energy Received at 173M (EVN FIT tariff meter)</field>
+        <field name="o">B30</field>
+        <field name="dich">node</field>
+        <field name="node_code">EVN</field>
+        <field name="nguon_so">cong_to</field>
+        <field name="he_so">1000</field>
+    </record>
+    <record id="map_pv_pr_node" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">44</field>
+        <field name="name">AC electrical energy, [ENAC] — bậc tử số PR</field>
+        <field name="o">O36</field>
+        <field name="dich">node</field>
+        <field name="node_code">PR</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="map_pv_td" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">45</field>
+        <field name="name">E consumed (self consumed energy)</field>
+        <field name="o">B26</field>
+        <field name="dich">node</field>
+        <field name="node_code">TD</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1000</field>
+    </record>
+    <record id="map_pv_bd" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">46</field>
+        <field name="name">Energy consumption @ night</field>
+        <field name="o">B29</field>
+        <field name="dich">node</field>
+        <field name="node_code">BD</field>
+        <field name="nguon_so">scada</field>
+        <field name="he_so">1000</field>
+    </record>
+
+    <!-- ========== Chỉ đối chiếu ==========
+         Tờ báo cáo chứa cả kết quả nhà máy tự tính. Đọc lên rồi so với
+         con số hệ tính ra là cách công thức của ta được kiểm lại mỗi
+         ngày, bằng số của chính nhà máy, không cần ai nhớ đi dò.      -->
+    <record id="map_pv_cmp_pr" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">60</field>
+        <field name="name">PR — nhà máy tự tính</field>
+        <field name="o">I38</field>
+        <field name="dich">kpi</field>
+        <field name="field_id" ref="eam_solar.field_eam_solar_kpi__pr"/>
+        <field name="chi_doi_chieu" eval="True"/>
+        <field name="sai_so">0.5</field>
+    </record>
+    <record id="map_pv_cmp_enom" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">61</field>
+        <field name="name">E nominal — nhà máy tự tính</field>
+        <field name="o">I36</field>
+        <field name="dich">kpi</field>
+        <field name="field_id"
+               ref="eam_solar.field_eam_solar_kpi__e_nominal"/>
+        <field name="chi_doi_chieu" eval="True"/>
+        <field name="sai_so">0.5</field>
+    </record>
+    <record id="map_pv_cmp_ft" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">62</field>
+        <field name="name">Ft — nhà máy tự tính</field>
+        <field name="o">I37</field>
+        <field name="dich">kpi</field>
+        <field name="field_id" ref="eam_solar.field_eam_solar_kpi__ft"/>
+        <field name="chi_doi_chieu" eval="True"/>
+        <field name="sai_so">0.5</field>
+    </record>
+    <record id="map_pv_cmp_loss_mcb" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">63</field>
+        <field name="name">Energy loss (up to main Switchgear) %</field>
+        <field name="o">B22</field>
+        <field name="dich">node</field>
+        <field name="node_code">MCB</field>
+        <field name="field_id"
+               ref="eam_chain.field_eam_chain_day__loss_pct"/>
+        <field name="chi_doi_chieu" eval="True"/>
+        <field name="sai_so">0.5</field>
+    </record>
+    <record id="map_pv_cmp_loss_gnt" model="eam.import.map">
+        <field name="template_id" ref="tpl_pv_daily"/>
+        <field name="sequence">64</field>
+        <field name="name">Energy loss (up to the side of transformer) %</field>
+        <field name="o">B25</field>
+        <field name="dich">node</field>
+        <field name="node_code">GNT</field>
+        <field name="field_id"
+               ref="eam_chain.field_eam_chain_day__loss_pct"/>
+        <field name="chi_doi_chieu" eval="True"/>
+        <field name="sai_so">0.5</field>
+    </record>
+
+</odoo>

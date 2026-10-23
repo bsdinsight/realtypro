@@ -95,7 +95,13 @@
                        optional="hide" readonly="1"/>
             </xpath>
 
-            <xpath expr="//page[@name='parts']//list" position="after">
+            <!-- Trỏ vào chính TRƯỜNG, không phải vào thẻ <list> bên
+                 trong nó. Chèn "sau" thẻ list là chèn VÀO TRONG thẻ
+                 field, và Odoo đọc mọi thẻ con của trường quan hệ như
+                 tên một loại view — nó đi tìm view type "div", không
+                 thấy, rồi vỡ màn hình bằng KeyNotFoundError. -->
+            <xpath expr="//page[@name='parts']/field[@name='part_line_ids']"
+                   position="after">
                 <div class="text-muted">
                     <b>Ba số khác nhau.</b> <i>Yêu cầu</i> là số xin và là
                     số đem đi giữ chỗ; <i>Đã xuất</i> là số kho đưa ra;

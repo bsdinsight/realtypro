@@ -10,20 +10,27 @@ class ReLoanNoteDisbursement(models.Model):
     dossier_line_ids = fields.One2many(
         'rp.loan.disbursement.dossier', 'disbursement_id',
         string='Hồ sơ giải ngân')
-    dossier_count = fields.Integer(compute='_compute_dossier_stats')
+    # Một hàm tính KHÔNG được vừa nuôi trường có lưu vừa nuôi trường
+    # không lưu: Odoo cảnh báo "inconsistent 'store'" và chỉ cần đọc ô
+    # đếm là nó tính lại rồi ghi đè hai ô có lưu (XBOSS báo, PR #8).
+    dossier_count = fields.Integer(compute='_compute_dossier_count')
     dossier_total = fields.Monetary(
         string='Σ giá trị hồ sơ',
-        compute='_compute_dossier_stats', store=True,
+        compute='_compute_dossier_amounts', store=True,
         help='Tổng giá trị các hồ sơ — phải bằng số tiền giải ngân.')
     dossier_balance = fields.Monetary(
         string='Chênh lệch',
-        compute='_compute_dossier_stats', store=True,
+        compute='_compute_dossier_amounts', store=True,
         help='= Số tiền giải ngân − Σ hồ sơ. Phải bằng 0 khi gửi NH.')
 
-    @api.depends('dossier_line_ids', 'dossier_line_ids.amount', 'amount')
-    def _compute_dossier_stats(self):
+    @api.depends('dossier_line_ids')
+    def _compute_dossier_count(self):
         for rec in self:
             rec.dossier_count = len(rec.dossier_line_ids)
+
+    @api.depends('dossier_line_ids', 'dossier_line_ids.amount', 'amount')
+    def _compute_dossier_amounts(self):
+        for rec in self:
             rec.dossier_total = sum(rec.dossier_line_ids.mapped('amount'))
             rec.dossier_balance = rec.amount - rec.dossier_total
 
@@ -36,6 +43,13 @@ class ReLoanNoteDisbursement(models.Model):
 
     def _check_ready_to_submit(self):
         super()._check_ready_to_submit()
+        # Cửa thoát cho luồng duyệt riêng của khách: lần giải ngân gắn
+        # với một phân bổ đã duyệt thì hồ sơ nằm ở chứng từ duyệt chứ
+        # không ở đây (XBOSS đặt cờ này từ module của họ, PR #8).
+        # Người gọi vẫn phải đi qua super() để phần còn lại của chuỗi
+        # kiểm tra chạy đủ.
+        if self.env.context.get('skip_disbursement_dossier_check'):
+            return
         for rec in self:
             if not rec.dossier_line_ids:
                 raise UserError(_(

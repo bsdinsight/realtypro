@@ -87,3 +87,24 @@ class TestAdvanceDossier(TransactionCase):
             'amount': 100_000_000.0,
         })
         self.assertEqual(dossier.contractor_id, self.contractor)
+
+    # ----- Giữ hai sửa của đối tác (PR #8) -------------------------------
+    def test_count_and_amounts_dung_ham_tinh_rieng(self):
+        """Ô đếm (không lưu) và hai ô tiền (có lưu) phải do HAI hàm tính
+        khác nhau — chung một hàm thì chỉ đọc ô đếm cũng kéo theo ghi đè
+        hai ô có lưu, và Odoo cảnh báo "inconsistent 'store'"."""
+        fields_ = self.env['re.loan.note.disbursement']._fields
+        self.assertNotEqual(fields_['dossier_count'].compute,
+                            fields_['dossier_total'].compute)
+        self.assertEqual(fields_['dossier_total'].compute,
+                         fields_['dossier_balance'].compute)
+
+    def test_co_the_bo_qua_kiem_ho_so_bang_ngu_canh(self):
+        """Luồng duyệt riêng của khách giữ hồ sơ ở chứng từ duyệt, nên
+        có cửa thoát bằng cờ ngữ cảnh — nhưng mặc định vẫn phải chặn."""
+        disb = self._disbursement()
+        with self.assertRaises(UserError):
+            disb.action_submit()
+        disb.with_context(
+            skip_disbursement_dossier_check=True).action_submit()
+        self.assertEqual(disb.state, 'submitted')

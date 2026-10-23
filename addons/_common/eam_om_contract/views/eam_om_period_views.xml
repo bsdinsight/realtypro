@@ -223,11 +223,11 @@
         </field>
     </record>
 
-    <menuitem id="menu_eam_om_period" name="Kỳ đánh giá O&amp;M"
-              parent="eam_core.menu_eam_perf"
+    <menuitem id="menu_eam_om_period" name="Kỳ đánh giá"
+              parent="eam_om_contract.menu_eam_om_root"
               action="action_eam_om_period" sequence="20"/>
-    <menuitem id="menu_eam_om_thanh_toan" name="Thanh toán O&amp;M theo nhà máy"
-              parent="eam_core.menu_eam_perf"
-              action="action_eam_om_thanh_toan" sequence="21"/>
+    <menuitem id="menu_eam_om_thanh_toan" name="Thanh toán theo nhà máy"
+              parent="eam_om_contract.menu_eam_om_root"
+              action="action_eam_om_thanh_toan" sequence="30"/>
 
 </odoo>

@@ -177,8 +177,16 @@
         </field>
     </record>
 
-    <menuitem id="menu_eam_om_contract" name="Hợp đồng O&amp;M"
-              parent="eam_core.menu_eam_config"
-              action="action_eam_om_contract" sequence="60"/>
+    <!-- Ba màn O&M đi với nhau thành MỘT nhóm, theo kiểu nhóm "Điện mặt
+         trời" đã có. Trước đây bảng hợp đồng nằm cuối danh sách 17 mục
+         của Cấu hình còn hai màn kia nằm giữa Hiệu suất: đúng chỗ theo
+         kiểu kỹ thuật (hợp đồng là dữ liệu khai một lần) nhưng người
+         dùng đi tìm "hợp đồng O&M" thì không thấy — và không thấy thì
+         coi như chưa làm. -->
+    <menuitem id="menu_eam_om_root" name="Hợp đồng O&amp;M"
+              parent="eam_core.menu_eam_perf" sequence="60"/>
+    <menuitem id="menu_eam_om_contract" name="Hợp đồng"
+              parent="menu_eam_om_root"
+              action="action_eam_om_contract" sequence="10"/>
 
 </odoo>

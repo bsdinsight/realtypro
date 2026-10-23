@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+      Sau nhom lay tu chinh to bao cao van hanh ngay cua mot nha may dang
+      chay. Khong tu nghi ra: moi nhom o day deu la mot dong co that
+      tren giay ma nguoi van hanh doc moi sang.
+
+      noupdate="1" vi bao cao cua tung khach gop khac nhau — nguoi trien
+      khai phai sua duoc ma lan nang cap sau khong ghi de.
+    -->
+
+    <record id="group_grid" model="eam.time.group">
+        <field name="code">GRID</field>
+        <field name="name">Dừng do lưới ngoài</field>
+        <field name="sequence">10</field>
+        <field name="mo_ta">Sự cố hoặc thao tác phía lưới làm nhà máy không phát được. Nhà máy vẫn sẵn sàng.</field>
+    </record>
+
+    <record id="group_curtail" model="eam.time.group">
+        <field name="code">CURT</field>
+        <field name="name">Cắt giảm theo lệnh điều độ</field>
+        <field name="sequence">20</field>
+        <field name="la_cat_giam" eval="True"/>
+        <field name="mo_ta">Lưới yêu cầu giảm phát. Máy VẪN SẴN SÀNG — giờ này tính vào giờ vận hành khi đánh giá nhà thầu, nhưng bị trừ khỏi mẫu số tỷ số hiệu suất.</field>
+    </record>
+
+    <record id="group_pm" model="eam.time.group">
+        <field name="code">PM</field>
+        <field name="name">Bảo trì theo kế hoạch</field>
+        <field name="sequence">30</field>
+        <field name="mo_ta">Công việc đã lên lịch trước. Thường do bên vận hành chủ động, nên mặc định không tính cho nhà thầu.</field>
+    </record>
+
+    <record id="group_comp" model="eam.time.group">
+        <field name="code">COMP</field>
+        <field name="name">Sự cố thiết bị</field>
+        <field name="sequence">40</field>
+        <field name="tinh_cho_nha_thau" eval="True"/>
+        <field name="mo_ta">Hỏng hóc thiết bị trong phạm vi hợp đồng vận hành bảo dưỡng.</field>
+    </record>
+
+    <record id="group_ext" model="eam.time.group">
+        <field name="code">EXT</field>
+        <field name="name">Sự cố ngoài phạm vi</field>
+        <field name="sequence">50</field>
+        <field name="mo_ta">Hỏng hóc ở hạng mục không thuộc phạm vi hợp đồng O&amp;M, hoặc do bên thứ ba.</field>
+    </record>
+
+    <record id="group_om" model="eam.time.group">
+        <field name="code">OM</field>
+        <field name="name">Dừng do nhà thầu O&amp;M</field>
+        <field name="sequence">60</field>
+        <field name="tinh_cho_nha_thau" eval="True"/>
+        <field name="mo_ta">Chờ nhân lực, chờ phụ tùng, chờ chẩn đoán, chờ hồ sơ — phần thời gian nhà thầu chịu trách nhiệm rút ngắn.</field>
+    </record>
+
+    <record id="group_fm" model="eam.time.group">
+        <field name="code">FM</field>
+        <field name="name">Bất khả kháng &amp; môi trường</field>
+        <field name="sequence">70</field>
+        <field name="mo_ta">Bão, động đất, điều kiện môi trường vượt ngưỡng thiết kế. Không quy cho bên nào.</field>
+    </record>
+
+    <record id="group_data" model="eam.time.group">
+        <field name="code">DATA</field>
+        <field name="name">Mất dữ liệu giám sát</field>
+        <field name="sequence">80</field>
+        <field name="mo_ta">Mất kết nối giám sát. Theo chuẩn, đây là MỘT LOẠI THỜI GIAN phải hạch toán — không được bỏ qua và không được mặc định là máy chạy tốt.</field>
+    </record>
+
+</odoo>

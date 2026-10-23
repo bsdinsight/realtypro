@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_time_group_user,eam.time.group user,model_eam_time_group,re_base.group_re_user,1,0,0,0
+access_eam_time_group_manager,eam.time.group manager,model_eam_time_group,re_base.group_re_manager,1,1,1,1

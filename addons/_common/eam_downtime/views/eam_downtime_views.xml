@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- A17.2 — Nhóm báo cáo và phép ánh xạ                          -->
+    <!-- ============================================================ -->
+    <record id="view_eam_time_group_list" model="ir.ui.view">
+        <field name="name">eam.time.group.list</field>
+        <field name="model">eam.time.group</field>
+        <field name="arch" type="xml">
+            <list string="Nhóm thời gian trên báo cáo" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category_count"/>
+                <field name="la_cat_giam"/>
+                <field name="tinh_cho_nha_thau"/>
+                <field name="mo_ta"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_time_group" model="ir.actions.act_window">
+        <field name="name">Nhóm thời gian trên báo cáo</field>
+        <field name="res_model">eam.time.group</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nhóm thời gian</p>
+            <p>Hai mươi ba loại chuẩn gộp lại thành ít dòng mà người vận
+            hành đọc được. Lưu theo <b>chuẩn</b>, hiện theo <b>nhóm</b> —
+            báo cáo điện gió và điện mặt trời gộp khác nhau nên phép ánh
+            xạ phải khai được.</p>
+        </field>
+    </record>
+
+    <!-- Ánh xạ: thêm cột nhóm vào màn loại thời gian đã có -->
+    <record id="view_eam_time_category_list_group" model="ir.ui.view">
+        <field name="name">eam.time.category.list.group</field>
+        <field name="model">eam.time.category</field>
+        <field name="inherit_id" ref="eam_core.view_eam_time_category_list"/>
+        <field name="arch" type="xml">
+            <field name="counts_as_downtime" position="after">
+                <field name="group_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_eam_time_category_map" model="ir.actions.act_window">
+        <field name="name">Ánh xạ loại thời gian → nhóm</field>
+        <field name="res_model">eam.time.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_chua_nhom': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Mọi loại đã xếp nhóm</p>
+            <p>Loại chưa xếp nhóm thì giờ của nó rơi vào dòng
+            <b>"chưa xếp nhóm"</b> trên báo cáo — hiện ra chứ không biến
+            mất, nhưng vẫn nên xếp cho đủ.</p>
+        </field>
+    </record>
+
+    <record id="view_eam_time_category_search_group" model="ir.ui.view">
+        <field name="name">eam.time.category.search.group</field>
+        <field name="model">eam.time.category</field>
+        <field name="arch" type="xml">
+            <search string="Loại thời gian">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="group_id"/>
+                <filter name="f_chua_nhom" string="Chưa xếp nhóm"
+                        domain="[('group_id', '=', False)]"/>
+                <filter name="f_dung" string="Tính là dừng máy"
+                        domain="[('counts_as_downtime', '=', True)]"/>
+                <separator/>
+                <filter name="g_nhom" string="Nhóm báo cáo"
+                        context="{'group_by': 'group_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- A17.3 / A17.4 — kWh mất và tiền, trên sổ dừng máy            -->
+    <!-- ============================================================ -->
+    <record id="view_eam_outage_form_downtime" model="ir.ui.view">
+        <field name="name">eam.outage.form.downtime</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_form"/>
+        <field name="arch" type="xml">
+            <field name="lost_mwh" position="before">
+                <field name="group_id"/>
+                <field name="nguon_mat"/>
+            </field>
+            <field name="lost_mwh" position="after">
+                <field name="mat_mong_doi" readonly="1"
+                       invisible="not mat_mong_doi"/>
+                <field name="mat_that" readonly="1"
+                       invisible="not mat_that"/>
+                <field name="so_doi_chung" readonly="1"
+                       invisible="not so_doi_chung"/>
+                <field name="ly_do_khong_tinh" readonly="1"
+                       invisible="not ly_do_khong_tinh"/>
+            </field>
+            <field name="lost_revenue" position="after">
+                <field name="gia_kwh" readonly="1" invisible="not gia_kwh"/>
+                <field name="nguon_gia" readonly="1"
+                       invisible="not nguon_gia"/>
+            </field>
+            <xpath expr="//header" position="inside">
+                <button name="action_tinh_san_luong_mat" type="object"
+                        string="Tính kWh mất (máy đối chứng)"
+                        icon="fa-calculator"/>
+                <button name="action_tinh_tien" type="object"
+                        string="Quy ra tiền" icon="fa-money"
+                        invisible="not lost_mwh"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_outage_list_downtime" model="ir.ui.view">
+        <field name="name">eam.outage.list.downtime</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_list"/>
+        <field name="arch" type="xml">
+            <field name="duration_hours" position="after">
+                <field name="group_id" optional="show"/>
+                <field name="nguon_mat" optional="show"/>
+                <field name="so_doi_chung" optional="hide"/>
+                <field name="ly_do_khong_tinh" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <menuitem id="menu_eam_time_group" name="Nhóm thời gian báo cáo"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_time_group" sequence="21"/>
+    <menuitem id="menu_eam_time_category_map" name="Ánh xạ loại → nhóm"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_time_category_map" sequence="22"/>
+
+</odoo>

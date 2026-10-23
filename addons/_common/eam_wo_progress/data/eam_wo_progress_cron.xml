@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      Chay hang ngay nhung chi DAY khi vuot mot nac moi (vua qua han,
+      3 ngay, 7 ngay). Nhac lai moi ngay thi sau mot tuan nguoi ta loc
+      het thong bao vao thung rac, va luc co lenh that su gap thi khong
+      ai nhin.
+    -->
+    <record id="cron_eam_wo_tre_han" model="ir.cron">
+        <field name="name">EAMOne: quét lệnh công việc trễ hạn</field>
+        <field name="model_id" ref="eam_work_order.model_eam_work_order"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_canh_bao_tre_han()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=7, minute=30, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

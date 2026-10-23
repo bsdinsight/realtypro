@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- A06.1 — Kế hoạch so với thực tế trên cùng một trục            -->
+    <!--                                                              -->
+    <!-- Odoo Community KHÔNG có view gantt (web_gantt là Enterprise), -->
+    <!-- nên "cùng một trục" dựng bằng cột: bốn mốc đặt cạnh nhau và   -->
+    <!-- ba con số lệch tính sẵn. Thông tin đủ; chỉ không vẽ thành     -->
+    <!-- thanh. Muốn thanh thì dùng lại thành phần gantt tự viết bên   -->
+    <!-- phần dự án — đó là một quyết định kiến trúc riêng.            -->
+    <!-- ============================================================ -->
+    <record id="view_eam_wo_ke_hoach_list" model="ir.ui.view">
+        <field name="name">eam.work.order.ke.hoach.list</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <list string="Kế hoạch so với thực tế"
+                  decoration-danger="tre_han and not tre_vi_cho"
+                  decoration-warning="tre_vi_cho"
+                  decoration-muted="state in ('done', 'closed', 'cancelled')">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="user_id"/>
+                <field name="date_planned_start" string="Dự kiến bắt đầu"/>
+                <field name="date_start" string="Thực tế bắt đầu"/>
+                <field name="lech_bat_dau"/>
+                <field name="date_planned_end" string="Dự kiến xong"/>
+                <field name="date_end" string="Thực tế xong"/>
+                <field name="lech_ket_thuc"/>
+                <field name="duration_hours" optional="show"/>
+                <field name="lech_gio_cong" optional="show"/>
+                <field name="so_gio_tre" optional="show"/>
+                <field name="tre_vi_cho" optional="show"/>
+                <field name="state"/>
+                <field name="tre_han" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- A06.2 — Kanban theo trạng thái, kéo thả đổi trạng thái -->
+    <record id="view_eam_wo_kanban" model="ir.ui.view">
+        <field name="name">eam.work.order.kanban</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false"
+                    group_create="false">
+                <field name="tre_han"/>
+                <field name="tre_vi_cho"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top mb-0">
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                            </strong>
+                        </div>
+                        <div class="text-muted">
+                            <field name="location_id"/>
+                        </div>
+                        <div class="mt-1">
+                            <field name="priority" widget="priority"/>
+                            <span t-if="record.tre_han.raw_value"
+                                  t-attf-class="badge ms-1 #{record.tre_vi_cho.raw_value ? 'text-bg-warning' : 'text-bg-danger'}">
+                                <t t-if="record.tre_vi_cho.raw_value">Trễ — đang chờ</t>
+                                <t t-else="">Trễ hạn</t>
+                            </span>
+                        </div>
+                        <footer class="pt-1">
+                            <field name="date_planned_end" widget="remaining_days"/>
+                            <field name="user_id" widget="many2one_avatar_user"
+                                   class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- A06.3 — Lịch tuần/tháng của đội bảo trì -->
+    <record id="view_eam_wo_calendar" model="ir.ui.view">
+        <field name="name">eam.work.order.calendar</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch bảo trì" date_start="date_planned_start"
+                      date_stop="date_planned_end" color="user_id"
+                      mode="month" quick_create="false">
+                <field name="name"/>
+                <field name="user_id" filters="1"/>
+                <field name="location_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- A06.5 — Tải công việc theo người -->
+    <record id="view_eam_wo_pivot_tai" model="ir.ui.view">
+        <field name="name">eam.work.order.pivot.tai</field>
+        <field name="model">eam.work.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Tải công việc theo người">
+                <field name="user_id" type="row"/>
+                <field name="date_planned_start" interval="week" type="col"/>
+                <field name="duration_hours" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Bổ sung vào form và danh sách sẵn có                         -->
+    <!-- ============================================================ -->
+    <record id="view_eam_wo_form_progress" model="ir.ui.view">
+        <field name="name">eam.work.order.form.progress</field>
+        <field name="model">eam.work.order</field>
+        <field name="inherit_id" ref="eam_work_order.view_eam_work_order_form"/>
+        <field name="arch" type="xml">
+            <field name="date_end" position="after">
+                <field name="lech_bat_dau"
+                       invisible="not lech_bat_dau"/>
+                <field name="lech_ket_thuc"
+                       invisible="not lech_ket_thuc"/>
+                <field name="lech_gio_cong"
+                       invisible="not lech_gio_cong"/>
+                <field name="tre_han" invisible="1"/>
+                <field name="tre_vi_cho" invisible="1"/>
+                <field name="so_gio_tre" invisible="not tre_han"/>
+                <field name="muc_canh_bao" invisible="not tre_han"/>
+                <field name="lan_canh_bao_cuoi" invisible="not tre_han"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <record id="action_eam_wo_ke_hoach" model="ir.actions.act_window">
+        <field name="name">Kế hoạch vs thực tế</field>
+        <field name="res_model">eam.work.order</field>
+        <field name="view_mode">list,kanban,calendar,pivot,form</field>
+        <field name="view_id" ref="view_eam_wo_ke_hoach_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có lệnh nào</p>
+            <p>Bốn mốc đặt cạnh nhau — dự kiến và thực tế, bắt đầu và kết
+            thúc — cộng ba con số lệch tính sẵn. Đổi sang
+            <b>lịch</b> để nhìn tuần/tháng, <b>kanban</b> để kéo thả đổi
+            trạng thái, <b>pivot</b> để xem ai đang quá tải.</p>
+        </field>
+    </record>
+
+    <record id="action_eam_wo_tre_han" model="ir.actions.act_window">
+        <field name="name">Lệnh trễ hạn</field>
+        <field name="res_model">eam.work.order</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="view_eam_wo_ke_hoach_list"/>
+        <field name="domain">[('tre_han', '=', True)]</field>
+        <field name="context">{'search_default_group_user': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có lệnh nào trễ hạn</p>
+            <p>Dòng <b>đỏ</b> là trễ vì bị bỏ quên — người phụ trách đã
+            được đẩy việc cần làm. Dòng <b>vàng</b> là trễ vì đang chờ
+            bên ngoài: đó là vấn đề của chuỗi cung ứng, không phải của
+            người thợ, nên hệ không nhắc họ.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_wo_ke_hoach" name="Kế hoạch vs thực tế"
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_wo_ke_hoach" sequence="12"/>
+    <menuitem id="menu_eam_wo_tre_han" name="Lệnh trễ hạn"
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_wo_tre_han" sequence="13"/>
+
+</odoo>

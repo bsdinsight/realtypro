@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_availability_day_list" model="ir.ui.view">
+        <field name="name">eam.availability.day.list</field>
+        <field name="model">eam.availability.day</field>
+        <field name="arch" type="xml">
+            <list string="Khả dụng theo ngày"
+                  decoration-warning="so_khoang_chua_tinh &gt; 0"
+                  decoration-muted="not do_duoc_sl">
+                <field name="date"/>
+                <field name="plant_id"/>
+                <field name="kd_thoi_gian"/>
+                <field name="kd_san_luong"/>
+                <field name="luy_ke_thang"/>
+                <field name="luy_ke_nam" optional="show"/>
+                <field name="so_may_kha_dung"/>
+                <field name="so_don_vi" optional="hide"/>
+                <field name="mau_so_doan" optional="show"/>
+                <field name="gio_dung" sum="Giờ dừng"/>
+                <field name="gio_chua_quy" sum="Chưa quy" optional="show"/>
+                <field name="sl_that" sum="Thực"/>
+                <field name="sl_mat" sum="Mất"/>
+                <field name="sl_dang_le" sum="Đáng lẽ" optional="hide"/>
+                <field name="so_khoang_chua_tinh" optional="show"/>
+                <field name="nguon_sl" optional="hide"/>
+                <field name="ly_do_chua_do"/>
+                <field name="do_duoc_sl" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_availability_day_form" model="ir.ui.view">
+        <field name="name">eam.availability.day.form</field>
+        <field name="model">eam.availability.day</field>
+        <field name="arch" type="xml">
+            <form string="Khả dụng ngày">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Theo thời gian">
+                            <field name="kd_thoi_gian"/>
+                            <field name="so_don_vi"/>
+                            <field name="mau_so_doan"/>
+                            <field name="gio_ky"/>
+                            <field name="gio_dung"/>
+                            <field name="gio_chua_quy"/>
+                            <field name="so_may_kha_dung"/>
+                        </group>
+                        <group string="Theo sản lượng">
+                            <field name="do_duoc_sl" invisible="1"/>
+                            <field name="kd_san_luong"
+                                   invisible="not do_duoc_sl"/>
+                            <field name="sl_that" invisible="not do_duoc_sl"/>
+                            <field name="sl_mat" invisible="not do_duoc_sl"/>
+                            <field name="sl_dang_le"
+                                   invisible="not do_duoc_sl"/>
+                            <field name="nguon_sl" invisible="not do_duoc_sl"/>
+                            <field name="ly_do_chua_do"
+                                   invisible="do_duoc_sl"/>
+                            <field name="so_khoang_chua_tinh"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="so_khoang_chua_tinh == 0">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        Ngày này có <field name="so_khoang_chua_tinh"
+                        readonly="1" class="oe_inline"/> khoảng dừng chưa
+                        tính được sản lượng mất. Mẫu số thiếu đúng phần
+                        đó, nên <b>khả dụng đang cao hơn sự thật</b>.
+                    </div>
+                    <group string="Luỹ kế — cộng tử số rồi chia tổng mẫu số,
+                                   KHÔNG trung bình phần trăm các ngày">
+                        <field name="luy_ke_thang"/>
+                        <field name="luy_ke_nam"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_availability_day_search" model="ir.ui.view">
+        <field name="name">eam.availability.day.search</field>
+        <field name="model">eam.availability.day</field>
+        <field name="arch" type="xml">
+            <search string="Khả dụng theo ngày">
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_chua_do" string="Chưa đo được sản lượng"
+                        domain="[('do_duoc_sl', '=', False)]"/>
+                <filter name="f_thieu" string="Còn khoảng chưa tính kWh"
+                        domain="[('so_khoang_chua_tinh', '>', 0)]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_availability_day" model="ir.actions.act_window">
+        <field name="name">Khả dụng theo ngày</field>
+        <field name="res_model">eam.availability.day</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_g_nm': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa dựng ngày nào</p>
+            <p>Hai con số song song: khả dụng theo <b>thời gian</b> và
+            theo <b>sản lượng</b>. Chúng khác nhau, và khác nhiều — một
+            tua-bin dừng giữa mùa lặng gió mất gần như không gì, dừng
+            giữa mùa gió mạnh mất cả chục nghìn kWh.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_availability_day" name="Khả dụng theo ngày"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_availability_day" sequence="6"/>
+
+</odoo>

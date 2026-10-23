@@ -21,7 +21,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 from . import do_kha_dung
-from .eam_om_commitment import CHUA_DO
 
 
 class EamOmPeriod(models.Model):
@@ -219,8 +218,9 @@ class EamOmPeriod(models.Model):
 
     def _do_mot(self, cam, plant_line, tu, den):
         """Đo một cam kết trên một nhà máy. Luôn trả về cùng hình dạng."""
-        if cam.loai in CHUA_DO:
-            return do_kha_dung.chua_do_duoc(CHUA_DO[cam.loai])
+        ly_do = cam._ly_do_chua_do(cam.loai)
+        if ly_do:
+            return do_kha_dung.chua_do_duoc(ly_do)
         return do_kha_dung.do_kha_dung_thoi_gian(
             self.env, plant_line.plant_id, tu, den,
             so_don_vi=plant_line.so_don_vi,

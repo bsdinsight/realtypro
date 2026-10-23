@@ -143,10 +143,22 @@ class EamOmCommitment(models.Model):
         for rec in self:
             rec.chu_ky_hieu_luc = rec.chu_ky or rec.contract_id.chu_ky
 
+    @api.model
+    def _ly_do_chua_do(self, loai):
+        """Vì sao hệ chưa đo được cơ sở này — '' nghĩa là đo được.
+
+        Là MỘT PHƯƠNG THỨC chứ không phải tra thẳng hằng số, để module
+        làm sau bịt được lỗ hổng mà module này tự khai. Module khả dụng
+        kế thừa và bỏ "khả dụng theo sản lượng" ra khỏi danh sách khi nó
+        đã đo được — chứ không dựng engine thứ hai rồi hai nơi trả lời
+        khác nhau.
+        """
+        return CHUA_DO.get(loai, '')
+
     @api.depends('loai')
     def _compute_do_duoc(self):
         for rec in self:
-            rec.ly_do_chua_do = CHUA_DO.get(rec.loai, '')
+            rec.ly_do_chua_do = rec._ly_do_chua_do(rec.loai)
             rec.do_duoc = not rec.ly_do_chua_do
 
     @api.depends('name', 'muc', 'loai')

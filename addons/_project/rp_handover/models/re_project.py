@@ -18,6 +18,36 @@ class ReProject(models.Model):
              'biên bản bàn giao nào. Đây là việc đang tồn đọng — mỗi trụ '
              'chưa bàn giao là một đồng hồ bảo hành chưa ai bấm bắt đầu.')
 
+    # ----- Nhìn từ phía vận hành -------------------------------------
+    # Ba con số này trả lời đúng câu hỏi đầu tiên khi mở một dự án đã
+    # vận hành: cây tài sản đã dựng chưa, và nhà máy có đang được theo
+    # dõi thật không. Dự án nối nhà máy mà cây vị trí rỗng thì mọi màn
+    # hình phía sau đều rỗng theo — nhưng chúng rỗng trong im lặng, nên
+    # phải đếm ra ở đây.
+    eam_location_count = fields.Integer(
+        string='Vị trí', compute='_compute_eam')
+    eam_asset_count = fields.Integer(
+        string='Thiết bị', compute='_compute_eam')
+    eam_outage_count = fields.Integer(
+        string='Khoảng dừng', compute='_compute_eam')
+
+    def _compute_eam(self):
+        L = self.env['eam.location']
+        I = self.env['eam.installation']
+        O = self.env['eam.outage']
+        for p in self:
+            if not p.plant_location_id:
+                p.eam_location_count = p.eam_asset_count = 0
+                p.eam_outage_count = 0
+                continue
+            vt = L.search([('id', 'child_of', p.plant_location_id.id)])
+            p.eam_location_count = len(vt)
+            p.eam_asset_count = len(I.search(
+                [('location_id', 'in', vt.ids),
+                 ('date_remove', '=', False)]).mapped('asset_id'))
+            p.eam_outage_count = O.search_count(
+                [('location_id', 'in', vt.ids)])
+
     @api.depends('handover_ids.state', 'plant_location_id')
     def _compute_handover(self):
         S = self.env['rp.erection.step']

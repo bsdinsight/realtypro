@@ -72,6 +72,7 @@ sẽ làm đồng hồ bảo hành đã chạy biến mất mà không ai biết
         'security/ir.model.access.csv',
         'data/rp_handover_sequence.xml',
         'views/rp_handover_views.xml',
+        'views/eam_project_views.xml',
     ],
     'installable': True,
 }

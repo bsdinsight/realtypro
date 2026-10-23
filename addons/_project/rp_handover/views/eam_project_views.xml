@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Màn DỰ ÁN nhìn từ phía vận hành.
+
+      Dùng lại chính bảng re.project của EPCOne chứ không dựng bảng thứ
+      hai: một nhà máy mà hai nơi cùng khai danh tính thì sớm muộn hai
+      nơi nói hai công suất, hai ngày COD, và không nơi nào là nơi thật.
+      Cầu bàn giao này vốn đã nối hai đầu, nên menu đặt ở đây là đúng
+      chỗ — EAMOne lõi không phải biết tới EPCOne.
+
+      Khác với màn dự án bên EPCOne ở chỗ nhìn: bên kia hỏi "xây tới đâu
+      rồi", bên này hỏi "nhà máy nào, công suất bao nhiêu, chạy từ bao
+      giờ, cây tài sản đã dựng chưa".
+    -->
+    <record id="view_eam_project_list" model="ir.ui.view">
+        <field name="name">re.project.eam.list</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <list string="Dự án vận hành"
+                  decoration-muted="not plant_location_id">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="project_type"/>
+                <field name="capacity_mw" sum="Tổng công suất"/>
+                <field name="date_cod"/>
+                <field name="plant_location_id"/>
+                <field name="eam_location_count"/>
+                <field name="eam_asset_count"/>
+                <field name="eam_outage_count" optional="show"/>
+                <field name="is_energy" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_project_search" model="ir.ui.view">
+        <field name="name">re.project.eam.search</field>
+        <field name="model">re.project</field>
+        <field name="arch" type="xml">
+            <search string="Dự án vận hành">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="plant_location_id"/>
+                <filter name="f_gio" string="Điện gió"
+                        domain="[('project_type', '=', 'wind')]"/>
+                <filter name="f_mt" string="Điện mặt trời"
+                        domain="[('project_type', '=', 'solar')]"/>
+                <separator/>
+                <filter name="f_chua_noi" string="Chưa nối nhà máy"
+                        domain="[('plant_location_id', '=', False)]"/>
+                <separator/>
+                <filter name="g_loai" string="Loại dự án"
+                        context="{'group_by': 'project_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_project" model="ir.actions.act_window">
+        <field name="name">Dự án</field>
+        <field name="res_model">re.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_energy', '=', True)]</field>
+        <field name="context">{'search_default_g_loai': 1}</field>
+        <field name="view_id" ref="view_eam_project_list"/>
+        <field name="search_view_id" ref="view_eam_project_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có dự án năng lượng nào</p>
+            <p>Dự án là nơi bắt đầu: mỗi dự án nối xuống một
+            <b>nhà máy</b> trong cây vị trí, và mọi thứ của phần vận hành
+            — tài sản, dừng máy, điểm đo, hợp đồng O&amp;M — treo dưới nhà
+            máy đó. Dòng <b>mờ</b> là dự án chưa nối nhà máy, nghĩa là
+            phần vận hành chưa có chỗ bám.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_project" name="Dự án"
+              parent="eam_core.menu_eam_root"
+              action="action_eam_project" sequence="5"/>
+
+</odoo>

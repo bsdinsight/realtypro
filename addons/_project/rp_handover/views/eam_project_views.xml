@@ -20,12 +20,13 @@
         <field name="arch" type="xml">
             <list string="Dự án vận hành"
                   decoration-muted="not plant_location_id">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="project_type"/>
-                <field name="capacity_mw" sum="Tổng công suất"/>
-                <field name="date_cod"/>
-                <field name="plant_location_id"/>
+                <field name="code" string="Mã dự án"/>
+                <field name="name" string="Tên dự án"/>
+                <field name="project_type" string="Loại"/>
+                <field name="capacity_mw" string="Công suất (MW)"
+                       sum="Tổng công suất"/>
+                <field name="date_cod" string="Vận hành từ"/>
+                <field name="plant_location_id" string="Nhà máy"/>
                 <field name="eam_location_count"/>
                 <field name="eam_asset_count"/>
                 <field name="eam_outage_count" optional="show"/>
@@ -39,9 +40,9 @@
         <field name="model">re.project</field>
         <field name="arch" type="xml">
             <search string="Dự án vận hành">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="plant_location_id"/>
+                <field name="code" string="Mã dự án"/>
+                <field name="name" string="Tên dự án"/>
+                <field name="plant_location_id" string="Nhà máy"/>
                 <filter name="f_gio" string="Điện gió"
                         domain="[('project_type', '=', 'wind')]"/>
                 <filter name="f_mt" string="Điện mặt trời"

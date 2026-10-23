@@ -34,6 +34,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="loai_id" options="{'no_create': True}"/>
+                            <field name="nhom" invisible="1"/>
                             <field name="partner_id"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
@@ -131,7 +133,8 @@
             <list string="Hợp đồng O&amp;M"
                   decoration-muted="state in ('het', 'cham_dut')">
                 <field name="name"/>
-                <field name="title" optional="show"/>
+                <field name="loai_id"/>
+                <field name="title" optional="hide"/>
                 <field name="partner_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
@@ -154,9 +157,14 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="plant_line_ids" string="Nhà máy"/>
+                <field name="loai_id"/>
                 <filter name="f_chay" string="Đang hiệu lực"
                         domain="[('state', '=', 'chay')]"/>
                 <separator/>
+                <filter name="g_loai" string="Loại hợp đồng"
+                        context="{'group_by': 'loai_id'}"/>
+                <filter name="g_nhom" string="Nhóm"
+                        context="{'group_by': 'nhom'}"/>
                 <filter name="g_nha_thau" string="Nhà thầu"
                         context="{'group_by': 'partner_id'}"/>
                 <filter name="g_tt" string="Trạng thái"
@@ -177,15 +185,24 @@
         </field>
     </record>
 
-    <!-- Ba màn O&M đi với nhau thành MỘT nhóm, theo kiểu nhóm "Điện mặt
-         trời" đã có. Trước đây bảng hợp đồng nằm cuối danh sách 17 mục
-         của Cấu hình còn hai màn kia nằm giữa Hiệu suất: đúng chỗ theo
-         kiểu kỹ thuật (hợp đồng là dữ liệu khai một lần) nhưng người
-         dùng đi tìm "hợp đồng O&M" thì không thấy — và không thấy thì
-         coi như chưa làm. -->
-    <menuitem id="menu_eam_om_root" name="Hợp đồng O&amp;M"
-              parent="eam_core.menu_eam_perf" sequence="60"/>
-    <menuitem id="menu_eam_om_contract" name="Hợp đồng"
+    <!-- Hợp đồng là NHÁNH GỐC của EAMOne, không nằm trong Hiệu suất.
+         Giai đoạn vận hành có khoảng ba mươi lăm loại hợp đồng (O&M
+         tổng, dịch vụ dài hạn OEM, vệ sinh tấm pin, cẩu nâng hạ, khung
+         phụ tùng, kiểm định, SCADA…), mỗi loại một nhà thầu, một cam
+         kết, một cách tính tiền. Hiệu suất chỉ là một KẾT QUẢ của hợp
+         đồng, không phải nhà của nó — và chuỗi liên kết trong tài liệu
+         danh mục cũng tách Hợp đồng thành một mắt xích riêng:
+         pháp nhân → nhà máy → thiết bị → HỢP ĐỒNG → nghĩa vụ → KPI/SLA
+         → công việc → nghiệm thu/thanh toán. -->
+    <menuitem id="menu_eam_om_root" name="Hợp đồng"
+              parent="eam_core.menu_eam_root" sequence="55"/>
+
+    <menuitem id="menu_eam_om_danh_gia" name="Đánh giá &amp; thanh toán"
+              parent="menu_eam_om_root" sequence="20"/>
+    <menuitem id="menu_eam_om_danh_muc" name="Danh mục"
+              parent="menu_eam_om_root" sequence="90"/>
+
+    <menuitem id="menu_eam_om_contract" name="Hợp đồng O&amp;M"
               parent="menu_eam_om_root"
               action="action_eam_om_contract" sequence="10"/>
 

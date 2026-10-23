@@ -224,10 +224,10 @@
     </record>
 
     <menuitem id="menu_eam_om_period" name="Kỳ đánh giá"
-              parent="eam_om_contract.menu_eam_om_root"
-              action="action_eam_om_period" sequence="20"/>
+              parent="eam_om_contract.menu_eam_om_danh_gia"
+              action="action_eam_om_period" sequence="10"/>
     <menuitem id="menu_eam_om_thanh_toan" name="Thanh toán theo nhà máy"
-              parent="eam_om_contract.menu_eam_om_root"
-              action="action_eam_om_thanh_toan" sequence="30"/>
+              parent="eam_om_contract.menu_eam_om_danh_gia"
+              action="action_eam_om_thanh_toan" sequence="20"/>
 
 </odoo>

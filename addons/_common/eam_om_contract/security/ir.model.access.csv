@@ -11,3 +11,5 @@ access_eam_om_period_line_user,eam.om.period.line user,model_eam_om_period_line,
 access_eam_om_period_line_manager,eam.om.period.line manager,model_eam_om_period_line,re_base.group_re_manager,1,1,1,1
 access_eam_om_period_plant_user,eam.om.period.plant user,model_eam_om_period_plant,re_base.group_re_user,1,0,0,0
 access_eam_om_period_plant_manager,eam.om.period.plant manager,model_eam_om_period_plant,re_base.group_re_manager,1,1,1,1
+access_eam_om_contract_type_user,eam.om.contract.type user,model_eam_om_contract_type,re_base.group_re_user,1,0,0,0
+access_eam_om_contract_type_manager,eam.om.contract.type manager,model_eam_om_contract_type,re_base.group_re_manager,1,1,1,1

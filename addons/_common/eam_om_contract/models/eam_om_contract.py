@@ -30,6 +30,15 @@ class EamOmContract(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Nhà thầu O&M', required=True,
         ondelete='restrict', tracking=True)
+    loai_id = fields.Many2one(
+        'eam.om.contract.type', string='Loại hợp đồng', required=True,
+        ondelete='restrict', tracking=True, index=True,
+        domain="[('quan_ly_o_day', '=', True)]",
+        help='Giai đoạn vận hành có nhiều loại hợp đồng chứ không chỉ một '
+             'hợp đồng O&M tổng. Loại nào đã có nơi quản lý riêng (mua bán '
+             'điện, EPC, vay) thì không chọn được ở đây.')
+    nhom = fields.Selection(
+        related='loai_id.nhom', string='Nhóm', store=True)
 
     date_start = fields.Date(
         string='Hiệu lực từ', required=True, tracking=True)
@@ -112,6 +121,17 @@ class EamOmContract(models.Model):
         for rec in self:
             rec.display_name = '%s — %s' % (rec.name or '',
                                             rec.partner_id.name or '')
+
+    @api.constrains('loai_id')
+    def _check_loai(self):
+        for rec in self:
+            if rec.loai_id and not rec.loai_id.quan_ly_o_day:
+                raise ValidationError(_(
+                    'Loại "%(l)s" không quản lý ở đây — nó nằm ở: %(d)s. '
+                    'Giữ nó trong danh mục để thấy bức tranh đủ, nhưng lập '
+                    'hợp đồng thì phải lập đúng chỗ, nếu không cùng một hợp '
+                    'đồng tồn tại hai bản và không bản nào là bản thật.',
+                    l=rec.loai_id.display_name, d=rec.loai_id.quan_ly_o_dau))
 
     @api.constrains('date_start', 'date_end')
     def _check_ngay(self):

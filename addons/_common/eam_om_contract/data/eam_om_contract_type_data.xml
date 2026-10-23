@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+      Danh muc LOAI hop dong giai doan O&amp;M, dung theo tai lieu
+      "AMI - Danh muc loai hop dong trong giai doan O&amp;M" ban 0.1,
+      ngay 23/10/2026.
+
+      Tai lieu ghi ro: day la DE XUAT de khao sat va thiet ke, KHONG
+      phai danh sach hop dong da xac minh cua khach, cung khong phai
+      danh muc bat buoc theo phap luat. Pham vi that phai doi chieu voi
+      hop dong va phu luc cua tung nha may.
+
+      noupdate="1" de nguoi trien khai sua/tat loai ma lan nang cap sau
+      khong ghi de len.
+    -->
+    <record id="type_om_01" model="eam.om.contract.type">
+        <field name="code">OM-01</field>
+        <field name="name">Hợp đồng O&amp;M tổng thể nhà máy</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Phạm vi vận hành/bảo trì, nhân sự, lịch công việc, KPI/SLA, phí và loại trừ</field>
+        <field name="uu_tien_demo">1</field>
+    </record>
+    <record id="type_om_02" model="eam.om.contract.type">
+        <field name="code">OM-02</field>
+        <field name="name">Dịch vụ dài hạn OEM — LTSA / Full Service</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Danh mục thiết bị, mức bao phủ phụ tùng/nhân công, bảo đảm khả dụng và giới hạn trách nhiệm. LTSA KHÁC bảo hành thiết bị — dịch vụ có thu phí không mặc nhiên bao phủ mọi lỗi.</field>
+        <field name="uu_tien_demo">2</field>
+    </record>
+    <record id="type_om_03" model="eam.om.contract.type">
+        <field name="code">OM-03</field>
+        <field name="name">Hợp đồng vận hành, trực ca</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Nhân sự trực, giao ca, giám sát, ứng phó sự cố và báo cáo</field>
+    </record>
+    <record id="type_om_04" model="eam.om.contract.type">
+        <field name="code">OM-04</field>
+        <field name="name">Hợp đồng bảo trì định kỳ</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Chu kỳ, checklist, vật tư, tiêu chí hoàn thành và nghiệm thu</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_om_05" model="eam.om.contract.type">
+        <field name="code">OM-05</field>
+        <field name="name">Hợp đồng sửa chữa sự cố</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Thời gian phản hồi/khôi phục, đơn giá, phạm vi sửa và bảo hành sau sửa</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_om_06" model="eam.om.contract.type">
+        <field name="code">OM-06</field>
+        <field name="name">Bảo trì hệ thống điện / BOP</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Máy biến áp, cáp, tủ điện, trạm biến áp, bảo vệ và hệ thống phụ trợ</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_om_07" model="eam.om.contract.type">
+        <field name="code">OM-07</field>
+        <field name="name">Quản lý tài sản kỹ thuật</field>
+        <field name="nhom">om</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Giám sát nhà thầu, phân tích hiệu suất, ngân sách bảo trì và báo cáo chủ sở hữu</field>
+    </record>
+    <record id="type_wg_01" model="eam.om.contract.type">
+        <field name="code">WG-01</field>
+        <field name="name">Bảo trì và sửa chữa cánh quạt</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Kiểm tra, ảnh khuyết tật, phân cấp hư hỏng, sửa chữa và nghiệm thu</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_wg_02" model="eam.om.contract.type">
+        <field name="code">WG-02</field>
+        <field name="name">Sửa chữa / thay thế cấu phần lớn</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Hộp số, máy phát, ổ trục chính, bộ biến đổi; serial, vận chuyển và bảo hành</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_wg_03" model="eam.om.contract.type">
+        <field name="code">WG-03</field>
+        <field name="name">Dịch vụ cẩu và nâng hạ</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Huy động, năng lực thiết bị, điều kiện thời tiết, thời gian chờ và chi phí</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_wg_04" model="eam.om.contract.type">
+        <field name="code">WG-04</field>
+        <field name="name">Giám sát tình trạng thiết bị — CMS</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Rung động, dầu bôi trơn, cảnh báo, chẩn đoán và khuyến nghị</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_wg_05" model="eam.om.contract.type">
+        <field name="code">WG-05</field>
+        <field name="name">Kiểm tra tháp, móng và kết cấu</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Bu lông, ăn mòn, nứt, lún và xử lý phát hiện</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_wg_06" model="eam.om.contract.type">
+        <field name="code">WG-06</field>
+        <field name="name">Kiểm tra cuối kỳ bảo hành</field>
+        <field name="nhom">gio</field>
+        <field name="ap_dung">gio</field>
+        <field name="noi_dung">Danh mục lỗi, bằng chứng, hạn thông báo và theo dõi khắc phục</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_pv_01" model="eam.om.contract.type">
+        <field name="code">PV-01</field>
+        <field name="name">Vệ sinh tấm pin</field>
+        <field name="nhom">mat_troi</field>
+        <field name="ap_dung">mat_troi</field>
+        <field name="noi_dung">Tần suất, phương pháp, nguồn nước, phạm vi và nghiệm thu</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_pv_02" model="eam.om.contract.type">
+        <field name="code">PV-02</field>
+        <field name="name">Bảo trì / sửa chữa inverter</field>
+        <field name="nhom">mat_troi</field>
+        <field name="ap_dung">mat_troi</field>
+        <field name="noi_dung">Model, serial, phụ tùng, thời gian khôi phục và đổi thiết bị</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_pv_03" model="eam.om.contract.type">
+        <field name="code">PV-03</field>
+        <field name="name">Kiểm tra hiệu suất / chẩn đoán module</field>
+        <field name="nhom">mat_troi</field>
+        <field name="ap_dung">mat_troi</field>
+        <field name="noi_dung">Ảnh nhiệt, đo I–V, EL khi cần, danh sách lỗi và kết quả kiểm tra</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_pv_04" model="eam.om.contract.type">
+        <field name="code">PV-04</field>
+        <field name="name">Bảo trì hệ thống tracker</field>
+        <field name="nhom">mat_troi</field>
+        <field name="ap_dung">mat_troi</field>
+        <field name="noi_dung">Truyền động, bộ điều khiển, hiệu chỉnh và phụ tùng. CHỈ áp dụng khi nhà máy có tracker.</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_pv_05" model="eam.om.contract.type">
+        <field name="code">PV-05</field>
+        <field name="name">Quản lý thực vật và vệ sinh hiện trường</field>
+        <field name="nhom">mat_troi</field>
+        <field name="ap_dung">mat_troi</field>
+        <field name="noi_dung">Phát quang, chống che bóng, hành lang thiết bị và thoát nước</field>
+        <field name="uu_tien_demo">3</field>
+    </record>
+    <record id="type_sp_01" model="eam.om.contract.type">
+        <field name="code">SP-01</field>
+        <field name="name">Cung cấp phụ tùng / vật tư theo khung</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Bảng giá, thời gian giao, đặt hàng và mức dự trữ</field>
+        <field name="uu_tien_demo">4</field>
+    </record>
+    <record id="type_sp_02" model="eam.om.contract.type">
+        <field name="code">SP-02</field>
+        <field name="name">Ký gửi hoặc dự trữ phụ tùng quan trọng</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Quyền sở hữu, nơi lưu, điều kiện sử dụng và bổ sung</field>
+        <field name="uu_tien_demo">4</field>
+    </record>
+    <record id="type_sp_03" model="eam.om.contract.type">
+        <field name="code">SP-03</field>
+        <field name="name">Sửa chữa / đổi phụ tùng, hoàn trả lõi</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">RMA, serial, hạn trả lõi, phí và bảo hành sau sửa</field>
+        <field name="uu_tien_demo">4</field>
+    </record>
+    <record id="type_sp_04" model="eam.om.contract.type">
+        <field name="code">SP-04</field>
+        <field name="name">Thuê thiết bị / dụng cụ chuyên dụng</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Thời hạn thuê, bàn giao, hiệu chuẩn và trách nhiệm hư hỏng</field>
+    </record>
+    <record id="type_in_01" model="eam.om.contract.type">
+        <field name="code">IN-01</field>
+        <field name="name">Thử nghiệm, kiểm định và hiệu chuẩn</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Danh mục thiết bị, chu kỳ, kết quả và chứng nhận</field>
+        <field name="uu_tien_demo">5</field>
+    </record>
+    <record id="type_it_01" model="eam.om.contract.type">
+        <field name="code">IT-01</field>
+        <field name="name">SCADA, phần mềm OEM và hỗ trợ kỹ thuật</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">License, hỗ trợ, cập nhật, quyền truy xuất và xuất dữ liệu</field>
+        <field name="uu_tien_demo">6</field>
+    </record>
+    <record id="type_it_02" model="eam.om.contract.type">
+        <field name="code">IT-02</field>
+        <field name="name">Viễn thông và kết nối dữ liệu</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Đường truyền, độ sẵn sàng, thời gian xử lý và giám sát</field>
+        <field name="uu_tien_demo">6</field>
+    </record>
+    <record id="type_ss_01" model="eam.om.contract.type">
+        <field name="code">SS-01</field>
+        <field name="name">Bảo vệ, an ninh nhà máy</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Nhân sự, tuần tra, sự cố và trách nhiệm</field>
+    </record>
+    <record id="type_ss_02" model="eam.om.contract.type">
+        <field name="code">SS-02</field>
+        <field name="name">Dịch vụ môi trường, xử lý chất thải</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Phạm vi thu gom, hồ sơ bàn giao và bằng chứng xử lý</field>
+    </record>
+    <record id="type_ss_03" model="eam.om.contract.type">
+        <field name="code">SS-03</field>
+        <field name="name">Bảo trì đường nội bộ, thoát nước và công trình phụ trợ</field>
+        <field name="nhom">vat_tu</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Phạm vi, lịch kiểm tra, sửa chữa và nghiệm thu</field>
+    </record>
+    <record id="type_cm_01" model="eam.om.contract.type">
+        <field name="code">CM-01</field>
+        <field name="name">Hợp đồng mua bán điện — PPA</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Điểm giao nhận, sản lượng, giá, đối soát, thanh toán và nghĩa vụ liên quan</field>
+        <field name="uu_tien_demo">7</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">EPCOne → Bán điện (PPA)</field>
+    </record>
+    <record id="type_cm_02" model="eam.om.contract.type">
+        <field name="code">CM-02</field>
+        <field name="name">Thoả thuận đấu nối, đo đếm và dịch vụ liên quan</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Ranh giới trách nhiệm, điểm đo, bảo trì và phối hợp ngừng điện</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">Chưa có nơi quản lý — cần quyết định đặt ở đâu</field>
+    </record>
+    <record id="type_cm_03" model="eam.om.contract.type">
+        <field name="code">CM-03</field>
+        <field name="name">Bảo hiểm tài sản và gián đoạn kinh doanh</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Tài sản được bảo hiểm, loại trừ, mức khấu trừ, thông báo và hồ sơ yêu cầu</field>
+        <field name="uu_tien_demo">8</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">Chưa có nơi quản lý — cần quyết định đặt ở đâu</field>
+    </record>
+    <record id="type_cm_04" model="eam.om.contract.type">
+        <field name="code">CM-04</field>
+        <field name="name">Thuê đất, mặt bằng, mái hoặc quyền tiếp cận</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Thời hạn, phí, điều kiện tiếp cận và nghĩa vụ duy trì</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">Chưa có nơi quản lý — cần quyết định đặt ở đâu</field>
+    </record>
+    <record id="type_cm_05" model="eam.om.contract.type">
+        <field name="code">CM-05</field>
+        <field name="name">Quản lý tài sản thương mại / tài chính</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Ngân sách, doanh thu, dòng tiền và báo cáo cho chủ sở hữu</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">Chưa có nơi quản lý — cần quyết định đặt ở đâu</field>
+    </record>
+    <record id="type_cm_06" model="eam.om.contract.type">
+        <field name="code">CM-06</field>
+        <field name="name">Hợp đồng vay và nghĩa vụ tài trợ liên quan</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Kỳ trả nợ, báo cáo và các nghĩa vụ cần theo dõi</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">Quản lý Vay</field>
+    </record>
+    <record id="type_cm_07" model="eam.om.contract.type">
+        <field name="code">CM-07</field>
+        <field name="name">Hợp đồng EPC / TSA / cung cấp thiết bị còn nghĩa vụ</field>
+        <field name="nhom">thuong_mai</field>
+        <field name="ap_dung">ca_hai</field>
+        <field name="noi_dung">Bảo hành, lỗi tồn đọng, bảo lãnh và nghĩa vụ sau bàn giao</field>
+        <field name="uu_tien_demo">8</field>
+        <field name="quan_ly_o_day" eval="False"/>
+        <field name="quan_ly_o_dau">EPCOne → Hợp đồng nhà thầu, Bảo lãnh, Sổ nghĩa vụ</field>
+    </record>
+</odoo>

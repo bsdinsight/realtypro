@@ -76,7 +76,9 @@ Realty CRM.
     'depends': ['eam_core'],
     'data': [
         'security/ir.model.access.csv',
+        'data/eam_om_contract_type_data.xml',
         'views/eam_om_contract_views.xml',
+        'views/eam_om_type_views.xml',
         'views/eam_om_period_views.xml',
     ],
     'installable': True,

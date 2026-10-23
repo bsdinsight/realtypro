@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Quản lý hiện trường (Site Management)',
-    'version': '19.0.1.1.1',
+    'version': '19.0.1.1.2',
     'category': 'Realty/Project',
     'summary': 'Nhật ký thi công, Punch list (lỗi & khắc phục), An toàn '
                'lao động (kiểm tra, toolbox meeting, sự cố) cho công trường.',
@@ -37,7 +37,6 @@ Người nhập: kỹ sư hiện trường CĐT/tổng thầu (backend Odoo).
         'rp_schedule',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'views/rp_site_diary_views.xml',
@@ -45,6 +44,7 @@ Người nhập: kỹ sư hiện trường CĐT/tổng thầu (backend Odoo).
         'views/rp_site_hse_views.xml',
         'views/rp_contract_views.xml',
         'views/rp_site_menus.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'installable': True,
     'application': False,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne - Contractor Contracts',
-    'version': '19.0.1.9.0',
+    'version': '19.0.1.9.1',
     'category': 'Realty/Project',
     'summary': 'Hợp đồng nhà thầu (rp.contract): lifecycle, BOQ lines, '
                'lịch thanh toán, phụ lục, bảo lãnh',
@@ -49,7 +49,6 @@ NGOÀI scope v1 (làm sau):
         'rp_estimate',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_change.xml',
         'views/rp_contract_views.xml',
@@ -59,6 +58,7 @@ NGOÀI scope v1 (làm sau):
         'views/rp_tender_package_views.xml',
         'views/rp_contract_report_views.xml',
         'views/menu.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'demo': [
         'demo/rp_contract_demo.xml',

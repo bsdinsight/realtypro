@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ hồ sơ kỹ thuật (điều 5.2)',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Realty/Project',
     'summary': 'Hồ sơ nhà thầu phải trình: đồng hồ xem xét 21 ngày, chuỗi '
                'lần trình, và cổng cho phép khởi công / bàn giao.',
@@ -63,7 +63,6 @@ Những thứ còn lại chỉ là hệ quả của ba điều trên:
         'rp_doc_folder',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/rp_document_views.xml',
@@ -72,6 +71,7 @@ Những thứ còn lại chỉ là hệ quả của ba điều trên:
         'views/rp_contract_views.xml',
         'views/re_project_views.xml',
         'views/rp_document_menus.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'installable': True,
     'application': False,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Lịch thi công (Schedule)',
-    'version': '19.0.9.10.0',
+    'version': '19.0.9.10.1',
     'category': 'Realty/Project',
     'summary': 'Tầng lịch thi công theo task (Odoo Project) cho HĐ nhà '
                'thầu: import Excel/MS Project XML, WBS, %, milestone, '
@@ -40,7 +40,6 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'rp_progress',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'wizards/rp_schedule_import_views.xml',
         'views/rp_task_link_views.xml',
@@ -49,6 +48,7 @@ Không đụng tầng nghiệm thu khối lượng (rp_progress) — 2 lăng kí
         'views/rp_contract_views.xml',
         'views/rp_schedule_baseline_views.xml',
         'views/rp_schedule_menus.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

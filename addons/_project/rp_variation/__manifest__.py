@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Sổ phát sinh (Variation)',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.1.1',
     'category': 'Realty/Project',
     'summary': 'Thay đổi phạm vi theo điều 13: đồng hồ báo giá 14 ngày, '
                'giá theo đơn giá hợp đồng, ra phụ lục và vào dự báo chi phí.',
@@ -45,13 +45,13 @@ Phát sinh có kéo dài thời gian thì mở thẳng hồ sơ khiếu nại gi
         'rp_claim',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/rp_variation_views.xml',
         'views/re_project_views.xml',
         'views/rp_contract_views.xml',
         'views/rp_variation_menus.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'installable': True,
     'application': False,

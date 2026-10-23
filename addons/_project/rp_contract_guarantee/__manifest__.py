@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne - Contract Guarantees',
-    'version': '19.0.1.7.0',
+    'version': '19.0.1.7.1',
     'category': 'Realty/Project',
     'summary': 'Sổ bảo lãnh hợp đồng nhà thầu — BL nhận từ nhà thầu phụ '
                '(thực hiện HĐ / tạm ứng / bảo hành), upload tài liệu, '
@@ -43,12 +43,12 @@ Thông tư 11/2022/TT-NHNN.
         'rp_contract',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/rp_contract_guarantee_views.xml',
         'views/rp_contract_views.xml',
         'views/menu.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'post_init_hook': 'post_init_migrate_flat_guarantees',
     'installable': True,

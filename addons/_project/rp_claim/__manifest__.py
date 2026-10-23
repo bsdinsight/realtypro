@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Khiếu nại, gia hạn (EOT) & phạt chậm',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Realty/Project',
     'summary': 'Sổ khiếu nại hai chiều, đếm hạn thông báo, gia hạn ra '
                'phụ lục, và phạt chậm tính trên mốc đã gia hạn.',
@@ -48,7 +48,6 @@ theo lịch; khi cần chốt thì lập **biên bản tính phạt** — số l
         're_ca_sign',
     ],
     'data': [
-        'views/rp_doc_filing_views.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
         'views/rp_claim_views.xml',
@@ -56,6 +55,7 @@ theo lịch; khi cần chốt thì lập **biên bản tính phạt** — số l
         'views/rp_claim_menus.xml',
         'views/rp_claim_sign_views.xml',
         'reports/rp_claim_report.xml',
+        'views/rp_doc_filing_views.xml',
     ],
     'installable': True,
     'application': False,

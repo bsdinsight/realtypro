@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — HĐ với Chủ đầu tư (đầu ra)',
-    'version': '19.0.2.0.6',
+    'version': '19.0.2.0.7',
     'category': 'Realty/Project',
     'summary': 'HĐ thi công ĐẦU RA (tổng thầu ↔ CĐT): BBNT sản lượng với '
                'CĐT + thanh toán của CĐT → khoản phải thu (quyền đòi nợ).',
@@ -45,6 +45,7 @@ tăng → hạn mức khả dụng tại NH tăng.
         'views/rp_owner_advance_views.xml',
         'views/rp_owner_ipc_views.xml',
         'views/rp_owner_dashboard_views.xml',
+        'views/re_bank_transaction_views.xml',
     ],
     'application': False,
     'installable': True,

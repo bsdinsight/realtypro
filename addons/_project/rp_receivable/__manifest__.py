@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EPCOne — Công nợ phải thu & phải trả",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Realty/Project",
     "summary": "Hoá đơn bán ra, thu tiền, và tuổi nợ cả hai chiều phải thu / phải trả.",
     "description": """
@@ -22,8 +22,12 @@ chờ cron.
     "data": [
         "data/ir_cron.xml",
         "views/account_move_views.xml",
-        "views/account_move_payable_views.xml",
+        # account_payment TRƯỚC account_move_payable: tệp payable tham
+        # chiếu view_rp_ar_payment_list khai trong tệp payment. Đảo thứ
+        # tự là cài mới chết với "External ID not found" — bản đã cài
+        # thì không thấy, nên lỗi chỉ lộ ra ở khách MỚI.
         "views/account_payment_views.xml",
+        "views/account_move_payable_views.xml",
         "views/menu.xml",
     ],
     "installable": True,

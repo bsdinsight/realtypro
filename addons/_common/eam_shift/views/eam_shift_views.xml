@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Mẫu ca                                                       -->
+    <!-- ============================================================ -->
+    <record id="view_eam_shift_pattern_list" model="ir.ui.view">
+        <field name="name">eam.shift.pattern.list</field>
+        <field name="model">eam.shift.pattern</field>
+        <field name="arch" type="xml">
+            <list string="Mẫu ca trực" editable="bottom">
+                <field name="plant_id" options="{'no_create': True}"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="gio_bat_dau"/>
+                <field name="so_gio"/>
+                <field name="qua_dem"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_eam_shift_pattern" model="ir.actions.act_window">
+        <field name="name">Mẫu ca trực</field>
+        <field name="res_model">eam.shift.pattern</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Khai mẫu ca</p>
+            <p>Ví dụ ba ca tám tiếng: 6h, 14h, 22h. Ca bắt đầu 22h sẽ kết
+            thúc 6h hôm sau — cột <b>Vắt qua ngày hôm sau</b> tự bật để
+            không ai tính ra ca đêm dài âm mười sáu tiếng.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Ca trực                                                      -->
+    <!-- ============================================================ -->
+    <record id="view_eam_shift_form" model="ir.ui.view">
+        <field name="name">eam.shift.form</field>
+        <field name="model">eam.shift</field>
+        <field name="arch" type="xml">
+            <form string="Ca trực">
+                <header>
+                    <button name="action_mo_ca" type="object" string="Mở ca"
+                            class="btn-primary" icon="fa-play"
+                            invisible="state != 'ke_hoach'"/>
+                    <button name="action_ban_giao" type="object"
+                            string="Giao ca" class="btn-primary"
+                            icon="fa-sign-out"
+                            invisible="state != 'dang_truc'"
+                            confirm="Việc còn mở sẽ được chuyển sang ca kế tiếp kèm dấu vết. Chưa có ca kế tiếp thì hệ ghi cảnh báo vào nhật ký."/>
+                    <button name="action_nhan_ca" type="object"
+                            string="Ký nhận ca" icon="fa-sign-in"
+                            invisible="state != 'da_ban_giao' or nguoi_nhan_id"/>
+                    <button name="action_xem_lich_su" type="object"
+                            string="Lịch sử sửa chữa" icon="fa-history"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="pattern_id"
+                                   options="{'no_create': True}"
+                                   domain="[('plant_id', '=', plant_id)]"/>
+                            <field name="ngay"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="truong_ca_id"/>
+                            <field name="user_ids" widget="many2many_tags"/>
+                            <field name="so_viec_mo"/>
+                            <field name="so_viec_lan_lau"/>
+                            <field name="so_may_dung"/>
+                        </group>
+                    </group>
+                    <group string="Giao nhận" col="4">
+                        <field name="nguoi_giao_id"/>
+                        <field name="gio_giao"/>
+                        <field name="nguoi_nhan_id"/>
+                        <field name="gio_nhan"/>
+                        <field name="ban_giao_mot_chieu" invisible="1"/>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not ban_giao_mot_chieu">
+                        <i class="fa fa-exclamation-triangle me-1"/>
+                        <b>Bàn giao một chiều</b> — đã giao nhưng chưa ai ký
+                        nhận. Không chặn vận hành, nhưng đây đúng là cái cớ
+                        kinh điển khi tranh chấp: <i>"tôi không được bàn
+                        giao việc đó"</i>.
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="so_viec_lan_lau == 0">
+                        <i class="fa fa-repeat me-1"/>
+                        Có <field name="so_viec_lan_lau" readonly="1"
+                        class="oe_inline"/> việc đã lăn qua <b>từ ba ca trở
+                        lên</b>. Việc lăn năm ca không phải việc khó — nó là
+                        việc đang bị đùn.
+                    </div>
+                    <notebook>
+                        <page string="Việc &amp; ghi chú" name="note">
+                            <field name="note_ids">
+                                <list editable="bottom"
+                                      decoration-danger="bi_dun"
+                                      decoration-bf="muc_do == 'khan'"
+                                      decoration-muted="state == 'xong'">
+                                    <field name="muc_do"/>
+                                    <field name="name"/>
+                                    <field name="loai"/>
+                                    <field name="location_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="work_order_id"
+                                           options="{'no_create': True}"
+                                           optional="show"/>
+                                    <field name="state"/>
+                                    <field name="so_ca_da_lan"/>
+                                    <field name="bi_dun" column_invisible="1"/>
+                                    <button name="action_xem_goc"
+                                            type="object" icon="fa-link"
+                                            title="Đi ngược tới việc gốc"
+                                            invisible="so_ca_da_lan == 0"/>
+                                    <field name="mo_ta" optional="hide"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-secondary mt-2"
+                                 role="alert">
+                                Ghi cả thứ <b>chưa thành lệnh công việc</b>:
+                                lời dặn, cái vừa phát hiện cuối ca, cái đang
+                                chờ nhà thầu trả lời. Ép phải có lệnh trước
+                                khi được ghi là đúng cách làm chúng biến mất.
+                            </div>
+                        </page>
+                        <page string="Trạng thái đầu ca" name="snap">
+                            <field name="snapshot_ids" readonly="1">
+                                <list decoration-danger="dang_dung">
+                                    <field name="location_id"/>
+                                    <field name="dang_dung"/>
+                                    <field name="ghi_chu"/>
+                                    <field name="outage_id"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-secondary mt-2"
+                                 role="alert">
+                                Đây là <b>ảnh chụp lúc mở ca</b>, không tính
+                                lại khi mở xem. Mục đích là ghi lại
+                                <i>người vào ca đã nhìn thấy gì</i> — tính
+                                lại thì sáu tháng sau nó hiện trạng thái hôm
+                                nay và biên bản mất sạch giá trị.
+                            </div>
+                        </page>
+                        <page string="Biên bản" name="bb">
+                            <field name="bien_ban" nolabel="1"
+                                   placeholder="Nội dung bàn giao bằng lời."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_shift_list" model="ir.ui.view">
+        <field name="name">eam.shift.list</field>
+        <field name="model">eam.shift</field>
+        <field name="arch" type="xml">
+            <list string="Ca trực"
+                  decoration-danger="so_viec_lan_lau &gt; 0"
+                  decoration-warning="ban_giao_mot_chieu"
+                  decoration-muted="state == 'ke_hoach'">
+                <field name="ngay"/>
+                <field name="plant_id"/>
+                <field name="pattern_id"/>
+                <field name="date_start"/>
+                <field name="truong_ca_id"/>
+                <field name="so_may_dung"/>
+                <field name="so_viec_mo" sum="Việc còn mở"/>
+                <field name="so_viec_lan_lau" sum="Bị đùn"/>
+                <field name="nguoi_giao_id" optional="show"/>
+                <field name="nguoi_nhan_id" optional="show"/>
+                <field name="ban_giao_mot_chieu" optional="show"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_shift_search" model="ir.ui.view">
+        <field name="name">eam.shift.search</field>
+        <field name="model">eam.shift</field>
+        <field name="arch" type="xml">
+            <search string="Ca trực">
+                <field name="plant_id"/>
+                <field name="truong_ca_id"/>
+                <field name="ngay"/>
+                <filter name="f_dun" string="Có việc bị đùn"
+                        domain="[('so_viec_lan_lau', '>', 0)]"/>
+                <filter name="f_mot_chieu" string="Bàn giao một chiều"
+                        domain="[('ban_giao_mot_chieu', '=', True)]"/>
+                <filter name="f_mo" string="Còn việc mở"
+                        domain="[('so_viec_mo', '>', 0)]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_ngay" string="Ngày"
+                        context="{'group_by': 'ngay'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_shift" model="ir.actions.act_window">
+        <field name="name">Ca trực &amp; giao ca</field>
+        <field name="res_model">eam.shift</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có ca nào</p>
+            <p>Khai <b>mẫu ca</b> trước, rồi sinh ca cho một dải ngày. Mở
+            ca là hệ chụp trạng thái nhà máy và kéo việc dở của ca trước
+            sang — <b>không có gì rơi giữa hai ca</b>.</p>
+        </field>
+    </record>
+
+    <!-- Việc bị đùn — màn riêng, vì đó là thứ cần ai đó xử lý -->
+    <record id="view_eam_shift_note_list" model="ir.ui.view">
+        <field name="name">eam.shift.note.list</field>
+        <field name="model">eam.shift.note</field>
+        <field name="arch" type="xml">
+            <list string="Việc chuyển ca" decoration-danger="bi_dun">
+                <field name="ngay"/>
+                <field name="plant_id"/>
+                <field name="shift_id"/>
+                <field name="name"/>
+                <field name="muc_do"/>
+                <field name="location_id"/>
+                <field name="state"/>
+                <field name="so_ca_da_lan"/>
+                <field name="bi_dun" column_invisible="1"/>
+                <button name="action_xem_goc" type="object" icon="fa-link"
+                        title="Đi ngược tới việc gốc"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_shift_note_search" model="ir.ui.view">
+        <field name="name">eam.shift.note.search</field>
+        <field name="model">eam.shift.note</field>
+        <field name="arch" type="xml">
+            <search string="Việc trong ca">
+                <field name="name"/>
+                <field name="plant_id"/>
+                <field name="location_id"/>
+                <filter name="f_dun" string="Đang bị đùn (≥3 ca)"
+                        domain="[('bi_dun', '=', True)]"/>
+                <filter name="f_mo" string="Còn mở"
+                        domain="[('state', '!=', 'xong')]"/>
+                <filter name="f_khan" string="Khẩn"
+                        domain="[('muc_do', '=', 'khan')]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_tt" string="Tình trạng"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_shift_note_dun" model="ir.actions.act_window">
+        <field name="name">Việc bị đùn qua nhiều ca</field>
+        <field name="res_model">eam.shift.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('bi_dun', '=', True), ('state', '!=', 'xong')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có việc nào bị đùn</p>
+            <p>Việc đã chuyển qua <b>từ ba ca trở lên</b> mà chưa xong.
+            Lăn năm ca thì không phải việc khó — là việc không ai nhận.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <menuitem id="menu_eam_shift" name="Ca trực &amp; giao ca"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_shift" sequence="3"/>
+    <menuitem id="menu_eam_shift_note_dun" name="Việc bị đùn qua nhiều ca"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_shift_note_dun" sequence="4"/>
+    <menuitem id="menu_eam_shift_pattern" name="Mẫu ca trực"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_shift_pattern" sequence="23"/>
+
+</odoo>

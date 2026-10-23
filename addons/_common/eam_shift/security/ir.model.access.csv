@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_shift_pattern_user,eam.shift.pattern user,model_eam_shift_pattern,re_base.group_re_user,1,0,0,0
+access_eam_shift_pattern_manager,eam.shift.pattern manager,model_eam_shift_pattern,re_base.group_re_manager,1,1,1,1
+access_eam_shift_user,eam.shift user,model_eam_shift,re_base.group_re_user,1,1,1,0
+access_eam_shift_manager,eam.shift manager,model_eam_shift,re_base.group_re_manager,1,1,1,1
+access_eam_shift_note_user,eam.shift.note user,model_eam_shift_note,re_base.group_re_user,1,1,1,1
+access_eam_shift_note_manager,eam.shift.note manager,model_eam_shift_note,re_base.group_re_manager,1,1,1,1
+access_eam_shift_snapshot_user,eam.shift.snapshot user,model_eam_shift_snapshot,re_base.group_re_user,1,0,0,0
+access_eam_shift_snapshot_manager,eam.shift.snapshot manager,model_eam_shift_snapshot,re_base.group_re_manager,1,1,1,1

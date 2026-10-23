@@ -1,0 +1,22 @@
+name: Thứ tự nạp
+
+# Chạy trên MỌI nhánh, không chỉ main: phép kiểm này nhẹ (không cần
+# database) và bắt đúng lớp lỗi mà bộ test nặng ở test.yml KHÔNG bắt
+# được — cài trên DB sạch thì Odoo nạp theo thứ tự manifest nên lỗi lộ,
+# nhưng test.yml chỉ cài một phần module, còn lỗi ghép view thì phụ
+# thuộc id nên có thể "may mắn" chạy đúng ở CI mà chết ở khách.
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: Kiểm thứ tự nạp tệp + ghép view
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cài lxml
+        run: pip install --quiet lxml
+      - name: Soi thứ tự nạp
+        run: python3 tools/check_install_order.py addons

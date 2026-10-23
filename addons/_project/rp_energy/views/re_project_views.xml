@@ -10,6 +10,13 @@
         <field name="name">re.project.form.energy</field>
         <field name="model">re.project</field>
         <field name="inherit_id" ref="re_base.view_re_project_form"/>
+        <!-- Ghép SAU view của rp_schedule: khối dưới xpath vào nút
+             action_open_project_gantt do rp_schedule chèn vào cùng form
+             cha. Odoo ghép view con theo (priority, id) — để mặc định
+             thì thứ tự phụ thuộc id, tức phụ thuộc lịch sử cài đặt:
+             môi trường nào cài rp_energy TRƯỚC khi rp_schedule có view
+             đó sẽ chết "không định vị được phần tử". -->
+        <field name="priority">30</field>
         <field name="arch" type="xml">
 
 

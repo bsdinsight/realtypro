@@ -33,6 +33,8 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from .eam_alarm_rule import THU_TU_MUC
+
 _logger = logging.getLogger(__name__)
 
 
@@ -129,10 +131,18 @@ class EamAlarm(models.Model):
         }
 
     def action_gom_cung_goc(self):
-        """Lấy cảnh báo NỔ SỚM NHẤT làm gốc, các cái còn lại thành con."""
+        """Lấy cảnh báo NẶNG NHẤT làm gốc; bằng mức thì lấy cái nổ sớm nhất.
+
+        Không lấy theo thời gian: gốc là dòng duy nhất còn hiện khi gộp
+        lại, nên nếu gốc nhẹ hơn con thì danh sách khai mức thấp hơn thực
+        tế — một hộp số đang 72 °C báo về thành 'Trung bình'.
+        """
         if len(self) < 2:
             raise UserError(_('Chọn từ hai cảnh báo trở lên để gom.'))
-        goc = min(self, key=lambda a: a.date_raised)
+        def hang(a):
+            som = a.date_raised.timestamp() if a.date_raised else 0.0
+            return (THU_TU_MUC.get(a.severity, 0), -som)
+        goc = max(self, key=hang)
         con = self - goc
         if any(a.parent_alarm_id and a.parent_alarm_id != goc for a in con):
             raise UserError(_(

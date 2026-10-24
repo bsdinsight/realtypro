@@ -50,13 +50,21 @@ from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 NGUON = [
+    ('tag_threshold', 'Ngưỡng điểm đo (kho chuỗi thời gian)'),
+    ('tag_stall', 'Điểm đo đứng im'),
+    ('tag_silent', 'Điểm đo ngừng gửi số'),
+    ('tag_deviation', 'Hai cảm biến lệch nhau'),
     ('meter_threshold', 'Ngưỡng đồng hồ'),
     ('meter_stall', 'Đồng hồ đứng im'),
     ('feed_silent', 'Mất số đọc'),
     ('external', 'Hệ ngoài đẩy vào'),
     ('manual', 'Người trực báo'),
 ]
-NGUON_TU_DONG = ('meter_threshold', 'meter_stall', 'feed_silent')
+NGUON_TU_DONG = ('meter_threshold', 'meter_stall', 'feed_silent',
+                 'tag_threshold', 'tag_stall', 'tag_deviation',
+                 'tag_silent')
+#: Nguồn đọc KHO CHUỖI THỜI GIAN thay vì sổ đồng hồ ghi tay.
+NGUON_TAG = ('tag_threshold', 'tag_stall', 'tag_deviation', 'tag_silent')
 
 MUC = [
     ('low', 'Thấp'),
@@ -115,9 +123,53 @@ class EamAlarmRule(models.Model):
              'dầu). Đặt lên giờ máy chạy là trùng việc với kế hoạch bảo '
              'trì phòng ngừa, và rồi hai cơ chế cùng sinh lệnh cho một '
              'việc.')
+    # ----- Điểm đo & điều kiện mở rộng -------------------------------
+    tag_code = fields.Char(
+        string='Mã điểm đo',
+        help='Gọi theo MÃ, không theo bản ghi: một luật phải chạy được '
+             'cho mọi nhà máy cùng nếp đặt mã. Kết thúc bằng "*" để khớp '
+             'nhiều điểm — "T*_TGB" là nhiệt độ hộp số mọi tua-bin.')
+    tag_code_2 = fields.Char(
+        string='Mã điểm đo đối chứng',
+        help='Chỉ dùng cho luật LỆCH CẢM BIẾN: hai cảm biến đo cùng một '
+             'đại lượng mà chênh nhau quá ngưỡng thì một trong hai đã '
+             'trôi — và không ai biết cái nào nếu chỉ nhìn một cái.')
+    threshold_2 = fields.Float(
+        string='Ngưỡng trên', digits=(16, 4),
+        help='Dùng cho điều kiện DẢI: ngưỡng dưới ở ô Ngưỡng, ngưỡng '
+             'trên ở đây.')
+    lech_pct = fields.Float(
+        string='Lệch quá (%)', digits=(16, 2), default=5.0,
+        help='Dùng cho luật lệch cảm biến. Tính theo phần trăm của trị '
+             'LỚN HƠN, để một cảm biến chết về 0 vẫn lộ ra thay vì chia '
+             'cho 0.')
+
+    phut_lien_tuc = fields.Integer(
+        string='Vượt liên tục (phút)', default=0,
+        help='Điều kiện phải đúng suốt bấy nhiêu phút mới nổ cảnh báo. '
+             'Để 0 là nổ ngay.\n\nĐây là thứ phân biệt một bộ cảnh báo '
+             'dùng được với một bộ bị tắt sau tuần đầu: nhiễu đo một nhịp '
+             'cũng vượt ngưỡng, và người ta chỉ chịu được chừng chục báo '
+             'giả trước khi lờ hết.')
+
+    gio_tu = fields.Float(
+        string='Chỉ báo từ giờ', digits=(4, 2),
+        help='Giờ địa phương của nhà máy. Để trống cùng với ô kia là báo '
+             'cả ngày.')
+    gio_den = fields.Float(string='Đến giờ', digits=(4, 2))
+    chi_khi_phat = fields.Boolean(
+        string='Chỉ báo khi nhà máy đang phát',
+        help='Luật hiệu suất chỉ có nghĩa khi máy đang chạy. Ban đêm một '
+             'tấm quang điện phát 0 kW là chuyện bình thường, báo động '
+             'cho nó là dạy người dùng bỏ qua cảnh báo.')
+
     operator = fields.Selection(
-        [('gt', 'Vượt quá'), ('lt', 'Thấp hơn')],
-        string='So sánh', default='gt')
+        [('gt', 'Vượt quá'), ('lt', 'Thấp hơn'),
+         ('between', 'Nằm TRONG dải'), ('outside', 'Nằm NGOÀI dải')],
+        string='So sánh', default='gt',
+        help='Dải dùng cả Ngưỡng (dưới) và Ngưỡng trên. "Ngoài dải" là '
+             'thứ hay cần nhất: nhiệt độ hộp số quá cao HOẶC quá thấp '
+             'đều là chuyện, mà khai hai luật thì hai lần phải sửa.')
     threshold = fields.Float(string='Ngưỡng', digits=(16, 4))
     window_days = fields.Integer(
         string='Trong vòng … ngày', default=3,
@@ -265,6 +317,10 @@ class EamAlarmRule(models.Model):
         self.ensure_one()
         if self.source not in NGUON_TU_DONG:
             return 0, 0
+        if self.source in NGUON_TAG:
+            return self._danh_gia_tag()
+        if not self._trong_khung_gio():
+            return 0, 0
         A = self.env['eam.alarm']
         M = self.env['eam.meter']
         hom_nay = fields.Date.context_today(self)
@@ -337,6 +393,41 @@ class EamAlarmRule(models.Model):
             else:
                 n_tat += A._tu_tat(self, vt)
         return n_bao, n_tat
+
+    def _trong_khung_gio(self, luc=None):
+        """Giờ hiện tại có nằm trong khung được phép báo không.
+
+        Giờ lấy theo múi giờ NHÀ MÁY, không theo múi giờ máy chủ: một
+        luật "chỉ báo 6h–18h" khai cho nhà máy Việt Nam mà chạy theo giờ
+        UTC thì nó báo từ 13h tới 1h sáng — vẫn báo đều, chỉ sai khung.
+        """
+        self.ensure_one()
+        if not self.gio_tu and not self.gio_den:
+            return True
+        import pytz
+        nm = self.plant_id or self.location_ids[:1].plant_id
+        mui = pytz.timezone(nm.mui_gio() if nm else 'Asia/Ho_Chi_Minh')
+        t = (luc or fields.Datetime.now())
+        tc = pytz.UTC.localize(t).astimezone(mui)
+        g = tc.hour + tc.minute / 60.0
+        tu, den = self.gio_tu or 0.0, self.gio_den or 24.0
+        # Khung vắt qua nửa đêm (22h → 5h) thì điều kiện là HOẶC.
+        return (tu <= g < den) if tu <= den else (g >= tu or g < den)
+
+    def _dang_phat(self, vt):
+        """Vị trí này có đang phát điện không, theo số đo gần nhất.
+
+        Chưa khai điểm đo công suất thì trả True — KHÔNG tự suy là nhà
+        máy đang nghỉ. Suy sai chiều này làm luật im lặng vĩnh viễn, và
+        một luật an toàn im lặng là loại hỏng tệ nhất.
+        """
+        self.ensure_one()
+        T = self.env['eam.tag']
+        t = T.search([('location_id', 'child_of', vt.id),
+                      ('tag_type', '=', 'power')], limit=1)
+        if not t:
+            return True
+        return (t.last_value or 0.0) > 0.0
 
     @api.model
     def _cron_quet(self):

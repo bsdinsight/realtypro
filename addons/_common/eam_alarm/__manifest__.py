@@ -94,12 +94,13 @@ vì sao, kể cả người bỏ qua.
     'license': 'AGPL-3',
     # Phụ thuộc eam_pm vì đồng hồ thiết bị (eam.meter) nằm ở đó — và hôm
     # nay đồng hồ là nguồn cảnh báo tự động duy nhất thực sự có dữ liệu.
-    'depends': ['eam_core', 'eam_work_order', 'eam_pm'],
+    'depends': ['eam_core', 'eam_work_order', 'eam_pm', 'eam_historian'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_alarm_cron.xml',
         'views/eam_alarm_rule_views.xml',
         'views/eam_alarm_views.xml',
+        'views/a12_views.xml',
         'views/eam_work_order_views.xml',
         'views/eam_alarm_menus.xml',
     ],

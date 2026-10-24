@@ -15,4 +15,13 @@
                eval="(DateTime.now().replace(hour=5, minute=30, second=0)
                       + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
+    <record id="cron_het_hoan" model="ir.cron">
+        <field name="name">EAMOne: bật lại cảnh báo đã hết hạn hoãn</field>
+        <field name="model_id" ref="model_eam_alarm"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_het_hoan()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
 </odoo>

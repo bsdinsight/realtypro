@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Luật: điểm đo, dải, ngưỡng thời gian, khung giờ ===== -->
+    <record id="view_rule_form_a12" model="ir.ui.view">
+        <field name="name">eam.alarm.rule.form.a12</field>
+        <field name="model">eam.alarm.rule</field>
+        <field name="inherit_id" ref="eam_alarm.view_eam_alarm_rule_form"/>
+        <field name="arch" type="xml">
+            <field name="operator" position="before">
+                <field name="tag_code"
+                       invisible="source not in ('tag_threshold', 'tag_stall', 'tag_deviation')"
+                       required="source in ('tag_threshold', 'tag_stall', 'tag_deviation')"
+                       placeholder="T*_TGB"/>
+                <field name="tag_code_2"
+                       invisible="source != 'tag_deviation'"
+                       required="source == 'tag_deviation'"/>
+                <field name="lech_pct" invisible="source != 'tag_deviation'"/>
+            </field>
+            <field name="operator" position="after">
+                <field name="threshold_2"
+                       invisible="operator not in ('between', 'outside')"
+                       required="operator in ('between', 'outside')"/>
+            </field>
+            <field name="window_days" position="after">
+                <field name="phut_lien_tuc"
+                       invisible="source not in ('tag_threshold', 'tag_stall')"/>
+                <label for="gio_tu" string="Khung giờ được báo"/>
+                <div class="o_row">
+                    <field name="gio_tu" widget="float_time"/>
+                    <span class="mx-1">→</span>
+                    <field name="gio_den" widget="float_time"/>
+                </div>
+                <field name="chi_khi_phat"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- ===== Cảnh báo: hoãn, gom cùng gốc, xác nhận lô ===== -->
+    <record id="view_alarm_form_a12" model="ir.ui.view">
+        <field name="name">eam.alarm.form.a12</field>
+        <field name="model">eam.alarm</field>
+        <field name="inherit_id" ref="eam_alarm.view_eam_alarm_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_hoan" type="object" string="Hoãn"
+                        invisible="dang_hoan or state in ('cleared', 'ignored')"/>
+                <button name="action_bo_hoan" type="object"
+                        string="Bỏ hoãn" invisible="not dang_hoan"/>
+                <button name="action_go_khoi_goc" type="object"
+                        string="Gỡ khỏi cảnh báo gốc"
+                        invisible="not parent_alarm_id"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning m-2" role="status"
+                     invisible="not dang_hoan">
+                    <b>Đang hoãn tới
+                    <field name="snooze_den" readonly="1" class="oe_inline"/></b>
+                    — lý do: <field name="snooze_ly_do" readonly="1"
+                                    class="oe_inline"/>
+                    (<field name="snooze_user_id" readonly="1"
+                            class="oe_inline"/>).
+                    Tới hạn hệ <b>tự bật lại</b> và ghi vào trao đổi —
+                    người hoãn không phải nhớ.
+                </div>
+                <div class="alert alert-info m-2" role="status"
+                     invisible="not parent_alarm_id">
+                    Cảnh báo này thuộc một sự cố lớn hơn:
+                    <field name="parent_alarm_id" readonly="1"
+                           class="oe_inline"/>. Xử lý ở cảnh báo gốc.
+                </div>
+                <div class="alert alert-secondary m-2" role="status"
+                     invisible="not la_goc">
+                    <b>Cảnh báo GỐC của
+                    <field name="child_count" readonly="1" class="oe_inline"/>
+                    cảnh báo khác.</b> Một sự cố đẻ ra nhiều dòng — gom lại
+                    để sau còn đếm đúng <i>sự cố</i>, chứ không đếm <i>số
+                    dòng cảnh báo</i>.
+                </div>
+            </xpath>
+            <xpath expr="//sheet/group" position="after">
+                <field name="child_alarm_ids" invisible="not la_goc"
+                       readonly="1">
+                    <list>
+                        <field name="date_raised"/>
+                        <field name="location_id"/>
+                        <field name="message"/>
+                        <field name="severity" widget="badge"/>
+                        <field name="state" widget="badge"/>
+                    </list>
+                </field>
+                <field name="dang_hoan" invisible="1"/>
+                <field name="la_goc" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_alarm_list_a12" model="ir.ui.view">
+        <field name="name">eam.alarm.list.a12</field>
+        <field name="model">eam.alarm</field>
+        <field name="inherit_id" ref="eam_alarm.view_eam_alarm_list"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="dang_hoan" string="Đang hoãn"
+                       optional="show"/>
+                <field name="parent_alarm_id" string="Thuộc gốc"
+                       optional="hide"/>
+                <field name="child_count" string="Số cảnh báo con"
+                       optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_alarm_search_a12" model="ir.ui.view">
+        <field name="name">eam.alarm.search.a12</field>
+        <field name="model">eam.alarm</field>
+        <field name="inherit_id" ref="eam_alarm.view_eam_alarm_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter name="f_dang_hoan" string="Đang hoãn"
+                        domain="[('dang_hoan', '=', True)]"/>
+                <filter name="f_chua_hoan" string="KHÔNG hoãn"
+                        domain="[('dang_hoan', '=', False)]"/>
+                <filter name="f_goc" string="Là cảnh báo gốc"
+                        domain="[('la_goc', '=', True)]"/>
+                <filter name="f_con" string="Thuộc một gốc"
+                        domain="[('parent_alarm_id', '!=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===== Hai hộp thoại ===== -->
+    <record id="view_snooze_wizard" model="ir.ui.view">
+        <field name="name">eam.alarm.snooze.wizard.form</field>
+        <field name="model">eam.alarm.snooze.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Hoãn cảnh báo">
+                <div class="alert alert-info" role="status">
+                    Hoãn <b>luôn có hạn</b>. Tới hạn hệ tự bật lại và ghi
+                    vào trao đổi của cảnh báo — tắt vĩnh viễn là cách một
+                    nhà máy mất hẳn một lớp canh gác mà không ai nhớ đã
+                    tắt gì.
+                </div>
+                <group>
+                    <field name="alarm_ids" readonly="1" widget="many2many_tags"/>
+                    <field name="so_gio"/>
+                    <field name="ly_do"
+                           placeholder="Chờ phụ tùng về · chờ cửa sổ dừng máy tháng sau…"/>
+                </group>
+                <footer>
+                    <button name="action_hoan" type="object" string="Hoãn"
+                            class="btn-primary"/>
+                    <button string="Thôi" special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ack_wizard" model="ir.ui.view">
+        <field name="name">eam.alarm.ack.wizard.form</field>
+        <field name="model">eam.alarm.ack.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Xác nhận hàng loạt">
+                <div class="alert alert-info" role="status">
+                    Một câu cho cả lô, nhưng <b>mỗi cảnh báo vẫn ghi riêng
+                    ai xác nhận và lúc nào</b> — ba tháng sau còn truy được
+                    từng cái.
+                </div>
+                <group>
+                    <field name="alarm_ids" readonly="1" widget="many2many_tags"/>
+                    <field name="binh_luan"
+                           placeholder="Đã kiểm tra tại chỗ, do mất lưới ngoài…"/>
+                </group>
+                <footer>
+                    <button name="action_ack" type="object"
+                            string="Xác nhận" class="btn-primary"/>
+                    <button string="Thôi" special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ack_lo" model="ir.actions.server">
+        <field name="name">Xác nhận hàng loạt</field>
+        <field name="model_id" ref="model_eam_alarm"/>
+        <field name="binding_model_id" ref="model_eam_alarm"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_ack_lo()</field>
+    </record>
+
+    <record id="action_hoan_lo" model="ir.actions.server">
+        <field name="name">Hoãn</field>
+        <field name="model_id" ref="model_eam_alarm"/>
+        <field name="binding_model_id" ref="model_eam_alarm"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_hoan()</field>
+    </record>
+
+    <record id="action_gom_goc" model="ir.actions.server">
+        <field name="name">Gom về một sự cố</field>
+        <field name="model_id" ref="model_eam_alarm"/>
+        <field name="binding_model_id" ref="model_eam_alarm"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_gom_cung_goc()</field>
+    </record>
+
+</odoo>

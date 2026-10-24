@@ -4,3 +4,5 @@ access_eam_alarm_rule_mgr,eam.alarm.rule.mgr,model_eam_alarm_rule,base.group_sys
 access_eam_alarm_user,eam.alarm.user,model_eam_alarm,base.group_user,1,1,1,0
 access_eam_alarm_mgr,eam.alarm.mgr,model_eam_alarm,base.group_system,1,1,1,1
 access_eam_alarm_ignore_wizard_user,eam.alarm.ignore.wizard.user,model_eam_alarm_ignore_wizard,base.group_user,1,1,1,1
+access_eam_alarm_snooze_wizard,eam.alarm.snooze.wizard,model_eam_alarm_snooze_wizard,base.group_user,1,1,1,1
+access_eam_alarm_ack_wizard,eam.alarm.ack.wizard,model_eam_alarm_ack_wizard,base.group_user,1,1,1,1

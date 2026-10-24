@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_daily_profile_user,eam.daily.profile user,model_eam_daily_profile,re_base.group_re_user,1,0,0,0
+access_eam_daily_profile_manager,eam.daily.profile manager,model_eam_daily_profile,re_base.group_re_manager,1,1,1,1
+access_eam_daily_profile_line_user,eam.daily.profile.line user,model_eam_daily_profile_line,re_base.group_re_user,1,0,0,0
+access_eam_daily_profile_line_manager,eam.daily.profile.line manager,model_eam_daily_profile_line,re_base.group_re_manager,1,1,1,1
+access_eam_daily_report_user,eam.daily.report user,model_eam_daily_report,re_base.group_re_user,1,1,1,0
+access_eam_daily_report_manager,eam.daily.report manager,model_eam_daily_report,re_base.group_re_manager,1,1,1,1
+access_eam_daily_report_line_user,eam.daily.report.line user,model_eam_daily_report_line,re_base.group_re_user,1,1,1,0
+access_eam_daily_report_line_manager,eam.daily.report.line manager,model_eam_daily_report_line,re_base.group_re_manager,1,1,1,1
+access_eam_daily_revise_wizard_user,eam.daily.revise.wizard user,model_eam_daily_revise_wizard,re_base.group_re_user,1,1,1,1

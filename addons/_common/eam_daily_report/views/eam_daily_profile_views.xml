@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_profile_form" model="ir.ui.view">
+        <field name="name">eam.daily.profile.form</field>
+        <field name="model">eam.daily.profile</field>
+        <field name="arch" type="xml">
+            <form string="Hồ sơ cấu hình báo cáo ngày">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Báo cáo vận hành ngày — điện gió"/></h1>
+                    </div>
+                    <div class="alert alert-info" role="status">
+                        Mỗi dòng dưới đây là một dòng trên tờ in ra. Dòng
+                        nào <b>máy lấy được</b> thì khai nó lấy ở đâu;
+                        dòng nào chỉ người trực biết thì để
+                        <b>"Người trực tự điền"</b>.
+                        Hệ <b>đếm</b> số ô người trực phải chạm vào —
+                        con số đó là lời hứa với họ.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="loai"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="tieu_de"/>
+                            <field name="line_count"/>
+                            <field name="so_o_nguoi"
+                                   decoration-danger="so_o_nguoi &gt; 15"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning py-1"
+                         invisible="so_o_nguoi &lt;= 15">
+                        <b>Quá mười lăm ô người trực phải điền.</b> Tới
+                        mức này tờ báo cáo quay về thành việc chép tay,
+                        và người ta sẽ điền cho xong chứ không điền cho
+                        đúng. Soi lại xem ô nào máy đã có số.
+                    </div>
+                    <notebook>
+                        <page string="Dòng trên tờ" name="dong">
+                            <field name="line_ids">
+                                <list editable="bottom" default_order="khoi, sequence">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="khoi"/>
+                                    <field name="name" width="260px"/>
+                                    <field name="kieu"/>
+                                    <field name="don_vi"/>
+                                    <field name="so_le"/>
+                                    <field name="nguon"/>
+                                    <field name="truong"
+                                           column_invisible="0"
+                                           readonly="nguon in ('nguoi', 'historian')"/>
+                                    <field name="node_code"
+                                           readonly="nguon != 'chain'"/>
+                                    <field name="tag_code"
+                                           readonly="nguon != 'historian'"/>
+                                    <field name="cach_lay"
+                                           readonly="nguon != 'historian'"/>
+                                    <field name="gop_nhieu"
+                                           readonly="nguon != 'historian'"/>
+                                    <field name="nguong" optional="hide"/>
+                                    <field name="group_id"
+                                           readonly="nguon != 'downtime'"
+                                           optional="hide"/>
+                                    <field name="he_so" optional="hide"/>
+                                    <field name="ghi_nguoc"
+                                           widget="boolean_toggle"/>
+                                    <field name="bat_buoc"
+                                           widget="boolean_toggle"/>
+                                    <field name="in_khi_trong"
+                                           widget="boolean_toggle"
+                                           optional="hide"/>
+                                    <field name="goi_y" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="gc">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_profile_list" model="ir.ui.view">
+        <field name="name">eam.daily.profile.list</field>
+        <field name="model">eam.daily.profile</field>
+        <field name="arch" type="xml">
+            <list string="Hồ sơ cấu hình">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="loai"/>
+                <field name="tieu_de" optional="show"/>
+                <field name="line_count"/>
+                <field name="so_o_nguoi"
+                       decoration-danger="so_o_nguoi &gt; 15"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_profile" model="ir.actions.act_window">
+        <field name="name">Hồ sơ báo cáo ngày</field>
+        <field name="res_model">eam.daily.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có hồ sơ nào</p>
+            <p>Tờ của điện gió và của điện mặt trời khác nhau ở
+            <b>nội dung từng dòng</b>, không khác ở cách làm việc. Nên
+            dòng trên tờ là <b>dữ liệu</b> — thêm loại nhà máy thứ ba là
+            thêm một hồ sơ, không phải viết thêm một báo cáo.</p>
+        </field>
+    </record>
+
+</odoo>

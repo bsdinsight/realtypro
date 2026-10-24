@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      Dựng tờ của HÔM QUA, mỗi sáng. Dựng chứ KHÔNG chốt và KHÔNG gửi:
+      tờ báo cáo cần người trực xác nhận quan trắc và nhận xét. Tự gửi
+      một tờ chưa ai đọc là biến báo cáo ngày thành thư rác trong ba
+      ngày, và lúc có chuyện thật thì không ai mở.
+    -->
+    <record id="cron_dung_bao_cao" model="ir.cron">
+        <field name="name">EAMOne: dựng sẵn báo cáo vận hành ngày</field>
+        <field name="model_id" ref="model_eam_daily_report"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_dung_bao_cao()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=0, minute=30, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="cron_nhac_chua_chot" model="ir.cron">
+        <field name="name">EAMOne: nhắc báo cáo ngày chưa chốt</field>
+        <field name="model_id" ref="model_eam_daily_report"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_nhac_chua_chot()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=7, minute=0, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_eam_location_form_tz" model="ir.ui.view">
+        <field name="name">eam.location.form.tz</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_type']" position="after">
+                <field name="tz" invisible="location_type != 'plant'"
+                       placeholder="Asia/Ho_Chi_Minh"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

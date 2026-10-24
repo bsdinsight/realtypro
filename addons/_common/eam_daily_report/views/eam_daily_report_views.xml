@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_report_form" model="ir.ui.view">
+        <field name="name">eam.daily.report.form</field>
+        <field name="model">eam.daily.report</field>
+        <field name="arch" type="xml">
+            <form string="Báo cáo vận hành ngày">
+                <header>
+                    <button name="action_rot_lai" type="object"
+                            string="Rót lại số" icon="fa-refresh"
+                            invisible="state != 'nhap'"/>
+                    <button name="action_dung_hoat_dong" type="object"
+                            string="Dựng lại khối hoạt động"
+                            invisible="state != 'nhap'"/>
+                    <button name="action_chot" type="object"
+                            string="Chốt bản ngày" class="btn-primary"
+                            invisible="state != 'nhap'"/>
+                    <button name="action_sua_lai" type="object"
+                            string="Sửa ra bản mới" class="btn-primary"
+                            invisible="state != 'chot'"/>
+                    <button name="action_mo_lai" type="object"
+                            string="Mở lại"
+                            invisible="state != 'chot'"
+                            confirm="Mở lại một tờ đã chốt chỉ nên làm khi tờ CHƯA gửi đi. Đã gửi rồi thì dùng 'Sửa ra bản mới' để giữ vết."/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="nhap,chot"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+
+                    <div class="alert alert-danger" role="status"
+                         invisible="state != 'thay_the'">
+                        <b>Bản này đã bị thay thế.</b> Nó được giữ lại để
+                        còn biết hôm đó đã báo thế nào — số liệu dùng
+                        tiếp nằm ở
+                        <field name="ban_sau_id" readonly="1"
+                               class="oe_inline"/>.
+                    </div>
+                    <div class="alert alert-info" role="status"
+                         invisible="not nguon_id">
+                        Sinh từ <field name="nguon_id" readonly="1"
+                                       class="oe_inline"/>.
+                        Lý do: <field name="ly_do_sua" readonly="1"
+                                      class="oe_inline"/>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="plant_id"
+                                   readonly="state != 'nhap'"
+                                   options="{'no_create': True}"/>
+                            <field name="date" readonly="state != 'nhap'"/>
+                            <field name="profile_id"
+                                   readonly="state != 'nhap'"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="ban_so"/>
+                            <field name="mui_gio"/>
+                            <field name="sl_ban"/>
+                            <field name="so_o_trong"/>
+                            <field name="so_chua_do"/>
+                            <field name="nguoi_chot_id"
+                                   invisible="not nguoi_chot_id"/>
+                            <field name="ngay_chot"
+                                   invisible="not ngay_chot"/>
+                            <field name="thieu_bat_buoc" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <div class="alert alert-warning py-1"
+                         invisible="not thieu_bat_buoc or state != 'nhap'">
+                        Còn ô <b>bắt buộc</b> để trống — chốt sẽ bị chặn
+                        và nói rõ ô nào. Những ô ấy được đánh dấu bắt
+                        buộc vì để trống thì tờ báo cáo mất nghĩa.
+                    </div>
+                    <div class="alert alert-secondary py-1"
+                         invisible="not so_chua_do">
+                        <b><field name="so_chua_do" class="oe_inline"/>
+                        dòng chưa có số đo.</b> Chúng in ra là "—" kèm
+                        lý do, <b>không</b> thành số 0 — ô trống và số
+                        không là hai chuyện khác hẳn nhau.
+                    </div>
+
+                    <notebook>
+                        <page string="Số liệu ngày" name="so">
+                            <field name="line_ids" nolabel="1"
+                                   readonly="state != 'nhap'">
+                                <list editable="bottom" create="false"
+                                      delete="false"
+                                      default_order="khoi, sequence"
+                                      decoration-muted="not do_duoc and nguon != 'nguoi'"
+                                      decoration-warning="bat_buoc and not do_duoc">
+                                    <field name="khoi"/>
+                                    <field name="name" width="280px"
+                                           readonly="1"/>
+                                    <field name="co_the_sua"
+                                           column_invisible="1"/>
+                                    <field name="kieu" column_invisible="1"/>
+                                    <field name="nguon" column_invisible="1"/>
+                                    <!-- invisible (không phải
+                                         column_invisible) ẩn Ô theo
+                                         TỪNG DÒNG: dòng kiểu chữ không
+                                         hiện "0,0000" ở cột số, và
+                                         ngược lại. -->
+                                    <field name="gia_tri"
+                                           invisible="kieu == 'chu'"
+                                           readonly="not co_the_sua"
+                                           width="130px"/>
+                                    <field name="gia_tri_chu"
+                                           invisible="kieu == 'so'"
+                                           readonly="not co_the_sua"
+                                           width="240px"/>
+                                    <field name="don_vi" readonly="1"/>
+                                    <field name="do_duoc"
+                                           widget="boolean_toggle"
+                                           readonly="not co_the_sua"/>
+                                    <field name="bat_buoc"
+                                           widget="boolean_toggle"
+                                           readonly="1" optional="show"/>
+                                    <field name="ly_do_chua_do" readonly="1"
+                                           width="300px"/>
+                                    <field name="nguon_ghi" readonly="1"
+                                           optional="hide"/>
+                                    <field name="goi_y" readonly="1"
+                                           optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hoạt động trong ngày" name="hd">
+                            <div class="alert alert-info py-1" role="status">
+                                Máy dựng sẵn từ <b>lệnh công việc</b> và
+                                <b>sổ dừng máy</b> trong ngày. Sửa câu
+                                chữ ở đây; muốn dựng lại từ đầu thì xoá
+                                hết rồi bấm nút trên đầu — hệ không đè
+                                lên phần đã sửa.
+                                <field name="hoat_dong_da_sua" invisible="1"/>
+                            </div>
+                            <field name="hoat_dong" nolabel="1"
+                                   readonly="state != 'nhap'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_report_list" model="ir.ui.view">
+        <field name="name">eam.daily.report.list</field>
+        <field name="model">eam.daily.report</field>
+        <field name="arch" type="xml">
+            <list string="Báo cáo vận hành ngày"
+                  decoration-muted="state == 'thay_the'"
+                  decoration-warning="state == 'nhap'"
+                  decoration-danger="thieu_bat_buoc and state == 'nhap'">
+                <field name="date"/>
+                <field name="plant_id"/>
+                <field name="profile_id" optional="show"/>
+                <field name="ban_so"/>
+                <field name="sl_ban" sum="Tổng sản lượng bán"/>
+                <field name="so_o_trong"/>
+                <field name="so_chua_do"/>
+                <field name="nguoi_chot_id" optional="show"
+                       widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'chot'"/>
+                <field name="thieu_bat_buoc" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_report_search" model="ir.ui.view">
+        <field name="name">eam.daily.report.search</field>
+        <field name="model">eam.daily.report</field>
+        <field name="arch" type="xml">
+            <search string="Tìm báo cáo ngày">
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_nhap" string="Còn nháp"
+                        domain="[('state', '=', 'nhap')]"/>
+                <filter name="f_chot" string="Đã chốt"
+                        domain="[('state', '=', 'chot')]"/>
+                <filter name="f_hien_hanh" string="Bản đang dùng"
+                        domain="[('state', '!=', 'thay_the')]"/>
+                <separator/>
+                <filter name="f_thieu" string="Còn ô bắt buộc để trống"
+                        domain="[('thieu_bat_buoc', '=', True)]"/>
+                <filter name="f_chua_do" string="Có dòng chưa đo được"
+                        domain="[('so_chua_do', '&gt;', 0)]"/>
+                <filter name="f_sua" string="Đã phải sửa ra bản mới"
+                        domain="[('ban_so', '&gt;', 1)]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_ngay" string="Ngày"
+                        context="{'group_by': 'date'}"/>
+                <filter name="g_tt" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_revise_wizard_form" model="ir.ui.view">
+        <field name="name">eam.daily.revise.wizard.form</field>
+        <field name="model">eam.daily.revise.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sửa ra bản mới">
+                <div class="alert alert-info" role="status">
+                    Bản cũ <b>không mất đi</b> — nó chuyển sang "đã thay
+                    thế" và vẫn mở xem được. Sửa đè lên tờ đã gửi đi là
+                    xoá mất chuyện hôm đó ta đã báo thế nào.
+                </div>
+                <group>
+                    <field name="report_id" readonly="1"/>
+                    <field name="ly_do"
+                           placeholder="Nạp lại SCADA ngày 19/10 · khoảng dừng T07 khai nhầm nhóm…"/>
+                </group>
+                <footer>
+                    <button name="action_tao" type="object"
+                            string="Tạo bản mới" class="btn-primary"/>
+                    <button string="Thôi" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo vận hành ngày</field>
+        <field name="res_model">eam.daily.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_report_search"/>
+        <field name="context">{'search_default_f_hien_hanh': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có tờ nào</p>
+            <p>Mỗi sáng hệ dựng sẵn tờ của hôm qua từ <b>số đã có</b>:
+            khí tượng, sản lượng từng bậc, hiệu suất, khả dụng, giờ
+            dừng. Người trực sửa chừng mười ô chỉ mình họ biết rồi chốt.</p>
+            <p>Hệ <b>dựng</b> chứ không tự chốt và không tự gửi — một tờ
+            chưa ai đọc mà đã gửi đi thì ba ngày sau không ai mở nữa.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_daily_report" name="Báo cáo vận hành ngày"
+              parent="eam_core.menu_eam_ops"
+              action="action_report" sequence="5"/>
+    <menuitem id="menu_daily_profile" name="Hồ sơ báo cáo ngày"
+              parent="eam_core.menu_eam_config"
+              action="action_profile" sequence="60"/>
+
+</odoo>

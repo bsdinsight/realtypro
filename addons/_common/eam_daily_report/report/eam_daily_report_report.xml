@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_in_bao_cao_ngay" model="ir.actions.report">
+        <field name="name">Báo cáo vận hành ngày</field>
+        <field name="model">eam.daily.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eam_daily_report.bao_cao_ngay</field>
+        <field name="report_file">eam_daily_report.bao_cao_ngay</field>
+        <field name="binding_model_id" ref="model_eam_daily_report"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">
+            'BCN_%s_%s' % (object.plant_id.code or '', object.date)
+        </field>
+    </record>
+
+    <template id="bao_cao_ngay">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h3 class="text-center mb-0">
+                            <span t-field="o.profile_id.tieu_de"/>
+                        </h3>
+                        <h5 class="text-center text-muted mt-0">
+                            <span t-field="o.plant_id.name"/> ·
+                            <span t-field="o.date"/>
+                        </h5>
+
+                        <!-- Bản thay thế phải nói ngay từ dòng đầu. Một
+                             tờ bản 2 trông y hệt bản 1 là cách chắc
+                             chắn để hai bản cùng lưu hành. -->
+                        <div t-if="o.ban_so &gt; 1"
+                             class="alert alert-warning py-1">
+                            <b>Bản <span t-field="o.ban_so"/></b> — thay
+                            cho bản <span t-esc="o.ban_so - 1"/>.
+                            Lý do: <span t-field="o.ly_do_sua"/>
+                        </div>
+                        <div t-if="o.state == 'thay_the'"
+                             class="alert alert-danger py-1">
+                            <b>Bản này ĐÃ BỊ THAY THẾ.</b> Dùng bản
+                            <span t-field="o.ban_sau_id.ban_so"/> thay cho nó.
+                        </div>
+                        <div t-if="o.state == 'nhap'"
+                             class="alert alert-secondary py-1">
+                            <b>NHÁP — chưa chốt.</b> Số liệu còn có thể đổi.
+                        </div>
+
+                        <t t-set="khoi_co"
+                           t-value="o.line_ids.mapped('khoi')"/>
+                        <t t-foreach="o._khoi_in()" t-as="k">
+                            <t t-set="dong"
+                               t-value="o.line_ids.filtered(lambda l: l.khoi == k['ma'] and (l.do_duoc or l.profile_line_id.in_khi_trong))"/>
+                            <div t-if="dong" class="mt-3">
+                                <h6 class="bg-light p-1 mb-1">
+                                    <span t-esc="k['ten']"/>
+                                </h6>
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr t-foreach="dong" t-as="l">
+                                        <td style="width:52%"
+                                            t-esc="l.name"/>
+                                        <td style="width:20%"
+                                            class="text-end fw-bold">
+                                            <span t-esc="l.hien_thi"/>
+                                        </td>
+                                        <td style="width:28%"
+                                            class="small text-muted">
+                                            <!-- Dòng chưa có số nói VÌ SAO
+                                                 ngay tại chỗ. Để trống thì
+                                                 người đọc tự điền lấy một
+                                                 lời giải thích, thường là
+                                                 lời sai. -->
+                                            <span t-if="not l.do_duoc"
+                                                  t-esc="l.ly_do_chua_do"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+
+                        <div class="mt-3">
+                            <h6 class="bg-light p-1 mb-1">Hoạt động trong ngày</h6>
+                            <div t-field="o.hoat_dong"/>
+                        </div>
+
+                        <div t-if="o.so_chua_do"
+                             class="alert alert-warning py-1 mt-3 small">
+                            <b><span t-field="o.so_chua_do"/> dòng chưa
+                            có số đo</b> và được in là "—". Ô trống KHÔNG
+                            phải là số không — lý do ghi ngay cạnh từng
+                            dòng.
+                        </div>
+
+                        <table class="table table-sm table-borderless mt-4">
+                            <tr>
+                                <td class="text-center" style="width:50%">
+                                    <b>NGƯỜI LẬP</b><br/>
+                                    <span t-field="o.create_uid.name"/>
+                                </td>
+                                <td class="text-center" style="width:50%">
+                                    <b>NGƯỜI CHỐT</b><br/>
+                                    <span t-if="o.nguoi_chot_id"
+                                          t-field="o.nguoi_chot_id.name"/>
+                                    <span t-else="" class="text-muted">
+                                        (chưa chốt)
+                                    </span><br/>
+                                    <span t-if="o.ngay_chot" class="small text-muted"
+                                          t-field="o.ngay_chot"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

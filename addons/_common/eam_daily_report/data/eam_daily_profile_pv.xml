@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Hồ sơ dựng theo tờ "DAILY PLANT OPERATION REPORT" THẬT của một nhà
+      máy điện mặt trời đang vận hành — cùng tờ đã dùng để dựng mẫu nạp
+      ở eam_import. Nhãn giữ nguyên tiếng Anh của khách, kể cả khi hệ
+      gọi tên khác: đặt cạnh tờ cũ phải so được từng dòng, mà dòng đã
+      dịch thì không so được.
+
+      Bốn ô quan trắc bằng mắt và ô REMARKS là của NGƯỜI TRỰC nhưng ghi
+      ngược về sổ quan trắc — dữ liệu khí tượng chỉ có một nhà, còn
+      người trực chỉ mở một màn hình.
+
+      Dòng PR lấy mẫu số ĐÃ DÙNG (pr_denominator_used), không lấy mẫu số
+      hệ tự tính: khoảng lệch với tờ của nhà máy còn đang treo, và dòng
+      PR tự khoá lại khi còn lệch.
+    -->
+    <record id="profile_pv" model="eam.daily.profile">
+        <field name="name">Báo cáo vận hành ngày — điện mặt trời</field>
+        <field name="code">PV-DAILY</field>
+        <field name="loai">pv</field>
+        <field name="tieu_de">DAILY PLANT OPERATION REPORT</field>
+        <field name="note">Nhãn giữ nguyên chữ trên tờ của nhà máy để đặt cạnh nhau so được.
+Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã nào thì chính dòng đó nói rõ nhà máy đang có những mã gì.</field>
+    </record>
+    <record id="pl_pv_irr" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Plant Irradiance</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">kW/m²</field>
+        <field name="so_le">1</field>
+        <field name="truong">irradiance_avg</field>
+    </record>
+    <record id="pl_pv_irn" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Irradiation</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">kWh/m²</field>
+        <field name="so_le">3</field>
+        <field name="truong">irradiation</field>
+    </record>
+    <record id="pl_pv_tam" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Ambient Temperature</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">°C</field>
+        <field name="so_le">1</field>
+        <field name="truong">temp_ambient</field>
+    </record>
+    <record id="pl_pv_tmo" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Module Temperature</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">°C</field>
+        <field name="so_le">1</field>
+        <field name="truong">temp_module</field>
+    </record>
+    <record id="pl_pv_wnd" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">50</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Wind Speed</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">m/s</field>
+        <field name="so_le">1</field>
+        <field name="truong">wind_speed</field>
+    </record>
+    <record id="pl_pv_sun" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">60</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Sunny hours</field>
+        <field name="kieu">so</field>
+        <field name="nguon">weather</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">sunny_hours</field>
+    </record>
+    <record id="pl_pv_o06" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Weather condition 6AM to 9AM</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">weather</field>
+        <field name="so_le">0</field>
+        <field name="truong">obs_06</field>
+        <field name="ghi_nguoc" eval="True"/>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Nắng · Nắng gián đoạn · Nhiều mây · Âm u · Mưa · Giông bão</field>
+    </record>
+    <record id="pl_pv_o09" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">80</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Weather condition 9AM to 12PM</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">weather</field>
+        <field name="so_le">0</field>
+        <field name="truong">obs_09</field>
+        <field name="ghi_nguoc" eval="True"/>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Nắng · Nắng gián đoạn · Nhiều mây · Âm u · Mưa · Giông bão</field>
+    </record>
+    <record id="pl_pv_o12" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">90</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Weather condition 12PM to 3PM</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">weather</field>
+        <field name="so_le">0</field>
+        <field name="truong">obs_12</field>
+        <field name="ghi_nguoc" eval="True"/>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Nắng · Nắng gián đoạn · Nhiều mây · Âm u · Mưa · Giông bão</field>
+    </record>
+    <record id="pl_pv_o15" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">100</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Weather condition 3PM to 6PM</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">weather</field>
+        <field name="so_le">0</field>
+        <field name="truong">obs_15</field>
+        <field name="ghi_nguoc" eval="True"/>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Nắng · Nắng gián đoạn · Nhiều mây · Âm u · Mưa · Giông bão</field>
+    </record>
+    <record id="pl_pv_einv" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy Output (Inverter)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">INV</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_emcb" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy Output (main Switchgear in MCB)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">MCB</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_egnt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Plant Energy Delivered to Grid EVN (171)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">GNT</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_eevn" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy Received at 173M (EVN FIT tariff meter)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">EVN</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_etd" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">50</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">E consumed (self consumed energy)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">TD</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_ebd" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">60</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy consumption @ night</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy</field>
+        <field name="node_code">BD</field>
+        <field name="he_so">1</field>
+    </record>
+    <record id="pl_pv_elk" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Luỹ kế tháng tới hôm nay</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">luy_ke_thang</field>
+        <field name="node_code">EVN</field>
+    </record>
+    <record id="pl_pv_eln" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">80</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Luỹ kế năm tới hôm nay</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">luy_ke_nam</field>
+        <field name="node_code">EVN</field>
+    </record>
+    <record id="pl_pv_lmcb" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss (up to main Switchgear)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">loss_pct</field>
+        <field name="node_code">MCB</field>
+    </record>
+    <record id="pl_pv_lgnt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss (up to the side of transformer)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">loss_pct</field>
+        <field name="node_code">GNT</field>
+    </record>
+    <record id="pl_pv_levn" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss (up to EVN meter)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">loss_pct</field>
+        <field name="node_code">EVN</field>
+    </record>
+    <record id="pl_pv_ldmy" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Sản lượng mất do dừng máy</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">kwh</field>
+    </record>
+    <record id="pl_pv_enac" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">AC electrical energy, [ENAC]</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">energy_ac</field>
+    </record>
+    <record id="pl_pv_enom" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">E nominal</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">e_nominal</field>
+    </record>
+    <record id="pl_pv_ft" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">Ft (hệ số hiệu chỉnh nhiệt độ)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="so_le">4</field>
+        <field name="truong">ft</field>
+    </record>
+    <record id="pl_pv_mso" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">PR formula Denominator</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">pr_denominator_used</field>
+    </record>
+    <record id="pl_pv_pr" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">50</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">PR</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">pr</field>
+    </record>
+    <record id="pl_pv_prg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">60</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">PR cam kết</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">pr_guaranteed</field>
+    </record>
+    <record id="pl_pv_pa" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">PA</field>
+        <field name="kieu">so</field>
+        <field name="nguon">kpi</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">pa</field>
+    </record>
+    <record id="pl_pv_kdt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Khả dụng theo thời gian</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">kd_thoi_gian</field>
+    </record>
+    <record id="pl_pv_kds" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Khả dụng theo sản lượng</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">kd_san_luong</field>
+    </record>
+    <record id="pl_pv_gdg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Giờ dừng trong ngày</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio_dung</field>
+    </record>
+    <record id="pl_pv_gcq" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Giờ chưa quy trách nhiệm</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio_chua_quy</field>
+    </record>
+    <record id="pl_pv_dtg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Tổng giờ dừng mọi nhóm</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio</field>
+    </record>
+    <record id="pl_pv_ns" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Nhân sự có mặt tại nhà máy</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nguoi</field>
+        <field name="don_vi">người</field>
+        <field name="so_le">0</field>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Số người trực + bảo trì</field>
+    </record>
+    <record id="pl_pv_kh" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Khách / đoàn đến làm việc</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="goi_y">Để trống nếu không có</field>
+    </record>
+    <record id="pl_pv_at" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Sự cố an toàn trong ngày</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Ghi "Không" nếu không có — để trống KHÔNG đồng nghĩa với không có</field>
+    </record>
+    <record id="pl_pv_rm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">ghi_chu</field>
+        <field name="name">REMARKS</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">weather</field>
+        <field name="so_le">0</field>
+        <field name="truong">obs_note</field>
+        <field name="ghi_nguoc" eval="True"/>
+        <field name="goi_y">Nhận xét của người trực về ngày hôm nay</field>
+    </record>
+</odoo>

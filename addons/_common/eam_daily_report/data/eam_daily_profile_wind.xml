@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Hồ sơ điện gió. Khác điện mặt trời ở MỘT chỗ có hệ quả lớn: nhà
+      máy gió trong hệ chưa có chuỗi bậc đo, nên sản lượng ngày dựng
+      thẳng từ điểm đo của từng tua-bin.
+
+      Mọi dòng lấy từ kho chuỗi thời gian đều gọi điểm đo theo MÃ CÓ SAO
+      ("T*_E"), không theo bản ghi: cùng một hồ sơ phải chạy được cho
+      nhà máy mười hai trụ lẫn nhà máy hai mươi trụ.
+
+      Và mọi dòng khớp nhiều điểm đo đều KHAI cách gộp. Cộng sản lượng
+      mười hai tua-bin ra sản lượng nhà máy thì đúng; "cộng" nhiệt độ
+      môi trường thì vô nghĩa nên nó khai trung bình. Chưa khai mà mã
+      khớp nhiều thì dòng đó báo thiếu khai báo chứ không tự chọn.
+
+      Công suất đỉnh lấy theo TỪNG MỐC THỜI GIAN rồi mới lấy đỉnh —
+      cộng đỉnh của mười hai tua-bin là cộng mười hai thời điểm khác
+      nhau, ra một con số chưa từng tồn tại.
+    -->
+    <record id="profile_wind" model="eam.daily.profile">
+        <field name="name">Báo cáo vận hành ngày — điện gió</field>
+        <field name="code">WIND-DAILY</field>
+        <field name="loai">wind</field>
+        <field name="tieu_de">BÁO CÁO VẬN HÀNH NGÀY — NHÀ MÁY ĐIỆN GIÓ</field>
+        <field name="note">Cần điểm đo đặt mã theo nếp: T&lt;số&gt;_E sản lượng, T&lt;số&gt;_P công suất, T&lt;số&gt;_WS tốc độ gió.
+Mã khác nếp thì sửa mã điểm đo trên dòng cấu hình, không phải sửa mã.</field>
+    </record>
+    <record id="pl_wd_vtb" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Tốc độ gió trung bình</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">m/s</field>
+        <field name="so_le">2</field>
+        <field name="tag_code">T*_WS</field>
+        <field name="cach_lay">gop</field>
+        <field name="gop_nhieu">tb</field>
+    </record>
+    <record id="pl_wd_vmx" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">20</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Tốc độ gió lớn nhất</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">m/s</field>
+        <field name="so_le">2</field>
+        <field name="tag_code">T*_WS</field>
+        <field name="cach_lay">dinh</field>
+        <field name="gop_nhieu">max</field>
+    </record>
+    <record id="pl_wd_tam" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">30</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Nhiệt độ môi trường</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">°C</field>
+        <field name="so_le">1</field>
+        <field name="tag_code">*_T_AMB</field>
+        <field name="cach_lay">gop</field>
+        <field name="gop_nhieu">tb</field>
+    </record>
+    <record id="pl_wd_pbr" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">40</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Áp suất khí quyển</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">hPa</field>
+        <field name="so_le">1</field>
+        <field name="tag_code">*_P_BAR</field>
+        <field name="cach_lay">gop</field>
+        <field name="gop_nhieu">tb</field>
+    </record>
+    <record id="pl_wd_otr" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">50</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Quan trắc thời tiết trong ca</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Gió mạnh / Mưa giông / Sương mù…</field>
+    </record>
+    <record id="pl_wd_esl" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Sản lượng phát trong ngày</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="tag_code">T*_E</field>
+        <field name="cach_lay">gop</field>
+        <field name="gop_nhieu">tong</field>
+    </record>
+    <record id="pl_wd_pdi" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">20</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Công suất đỉnh trong ngày</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">kW</field>
+        <field name="so_le">1</field>
+        <field name="tag_code">T*_P</field>
+        <field name="cach_lay">dinh</field>
+        <field name="gop_nhieu">tong</field>
+    </record>
+    <record id="pl_wd_pdl" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">30</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Thời điểm đạt đỉnh</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">historian</field>
+        <field name="so_le">0</field>
+        <field name="tag_code">T*_P</field>
+        <field name="cach_lay">dinh_luc</field>
+        <field name="gop_nhieu">tong</field>
+    </record>
+    <record id="pl_wd_ghl" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">40</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Số giờ hoà lưới</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="tag_code">T*_P</field>
+        <field name="cach_lay">gio_tren_nguong</field>
+        <field name="gop_nhieu">tong</field>
+        <field name="nguong">0</field>
+    </record>
+    <record id="pl_wd_kdt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Khả dụng theo thời gian</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">kd_thoi_gian</field>
+    </record>
+    <record id="pl_wd_kds" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">20</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Khả dụng theo sản lượng</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+        <field name="truong">kd_san_luong</field>
+    </record>
+    <record id="pl_wd_sdv" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">30</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Số tua-bin tính khả dụng</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">máy</field>
+        <field name="so_le">0</field>
+        <field name="truong">so_don_vi</field>
+    </record>
+    <record id="pl_wd_gky" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">40</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Giờ-máy trong kỳ</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">1</field>
+        <field name="truong">gio_ky</field>
+    </record>
+    <record id="pl_wd_gdg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">50</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Giờ dừng</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio_dung</field>
+    </record>
+    <record id="pl_wd_gcq" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">60</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Giờ chưa quy trách nhiệm</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio_chua_quy</field>
+    </record>
+    <record id="pl_wd_slm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">70</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Sản lượng mất</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">sl_mat</field>
+    </record>
+    <record id="pl_wd_dtg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Tổng giờ dừng mọi nhóm</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+        <field name="truong">gio</field>
+    </record>
+    <record id="pl_wd_dkw" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">20</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Sản lượng mất do dừng máy</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+        <field name="truong">kwh</field>
+    </record>
+    <record id="pl_wd_ns" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Nhân sự có mặt tại nhà máy</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nguoi</field>
+        <field name="don_vi">người</field>
+        <field name="so_le">0</field>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Số người trực + bảo trì</field>
+    </record>
+    <record id="pl_wd_kh" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">20</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Khách / đoàn đến làm việc</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="goi_y">Để trống nếu không có</field>
+    </record>
+    <record id="pl_wd_at" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">30</field>
+        <field name="khoi">nhan_su</field>
+        <field name="name">Sự cố an toàn trong ngày</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="bat_buoc" eval="True"/>
+        <field name="goi_y">Ghi "Không" nếu không có — để trống KHÔNG đồng nghĩa với không có</field>
+    </record>
+    <record id="pl_wd_rm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">10</field>
+        <field name="khoi">ghi_chu</field>
+        <field name="name">Nhận xét của người trực</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="goi_y">Những gì số đo không nói được</field>
+    </record>
+</odoo>

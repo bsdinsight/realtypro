@@ -85,8 +85,12 @@ class EamAlarm(models.Model):
         TRANG_THAI, string='Trạng thái', required=True, default='new',
         index=True, tracking=True, copy=False)
     date_raised = fields.Datetime(
-        string='Nổ lúc', required=True, default=fields.Datetime.now,
-        index=True, tracking=True)
+        string='Thời điểm', required=True, default=fields.Datetime.now,
+        index=True, tracking=True,
+        help='Thời điểm hệ GHI NHẬN điều kiện lần đầu — không phải lúc '
+             'người trực mở màn hình ra xem, và không phải lúc cảnh báo '
+             'nổ lại ở lần sau: lần sau cộng vào "số lần nổ" và cập nhật '
+             '"thấy lần cuối", mốc này giữ nguyên.')
     date_last_seen = fields.Datetime(
         string='Thấy lần cuối', default=fields.Datetime.now)
     date_cleared = fields.Datetime(string='Hết lúc', copy=False,

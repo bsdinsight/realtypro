@@ -9,7 +9,7 @@
                   decoration-danger="severity == 'critical' or is_repeat"
                   decoration-warning="severity == 'high'"
                   decoration-muted="state in ('cleared', 'ignored')">
-                <field name="date_raised" string="Nổ lúc"/>
+                <field name="date_raised" string="Thời điểm"/>
                 <field name="location_id" string="Vị trí" width="180px"/>
                 <field name="asset_id" string="Thiết bị" optional="show"
                        width="180px"/>

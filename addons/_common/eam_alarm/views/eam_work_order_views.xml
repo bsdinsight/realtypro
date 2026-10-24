@@ -33,7 +33,7 @@
                     </div>
                     <field name="alarm_ids" readonly="1">
                         <list>
-                            <field name="date_raised" string="Nổ lúc"/>
+                            <field name="date_raised" string="Thời điểm"/>
                             <field name="severity" string="Mức"
                                    widget="badge"/>
                             <field name="message" string="Nội dung"/>

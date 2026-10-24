@@ -97,6 +97,32 @@ class EamUnitDay(models.Model):
     do_duoc_hs = fields.Boolean(string='Tính được hệ số')
     ly_do_hs = fields.Char(string='Vì sao chưa có hệ số', readonly=True)
 
+    # ----- Nhịp chạy trong ngày, đọc từ chính chuỗi số đo ----------------
+    #
+    # Mốc đồng bộ và mốc ngắt lấy theo NGƯỠNG, không theo "có số đo":
+    # tổ máy gửi số suốt đêm với giá trị 0, nên mốc đầu tiên có số đo là
+    # 00:00 mọi ngày — một con số luôn đúng cú pháp và luôn vô nghĩa.
+    moc_dong_bo = fields.Datetime(string='Đồng bộ lúc', readonly=True)
+    moc_ngat = fields.Datetime(string='Ngắt lúc', readonly=True)
+    gio_danh_nghia = fields.Float(
+        string='Giờ vận hành danh nghĩa', digits=(6, 2), readonly=True,
+        help='Khoảng từ mốc đồng bộ tới mốc ngắt. KHÁC với số giờ thực '
+             'sự phát: tổ máy dừng giữa ngày rồi chạy lại vẫn nằm trong '
+             'cùng một khoảng này.')
+    dinh_ac = fields.Float(
+        string='Đỉnh công suất AC (kW)', digits=(16, 1), readonly=True)
+    dinh_dc = fields.Float(
+        string='Đỉnh công suất DC (kW)', digits=(16, 1), readonly=True)
+    hieu_suat_bd = fields.Float(
+        string='Hiệu suất biến đổi (%)', digits=(6, 2), readonly=True,
+        aggregator='avg',
+        help='Điện năng xoay chiều chia điện năng một chiều trong ngày. '
+             'Tính trên ĐIỆN NĂNG cả ngày chứ không lấy trung bình các '
+             'hiệu suất tức thời: hiệu suất lúc tải thấp kéo trung bình '
+             'xuống dù quãng ấy gần như không sinh ra điện.')
+    do_duoc_dc = fields.Boolean(string='Có số phía một chiều')
+    ly_do_dc = fields.Char(string='Vì sao chưa có số DC', readonly=True)
+
     # ----- Khả dụng: HAI cột, cố ý ---------------------------------------
     kd_san_luong = fields.Float(
         string='Khả dụng theo sản lượng (%)', digits=(16, 2),
@@ -239,6 +265,8 @@ class EamUnitDay(models.Model):
                  so_khoang=k.get('so_khoang', 0),
                  so_khoang_chua_tinh=k.get('so_khoang_chua_tinh', 0))
 
+        v.update(self._nhip_chay(vt, tu, den, cs, that))
+
         if d:
             # Cột của HÃNG là số nhập tay — dựng lại KHÔNG được xoá nó.
             d.write(v)
@@ -246,6 +274,68 @@ class EamUnitDay(models.Model):
             d = self.create(v)
         d._tinh_luy_ke()
         return d
+
+    def _nhip_chay(self, vt, tu, den, cs, sl_ac):
+        """Mốc đồng bộ/ngắt, đỉnh hai phía và hiệu suất biến đổi.
+
+        Tổ máy nào chưa có điểm đo phía MỘT CHIỀU thì hai cột DC để
+        trống kèm lý do — không điền 0. Hiệu suất bằng 0% đọc ra là
+        "bộ nghịch lưu không chuyển được gì", ngược hẳn sự thật là
+        "nhà máy này không đo phía một chiều".
+        """
+        T = self.env['eam.tag']
+        H = self.env['eam.historian']
+        v = {'moc_dong_bo': False, 'moc_ngat': False, 'gio_danh_nghia': 0.0,
+             'dinh_ac': 0.0, 'dinh_dc': 0.0, 'hieu_suat_bd': 0.0,
+             'do_duoc_dc': False, 'ly_do_dc': False}
+        # Ngưỡng 1% công suất đặt: bộ nghịch lưu nhả vài kW lúc tự kiểm
+        # tra trước bình minh, lấy mốc đó làm "đồng bộ" thì ngày nào
+        # cũng sớm hơn thật chừng nửa tiếng.
+        nguong = max((cs or 0.0) * 0.01, 1.0)
+        ac = T.search([('location_id', '=', vt.id),
+                       ('tag_type', '=', 'power')], limit=1)
+        if ac:
+            k = H.tom_tat_ngay(ac.ids, tu, den, nguong, True) or {}
+            if k.get('n'):
+                v['dinh_ac'] = k.get('dinh') or 0.0
+                v['moc_dong_bo'] = k.get('moc_dau') or False
+                v['moc_ngat'] = k.get('moc_cuoi') or False
+                if v['moc_dong_bo'] and v['moc_ngat']:
+                    v['gio_danh_nghia'] = (
+                        v['moc_ngat'] - v['moc_dong_bo']
+                    ).total_seconds() / 3600.0
+
+        dc = T.search([('location_id', '=', vt.id),
+                       ('tag_type', '=', 'dc_power')], limit=1)
+        if not dc:
+            v['ly_do_dc'] = _('tổ máy chưa khai điểm đo phía một chiều')
+            return v
+        kd_ = H.tom_tat_ngay(dc.ids, tu, den, nguong, True) or {}
+        if not kd_.get('n'):
+            v['ly_do_dc'] = _('điểm đo phía một chiều không có số trong ngày')
+            return v
+        v['dinh_dc'] = kd_.get('dinh') or 0.0
+        # Điện năng một chiều: tích phân công suất theo nhịp lấy mẫu của
+        # chính điểm đo. Nhịp khai sai thì con số sai theo đúng tỷ lệ ấy,
+        # nên lấy từ điểm đo chứ không giả định 10 phút.
+        nhip = dc.sample_seconds or kd_.get('nhip') or 0
+        if not nhip:
+            v['ly_do_dc'] = _(
+                'điểm đo phía một chiều chưa khai nhịp lấy mẫu, không '
+                'tích phân ra điện năng được')
+            return v
+        self.env.cr.execute(
+            'SELECT sum(value) FROM eam_tag_reading '
+            'WHERE tag_id = %s AND ts >= %s AND ts < %s', (dc.id, tu, den))
+        tong = self.env.cr.fetchone()[0]
+        e_dc = float(tong or 0.0) * nhip / 3600.0
+        if not e_dc or sl_ac is None:
+            v['ly_do_dc'] = _(
+                'chưa đủ số hai phía để tính hiệu suất biến đổi')
+            return v
+        v['hieu_suat_bd'] = 100.0 * sl_ac / e_dc
+        v['do_duoc_dc'] = True
+        return v
 
     def _tinh_luy_ke(self):
         """Luỹ kế tháng và năm, cộng từ những ngày CÓ SỐ.

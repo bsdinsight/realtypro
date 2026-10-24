@@ -83,6 +83,8 @@
                                        t-value="kb.profile_line_id.khoi_dac_biet"/>
                                     <t t-if="ma == 'bang_to_may'"
                                        t-call="eam_daily_report.khoi_bang_to_may"/>
+                                    <t t-if="ma == 'bang_inverter'"
+                                       t-call="eam_daily_report.khoi_bang_inverter"/>
                                     <t t-if="ma == 'hoa_gio'"
                                        t-call="eam_daily_report.khoi_hoa_gio"/>
                                     <t t-if="ma == 'bieu_do_ngay'"

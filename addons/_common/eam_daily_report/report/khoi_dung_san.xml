@@ -291,4 +291,47 @@
         </table>
     </template>
 
+    <!-- ====== Bảng tổ máy xoay ngang (tờ điện mặt trời) ====== -->
+    <template id="khoi_bang_inverter">
+        <t t-set="v" t-value="o.bang_inverter()"/>
+        <p t-if="not v['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="v['ly_do']"/>
+        </p>
+        <div t-if="v['do_duoc']">
+            <table class="table table-sm table-bordered mb-0"
+                   style="font-size:7.5px">
+                <thead class="bg-light">
+                    <tr>
+                        <th style="width:21%">Inverter</th>
+                        <th class="text-end">Avg</th>
+                        <th class="text-end" t-foreach="v['cot']" t-as="c"
+                            t-esc="c"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="v['hang']" t-as="h">
+                        <td t-esc="h['ten']"/>
+                        <td class="text-end fw-bold" t-esc="h['tb']"/>
+                        <t t-foreach="h['o']" t-as="x">
+                            <td class="text-end">
+                                <span t-if="x != '—'" t-esc="x"/>
+                                <span t-else="" class="text-muted">—</span>
+                            </td>
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="small text-muted mb-0 mt-1">
+                Cột <b>Avg</b> tính trên những bộ CÓ SỐ của chính chỉ tiêu
+                đó, không trên tổng số bộ.
+                <t t-if="v['thieu_dc']">
+                    <b><span t-esc="v['thieu_dc']"/>/<span t-esc="v['so_may']"/>
+                    bộ chưa có số phía một chiều</b> nên hai hàng DC và
+                    hiệu suất để "—"<t t-if="v['ly_do_dc']">:
+                    <span t-esc="v['ly_do_dc']"/></t>.
+                </t>
+            </p>
+        </div>
+    </template>
+
 </odoo>

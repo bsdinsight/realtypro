@@ -482,7 +482,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="kieu">chu</field>
         <field name="nguon">khoi</field>
         <field name="so_le">0</field>
-        <field name="khoi_dac_biet">bang_to_may</field>
+        <field name="khoi_dac_biet">bang_inverter</field>
     </record>
 
     <!-- 2. Điện năng từng giờ 06–18, kèm cột -->

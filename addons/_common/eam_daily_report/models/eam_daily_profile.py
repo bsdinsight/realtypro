@@ -63,6 +63,7 @@ NGUON = [
 #: vì chôn vào bản in rồi muốn đổi chỗ phải sửa mã.
 KHOI_DAC_BIET = [
     ('bang_to_may', 'Bảng từng tổ máy'),
+    ('bang_inverter', 'Bảng tổ máy xoay ngang (chỉ tiêu làm hàng)'),
     ('hoa_gio', 'Hoa gió'),
     ('bieu_do_ngay', 'Biểu đồ công suất trong ngày'),
     ('san_luong_gio', 'Điện năng từng giờ trong ngày'),

@@ -279,3 +279,76 @@ class EamDailyReport(models.Model):
             'co_tien': not any(d.get('chua_tien') for d in dong)
                        and any(d['tien'] for d in dong),
         }
+
+    # ==================================================================
+    def bang_inverter(self):
+        """Bảng tổ máy XOAY NGANG: chỉ tiêu làm hàng, từng bộ làm cột.
+
+        Tờ báo cáo của nhà máy điện mặt trời xếp ngược với bảng tua-bin:
+        bảy chỉ tiêu nằm dọc, mười chín bộ nghịch lưu nằm ngang. Không
+        phải chuyện thẩm mỹ — mười chín dòng bảy cột thì mắt phải quét
+        dọc để so các bộ với nhau, còn bảy dòng mười chín cột thì một
+        hàng là một chỉ tiêu và máy nào lệch đàn lộ ra ngay.
+
+        Cột TRUNG BÌNH tính trên những bộ CÓ SỐ của chính chỉ tiêu đó,
+        không phải trên tổng số bộ: hai bộ mất tín hiệu làm mẫu số to
+        lên mà tử số không đổi, và trung bình tụt xuống vì một lý do
+        chẳng liên quan gì tới việc phát điện.
+        """
+        self.ensure_one()
+        import pytz
+        mui = pytz.timezone(self._mui_gio())
+        ds = self.env['eam.unit.day'].search(
+            [('plant_id', '=', self.plant_id.id), ('date', '=', self.date)],
+            order='location_code')
+        if not ds:
+            return {'do_duoc': False, 'ly_do': _(
+                'chưa dựng sổ ngày tổ máy cho ngày này')}
+
+        def gio(ts):
+            if not ts:
+                return None
+            return pytz.UTC.localize(ts).astimezone(mui)
+
+        def phut(ts):
+            t = gio(ts)
+            return None if t is None else t.hour * 60 + t.minute
+
+        def chu_gio(p):
+            return '—' if p is None else '%02d:%02d' % (p // 60, p % 60)
+
+        chi_tieu = [
+            ('Synchronization time (hh:mm)', 'gio',
+             [phut(d.moc_dong_bo) for d in ds]),
+            ('De-synchronization time (hh:mm)', 'gio',
+             [phut(d.moc_ngat) for d in ds]),
+            ('h nominal (nominal operating hours)', '%.2f',
+             [d.gio_danh_nghia or None for d in ds]),
+            ('Max Peak DC, MW', '%.3f',
+             [(d.dinh_dc / 1000.0) if d.do_duoc_dc else None for d in ds]),
+            ('Max Peak AC, MW', '%.3f',
+             [(d.dinh_ac / 1000.0) or None for d in ds]),
+            ('Average efficiency (%)', '%.2f',
+             [d.hieu_suat_bd if d.do_duoc_dc else None for d in ds]),
+            ('Energy Output Inverter (MWh)', '%.3f',
+             [(d.san_luong / 1000.0) if d.do_duoc_sl else None for d in ds]),
+        ]
+        hang = []
+        for ten, dang, gt in chi_tieu:
+            co = [x for x in gt if x is not None]
+            tb = (sum(co) / len(co)) if co else None
+            if dang == 'gio':
+                o = [chu_gio(x) for x in gt]
+                tbc = chu_gio(int(round(tb)) if tb is not None else None)
+            else:
+                o = ['—' if x is None else dang % x for x in gt]
+                tbc = '—' if tb is None else dang % tb
+            hang.append({'ten': ten, 'tb': tbc, 'o': o,
+                         'thieu': len(gt) - len(co)})
+        return {
+            'do_duoc': True, 'hang': hang,
+            'cot': [d.location_code or '' for d in ds],
+            'so_may': len(ds),
+            'thieu_dc': len([d for d in ds if not d.do_duoc_dc]),
+            'ly_do_dc': next((d.ly_do_dc for d in ds if d.ly_do_dc), ''),
+        }

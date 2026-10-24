@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- A26.2 — Nguồn gốc nằm TRÊN CHÍNH CON MÁY                     -->
+    <!-- Mọi xpath dưới đây trỏ vào CHÍNH thẻ <field>, không trỏ vào   -->
+    <!-- thẻ con của nó: chèn "sau" một thẻ con là chèn vào BÊN TRONG  -->
+    <!-- field, và Odoo đọc thẻ con của trường quan hệ như tên loại    -->
+    <!-- view — vỡ cả form mà lúc nạp module không báo gì.             -->
+    <!-- ============================================================ -->
+    <record id="view_eam_asset_form_warranty" model="ir.ui.view">
+        <field name="name">eam.asset.form.warranty</field>
+        <field name="model">eam.asset</field>
+        <field name="inherit_id" ref="eam_core.view_eam_asset_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_keo_nguon_goc" type="object"
+                        string="Kéo nguồn gốc từ biên bản bàn giao"
+                        invisible="nguon_goc == 'ban_giao'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='warranty_days_left']"
+                   position="after">
+                <field name="warranty_lot_end"
+                       invisible="not warranty_lot_end"/>
+                <field name="lech_bao_hanh" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//page[@name='bh']/field[@name='warranty_note']"
+                   position="before">
+                <div class="alert alert-warning" role="status"
+                     invisible="not lech_bao_hanh">
+                    <b>Hai hạn bảo hành lệch nhau.</b> Hạn trên lô hàng
+                    tính từ ngày NHẬN, hạn ở trên tính khi đã vận hành —
+                    cả hai đều đúng, nhưng chỉ một cái trả lời được
+                    <i>lần sửa này ai trả tiền</i>. Hệ lấy hạn trên tài
+                    sản và <b>không tự chọn hộ</b>: lệch là dấu hiệu có
+                    người khai nhầm một trong hai, chọn hộ là giấu mất
+                    chuyện đó.
+                </div>
+                <group>
+                    <group string="Con máy này do ai cấp">
+                        <field name="supplier_partner_id"/>
+                        <field name="nguon_goc"/>
+                        <field name="nguon_tham_chieu"/>
+                        <field name="nguon_ghi_chu"
+                               invisible="not nguon_ghi_chu"/>
+                    </group>
+                    <group string="Theo dõi hạn">
+                        <field name="nguoi_theo_doi_id"/>
+                        <field name="canh_bao_het_han"/>
+                    </group>
+                </group>
+                <separator string="Điều kiện bảo hành theo hợp đồng"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- A26.1 + A26.3 — Màn tra cứu theo sê-ri, và lọc được "sắp hết" -->
+    <record id="view_eam_asset_list_warranty" model="ir.ui.view">
+        <field name="name">eam.asset.list.warranty</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <list string="Bảo hành theo sê-ri" create="false"
+                  decoration-danger="warranty_state == 'expired'"
+                  decoration-warning="warranty_state == 'expiring'"
+                  decoration-muted="warranty_state == 'none'">
+                <field name="code" string="Mã"/>
+                <field name="name" string="Tên" width="200px"/>
+                <field name="serial_no" string="Sê-ri"/>
+                <field name="current_location_id" string="Đang lắp tại"
+                       width="180px" optional="show"/>
+                <field name="supplier_partner_id" string="Nhà cung cấp"
+                       width="200px"/>
+                <field name="manufacturer_id" string="Nhà sản xuất"
+                       width="180px" optional="hide"/>
+                <field name="nguon_goc" string="Đến từ đâu"/>
+                <field name="nguon_tham_chieu" string="HĐ / đơn mua"
+                       width="180px"/>
+                <field name="warranty_end" string="BH đến"/>
+                <field name="warranty_days_left" string="Còn (ngày)"/>
+                <field name="warranty_lot_end" string="BH theo lô"
+                       optional="hide"/>
+                <field name="lech_bao_hanh" string="Lệch"/>
+                <field name="nguoi_theo_doi_id" string="Người theo dõi"
+                       widget="many2one_avatar_user"/>
+                <field name="warranty_state" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_asset_search_warranty" model="ir.ui.view">
+        <field name="name">eam.asset.search.warranty</field>
+        <field name="model">eam.asset</field>
+        <field name="arch" type="xml">
+            <search string="Bảo hành">
+                <field name="serial_no"/>
+                <field name="name"/>
+                <field name="supplier_partner_id"/>
+                <field name="nguon_tham_chieu" string="Số HĐ / đơn mua"/>
+                <!-- Lọc theo warranty_state được là nhờ hàm tìm kiếm
+                     gắn thêm ở eam_warranty: trường vẫn KHÔNG lưu (con
+                     số "còn bao nhiêu ngày" đổi theo từng ngày), nhưng
+                     hàm tự dựng điều kiện trên warranty_end. -->
+                <filter name="f_sap_het" string="Sắp hết bảo hành"
+                        domain="[('warranty_state', '=', 'expiring')]"/>
+                <filter name="f_con" string="Còn hạn"
+                        domain="[('warranty_state', '=', 'valid')]"/>
+                <filter name="f_het" string="Hết hạn"
+                        domain="[('warranty_state', '=', 'expired')]"/>
+                <filter name="f_chua_khai" string="Chưa khai hạn bảo hành"
+                        domain="[('warranty_state', '=', 'none')]"/>
+                <separator/>
+                <filter name="f_lech" string="Hai hạn LỆCH nhau"
+                        domain="[('lech_bao_hanh', '=', True)]"/>
+                <filter name="f_chua_nguoi" string="Chưa ai theo dõi"
+                        domain="[('nguoi_theo_doi_id', '=', False)]"/>
+                <filter name="f_chua_ncc" string="Chưa biết nhà cung cấp"
+                        domain="[('supplier_partner_id', '=', False)]"/>
+                <separator/>
+                <filter name="g_ncc" string="Nhà cung cấp"
+                        context="{'group_by': 'supplier_partner_id'}"/>
+                <filter name="g_nguon" string="Đến từ đâu"
+                        context="{'group_by': 'nguon_goc'}"/>
+                <filter name="g_nguoi" string="Người theo dõi"
+                        context="{'group_by': 'nguoi_theo_doi_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_asset_warranty" model="ir.actions.act_window">
+        <field name="name">Bảo hành theo sê-ri</field>
+        <field name="res_model">eam.asset</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_eam_asset_list_warranty"/>
+        <field name="search_view_id" ref="view_eam_asset_search_warranty"/>
+        <field name="domain">[('state', '!=', 'scrapped')]</field>
+        <field name="context">{'search_default_f_sap_het': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có máy nào sắp hết bảo hành</p>
+            <p>Ba năm sau khi hộp số hỏng, câu đầu tiên luôn là
+            <b>con này do ai cấp, theo hợp đồng nào, còn bảo hành
+            không</b> — trả lời được hay không quyết định <b>ai trả
+            tiền</b> cho lần sửa đó. Màn này là chỗ trả lời.</p>
+            <p>Bỏ bộ lọc để xem toàn bộ, hoặc lọc <b>Chưa biết nhà cung
+            cấp</b> để thấy đúng chỗ còn thiếu hồ sơ.</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- A26.4 — Phiếu bảo hành: tình trạng được CHỤP LẠI lúc lập      -->
+    <!-- ============================================================ -->
+    <record id="view_eam_rma_form_warranty" model="ir.ui.view">
+        <field name="name">eam.rma.form.warranty</field>
+        <field name="model">eam.rma</field>
+        <field name="inherit_id" ref="eam_stock.view_eam_rma_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref_supplier']" position="after">
+                <field name="supplier_goc_id"/>
+                <field name="bao_hanh_luc_lap"/>
+                <field name="han_bao_hanh_luc_lap"
+                       invisible="not han_bao_hanh_luc_lap"/>
+                <field name="ngay_con_lai_luc_lap"
+                       invisible="not bao_hanh_luc_lap"/>
+                <field name="doi_bao_hanh_nhung_het_han" invisible="1"/>
+            </xpath>
+
+            <!-- Chọn theo TÊN TRƯỜNG, không chọn theo string: Odoo chặn
+                 string làm bộ chọn trong view kế thừa (và chọn theo chữ
+                 hiển thị thì đổi một dấu gạch là vỡ). -->
+            <xpath expr="//field[@name='reason']" position="before">
+                <div class="alert alert-warning" role="status"
+                     invisible="not doi_bao_hanh_nhung_het_han">
+                    <b>Phiếu khai loại bảo hành, nhưng lúc lập con máy đã
+                    hết hạn.</b> Phiếu vẫn gửi đi được — nhưng bên kia sẽ
+                    từ chối, và cả quãng chờ đó là thời gian chết. Đổi
+                    loại phiếu, hoặc nêu rõ căn cứ đòi ngoài hạn.
+                </div>
+                <div class="alert alert-info" role="status"
+                     invisible="not asset_id or bao_hanh_luc_lap">
+                    Phiếu này <b>không có ảnh chụp tình trạng bảo hành</b>
+                    — lập trước khi phần theo dõi bảo hành có mặt. Hệ
+                    KHÔNG tính bù, vì tính theo hôm nay là để biên bản
+                    tự lật ngược kết luận của chính nó.
+                    <span invisible="state != 'draft'">Phiếu còn ở nháp
+                    thì bấm <i>Chụp lại tình trạng bảo hành</i> để lấy
+                    tình trạng hiện tại — và hiểu đó là con số của hôm
+                    nay, không phải của ngày lập.</span>
+                    <span invisible="state == 'draft'">Phiếu đã gửi đi
+                    rồi thì không chụp nữa: ghi con số của hôm nay vào
+                    một phiếu lập từ trước là bịa ra chứng cứ.</span>
+                </div>
+            </xpath>
+
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_chup_lai_bao_hanh" type="object"
+                        string="Chụp lại tình trạng bảo hành"
+                        invisible="state != 'draft' or not asset_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_rma_list_warranty" model="ir.ui.view">
+        <field name="name">eam.rma.list.warranty</field>
+        <field name="model">eam.rma</field>
+        <field name="inherit_id" ref="eam_stock.view_eam_rma_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="bao_hanh_luc_lap" string="BH lúc lập"
+                       optional="show"/>
+                <field name="doi_bao_hanh_nhung_het_han"
+                       string="Đòi ngoài hạn" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_eam_rma_search_warranty" model="ir.ui.view">
+        <field name="name">eam.rma.search.warranty</field>
+        <field name="model">eam.rma</field>
+        <field name="inherit_id" ref="eam_stock.view_eam_rma_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='f_dang_mo']" position="after">
+                <filter name="f_doi_ngoai_han"
+                        string="Đòi bảo hành nhưng đã hết hạn"
+                        domain="[('doi_bao_hanh_nhung_het_han', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_asset_warranty" name="Bảo hành theo sê-ri"
+              parent="eam_core.menu_eam_asset_group"
+              action="action_eam_asset_warranty" sequence="35"/>
+
+</odoo>

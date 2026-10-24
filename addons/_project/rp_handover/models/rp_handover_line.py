@@ -156,8 +156,29 @@ class RpHandoverLine(models.Model):
                         'Bảo hành %(n)d tháng kể từ ngày nghiệm thu bàn '
                         'giao %(d)s của chính vị trí này.',
                         n=h.warranty_months, d=self.date_toc or '')
-            if self.supplier_id and not a.manufacturer_id:
-                v['manufacturer_id'] = self.supplier_id.id
+            if self.supplier_id:
+                # Nhà cung cấp là ai CẤP con máy; nhà sản xuất là ai LÀM
+                # ra nó. Bảo hành đòi ở bên cấp, không đòi ở bên làm.
+                #
+                # Trước đây chỗ này ghi nhà cung cấp vào ô NHÀ SẢN XUẤT —
+                # vì sổ tài sản chưa có ô nào cho bên cấp. Với tổng thầu
+                # cấp thẳng thiết bị của chính mình thì hai bên là một và
+                # không ai thấy sai; với thiết bị mua qua đại lý thì sổ
+                # ghi tên đại lý vào chỗ hãng, và ba năm sau người đọc
+                # gọi đúng cái tên không chịu trách nhiệm bảo hành.
+                #
+                # Có eam_warranty thì ghi vào đúng ô. Không có thì vẫn
+                # giữ cách cũ, vì mất hẳn cái tên còn tệ hơn ghi lệch ô.
+                if 'supplier_partner_id' in a._fields:
+                    if not a.supplier_partner_id:
+                        v['supplier_partner_id'] = self.supplier_id.id
+                        v['nguon_goc'] = 'ban_giao'
+                        v['nguon_tham_chieu'] = self.contract_id.name or ''
+                        v['nguon_ghi_chu'] = _(
+                            'ghi từ biên bản bàn giao %(bb)s, vị trí %(vt)s',
+                            bb=h.name, vt=self.location_code or '—')
+                elif not a.manufacturer_id:
+                    v['manufacturer_id'] = self.supplier_id.id
             a.write(v)
 
         # Đồng hồ giờ máy — bắt đầu từ 0 tại ngày bàn giao

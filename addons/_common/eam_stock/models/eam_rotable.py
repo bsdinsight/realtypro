@@ -66,7 +66,7 @@ class StockLot(models.Model):
                 continue
             if not l.product_id.eam_is_rotable:
                 continue
-            a = A.create({
+            v = {
                 'name': '%s — %s' % (l.product_id.name, l.name),
                 # Tên sê-ri đã mang sẵn mã sản phẩm nên dùng luôn làm mã
                 # tài sản: duy nhất toàn hệ thống, và tra ngược được từ
@@ -82,7 +82,16 @@ class StockLot(models.Model):
                 'date_manufacture': l.eam_mfg_date or False,
                 'warranty_end': l.eam_warranty_end or False,
                 'warranty_note': l.eam_warranty_note or False,
-            })
+            }
+            # Con máy này đến từ kho, tức qua đường mua sắm — hệ BIẾT
+            # điều đó, nên đừng để sổ ghi "chưa rõ". Có eam_warranty thì
+            # ghi; không có thì bỏ qua, vì eam_stock không được phụ thuộc
+            # vào nó.
+            if 'nguon_goc' in A._fields:
+                v['nguon_goc'] = 'mua_sam'
+                if l.ref:
+                    v['nguon_tham_chieu'] = l.ref
+            a = A.create(v)
             l.eam_asset_id = a.id
             tao |= a
         return tao

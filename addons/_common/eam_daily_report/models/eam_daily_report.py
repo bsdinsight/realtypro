@@ -214,6 +214,28 @@ class EamDailyReport(models.Model):
             'sequence': l.sequence,
         } for l in self.profile_id.line_ids])
 
+    def _bo_sung_dong(self):
+        """Nhận dòng mới của hồ sơ mà KHÔNG xoá ô người trực đã điền.
+
+        Hồ sơ cấu hình còn được sửa sau khi tờ đã dựng — thêm một dòng
+        vào hồ sơ thì mọi tờ còn nháp phải có dòng ấy. Dựng lại toàn bộ
+        (``_dung_dong``) thì nhận được dòng mới nhưng xoá sạch ô người
+        trực đã gõ, nên nó chỉ dùng lúc tạo tờ.
+
+        Thiếu chỗ này thì triệu chứng rất dễ đổ nhầm cho chỗ khác: tờ in
+        ra khuyết hẳn mấy khung, trông như số liệu chưa về, trong khi
+        thật ra tờ ấy dựng từ hồ sơ của hôm qua.
+        """
+        self.ensure_one()
+        co = set(self.line_ids.mapped('profile_line_id').ids)
+        thieu = self.profile_id.line_ids.filtered(lambda l: l.id not in co)
+        if thieu:
+            self.env['eam.daily.report.line'].create([{
+                'report_id': self.id, 'profile_line_id': l.id,
+                'sequence': l.sequence,
+            } for l in thieu])
+        return len(thieu)
+
     def action_rot_lai(self):
         """Rót lại số máy tính — giữ nguyên ô người trực đã điền."""
         for r in self:
@@ -222,8 +244,12 @@ class EamDailyReport(models.Model):
                     'Tờ ngày %s đã chốt. Số đã chốt là bản ghi của hôm '
                     'đó, không rót đè lên được — muốn đổi thì bấm "Sửa '
                     'ra bản mới".', r.date))
+            them = r._bo_sung_dong()
             r._rot_so()
-        return self._bao(_('Đã rót lại số cho %d tờ.', len(self)))
+        n = sum(1 for _r in self)
+        return self._bao(_('Đã rót lại số cho %(n)d tờ%(t)s.', n=n,
+                           t=(_(' · nhận thêm %d dòng mới từ hồ sơ', them)
+                              if them else '')))
 
     def _mui_gio(self):
         self.ensure_one()

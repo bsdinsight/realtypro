@@ -17,11 +17,16 @@
     <template id="bao_cao_ngay">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <!-- Bố cục LƯỚI đi đường riêng: nó dựng theo tờ giấy nhà
-                     máy đang dùng, không qua khung chuẩn của Odoo — tiêu
-                     đề công ty và lề mặc định ăn mất chiều ngang mà lưới
-                     ba khung cần. -->
-                <t t-if="o.profile_id.bo_cuc == 'luoi'">
+                <!-- CẢ HAI bố cục phải đi qua web.external_layout.
+                     Bỏ qua nó thì tờ in ra VỠ DẤU TIẾNG VIỆT: thẻ khai
+                     bộ mã vẫn còn nguyên trong HTML, nhưng Odoo cắt
+                     phần đầu/chân trang trước khi đưa sang bộ dựng PDF,
+                     và không có khung chuẩn thì phần thân đi một đường
+                     khác rồi bị đọc như Latin-1. "Nhà máy" ra
+                     "NhÃ mÃ¡y" — không có gì báo, và chỉ lộ khi nhìn
+                     tờ giấy. -->
+                <t t-if="o.profile_id.bo_cuc == 'luoi'"
+                   t-call="web.external_layout">
                     <div class="page">
                         <t t-call="eam_daily_report.bao_cao_ngay_luoi"/>
                     </div>

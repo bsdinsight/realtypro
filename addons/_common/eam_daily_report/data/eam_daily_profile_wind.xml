@@ -246,7 +246,7 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="profile_id" ref="profile_wind"/>
         <field name="sequence">10</field>
         <field name="khoi">kha_dung</field>
-        <field name="name">Energy Based Availability</field>
+        <field name="name">Energy Based Availability — mọi nguyên nhân</field>
         <field name="kieu">so</field>
         <field name="nguon">unit</field>
         <field name="don_vi">%</field>
@@ -279,7 +279,7 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="profile_id" ref="profile_wind"/>
         <field name="sequence">40</field>
         <field name="khoi">kha_dung</field>
-        <field name="name">Time Based Availability</field>
+        <field name="name">Time Based Availability — phạm vi hợp đồng</field>
         <field name="kieu">so</field>
         <field name="nguon">avail</field>
         <field name="don_vi">%</field>
@@ -290,7 +290,7 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="profile_id" ref="profile_wind"/>
         <field name="sequence">50</field>
         <field name="khoi">kha_dung</field>
-        <field name="name">Giờ dừng</field>
+        <field name="name">Giờ dừng tính cho nhà thầu</field>
         <field name="kieu">so</field>
         <field name="nguon">avail</field>
         <field name="don_vi">h</field>
@@ -396,5 +396,16 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="so_le">0</field>
         <field name="bat_buoc" eval="True"/>
         <field name="goi_y">Ghi "Không" nếu không có — để trống KHÔNG đồng nghĩa với không có</field>
+    </record>
+    <record id="pl_wd_note" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">80</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Vì sao ba con số khả dụng khác nhau</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">nguoi</field>
+        <field name="so_le">0</field>
+        <field name="in_khi_trong" eval="True"/>
+        <field name="goi_y">Mọi nguyên nhân: ta mất sản lượng thật bất kể lỗi ai. Phạm vi hợp đồng: chỉ phần quy được cho nhà thầu. Theo hãng: họ loại trừ thêm phần ngoài trách nhiệm họ.</field>
     </record>
 </odoo>

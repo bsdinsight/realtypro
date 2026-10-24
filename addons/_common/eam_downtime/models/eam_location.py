@@ -80,12 +80,18 @@ class EamLocation(models.Model):
             'cho_pr': max(tong_quat - cat_giam, 0.0),
         }
 
-    def gio_theo_nhom(self, tu, den):
+    def gio_theo_nhom(self, tu, den, theo='nhom'):
         """Giờ dừng gộp theo NHÓM BÁO CÁO, kèm dòng chưa xếp nhóm.
 
         Loại thời gian chưa ánh xạ nhóm vẫn ra một dòng riêng thay vì
         biến mất — tổng sáu dòng nhỏ hơn tổng thật mà không ai báo thiếu
         là cách im lặng nhất để một báo cáo nói sai.
+
+        ``theo='loai'`` gộp theo LOẠI THỜI GIAN thay vì theo nhóm — mịn
+        hơn một bậc, vì tờ báo cáo của nhà máy liệt kê từng nguyên nhân
+        chứ không gộp thành sáu nhóm. Cùng một phép cắt khoảng theo biên
+        ngày, chỉ khác khoá gộp: tách thành hai hàm là hai nơi cùng phải
+        nhớ rằng khoảng dừng vắt qua nửa đêm phải cắt đôi.
         """
         self.ensure_one()
         O = self.env['eam.outage']
@@ -101,7 +107,11 @@ class EamLocation(models.Model):
             dau, cuoi = max(o.date_start, tu), min(ket, den)
             if cuoi <= dau:
                 continue
-            ten = o.group_id.name if o.group_id else 'Chưa xếp nhóm'
+            if theo == 'loai':
+                ten = (o.category_id.name if o.category_id
+                       else 'Chưa khai loại thời gian')
+            else:
+                ten = o.group_id.name if o.group_id else 'Chưa xếp nhóm'
             d = kq.setdefault(ten, {'gio': 0.0, 'kwh': 0.0, 'tien': 0.0,
                                     'so': 0, 'chua_tien': 0})
             d['gio'] += (cuoi - dau).total_seconds() / 3600.0

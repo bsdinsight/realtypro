@@ -117,14 +117,33 @@ class EamDailyReport(models.Model):
                 'troi_nhat': max(canh, key=lambda c: c['tan_suat'])}
 
     # ==================================================================
+    def _tag_cong_suat(self):
+        """Các điểm đo cộng lại ra CÔNG SUẤT TOÀN NHÀ MÁY — không trùng.
+
+        Tra theo LOẠI ĐO chứ không theo đuôi mã: nhà máy điện gió đặt
+        ``T01_P``, nhà máy điện mặt trời đặt ``PV50_P_01``, và một quy
+        ước đặt tên viết cứng trong mã thì nhà máy thứ ba lại phá.
+
+        Chỗ dễ sai là TRÙNG: điện mặt trời có cả điểm đo tổng ở cấp nhà
+        máy lẫn mười sáu điểm đo từng bộ nghịch lưu. Cộng cả mười bảy ra
+        gấp đôi — một đường cong trông vẫn mượt, chỉ cao gấp đôi. Nên có
+        điểm đo ở CẤP NHÀ MÁY thì dùng riêng nó; không có mới cộng các
+        điểm đo cấp máy.
+        """
+        self.ensure_one()
+        tags = self.env['eam.tag'].search([
+            ('plant_id', '=', self.plant_id.id), ('tag_type', '=', 'power')])
+        o_nha_may = tags.filtered(lambda t: t.location_id == self.plant_id)
+        return o_nha_may or tags
+
     def bieu_do_ngay(self, buoc_phut=30):
         """Công suất toàn trại và tốc độ gió theo bước thời gian."""
         self.ensure_one()
-        tp = self._tag_theo_ma('_P')
+        tp = self._tag_cong_suat()
         ws = self._tag_theo_ma('_WS')
         if not tp:
             return {'do_duoc': False, 'ly_do': _(
-                'nhà máy chưa có điểm đo công suất (*_P)')}
+                'nhà máy chưa khai điểm đo nào loại "công suất"')}
         tu, den = self._bien_ngay_utc()
         b = buoc_phut * 60
         # HAI tầng gộp, và chúng KHÔNG đổi chỗ cho nhau được:
@@ -166,3 +185,82 @@ class EamDailyReport(models.Model):
                 'cs_max': max(d['cs'] for d in diem) or 1.0,
                 'ws_max': max(d['ws'] for d in diem) or 1.0,
                 'co_gio': bool(ws)}
+
+    # ==================================================================
+    def san_luong_gio(self, tu_gio=0, den_gio=24):
+        """Điện năng từng GIỜ trong ngày, kèm số để vẽ cột.
+
+        Khác biểu đồ ngày ở đơn vị, và khác biểu đồ ngày ở chỗ đó quan
+        trọng. Biểu đồ ngày vẽ CÔNG SUẤT (kW) — ảnh chụp tại từng thời
+        điểm. Tờ báo cáo của nhà máy lại đòi ĐIỆN NĂNG từng giờ (kWh) —
+        tổng cộng dồn trong giờ ấy. Lấy trung bình công suất trong giờ
+        rồi nhân một giờ thì ra điện năng; lấy TỔNG các số đo công suất
+        trong giờ thì ra một con số gấp sáu lần mà vẫn mang đơn vị kWh.
+
+        ``tu_gio``/``den_gio`` theo giờ TẠI NHÀ MÁY. Để mặc định 0–24 là
+        cả ngày; tờ điện mặt trời chỉ in 06–18 vì ngoài khung đó không có
+        nắng — nhưng khung ấy là của hồ sơ cấu hình, không viết cứng ở đây.
+        """
+        self.ensure_one()
+        tp = self._tag_cong_suat()
+        if not tp:
+            return {'do_duoc': False, 'ly_do': _(
+                'nhà máy chưa khai điểm đo nào loại "công suất"')}
+        tu, den = self._bien_ngay_utc()
+        self.env.cr.execute("""
+            SELECT to_timestamp(floor(extract(epoch FROM ts) / 3600) * 3600)
+                       AT TIME ZONE 'UTC' AS gio, avg(v)
+            FROM (SELECT ts, sum(value) AS v FROM {bang}
+                  WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s
+                  GROUP BY ts) x
+            GROUP BY 1 ORDER BY 1
+        """.format(bang=BANG), (tp.ids, tu, den))
+        hang = self.env.cr.fetchall()
+        if not hang:
+            return {'do_duoc': False, 'ly_do': _(
+                'không có số đo công suất nào trong ngày')}
+
+        import pytz
+        mui = pytz.timezone(self._mui_gio())
+        dong = []
+        for ts, cs in hang:
+            tc = pytz.UTC.localize(ts).astimezone(mui)
+            if not (tu_gio <= tc.hour < den_gio):
+                continue
+            # Trung bình công suất trong giờ × 1 giờ = điện năng giờ ấy.
+            dong.append({'gio': tc.strftime('%H:%M'), 'h': tc.hour,
+                         'kwh': float(cs or 0.0)})
+        if not dong:
+            return {'do_duoc': False, 'ly_do': _(
+                'không có số đo nào trong khung %(a)02d–%(b)02d giờ',
+                a=tu_gio, b=den_gio)}
+        return {'do_duoc': True, 'dong': dong,
+                'tong': sum(d['kwh'] for d in dong),
+                'dinh': max(d['kwh'] for d in dong) or 1.0,
+                'khung': '%02d:00–%02d:00' % (tu_gio, den_gio),
+                'ngoai_khung': len(hang) - len(dong)}
+
+    # ==================================================================
+    def gio_nguyen_nhan(self):
+        """Giờ dừng tách theo từng LOẠI THỜI GIAN, không gộp thành nhóm.
+
+        Sổ dừng máy đã có sẵn phép cắt khoảng theo biên ngày — khoảng
+        dừng vắt qua nửa đêm phải chia cho hai ngày. Gọi lại đúng phép
+        ấy với trục ``loai`` thay vì chép sang đây, vì chép là hai nơi
+        cùng phải nhớ cắt, và nơi quên sẽ im lặng.
+        """
+        self.ensure_one()
+        tu, den = self._bien_ngay_utc()
+        theo = self.plant_id.gio_theo_nhom(tu, den, theo='loai')
+        dong = [{'ten': k, **v} for k, v in theo.items()]
+        dong.sort(key=lambda d: -d['gio'])
+        return {
+            'do_duoc': True, 'dong': dong,
+            'tong_gio': sum(d['gio'] for d in dong),
+            'tong_kwh': sum(d['kwh'] for d in dong),
+            'tong_so': sum(d['so'] for d in dong),
+            # Giá điện chưa khai thì KHÔNG in cột tiền, thay vì in một
+            # tổng nhỏ hơn thật mà trông như đã tính xong.
+            'co_tien': not any(d.get('chua_tien') for d in dong)
+                       and any(d['tien'] for d in dong),
+        }

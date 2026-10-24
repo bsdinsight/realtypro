@@ -62,6 +62,8 @@ KHOI_DAC_BIET = [
     ('bang_to_may', 'Bảng từng tổ máy'),
     ('hoa_gio', 'Hoa gió'),
     ('bieu_do_ngay', 'Biểu đồ công suất trong ngày'),
+    ('san_luong_gio', 'Điện năng từng giờ trong ngày'),
+    ('gio_nguyen_nhan', 'Giờ dừng tách theo nguyên nhân'),
     ('cong_to', 'Công-tơ: số đọc hôm qua / hôm nay / chênh'),
 ]
 
@@ -71,6 +73,11 @@ CACH_LAY = [
     ('dinh', 'Đỉnh trong ngày'),
     ('dinh_luc', 'Thời điểm đạt đỉnh'),
     ('gio_tren_nguong', 'Số giờ trên ngưỡng'),
+    # Hai cách dưới đọc trên NGƯỠNG, không phải trên bảng số đo: nhà máy
+    # gửi số suốt đêm với giá trị 0, nên "mốc đầu tiên có số đo" là 00:00
+    # mọi ngày. Cái tờ báo cáo hỏi là lúc nhà máy BẮT ĐẦU PHÁT.
+    ('moc_dau', 'Mốc đầu tiên vượt ngưỡng'),
+    ('moc_cuoi', 'Mốc cuối cùng vượt ngưỡng'),
 ]
 
 

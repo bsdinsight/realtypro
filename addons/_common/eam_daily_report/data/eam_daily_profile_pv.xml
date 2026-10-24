@@ -467,4 +467,72 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="ghi_nguoc" eval="True"/>
         <field name="goi_y">Nhận xét của người trực về ngày hôm nay</field>
     </record>
+
+    <!-- ================= B05: bốn khối còn thiếu của tờ PV ============ -->
+
+    <!-- 1. Bảng từng bộ nghịch lưu — dùng lại khối đã dựng cho tua-bin -->
+    <record id="pl_pv_btm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">to_may</field>
+        <field name="name">Inverter Report</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">khoi</field>
+        <field name="so_le">0</field>
+        <field name="khoi_dac_biet">bang_to_may</field>
+    </record>
+
+    <!-- 2. Điện năng từng giờ 06–18, kèm cột -->
+    <record id="pl_pv_slg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">90</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Hourly Energy Output</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">khoi</field>
+        <field name="so_le">0</field>
+        <field name="khoi_dac_biet">san_luong_gio</field>
+    </record>
+
+    <!-- 3. Giờ dừng tách theo nguyên nhân -->
+    <record id="pl_pv_gnn" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Downtime by cause</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">khoi</field>
+        <field name="so_le">0</field>
+        <field name="khoi_dac_biet">gio_nguyen_nhan</field>
+    </record>
+
+    <!-- 4. Mốc đồng bộ đầu ngày và ngắt cuối ngày.
+         Ngưỡng 100 kW chứ không phải 0: nhà máy nhả vài kW lúc tờ mờ
+         sáng do bộ nghịch lưu tự kiểm tra, lấy mốc đó làm "bắt đầu
+         phát" thì ngày nào cũng sớm hơn thật chừng nửa tiếng. -->
+    <record id="pl_pv_md" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">110</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">First synchronisation</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">*_P_AC</field>
+        <field name="cach_lay">moc_dau</field>
+        <field name="nguong">100</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_pv_mc" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">120</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Last disconnection</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">*_P_AC</field>
+        <field name="cach_lay">moc_cuoi</field>
+        <field name="nguong">100</field>
+        <field name="so_le">0</field>
+    </record>
+
 </odoo>

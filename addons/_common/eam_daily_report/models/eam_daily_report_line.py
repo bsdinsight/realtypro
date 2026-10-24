@@ -362,20 +362,29 @@ class EamDailyReportLine(models.Model):
             return self._chua_do(_(
                 '%(n)d điểm đo khớp mã "%(m)s" nhưng không có số đo nào '
                 'trong ngày', n=len(tags), m=c.tag_code))
-        if c.cach_lay == 'dinh_luc':
-            ts = kq.get('dinh_luc')
+        # Ba cách lấy cho ra một MỐC THỜI GIAN chứ không phải một con số.
+        if c.cach_lay in ('dinh_luc', 'moc_dau', 'moc_cuoi'):
+            ts = kq.get(c.cach_lay)
             if not ts:
-                return self._chua_do(_('không xác định được thời điểm đỉnh'))
+                return self._chua_do(
+                    _('không xác định được thời điểm đỉnh')
+                    if c.cach_lay == 'dinh_luc' else
+                    _('không có số đo nào vượt ngưỡng trong ngày'))
             # Kho chuỗi thời gian lưu theo UTC. In thẳng ra tờ báo cáo là
             # lệch bảy tiếng — mà "đỉnh gió lúc 4h sáng" nghe vẫn hợp lý
             # nên không ai nghi. Đổi về giờ TẠI NHÀ MÁY.
             mui = pytz.timezone(self.report_id._mui_gio())
             tai_cho = pytz.UTC.localize(ts).astimezone(mui)
-            return self._dat(tai_cho.strftime('%H:%M'),
-                             _('đỉnh %(d).1f lúc %(g)s giờ %(m)s',
-                               d=kq.get('dinh') or 0,
-                               g=tai_cho.strftime('%H:%M'),
-                               m=mui.zone), chu=True)
+            g = tai_cho.strftime('%H:%M')
+            if c.cach_lay == 'dinh_luc':
+                vet = _('đỉnh %(d).1f lúc %(g)s giờ %(m)s',
+                        d=kq.get('dinh') or 0, g=g, m=mui.zone)
+            else:
+                vet = _('%(l)s vượt %(n).1f lúc %(g)s giờ %(m)s',
+                        l=(_('lần đầu') if c.cach_lay == 'moc_dau'
+                           else _('lần cuối')),
+                        n=c.nguong or 0, g=g, m=mui.zone)
+            return self._dat(g, vet, chu=True)
         khoa = {'gop': 'gop', 'dinh': 'dinh',
                 'gio_tren_nguong': 'gio_tren_nguong'}.get(
                     c.cach_lay or 'gop', 'gop')

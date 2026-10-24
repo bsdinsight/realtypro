@@ -87,6 +87,10 @@
                                        t-call="eam_daily_report.khoi_hoa_gio"/>
                                     <t t-if="ma == 'bieu_do_ngay'"
                                        t-call="eam_daily_report.khoi_bieu_do"/>
+                                    <t t-if="ma == 'san_luong_gio'"
+                                       t-call="eam_daily_report.khoi_san_luong_gio"/>
+                                    <t t-if="ma == 'gio_nguyen_nhan'"
+                                       t-call="eam_daily_report.khoi_gio_nguyen_nhan"/>
                                     <t t-if="ma == 'cong_to'">
                                         <p class="small text-muted mb-0">
                                             Khối công-tơ giao nhận (số đọc

@@ -176,4 +176,102 @@
         </div>
     </template>
 
+    <!-- ============ Điện năng từng giờ trong ngày ============ -->
+    <template id="khoi_san_luong_gio">
+        <t t-set="s" t-value="o.san_luong_gio(6, 18)"/>
+        <p t-if="not s['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="s['ly_do']"/>
+        </p>
+        <div t-if="s['do_duoc']">
+            <svg width="100%" height="130" viewBox="0 0 700 130"
+                 preserveAspectRatio="none">
+                <line x1="0" y1="118" x2="700" y2="118"
+                      stroke="#999" stroke-width="1"/>
+                <t t-set="n" t-value="len(s['dong'])"/>
+                <t t-set="w" t-value="700.0 / max(n, 1)"/>
+                <t t-foreach="s['dong']" t-as="d">
+                    <rect t-att-x="w * d_index + w * 0.15"
+                          t-att-y="118 - 104.0 * d['kwh'] / s['dinh']"
+                          t-att-width="w * 0.70"
+                          t-att-height="104.0 * d['kwh'] / s['dinh']"
+                          fill="#0E8C99"/>
+                    <text t-att-x="w * d_index + w * 0.5" y="128"
+                          font-size="8" fill="#666" text-anchor="middle"
+                          t-esc="d['gio'][:2]"/>
+                </t>
+            </svg>
+            <table class="table table-sm table-borderless mb-0"
+                   style="font-size:9px">
+                <tr>
+                    <td style="width:12%"><b>Giờ</b></td>
+                    <t t-foreach="s['dong']" t-as="d">
+                        <td class="text-end" t-esc="d['gio'][:2]"/>
+                    </t>
+                    <td class="text-end"><b>Tổng</b></td>
+                </tr>
+                <tr>
+                    <td><b>kWh</b></td>
+                    <t t-foreach="s['dong']" t-as="d">
+                        <td class="text-end"
+                            t-esc="'{:,.0f}'.format(d['kwh'])"/>
+                    </t>
+                    <td class="text-end">
+                        <b t-esc="'{:,.0f}'.format(s['tong'])"/>
+                    </td>
+                </tr>
+            </table>
+            <div class="small text-muted">
+                Khung <span t-esc="s['khung']"/> giờ tại nhà máy.
+                Mỗi cột là TRUNG BÌNH công suất trong giờ nhân một giờ —
+                cộng dồn số đo thì ra con số gấp mấy lần mà vẫn mang đơn
+                vị kWh.
+                <t t-if="s['ngoai_khung']">
+                    <span t-esc="s['ngoai_khung']"/> giờ ngoài khung
+                    không in, nên tổng ở đây nhỏ hơn sản lượng cả ngày.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <!-- ============ Giờ dừng tách theo nguyên nhân ============ -->
+    <template id="khoi_gio_nguyen_nhan">
+        <t t-set="k" t-value="o.gio_nguyen_nhan()"/>
+        <p t-if="not k['dong']" class="small text-muted mb-0">
+            Không có khoảng dừng nào trong ngày.
+        </p>
+        <table t-if="k['dong']" class="table table-sm mb-0"
+               style="font-size:10px">
+            <thead>
+                <tr>
+                    <th>Nguyên nhân</th>
+                    <th class="text-end">Số lần</th>
+                    <th class="text-end">Giờ</th>
+                    <th class="text-end">Sản lượng mất (kWh)</th>
+                    <th t-if="k['co_tien']" class="text-end">Doanh thu mất</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="k['dong']" t-as="d">
+                    <td t-esc="d['ten']"/>
+                    <td class="text-end" t-esc="d['so']"/>
+                    <td class="text-end" t-esc="'{:,.2f}'.format(d['gio'])"/>
+                    <td class="text-end" t-esc="'{:,.1f}'.format(d['kwh'])"/>
+                    <td t-if="k['co_tien']" class="text-end"
+                        t-esc="'{:,.0f}'.format(d['tien'])"/>
+                </tr>
+                <tr style="border-top:1.5px solid #0F2C3F">
+                    <td><b>Tổng</b></td>
+                    <td class="text-end"><b t-esc="k['tong_so']"/></td>
+                    <td class="text-end">
+                        <b t-esc="'{:,.2f}'.format(k['tong_gio'])"/>
+                    </td>
+                    <td class="text-end">
+                        <b t-esc="'{:,.1f}'.format(k['tong_kwh'])"/>
+                    </td>
+                    <td t-if="k['co_tien']"/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
 </odoo>

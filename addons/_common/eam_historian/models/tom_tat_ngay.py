@@ -100,7 +100,13 @@ class EamHistorian(models.AbstractModel):
         if tong is not None and cach_gop == 'avg' and len(tags) > 1:
             tong = tong / len(tags)
 
-        # ---- Lượt 2: ĐỈNH & GIỜ TRÊN NGƯỠNG — cộng theo từng mốc ------
+        # ---- Lượt 2: ĐỈNH, GIỜ TRÊN NGƯỠNG, MỐC ĐẦU/CUỐI --------------
+        #
+        # Mốc đầu và mốc cuối phải lấy ở ĐÂY, trên chuỗi đã cộng theo
+        # từng mốc, chứ không phải min/max của bảng số đo: nhà máy gửi
+        # số suốt đêm với giá trị 0, nên min(ts) của bảng là 00:00 mọi
+        # ngày — một con số luôn đúng cú pháp và luôn vô nghĩa. Cái cần
+        # biết là lúc nhà máy BẮT ĐẦU PHÁT, tức mốc đầu tiên vượt ngưỡng.
         nhip = max(tags.mapped('sample_seconds') or [0])
         cr.execute("""
             WITH theo_moc AS (
@@ -112,17 +118,20 @@ class EamHistorian(models.AbstractModel):
             SELECT max(v),
                    (array_agg(ts ORDER BY v DESC NULLS LAST))[1],
                    count(*) FILTER (WHERE v > %s),
-                   count(*)
+                   count(*),
+                   min(ts) FILTER (WHERE v > %s),
+                   max(ts) FILTER (WHERE v > %s)
             FROM theo_moc
         """.format(gn=cach_gop, bang=BANG),
-            (tags.ids, tu, den, nguong or 0.0))
-        dinh, dinh_luc, n_tren, n_moc = cr.fetchone()
+            (tags.ids, tu, den, nguong or 0.0, nguong or 0.0, nguong or 0.0))
+        dinh, dinh_luc, n_tren, n_moc, moc_dau, moc_cuoi = cr.fetchone()
 
         return {
             'gop': tong,
             'dinh': float(dinh) if dinh is not None else None,
             'dinh_luc': dinh_luc,
             'gio_tren_nguong': (n_tren * nhip / 3600.0) if nhip else None,
+            'moc_dau': moc_dau, 'moc_cuoi': moc_cuoi,
             'n': n, 'n_nghi': n_nghi, 'n_moc': n_moc,
             'so_diem_do': len(tags), 'nhip': nhip,
         }

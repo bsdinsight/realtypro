@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_target_list" model="ir.ui.view">
+        <field name="name">eam.energy.target.list</field>
+        <field name="model">eam.energy.target</field>
+        <field name="arch" type="xml">
+            <list string="Mục tiêu sản lượng" editable="bottom"
+                  multi_edit="1">
+                <field name="plant_id" width="220px"/>
+                <field name="nam"/>
+                <field name="thang"/>
+                <field name="p50" sum="Tổng P50"/>
+                <field name="p75" sum="Tổng P75"/>
+                <field name="p90" sum="Tổng P90"/>
+                <field name="cach_rai"/>
+                <field name="nguon" width="240px"/>
+                <field name="ghi_chu" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_target_form" model="ir.ui.view">
+        <field name="name">eam.energy.target.form</field>
+        <field name="model">eam.energy.target</field>
+        <field name="arch" type="xml">
+            <form string="Mục tiêu sản lượng">
+                <header>
+                    <button name="action_nhan_ban_sang_nam" type="object"
+                            string="Nhân bản sang năm sau"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-info" role="status">
+                        <b>P50 ≥ P75 ≥ P90.</b> Càng chắc chắn đạt thì con
+                        số càng thấp — P90 là mức vượt qua 90% số năm, và
+                        là mức <b>ngân hàng</b> dùng để tính khả năng trả
+                        nợ. Khai ngược chiều thì mọi phân tích rủi ro sau
+                        đó lộn ngược mà vẫn chạy trơn tru, nên hệ chặn
+                        ngay lúc lưu.
+                    </div>
+                    <group>
+                        <group string="Kỳ">
+                            <field name="plant_id"
+                                   options="{'no_create': True}"/>
+                            <field name="nam"/>
+                            <field name="thang"/>
+                        </group>
+                        <group string="Ba mức xác suất">
+                            <field name="p50"/>
+                            <field name="p75"/>
+                            <field name="p90"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Truy nguồn">
+                            <field name="nguon"
+                                   placeholder="Báo cáo mô phỏng gió WAsP 2025 · Phụ lục 3 HĐ vay…"/>
+                            <field name="cach_rai"/>
+                            <field name="ghi_chu"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_target_search" model="ir.ui.view">
+        <field name="name">eam.energy.target.search</field>
+        <field name="model">eam.energy.target</field>
+        <field name="arch" type="xml">
+            <search string="Tìm mục tiêu">
+                <field name="plant_id"/>
+                <field name="nam"/>
+                <filter name="f_thieu_p90" string="Chưa khai P90"
+                        domain="[('p90', '=', 0)]"/>
+                <filter name="f_khong_rai" string="Không rải theo ngày"
+                        domain="[('cach_rai', '=', 'khong')]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_nam" string="Năm"
+                        context="{'group_by': 'nam'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_target" model="ir.actions.act_window">
+        <field name="name">Mục tiêu sản lượng</field>
+        <field name="res_model">eam.energy.target</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_target_search"/>
+        <field name="context">{'search_default_g_nm': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai mục tiêu nào</p>
+            <p>Sản lượng không phải một con số mà là một <b>phân phối</b>:
+            gió năm nay mạnh hơn năm ngoái thì sản lượng khác, và không ai
+            điều khiển được chuyện đó.</p>
+            <p><b>P50</b> là kỳ vọng, dùng lập kế hoạch. <b>P90</b> là mức
+            ngân hàng dùng tính khả năng trả nợ. Khai một mức rồi gọi nó
+            là "kế hoạch" thì mọi câu hỏi về rủi ro sản lượng đều mất chỗ
+            trả lời.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_target" name="Mục tiêu sản lượng"
+              parent="eam_core.menu_eam_config"
+              action="action_target" sequence="70"/>
+
+</odoo>

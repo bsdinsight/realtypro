@@ -573,6 +573,83 @@ class EamDailyReport(models.Model):
                        t=r.display_name, a=r.so_o_trong))
         return {'nhac': len(tre)}
 
+    # ==================================================================
+    def luoi_in(self):
+        """Xếp các dòng vào ĐÚNG Ô của tờ giấy nhà máy đang dùng.
+
+        Tờ báo cáo của nhà máy không phải một danh sách dọc. Nó là một
+        lưới: ba khung cạnh nhau cho năng lượng / giờ / khí tượng, rồi
+        hằng số và KPI, rồi một dải điện năng theo giờ, rồi nhận xét.
+        Người trực đã quen đọc theo chỗ — ô nào ở đâu là một phần của
+        việc đọc nhanh.
+
+        Xếp ô làm ở ĐÂY chứ không trong bản in: bản in chỉ nên biết "vẽ
+        một khung nhãn–giá trị", còn dòng nào vào khung nào là luật, và
+        luật thì phải đọc được, sửa được, không nằm rải trong các thẻ
+        điều kiện của QWeb.
+        """
+        self.ensure_one()
+        ds = self.line_ids.filtered(
+            lambda l: l.do_duoc or l.profile_line_id.in_khi_trong)
+
+        def o(khoi, nguon=None, khac_nguon=None, cach=None, khong_cach=False):
+            r = ds.filtered(lambda l: l.khoi == khoi)
+            if nguon:
+                r = r.filtered(lambda l: l.profile_line_id.nguon in nguon)
+            if khac_nguon:
+                r = r.filtered(
+                    lambda l: l.profile_line_id.nguon not in khac_nguon)
+            if cach:
+                r = r.filtered(lambda l: l.profile_line_id.cach_lay in cach)
+            if khong_cach:
+                r = r.filtered(
+                    lambda l: l.profile_line_id.cach_lay not in MOC)
+            return r.sorted(lambda l: l.sequence)
+
+        MOC = ('moc_dau', 'moc_cuoi')
+        khoi = ds.filtered(lambda l: l.profile_line_id.nguon == 'khoi')
+
+        def ma_khoi(ma):
+            return khoi.filtered(
+                lambda l: l.profile_line_id.khoi_dac_biet == ma)[:1]
+
+        return {
+            # Bảng tổ máy chiếm nguyên chiều ngang, nên đứng riêng.
+            'bang': ma_khoi('bang_inverter') or ma_khoi('bang_to_may'),
+            # Tổn thất theo BẬC thuộc về khung năng lượng — nó nói về
+            # đường đi của điện. Tổn thất theo NGUYÊN NHÂN DỪNG thì
+            # không: nó nói về sự cố, và tờ của nhà máy để riêng.
+            'nang_luong': (o('san_luong', khac_nguon=('khoi',),
+                             khong_cach=True)
+                           + o('ton_that', nguon=('chain', 'cong_thuc'))),
+            'gio': o('dung_may', khac_nguon=('khoi',)),
+            'kha_dung': o('kha_dung'),
+            'khi_tuong': o('khi_tuong', khac_nguon=('khoi', 'nguoi')),
+            'mat_theo_nn': o('ton_that', nguon=('downtime',)),
+            'hang_so': o('hieu_suat', nguon=('nha_may',)),
+            'kpi': o('hieu_suat', khac_nguon=('nha_may', 'khoi')),
+            'theo_gio': ma_khoi('san_luong_gio') or ma_khoi('bieu_do_ngay'),
+            'dau_cuoi': o('san_luong', cach=MOC),
+            'nhan_su': o('nhan_su'),
+            'ghi_chu': o('ghi_chu') + o('khi_tuong', nguon=('nguoi',)),
+            'khoi_them': khoi.filtered(
+                lambda l: l.profile_line_id.khoi_dac_biet
+                in ('gio_nguyen_nhan', 'hoa_gio', 'cong_to')),
+        }
+
+    def action_in(self):
+        """In bằng khổ giấy HỢP VỚI BỐ CỤC đã khai trên hồ sơ.
+
+        Một hành động in chỉ mang được một khổ giấy. Bố cục lưới ba
+        khung cần A4 ngang; ép nó vào khổ dọc thì ba khung chồng lên
+        nhau, mà ép bố cục dọc vào khổ ngang thì nửa trang bỏ trống.
+        """
+        self.ensure_one()
+        ref = ('eam_daily_report.action_in_bao_cao_ngang'
+               if self.profile_id.bo_cuc == 'luoi'
+               else 'eam_daily_report.action_in_bao_cao_ngay')
+        return self.env.ref(ref).report_action(self)
+
 
 class EamDailyReviseWizard(models.TransientModel):
     _name = 'eam.daily.revise.wizard'

@@ -23,6 +23,7 @@
         <field name="tieu_de">DAILY PLANT OPERATION REPORT</field>
         <field name="note">Nhãn giữ nguyên chữ trên tờ của nhà máy để đặt cạnh nhau so được.
 Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã nào thì chính dòng đó nói rõ nhà máy đang có những mã gì.</field>
+        <field name="bo_cuc">luoi</field>
     </record>
     <record id="pl_pv_irr" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>

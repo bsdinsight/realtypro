@@ -78,6 +78,7 @@ trong ba ngày.
         'data/eam_daily_profile_wind.xml',
         'data/eam_daily_report_cron.xml',
         'report/khoi_dung_san.xml',
+        'report/bao_cao_luoi.xml',
         'report/eam_daily_report_report.xml',
         'views/eam_location_views.xml',
         'views/eam_daily_profile_views.xml',

@@ -112,6 +112,15 @@ class EamDailyProfile(models.Model):
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         'res.company', default=lambda s: s.env.company)
+    bo_cuc = fields.Selection(
+        [('doc', 'Danh sách dọc theo khối'),
+         ('luoi', 'Lưới ngang — ba khung cạnh nhau')],
+        string='Bố cục bản in', default='doc', required=True,
+        help='Tờ báo cáo của nhà máy điện mặt trời không phải danh sách '
+             'dọc: ba khung năng lượng / giờ / khí tượng nằm cạnh nhau, '
+             'rồi hằng số và KPI, rồi dải điện năng theo giờ. Người trực '
+             'đọc theo CHỖ — ô nào ở đâu là một phần của việc đọc nhanh, '
+             'nên đổi bố cục là đổi tốc độ đọc chứ không chỉ đổi hình.')
     note = fields.Text(string='Ghi chú')
 
     _code_uniq = models.Constraint('unique(code, company_id)',

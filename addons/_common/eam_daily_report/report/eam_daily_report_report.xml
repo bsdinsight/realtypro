@@ -17,7 +17,16 @@
     <template id="bao_cao_ngay">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
+                <!-- Bố cục LƯỚI đi đường riêng: nó dựng theo tờ giấy nhà
+                     máy đang dùng, không qua khung chuẩn của Odoo — tiêu
+                     đề công ty và lề mặc định ăn mất chiều ngang mà lưới
+                     ba khung cần. -->
+                <t t-if="o.profile_id.bo_cuc == 'luoi'">
+                    <div class="page">
+                        <t t-call="eam_daily_report.bao_cao_ngay_luoi"/>
+                    </div>
+                </t>
+                <t t-else="" t-call="web.external_layout">
                     <div class="page">
 
                         <h3 class="text-center mb-0">

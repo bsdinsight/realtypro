@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bố cục LƯỚI NGANG, dựng theo tờ báo cáo nhà máy đang dùng.
+
+     Ba khung cạnh nhau, không xếp dọc. Người trực đọc theo CHỖ: giờ
+     dừng luôn ở giữa, khí tượng luôn bên phải. Xếp dọc thì mọi con số
+     vẫn đúng mà mỗi lần đọc phải dò lại từ đầu.
+
+     Việc xếp dòng nào vào khung nào nằm ở ``luoi_in()`` bên Python, để
+     luật đọc được và sửa được — bản in chỉ biết vẽ một khung
+     nhãn–giá trị–đơn vị. -->
+<odoo>
+
+    <record id="paper_bcn_ngang" model="report.paperformat">
+        <field name="name">Báo cáo ngày — A4 ngang</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">12</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">6</field>
+        <field name="margin_right">6</field>
+        <field name="header_spacing">6</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <!-- Một khung: nhãn | giá trị | đơn vị. Dùng lại cho mọi ô. -->
+    <template id="khung_so">
+        <table class="table table-sm table-bordered mb-0"
+               style="font-size:8px">
+            <tr t-if="tieu_de">
+                <th colspan="3" class="bcn-band" t-esc="tieu_de"/>
+            </tr>
+            <tr t-foreach="dong" t-as="l">
+                <td style="width:62%" t-esc="l.name"/>
+                <td class="text-end fw-bold" style="width:24%">
+                    <span t-esc="l.hien_thi"/>
+                </td>
+                <td class="text-muted" style="width:14%"
+                    t-esc="l.don_vi or ''"/>
+            </tr>
+        </table>
+    </template>
+
+    <template id="bao_cao_ngay_luoi">
+        <t t-set="g" t-value="o.luoi_in()"/>
+        <style>
+            .bcn-band { background:#1F3864; color:#fff; font-weight:bold;
+                        padding:2px 4px; font-size:8px; }
+            .bcn t td, .bcn t th { padding:1px 3px; }
+            .bcn .table td, .bcn .table th { padding:1px 3px;
+                                             vertical-align:middle; }
+        </style>
+        <div class="bcn">
+            <table style="width:100%; border:0">
+                <tr>
+                    <td style="border:0">
+                        <h5 class="mb-0"><b>DAILY PLANT OPERATION REPORT</b></h5>
+                        <div style="font-size:9px">
+                            <span t-field="o.plant_id.name"/> ·
+                            <b><span t-field="o.date"/></b>
+                        </div>
+                    </td>
+                    <td style="border:0; text-align:right; font-size:8px"
+                        class="text-muted">
+                        <span t-if="o.state == 'nhap'"><b>NHÁP — chưa chốt</b></span>
+                        <span t-if="o.ban_so &gt; 1">· bản <span t-esc="o.ban_so"/></span>
+                        <div t-if="o.so_chua_do">
+                            <span t-esc="o.so_chua_do"/> ô chưa đo được
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== Bảng tổ máy: chiếm nguyên chiều ngang ===== -->
+            <t t-if="g['bang']">
+                <div class="bcn-band mt-1">INVERTER</div>
+                <t t-set="ma" t-value="g['bang'].profile_line_id.khoi_dac_biet"/>
+                <t t-if="ma == 'bang_inverter'"
+                   t-call="eam_daily_report.khoi_bang_inverter"/>
+                <t t-if="ma == 'bang_to_may'"
+                   t-call="eam_daily_report.khoi_bang_to_may"/>
+            </t>
+
+            <!-- ===== Ba khung cạnh nhau ===== -->
+            <table style="width:100%; border:0" class="mt-1">
+                <tr style="vertical-align:top">
+                    <td style="width:38%; border:0; padding-right:4px">
+                        <t t-set="tieu_de" t-value="'PLANT - ENERGY'"/>
+                        <t t-set="dong" t-value="g['nang_luong']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                    </td>
+                    <td style="width:30%; border:0; padding-right:4px">
+                        <t t-set="tieu_de" t-value="'PLANT - HOURS'"/>
+                        <t t-set="dong" t-value="g['gio']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                        <t t-if="g['kha_dung']">
+                            <t t-set="tieu_de" t-value="'AVAILABILITY'"/>
+                            <t t-set="dong" t-value="g['kha_dung']"/>
+                            <t t-call="eam_daily_report.khung_so"/>
+                        </t>
+                    </td>
+                    <td style="width:32%; border:0">
+                        <t t-set="tieu_de" t-value="'PLANT - WEATHER'"/>
+                        <t t-set="dong" t-value="g['khi_tuong']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                        <t t-if="g['mat_theo_nn']">
+                            <t t-set="tieu_de"
+                               t-value="'ENERGY LOSS BY OUTAGE'"/>
+                            <t t-set="dong" t-value="g['mat_theo_nn']"/>
+                            <t t-call="eam_daily_report.khung_so"/>
+                        </t>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== Hằng số nhà máy | KPI ===== -->
+            <table style="width:100%; border:0" class="mt-1">
+                <tr style="vertical-align:top">
+                    <td style="width:38%; border:0; padding-right:4px">
+                        <t t-set="tieu_de" t-value="'SITE CONSTANTS'"/>
+                        <t t-set="dong" t-value="g['hang_so']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                    </td>
+                    <td style="width:62%; border:0">
+                        <t t-set="tieu_de" t-value="'KPI'"/>
+                        <t t-set="dong" t-value="g['kpi']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== Dải điện năng theo giờ ===== -->
+            <t t-if="g['theo_gio']">
+                <div class="bcn-band mt-1">HOURLY ENERGY OUTPUT</div>
+                <t t-set="ma"
+                   t-value="g['theo_gio'].profile_line_id.khoi_dac_biet"/>
+                <t t-if="ma == 'san_luong_gio'"
+                   t-call="eam_daily_report.khoi_san_luong_gio"/>
+                <t t-if="ma == 'bieu_do_ngay'"
+                   t-call="eam_daily_report.khoi_bieu_do"/>
+            </t>
+
+            <!-- ===== Nhận xét | Mốc đầu-cuối ===== -->
+            <table style="width:100%; border:0" class="mt-1">
+                <tr style="vertical-align:top">
+                    <td style="width:62%; border:0; padding-right:4px">
+                        <div class="bcn-band">REMARKS</div>
+                        <div style="border:1px solid #dee2e6; min-height:48px;
+                                    padding:3px; font-size:8px">
+                            <t t-foreach="g['ghi_chu']" t-as="l">
+                                <div>— <span t-esc="l.hien_thi"/></div>
+                            </t>
+                            <div t-field="o.hoat_dong"/>
+                            <div t-if="o.su_co" t-field="o.su_co"/>
+                        </div>
+                    </td>
+                    <td style="width:38%; border:0">
+                        <t t-set="tieu_de" t-value="'FIRST / LAST'"/>
+                        <t t-set="dong" t-value="g['dau_cuoi'] + g['nhan_su']"/>
+                        <t t-call="eam_daily_report.khung_so"/>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Khối phụ: chỉ in khi hồ sơ có khai -->
+            <t t-foreach="g['khoi_them']" t-as="kb">
+                <t t-set="ma" t-value="kb.profile_line_id.khoi_dac_biet"/>
+                <div class="bcn-band mt-1" t-esc="kb.name"/>
+                <t t-if="ma == 'gio_nguyen_nhan'"
+                   t-call="eam_daily_report.khoi_gio_nguyen_nhan"/>
+                <t t-if="ma == 'hoa_gio'"
+                   t-call="eam_daily_report.khoi_hoa_gio"/>
+            </t>
+        </div>
+    </template>
+
+    <record id="action_in_bao_cao_ngang" model="ir.actions.report">
+        <field name="name">Báo cáo vận hành ngày (khổ ngang)</field>
+        <field name="model">eam.daily.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eam_daily_report.bao_cao_ngay</field>
+        <field name="report_file">eam_daily_report.bao_cao_ngay</field>
+        <field name="paperformat_id" ref="paper_bcn_ngang"/>
+        <field name="print_report_name">
+            'BCN_%s_%s' % (object.plant_id.code or '', object.date)
+        </field>
+    </record>
+
+</odoo>

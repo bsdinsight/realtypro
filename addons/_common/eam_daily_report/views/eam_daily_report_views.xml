@@ -23,6 +23,8 @@
                             string="Mở lại"
                             invisible="state != 'chot'"
                             confirm="Mở lại một tờ đã chốt chỉ nên làm khi tờ CHƯA gửi đi. Đã gửi rồi thì dùng 'Sửa ra bản mới' để giữ vết."/>
+                    <button name="action_xuat_excel" type="object"
+                            string="Xuất Excel" icon="fa-file-excel-o"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="nhap,chot"/>
                 </header>

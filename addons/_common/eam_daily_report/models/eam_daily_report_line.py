@@ -125,16 +125,24 @@ class EamDailyReportLine(models.Model):
         trực đã ghi rõ "Không" — một tờ báo cáo nói sai đúng cái ô không
         được phép nói sai.
 
-        Ô SỐ thì KHÔNG tự suy được: nhập 0 khách và chưa đếm khách là
-        hai chuyện khác nhau, và chỉ có cái nút phân biệt được.
+        Ô SỐ chỉ mơ hồ ở đúng một giá trị: SỐ KHÔNG. Nhập 0 khách và
+        chưa đếm khách là hai chuyện khác nhau, và chỉ cái nút phân biệt
+        được — nên ở 0 thì cờ vẫn do người gạt. Nhưng một con số KHÁC
+        không thì không mơ hồ: gõ được 7 nghĩa là đã đếm. Để nguyên cờ
+        tắt ở đó là bản in ra "—" cho ô vừa ghi 7 — cùng một lỗi với ô
+        chữ, chỉ khác chỗ xảy ra.
         """
-        if 'gia_tri_chu' not in vals:
-            return
-        for l in self.filtered(lambda x: x.nguon == 'nguoi'
-                               and x.kieu == 'chu'):
-            co = bool((l.gia_tri_chu or '').strip())
-            if l.do_duoc != co:
-                super(EamDailyReportLine, l).write({'do_duoc': co})
+        if 'gia_tri_chu' in vals:
+            for l in self.filtered(lambda x: x.nguon == 'nguoi'
+                                   and x.kieu == 'chu'):
+                co = bool((l.gia_tri_chu or '').strip())
+                if l.do_duoc != co:
+                    super(EamDailyReportLine, l).write({'do_duoc': co})
+        if 'gia_tri' in vals and 'do_duoc' not in vals:
+            for l in self.filtered(lambda x: x.nguon == 'nguoi'
+                                   and x.kieu != 'chu'
+                                   and x.gia_tri and not x.do_duoc):
+                super(EamDailyReportLine, l).write({'do_duoc': True})
 
     def _ghi_nguoc(self):
         self.ensure_one()

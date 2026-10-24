@@ -48,6 +48,7 @@ NGUON = [
     ('chain', 'Bậc đo trong chuỗi'),
     ('avail', 'Khả dụng trong ngày'),
     ('downtime', 'Giờ dừng theo nhóm'),
+    ('gio_vh', 'Giờ vận hành trong ngày'),
     ('historian', 'Kho chuỗi thời gian'),
     ('unit', 'Tổng bảng tổ máy'),
     ('target', 'Mục tiêu sản lượng'),

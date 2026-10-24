@@ -136,6 +136,21 @@ class EamDailyReport(models.Model):
         o_nha_may = tags.filtered(lambda t: t.location_id == self.plant_id)
         return o_nha_may or tags
 
+    def _so_to_may(self):
+        """Số tổ máy của nhà máy — mẫu số để quy giờ-máy về giờ nhà máy.
+
+        Ưu tiên con số NGƯỜI KHAI trên hồ sơ nhà máy; không có thì đếm
+        vị trí đã gắn cờ tổ máy. Không có cả hai thì trả 0 để nơi gọi
+        nói "chưa khai" — chia cho một con số đoán bừa ra một tỷ lệ
+        trông hợp lý và sai.
+        """
+        self.ensure_one()
+        nm = self.plant_id
+        if getattr(nm, 'so_don_vi_kha_dung', 0):
+            return nm.so_don_vi_kha_dung
+        return self.env['eam.location'].search_count([
+            ('id', 'child_of', nm.id), ('la_to_may', '=', True)])
+
     def bieu_do_ngay(self, buoc_phut=30):
         """Công suất toàn trại và tốc độ gió theo bước thời gian."""
         self.ensure_one()

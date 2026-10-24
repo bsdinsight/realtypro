@@ -341,11 +341,91 @@ class EamDailyReportLine(models.Model):
                 '%(n)d khoảng dừng đã có sản lượng mất nhưng CHƯA quy ra '
                 'tiền — khai giá điện trên nhà máy hoặc hợp đồng mua bán '
                 'điện, rồi bấm tính tiền trên sổ dừng máy', n=chua))
-        khoa = {'kwh': 'kwh', 'tien': 'tien'}.get(c.truong, 'gio')
+        khoa = {'kwh': 'kwh', 'tien': 'tien'}.get(
+            c.truong, 'gio' if c.truong != 'gio_nm' else 'gio')
         tong = sum(x[khoa] for x in cac)
-        self._dat(tong * c.he_so, _(
-            '%(n)d khoảng dừng · %(g)d nhóm',
-            n=sum(x['so'] for x in cac), g=len(cac)))
+        vet = _('%(n)d khoảng dừng · %(g)d nhóm',
+                n=sum(x['so'] for x in cac), g=len(cac))
+        if c.truong == 'gio_nm':
+            # GIỜ-MÁY khác GIỜ-NHÀ MÁY, và đó là chỗ một tờ báo cáo nói
+            # sai mà không ai bắt được. Bốn bộ nghịch lưu dừng một tiếng
+            # là 4 giờ-máy, nhưng nhà máy vẫn chạy suốt — trừ 4 giờ ấy
+            # khỏi giờ vận hành của NHÀ MÁY là trộn hai mẫu số, và ra
+            # một con số nhỏ hơn thật mà vẫn dương nên trông vẫn hợp lý.
+            n = self.report_id._so_to_may()
+            if not n:
+                return self._chua_do(_(
+                    'nhà máy chưa khai số tổ máy, nên không quy được '
+                    'giờ-máy về giờ cấp nhà máy'))
+            tong = tong / float(n)
+            vet = _('%(v)s · quy về cấp nhà máy: chia cho %(n)d tổ máy',
+                    v=vet, n=n)
+        self._dat(tong * c.he_so, vet)
+
+    def _rot_gio_vh(self, ctx, c):
+        """Ba con số giờ vận hành trong ngày, tính ở MỘT chỗ.
+
+        Tờ báo cáo của nhà máy in cả ba: giờ vận hành danh nghĩa, tổng
+        giờ dừng, và giờ vận hành dùng cho tỷ số hiệu suất. Con số thứ
+        ba là hiệu của hai con số đầu — để nó tự tính ở chỗ khác là mở
+        đường cho ba dòng trên cùng một tờ không trừ ra nhau.
+
+        ``danh_nghia``  khoảng từ lúc nhà máy bắt đầu phát tới lúc ngắt
+                        cuối cùng. KHÔNG phải số giờ có số đo: nhà máy
+                        gửi số suốt đêm với giá trị 0.
+        ``dung``        tổng giờ dừng mọi nhóm trong ngày.
+        ``cho_pr``      danh nghĩa trừ giờ dừng.
+        """
+        tags = self.report_id._tag_cong_suat()
+        if not tags:
+            return self._chua_do(_(
+                'nhà máy chưa khai điểm đo nào loại "công suất"'))
+        kq = self.env['eam.historian'].tom_tat_ngay(
+            tags.ids, ctx['tu'], ctx['den'], c.nguong, True)
+        if not kq or kq.get('loi') or not kq.get('n'):
+            return self._chua_do((kq or {}).get('loi') or _(
+                'không có số đo công suất nào trong ngày'))
+        dau, cuoi = kq.get('moc_dau'), kq.get('moc_cuoi')
+        if not dau or not cuoi:
+            return self._chua_do(_(
+                'không mốc đo nào vượt ngưỡng %.1f trong ngày',
+                c.nguong or 0))
+        danh_nghia = (cuoi - dau).total_seconds() / 3600.0
+        mui = pytz.timezone(self.report_id._mui_gio())
+        khung = _('%(a)s → %(b)s giờ %(m)s',
+                  a=pytz.UTC.localize(dau).astimezone(mui).strftime('%H:%M'),
+                  b=pytz.UTC.localize(cuoi).astimezone(mui).strftime('%H:%M'),
+                  m=mui.zone)
+        if c.truong == 'danh_nghia':
+            return self._dat(danh_nghia * c.he_so, khung)
+        if ctx.get('dung') is None:
+            ctx['dung'] = self.report_id.plant_id.gio_theo_nhom(
+                ctx['tu'], ctx['den'])
+        # Giờ dừng cộng ra GIỜ-MÁY; khung phát ở trên là GIỜ-NHÀ MÁY.
+        # Phải quy về cùng một mẫu số trước khi trừ.
+        n_may = self.report_id._so_to_may()
+        if not n_may:
+            return self._chua_do(_(
+                'nhà máy chưa khai số tổ máy, nên không quy được giờ-máy '
+                'về giờ cấp nhà máy'))
+        tong_dung = sum(x['gio'] for x in ctx['dung'].values()) / float(n_may)
+        if c.truong == 'dung':
+            return self._dat(tong_dung * c.he_so, _(
+                '%(g)d nhóm có giờ dừng · quy về cấp nhà máy: chia cho '
+                '%(n)d tổ máy',
+                g=len([x for x in ctx['dung'].values() if x['gio']]),
+                n=n_may))
+        # Khoảng dừng NẰM NGOÀI khung phát — ban đêm chẳng hạn — vẫn vào
+        # tổng giờ dừng, nên hiệu có thể âm. Kẹp về 0 và nói ra, thay vì
+        # in một số giờ âm trông như lỗi gõ phím.
+        con = danh_nghia - tong_dung
+        if con < 0:
+            return self._dat(0.0, _(
+                'giờ dừng (%(d).2f h) vượt khung phát (%(k).2f h) — có '
+                'khoảng dừng nằm ngoài giờ phát', d=tong_dung, k=danh_nghia))
+        self._dat(con * c.he_so, _(
+            '%(k).2f h khung phát trừ %(d).2f h giờ dừng · %(w)s',
+            k=danh_nghia, d=tong_dung, w=khung))
 
     def _rot_historian(self, ctx, c):
         tags = self._tim_tag(c.tag_code)
@@ -440,9 +520,23 @@ class EamDailyReportLine(models.Model):
                                   t.get('so_to_may', 0)))
 
     def _rot_target(self, ctx, c):
-        """Mục tiêu LUỸ KẾ tới ngày này, ở mức đã khai."""
-        lk = self.env['eam.energy.target'].luy_ke_den(
-            self.report_id.plant_id, self.report_id.date)
+        """Mục tiêu sản lượng: luỹ kế tới ngày này, hoặc CẢ THÁNG."""
+        T = self.env['eam.energy.target']
+        ngay = self.report_id.date
+        # Mục tiêu CẢ THÁNG đọc thẳng bản ghi tháng, không đi qua phép
+        # luỹ kế. Mục tiêu khai "không rải theo ngày" thì phép luỹ kế từ
+        # chối trả số trước ngày cuối tháng — đúng với dòng luỹ kế, sai
+        # với dòng cả tháng: con số ấy có sẵn từ đầu tháng.
+        if c.truong == 'ca_thang':
+            t = T.cua_thang(self.report_id.plant_id, ngay)
+            if not t:
+                return self._chua_do(_(
+                    'chưa khai mục tiêu cho tháng %(t)02d/%(n)d của nhà '
+                    'máy này', t=ngay.month, n=ngay.year))
+            return self._dat(t[c.muc] * c.he_so, _(
+                'mục tiêu CẢ THÁNG %(t)02d/%(n)d · nguồn: %(g)s',
+                t=ngay.month, n=ngay.year, g=t.nguon))
+        lk = T.luy_ke_den(self.report_id.plant_id, ngay)
         if not lk.get('do_duoc'):
             return self._chua_do(lk.get('ly_do') or _('chưa khai mục tiêu'))
         # Nói rõ con số là CHIA ĐỀU. Trình bày nó như mục tiêu riêng của

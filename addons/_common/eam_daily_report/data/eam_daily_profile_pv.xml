@@ -172,7 +172,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="profile_id" ref="profile_pv"/>
         <field name="sequence">30</field>
         <field name="khoi">san_luong</field>
-        <field name="name">Plant Energy Delivered to Grid EVN (171)</field>
+        <field name="name">Plant Energy Delivered to Grid EVN (171 AMI)</field>
         <field name="kieu">so</field>
         <field name="nguon">chain</field>
         <field name="don_vi">kWh</field>
@@ -222,9 +222,9 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
     </record>
     <record id="pl_pv_elk" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
-        <field name="sequence">70</field>
+        <field name="sequence">45</field>
         <field name="khoi">san_luong</field>
-        <field name="name">Luỹ kế tháng tới hôm nay</field>
+        <field name="name">Energy accumulated of this month at 173M (EVN FIT tariff meter)</field>
         <field name="kieu">so</field>
         <field name="nguon">chain</field>
         <field name="don_vi">kWh</field>
@@ -236,7 +236,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="profile_id" ref="profile_pv"/>
         <field name="sequence">80</field>
         <field name="khoi">san_luong</field>
-        <field name="name">Luỹ kế năm tới hôm nay</field>
+        <field name="name">Energy accumulated of this year at 173M (EVN FIT tariff meter)</field>
         <field name="kieu">so</field>
         <field name="nguon">chain</field>
         <field name="don_vi">kWh</field>
@@ -413,14 +413,14 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
     </record>
     <record id="pl_pv_dtg" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
-        <field name="sequence">10</field>
+        <field name="sequence">110</field>
         <field name="khoi">dung_may</field>
-        <field name="name">Tổng giờ dừng mọi nhóm</field>
+        <field name="name">Total Outage</field>
         <field name="kieu">so</field>
         <field name="nguon">downtime</field>
         <field name="don_vi">h</field>
         <field name="so_le">2</field>
-        <field name="truong">gio</field>
+        <field name="truong">gio_nm</field>
     </record>
     <record id="pl_pv_ns" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
@@ -497,7 +497,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
     <!-- 3. Giờ dừng tách theo nguyên nhân -->
     <record id="pl_pv_gnn" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
-        <field name="sequence">20</field>
+        <field name="sequence">130</field>
         <field name="khoi">dung_may</field>
         <field name="name">Downtime by cause</field>
         <field name="kieu">chu</field>
@@ -533,6 +533,301 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="cach_lay">moc_cuoi</field>
         <field name="nguong">100</field>
         <field name="so_le">0</field>
+    </record>
+
+    <!-- ======== PLANT - HOURS: 10 dòng đúng tên tờ Khánh Hoà ========
+         Sáu dòng nguyên nhân neo vào NHÓM GIỜ DỪNG đã khai, nên đổi
+         cách xếp loại là tờ báo cáo đổi theo — không phải sửa mã.
+
+         Hai dòng cuối (bất khả kháng, mất dữ liệu) KHÔNG có trên tờ của
+         khách. Thêm vào vì danh mục của ta có 8 nhóm: in 6 nhóm rồi in
+         "Total Outage" cộng cả 8 thì sáu dòng không cộng ra dòng tổng,
+         mà chẳng gì trên giấy nói vì sao. -->
+    <record id="pl_pv_hnom" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">10</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Nominal operational hours</field>
+        <field name="kieu">so</field>
+        <field name="nguon">gio_vh</field>
+        <field name="truong">danh_nghia</field>
+        <field name="nguong">100</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hgrid" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">20</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">External grid Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_grid"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hcur" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">30</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Curtailment Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_curtail"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hpm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">40</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Preventive Maintenance Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_pm"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hext" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">50</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">External Onshore Comp. Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_ext"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hpr" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">60</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">System Operational hours (for PR)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">gio_vh</field>
+        <field name="truong">cho_pr</field>
+        <field name="nguong">100</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hcomp" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Comp. Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_comp"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hom" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">80</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">O&amp;M Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_om"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hfm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">90</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Force majeure &amp; environment Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_fm"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hgap" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">95</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">Monitoring data gap</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">gio_nm</field>
+        <field name="group_id" ref="eam_downtime.group_data"/>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_hsys" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">100</field>
+        <field name="khoi">dung_may</field>
+        <field name="name">System Operational hours</field>
+        <field name="kieu">so</field>
+        <field name="nguon">gio_vh</field>
+        <field name="truong">danh_nghia</field>
+        <field name="nguong">100</field>
+        <field name="don_vi">h</field>
+        <field name="so_le">2</field>
+    </record>
+
+    <!-- ======== Bốn ô SẢN LƯỢNG MẤT theo nguyên nhân ======== -->
+    <record id="pl_pv_mcur" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">50</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Curtailment Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_curtail"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mcomp" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">60</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Comp. Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_comp"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mgrid" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Grid Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_grid"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mpm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">80</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Preventive Maintenance Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_pm"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+
+    <!-- ======== PLANT - ENERGY: bốn dòng còn thiếu ======== -->
+    <record id="pl_pv_pk" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">5</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Daily Peak AC Power (entire plant)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">*_P_AC</field>
+        <field name="cach_lay">dinh</field>
+        <field name="don_vi">kW</field>
+        <field name="so_le">1</field>
+    </record>
+    <record id="pl_pv_pkt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">6</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Daily Peak AC Power — time</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">*_P_AC</field>
+        <field name="cach_lay">dinh_luc</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_pv_lk171" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">35</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy accumulated of this month (171 AMI)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">GNT</field>
+        <field name="truong">luy_ke_thang</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+    </record>
+    <!-- Mục tiêu CẢ THÁNG, không phải luỹ kế tới hôm nay: tờ báo cáo
+         đặt nó cạnh sản lượng luỹ kế để người đọc biết còn phải phát
+         bao nhiêu nữa. -->
+    <record id="pl_pv_tgt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">70</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Target Energy of this month at 173M (EVN FIT tariff meter)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">target</field>
+        <field name="truong">ca_thang</field>
+        <field name="muc">p50</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+    </record>
+
+    <!-- Bốn ô còn lại của sản lượng mất. Tờ của khách in bốn ô vì bốn
+         nguyên nhân kia bằng không hôm đó; in thiếu thì tổng bốn ô nhỏ
+         hơn dòng "sản lượng mất do dừng máy" mà không gì nói vì sao. -->
+    <record id="pl_pv_mom" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">90</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for O&amp;M Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_om"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mext" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">100</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for External Onshore Comp. Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_ext"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mfm" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">110</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Force majeure &amp; environment Outage</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_fm"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
+    </record>
+    <record id="pl_pv_mgap" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">120</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss for Monitoring data gap</field>
+        <field name="kieu">so</field>
+        <field name="nguon">downtime</field>
+        <field name="truong">kwh</field>
+        <field name="group_id" ref="eam_downtime.group_data"/>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">3</field>
     </record>
 
 </odoo>

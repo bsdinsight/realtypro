@@ -37,8 +37,11 @@ class EamLocation(models.Model):
              'tua-bin tính theo BỘI SỐ của con số này, không tính theo '
              'mét tuyệt đối.')
     hub_height_m = fields.Float(string='Cao độ trục (m)', digits=(16, 1))
-    rated_power_mw = fields.Float(string='Công suất đặt (MW)',
-                                  digits=(16, 3))
+    # rated_power_mw dời về eam_core: nó là thuộc tính NỀN của vị
+    # trí (bảng hiệu suất tổ máy và phần sản lượng theo kỳ đều cần,
+    # và cả hai chạy được khi không có bản đồ). Để ở đây thì bản đồ
+    # cần bảng tổ máy để tô màu, mà bảng tổ máy lại cần bản đồ để
+    # biết công suất — Odoo không giải được vòng ấy.
 
     @api.depends('latitude', 'longitude')
     def _compute_has_coords(self):
@@ -382,9 +385,15 @@ class EamLocation(models.Model):
                 'lost_money': round(sum(p['lost_money'] for p in diem)),
                 'wo_open': sum(p['wo_open'] for p in diem),
                 'wo_hold': sum(p['wo_hold'] for p in diem),
+                # LỌC THEO NHÀ MÁY đang xem. Trước đây đếm trên toàn
+                # bộ cơ sở dữ liệu, nên panel của một nhà máy 12 trụ
+                # hiện "chưa có toạ độ 17" — đếm luôn vị trí của nhà máy
+                # khác. Hai mẫu số khác nhau đứng cạnh nhau là chỗ người
+                # đọc mất tin vào cả panel.
                 'no_coords': self.search_count([
                     ('location_type', '=', 'position'),
-                    ('has_coords', '=', False)]),
+                    ('has_coords', '=', False)] + (
+                    [('id', 'child_of', nha_may.id)] if nha_may else [])),
                 'pairs': len(cap),
             },
             # Đồng tiền lấy từ chính các khoảng dừng, KHÔNG lấy của công

@@ -32,9 +32,12 @@
                         <b t-esc="state.data.summary.n"/></div>
                     <div class="eam-kv"><span>Công suất đặt</span>
                         <b><t t-esc="so(state.data.summary.mw_total)"/> MW</b></div>
-                    <div class="eam-kv"><span>Đang phát</span>
-                        <b class="text-success">
+                    <div class="eam-kv"><span>Công suất SẴN SÀNG</span>
+                        <b class="text-success" t-att-title="'Tổng công suất ĐẶT của những tổ máy không có khoảng dừng mở tại mốc xem — KHÔNG phải công suất đang phát. Ngày lặng gió hoàn toàn con số này vẫn bằng công suất đặt.'">
                             <t t-esc="so(state.data.summary.mw_running)"/> MW</b></div>
+                    <div class="eam-kv" t-if="sl and sl.co_so_ngay">
+                        <span>Công suất TRUNG BÌNH ngày</span>
+                        <b><t t-esc="so(csTrungBinh(sl.kwh_ngay))"/> kW</b></div>
                     <div class="eam-kv"><span>Khả dụng bình quân</span>
                         <b t-if="state.data.summary.avail === null">—</b>
                         <b t-else=""><t t-esc="state.data.summary.avail"/>%
@@ -60,7 +63,7 @@
                         <b class="text-danger"
                            t-esc="state.data.summary.pairs"/></div>
                     <div class="eam-kv" t-if="state.data.summary.no_coords">
-                        <span>Chưa có toạ độ</span>
+                        <span t-att-title="'Đếm trên MỌI vị trí thiết bị của nhà máy, không chỉ tổ máy — nên con số này có thể lớn hơn số vị trí ở trên.'">Vị trí thiếu toạ độ</span>
                         <b class="text-warning"
                            t-esc="state.data.summary.no_coords"/></div>
                     <div class="mt-2">
@@ -109,6 +112,34 @@
                                 t-on-click="() => this.doiToMau('erect')">
                             Tiến độ dựng máy</button>
                     </div>
+                    <div class="btn-group btn-group-sm w-100 mt-1"
+                         t-if="coSanLuong">
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.toMau === 'cf'}"
+                                t-on-click="() => this.doiToMau('cf')">
+                            Hệ số công suất</button>
+                        <button class="btn btn-outline-secondary"
+                                t-att-class="{'active': state.toMau === 'kd'}"
+                                t-on-click="() => this.doiToMau('kd')">
+                            Khả dụng</button>
+                    </div>
+                    <label class="eam-chk mt-1" t-if="coSanLuong">
+                        <input type="checkbox" t-att-checked="state.coMat"
+                               t-on-change="() => this.batCoMat()"/>
+                        <span>Cỡ điểm theo sản lượng MẤT</span>
+                    </label>
+                    <div class="eam-note" t-if="state.toMau === 'cf'">
+                        Thang tô chuẩn hoá về <b>mức cao nhất trong
+                        ngày</b>, không về 100%: ngày lặng gió cả trại
+                        dưới 10%, tô theo 100% thì mười hai chấm đỏ như
+                        nhau và không còn phân biệt được máy nào kém.
+                    </div>
+                    <div class="eam-note"
+                         t-if="state.toMau === 'cf' or state.toMau === 'kd'">
+                        Vị trí <b>chưa có số của ngày đang xem</b> để
+                        xám. Một bản đồ xanh rờn trong ngày chưa có số
+                        nào là bản đồ đang nói dối.
+                    </div>
                     <div class="eam-thang" t-if="state.toMau === 'erect'">
                         <span>0%</span><i/><span>100%</span>
                     </div>
@@ -117,6 +148,44 @@
                         đỏ — chưa khai khác với chưa làm, tô đỏ sẽ biến
                         một lỗ hổng dữ liệu thành báo động giả.
                     </div>
+                </div>
+
+                <div class="eam-box" t-if="sl">
+                    <div class="eam-box-h">Sản lượng</div>
+                    <t t-if="sl.co_so_ngay">
+                        <div class="eam-kv"><span>Ngày <t t-esc="sl.ngay"/></span>
+                            <b><t t-esc="so(sl.kwh_ngay)"/> kWh</b></div>
+                        <div class="eam-kv"><span>Hệ số công suất</span>
+                            <b><t t-esc="sl.cf_ngay"/>%</b></div>
+                        <div class="eam-kv"><span>Khả dụng — mọi nguyên nhân</span>
+                            <b><t t-esc="sl.kd_ngay"/>%</b></div>
+                        <div class="eam-kv"><span>Khả dụng — phạm vi hợp đồng</span>
+                            <b><t t-esc="sl.kd_om_ngay"/>%</b></div>
+                    </t>
+                    <div class="eam-note" t-else="">
+                        <b>Ngày đang xem chưa có số.</b> Các ô sản lượng
+                        để trống chứ không hiện 0 — chưa có số khác với
+                        bằng không.
+                    </div>
+                    <t t-if="sl.thang">
+                        <div class="eam-kv mt-1"><span>Tháng <t t-esc="sl.thang"/></span>
+                            <b><t t-esc="so(sl.kwh_thang)"/> kWh</b></div>
+                        <div class="eam-kv"><span>Mất trong tháng</span>
+                            <b class="text-danger"><t t-esc="so(sl.mat_thang)"/> kWh</b></div>
+                        <t t-if="sl.ty_le_p50 !== null">
+                            <div class="eam-kv"><span>Đạt so với P50</span>
+                                <b t-att-class="sl.dat_muc === 'duoi' ? 'text-danger' : 'text-success'">
+                                    <t t-esc="sl.ty_le_p50"/>%</b></div>
+                        </t>
+                        <div class="eam-note" t-if="sl.ngay_thieu_thang">
+                            Tháng này còn <b><t t-esc="sl.ngay_thieu_thang"/>/<t t-esc="sl.so_ngay_thang"/>
+                            ngày chưa có dữ liệu</b> — con số trên NHỎ HƠN
+                            thật, và tỷ lệ đạt kế hoạch cũng vậy.
+                        </div>
+                        <div class="eam-note" t-if="sl.ly_do_khong_so">
+                            Chưa so được với kế hoạch: <t t-esc="sl.ly_do_khong_so"/>.
+                        </div>
+                    </t>
                 </div>
 
                 <div class="eam-box" t-if="state.toMau === 'state'">

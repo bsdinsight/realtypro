@@ -7,3 +7,4 @@ from . import eam_installation
 from . import eam_time_category
 from . import eam_outage
 from . import eam_location_tz
+from . import eam_location_cong_suat

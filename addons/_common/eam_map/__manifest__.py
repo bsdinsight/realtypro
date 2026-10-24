@@ -76,7 +76,8 @@ bậc trạng thái còn tệ hơn để trống.
     # KHÔNG phụ thuộc cứng eam_work_order: phần lệnh công việc đã dò mềm
     # trong mã (`env.get`). Buộc cứng thì một khách chỉ cần bản đồ công
     # trường vẫn bị kéo theo cả phân hệ bảo trì.
-    'depends': ['eam_core'],
+    'depends': ['eam_core', 'eam_unit_day', 'eam_energy_period',
+                'eam_availability'],
     'data': ['views/eam_map_views.xml'],
     'assets': {
         'web.assets_backend': [

@@ -67,6 +67,7 @@ export class EamPlantMap extends Component {
             lop: { wake: true, pairs: true, nhan: true },
             nen: "sat",
             toMau: "state",
+            coMat: false,
             loc: Object.fromEntries(Object.keys(MAU).map((k) => [k, true])),
         });
 
@@ -198,7 +199,7 @@ export class EamPlantMap extends Component {
 
         for (const p of hien) {
             const mk = L.circleMarker([p.lat, p.lon], {
-                radius: 9, color: "#ffffff", weight: 2,
+                radius: this.banKinh(p), color: "#ffffff", weight: 2,
                 fillColor: this.mauDiem(p), fillOpacity: 0.95,
             }).addTo(this._lopDiem);
             mk.bindPopup(this._popup(p), { maxWidth: 380, minWidth: 320 });
@@ -232,6 +233,32 @@ export class EamPlantMap extends Component {
             L.push(`<div>⏱ Đã ${p.state_hours} giờ`
                 + (p.liability ? ` · quy cho <b>${p.liability}</b>` : "")
                 + `</div>`);
+        }
+        // ----- Sản lượng của chính ngày đang xem -----------------
+        // Đặt NGAY SAU trạng thái, trước thông số kỹ thuật: người mở
+        // bong bóng này đang hỏi "máy đó làm ăn ra sao hôm qua", chứ
+        // không hỏi đường kính rô-to.
+        if (p.co_so_ngay) {
+            L.push(`<hr/>`);
+            L.push(`<div>⚡ <b>${p.kwh === null ? "—" : tien(p.kwh)}</b> kWh`
+                + ` · hệ số công suất <b>${p.cf === null ? "—" : p.cf + "%"}</b></div>`);
+            L.push(`<div>📅 Luỹ kế tháng <b>${tien(p.lk_thang)}</b> kWh</div>`);
+            // BA cột khả dụng, cố ý không gộp: cột của ta tính hết mọi
+            // nguyên nhân, cột hợp đồng chỉ phần quy được cho nhà thầu,
+            // cột của hãng là số họ báo. Khoảng cách giữa chúng mới là
+            // thứ đưa ra bàn họp.
+            L.push(`<div>📶 Khả dụng — mọi nguyên nhân `
+                + `<b>${p.kd_sl === null ? "—" : p.kd_sl + "%"}</b>`
+                + ` · phạm vi hợp đồng <b>${p.kd_om === null ? "—" : p.kd_om + "%"}</b>`
+                + (p.kd_hang ? ` · theo hãng <b>${p.kd_hang}%</b>` : "")
+                + `</div>`);
+            if (p.mat_ngay) {
+                L.push(`<div class="eam-canh">📉 Mất <b>${tien(p.mat_ngay)}</b> kWh trong ngày</div>`);
+            }
+        } else {
+            L.push(`<hr/>`);
+            L.push(`<div class="text-muted">⚡ Ngày đang xem <b>chưa có số</b>`
+                + ` của tổ máy này — để trống chứ không hiện 0.</div>`);
         }
         L.push(`<hr/>`);
         L.push(`<div>🌀 ${p.mw || "—"} MW · rô-to ${p.rotor_d || "—"} m `
@@ -308,12 +335,61 @@ export class EamPlantMap extends Component {
         if (this.state.toMau === "erect") {
             return this.mauTienDo(p.erect_pct);
         }
+        if (this.state.toMau === "cf") {
+            // Thang tô theo hệ số công suất, chuẩn hoá về mức CAO NHẤT
+            // trong ngày chứ không về 100%: một ngày lặng gió thì cả
+            // trại dưới 10%, tô theo 100% ra mười hai chấm đỏ như nhau
+            // và không còn phân biệt được máy nào kém.
+            return this.mauTienDo(this._chuanHoa(p.cf, "cf"));
+        }
+        if (this.state.toMau === "kd") {
+            return this.mauTienDo(p.kd_sl);
+        }
         return (MAU[p.state] || MAU.standby).c;
+    }
+
+    _chuanHoa(v, khoa) {
+        if (v === null || v === undefined) { return null; }
+        const d = this.state.data;
+        const cao = Math.max(...d.points.map((x) => x[khoa] || 0));
+        return cao > 0 ? (100 * v) / cao : null;
+    }
+
+    banKinh(p) {
+        // Cỡ điểm theo SẢN LƯỢNG MẤT: đặt thiệt hại lên bản đồ. Máy mất
+        // nhiều thành chấm to, nhìn một cái là thấy tiền đang rơi ở đâu.
+        if (!this.state.coMat) { return 9; }
+        const d = this.state.data;
+        const cao = Math.max(...d.points.map((x) => x.mat_ngay || 0));
+        if (!cao) { return 9; }
+        return 6 + 12 * Math.sqrt(Math.max(p.mat_ngay || 0, 0) / cao);
     }
 
     doiToMau(k) {
         this.state.toMau = k;
         this._ve();
+    }
+
+    batCoMat() {
+        this.state.coMat = !this.state.coMat;
+        this._ve();
+    }
+
+    get coSanLuong() {
+        const d = this.state.data;
+        return !!(d && d.points.some((p) => p.co_so_ngay));
+    }
+
+    csTrungBinh(kwh) {
+        // kWh cả ngày chia 24 giờ ra công suất trung bình. Đây là con
+        // số THẬT sự phát, khác hẳn "công suất sẵn sàng" ở trên vốn chỉ
+        // là tổng công suất ĐẶT của những máy không có khoảng dừng mở.
+        return kwh ? Math.round(kwh / 24) : 0;
+    }
+
+    get sl() {
+        const d = this.state.data;
+        return (d && d.summary && d.summary.san_luong) || null;
     }
 
     get coTienDo() {

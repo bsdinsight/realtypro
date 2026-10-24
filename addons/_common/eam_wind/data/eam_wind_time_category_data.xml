@@ -131,6 +131,7 @@
         <field name="standard_ref">IEC 61400-26-1:2019 §5.5</field>
     </record>
     <record id="tc_sched_maint" model="eam.time.category">
+        <field name="is_planned" eval="True"/>
         <field name="code">5.5.2</field>
         <field name="name">Bảo trì theo kế hoạch</field>
         <field name="parent_id" ref="tc_non_operative"/>
@@ -141,6 +142,7 @@
         <field name="note">Bảo trì NẰM TRONG định mức thời gian của hợp đồng. Vượt định mức, hoặc do OEM tự quyết, thì xếp sang Can thiệp sửa chữa có kế hoạch.</field>
     </record>
     <record id="tc_planned_corr" model="eam.time.category">
+        <field name="is_planned" eval="True"/>
         <field name="code">5.5.3</field>
         <field name="name">Can thiệp sửa chữa có kế hoạch</field>
         <field name="parent_id" ref="tc_non_operative"/>

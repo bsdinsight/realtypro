@@ -13,6 +13,7 @@
                 <field name="counts_as_downtime" string="Tính là dừng"/>
                 <field name="is_mandatory" string="Bắt buộc"/>
                 <field name="is_data_gap" string="Mất dữ liệu" optional="show"/>
+                <field name="is_planned" string="Có kế hoạch" optional="show"/>
                 <field name="attributable_to" string="Thường quy cho"
                        optional="show"/>
                 <field name="standard_ref" string="Viện dẫn" optional="show"/>
@@ -42,6 +43,7 @@
                             <field name="counts_as_downtime"/>
                             <field name="is_mandatory"/>
                             <field name="is_data_gap"/>
+                            <field name="is_planned"/>
                             <field name="attributable_to"/>
                         </group>
                     </group>

@@ -30,6 +30,11 @@ const MAU = {
     // Dựng xong nhưng chưa tới ngày vận hành thương mại — chạy thử và
     // nghiệm thu. Đây là bậc cả một dự án đang xây sống trong đó.
     commissioning: { c: "#e3a008", t: "Đã dựng, chưa vận hành" },
+    // Trạm khí tượng, nhà điều hành, trạm biến áp: vẫn cắm vì người ra
+    // hiện trường cần biết chúng ở đâu, nhưng không phát điện nên không
+    // vào ô trạng thái. Thiếu bậc này thì trạm khí tượng lọt vào "đang
+    // phát" và nhà máy 16 bộ nghịch lưu báo đang phát 17.
+    khong_phat:    { c: "#5b7f95", t: "Không phát điện" },
 };
 
 const NEN = {

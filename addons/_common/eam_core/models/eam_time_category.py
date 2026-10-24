@@ -65,6 +65,17 @@ class EamTimeCategory(models.Model):
         string='Là khoảng mất dữ liệu',
         help='Mất kết nối giám sát. Phải hạch toán thành một loại thời '
              'gian, không được bỏ qua và không được coi là máy chạy tốt.')
+    is_planned = fields.Boolean(
+        string='Dừng có kế hoạch',
+        help='Dừng biết trước và xếp lịch được: bảo trì theo kế hoạch, '
+             'can thiệp sửa chữa có kế hoạch. Phân biệt với dừng sự cố — '
+             'cùng là giờ dừng, nhưng một bên nằm trong kế hoạch còn một '
+             'bên thì không, và bản đồ hiện trường tô hai màu khác nhau.\n\n'
+             'KHÔNG suy ra được từ tên. Trước đây bản đồ dò chữ "kế hoạch" '
+             'trong tên loại: tên là trường DỊCH ĐƯỢC, nên người đọc màn '
+             'hình bằng tiếng Anh thấy "Planned maintenance" — không khớp '
+             'chuỗi — và một máy đang bảo trì hiện màu ĐỎ như đang hỏng. '
+             'Loại đặt tên "Bảo trì định kỳ" cũng rơi vào đó.')
 
     attributable_to = fields.Selection(
         [('operator', 'Bên vận hành'),

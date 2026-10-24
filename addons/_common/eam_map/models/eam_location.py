@@ -138,7 +138,13 @@ class EamLocation(models.Model):
             ma = 'curtailed'
         elif not c.counts_as_downtime:
             ma = 'standby'
-        elif 'kế hoạch' in (c.name or '').lower():
+        elif c.is_planned:
+            # Đọc CỜ đã khai, không dò chữ "kế hoạch" trong tên. Tên là
+            # trường dịch được: xem màn hình bằng tiếng Anh thì chuỗi là
+            # "Planned maintenance", không khớp, và một máy đang bảo trì
+            # hiện màu ĐỎ như đang hỏng. Đúng luật mà chính tệp danh mục
+            # loại thời gian đã ghi ở đầu: khai tay từng loại, không suy
+            # từ tên.
             ma = 'maintenance'
         else:
             ma = 'down'
@@ -313,6 +319,29 @@ class EamLocation(models.Model):
 
         diem = [l._map_payload_one(tu, den) for l in cay]
 
+        # --------------------------------------------------------------
+        # Vị trí KHÔNG PHÁT ĐIỆN — trạm khí tượng, nhà điều hành, trạm
+        # biến áp — vẫn cắm trên bản đồ vì người ra hiện trường cần biết
+        # chúng ở đâu, nhưng KHÔNG được đếm vào ô trạng thái phát điện.
+        # Trạm khí tượng không có khoảng dừng nào nên lọt vào "đang
+        # phát", và một nhà máy 16 bộ nghịch lưu báo "đang phát 17".
+        #
+        # Chỉ hạ bậc khi nhà máy ĐÃ KHAI tổ máy. Nhà máy chưa khai thì
+        # tập cờ rỗng, hạ bậc tất cả thành "không phát điện" là biến một
+        # bản đồ đang chạy tốt thành trống trơn vì một việc khai báo
+        # chưa ai làm.
+        # --------------------------------------------------------------
+        to_may = set()
+        if nha_may:
+            to_may = set(self.search([('id', 'child_of', nha_may.id),
+                                      ('la_to_may', '=', True)]).ids)
+        for p in diem:
+            p['phat_dien'] = (p['id'] in to_may) if to_may else True
+            if not p['phat_dien']:
+                p['state'] = 'khong_phat'
+                p['avail'] = None
+        chi_phat = [p for p in diem if p['phat_dien']]
+
         # ------------------------------------------------------------------
         # Cặp quá gần nhau.
         #
@@ -346,9 +375,9 @@ class EamLocation(models.Model):
         dem = {}
         for p in diem:
             dem[p['state']] = dem.get(p['state'], 0) + 1
-        co_kd = [p for p in diem if p['avail'] is not None]
-        mw_tong = sum(p['mw'] or 0.0 for p in diem)
-        mw_phat = sum(p['mw'] or 0.0 for p in diem
+        co_kd = [p for p in chi_phat if p['avail'] is not None]
+        mw_tong = sum(p['mw'] or 0.0 for p in chi_phat)
+        mw_phat = sum(p['mw'] or 0.0 for p in chi_phat
                       if p['state'] == 'running')
 
         return {
@@ -371,6 +400,11 @@ class EamLocation(models.Model):
             'data_span': self._map_khoang_du_lieu(),
             'summary': {
                 'n': len(diem),
+                # Số vị trí PHÁT ĐIỆN, tách khỏi tổng số điểm cắm trên
+                # bản đồ. Hai con số này khác nhau ở đúng chỗ người đọc
+                # hay nhầm: trạm khí tượng là một điểm, không phải một
+                # tổ máy.
+                'n_phat': len(chi_phat),
                 'by_state': dem,
                 'mw_total': round(mw_tong, 2),
                 'mw_running': round(mw_phat, 2),

@@ -154,6 +154,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="truong">energy</field>
         <field name="node_code">INV</field>
         <field name="he_so">1</field>
+        <field name="ma">e_inv</field>
     </record>
     <record id="pl_pv_emcb" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
@@ -180,6 +181,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="truong">energy</field>
         <field name="node_code">GNT</field>
         <field name="he_so">1</field>
+        <field name="ma">e_171</field>
     </record>
     <record id="pl_pv_eevn" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
@@ -206,6 +208,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="truong">energy</field>
         <field name="node_code">TD</field>
         <field name="he_so">1</field>
+        <field name="ma">e_td</field>
     </record>
     <record id="pl_pv_ebd" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
@@ -828,6 +831,85 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="group_id" ref="eam_downtime.group_data"/>
         <field name="don_vi">kWh</field>
         <field name="so_le">3</field>
+    </record>
+
+    <!-- ======== SITE CONSTANTS — đọc thẳng hồ sơ nhà máy ========
+         Bốn con số này không đổi theo ngày, nhưng mẫu số tỷ số hiệu
+         suất dựng trên chúng. Ba tháng sau khi PR bị chất vấn, tờ giấy
+         phải tự nói được nó tính bằng diện tích nào. -->
+    <record id="pl_pv_cma" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">1</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">Module Area</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nha_may</field>
+        <field name="truong">pv_module_area</field>
+        <field name="don_vi">m²</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_cme" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">2</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">Module Efficiency</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nha_may</field>
+        <field name="truong">pv_module_eff</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_cpt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">3</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">Planned Ambient Temp</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nha_may</field>
+        <field name="truong">pv_planned_temp</field>
+        <field name="don_vi">°C</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_pv_ctk" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">4</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">TKPMPP</field>
+        <field name="kieu">so</field>
+        <field name="nguon">nha_may</field>
+        <field name="truong">pv_tk_pmpp</field>
+        <field name="don_vi">%/°C</field>
+        <field name="so_le">2</field>
+        <field name="he_so">100</field>
+    </record>
+
+    <!-- ======== Hai dòng TÍNH TỪ DÒNG KHÁC ========
+         Không bảng nào chứa sẵn hai con số này — chúng là phép tính
+         giữa những dòng đã có trên chính tờ giấy. -->
+    <record id="pl_pv_ltd" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">55</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy loss (self consumption)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">cong_thuc</field>
+        <field name="cong_thuc">100 * e_td / e_inv</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">3</field>
+    </record>
+    <!-- Sản lượng gộp tại điểm giao nhận: điện giao lên lưới CỘNG phần
+         nhà máy tự dùng. Suy từ chính tờ của khách — 112,998 + 0,256 =
+         113,254 khớp tới số lẻ cuối. -->
+    <record id="pl_pv_net" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">58</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Net Power Plant Energy Production</field>
+        <field name="kieu">so</field>
+        <field name="nguon">cong_thuc</field>
+        <field name="cong_thuc">e_171 + e_td</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
     </record>
 
 </odoo>

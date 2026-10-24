@@ -290,10 +290,16 @@ class EamUnitDay(models.Model):
         cs = sum(ds.filtered('do_duoc_hs').mapped('cong_suat_kw'))
         sl = sum(ds.filtered('do_duoc_sl').mapped('san_luong'))
         hang = ds.filtered(lambda x: x.kd_nha_san_xuat)
+        co_sl = ds.filtered('do_duoc_sl')
         return {
             'so_to_may': len(ds),
             'san_luong': sl,
-            'so_chua_co_sl': len(ds) - len(ds.filtered('do_duoc_sl')),
+            # Trung bình mỗi tổ máy — chia cho số tổ máy CÓ SỐ, không
+            # chia cho tổng số tổ máy. Hai tua-bin mất tín hiệu làm mẫu
+            # số to lên mà tử số không đổi, và "trung bình" tụt xuống vì
+            # một lý do chẳng liên quan gì tới việc phát điện.
+            'tb_san_luong': (sl / len(co_sl)) if co_sl else None,
+            'so_chua_co_sl': len(ds) - len(co_sl),
             'luy_ke_thang': sum(ds.mapped('luy_ke_thang')),
             'he_so_cong_suat': (100.0 * sl / (cs * 24.0)) if cs else None,
             'kd_san_luong': (100.0 * that / (that + mat)

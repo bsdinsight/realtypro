@@ -52,6 +52,8 @@ NGUON = [
     ('historian', 'Kho chuỗi thời gian'),
     ('unit', 'Tổng bảng tổ máy'),
     ('target', 'Mục tiêu sản lượng'),
+    ('nha_may', 'Hằng số khai trên hồ sơ nhà máy'),
+    ('cong_thuc', 'Tính từ các dòng khác trên cùng tờ'),
     ('khoi', 'Khối dựng sẵn (bảng, biểu đồ)'),
     ('nguoi', 'Người trực tự điền'),
 ]
@@ -143,6 +145,17 @@ class EamDailyProfileLine(models.Model):
 
     nguon = fields.Selection(NGUON, string='Lấy số từ đâu', required=True,
                              default='nguoi')
+    ma = fields.Char(
+        string='Mã dòng',
+        help='Tên ngắn để dòng KHÁC trỏ tới trong công thức, ví dụ '
+             '"e_inv". Chỉ cần khai cho dòng nào được dùng làm đầu vào.')
+    cong_thuc = fields.Char(
+        string='Công thức',
+        help='Chỉ dùng khi nguồn là "Tính từ các dòng khác". Viết bằng '
+             'MÃ DÒNG, ví dụ "100 * e_td / e_inv". Dòng đầu vào chưa đo '
+             'được thì dòng này cũng ghi CHƯA ĐO ĐƯỢC kèm tên mã còn '
+             'thiếu — không thay bằng 0, vì một tỷ lệ tính trên số 0 giả '
+             'vẫn ra con số trông hợp lý.')
     truong = fields.Char(
         string='Tên trường',
         help='Tên kỹ thuật của trường trên bảng nguồn, ví dụ '

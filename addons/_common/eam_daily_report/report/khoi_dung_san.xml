@@ -49,6 +49,23 @@
                         <span t-else="" class="text-muted">—</span>
                     </td>
                 </tr>
+                <!-- Dòng TRUNG BÌNH chỉ có ở cột sản lượng. Ba cột
+                     phần trăm cố ý để trống: trung bình của các phần
+                     trăm KHÁC với phần trăm của tổng, và dòng TOTAL
+                     ngay dưới đã là con số đúng. In cả hai cạnh nhau
+                     là mời người đọc lấy nhầm. -->
+                <tr class="bg-light">
+                    <td>Avg / unit</td>
+                    <td class="text-end">
+                        <span t-if="b['tong'].get('tb_san_luong')"
+                              t-esc="'{:,.0f}'.format(b['tong']['tb_san_luong'])"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end text-muted">—</td>
+                    <td class="text-end text-muted">—</td>
+                    <td class="text-end text-muted">—</td>
+                    <td class="text-end text-muted">—</td>
+                </tr>
                 <tr class="fw-bold bg-light">
                     <td>TOTAL</td>
                     <td class="text-end"

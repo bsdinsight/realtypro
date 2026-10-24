@@ -12,9 +12,12 @@ Nên mỗi dòng mang ``do_duoc`` kèm ``ly_do_chua_do``, và bản in ghi "—"
 """
 import logging
 
+import re
+
 import pytz
 
 from odoo import _, api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -546,6 +549,74 @@ class EamDailyReportLine(models.Model):
                if lk['cach_rai'] == 'deu'
                else _('mục tiêu cả tháng · nguồn: %s', lk['nguon']))
         self._dat(lk[c.muc] * c.he_so, vet)
+
+    def _rot_nha_may(self, ctx, c):
+        """Hằng số khai trên hồ sơ nhà máy — diện tích pin, hệ số nhiệt…
+
+        Mấy con số này KHÔNG đổi theo ngày, nhưng vẫn phải in lên tờ:
+        mẫu số tỷ số hiệu suất dựng trên chúng, và ba tháng sau khi PR
+        bị chất vấn thì tờ giấy phải tự nói được nó tính bằng diện tích
+        nào.
+        """
+        nm = self.report_id.plant_id
+        gt, loi = self._lay_truong(nm, c.truong, _('hồ sơ nhà máy'))
+        if loi:
+            return self._chua_do(loi)
+        if not gt:
+            # Hằng số bằng 0 là CHƯA KHAI, không phải "bằng không":
+            # diện tích tấm pin không thể bằng 0 trên một nhà máy đang
+            # phát điện.
+            return self._chua_do(_(
+                'hằng số "%(t)s" chưa khai trên hồ sơ nhà máy %(n)s',
+                t=c.truong, n=nm.display_name))
+        if c.kieu == 'chu':
+            return self._dat(self._ra_chu(nm, c.truong, gt),
+                             nm.display_name, chu=True)
+        self._dat(gt * c.he_so, _('hồ sơ nhà máy %s', nm.display_name))
+
+    def _rot_cong_thuc(self, ctx, c):
+        """Tính từ các dòng KHÁC trên cùng tờ, trỏ bằng mã dòng.
+
+        Có hai dòng trên tờ của nhà máy không đọc được từ bảng nào —
+        chúng là phép tính giữa những dòng khác: tỷ lệ điện tự dùng, và
+        sản lượng gộp tại điểm giao nhận. Viết chúng vào mã là chôn một
+        công thức của MỘT nhà máy vào sản phẩm dùng chung.
+
+        Luật quan trọng nhất ở đây là TỪ CHỐI: đầu vào chưa đo được thì
+        kết quả cũng chưa đo được, kèm tên mã còn thiếu. Thay số thiếu
+        bằng 0 cho ra một tỷ lệ trông vẫn hợp lý — và sai.
+        """
+        bieu = (c.cong_thuc or '').strip()
+        if not bieu:
+            return self._chua_do(_(
+                'dòng khai nguồn "công thức" nhưng chưa viết công thức'))
+        so, thieu_so = {}, {}
+        for l in self.report_id.line_ids:
+            ma = l.profile_line_id.ma
+            if not ma or (l.kieu or '') == 'chu':
+                continue
+            if l.do_duoc:
+                so[ma] = l.gia_tri
+            else:
+                thieu_so[ma] = l.ly_do_chua_do or _('chưa đo được')
+        can = set(re.findall(r'[A-Za-z_][A-Za-z0-9_]*', bieu))
+        thieu = sorted(t for t in can if t not in so)
+        if thieu:
+            return self._chua_do(_(
+                'công thức cần %(c)s nhưng %(t)s chưa có số%(v)s',
+                c=', '.join(sorted(can)), t=', '.join(thieu),
+                v=(' (%s)' % thieu_so[thieu[0]]) if thieu[0] in thieu_so
+                else _(' — chưa dòng nào trên tờ mang mã đó')))
+        try:
+            gt = safe_eval(bieu, dict(so))
+        except ZeroDivisionError:
+            return self._chua_do(_(
+                'mẫu số bằng không trong công thức "%s"', bieu))
+        except Exception as e:                        # noqa: BLE001
+            return self._chua_do(_('công thức hỏng: %s', str(e)[:80]))
+        self._dat(gt * c.he_so, _('= %(b)s, với %(v)s', b=bieu, v=' · '.join(
+            '%s=%s' % (k, round(v, 3)) for k, v in sorted(so.items())
+            if k in can)))
 
     def _rot_khoi(self, ctx, c):
         """Khối dựng sẵn — bản in tự chèn, dòng này chỉ đánh dấu chỗ."""

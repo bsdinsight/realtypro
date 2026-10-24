@@ -286,7 +286,19 @@ class EamDailyReport(models.Model):
                 ('date', '=', self.date)], limit=1),
             'dung': None,
         }
-        for l in self.line_ids.filtered(lambda x: x.nguon != 'nguoi'):
+        # HAI LƯỢT, và thứ tự là bắt buộc: dòng công thức đọc giá trị
+        # của dòng khác, nên nó phải chạy sau khi mọi dòng kia đã có số.
+        # Rót một lượt theo thứ tự in thì một dòng công thức đặt ở đầu
+        # tờ sẽ đọc dòng cuối tờ khi dòng ấy còn rỗng — và ghi ra "chưa
+        # đo được" cho một thứ hoàn toàn đo được.
+        for l in self.line_ids.filtered(
+                lambda x: x.nguon not in ('nguoi', 'cong_thuc')):
+            l._rot(ctx)
+        # Trong lượt hai vẫn giữ thứ tự in, để một công thức dùng được
+        # kết quả của công thức đứng trước nó.
+        for l in self.line_ids.filtered(
+                lambda x: x.nguon == 'cong_thuc').sorted(
+                    lambda x: (x.khoi or '', x.sequence)):
             l._rot(ctx)
         self._cap_nhat_tom_tat()
 

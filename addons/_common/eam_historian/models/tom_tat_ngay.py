@@ -40,7 +40,7 @@ import logging
 
 from odoo import _, api, models
 
-from odoo.addons.eam_historian.models.eam_historian import BANG
+from .eam_historian import BANG
 
 _logger = logging.getLogger(__name__)
 

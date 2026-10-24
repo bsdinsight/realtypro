@@ -18,6 +18,8 @@ cả chục lần.
 tháng chia tổng sản lượng đáng lẽ của tháng. Hai cách ra hai con số, và
 cách sai luôn đẹp hơn vì ngày xấu bị pha loãng.
 """
+import pytz
+
 from datetime import datetime, time, timedelta
 
 from odoo import _, api, fields, models
@@ -117,8 +119,23 @@ class EamAvailabilityDay(models.Model):
         from . import do_kha_dung_sl as sl
         from odoo.addons.eam_om_contract.models import do_kha_dung as tg
 
-        tu = datetime.combine(ngay, time.min)
-        den = datetime.combine(ngay + timedelta(days=1), time.min)
+        # Biên ngày theo múi giờ NHÀ MÁY, không phải UTC.
+        #
+        # Trước đây chỗ này dựng mốc naive rồi để kho chuỗi thời gian
+        # đọc như UTC — nghĩa là "ngày 15/10" của một nhà máy ở Việt Nam
+        # thật ra là 07:00 ngày 15 tới 07:00 ngày 16 giờ địa phương. Bảy
+        # tiếng của một ngày khác.
+        #
+        # Một mình nó thì chỉ lệch; đặt cạnh bảng hiệu suất tổ máy — vốn
+        # dùng ngày địa phương — thì hai khối trên CÙNG MỘT TỜ nói về
+        # hai khung hai mươi tư giờ khác nhau, mà không gì báo. Dòng
+        # tổng không khớp dòng nhà máy, và người đọc không có cách nào
+        # biết vì sao.
+        mui = pytz.timezone(plant.mui_gio())
+        dau = mui.localize(datetime.combine(ngay, time.min))
+        tu = dau.astimezone(pytz.UTC).replace(tzinfo=None)
+        den = ((dau + timedelta(days=1)).astimezone(pytz.UTC)
+               .replace(tzinfo=None))
         doan = False
         if not so_don_vi:
             so_don_vi = plant.so_don_vi_kha_dung

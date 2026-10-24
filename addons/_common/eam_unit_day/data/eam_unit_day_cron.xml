@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_dung_to_may" model="ir.cron">
+        <field name="name">EAMOne: dựng hiệu suất tổ máy của hôm qua</field>
+        <field name="model_id" ref="model_eam_unit_day"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_dung_hom_qua()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <!-- Chạy TRƯỚC cron dựng tờ báo cáo ngày (0h30), vì tờ báo cáo
+             đọc bảng này. Ngược thứ tự thì tờ sáng nay dựng bằng bảng
+             của hôm kia, và không gì báo. -->
+        <field name="nextcall"
+               eval="(DateTime.now().replace(hour=0, minute=10, second=0)
+                      + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

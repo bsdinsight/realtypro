@@ -6,3 +6,4 @@ from . import eam_power_curve
 from . import eam_power_curve_run
 from . import eam_trend
 from . import eam_quality
+from . import tom_tat_ngay

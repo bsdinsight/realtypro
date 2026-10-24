@@ -37,6 +37,8 @@ Sản lượng thực lấy từ đâu — và thứ tự ưu tiên
 3. Không có cả hai → **nói chưa đo được**. Lấy 0 thì khả dụng ra 0%,
    đọc ra là "nhà máy chết cả kỳ" — ngược hẳn sự thật.
 """
+import pytz
+
 from datetime import datetime, timedelta
 
 
@@ -52,13 +54,28 @@ def san_luong_that(env, plant, tu, den):
     chuoi = env['eam.chain'].search([('plant_id', '=', plant.id)], limit=1)
     bac = chuoi.node_ids.filtered('is_billing') if chuoi else None
     if bac:
-        # Mốc cuối của kỳ là LOẠI TRỪ (0h hôm sau), nên `den.date()`
-        # chính là ngày hôm sau và lọt thêm trọn một ngày vào tổng.
-        # Lùi một phần triệu giây rồi mới lấy ngày.
-        cuoi = (den - timedelta(microseconds=1)).date()
+        # HAI LOẠI "NGÀY" trong cùng một hàm, và chúng không đổi lẫn
+        # nhau được:
+        #
+        #   * tu/den là mốc thời gian UTC — thứ kho chuỗi thời gian hiểu;
+        #   * eam.chain.day khoá theo NGÀY LỊCH ĐỊA PHƯƠNG — thứ con
+        #     người và hoá đơn hiểu.
+        #
+        # Lấy ``tu.date()`` thẳng từ mốc UTC là trộn hai loại ấy. Ngày
+        # 20/10 của một nhà máy ở Việt Nam bắt đầu lúc 17:00 UTC ngày
+        # 19, nên ``tu.date()`` ra 19/10 và cửa sổ nuốt TRỌN thêm một
+        # ngày: đo trên dữ liệu thật, 261.630 kWh thành 374.301 — tức
+        # 112.671 của ngày 19 cộng vào. Con số vẫn dương, vẫn hợp lý,
+        # và chỉ lộ khi đem đối chiếu công-tơ.
+        #
+        # Nên đổi NGƯỢC về giờ địa phương rồi mới lấy ngày.
+        mui = pytz.timezone(plant.mui_gio())
+        d_tu = pytz.UTC.localize(tu).astimezone(mui).date()
+        cuoi = (pytz.UTC.localize(den).astimezone(mui)
+                - timedelta(microseconds=1)).date()
         ngay = env['eam.chain.day'].search([
             ('node_id', '=', bac.id),
-            ('date', '>=', tu.date()), ('date', '<=', cuoi)])
+            ('date', '>=', d_tu), ('date', '<=', cuoi)])
         if ngay:
             return (sum(ngay.mapped('energy')),
                     'bậc bán điện "%s", %d ngày' % (bac.name, len(ngay)))
@@ -68,18 +85,26 @@ def san_luong_that(env, plant, tu, den):
         ('location_id', 'child_of', plant.id),
         ('tag_type', '=', 'energy'), ('is_virtual', '=', False)])
     if tags:
-        giay = int((den - tu).total_seconds()) or 1
-        doc = env['eam.historian'].doc_gop(tags.ids, tu, den, giay)
-        tong = 0.0
-        co = 0
-        for tid, diem in doc.items():
-            gt = [float(d['gt']) for d in diem if d.get('gt') is not None]
-            if gt:
-                tong += sum(gt)
-                co += 1
-        if co:
-            return tong, 'cộng điện năng %d/%d tổ máy (số SCADA)' % (
-                co, len(tags))
+        # KHÔNG dùng doc_gop ở đây, dù đặt bước bằng đúng cả cửa sổ.
+        #
+        # doc_gop chia bục theo lưới thời gian TUYỆT ĐỐI
+        # (floor(epoch/bước)*bước), nên một ngày địa phương bắt đầu lúc
+        # 17:00 UTC rơi vào HAI bục. Với đồng hồ luỹ kế, mỗi lần cắt làm
+        # mất đúng một nhịp lấy mẫu: tổng thành (cuối_A − đầu_A) +
+        # (cuối_B − đầu_B) thay vì (cuối_B − đầu_A).
+        #
+        # Đo trên dữ liệu thật ngày 15/10: 154.361,030 thay vì
+        # 154.432,390 — thiếu 71,36 kWh, tức 0,046%. Nhỏ, nhưng là cái
+        # sai CÓ HỆ THỐNG và luôn thiếu về một phía, nên cộng cả năm thì
+        # không còn nhỏ. Và nó không báo gì: con số vẫn dương, vẫn hợp
+        # lý, chỉ lệch với công-tơ.
+        #
+        # tom_tat_ngay gộp thẳng trên cửa sổ, không chia bục.
+        kq = env['eam.historian'].tom_tat_ngay(tags.ids, tu, den,
+                                               gop_nhieu='tong')
+        if kq and kq.get('gop') is not None:
+            return kq['gop'], 'cộng điện năng %d tổ máy (số SCADA)' % (
+                kq.get('so_diem_do') or len(tags))
     return None, ''
 
 

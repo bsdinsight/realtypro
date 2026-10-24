@@ -11,6 +11,8 @@ Chuyện này không phải giả định: trong hệ đã có nhà máy ở Là
 giờ là **thuộc tính của nhà máy**, khai một lần, và tờ báo cáo CHỤP LẠI
 múi giờ nó đã dùng — để sau còn biết con số đó đo trong khung giờ nào.
 """
+import pytz
+
 from odoo import fields, models
 
 
@@ -25,7 +27,13 @@ class EamLocation(models.Model):
              'máy ngoài Việt Nam.')
 
     def _tz_get(self):
-        return self.env['res.partner']._tz_get()
+        # Odoo 19 KHÔNG có res.partner._tz_get — đó là hàm cấp module
+        # trong addons/base, không phải phương thức của model. Gọi nó
+        # như phương thức thì chỉ vỡ lúc dựng danh sách chọn, tức là
+        # lúc MỞ FORM trên trình duyệt, chứ không vỡ lúc nạp module.
+        return [(t, t) for t in sorted(
+            pytz.all_timezones,
+            key=lambda z: z if not z.startswith('Etc/') else '_' + z)]
 
     def mui_gio(self):
         """Múi giờ dùng cho biên ngày, theo thứ tự chắc chắn giảm dần."""

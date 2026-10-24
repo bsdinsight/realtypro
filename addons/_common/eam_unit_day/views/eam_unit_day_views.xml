@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_unit_day_list" model="ir.ui.view">
+        <field name="name">eam.unit.day.list</field>
+        <field name="model">eam.unit.day</field>
+        <field name="arch" type="xml">
+            <list string="Hiệu suất tổ máy theo ngày" create="false"
+                  decoration-danger="do_duoc_kd and kd_san_luong &lt; 90"
+                  decoration-warning="not do_duoc_sl or not do_duoc_hs"
+                  decoration-muted="not do_duoc_kd"
+                  default_order="date desc, location_code">
+                <field name="date"/>
+                <field name="location_code" string="Tổ máy"/>
+                <field name="plant_id" optional="hide"/>
+                <field name="san_luong" sum="Tổng sản lượng"/>
+                <field name="luy_ke_thang" sum="Tổng luỹ kế tháng"/>
+                <field name="so_ngay_thang" string="Ngày đã cộng"
+                       optional="show"/>
+                <field name="cong_suat_kw" optional="hide"/>
+                <field name="he_so_cong_suat"
+                       optional="show"/>
+                <field name="kd_san_luong" string="KD mọi nguyên nhân (%)"/>
+                <field name="kd_om" string="KD phạm vi hợp đồng (%)"
+                       optional="show"/>
+                <field name="kd_nha_san_xuat" string="KD theo hãng (%)"/>
+                <field name="lech_kd" string="Lệch"/>
+                <field name="sl_mat" string="SL mất (kWh)" optional="show"/>
+                <field name="so_khoang" string="Số lần dừng" optional="hide"/>
+                <field name="so_khoang_chua_tinh" string="Dừng chưa quy kWh"
+                       optional="show"/>
+                <field name="ly_do_kd" string="Vì sao chưa đo"
+                       optional="show" width="260px"/>
+                <field name="do_duoc_sl" column_invisible="1"/>
+                <field name="do_duoc_hs" column_invisible="1"/>
+                <field name="do_duoc_kd" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_unit_day_form" model="ir.ui.view">
+        <field name="name">eam.unit.day.form</field>
+        <field name="model">eam.unit.day</field>
+        <field name="arch" type="xml">
+            <form string="Hiệu suất tổ máy">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-info py-1" role="status"
+                         invisible="not kd_nha_san_xuat">
+                        <b>Hai cột khả dụng cố ý KHÔNG gộp.</b> Cột của ta
+                        tính hết mọi nguyên nhân vì ta mất sản lượng thật;
+                        cột của hãng loại trừ phần không thuộc trách nhiệm
+                        họ. Khoảng lệch mới là thứ đưa ra bàn họp.
+                    </div>
+                    <group>
+                        <group string="Sản lượng">
+                            <field name="location_id" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="san_luong" readonly="1"/>
+                            <field name="do_duoc_sl" readonly="1"/>
+                            <field name="nguon_sl"/>
+                            <field name="ly_do_sl"
+                                   invisible="do_duoc_sl"/>
+                            <field name="luy_ke_thang" readonly="1"/>
+                            <field name="so_ngay_thang" readonly="1"/>
+                            <field name="luy_ke_nam" readonly="1"/>
+                        </group>
+                        <group string="Hệ số công suất">
+                            <field name="cong_suat_kw"/>
+                            <field name="nguon_cs"/>
+                            <field name="he_so_cong_suat" readonly="1"/>
+                            <field name="ly_do_hs"
+                                   invisible="do_duoc_hs"/>
+                            <field name="do_duoc_hs" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Khả dụng — CỦA TA đo">
+                            <field name="kd_san_luong" readonly="1"/>
+                            <field name="sl_that" readonly="1"/>
+                            <field name="sl_mat" readonly="1"/>
+                            <field name="sl_mat_om" readonly="1"/>
+                            <field name="kd_om" readonly="1"/>
+                            <field name="so_khoang" readonly="1"/>
+                            <field name="so_khoang_chua_tinh" readonly="1"/>
+                            <field name="ly_do_kd"
+                                   invisible="do_duoc_kd"/>
+                            <field name="do_duoc_kd" invisible="1"/>
+                        </group>
+                        <group string="Khả dụng — theo HÃNG (nhập vào)">
+                            <field name="kd_nha_san_xuat"/>
+                            <field name="lech_kd" readonly="1"/>
+                            <field name="ghi_chu"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_unit_day_search" model="ir.ui.view">
+        <field name="name">eam.unit.day.search</field>
+        <field name="model">eam.unit.day</field>
+        <field name="arch" type="xml">
+            <search string="Tìm">
+                <field name="location_id"/>
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_kem" string="Khả dụng dưới 90%"
+                        domain="[('do_duoc_kd', '=', True),
+                                 ('kd_san_luong', '&lt;', 90)]"/>
+                <filter name="f_chua_sl" string="Chưa có sản lượng"
+                        domain="[('do_duoc_sl', '=', False)]"/>
+                <filter name="f_chua_hs" string="Chưa tính được hệ số công suất"
+                        domain="[('do_duoc_hs', '=', False)]"/>
+                <filter name="f_chua_quy" string="Có khoảng dừng chưa quy ra kWh"
+                        domain="[('so_khoang_chua_tinh', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="f_lech" string="Lệch với hãng trên 5 điểm"
+                        domain="[('lech_kd', '&gt;', 5)]"/>
+                <filter name="f_chua_hang" string="Chưa nhập số của hãng"
+                        domain="[('kd_nha_san_xuat', '=', 0)]"/>
+                <separator/>
+                <filter name="g_may" string="Tổ máy"
+                        context="{'group_by': 'location_id'}"/>
+                <filter name="g_ngay" string="Ngày"
+                        context="{'group_by': 'date'}"/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_unit_day_pivot" model="ir.ui.view">
+        <field name="name">eam.unit.day.pivot</field>
+        <field name="model">eam.unit.day</field>
+        <field name="arch" type="xml">
+            <pivot string="Sản lượng theo tổ máy">
+                <field name="location_code" type="row"/>
+                <field name="date" interval="day" type="col"/>
+                <field name="san_luong" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_unit_day_graph" model="ir.ui.view">
+        <field name="name">eam.unit.day.graph</field>
+        <field name="model">eam.unit.day</field>
+        <field name="arch" type="xml">
+            <graph string="Hệ số công suất theo tổ máy" type="bar">
+                <field name="location_code"/>
+                <field name="he_so_cong_suat" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_unit_day" model="ir.actions.act_window">
+        <field name="name">Hiệu suất tổ máy theo ngày</field>
+        <field name="res_model">eam.unit.day</field>
+        <field name="view_mode">list,graph,pivot,form</field>
+        <field name="search_view_id" ref="view_unit_day_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có dòng nào</p>
+            <p>Con số cấp nhà máy trả lời <i>"hôm qua trại phát bao
+            nhiêu"</i>. Bảng này trả lời câu người vận hành hỏi mỗi sáng:
+            <b>máy nào đang kéo cả trại xuống</b>.</p>
+            <p>Chưa có dòng nào thường là vì nhà máy <b>chưa khai tổ
+            máy</b>. Mở hồ sơ nhà máy và bấm <i>Đánh dấu tổ máy theo điểm
+            đo</i> — hệ không tự đoán, vì đoán là đưa cả trạm khí tượng
+            vào bảng.</p>
+        </field>
+    </record>
+
+    <!-- Nút trên hồ sơ nhà máy -->
+    <record id="view_eam_location_form_unit" model="ir.ui.view">
+        <field name="name">eam.location.form.unit</field>
+        <field name="model">eam.location</field>
+        <field name="inherit_id" ref="eam_core.view_eam_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_type']" position="after">
+                <field name="la_to_may"
+                       invisible="location_type != 'position'"/>
+            </xpath>
+            <!-- Form vị trí không có <header>; chèn nút vào ngay trước
+                 khối tiêu đề thay vì tạo header mới cho một nút. -->
+            <xpath expr="//div[@name='button_box']" position="after">
+                <div invisible="location_type != 'plant'" class="mb-2">
+                    <button name="action_danh_dau_to_may" type="object"
+                            string="Đánh dấu tổ máy theo điểm đo"
+                            class="btn-secondary"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_unit_day" name="Hiệu suất tổ máy"
+              parent="eam_core.menu_eam_ops"
+              action="action_unit_day" sequence="6"/>
+
+</odoo>

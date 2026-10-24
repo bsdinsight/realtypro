@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ Bảng từng tổ máy ============ -->
+    <template id="khoi_bang_to_may">
+        <t t-set="b" t-value="o.bang_to_may()"/>
+        <p t-if="not b['dong']" class="small text-muted mb-0">
+            Chưa dựng bảng tổ máy cho ngày này. Mở <b>Vận hành → Hiệu
+            suất tổ máy</b> và dựng, hoặc chờ cron chạy lúc 0h10.
+        </p>
+        <table t-if="b['dong']" class="table table-sm table-bordered mb-0"
+               style="font-size:9px">
+            <thead class="bg-light">
+                <tr>
+                    <th>MFG</th>
+                    <th class="text-end">Production Today (kWh)</th>
+                    <th class="text-end">Cumulative of the month (kWh)</th>
+                    <th class="text-end">Capacity factor</th>
+                    <th class="text-end">Energy Based Availability</th>
+                    <th class="text-end">Manufacturer Availability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="b['dong']" t-as="d">
+                    <td t-esc="d.location_code"/>
+                    <td class="text-end">
+                        <span t-if="d.do_duoc_sl"
+                              t-esc="'{:,.0f}'.format(d.san_luong)"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end"
+                        t-esc="'{:,.0f}'.format(d.luy_ke_thang)"/>
+                    <td class="text-end">
+                        <span t-if="d.do_duoc_hs"
+                              t-esc="'{:.2f}%'.format(d.he_so_cong_suat)"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <!-- Hai cột khả dụng cố ý KHÔNG gộp: cột của ta tính
+                         hết mọi nguyên nhân, cột của hãng loại trừ phần
+                         ngoài trách nhiệm họ. -->
+                    <td class="text-end">
+                        <span t-if="d.do_duoc_kd"
+                              t-esc="'{:.2f}%'.format(d.kd_san_luong)"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-if="d.kd_nha_san_xuat"
+                              t-esc="'{:.2f}%'.format(d.kd_nha_san_xuat)"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                </tr>
+                <tr class="fw-bold bg-light">
+                    <td>TOTAL</td>
+                    <td class="text-end"
+                        t-esc="'{:,.0f}'.format(b['tong']['san_luong'])"/>
+                    <td class="text-end"
+                        t-esc="'{:,.0f}'.format(b['tong']['luy_ke_thang'])"/>
+                    <td class="text-end">
+                        <span t-if="b['tong']['he_so_cong_suat']"
+                              t-esc="'{:.2f}%'.format(b['tong']['he_so_cong_suat'])"/>
+                        <span t-else="">—</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-if="b['tong']['kd_san_luong']"
+                              t-esc="'{:.2f}%'.format(b['tong']['kd_san_luong'])"/>
+                        <span t-else="">—</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-if="b['tong']['kd_nha_san_xuat']"
+                              t-esc="'{:.2f}%'.format(b['tong']['kd_nha_san_xuat'])"/>
+                        <span t-else="">—</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p t-if="b['tong'] and b['tong'].get('so_chua_co_sl')"
+           class="small text-muted mb-0 mt-1">
+            <b><span t-esc="b['tong']['so_chua_co_sl']"/> tổ máy chưa có
+            số sản lượng</b> và được in là "—". Dòng TỔNG cộng tử số và
+            mẫu số rồi mới chia, không phải trung bình các phần trăm.
+        </p>
+    </template>
+
+    <!-- ============ Hoa gió ============ -->
+    <template id="khoi_hoa_gio">
+        <t t-set="h" t-value="o.hoa_gio()"/>
+        <p t-if="not h['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="h['ly_do']"/>
+        </p>
+        <div t-if="h['do_duoc']" class="d-flex align-items-center">
+            <svg width="190" height="190" viewBox="-100 -100 200 200">
+                <!-- Ba vòng thước, và nhãn hướng ở ngoài cùng -->
+                <circle cx="0" cy="0" r="80" fill="none"
+                        stroke="#ccc" stroke-width="0.5"/>
+                <circle cx="0" cy="0" r="53" fill="none"
+                        stroke="#ccc" stroke-width="0.5"/>
+                <circle cx="0" cy="0" r="27" fill="none"
+                        stroke="#ccc" stroke-width="0.5"/>
+                <t t-foreach="h['canh']" t-as="c">
+                    <!-- Cánh vẽ theo TẦN SUẤT, tô đậm nhạt theo TỐC ĐỘ:
+                         một bông hoa chỉ vẽ tần suất thì không cho biết
+                         hướng nào mang năng lượng. -->
+                    <g t-att-transform="'rotate(%f)' % c['goc']">
+                        <rect x="-9" t-att-y="-80 * c['ty']" width="18"
+                              t-att-height="80 * c['ty']"
+                              t-att-fill="'#0E8C99'"
+                              t-att-fill-opacity="0.35 + 0.65 * min(c['toc'] / 12.0, 1.0)"
+                              stroke="#0F2C3F" stroke-width="0.3"/>
+                    </g>
+                    <text t-att-x="c['nx']" t-att-y="c['ny']"
+                          text-anchor="middle" font-size="7"
+                          fill="#0F2C3F" t-esc="c['ten']"/>
+                </t>
+            </svg>
+            <div class="ms-3 small">
+                <div><b>Hướng trội:</b>
+                    <span t-esc="h['troi_nhat']['ten']"/>
+                    (<span t-esc="'{:.1f}%'.format(h['troi_nhat']['tan_suat'])"/>,
+                    <span t-esc="'{:.1f} m/s'.format(h['troi_nhat']['toc'])"/>)
+                </div>
+                <div class="text-muted">
+                    Dựng từ <span t-esc="'{:,}'.format(h['so_moc'])"/> mốc
+                    đo. Chiều dài cánh là <b>tần suất</b>; độ đậm là
+                    <b>tốc độ trung bình</b> của hướng đó.
+                </div>
+                <div class="text-muted mt-1">
+                    Hướng gió lấy trung bình <b>vectơ</b> — trung bình số
+                    học của 350° và 10° ra 180°, tức ngược hẳn hướng thật.
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ============ Biểu đồ công suất trong ngày ============ -->
+    <template id="khoi_bieu_do">
+        <t t-set="g" t-value="o.bieu_do_ngay()"/>
+        <p t-if="not g['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="g['ly_do']"/>
+        </p>
+        <div t-if="g['do_duoc']">
+            <svg width="100%" height="150" viewBox="0 0 700 150"
+                 preserveAspectRatio="none">
+                <line x1="0" y1="140" x2="700" y2="140"
+                      stroke="#999" stroke-width="1"/>
+                <t t-set="n" t-value="len(g['diem'])"/>
+                <polyline fill="none" stroke="#0E8C99" stroke-width="1.6"
+                          t-att-points="' '.join('%f,%f' % (
+                              700.0 * i / max(n - 1, 1),
+                              140 - 125.0 * d['cs'] / g['cs_max'])
+                              for i, d in enumerate(g['diem']))"/>
+                <polyline t-if="g['co_gio']" fill="none" stroke="#C86428"
+                          stroke-width="1" stroke-dasharray="3,2"
+                          t-att-points="' '.join('%f,%f' % (
+                              700.0 * i / max(n - 1, 1),
+                              140 - 125.0 * d['ws'] / g['ws_max'])
+                              for i, d in enumerate(g['diem']))"/>
+                <t t-foreach="[0, n // 4, n // 2, 3 * n // 4, n - 1]" t-as="i">
+                    <!-- Nhãn đầu neo trái, nhãn cuối neo phải: neo giữa
+                         thì hai đầu bị cắt mất nửa chữ. -->
+                    <text t-att-x="700.0 * i / max(n - 1, 1)" y="149"
+                          font-size="8" fill="#666"
+                          t-att-text-anchor="'start' if i == 0 else ('end' if i == n - 1 else 'middle')"
+                          t-esc="g['diem'][i]['gio']"/>
+                </t>
+            </svg>
+            <div class="small text-muted">
+                <span style="color:#0E8C99">━</span> Công suất toàn trại
+                (đỉnh <span t-esc="'{:,.0f} kW'.format(g['cs_max'])"/>)
+                &amp;nbsp;·&amp;nbsp;
+                <span t-if="g['co_gio']" style="color:#C86428">╌</span>
+                <t t-if="g['co_gio']">Tốc độ gió (đỉnh
+                    <span t-esc="'{:.1f} m/s'.format(g['ws_max'])"/>)</t>
+                — mỗi điểm là <b>trung bình các tổng theo mốc</b>, không
+                phải tổng cộng dồn.
+            </div>
+        </div>
+    </template>
+
+</odoo>

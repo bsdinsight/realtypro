@@ -73,6 +73,16 @@ class EamTimeGroup(models.Model):
 class EamTimeCategory(models.Model):
     _inherit = 'eam.time.category'
 
+    la_su_co = fields.Boolean(
+        string='Là sự cố',
+        help='Loại này tính vào mục SỰ CỐ của tờ báo cáo ngày.\n\n'
+             'Cờ nằm ở LOẠI THỜI GIAN chứ không ở nhóm báo cáo, vì ngữ '
+             'nghĩa nằm ở đây: nhóm "Sự cố thiết bị" vẫn chứa loại "Can '
+             'thiệp sửa chữa CÓ KẾ HOẠCH", còn loại "Dừng sự cố — chờ '
+             'vật tư" lại nằm trong nhóm "Dừng do nhà thầu O&M". Lấy '
+             'nhóm làm thước thì mục sự cố vừa thiếu vừa thừa.\n\n'
+             'KHAI chứ không dò theo tên: tên đổi một chữ là mục sự cố '
+             'trống rỗng mà không gì báo.')
     group_id = fields.Many2one(
         'eam.time.group', string='Nhóm trên báo cáo', ondelete='set null',
         index=True,

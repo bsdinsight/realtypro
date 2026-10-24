@@ -54,6 +54,10 @@
                                            readonly="nguon in ('nguoi', 'historian')"/>
                                     <field name="node_code"
                                            readonly="nguon != 'chain'"/>
+                                    <field name="khoi_dac_biet"
+                                           readonly="nguon != 'khoi'"/>
+                                    <field name="muc"
+                                           readonly="nguon != 'target'"/>
                                     <field name="tag_code"
                                            readonly="nguon != 'historian'"/>
                                     <field name="cach_lay"

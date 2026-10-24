@@ -113,6 +113,20 @@ class EamDailyReport(models.Model):
         string='Hoạt động trong ngày',
         help='Máy dựng sẵn từ lệnh công việc và sổ dừng máy trong ngày. '
              'Người trực sửa câu chữ, không phải gõ lại từ đầu.')
+    ke_hoach_mai = fields.Html(
+        string='Kế hoạch ngày mai',
+        help='Máy dựng từ lệnh công việc đã lên lịch cho ngày mai. Phần '
+             'này của tờ báo cáo hay bị bỏ trống nhất, mà nó lại là thứ '
+             'ca sau đọc đầu tiên.')
+    su_co = fields.Html(
+        string='Sự cố',
+        help='Khoảng dừng KHÔNG kế hoạch trong ngày. Tách khỏi khối hoạt '
+             'động vì người đọc tìm nó riêng — gộp chung thì sự cố nằm '
+             'lẫn giữa việc bảo trì thường ngày.')
+    ghi_chu_bc = fields.Html(
+        string='Ghi chú',
+        help='Phần chỉ người trực biết. Máy không dựng được, và cũng '
+             'không nên dựng.')
     hoat_dong_da_sua = fields.Boolean(
         string='Người đã sửa khối hoạt động', readonly=True, copy=False,
         help='Dựng lại sẽ ĐÈ mất phần đã sửa, nên hệ hỏi trước.')
@@ -340,11 +354,50 @@ class EamDailyReport(models.Model):
             muc.append('</ul>')
             phan.append(''.join(muc))
 
-        if not phan:
-            phan.append('<p><i>%s</i></p>' % _(
-                'Không có khoảng dừng hay lệnh công việc nào được ghi '
-                'nhận trong ngày. Đây là điều hệ ĐỌC ĐƯỢC, không phải '
-                'lời khẳng định rằng không có gì xảy ra.'))
+        # ----- Sự cố: khoảng dừng KHÔNG kế hoạch ----------------------
+        # "Sự cố" theo CỜ ĐÃ KHAI trên nhóm báo cáo, không dò theo tên
+        # nhóm: tên đổi một chữ là mục sự cố trống rỗng mà không gì báo.
+        sc = O.filtered(lambda o: o.category_id.la_su_co)
+        if sc:
+            m = ['<ul>']
+            for o in sc.sorted('date_start'):
+                m.append('<li>%s</li>' % _(
+                    '%(vt)s — %(ly)s, mất %(k)s kWh',
+                    vt=o.location_id.complete_code or o.location_id.name,
+                    ly=(o.category_id.name or o.reason or _('chưa phân loại')),
+                    k='{:,.0f}'.format((o.lost_mwh or 0) * 1000)))
+            m.append('</ul>')
+            self.su_co = ''.join(m)
+        else:
+            # Phân biệt "không có sự cố" với "chưa khai loại nào là sự
+            # cố". Hai chuyện khác hẳn nhau, và chỉ một trong hai là tin
+            # tốt.
+            co_khai = self.env['eam.time.category'].search_count(
+                [('la_su_co', '=', True)])
+            self.su_co = '<p><i>%s</i></p>' % (
+                _('Không có khoảng dừng thuộc loại sự cố nào được GHI '
+                  'NHẬN trong ngày.') if co_khai else
+                _('CHƯA KHAI loại thời gian nào là sự cố, nên mục này '
+                  'luôn trống. Mở Cấu hình → Loại thời gian và tích ô '
+                  '"Là sự cố" cho các loại tương ứng.'))
+
+        # ----- Kế hoạch ngày mai: máy dựng được ------------------------
+        mai_tu, mai_den = den, den + (den - tu)
+        WM = self.env['eam.work.order'].search([
+            ('location_id', 'child_of', self.plant_id.id),
+            ('date_planned_start', '>=', mai_tu),
+            ('date_planned_start', '<', mai_den)])
+        if WM:
+            m = ['<ul>']
+            for w in WM.sorted('date_planned_start'):
+                m.append('<li>%s — %s</li>' % (
+                    w.display_name, w.user_id.name or _('chưa giao ai')))
+            m.append('</ul>')
+            self.ke_hoach_mai = ''.join(m)
+        else:
+            self.ke_hoach_mai = '<p><i>%s</i></p>' % _(
+                'Chưa có lệnh công việc nào lên lịch cho ngày mai.')
+
         self.hoat_dong = ''.join(phan)
         self.hoat_dong_da_sua = False
 

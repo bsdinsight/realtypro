@@ -319,11 +319,25 @@ class EamDailyReportLine(models.Model):
                 # Không có khoảng dừng nào thuộc nhóm này trong ngày là
                 # một sự thật ĐO ĐƯỢC: bằng không, không phải thiếu số.
                 return self._dat(0.0, _('không có khoảng dừng nhóm này'))
-            gt = d['kwh'] if c.truong == 'kwh' else d['gio']
-            return self._dat(gt * c.he_so, _('%d khoảng dừng', d['so']))
-        tong = sum(v['kwh' if c.truong == 'kwh' else 'gio']
-                   for v in theo.values())
-        self._dat(tong * c.he_so, _('%d nhóm', len(theo)))
+            cac = [d]
+        else:
+            cac = list(theo.values())
+        if not cac:
+            return self._dat(0.0, _('không có khoảng dừng nào trong ngày'))
+        chua = sum(x.get('chua_tien', 0) for x in cac)
+        if c.truong == 'tien' and chua:
+            # Giá điện chưa khai thì tổng tiền nhỏ hơn thật mà vẫn là
+            # một con số dương — "53.560 kWh mất = 48 đồng" trông như đã
+            # tính xong, và không ai bấm máy tính lại một dòng báo cáo.
+            return self._chua_do(_(
+                '%(n)d khoảng dừng đã có sản lượng mất nhưng CHƯA quy ra '
+                'tiền — khai giá điện trên nhà máy hoặc hợp đồng mua bán '
+                'điện, rồi bấm tính tiền trên sổ dừng máy', n=chua))
+        khoa = {'kwh': 'kwh', 'tien': 'tien'}.get(c.truong, 'gio')
+        tong = sum(x[khoa] for x in cac)
+        self._dat(tong * c.he_so, _(
+            '%(n)d khoảng dừng · %(g)d nhóm',
+            n=sum(x['so'] for x in cac), g=len(cac)))
 
     def _rot_historian(self, ctx, c):
         tags = self._tim_tag(c.tag_code)
@@ -382,6 +396,56 @@ class EamDailyReportLine(models.Model):
         else:
             dk.append(('code', '=', ma))
         return T.search(dk, order='code')
+
+    def _rot_unit(self, ctx, c):
+        """Lấy một ô của dòng TỔNG trong bảng tổ máy.
+
+        Không cộng lại từ đầu: gọi đúng hàm đã dựng dòng TỔNG của bảng,
+        để tờ báo cáo và bảng tổ máy không bao giờ ra hai con số cho
+        cùng một ngày.
+        """
+        t = self.env['eam.unit.day'].tong_ngay(
+            self.report_id.plant_id, self.report_id.date)
+        if not t:
+            return self._chua_do(_(
+                'chưa dựng bảng tổ máy cho ngày này — mở "Hiệu suất tổ '
+                'máy" và dựng, hoặc chờ cron chạy lúc 0h10'))
+        if c.truong not in t:
+            return self._chua_do(_(
+                'dòng TỔNG của bảng tổ máy không có ô "%(t)s"; đang có: '
+                '%(c)s', t=c.truong, c=', '.join(sorted(t))))
+        gt = t[c.truong]
+        if gt is None:
+            return self._chua_do(_(
+                'ô "%s" của dòng TỔNG chưa tính được — xem lý do trên '
+                'chính bảng tổ máy', c.truong))
+        self._dat(gt * c.he_so, _('dòng TỔNG của %d tổ máy',
+                                  t.get('so_to_may', 0)))
+
+    def _rot_target(self, ctx, c):
+        """Mục tiêu LUỸ KẾ tới ngày này, ở mức đã khai."""
+        lk = self.env['eam.energy.target'].luy_ke_den(
+            self.report_id.plant_id, self.report_id.date)
+        if not lk.get('do_duoc'):
+            return self._chua_do(lk.get('ly_do') or _('chưa khai mục tiêu'))
+        # Nói rõ con số là CHIA ĐỀU. Trình bày nó như mục tiêu riêng của
+        # ngày hôm nay là để người đọc tin vào một độ chính xác không có.
+        vet = (_('mục tiêu tháng chia đều %(a)d/%(b)d ngày · nguồn: %(n)s',
+                 a=lk['ngay_thu'], b=lk['so_ngay_thang'], n=lk['nguon'])
+               if lk['cach_rai'] == 'deu'
+               else _('mục tiêu cả tháng · nguồn: %s', lk['nguon']))
+        self._dat(lk[c.muc] * c.he_so, vet)
+
+    def _rot_khoi(self, ctx, c):
+        """Khối dựng sẵn — bản in tự chèn, dòng này chỉ đánh dấu chỗ."""
+        nhan = dict(c._fields['khoi_dac_biet'].selection).get(
+            c.khoi_dac_biet, '')
+        self.write({'do_duoc': True,
+                    'gia_tri_chu': _('(khối: %s)', nhan),
+                    'ly_do_chua_do': False,
+                    'nguon_ghi': _('khối dựng sẵn: %s',
+                                   dict(c._fields['khoi_dac_biet'].selection
+                                        ).get(c.khoi_dac_biet, ''))})
 
     def _rot_nguoi(self, ctx, c):
         """Người trực tự điền — máy không đụng vào."""

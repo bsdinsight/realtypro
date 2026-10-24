@@ -141,6 +141,15 @@
                             </div>
                             <field name="hoat_dong" nolabel="1"
                                    readonly="state != 'nhap'"/>
+                            <separator string="Kế hoạch ngày mai"/>
+                            <field name="ke_hoach_mai" nolabel="1"
+                                   readonly="state != 'nhap'"/>
+                            <separator string="Sự cố"/>
+                            <field name="su_co" nolabel="1"
+                                   readonly="state != 'nhap'"/>
+                            <separator string="Ghi chú — chỉ người trực biết"/>
+                            <field name="ghi_chu_bc" nolabel="1"
+                                   readonly="state != 'nhap'"/>
                         </page>
                     </notebook>
                 </sheet>

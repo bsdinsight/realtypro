@@ -102,8 +102,18 @@ class EamLocation(models.Model):
             if cuoi <= dau:
                 continue
             ten = o.group_id.name if o.group_id else 'Chưa xếp nhóm'
-            d = kq.setdefault(ten, {'gio': 0.0, 'kwh': 0.0, 'so': 0})
+            d = kq.setdefault(ten, {'gio': 0.0, 'kwh': 0.0, 'tien': 0.0,
+                                    'so': 0, 'chua_tien': 0})
             d['gio'] += (cuoi - dau).total_seconds() / 3600.0
             d['kwh'] += (o.lost_mwh or 0.0) * 1000.0
+            # Tiền đã tính sẵn trên chính khoảng dừng, kèm vết giá lấy
+            # từ đâu. Nhân lại ở đây là mở ra khả năng hai nơi dùng hai
+            # giá cho cùng một ngày.
+            d['tien'] += o.lost_revenue or 0.0
+            # Đếm riêng khoảng dừng ĐÃ có sản lượng mất mà CHƯA quy ra
+            # tiền: cộng chúng như số 0 thì tổng tiền nhỏ hơn thật mà
+            # vẫn là một con số dương, trông như đã tính xong.
+            if (o.lost_mwh or 0) and not (o.lost_revenue or 0):
+                d['chua_tien'] = d.get('chua_tien', 0) + 1
             d['so'] += 1
         return kq

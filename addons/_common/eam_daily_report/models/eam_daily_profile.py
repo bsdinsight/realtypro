@@ -29,7 +29,9 @@ from odoo.exceptions import ValidationError
 #: Khối trên tờ báo cáo. Thứ tự này là thứ tự in.
 KHOI = [
     ('khi_tuong', 'Khí tượng'),
+    ('to_may', 'Từng tổ máy'),
     ('san_luong', 'Sản lượng'),
+    ('cong_to', 'Công-tơ giao nhận'),
     ('ton_that', 'Tổn thất qua các bậc'),
     ('hieu_suat', 'Hiệu suất'),
     ('kha_dung', 'Khả dụng'),
@@ -47,7 +49,20 @@ NGUON = [
     ('avail', 'Khả dụng trong ngày'),
     ('downtime', 'Giờ dừng theo nhóm'),
     ('historian', 'Kho chuỗi thời gian'),
+    ('unit', 'Tổng bảng tổ máy'),
+    ('target', 'Mục tiêu sản lượng'),
+    ('khoi', 'Khối dựng sẵn (bảng, biểu đồ)'),
     ('nguoi', 'Người trực tự điền'),
+]
+
+#: Khối dựng sẵn — không phải một con số mà cả một mảng của tờ giấy.
+#: Đặt chúng thành DÒNG cấu hình để thứ tự in vẫn do hồ sơ quyết, thay
+#: vì chôn vào bản in rồi muốn đổi chỗ phải sửa mã.
+KHOI_DAC_BIET = [
+    ('bang_to_may', 'Bảng từng tổ máy'),
+    ('hoa_gio', 'Hoa gió'),
+    ('bieu_do_ngay', 'Biểu đồ công suất trong ngày'),
+    ('cong_to', 'Công-tơ: số đọc hôm qua / hôm nay / chênh'),
 ]
 
 #: Cách rút một con số NGÀY ra từ chuỗi thời gian.
@@ -131,6 +146,14 @@ class EamDailyProfileLine(models.Model):
     group_id = fields.Many2one(
         'eam.time.group', string='Nhóm giờ dừng',
         help='Để trống thì lấy TỔNG mọi nhóm.')
+    khoi_dac_biet = fields.Selection(
+        KHOI_DAC_BIET, string='Khối dựng sẵn',
+        help='Chỉ dùng khi nguồn là "Khối dựng sẵn". Dòng này không mang '
+             'một con số — nó đánh dấu chỗ bản in chèn cả một mảng.')
+    muc = fields.Selection(
+        [('p50', 'P50'), ('p75', 'P75'), ('p90', 'P90')],
+        string='Mức xác suất',
+        help='Chỉ dùng khi nguồn là "Mục tiêu sản lượng".')
     tag_code = fields.Char(
         string='Mã điểm đo',
         help='Gọi điểm đo theo MÃ, không theo bản ghi: hồ sơ cấu hình '
@@ -174,7 +197,8 @@ class EamDailyProfileLine(models.Model):
              'tồn tại.')
     note = fields.Char(string='Ghi chú')
 
-    @api.constrains('nguon', 'truong', 'node_code', 'tag_code')
+    @api.constrains('nguon', 'truong', 'node_code', 'tag_code',
+                    'khoi_dac_biet', 'muc')
     def _check_khai_du(self):
         for l in self:
             if l.nguon in ('weather', 'kpi', 'avail') and not l.truong:
@@ -185,6 +209,19 @@ class EamDailyProfileLine(models.Model):
                 raise ValidationError(_(
                     'Dòng "%s" lấy từ chuỗi bậc đo thì phải khai CẢ mã '
                     'bậc lẫn tên trường.', l.name))
+            if l.nguon == 'khoi' and not l.khoi_dac_biet:
+                raise ValidationError(_(
+                    'Dòng "%s" là khối dựng sẵn thì phải chọn khối nào.',
+                    l.name))
+            if l.nguon == 'target' and not l.muc:
+                raise ValidationError(_(
+                    'Dòng "%s" lấy mục tiêu thì phải chọn mức P50, P75 '
+                    'hay P90 — "mục tiêu" không kèm mức là câu nói dở.',
+                    l.name))
+            if l.nguon == 'unit' and not l.truong:
+                raise ValidationError(_(
+                    'Dòng "%s" lấy từ bảng tổ máy thì phải khai lấy ô '
+                    'nào của dòng TỔNG.', l.name))
             if l.nguon == 'historian' and not l.tag_code:
                 raise ValidationError(_(
                     'Dòng "%s" lấy từ kho chuỗi thời gian thì phải khai '

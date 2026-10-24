@@ -26,10 +26,15 @@ from odoo.addons.eam_historian.models.eam_historian import BANG
 
 _logger = logging.getLogger(__name__)
 
-#: Mười hai cánh hoa gió, mỗi cánh 30 độ, bắt đầu từ Bắc.
-SO_CANH = 12
+#: MƯỜI SÁU cánh, mỗi cánh 22,5 độ — không phải mười hai.
+#
+# Bộ tên B / BĐB / ĐB / ĐĐB… là bộ MƯỜI SÁU ĐIỂM, tâm cách nhau 22,5°.
+# Dùng nó cho mười hai cánh 30° thì mỗi nhãn lệch khỏi hướng thật tới
+# bảy độ rưỡi và càng về sau càng lệch: cánh 30–60° (tức ĐÔNG BẮC) bị
+# gọi là "BĐB". Hoa gió mười sáu cánh cũng là nếp của ngành.
+SO_CANH = 16
 TEN_HUONG = ['B', 'BĐB', 'ĐB', 'ĐĐB', 'Đ', 'ĐĐN', 'ĐN', 'NĐN',
-             'N', 'NTN', 'TN', 'TTN']
+             'N', 'NTN', 'TN', 'TTN', 'T', 'TTB', 'TB', 'BTB']
 
 
 class EamDailyReport(models.Model):

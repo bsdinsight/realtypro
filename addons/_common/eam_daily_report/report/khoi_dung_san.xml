@@ -101,7 +101,7 @@
                          một bông hoa chỉ vẽ tần suất thì không cho biết
                          hướng nào mang năng lượng. -->
                     <g t-att-transform="'rotate(%f)' % c['goc']">
-                        <rect x="-9" t-att-y="-80 * c['ty']" width="18"
+                        <rect x="-7" t-att-y="-80 * c['ty']" width="14"
                               t-att-height="80 * c['ty']"
                               t-att-fill="'#0E8C99'"
                               t-att-fill-opacity="0.35 + 0.65 * min(c['toc'] / 12.0, 1.0)"

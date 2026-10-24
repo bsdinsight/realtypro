@@ -66,8 +66,23 @@ class EamOutage(models.Model):
                 rec.ly_do_khong_tinh = False
                 tinh += 1
             else:
-                # Giữ nguyên con số cũ. Không tính được KHÁC với bằng 0.
                 rec.ly_do_khong_tinh = kq['ly_do']
+                # "Không tính được" KHÁC "bằng 0", nên con số cũ được giữ
+                # — NHƯNG chỉ khi nó là con số của NGƯỜI.
+                #
+                # Số do chính engine này tính ở lượt trước là chuyện khác:
+                # dữ liệu nền đã đổi, lượt này không dựng lại được, nên nó
+                # thành số MỒ CÔI — không ai gõ, không còn gì đỡ. Giữ lại
+                # thì nó chảy tiếp vào khả dụng và vào tiền phạt nhà thầu
+                # mãi mãi, mà màn hình vẫn hiện một con số trông bình
+                # thường. Đo trên dữ liệu thật: sau khi nạp lại SCADA, số
+                # mồ côi làm sản lượng mất phồng lên MƯỜI MỘT LẦN.
+                if rec.nguon_mat == 'doi_chung' and rec.lost_mwh:
+                    rec.lost_mwh = 0.0
+                    rec.lost_revenue = 0.0
+                    rec.ly_do_khong_tinh = _(
+                        'Đã XOÁ con số cũ do máy tính ở lượt trước, vì '
+                        'lượt này không dựng lại được: %s', kq['ly_do'])
                 de += 1
         if len(self) == 1 and de and not tinh:
             raise UserError(_(

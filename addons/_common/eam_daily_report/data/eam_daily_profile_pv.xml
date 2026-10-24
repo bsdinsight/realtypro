@@ -912,4 +912,45 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
         <field name="so_le">1</field>
     </record>
 
+    <!-- ======== Nhóm ③: phía MỘT CHIỀU lên tờ ========
+         Bậc "đầu vào một chiều" đứng trước bậc đầu ra bộ nghịch lưu,
+         nên tổn thất của bậc ấy CHÍNH LÀ tổn hao biến đổi DC→AC. Hiệu
+         suất đọc ra từ đó, không tính riêng một chỗ khác. -->
+    <record id="pl_pv_edc" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">8</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy Input (DC side)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">DC</field>
+        <field name="truong">energy</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">1</field>
+    </record>
+    <record id="pl_pv_ldc" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">5</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Energy loss (DC to AC conversion)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">INV</field>
+        <field name="truong">loss_pct</field>
+        <field name="ma">l_inv</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">4</field>
+    </record>
+    <record id="pl_pv_eff" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_pv"/>
+        <field name="sequence">5</field>
+        <field name="khoi">hieu_suat</field>
+        <field name="name">Average inverter efficiency</field>
+        <field name="kieu">so</field>
+        <field name="nguon">cong_thuc</field>
+        <field name="cong_thuc">100 - l_inv</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+
 </odoo>

@@ -132,3 +132,56 @@ class EamChainDay(models.Model):
                     'nhân thường gặp: công-tơ vừa được thay mà chưa đánh '
                     'dấu, hoặc hai số đọc bị đảo ngày.',
                     rec.energy, rec.node_id.name, rec.date))
+
+    # ==================================================================
+    # Tổn thất của một bậc đọc sang DÒNG NGÀY CỦA BẬC TRƯỚC — một quan
+    # hệ Odoo không theo dõi được, vì nó đi qua ``sequence`` chứ không
+    # qua một trường quan hệ. ``eam.chain.node`` đã đỡ trường hợp thêm
+    # hoặc đổi thứ tự BẬC; còn thiếu trường hợp thường gặp hơn nhiều:
+    # dòng ngày của bậc trước mới được dựng, hoặc vừa sửa số.
+    #
+    # Hậu quả không hề báo: bậc sau giữ nguyên tổn thất CŨ, mà số cũ
+    # trông y hệt số mới. Dựng bậc "đầu vào một chiều" xong thì tổn hao
+    # biến đổi của bộ nghịch lưu vẫn hiện là trống, và người đọc kết
+    # luận nhà máy không đo được hiệu suất.
+    # ==================================================================
+    def _tinh_lai_ke_ben(self):
+        """Tính lại tổn thất cho mọi dòng CÙNG CHUỖI, CÙNG NGÀY."""
+        if not self:
+            return
+        khoa = {(r.chain_id.id, r.date) for r in self if r.chain_id and r.date}
+        if not khoa:
+            return
+        mien = ['|'] * (len(khoa) - 1)
+        for c, d in khoa:
+            mien += ['&', ('chain_id', '=', c), ('date', '=', d)]
+        ke = self.search(mien)
+        if ke:
+            ke._compute_ton_that()
+            ke.flush_recordset()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        recs = super().create(vals_list)
+        recs._tinh_lai_ke_ben()
+        return recs
+
+    def write(self, vals):
+        res = super().write(vals)
+        if {'energy', 'node_id', 'date'} & set(vals):
+            self._tinh_lai_ke_ben()
+        return res
+
+    def unlink(self):
+        ke = self.browse()
+        if self:
+            khoa = {(r.chain_id.id, r.date)
+                    for r in self if r.chain_id and r.date}
+            if khoa:
+                mien = ['|'] * (len(khoa) - 1)
+                for c, d in khoa:
+                    mien += ['&', ('chain_id', '=', c), ('date', '=', d)]
+                ke = self.search(mien) - self
+        res = super().unlink()
+        ke.exists()._tinh_lai_ke_ben()
+        return res

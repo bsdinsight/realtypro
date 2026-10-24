@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_period_list" model="ir.ui.view">
+        <field name="name">eam.energy.period.list</field>
+        <field name="model">eam.energy.period</field>
+        <field name="arch" type="xml">
+            <list string="Sản lượng theo kỳ" create="false"
+                  decoration-danger="dat_muc == 'duoi'"
+                  decoration-warning="not du_lieu_day"
+                  decoration-success="dat_muc == 'p50'">
+                <field name="nhan_ky" string="Kỳ"/>
+                <field name="loai_ky"/>
+                <field name="plant_id"/>
+                <field name="san_luong" sum="Tổng sản lượng"/>
+                <field name="so_ngay_thieu" string="Ngày thiếu"/>
+                <field name="he_so_cong_suat" string="CF (%)"/>
+                <field name="kd_san_luong" string="Khả dụng (%)"/>
+                <field name="sl_mat" string="Mất (kWh)" sum="Tổng mất"/>
+                <field name="p50" optional="show" sum="Tổng P50"/>
+                <field name="ty_le_p50" string="Đạt P50 (%)"/>
+                <field name="dat_muc" widget="badge"
+                       decoration-success="dat_muc == 'p50'"
+                       decoration-warning="dat_muc in ('p75', 'p90')"
+                       decoration-danger="dat_muc == 'duoi'"/>
+                <field name="ly_do_khong_so" string="Vì sao chưa so được"
+                       optional="show" width="260px"/>
+                <field name="doanh_thu" optional="hide" sum="Tổng doanh thu"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="du_lieu_day" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_period_form" model="ir.ui.view">
+        <field name="name">eam.energy.period.form</field>
+        <field name="model">eam.energy.period</field>
+        <field name="arch" type="xml">
+            <form string="Sản lượng theo kỳ">
+                <header>
+                    <button name="action_xem_to_may" type="object"
+                            string="Xem bảng tổ máy của kỳ này"
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-warning py-1" role="status"
+                         invisible="du_lieu_day">
+                        <b>Kỳ này thiếu
+                        <field name="so_ngay_thieu" class="oe_inline"/>
+                        ngày dữ liệu.</b> Hệ KHÔNG cộng ngày thiếu thành 0,
+                        nên con số dưới đây <b>nhỏ hơn thật</b> — đừng
+                        đem so với một kỳ đủ ngày mà chưa trừ phần này.
+                    </div>
+                    <div class="alert alert-secondary py-1" role="status"
+                         invisible="co_muc_tieu">
+                        <b>Chưa so được với mục tiêu:</b>
+                        <field name="ly_do_khong_so" class="oe_inline"
+                               readonly="1"/>.
+                        Để trống chứ không ghi 0% — "đạt 0% kế hoạch" và
+                        "chưa ai khai kế hoạch" là hai chuyện khác hẳn.
+                    </div>
+                    <group>
+                        <group string="Kỳ">
+                            <field name="plant_id" readonly="1"/>
+                            <field name="loai_ky" readonly="1"/>
+                            <field name="tu_ngay" readonly="1"/>
+                            <field name="den_ngay" readonly="1"/>
+                            <field name="so_ngay" readonly="1"/>
+                            <field name="so_ngay_co_so" readonly="1"/>
+                            <field name="so_ngay_thieu" readonly="1"/>
+                            <field name="du_lieu_day" invisible="1"/>
+                        </group>
+                        <group string="Sản lượng">
+                            <field name="san_luong" readonly="1"/>
+                            <field name="cong_suat_dat_kw" readonly="1"/>
+                            <field name="he_so_cong_suat" readonly="1"/>
+                            <field name="sl_mat" readonly="1"/>
+                            <field name="kd_san_luong" readonly="1"/>
+                            <field name="doanh_thu" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="So với mục tiêu" invisible="not co_muc_tieu">
+                        <group>
+                            <field name="p50" readonly="1"/>
+                            <field name="p75" readonly="1"/>
+                            <field name="p90" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="ty_le_p50" readonly="1"/>
+                            <field name="dat_muc" readonly="1" widget="badge"/>
+                            <field name="co_muc_tieu" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_period_search" model="ir.ui.view">
+        <field name="name">eam.energy.period.search</field>
+        <field name="model">eam.energy.period</field>
+        <field name="arch" type="xml">
+            <search string="Tìm">
+                <field name="plant_id"/>
+                <field name="nhan_ky"/>
+                <filter name="f_ngay" string="Theo ngày"
+                        domain="[('loai_ky', '=', 'ngay')]"/>
+                <filter name="f_tuan" string="Theo tuần"
+                        domain="[('loai_ky', '=', 'tuan')]"/>
+                <filter name="f_thang" string="Theo tháng"
+                        domain="[('loai_ky', '=', 'thang')]"/>
+                <filter name="f_nam" string="Theo năm"
+                        domain="[('loai_ky', '=', 'nam')]"/>
+                <separator/>
+                <filter name="f_duoi" string="DƯỚI P90"
+                        domain="[('dat_muc', '=', 'duoi')]"/>
+                <filter name="f_thieu" string="Thiếu ngày dữ liệu"
+                        domain="[('so_ngay_thieu', '&gt;', 0)]"/>
+                <filter name="f_chua_mt" string="Chưa khai mục tiêu"
+                        domain="[('co_muc_tieu', '=', False)]"/>
+                <separator/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <filter name="g_loai" string="Loại kỳ"
+                        context="{'group_by': 'loai_ky'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Cộng gộp hay để cạnh nhau: pivot cho cả hai. Bỏ nhà máy khỏi
+         hàng là cộng gộp; để lại là đặt cạnh nhau. -->
+    <record id="view_period_pivot" model="ir.ui.view">
+        <field name="name">eam.energy.period.pivot</field>
+        <field name="model">eam.energy.period</field>
+        <field name="arch" type="xml">
+            <pivot string="Sản lượng đa kỳ, đa nhà máy">
+                <field name="plant_id" type="row"/>
+                <field name="nhan_ky" type="col"/>
+                <field name="san_luong" type="measure"/>
+                <field name="sl_mat" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_period_graph" model="ir.ui.view">
+        <field name="name">eam.energy.period.graph</field>
+        <field name="model">eam.energy.period</field>
+        <field name="arch" type="xml">
+            <graph string="Sản lượng theo kỳ" type="bar" stacked="0">
+                <field name="nhan_ky"/>
+                <field name="plant_id"/>
+                <field name="san_luong" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_period" model="ir.actions.act_window">
+        <field name="name">Sản lượng đa kỳ</field>
+        <field name="res_model">eam.energy.period</field>
+        <field name="view_mode">list,graph,pivot,form</field>
+        <field name="search_view_id" ref="view_period_search"/>
+        <field name="context">{'search_default_f_thang': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có kỳ nào</p>
+            <p>Sản lượng theo <b>ngày / tuần / tháng / năm</b>, một hay
+            nhiều nhà máy. Bỏ nhà máy khỏi hàng trong <b>pivot</b> là
+            cộng gộp; để lại là đặt cạnh nhau.</p>
+            <p>Mỗi dòng in kèm <b>số ngày thiếu dữ liệu</b> — một kỳ
+            thiếu ba ngày vẫn ra con số dương trông bình thường, chỉ nhỏ
+            hơn thật.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_period" name="Sản lượng đa kỳ"
+              parent="eam_core.menu_eam_perf"
+              action="action_period" sequence="20"/>
+
+</odoo>

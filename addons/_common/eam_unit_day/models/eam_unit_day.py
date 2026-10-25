@@ -120,6 +120,13 @@ class EamUnitDay(models.Model):
              'Tính trên ĐIỆN NĂNG cả ngày chứ không lấy trung bình các '
              'hiệu suất tức thời: hiệu suất lúc tải thấp kéo trung bình '
              'xuống dù quãng ấy gần như không sinh ra điện.')
+    gio_tb = fields.Float(
+        string='Tốc độ gió trung bình (m/s)', digits=(5, 2), readonly=True,
+        aggregator='avg',
+        help='Trung bình tại CHÍNH tổ máy này, không phải của trạm khí '
+             'tượng. Hai trụ cách nhau năm trăm mét có thể chênh nhau cả '
+             'mét trên giây, và đó đúng là thứ cột này dùng để giải '
+             'thích vì sao hai trụ cùng model phát khác nhau.')
     do_duoc_dc = fields.Boolean(string='Có số phía một chiều')
     ly_do_dc = fields.Char(string='Vì sao chưa có số DC', readonly=True)
 
@@ -287,7 +294,7 @@ class EamUnitDay(models.Model):
         H = self.env['eam.historian']
         v = {'moc_dong_bo': False, 'moc_ngat': False, 'gio_danh_nghia': 0.0,
              'dinh_ac': 0.0, 'dinh_dc': 0.0, 'hieu_suat_bd': 0.0,
-             'do_duoc_dc': False, 'ly_do_dc': False}
+             'gio_tb': 0.0, 'do_duoc_dc': False, 'ly_do_dc': False}
         # Ngưỡng 1% công suất đặt: bộ nghịch lưu nhả vài kW lúc tự kiểm
         # tra trước bình minh, lấy mốc đó làm "đồng bộ" thì ngày nào
         # cũng sớm hơn thật chừng nửa tiếng.
@@ -304,6 +311,13 @@ class EamUnitDay(models.Model):
                     v['gio_danh_nghia'] = (
                         v['moc_ngat'] - v['moc_dong_bo']
                     ).total_seconds() / 3600.0
+
+        ws = T.search([('location_id', '=', vt.id),
+                       ('tag_type', '=', 'wind_speed')], limit=1)
+        if ws:
+            kg = H.tom_tat_ngay(ws.ids, tu, den, 0.0, 'tb') or {}
+            if kg.get('n') and kg.get('gop') is not None:
+                v['gio_tb'] = kg['gop']
 
         dc = T.search([('location_id', '=', vt.id),
                        ('tag_type', '=', 'dc_power')], limit=1)
@@ -389,6 +403,13 @@ class EamUnitDay(models.Model):
             # số to lên mà tử số không đổi, và "trung bình" tụt xuống vì
             # một lý do chẳng liên quan gì tới việc phát điện.
             'tb_san_luong': (sl / len(co_sl)) if co_sl else None,
+            # Tốc độ gió của cả trại là TRUNG BÌNH các trụ, không phải
+            # tổng. Cộng m/s của mười hai trụ ra 108 m/s — một con số
+            # không ai tin, nhưng chỉ vì nó quá to; cộng của hai trụ ra
+            # 18 m/s thì trông vẫn hợp lý.
+            'gio_tb': ((sum(x.gio_tb for x in ds if x.gio_tb)
+                        / len([x for x in ds if x.gio_tb]))
+                       if any(x.gio_tb for x in ds) else None),
             'so_chua_co_sl': len(ds) - len(co_sl),
             'luy_ke_thang': sum(ds.mapped('luy_ke_thang')),
             'he_so_cong_suat': (100.0 * sl / (cs * 24.0)) if cs else None,

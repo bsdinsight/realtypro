@@ -18,11 +18,11 @@
              đặt tên công ty ở vị trí tuyệt đối, nên lề hẹp thì nội dung
              chui lên nằm đè chữ. Khổ ngang càng dễ dính vì nội dung bắt
              đầu ngay sát mép. -->
-        <field name="margin_top">48</field>
+        <field name="margin_top">13</field>
         <field name="margin_bottom">8</field>
         <field name="margin_left">6</field>
         <field name="margin_right">6</field>
-        <field name="header_spacing">20</field>
+        <field name="header_spacing">3</field>
         <field name="dpi">96</field>
     </record>
 
@@ -190,5 +190,34 @@
             'BCN_%s_%s' % (object.plant_id.code or '', object.date)
         </field>
     </record>
+
+    <!-- Khung GỌN cho hai bố cục lưới.
+         Đầu trang của khung chuẩn Odoo cao chừng 20mm (logo + tên công
+         ty + địa chỉ). Trên khổ A4 NGANG, lề trên phải chừa 48mm mới
+         không đè — tức 23% chiều cao trang, đủ để đẩy hẳn một mục sang
+         trang sau.
+         Vẫn phải có thẻ <div class="header">: Odoo tách phần đầu/chân
+         trang ra tệp riêng trước khi dựng PDF, và không có thẻ ấy thì
+         phần thân đi đường khác rồi VỠ DẤU TIẾNG VIỆT. -->
+    <template id="khung_gon">
+        <div class="header"
+             style="font-size:7px; color:#555; padding-bottom:1px;
+                    border-bottom:0.5px solid #ccc">
+            <span t-esc="o.plant_id.company_id.name or ''"/>
+            · <b><span t-field="o.plant_id.name"/></b>
+            · DAILY REPORT · <b><span t-field="o.date"/></b>
+            <span style="float:right">
+                <span t-if="o.state == 'nhap'">NHÁP — chưa chốt</span>
+                <span t-else="">Chốt bởi
+                    <span t-field="o.nguoi_chot_id.name"/></span>
+                <span t-if="o.ban_so &gt; 1"> · bản
+                    <span t-esc="o.ban_so"/></span>
+            </span>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id">
+            <t t-out="0"/>
+        </div>
+    </template>
 
 </odoo>

@@ -26,13 +26,13 @@
                      "NhÃ mÃ¡y" — không có gì báo, và chỉ lộ khi nhìn
                      tờ giấy. -->
                 <t t-if="o.profile_id.bo_cuc == 'luoi'"
-                   t-call="web.external_layout">
+                   t-call="eam_daily_report.khung_gon">
                     <div class="page">
                         <t t-call="eam_daily_report.bao_cao_ngay_luoi"/>
                     </div>
                 </t>
                 <t t-elif="o.profile_id.bo_cuc == 'luoi_gio'"
-                   t-call="web.external_layout">
+                   t-call="eam_daily_report.khung_gon">
                     <div class="page">
                         <t t-call="eam_daily_report.bao_cao_ngay_luoi_gio"/>
                     </div>

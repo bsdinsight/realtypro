@@ -67,6 +67,8 @@ KHOI_DAC_BIET = [
     ('bang_inverter', 'Bảng tổ máy xoay ngang (chỉ tiêu làm hàng)'),
     ('hoa_gio', 'Hoa gió'),
     ('bieu_do_ngay', 'Biểu đồ công suất trong ngày'),
+    ('bieu_do_to_may', 'Biểu đồ so các tổ máy'),
+    ('bieu_do_thang', 'Biểu đồ sản lượng trong tháng'),
     ('san_luong_gio', 'Điện năng từng giờ trong ngày'),
     ('gio_nguyen_nhan', 'Giờ dừng tách theo nguyên nhân'),
     ('cong_to', 'Công-tơ: số đọc hôm qua / hôm nay / chênh'),

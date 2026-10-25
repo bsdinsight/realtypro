@@ -13,6 +13,7 @@
             <thead class="bg-light">
                 <tr>
                     <th>MFG</th>
+                    <th class="text-end">Avg [m/s]</th>
                     <th class="text-end">Production Today (kWh)</th>
                     <th class="text-end">Cumulative of the month (kWh)</th>
                     <th class="text-end">Capacity factor</th>
@@ -23,6 +24,10 @@
             <tbody>
                 <tr t-foreach="b['dong']" t-as="d">
                     <td t-esc="d.location_code"/>
+                    <td class="text-end">
+                        <span t-if="d.gio_tb" t-esc="'{:.1f}'.format(d.gio_tb)"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
                     <td class="text-end">
                         <span t-if="d.do_duoc_sl"
                               t-esc="'{:,.0f}'.format(d.san_luong)"/>
@@ -57,6 +62,11 @@
                 <tr class="bg-light">
                     <td>Avg / unit</td>
                     <td class="text-end">
+                        <span t-if="b['tong'].get('gio_tb')"
+                              t-esc="'{:.1f}'.format(b['tong']['gio_tb'])"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end">
                         <span t-if="b['tong'].get('tb_san_luong')"
                               t-esc="'{:,.0f}'.format(b['tong']['tb_san_luong'])"/>
                         <span t-else="" class="text-muted">—</span>
@@ -68,6 +78,11 @@
                 </tr>
                 <tr class="fw-bold bg-light">
                     <td>TOTAL</td>
+                    <td class="text-end">
+                        <span t-if="b['tong'].get('gio_tb')"
+                              t-esc="'{:.1f}'.format(b['tong']['gio_tb'])"/>
+                        <span t-else="">—</span>
+                    </td>
                     <td class="text-end"
                         t-esc="'{:,.0f}'.format(b['tong']['san_luong'])"/>
                     <td class="text-end"
@@ -171,6 +186,12 @@
                               700.0 * i / max(n - 1, 1),
                               140 - 125.0 * d['ws'] / g['ws_max'])
                               for i, d in enumerate(g['diem']))"/>
+                <polyline t-if="g.get('co_may')" fill="none" stroke="#1a9850"
+                          stroke-width="1" stroke-dasharray="1,2"
+                          t-att-points="' '.join('%f,%f' % (
+                              700.0 * i / max(n - 1, 1),
+                              140 - 125.0 * (d.get('may') or 0) / g['may_max'])
+                              for i, d in enumerate(g['diem']))"/>
                 <t t-foreach="[0, n // 4, n // 2, 3 * n // 4, n - 1]" t-as="i">
                     <!-- Nhãn đầu neo trái, nhãn cuối neo phải: neo giữa
                          thì hai đầu bị cắt mất nửa chữ. -->
@@ -183,6 +204,10 @@
             <div class="small text-muted">
                 <span style="color:#0E8C99">━</span> Công suất toàn trại
                 (đỉnh <span t-esc="'{:,.0f} kW'.format(g['cs_max'])"/>)
+                &amp;nbsp;·&amp;nbsp;
+                <span t-if="g.get('co_may')" style="color:#1a9850">┈</span>
+                <span t-if="g.get('co_may')">Số tổ máy đang phát (đỉnh
+                <span t-esc="g['may_max']"/>)</span>
                 &amp;nbsp;·&amp;nbsp;
                 <span t-if="g['co_gio']" style="color:#C86428">╌</span>
                 <t t-if="g['co_gio']">Tốc độ gió (đỉnh
@@ -380,6 +405,110 @@
             và để trống. Lấy số đọc gần nhất thay cho số đọc hôm qua là
             âm thầm cộng sản lượng nhiều ngày vào một ngày.
         </p>
+    </template>
+
+    <!-- ====== Cột sản lượng từng trụ + luỹ kế + tốc độ gió ====== -->
+    <template id="khoi_bieu_do_to_may">
+        <t t-set="v" t-value="o.bieu_do_to_may()"/>
+        <p t-if="not v['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="v['ly_do']"/>
+        </p>
+        <div t-if="v['do_duoc']">
+            <svg width="100%" height="140" viewBox="0 0 560 140"
+                 preserveAspectRatio="none">
+                <line x1="0" y1="124" x2="560" y2="124"
+                      stroke="#999" stroke-width="1"/>
+                <t t-set="n" t-value="len(v['cot'])"/>
+                <t t-set="w" t-value="560.0 / max(n, 1)"/>
+                <t t-foreach="v['cot']" t-as="c">
+                    <rect t-if="c['sl'] is not None"
+                          t-att-x="w * c_index + w * 0.18"
+                          t-att-y="124 - 108.0 * c['sl'] / v['dinh_sl']"
+                          t-att-width="w * 0.64"
+                          t-att-height="108.0 * c['sl'] / v['dinh_sl']"
+                          fill="#C0392B"/>
+                    <text t-att-x="w * c_index + w * 0.5" y="135"
+                          font-size="6" fill="#666" text-anchor="middle"
+                          t-esc="c['ma']"/>
+                </t>
+                <polyline fill="none" stroke="#1F3864" stroke-width="1.4"
+                          t-att-points="' '.join('%f,%f' % (
+                              w * i + w * 0.5,
+                              124 - 108.0 * c['lk'] / v['dinh_lk'])
+                              for i, c in enumerate(v['cot']))"/>
+                <polyline t-if="v['co_gio']" fill="none" stroke="#0E8C99"
+                          stroke-width="1" stroke-dasharray="3,2"
+                          t-att-points="' '.join('%f,%f' % (
+                              w * i + w * 0.5,
+                              124 - 108.0 * (c['gio'] or 0) / v['dinh_gio'])
+                              for i, c in enumerate(v['cot']))"/>
+            </svg>
+            <div style="font-size:6.5px" class="text-muted">
+                <span style="color:#C0392B">▮</span> Sản lượng hôm nay ·
+                <span style="color:#1F3864">━</span> Luỹ kế tháng ·
+                <span t-if="v['co_gio']" style="color:#0E8C99">╌</span>
+                <span t-if="v['co_gio']">Tốc độ gió</span>
+                — ba đơn vị khác nhau, mỗi đường chuẩn hoá theo đỉnh của
+                CHÍNH NÓ. Đọc được HÌNH DÁNG (trụ nào thấp hơn đàn),
+                không đọc được giá trị.
+            </div>
+        </div>
+    </template>
+
+    <!-- ====== Sản lượng trong tháng so với P50/P75/P90 ====== -->
+    <template id="khoi_bieu_do_thang">
+        <t t-set="m" t-value="o.bieu_do_thang()"/>
+        <p t-if="not m['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="m['ly_do']"/>
+        </p>
+        <div t-if="m['do_duoc']">
+            <svg width="100%" height="140" viewBox="0 0 560 140"
+                 preserveAspectRatio="none">
+                <line x1="0" y1="124" x2="560" y2="124"
+                      stroke="#999" stroke-width="1"/>
+                <t t-set="n" t-value="len(m['diem'])"/>
+                <t t-set="w" t-value="560.0 / max(m['so_ngay'], 1)"/>
+                <t t-foreach="m['diem']" t-as="d">
+                    <rect t-att-x="w * d_index + w * 0.15"
+                          t-att-y="124 - 108.0 * d['sl'] / m['dinh']"
+                          t-att-width="w * 0.70"
+                          t-att-height="108.0 * d['sl'] / m['dinh']"
+                          fill="#C0392B"/>
+                </t>
+                <polyline fill="none" stroke="#1F3864" stroke-width="1.5"
+                          t-att-points="' '.join('%f,%f' % (
+                              w * i + w * 0.5,
+                              124 - 108.0 * d['lk'] / m['dinh_lk'])
+                              for i, d in enumerate(m['diem']))"/>
+                <t t-foreach="[('p50','#1a9850'),('p75','#fd8d3c'),
+                               ('p90','#999999')]" t-as="mk">
+                    <polyline t-if="m['muc'].get(mk[0])" fill="none"
+                              t-att-stroke="mk[1]" stroke-width="0.9"
+                              stroke-dasharray="4,2"
+                              t-att-points="' '.join('%f,%f' % (
+                                  w * i + w * 0.5, 124 - 108.0 * y / m['dinh_lk'])
+                                  for i, y in enumerate(m['muc'][mk[0]]))"/>
+                </t>
+                <t t-foreach="[1, m['so_ngay'] // 2, m['so_ngay']]" t-as="i">
+                    <text t-att-x="w * (i - 0.5)" y="135" font-size="6"
+                          fill="#666" text-anchor="middle" t-esc="i"/>
+                </t>
+            </svg>
+            <div style="font-size:6.5px" class="text-muted">
+                <span style="color:#C0392B">▮</span> Sản lượng ngày ·
+                <span style="color:#1F3864">━</span> Luỹ kế ·
+                <span style="color:#1a9850">╌</span> P50 ·
+                <span style="color:#fd8d3c">╌</span> P75 ·
+                <span style="color:#999">╌</span> P90.
+                Mục tiêu vẽ thành đường luỹ kế CHIA ĐỀU theo ngày — so
+                luỹ kế tới hôm nay với mục tiêu cả tháng thì tháng nào
+                cũng trông như sắp trượt.
+                <t t-if="m['thieu']"> <b><span t-esc="m['thieu']"/> ngày
+                chưa có số</b> và vẽ bằng không.</t>
+                <t t-if="m['ly_do_muc']"> Không vẽ được mục tiêu:
+                <span t-esc="m['ly_do_muc']"/>.</t>
+            </div>
+        </div>
     </template>
 
 </odoo>

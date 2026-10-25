@@ -19,8 +19,9 @@ trung bình VECTƠ. Kho chuỗi thời gian đã có sẵn phép ấy; ở đây
 """
 import logging
 import math
+from datetime import timedelta
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 
 from odoo.addons.eam_historian.models.eam_historian import BANG
 
@@ -196,10 +197,33 @@ class EamDailyReport(models.Model):
         if not diem:
             return {'do_duoc': False, 'ly_do': _(
                 'không có số đo công suất nào trong ngày')}
+
+        # SỐ TỔ MÁY ĐANG PHÁT theo từng bục. Đếm trên điểm đo CẤP MÁY,
+        # nên nhà máy chỉ có điểm đo tổng thì không đếm được — nói ra
+        # thay vì vẽ một đường phẳng ở số không.
+        T = self.env['eam.tag']
+        may = T.search([('plant_id', '=', self.plant_id.id),
+                        ('tag_type', '=', 'power'),
+                        ('location_id', '!=', self.plant_id.id)])
+        if may:
+            self.env.cr.execute("""
+                SELECT to_timestamp(floor(extract(epoch FROM ts) / %s) * %s)
+                           AT TIME ZONE 'UTC' AS buc,
+                       avg(n)::float
+                FROM (SELECT ts, count(*) FILTER (WHERE value > 1) n
+                        FROM {bang}
+                       WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s
+                    GROUP BY ts) x
+                GROUP BY 1
+            """.format(bang=BANG), (b, b, may.ids, tu, den))
+            dem = {r[0]: float(r[1]) for r in self.env.cr.fetchall()}
+            for i, (ts, _v) in enumerate(cs):
+                diem[i]['may'] = dem.get(ts, 0.0)
         return {'do_duoc': True, 'diem': diem,
                 'cs_max': max(d['cs'] for d in diem) or 1.0,
                 'ws_max': max(d['ws'] for d in diem) or 1.0,
-                'co_gio': bool(ws)}
+                'may_max': len(may) or 1,
+                'co_gio': bool(ws), 'co_may': bool(may)}
 
     # ==================================================================
     def san_luong_gio(self, tu_gio=0, den_gio=24):
@@ -417,3 +441,79 @@ class EamDailyReport(models.Model):
             })
         return {'do_duoc': True, 'dong': dong,
                 'so_thieu': len([d for d in dong if d['ra'] is None])}
+
+    # ==================================================================
+    def bieu_do_to_may(self):
+        """Cột sản lượng từng trụ, kèm đường luỹ kế tháng và tốc độ gió.
+
+        Ba đại lượng BA ĐƠN VỊ khác nhau trên một khung. Mỗi đường chuẩn
+        hoá theo ĐỈNH CỦA CHÍNH NÓ, nên chỉ đọc được HÌNH DÁNG — trụ nào
+        thấp hơn đàn — chứ không đọc được giá trị. Đó là điều phải nói
+        ra: một biểu đồ hai trục mà không ghi rõ thì người đọc sẽ so
+        chiều cao giữa hai đường khác đơn vị.
+        """
+        self.ensure_one()
+        ds = self.env['eam.unit.day'].search(
+            [('plant_id', '=', self.plant_id.id), ('date', '=', self.date)],
+            order='location_code')
+        if not ds:
+            return {'do_duoc': False, 'ly_do': _(
+                'chưa dựng sổ ngày tổ máy cho ngày này')}
+        cot = [{'ma': d.location_code or '',
+                'sl': d.san_luong if d.do_duoc_sl else None,
+                'lk': d.luy_ke_thang or 0.0,
+                'gio': d.gio_tb or None} for d in ds]
+        dinh_sl = max([c['sl'] for c in cot if c['sl'] is not None] or [1.0])
+        dinh_lk = max([c['lk'] for c in cot] or [1.0]) or 1.0
+        dinh_g = max([c['gio'] for c in cot if c['gio']] or [1.0])
+        return {'do_duoc': True, 'cot': cot,
+                'dinh_sl': dinh_sl or 1.0, 'dinh_lk': dinh_lk,
+                'dinh_gio': dinh_g or 1.0,
+                'co_gio': any(c['gio'] for c in cot)}
+
+    # ==================================================================
+    def bieu_do_thang(self):
+        """Sản lượng từng ngày trong tháng + luỹ kế so với P50/P75/P90.
+
+        Mục tiêu vẽ thành ĐƯỜNG LUỸ KẾ chia đều theo ngày, không phải
+        một vạch ngang ở mức cả tháng: so sản lượng luỹ kế tới ngày 17
+        với mục tiêu CẢ THÁNG thì tháng nào cũng trông như sắp trượt.
+        """
+        self.ensure_one()
+        dau = self.date.replace(day=1)
+        ds = self.env['eam.unit.day'].read_group(
+            [('plant_id', '=', self.plant_id.id),
+             ('date', '>=', dau), ('date', '<=', self.date),
+             ('do_duoc_sl', '=', True)],
+            ['san_luong:sum'], ['date:day'], lazy=False)
+        theo = {}
+        for g in ds:
+            d = g.get('__range', {}).get('date:day', {}).get('from')
+            if d:
+                theo[fields.Date.to_date(d)] = g['san_luong']
+        if not theo:
+            return {'do_duoc': False, 'ly_do': _(
+                'tháng này chưa có ngày nào có sản lượng')}
+        import calendar
+        so_ngay = calendar.monthrange(self.date.year, self.date.month)[1]
+        lk = T = self.env['eam.energy.target'].luy_ke_den(
+            self.plant_id, self.date)
+        ca_thang = lk.get('ca_thang') if lk.get('do_duoc') else None
+        diem, cong = [], 0.0
+        d = dau
+        while d <= self.date:
+            v = theo.get(d, 0.0)
+            cong += v
+            diem.append({'ngay': d.day, 'sl': v, 'lk': cong})
+            d += timedelta(days=1)
+        muc = {}
+        if ca_thang:
+            for k in ('p50', 'p75', 'p90'):
+                muc[k] = [ca_thang[k] * x['ngay'] / so_ngay for x in diem]
+        dinh = max([x['sl'] for x in diem] or [1.0]) or 1.0
+        dinh_lk = max([cong] + [max(v) for v in muc.values()] or [1.0]) or 1.0
+        return {'do_duoc': True, 'diem': diem, 'muc': muc,
+                'dinh': dinh, 'dinh_lk': dinh_lk, 'so_ngay': so_ngay,
+                'thieu': len([x for x in diem if not x['sl']]),
+                'ly_do_muc': '' if ca_thang else (
+                    lk.get('ly_do') or _('chưa khai mục tiêu tháng'))}

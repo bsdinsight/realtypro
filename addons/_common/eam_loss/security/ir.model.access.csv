@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_eam_loss_type_user,eam.loss.type user,model_eam_loss_type,re_base.group_re_user,1,0,0,0
+access_eam_loss_type_mgr,eam.loss.type manager,model_eam_loss_type,re_base.group_re_manager,1,1,1,1
+access_eam_loss_day_user,eam.loss.day user,model_eam_loss_day,re_base.group_re_user,1,1,1,0
+access_eam_loss_day_mgr,eam.loss.day manager,model_eam_loss_day,re_base.group_re_manager,1,1,1,1
+access_eam_loss_line_user,eam.loss.day.line user,model_eam_loss_day_line,re_base.group_re_user,1,1,1,0
+access_eam_loss_line_mgr,eam.loss.day.line manager,model_eam_loss_day_line,re_base.group_re_manager,1,1,1,1

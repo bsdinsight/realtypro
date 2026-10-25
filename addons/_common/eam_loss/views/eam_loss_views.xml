@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_loss_type_list" model="ir.ui.view">
+        <field name="name">eam.loss.type.list</field>
+        <field name="model">eam.loss.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="nhom"/>
+                <field name="cach_do"/>
+                <field name="group_id"/>
+                <field name="node_code"/>
+                <field name="la_tu_dung"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_day_list" model="ir.ui.view">
+        <field name="name">eam.loss.day.list</field>
+        <field name="model">eam.loss.day</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="plant_id"/>
+                <field name="muc_ke_hoach" sum="Tổng" optional="show"/>
+                <field name="muc_tai_nguyen" sum="Tổng"/>
+                <field name="chenh_tai_nguyen" sum="Tổng" optional="show"/>
+                <field name="thuc_te" sum="Tổng"/>
+                <field name="tong_mat" sum="Tổng"/>
+                <field name="tong_tu_dung" sum="Tổng" optional="hide"/>
+                <field name="du" sum="Tổng"
+                       decoration-warning="du_dang_ke"/>
+                <field name="du_dang_ke" column_invisible="1"/>
+                <field name="du_pct" optional="show"
+                       decoration-warning="du_dang_ke"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_day_form" model="ir.ui.view">
+        <field name="name">eam.loss.day.form</field>
+        <field name="model">eam.loss.day</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_dung_lai" type="object"
+                            string="Dựng lại" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <h1><field name="display_name" readonly="1"/></h1>
+                    <group>
+                        <group string="Ba mốc">
+                            <field name="muc_ke_hoach"/>
+                            <field name="ly_do_kh" invisible="do_duoc_kh"
+                                   readonly="1"/>
+                            <field name="muc_tai_nguyen"/>
+                            <field name="ly_do_tn" readonly="1"
+                                   invisible="not ly_do_tn"/>
+                            <field name="thuc_te"/>
+                            <field name="do_duoc_kh" invisible="1"/>
+                            <field name="do_duoc_tn" invisible="1"/>
+                        </group>
+                        <group string="Phân rã">
+                            <field name="tong_mat"/>
+                            <field name="tong_tu_dung"/>
+                            <field name="du"/>
+                            <field name="du_pct"/>
+                            <field name="du_dang_ke"/>
+                            <field name="chenh_tai_nguyen"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not du_dang_ke">
+                        <b>Phần dư <field name="du_pct" nolabel="1"
+                           readonly="1"/>% của mốc tài nguyên.</b>
+                        Mô hình chưa giải thích được phần này — KHÔNG chia
+                        nó vào các cột để biểu đồ cộng khít. Dư lớn thường
+                        do một trong ba: sổ dừng máy ghi thiếu, đường cong
+                        công suất không còn đúng với máy đã xuống cấp, hoặc
+                        gió đo tại vỏ máy lệch so với gió tới cánh.
+                    </div>
+                    <field name="thac_nuoc" readonly="1"/>
+                    <field name="line_ids" readonly="1">
+                        <list>
+                            <field name="loss_type_id"/>
+                            <field name="nhom"/>
+                            <field name="kwh" sum="Tổng"/>
+                            <field name="ty_le"/>
+                            <field name="tien" sum="Tổng" optional="show"/>
+                            <field name="nguon" optional="show"/>
+                            <field name="do_duoc" optional="hide"/>
+                            <field name="ly_do" optional="show"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_line_pivot" model="ir.ui.view">
+        <field name="name">eam.loss.day.line.pivot</field>
+        <field name="model">eam.loss.day.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân rã tổn thất">
+                <field name="loss_type_id" type="row"/>
+                <field name="date" interval="day" type="col"/>
+                <field name="kwh" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_eam_loss_day" model="ir.actions.act_window">
+        <field name="name">Hạch toán tổn thất</field>
+        <field name="res_model">eam.loss.day</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="action_eam_loss_line" model="ir.actions.act_window">
+        <field name="name">Phân rã tổn thất</field>
+        <field name="res_model">eam.loss.day.line</field>
+        <field name="view_mode">pivot,list</field>
+    </record>
+    <record id="action_eam_loss_type" model="ir.actions.act_window">
+        <field name="name">Loại tổn thất</field>
+        <field name="res_model">eam.loss.type</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_eam_loss_day" name="Hạch toán tổn thất"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_loss_day" sequence="30"/>
+    <menuitem id="menu_eam_loss_line" name="Phân rã tổn thất"
+              parent="eam_core.menu_eam_perf"
+              action="action_eam_loss_line" sequence="31"/>
+    <menuitem id="menu_eam_loss_type" name="Loại tổn thất"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_loss_type" sequence="30"/>
+
+</odoo>

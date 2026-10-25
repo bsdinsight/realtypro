@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Loại tổn thất DÙNG CHUNG cho cả hai công nghệ. Mười loại riêng của
+     tấm quang điện (bụi bẩn, che bóng, clipping, string chết…) thuộc
+     B04 và khai thêm vào chính bảng này — không phải một bảng thứ hai. -->
+<odoo>
+  <data noupdate="1">
+
+    <record id="lt_luoi" model="eam.loss.type">
+        <field name="code">GRID</field>
+        <field name="name">Lưới ngoài</field>
+        <field name="sequence">10</field>
+        <field name="nhom">luoi</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_grid"/>
+    </record>
+    <record id="lt_catgiam" model="eam.loss.type">
+        <field name="code">CURT</field>
+        <field name="name">Cắt giảm theo lệnh điều độ</field>
+        <field name="sequence">20</field>
+        <field name="nhom">luoi</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_curtail"/>
+        <field name="note">Cắt giảm thường ĐƯỢC THANH TOÁN theo hợp đồng
+            mua bán điện. Vẫn là sản lượng không phát ra, nhưng không
+            phải khoản mất tiền — nên đừng cộng nó vào "doanh thu mất"
+            mà chưa đối chiếu điều khoản deemed.</field>
+    </record>
+    <record id="lt_bt" model="eam.loss.type">
+        <field name="code">PM</field>
+        <field name="name">Bảo trì theo kế hoạch</field>
+        <field name="sequence">30</field>
+        <field name="nhom">dung_may</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_pm"/>
+    </record>
+    <record id="lt_suco" model="eam.loss.type">
+        <field name="code">FAULT</field>
+        <field name="name">Sự cố thiết bị</field>
+        <field name="sequence">40</field>
+        <field name="nhom">dung_may</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_comp"/>
+    </record>
+    <record id="lt_om" model="eam.loss.type">
+        <field name="code">OM</field>
+        <field name="name">Dừng do nhà thầu O&amp;M</field>
+        <field name="sequence">50</field>
+        <field name="nhom">dung_may</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_om"/>
+    </record>
+    <record id="lt_ngoai" model="eam.loss.type">
+        <field name="code">EXT</field>
+        <field name="name">Sự cố ngoài phạm vi</field>
+        <field name="sequence">60</field>
+        <field name="nhom">dung_may</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_ext"/>
+    </record>
+    <record id="lt_bkk" model="eam.loss.type">
+        <field name="code">FM</field>
+        <field name="name">Bất khả kháng &amp; môi trường</field>
+        <field name="sequence">70</field>
+        <field name="nhom">khac</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_fm"/>
+    </record>
+    <record id="lt_mdl" model="eam.loss.type">
+        <field name="code">GAP</field>
+        <field name="name">Mất dữ liệu giám sát</field>
+        <field name="sequence">80</field>
+        <field name="nhom">khac</field>
+        <field name="cach_do">dung_may</field>
+        <field name="group_id" ref="eam_downtime.group_data"/>
+        <field name="note">Mất dữ liệu KHÔNG phải mất điện — máy có thể
+            vẫn chạy. Xếp riêng để không lẫn vào tổn thất thật; con số ở
+            đây lớn nghĩa là độ tin của cả bản hạch toán giảm theo.</field>
+    </record>
+
+    <!-- Tổn thất ĐƯỜNG DÂY, đọc từ chuỗi điểm đo -->
+    <record id="lt_duongday" model="eam.loss.type">
+        <field name="code">LINE</field>
+        <field name="name">Tổn thất đường dây trong trại</field>
+        <field name="sequence">90</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">SUB</field>
+    </record>
+    <record id="lt_mba" model="eam.loss.type">
+        <field name="code">TRAFO</field>
+        <field name="name">Tổn thất máy biến áp nâng</field>
+        <field name="sequence">100</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">MBA</field>
+    </record>
+
+    <!-- Tiêu thụ CÓ CHỦ ĐÍCH — trừ khỏi sản lượng bán được nhưng không
+         phải tổn thất của ai. -->
+    <record id="lt_tudung" model="eam.loss.type">
+        <field name="code">AUX</field>
+        <field name="name">Điện tự dùng</field>
+        <field name="sequence">200</field>
+        <field name="nhom">tu_dung</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">TD</field>
+        <field name="la_tu_dung" eval="True"/>
+    </record>
+    <record id="lt_bandem" model="eam.loss.type">
+        <field name="code">NIGHT</field>
+        <field name="name">Tiêu thụ ban đêm</field>
+        <field name="sequence">210</field>
+        <field name="nhom">tu_dung</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">BD</field>
+        <field name="la_tu_dung" eval="True"/>
+    </record>
+
+  </data>
+</odoo>

@@ -88,6 +88,10 @@ class EamLossDay(models.Model):
         help='Mốc kế hoạch trừ mốc tài nguyên. Dương nghĩa là trời cho '
              'ít hơn năm P50 — không ai làm gì sai.')
 
+    duoi_ke_hoach = fields.Boolean(
+        string='Dưới mốc kế hoạch', compute='_compute_tong', store=True,
+        help='Chỉ có nghĩa khi ĐÃ khai mục tiêu. Chưa khai thì không '
+             'phải "đạt kế hoạch", mà là chưa có kế hoạch để so.')
     thac_nuoc = fields.Html(string='Biểu đồ thác nước',
                             compute='_compute_thac', sanitize=False)
     display_name = fields.Char(compute='_compute_display_name')
@@ -122,6 +126,8 @@ class EamLossDay(models.Model):
                 r.du_pct = 0.0
             r.chenh_tai_nguyen = ((r.muc_ke_hoach - r.muc_tai_nguyen)
                                   if (r.do_duoc_kh and r.do_duoc_tn) else 0.0)
+            r.duoi_ke_hoach = bool(r.do_duoc_kh
+                                   and r.thuc_te < r.muc_ke_hoach)
             kha_nang = (r.plant_id.rated_power_mw or 0.0) * 1000.0 * 24.0
             r.du_dang_ke = bool(
                 abs(r.du_pct) > 5.0 and kha_nang
@@ -560,6 +566,10 @@ class EamLossDayLine(models.Model):
                            currency_field='currency_id')
     ty_le = fields.Float(string='% của mốc', digits=(6, 3),
                          compute='_compute_ty_le', store=True)
+    la_tu_dung = fields.Boolean(related='loss_type_id.la_tu_dung',
+                                store=True, string='Tiêu thụ chủ đích')
+    cach_do = fields.Selection(related='loss_type_id.cach_do', store=True,
+                               string='Lấy số từ đâu')
     do_duoc = fields.Boolean(string='Quy được', default=True)
     ly_do = fields.Char(string='Vì sao chưa quy được', readonly=True)
     nguon = fields.Char(string='Lấy từ đâu', readonly=True)

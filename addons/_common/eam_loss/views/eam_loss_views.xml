@@ -113,20 +113,139 @@
         </field>
     </record>
 
+    <!-- ================== PANE LỌC ==================
+         Hai câu hỏi khác nhau nên hai pane khác nhau:
+
+         * Bản hạch toán NGÀY: người đọc đi theo NHÀ MÁY, rồi lọc ra
+           ngày nào đáng xem. Pane bên trái là nhà máy.
+         * Phân rã: người đọc đi theo LOẠI TỔN THẤT — "bụi bẩn tháng
+           này bao nhiêu". Pane bên trái là nhóm và loại.
+
+         Bộ đếm bật sẵn: con số cạnh mỗi mục cho biết có đáng bấm vào
+         không, đỡ phải bấm thử rồi quay ra. -->
+
+    <record id="view_eam_loss_day_search" model="ir.ui.view">
+        <field name="name">eam.loss.day.search</field>
+        <field name="model">eam.loss.day</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_hnay" string="Hôm nay"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="f_7" string="7 ngày gần nhất"
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="f_thang" string="Tháng này"
+                        domain="[('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <!-- Lọc đáng giá nhất: ngày nào mô hình chưa giải thích
+                     được, và đủ lớn để không phải nhiễu của ngày lặng gió. -->
+                <filter name="f_du" string="Phần dư đáng xem"
+                        domain="[('du_dang_ke', '=', True)]"/>
+                <filter name="f_duoi_kh" string="Dưới mốc kế hoạch"
+                        domain="[('duoi_ke_hoach', '=', True)]"/>
+                <separator/>
+                <filter name="f_thieu_tn" string="Chưa có mốc tài nguyên"
+                        domain="[('do_duoc_tn', '=', False)]"/>
+                <filter name="f_thieu_kh" string="Chưa khai mục tiêu"
+                        domain="[('do_duoc_kh', '=', False)]"/>
+                <separator/>
+                    <filter name="g_nm" string="Nhà máy"
+                            context="{'group_by': 'plant_id'}"/>
+                    <filter name="g_thang" string="Tháng"
+                            context="{'group_by': 'date:month'}"/>                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" select="one" icon="fa-industry"
+                           enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_line_search" model="ir.ui.view">
+        <field name="name">eam.loss.day.line.search</field>
+        <field name="model">eam.loss.day.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="loss_type_id"/>
+                <field name="plant_id"/>
+                <field name="date"/>
+                <filter name="f_7" string="7 ngày gần nhất"
+                        domain="[('date', '&gt;=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="f_thang" string="Tháng này"
+                        domain="[('date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="f_co" string="Đã quy được"
+                        domain="[('do_duoc', '=', True), ('kwh', '!=', 0)]"/>
+                <!-- Danh sách CHƯA QUY ĐƯỢC là thứ đem ra bàn lắp thêm
+                     đo — nên nó phải lọc ra được bằng một cú bấm. -->
+                <filter name="f_chua" string="Chưa quy được"
+                        domain="[('do_duoc', '=', False)]"/>
+                <separator/>
+                <filter name="f_mat" string="Là tổn thất"
+                        domain="[('la_tu_dung', '=', False)]"/>
+                <filter name="f_tudung" string="Tiêu thụ có chủ đích"
+                        domain="[('la_tu_dung', '=', True)]"/>
+                <separator/>
+                    <filter name="g_loai" string="Loại tổn thất"
+                            context="{'group_by': 'loss_type_id'}"/>
+                    <filter name="g_nhom" string="Nhóm"
+                            context="{'group_by': 'nhom'}"/>
+                    <filter name="g_nm" string="Nhà máy"
+                            context="{'group_by': 'plant_id'}"/>
+                    <filter name="g_ngay" string="Ngày"
+                            context="{'group_by': 'date'}"/>
+                    <filter name="g_cach" string="Cách lấy số"
+                            context="{'group_by': 'cach_do'}"/>                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" select="one" icon="fa-industry"
+                           enable_counters="1"/>
+                    <field name="nhom" select="multi" icon="fa-tags"
+                           enable_counters="1"/>
+                    <field name="loss_type_id" select="multi"
+                           icon="fa-list-ul" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_type_search" model="ir.ui.view">
+        <field name="name">eam.loss.type.search</field>
+        <field name="model">eam.loss.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <filter name="f_tudung" string="Tiêu thụ có chủ đích"
+                        domain="[('la_tu_dung', '=', True)]"/>
+                <filter name="f_tay" string="Chờ người nhập"
+                        domain="[('cach_do', '=', 'tay')]"/>
+                <separator/>
+                    <filter name="g_nhom" string="Nhóm"
+                            context="{'group_by': 'nhom'}"/>
+                    <filter name="g_cach" string="Cách lấy số"
+                            context="{'group_by': 'cach_do'}"/>            </search>
+        </field>
+    </record>
+
     <record id="action_eam_loss_day" model="ir.actions.act_window">
         <field name="name">Hạch toán tổn thất</field>
         <field name="res_model">eam.loss.day</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_loss_day_search"/>
+        <field name="context">{'search_default_f_thang': 1}</field>
     </record>
     <record id="action_eam_loss_line" model="ir.actions.act_window">
         <field name="name">Phân rã tổn thất</field>
         <field name="res_model">eam.loss.day.line</field>
         <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_eam_loss_line_search"/>
+        <field name="context">{'search_default_f_thang': 1,
+                               'search_default_g_loai': 1}</field>
     </record>
     <record id="action_eam_loss_type" model="ir.actions.act_window">
         <field name="name">Loại tổn thất</field>
         <field name="res_model">eam.loss.type</field>
         <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_eam_loss_type_search"/>
     </record>
 
     <menuitem id="menu_eam_loss_day" name="Hạch toán tổn thất"

@@ -136,16 +136,16 @@
     </record>
 
     <menuitem id="menu_rp_payment_request" name="Đề nghị thanh toán"
-              parent="menu_procurement" action="action_rp_payment_request"
-              sequence="40"/>
+              parent="menu_procurement_pay" action="action_rp_payment_request"
+              sequence="10"/>
 
     <!-- Hoá đơn NCC và Thanh toán: dùng lại action chuẩn của Odoo, chỉ
          mượn chỗ đứng trong chuỗi mua sắm. -->
     <menuitem id="menu_rp_procure_bills" name="Hoá đơn nhà cung cấp"
-              parent="menu_procurement"
-              action="action_procure_vendor_bills" sequence="50"/>
+              parent="menu_procurement_pay"
+              action="action_procure_vendor_bills" sequence="20"/>
     <menuitem id="menu_rp_procure_payments" name="Thanh toán"
-              parent="menu_procurement"
+              parent="menu_procurement_pay"
               action="action_procure_payments"
-              sequence="60"/>
+              sequence="30"/>
 </odoo>

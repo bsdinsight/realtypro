@@ -129,6 +129,6 @@
          chính thì người dùng tưởng phân hệ này nhỏ, mà quy mô thật của
          nó nằm ở 25 năm vận hành chứ không ở hai năm xây dựng. -->
     <menuitem id="menu_rp_purchase_order" name="Đơn mua"
-              parent="menu_procurement"
+              parent="menu_procurement_buy"
               action="action_rp_purchase_order" sequence="20"/>
 </odoo>

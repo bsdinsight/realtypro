@@ -145,6 +145,6 @@
     </record>
 
     <menuitem id="menu_rp_purchase_request" name="Yêu cầu mua sắm"
-              parent="menu_procurement" action="action_rp_purchase_request"
+              parent="menu_procurement_buy" action="action_rp_purchase_request"
               sequence="10"/>
 </odoo>

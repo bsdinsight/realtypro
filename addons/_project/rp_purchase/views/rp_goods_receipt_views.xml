@@ -148,6 +148,6 @@
     </record>
 
     <menuitem id="menu_rp_goods_receipt" name="Nhận hàng &amp; nghiệm thu"
-              parent="menu_procurement" action="action_rp_goods_receipt"
+              parent="menu_procurement_buy" action="action_rp_goods_receipt"
               sequence="30"/>
 </odoo>

@@ -28,4 +28,18 @@
     <menuitem id="menu_procurement" name="Mua sắm"
               web_icon="rp_purchase,static/description/icon.png"
               sequence="22"/>
+
+    <!-- Chuỗi mua sắm có sáu chặng, nhưng sáu mục phẳng trên thanh menu
+         thì người dùng phải tự đọc hết mới biết chặng nào nối chặng nào.
+         Gộp làm hai cụm theo đúng chỗ chuỗi ấy GÃY ĐÔI: trước là lấy
+         hàng về, sau là trả tiền. Thanh menu còn năm mục, và tên cụm nói
+         luôn mình đang ở nửa nào.
+
+         Khai ở menu_root.xml vì file này nạp đầu tiên trong manifest,
+         nên các menuitem khai rải rác ở những file sau đều tham chiếu
+         được. -->
+    <menuitem id="menu_procurement_buy" name="Mua hàng"
+              parent="menu_procurement" sequence="10"/>
+    <menuitem id="menu_procurement_pay" name="Công nợ &amp; thanh toán"
+              parent="menu_procurement" sequence="40"/>
 </odoo>

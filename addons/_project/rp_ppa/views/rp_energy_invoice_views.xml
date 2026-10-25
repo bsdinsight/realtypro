@@ -7,9 +7,24 @@
      không phải mở app Kế toán rồi tự mò giữa mọi hoá đơn bán của công
      ty. -->
 <odoo>
+    <!-- `priority` 99 cho MỌI view ta thêm vào account.move và
+         account.payment. Đây không phải chuyện thẩm mỹ.
+
+         `ir.ui.view._order` là `priority, name, id`. Cùng priority mặc
+         định 16 thì Odoo phân định bằng TÊN, và "account.payment.energy.
+         list" đứng trước "account.payment.list" — nên view tiền điện
+         của ta trở thành view mặc định của account.payment cho TOÀN HỆ
+         THỐNG. Màn "Thanh toán" của app Mua sắm lĩnh đủ: nó hiện cột
+         "Dự án" trống, "Số tờ" bằng 0, và gọi nhà thầu là "Bên mua".
+         Action của app ấy không ghim `view_id` nên không có gì đỡ.
+
+         Ghim `view_id` trên action CỦA MÌNH là chưa đủ — nó chỉ bảo vệ
+         màn của mình. Phải đẩy priority để view của mình không bao giờ
+         được chọn làm mặc định cho màn của NGƯỜI KHÁC. -->
     <record id="view_energy_invoice_list" model="ir.ui.view">
         <field name="name">account.move.energy.list</field>
         <field name="model">account.move</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <list string="Hoá đơn tiền điện" create="false"
                   decoration-info="state == 'draft'"
@@ -51,6 +66,7 @@
     <record id="view_energy_invoice_search" model="ir.ui.view">
         <field name="name">account.move.energy.search</field>
         <field name="model">account.move</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <search string="Hoá đơn tiền điện">
                 <field name="name" string="Số hoá đơn"/>
@@ -109,6 +125,7 @@
     <record id="view_energy_payment_list" model="ir.ui.view">
         <field name="name">account.payment.energy.list</field>
         <field name="model">account.payment</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <list string="Thu tiền điện" create="false"
                   decoration-info="state == 'draft'">
@@ -139,6 +156,7 @@
     <record id="view_energy_payment_search" model="ir.ui.view">
         <field name="name">account.payment.energy.search</field>
         <field name="model">account.payment</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <search string="Thu tiền điện">
                 <field name="name" string="Số phiếu"/>

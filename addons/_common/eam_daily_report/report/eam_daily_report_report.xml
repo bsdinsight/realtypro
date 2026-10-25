@@ -107,13 +107,8 @@
                                        t-call="eam_daily_report.khoi_san_luong_gio"/>
                                     <t t-if="ma == 'gio_nguyen_nhan'"
                                        t-call="eam_daily_report.khoi_gio_nguyen_nhan"/>
-                                    <t t-if="ma == 'cong_to'">
-                                        <p class="small text-muted mb-0">
-                                            Khối công-tơ giao nhận (số đọc
-                                            hôm qua / hôm nay / chênh) chưa
-                                            dựng — xem C03 trong danh mục.
-                                        </p>
-                                    </t>
+                                    <t t-if="ma == 'cong_to'"
+                                       t-call="eam_daily_report.khoi_cong_to"/>
                                 </t>
                             </div>
                         </t>

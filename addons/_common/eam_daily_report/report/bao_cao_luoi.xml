@@ -169,6 +169,8 @@
                    t-call="eam_daily_report.khoi_gio_nguyen_nhan"/>
                 <t t-if="ma == 'hoa_gio'"
                    t-call="eam_daily_report.khoi_hoa_gio"/>
+                <t t-if="ma == 'cong_to'"
+                   t-call="eam_daily_report.khoi_cong_to"/>
             </t>
         </div>
     </template>

@@ -352,3 +352,68 @@ class EamDailyReport(models.Model):
             'thieu_dc': len([d for d in ds if not d.do_duoc_dc]),
             'ly_do_dc': next((d.ly_do_dc for d in ds if d.ly_do_dc), ''),
         }
+
+    # ==================================================================
+    #: Công-tơ ĐIỆN NĂNG. Đồng hồ giờ máy chạy cũng là eam.meter nhưng
+    #: không thuộc về tờ giao nhận: nhà máy mười hai tua-bin có mười hai
+    #: đồng hồ giờ, in lẫn vào đây thì bảng giao nhận dài gấp ba và
+    #: không dòng nào trong đó liên quan tới sản lượng bán được.
+    LOAI_DIEN_NANG = ('other', 'production_mwh')
+
+    def cong_to_giao_nhan(self):
+        """Bảng số đọc công-tơ: hôm qua · hôm nay · chênh.
+
+        Đây là chỗ DUY NHẤT trên tờ báo cáo có chứng từ đi kèm. Mọi con
+        số khác suy ra từ chuỗi số đo; riêng dòng này là hiệu hai lần
+        đọc đồng hồ, và nó là thứ đem đối chiếu với hoá đơn.
+
+        Thiếu một trong hai lần đọc thì KHÔNG tính chênh. Lấy số đọc gần
+        nhất thay cho số đọc hôm qua là âm thầm cộng sản lượng của nhiều
+        ngày vào một ngày — vẫn ra số dương, vẫn hợp lý, và chỉ lộ khi
+        cộng cả tháng lại thấy vượt.
+        """
+        self.ensure_one()
+        from datetime import timedelta
+        M = self.env['eam.meter']
+        R = self.env['eam.meter.reading']
+        ds = M.search([('location_id', 'child_of', self.plant_id.id),
+                       ('meter_type', 'in', self.LOAI_DIEN_NANG)],
+                      order='location_code')
+        if not ds:
+            return {'do_duoc': False, 'ly_do': _(
+                'nhà máy chưa khai công-tơ điện năng nào — mười hai đồng '
+                'hồ giờ máy chạy không thuộc bảng giao nhận')}
+        hom_qua = self.date - timedelta(days=1)
+        # KHÔNG có dòng tổng. Bảng này gồm công-tơ XUẤT, công-tơ NHẬN
+        # và công-tơ tự dùng — ba chiều khác nhau. Cộng chúng lại ra một
+        # con số không mang nghĩa gì, mà vẫn là một con số đẹp nằm cuối
+        # bảng, nên sớm muộn sẽ có người trích dẫn nó.
+        dong = []
+        for m in ds:
+            a = R.search([('meter_id', '=', m.id),
+                          ('date', '=', hom_qua)], limit=1)
+            b = R.search([('meter_id', '=', m.id),
+                          ('date', '=', self.date)], limit=1)
+            chenh = None
+            vi = ''
+            if not b:
+                vi = _('chưa có số đọc hôm nay')
+            elif not a:
+                vi = _('chưa có số đọc hôm qua — không tính chênh được')
+            elif b.is_reset:
+                vi = _('đồng hồ đã được thay / quay vòng trong ngày')
+            else:
+                chenh = (b.effective_value or 0.0) - (a.effective_value or 0.0)
+                if chenh < 0:
+                    vi = _('số đọc hôm nay NHỎ HƠN hôm qua')
+                    chenh = None
+
+            dong.append({
+                'ten': m.location_id.name or m.display_name,
+                'dv': m.uom_label or 'kWh',
+                'hq': a.effective_value if a else None,
+                'hn': b.effective_value if b else None,
+                'ra': chenh, 'vi': vi,
+            })
+        return {'do_duoc': True, 'dong': dong,
+                'so_thieu': len([d for d in dong if d['ra'] is None])}

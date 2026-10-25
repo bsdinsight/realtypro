@@ -334,4 +334,52 @@
         </div>
     </template>
 
+    <!-- ====== Công-tơ giao nhận: hôm qua · hôm nay · chênh ====== -->
+    <template id="khoi_cong_to">
+        <t t-set="k" t-value="o.cong_to_giao_nhan()"/>
+        <p t-if="not k['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="k['ly_do']"/>
+        </p>
+        <table t-if="k['do_duoc']" class="table table-sm table-bordered mb-0"
+               style="font-size:8px">
+            <thead class="bg-light">
+                <tr>
+                    <th>Metering</th>
+                    <th class="text-center">Unit</th>
+                    <th class="text-end">Readings Yesterday</th>
+                    <th class="text-end">Readings Today</th>
+                    <th class="text-end">Output Today</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="k['dong']" t-as="d">
+                    <td t-esc="d['ten']"/>
+                    <td class="text-center" t-esc="d['dv']"/>
+                    <td class="text-end">
+                        <span t-if="d['hq'] is not None"
+                              t-esc="'{:,.3f}'.format(d['hq'])"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-if="d['hn'] is not None"
+                              t-esc="'{:,.3f}'.format(d['hn'])"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end fw-bold">
+                        <span t-if="d['ra'] is not None"
+                              t-esc="'{:,.0f}'.format(d['ra'])"/>
+                        <span t-else="" class="text-danger"
+                              style="font-weight:normal" t-esc="d['vi']"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p t-if="k['do_duoc'] and k['so_thieu']"
+           class="small text-muted mb-0 mt-1">
+            <b><span t-esc="k['so_thieu']"/> công-tơ chưa tính được chênh</b>
+            và để trống. Lấy số đọc gần nhất thay cho số đọc hôm qua là
+            âm thầm cộng sản lượng nhiều ngày vào một ngày.
+        </p>
+    </template>
+
 </odoo>

@@ -6,6 +6,7 @@ thay vì đặt tên khác cho cùng một khái niệm. Hai bộ từ vựng ch
 thứ là cách chắc chắn để sáu tháng sau không ai lọc chéo được.
 """
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 LOAI_PHU_TUNG = [
     ('spare', 'Phụ tùng thay thế'),

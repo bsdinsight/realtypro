@@ -3,7 +3,7 @@
 
 Người vận hành hỏi "nhà máy này đang có gì trong tay", nhưng tồn kho
 thì ghi theo KHO. Trước đây hai câu ấy chỉ nối với nhau bằng cái TÊN:
-kho tên là "Kho hiện trường Savannakhet" thì người đọc tự hiểu. Máy
+đặt kho là "Kho hiện trường <tên nhà máy>" thì người đọc tự hiểu. Máy
 không đọc được tên, nên không lọc, không cộng, không cảnh báo theo nhà
 máy được.
 

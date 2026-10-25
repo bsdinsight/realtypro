@@ -26,3 +26,11 @@ class StockLocation(models.Model):
         help='Hàng nằm ở đây chưa đủ điều kiện lắp lên máy: chờ kiểm tra, '
              'cách ly, hỏng, hoặc đang gửi đi sửa. Vị trí này sẽ không '
              'chọn được làm kho xuất.')
+
+    # Kéo nhà máy xuống tận vị trí để tồn kho lọc và cộng được theo nhà
+    # máy. `warehouse_id` của Odoo là trường tính CÓ LƯU nên nối chuỗi
+    # related được; nếu nó không lưu thì trường này cũng không lưu nổi
+    # và mọi phép lọc sẽ phải quét toàn bảng.
+    eam_plant_id = fields.Many2one(
+        'eam.location', string='Nhà máy',
+        related='warehouse_id.eam_plant_id', store=True, index=True)

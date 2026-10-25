@@ -68,6 +68,7 @@ lại kho khi đã sửa xong và nghiệm thu.
         # 17 mục menu của kho nằm rải ở bảy file.
         'views/eam_stock_menus.xml',
         'views/eam_stock_views.xml',
+        'views/stock_plant_views.xml',
         'views/eam_part_views.xml',
         'views/eam_user_views.xml',
         'views/eam_inbound_views.xml',

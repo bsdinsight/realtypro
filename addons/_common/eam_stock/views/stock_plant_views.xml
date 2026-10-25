@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Đưa chiều NHÀ MÁY vào kho và vào tồn kho.
+
+     Câu người vận hành hỏi là "nhà máy này đang có gì trong tay", mà
+     tồn kho thì ghi theo kho. Trước đây hai câu ấy chỉ nối nhau bằng
+     cái TÊN của kho — máy không đọc được tên. -->
+<odoo>
+    <record id="view_warehouse_eam_plant" model="ir.ui.view">
+        <field name="name">stock.warehouse.form.eam.plant</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="eam_plant_id"
+                       options="{'no_create': True}"
+                       placeholder="Để trống = kho dùng chung"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_warehouse_tree_eam_plant" model="ir.ui.view">
+        <field name="name">stock.warehouse.list.eam.plant</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="eam_plant_id" string="Nhà máy"
+                       width="220px"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Tồn kho: thêm cột, ô lọc và ô gom nhóm theo nhà máy.
+         Kế thừa view CHUẨN của Odoo chứ không dựng view mới cho
+         stock.quant — dựng view mới là nó tranh mất view mặc định của
+         mọi màn tồn kho khác, đúng cái bẫy vừa dính với account.payment
+         (ir.ui.view xếp theo priority rồi tới TÊN). -->
+    <record id="view_quant_eam_plant" model="ir.ui.view">
+        <field name="name">stock.quant.list.eam.plant</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id"
+               ref="stock.view_stock_quant_tree_editable"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="after">
+                <field name="eam_plant_id" string="Nhà máy"
+                       optional="show" width="200px" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_quant_search_eam_plant" model="ir.ui.view">
+        <field name="name">stock.quant.search.eam.plant</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="after">
+                <field name="eam_plant_id" string="Nhà máy"/>
+            </field>
+            <filter name="locationgroup" position="after">
+                <filter name="g_eam_plant" string="Nhà máy"
+                        context="{'group_by': 'eam_plant_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

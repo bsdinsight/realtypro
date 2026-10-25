@@ -38,6 +38,8 @@ Cộng mười hai công suất ra công suất nhà máy: đúng. Cộng mườ
 """
 import logging
 
+import math
+
 from odoo import _, api, models
 
 from .eam_historian import BANG
@@ -45,6 +47,11 @@ from .eam_historian import BANG
 _logger = logging.getLogger(__name__)
 
 #: Cách cộng nhiều điểm đo lại thành một con số của nhà máy.
+#: Dưới mức này thì không công bố hướng trung bình. 0,3 là mức quen
+#: dùng trong thống kê hướng: dưới đó phân bố coi như không có hướng
+#: trội, và mọi số đo hướng trung bình đều là ngẫu nhiên.
+NGUONG_TAP_TRUNG = 0.30
+
 GOP_NHIEU = {'tong': 'sum', 'tb': 'avg', 'max': 'max',
              # Gộp nhiều điểm đo HƯỚNG: trung bình số học của 350° và
              # 10° ra 180°, tức ngược hẳn hướng thật. Mỗi điểm đo đã có
@@ -84,17 +91,33 @@ class EamHistorian(models.AbstractModel):
             # trung bình chỉ đúng khi các điểm có cùng số mẫu, và sai ở
             # chỗ vòng qua 0° ngay cả khi cùng số mẫu.
             cr.execute("""
-                SELECT degrees(atan2(avg(sin(radians(value))),
-                                     avg(cos(radians(value))))),
+                SELECT avg(sin(radians(value))), avg(cos(radians(value))),
                        count(*), count(*) FILTER (WHERE quality <> 0)
                 FROM {bang}
                 WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s
             """.format(bang=BANG), (tags.ids, tu, den))
-            goc, n, n_nghi = cr.fetchone()
-            if not n:
+            s_tb, c_tb, n, n_nghi = cr.fetchone()
+            if not n or s_tb is None:
                 return {'n': 0}
-            goc = (float(goc) + 360.0) % 360.0 if goc is not None else None
-            return {'gop': goc, 'dinh': None, 'dinh_luc': None,
+            goc = (math.degrees(math.atan2(float(s_tb), float(c_tb)))
+                   + 360.0) % 360.0
+            # ĐỘ TẬP TRUNG: độ dài vectơ tổng hợp, 1 là gió một hướng,
+            # 0 là gió toả đều. Dưới ngưỡng này thì "hướng trung bình"
+            # KHÔNG có nghĩa — gió thổi hai hướng ngược nhau triệt tiêu
+            # nhau và kim chỉ đâu cũng được, mà kết quả vẫn là một con
+            # số hợp lệ trong 0–360 nên không ai nghi. Trả về kèm cờ để
+            # nơi in ra từ chối thay vì in bừa.
+            R = math.hypot(float(s_tb), float(c_tb))
+            if R < NGUONG_TAP_TRUNG:
+                return {'n': n, 'n_nghi': n_nghi, 'gop': None,
+                        'do_tap_trung': R, 'loi': _(
+                            'gió trong ngày toả đều (độ tập trung %(r).3f '
+                            '< %(g).2f) — không có hướng trội nào, nên '
+                            '"hướng trung bình" là con số vô nghĩa. Xem '
+                            'hoa gió để thấy phân bố thật.',
+                            r=R, g=NGUONG_TAP_TRUNG)}
+            return {'gop': goc, 'do_tap_trung': R,
+                    'dinh': None, 'dinh_luc': None,
                     'gio_tren_nguong': None, 'moc_dau': None,
                     'moc_cuoi': None, 'n': n, 'n_nghi': n_nghi,
                     'n_moc': n, 'so_diem_do': len(tags),

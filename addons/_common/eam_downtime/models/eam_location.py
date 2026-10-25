@@ -114,12 +114,25 @@ class EamLocation(models.Model):
                 ten = o.group_id.name if o.group_id else 'Chưa xếp nhóm'
             d = kq.setdefault(ten, {'gio': 0.0, 'kwh': 0.0, 'tien': 0.0,
                                     'so': 0, 'chua_tien': 0})
-            d['gio'] += (cuoi - dau).total_seconds() / 3600.0
-            d['kwh'] += (o.lost_mwh or 0.0) * 1000.0
+            trong = (cuoi - dau).total_seconds() / 3600.0
+            d['gio'] += trong
+            # Khoảng dừng VẮT QUA NỬA ĐÊM: giờ thì cắt theo cửa sổ, mà
+            # sản lượng mất trước đây cộng NGUYÊN con số của cả khoảng
+            # vào MỌI ngày nó chạm tới. Một khoảng 34 tiếng vắt hai ngày
+            # báo cùng một 42.867 kWh cho cả hai — tổng tháng vượt thật
+            # mà từng dòng ngày vẫn trông bình thường.
+            #
+            # Chia theo TỶ LỆ GIỜ nằm trong cửa sổ. Đây là phép xấp xỉ —
+            # gió không đều suốt khoảng dừng — nhưng là phép xấp xỉ KHAI
+            # RA được, còn cộng trùng thì không ai thấy.
+            ca = o.duration_hours or (
+                (ket - o.date_start).total_seconds() / 3600.0)
+            ty = (trong / ca) if ca else 1.0
+            d['kwh'] += (o.lost_mwh or 0.0) * 1000.0 * ty
             # Tiền đã tính sẵn trên chính khoảng dừng, kèm vết giá lấy
             # từ đâu. Nhân lại ở đây là mở ra khả năng hai nơi dùng hai
-            # giá cho cùng một ngày.
-            d['tien'] += o.lost_revenue or 0.0
+            # giá cho cùng một ngày — nên chỉ chia tỷ lệ, không tính lại.
+            d['tien'] += (o.lost_revenue or 0.0) * ty
             # Đếm riêng khoảng dừng ĐÃ có sản lượng mất mà CHƯA quy ra
             # tiền: cộng chúng như số 0 thì tổng tiền nhỏ hơn thật mà
             # vẫn là một con số dương, trông như đã tính xong.

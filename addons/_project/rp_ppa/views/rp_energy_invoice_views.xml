@@ -106,7 +106,90 @@
         </field>
     </record>
 
-    <!-- MỘT mục trên thanh menu, mở ra hai việc — không phải hai mục
+    <record id="view_energy_payment_list" model="ir.ui.view">
+        <field name="name">account.payment.energy.list</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <list string="Thu tiền điện" create="false"
+                  decoration-info="state == 'draft'">
+                <field name="name" string="Số phiếu" width="170px"/>
+                <field name="date" string="Ngày thu" width="130px"/>
+                <field name="energy_project_id" string="Dự án" width="220px"/>
+                <field name="partner_id" string="Bên mua" width="240px"/>
+                <!-- Cột này là lý do màn hình tồn tại: nhìn một cái biết
+                     ngay phiếu nào gánh nhiều hoá đơn. Để `widget`
+                     many2many_tags thì đọc được số hiệu từng tờ mà không
+                     phải mở phiếu ra.
+                     Dùng `energy_invoice_ids` của ta, KHÔNG dùng
+                     `invoice_ids` của Odoo — xem `_hoa_don_doi_tru`. -->
+                <field name="energy_invoice_ids" string="Trả cho hoá đơn"
+                       widget="many2many_tags" width="300px"/>
+                <field name="energy_invoice_count" string="Số tờ"
+                       width="100px"/>
+                <field name="amount" string="Số tiền" sum="Σ" width="190px"/>
+                <field name="journal_id" string="Qua tài khoản"
+                       optional="hide" width="190px"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_energy_payment_search" model="ir.ui.view">
+        <field name="name">account.payment.energy.search</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <search string="Thu tiền điện">
+                <field name="name" string="Số phiếu"/>
+                <field name="partner_id" string="Bên mua"/>
+                <field name="energy_project_id" string="Dự án"/>
+                <field name="energy_invoice_ids" string="Hoá đơn"/>
+                <filter name="f_gop" string="Thu gộp nhiều hoá đơn"
+                        domain="[('energy_invoice_count', '&gt;', 1)]"/>
+                <separator/>
+                <filter name="g_duan" string="Dự án"
+                        context="{'group_by': 'energy_project_id'}"/>
+                <filter name="g_benmua" string="Bên mua"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_thang" string="Tháng thu"
+                        context="{'group_by': 'date:month'}"/>
+                <searchpanel>
+                    <field name="energy_project_id" string="Dự án"
+                           icon="fa-bolt" enable_counters="1"/>
+                    <field name="partner_id" string="Bên mua"
+                           icon="fa-building" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_energy_payment" model="ir.actions.act_window">
+        <field name="name">Thu tiền</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <!-- Lọc bằng trường ĐẾM CÓ LƯU, không bằng đường dẫn xuyên quan
+             hệ: `energy_invoice_count` nằm sẵn trong bảng nên lọc nhanh
+             và chắc, còn đi xuyên `invoice_ids.energy_line_ids` thì phụ
+             thuộc vào việc Odoo có dựng nổi truy vấn hay không. -->
+        <field name="domain">[('energy_invoice_count', '&gt;', 0)]</field>
+        <field name="view_id" ref="view_energy_payment_list"/>
+        <field name="search_view_id" ref="view_energy_payment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa thu được đồng
+               nào</p>
+            <p>Phiếu thu không tạo ở đây mà sinh từ <b>hoá đơn</b>: mở
+               <i>Hoá đơn tiền điện</i>, chọn một hay nhiều tờ rồi bấm
+               <b>Đăng ký thanh toán</b>.</p>
+            <p>Thu <b>làm nhiều lần</b> thì mỗi lần sửa lại số tiền cho
+               đúng phần trả — hoá đơn giữ số dư cho tới khi trả hết. Thu
+               <b>một lần cho nhiều hoá đơn</b> thì tích nhiều tờ cùng một
+               bên mua rồi bật <i>Gộp thanh toán</i>, sẽ ra một phiếu duy
+               nhất gánh tất cả.</p>
+        </field>
+    </record>
+
+    <!-- MỘT mục trên thanh menu, mở ra ba việc — không phải ba mục
          ngang hàng. Mỗi chức năng chiếm một mục thì mới năm bảy việc là
          thanh menu dài bằng cả màn hình, và khách nhìn vào đọc ra ngay
          là phần mềm chắp vá. Đây đúng là dáng của app Odoo chuẩn
@@ -114,12 +197,15 @@
 
          Wizard gộp kỳ đã viết xong từ lâu mà KHÔNG có lối vào nào —
          action nằm đó, không menu hay nút nào gọi. Nay nó là menu con. -->
-    <menuitem id="menu_rp_energy_invoice_root" name="Hoá đơn"
+    <menuitem id="menu_rp_energy_invoice_root" name="Hoá đơn &amp; thu tiền"
               parent="menu_energy_sale" sequence="40"/>
     <menuitem id="menu_rp_energy_invoice" name="Hoá đơn tiền điện"
               parent="menu_rp_energy_invoice_root"
               action="action_energy_invoice" sequence="10"/>
+    <menuitem id="menu_rp_energy_payment" name="Thu tiền"
+              parent="menu_rp_energy_invoice_root"
+              action="action_energy_payment" sequence="20"/>
     <menuitem id="menu_rp_energy_invoice_wizard" name="Xuất hoá đơn gộp kỳ"
               parent="menu_rp_energy_invoice_root"
-              action="action_rp_energy_invoice_wizard" sequence="20"/>
+              action="action_rp_energy_invoice_wizard" sequence="30"/>
 </odoo>

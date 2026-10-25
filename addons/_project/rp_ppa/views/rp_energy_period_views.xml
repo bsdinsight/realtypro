@@ -5,7 +5,11 @@
         <field name="name">rp.energy.period.list</field>
         <field name="model">rp.energy.period</field>
         <field name="arch" type="xml">
-            <list string="Sản lượng theo kỳ" default_order="date_from"
+            <!-- Mới nhất lên đầu. Sổ sản lượng là thứ người ta mở ra để
+                 xem THÁNG VỪA RỒI thế nào, không phải để đọc lại tháng
+                 đầu tiên của nhà máy. Trước đây xếp xuôi nên muốn xem
+                 tháng gần nhất phải cuộn qua ba năm. -->
+            <list string="Sản lượng theo kỳ" default_order="date_from desc"
                   decoration-info="is_pre_cod"
                   decoration-danger="shortfall_mwh &gt; 0">
                 <field name="name"/>
@@ -115,6 +119,37 @@
         </field>
     </record>
 
+    <!-- Sản lượng là chuỗi số theo thời gian; đọc nó bằng danh sách thì
+         mắt phải tự dựng lấy cái biểu đồ. Hai kiểu xem dưới đây để người
+         dùng thấy ngay mùa vụ và xu hướng — điện gió mạnh cuối năm, điện
+         mặt trời mạnh mùa khô — thứ mà 83 dòng số không nói ra được.
+         ĐO bằng `net_mwh` chứ không phải doanh thu: sản lượng cùng một
+         đơn vị cho mọi dự án, còn tiền thì mỗi dự án một loại. -->
+    <record id="view_rp_energy_period_graph" model="ir.ui.view">
+        <field name="name">rp.energy.period.graph</field>
+        <field name="model">rp.energy.period</field>
+        <field name="arch" type="xml">
+            <graph string="Sản lượng theo kỳ" type="bar" sample="1">
+                <field name="date_from" interval="month"/>
+                <field name="project_id"/>
+                <field name="net_mwh" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_rp_energy_period_pivot" model="ir.ui.view">
+        <field name="name">rp.energy.period.pivot</field>
+        <field name="model">rp.energy.period</field>
+        <field name="arch" type="xml">
+            <pivot string="Sản lượng theo kỳ" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="date_from" interval="year" type="col"/>
+                <field name="net_mwh" type="measure"/>
+                <field name="curtailed_mwh" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_rp_energy_period_search" model="ir.ui.view">
         <field name="name">rp.energy.period.search</field>
         <field name="model">rp.energy.period</field>
@@ -129,8 +164,23 @@
                 <filter name="f_shortfall" string="Khả dụng dưới cam kết"
                         domain="[('shortfall_mwh', '&gt;', 0)]"/>
                 <separator/>
+                <!-- `g_duan` phải là nhóm NGOÀI CÙNG và luôn bật sẵn.
+                     Cột Doanh thu có `sum`, mà mỗi dự án bán bằng một
+                     loại tiền — SAVA1 thu đô, DG123 và PV50 thu đồng.
+                     Để phẳng là Odoo cộng thẳng đô với đồng ra một số
+                     trông rất bình thường mà sai hơn hai vạn lần. Gom
+                     theo dự án trước thì mỗi dòng tổng chỉ còn một loại
+                     tiền, và con số mới có nghĩa. -->
+                <filter name="g_duan" string="Dự án"
+                        context="{'group_by': 'project_id'}"/>
+                <filter name="g_nam" string="Năm"
+                        context="{'group_by': 'date_from:year'}"/>
+                <filter name="g_quy" string="Quý"
+                        context="{'group_by': 'date_from:quarter'}"/>
                 <filter name="g_month" string="Tháng"
                         context="{'group_by': 'date_from:month'}"/>
+                <filter name="g_trangthai" string="Trạng thái"
+                        context="{'group_by': 'state'}"/>
                 <searchpanel>
                     <field name="project_id" string="Dự án" icon="fa-folder"
                            enable_counters="1"/>
@@ -144,8 +194,30 @@
     <record id="action_rp_energy_period" model="ir.actions.act_window">
         <field name="name">Sản lượng &amp; doanh thu</field>
         <field name="res_model">rp.energy.period</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,graph,pivot,form</field>
+        <field name="view_id" ref="view_rp_energy_period_list"/>
         <field name="search_view_id" ref="view_rp_energy_period_search"/>
+        <!-- Mở sẵn DỰ ÁN rồi tới NĂM. Hai cấp này không phải để cho đẹp:
+             một danh sách phẳng 83 dòng trải ba năm thì dòng tổng cộng cả
+             2023 lẫn 2026 lại với nhau, mà cộng doanh thu bốn năm thành
+             một số thì chẳng trả lời được câu hỏi nào. Gom theo năm là
+             ra ngay câu người ta thật sự hỏi: "năm nay nhà máy phát được
+             bao nhiêu, thu về bao nhiêu, so với năm ngoái thế nào".
+             Dự án đứng ngoài vì lý do loại tiền — xem ghi chú ở `g_duan`. -->
+        <field name="context">{'search_default_g_duan': 1,
+                               'search_default_g_nam': 2}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có kỳ sản lượng
+               nào</p>
+            <p>Mỗi kỳ là một lần chốt công-tơ: phát gộp − tự dùng − tổn
+               thất = <b>giao nhận ròng</b>, tức phần được trả tiền. Chốt
+               công-tơ xong thì sản lượng được phân bổ cho từng hợp đồng
+               mua bán điện theo tỷ lệ đã ký.</p>
+            <p>Màn này mở sẵn ở dạng gom nhóm theo <b>Dự án</b> rồi
+               <b>Năm</b>. Đổi cách gom ở menu <i>Gom nhóm</i>, hoặc chuyển
+               sang biểu đồ và bảng xoay ở góc trên bên phải để nhìn mùa vụ
+               và xu hướng.</p>
+        </field>
     </record>
 
     <menuitem id="menu_rp_energy_period" name="Sản lượng &amp; doanh thu"

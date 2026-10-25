@@ -554,6 +554,83 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="truong">san_luong</field>
         <field name="don_vi">kWh</field>
         <field name="so_le">0</field>
+        <field name="ma">sl_nam</field>
+    </record>
+
+    <!-- =========== Nhóm ⑤ =========== -->
+    <record id="pl_wd_rh" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">33</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Humidity</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">*_RH</field>
+        <field name="cach_lay">gop</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+    <!-- Khả dụng theo KỲ HỢP ĐỒNG, không theo năm dương lịch: chỉ con
+         số này mới là căn cứ phạt. -->
+    <record id="pl_wd_ebahd" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">16</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Energy Based Availability Cumulative — Availability Period</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="truong">kd_san_luong</field>
+        <field name="loai_ky">hop_dong</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_wd_cg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">75</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">EVN AGC control</field>
+        <field name="kieu">chu</field>
+        <field name="nguon">khoi</field>
+        <field name="so_le">0</field>
+        <field name="khoi_dac_biet">bang_cat_giam</field>
+    </record>
+    <record id="pl_wd_slnam2" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">86</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Capacity factor for current year</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">nam</field>
+        <field name="truong">he_so_cong_suat</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+    <!-- Sản lượng LẼ RA phát được cả năm: thật cộng phần đã mất. Không
+         bảng nào chứa sẵn, nên tính từ hai dòng trên chính tờ này. -->
+    <record id="pl_wd_slmat_n" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">87</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Energy lost in the year (all causes)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">nam</field>
+        <field name="truong">sl_mat</field>
+        <field name="ma">mat_nam</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_slkcg" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">88</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Production for current year without losses</field>
+        <field name="kieu">so</field>
+        <field name="nguon">cong_thuc</field>
+        <field name="cong_thuc">sl_nam + mat_nam</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
     </record>
 
 </odoo>

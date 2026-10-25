@@ -69,6 +69,7 @@ KHOI_DAC_BIET = [
     ('bieu_do_ngay', 'Biểu đồ công suất trong ngày'),
     ('bieu_do_to_may', 'Biểu đồ so các tổ máy'),
     ('bieu_do_thang', 'Biểu đồ sản lượng trong tháng'),
+    ('bang_cat_giam', 'Bảng cắt giảm theo lệnh điều độ'),
     ('san_luong_gio', 'Điện năng từng giờ trong ngày'),
     ('gio_nguyen_nhan', 'Giờ dừng tách theo nguyên nhân'),
     ('cong_to', 'Công-tơ: số đọc hôm qua / hôm nay / chênh'),
@@ -205,7 +206,7 @@ class EamDailyProfileLine(models.Model):
              'khai thì dòng đó báo thiếu khai báo.')
     loai_ky = fields.Selection(
         [('ngay', 'Ngày'), ('tuan', 'Tuần'), ('thang', 'Tháng'),
-         ('nam', 'Năm')],
+         ('nam', 'Năm'), ('hop_dong', 'Kỳ hợp đồng O&M')],
         string='Kỳ',
         help='Dùng cho nguồn "theo kỳ", và cho nguồn "bậc đo" khi muốn '
              'LUỸ KẾ tới ngày này thay vì số của riêng ngày — tờ báo cáo '

@@ -285,7 +285,47 @@ class EamDailyReportLine(models.Model):
                              k.display_name, chu=True)
         self._dat(gt * c.he_so, k.display_name)
 
+    def _rot_avail_hop_dong(self, c):
+        """Khả dụng luỹ kế trong KỲ HỢP ĐỒNG, tới ngày của tờ.
+
+        Kỳ khả dụng hợp đồng không trùng năm dương lịch: hợp đồng O&M
+        chạy từ ngày nghiệm thu, nên "khả dụng năm nay" theo lịch và
+        theo hợp đồng là hai con số khác nhau — và chỉ con số theo hợp
+        đồng mới là căn cứ phạt.
+        """
+        ngay = self.report_id.date
+        nm = self.report_id.plant_id
+        hd = self.env['eam.om.contract'].search(
+            [('date_start', '<=', ngay), ('date_end', '>=', ngay)])
+        rieng = hd.filtered(
+            lambda h: nm in h.plant_line_ids.mapped('plant_id'))
+        hd = rieng[:1] or hd[:1]
+        if not hd:
+            return self._chua_do(_(
+                'nhà máy chưa có hợp đồng O&M nào phủ ngày %s', ngay))
+        ds = self.env['eam.availability.day'].search(
+            [('plant_id', '=', nm.id),
+             ('date', '>=', hd.date_start), ('date', '<=', ngay)])
+        if not ds:
+            return self._chua_do(_(
+                'chưa có ngày khả dụng nào trong kỳ hợp đồng %(t)s–%(d)s',
+                t=hd.date_start, d=ngay))
+        # Cộng TỬ SỐ và MẪU SỐ rồi mới chia — không lấy trung bình các
+        # phần trăm: ngày lặng gió mất ít điện mà khả dụng vẫn thấp, lấy
+        # trung bình thì nó cùng trọng số với ngày gió mạnh.
+        that = sum(ds.mapped('sl_that'))
+        mat = sum(ds.mapped('sl_mat'))
+        if not (that + mat):
+            return self._chua_do(_('kỳ hợp đồng chưa có sản lượng nào'))
+        thieu = (ngay - hd.date_start).days + 1 - len(ds)
+        self._dat(100.0 * that / (that + mat) * c.he_so, _(
+            '%(h)s · %(t)s→%(d)s · %(n)d ngày có số%(x)s',
+            h=hd.name, t=hd.date_start, d=ngay, n=len(ds),
+            x=(_(' · THIẾU %d ngày') % thieu) if thieu > 0 else ''))
+
     def _rot_avail(self, ctx, c):
+        if c.loai_ky == 'hop_dong':
+            return self._rot_avail_hop_dong(c)
         a = ctx['avail']
         gt, loi = self._lay_truong(a, c.truong, _('khả dụng'))
         if loi:
@@ -412,6 +452,22 @@ class EamDailyReportLine(models.Model):
         gt, loi = self._lay_truong(r, c.truong, _('sản lượng theo kỳ'))
         if loi:
             return self._chua_do(loi)
+        # TỶ LỆ trên kỳ thiếu ngày thì SAI, không phải "nhỏ hơn thật".
+        # Tổng thiếu ngày vẫn là một phần của tổng — ai đọc cũng hiểu
+        # 12,3 triệu kWh là chưa đủ năm. Nhưng hệ số công suất 2,92%
+        # tính trên 32/365 ngày KHÔNG phải hệ số công suất thấp: mẫu số
+        # là cả năm còn tử số mới có một tháng. Con số ấy nằm cạnh "PR
+        # cam kết" và "khả dụng" thì người đọc sẽ so nó với cam kết.
+        #
+        # Đơn vị là thứ dòng hồ sơ ĐÃ KHAI, nên dùng nó làm dấu hiệu —
+        # không đoán theo tên trường.
+        if (c.don_vi or '').strip() == '%' and r.so_ngay and \
+                r.so_ngay_co_so < r.so_ngay * 0.5:
+            return self._chua_do(_(
+                'kỳ %(k)s mới có %(a)d/%(b)d ngày có số — một TỶ LỆ tính '
+                'trên nửa kỳ còn thiếu thì sai chứ không phải nhỏ hơn '
+                'thật, vì mẫu số là cả kỳ', k=r.nhan_ky or '',
+                a=r.so_ngay_co_so, b=r.so_ngay))
         vet = r.nhan_ky or ''
         if r.so_ngay_thieu:
             # Kỳ thiếu ngày vẫn ra một con số dương trông bình thường,

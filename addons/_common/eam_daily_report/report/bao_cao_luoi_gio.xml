@@ -137,6 +137,7 @@
                         </table>
                     </td>
                     <td style="width:38%; border:0; vertical-align:top">
+                        <t t-call="eam_daily_report.khoi_bang_cat_giam"/>
                         <t t-if="g['bieu_do']"
                            t-call="eam_daily_report.khoi_bieu_do"/>
                     </td>

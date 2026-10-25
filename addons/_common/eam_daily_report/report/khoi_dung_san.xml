@@ -511,4 +511,52 @@
         </div>
     </template>
 
+    <!-- ====== Cắt giảm theo lệnh điều độ ====== -->
+    <template id="khoi_bang_cat_giam">
+        <t t-set="k" t-value="o.bang_cat_giam()"/>
+        <p t-if="not k['do_duoc']" class="small text-muted mb-0">
+            <span t-esc="k['ly_do']"/>
+        </p>
+        <table t-if="k['do_duoc']" class="table table-sm table-bordered mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th>EVN AGC control</th>
+                    <th class="text-end">kWh</th>
+                    <th class="text-end">%</th>
+                    <th class="text-end">VND</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="k['dong']" t-as="d">
+                    <td t-esc="d['ten']"/>
+                    <td class="text-end fw-bold"
+                        t-esc="'{:,.0f}'.format(d['kwh'])"/>
+                    <td class="text-end">
+                        <span t-if="d['ty'] is not None"
+                              t-esc="'{:.2f}%'.format(d['ty'])"/>
+                        <span t-else="" class="text-muted">—</span>
+                    </td>
+                    <td class="text-end">
+                        <span t-if="d['tien'] is not None"
+                              t-esc="'{:,.0f}'.format(d['tien'])"/>
+                        <span t-else="" class="text-muted"
+                              style="font-size:6px">chưa quy ra tiền
+                            (<span t-esc="d['chua_tien']"/> khoảng)</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p t-if="k['do_duoc']" class="text-muted mb-0"
+           style="font-size:6px">
+            Nhóm tính là cắt giảm: <span t-esc="k['nhom']"/>.
+            Phần trăm lấy mẫu số là sản lượng LẼ RA phát được (thật +
+            phần bị cắt) — chia cho sản lượng thật thôi thì một ngày bị
+            cắt một nửa ra "100% cắt giảm".
+            <t t-foreach="k['dong']" t-as="d">
+                <t t-if="d['thieu']"> <b><span t-esc="d['ten']"/>:
+                thiếu <span t-esc="d['thieu']"/> ngày chưa có số.</b></t>
+            </t>
+        </p>
+    </template>
+
 </odoo>

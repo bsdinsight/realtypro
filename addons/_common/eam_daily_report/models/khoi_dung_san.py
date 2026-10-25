@@ -517,3 +517,71 @@ class EamDailyReport(models.Model):
                 'thieu': len([x for x in diem if not x['sl']]),
                 'ly_do_muc': '' if ca_thang else (
                     lk.get('ly_do') or _('chưa khai mục tiêu tháng'))}
+
+    # ==================================================================
+    def _bien_ky_utc(self, loai):
+        """Biên UTC của kỳ, tính TỚI HẾT NGÀY CỦA TỜ.
+
+        Luỹ kế tháng trên tờ ngày 17 là 01→17, không phải cả tháng. Và
+        biên phải theo múi giờ NHÀ MÁY rồi mới đổi sang UTC — lấy ngày
+        lịch rồi coi như UTC là lệch bảy tiếng, tức nuốt hoặc hụt gần
+        một phần ba ngày đầu kỳ.
+        """
+        self.ensure_one()
+        import pytz
+        from datetime import datetime, time as _t, timedelta as _td
+        mui = pytz.timezone(self._mui_gio())
+        if loai == 'thang':
+            dau = self.date.replace(day=1)
+        elif loai == 'nam':
+            dau = self.date.replace(month=1, day=1)
+        else:
+            dau = self.date
+        a = mui.localize(datetime.combine(dau, _t.min))
+        b = mui.localize(datetime.combine(self.date + _td(days=1), _t.min))
+        return (a.astimezone(pytz.UTC).replace(tzinfo=None),
+                b.astimezone(pytz.UTC).replace(tzinfo=None))
+
+    def bang_cat_giam(self):
+        """Cắt giảm theo lệnh điều độ: ngày · luỹ kế tháng · luỹ kế năm.
+
+        Phần trăm lấy mẫu số là SẢN LƯỢNG LẼ RA PHÁT ĐƯỢC — tức sản
+        lượng thật CỘNG phần bị cắt. Chia cho sản lượng thật thôi thì
+        một ngày bị cắt một nửa ra "100% cắt giảm", vẫn là con số nhưng
+        không còn nghĩa gì.
+        """
+        self.ensure_one()
+        G = self.env['eam.time.group']
+        nhom = G.search([('la_cat_giam', '=', True)])
+        if not nhom:
+            return {'do_duoc': False, 'ly_do': _(
+                'chưa khai nhóm giờ dừng nào là CẮT GIẢM — không tách '
+                'được phần bị điều độ cắt khỏi phần hỏng máy')}
+        ten_nhom = set(nhom.mapped('name'))
+        P = self.env['eam.energy.period']
+        dong = []
+        for loai, nhan in (('ngay', _('Daily curtailment')),
+                           ('thang', _('Monthly cumulative')),
+                           ('nam', _('Yearly cumulative'))):
+            tu, den = self._bien_ky_utc(loai)
+            theo = self.plant_id.gio_theo_nhom(tu, den)
+            kwh = sum(v['kwh'] for k, v in theo.items() if k in ten_nhom)
+            tien = sum(v['tien'] for k, v in theo.items() if k in ten_nhom)
+            gio = sum(v['gio'] for k, v in theo.items() if k in ten_nhom)
+            chua = sum(v.get('chua_tien', 0) for k, v in theo.items()
+                       if k in ten_nhom)
+            ky = P.search([('plant_id', '=', self.plant_id.id),
+                           ('loai_ky', '=', loai),
+                           ('tu_ngay', '<=', self.date),
+                           ('den_ngay', '>=', self.date)], limit=1)
+            sl = ky.san_luong if ky else None
+            ty = (100.0 * kwh / (sl + kwh)) if (sl is not None
+                                               and (sl + kwh)) else None
+            dong.append({
+                'ten': nhan, 'kwh': kwh, 'gio': gio,
+                'ty': ty, 'tien': None if chua else tien,
+                'chua_tien': chua,
+                'thieu': ky.so_ngay_thieu if ky else None,
+            })
+        return {'do_duoc': True, 'dong': dong,
+                'nhom': ', '.join(sorted(ten_nhom))}

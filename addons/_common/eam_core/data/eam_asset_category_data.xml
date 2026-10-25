@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Danh mục cấu phần dùng chung cho nhiều công nghệ phát điện.
+     Vì sao nằm ở eam_core chứ không ở eam_solar hay eam_wind: cả hai
+     module đều treo nhánh của mình vào gốc này, nên gốc phải ở module
+     mà cả hai đều phụ thuộc. -->
+<odoo>
+    <record id="cat_inverter" model="eam.asset.category">
+        <field name="code">INV</field>
+        <field name="name">Bộ biến tần</field>
+        <!-- LÝ DO TỒN TẠI của nút này. Pane "Loại cấu phần" vẽ ra một
+             CÂY, và Odoo cố tình không để hai ô kiểu-cây lọc lẫn nhau:
+             bấm một nhà máy thì danh sách loại vẫn hiện đủ, chỉ số đếm
+             co lại. Trước đây biến tần quang điện là nút GỐC còn biến
+             tần tua-bin lồng hai cấp trong Tua-bin gió / Hệ điện — chọn
+             nhà máy điện gió thì nút gốc tên đúng chữ "Bộ biến tần" hiện
+             số RỖNG, và người dùng kết luận nhà máy không có biến tần.
+             Có gốc dùng chung thì nút trên cùng đếm đúng cho MỌI nhà
+             máy, bung một cấp là ra loại cụ thể.
+
+             HAI NHÁNH PHẢI NGANG HÀNG — đừng treo nhánh gió xuống dưới
+             nhánh quang điện cho gọn. Kế hoạch bảo trì quét danh mục
+             bằng `child_of` (eam_pm/models/eam_pm_plan.py, hàm
+             `_vi_tri_ap_dung`; mẫu cấu trúc cũng vậy), nên treo lồng là
+             kế hoạch "Bảo dưỡng bộ biến tần 6 tháng" vốn viết cho điện
+             mặt trời tự sinh việc cho cả biến tần tua-bin.
+
+             KHÔNG khai `attr_definition` ở đây: thông số biến tần quang
+             điện (số bộ MPPT, dải điện áp MPPT) khác hẳn biến tần
+             tua-bin, nên lý lịch để ở hai nhánh con. Cũng không gắn tài
+             sản trực tiếp vào nút này. -->
+        <field name="alias_names">Inverter, Converter, Biến tần, Bộ nghịch lưu</field>
+    </record>
+</odoo>

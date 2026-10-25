@@ -129,6 +129,53 @@
                         context="{'group_by': 'date'}"/>
                 <filter name="g_nm" string="Nhà máy"
                         context="{'group_by': 'plant_id'}"/>
+                <!-- Pane lọc. Bốn ô, đếm trên 848 dòng thật:
+
+                       nhà máy          PV50 464 · DG123 384
+                       dải khả dụng     ≥99% 758 · 95–99% 34 ·
+                                        90–95% 11 · <90% 45
+                       đối chiếu hãng   CHƯA NHẬP 465 · khớp 329 ·
+                                        lệch 1–5đ 30 · lệch >5đ 24
+                       dừng máy         không dừng 733 · đã quy 106 ·
+                                        chưa quy kWh 9
+
+                     Bị loại, kèm lý do:
+                       do_duoc_sl / _hs / _kd  mỗi cái 848/848 cùng một
+                                        giá trị
+                       do_duoc_dc       trùng KHÍT nhà máy (464 = PV50,
+                                        384 = DG123) — nó chỉ đang nói
+                                        "có phải điện mặt trời không"
+                       nguồn sản lượng  một giá trị, và là Char
+                       TỔ MÁY           28 tổ máy. Ô nhiều-chọn KHÔNG co
+                                        lại theo nhà máy đã chọn ở trên
+                                        (lõi chỉ đổi con số đếm), nên
+                                        chọn PV50 xong vẫn phải cuộn qua
+                                        12 tua-bin của DG123. Chiều này
+                                        để ở ô tìm kiếm và "Nhóm theo",
+                                        nơi gõ "T07" là ra ngay.
+
+                     Con số 465 ở trên đáng chú ý: hơn NỬA số ngày-tổ-máy
+                     chưa có số của hãng để đối chiếu. Chúng đều mang
+                     `lech_kd = 0`, nên nếu xếp theo độ lệch thì chúng
+                     rơi vào nhóm "khớp" — đọc thành "ta và hãng nhất
+                     trí", trong khi thật ra KHÔNG CÓ GÌ ĐỂ SO. Vì vậy
+                     ô này hỏi "đã có số của hãng chưa" TRƯỚC, rồi mới
+                     xét độ lệch.
+
+                     KHÔNG khai `expand` ở ô nhà máy. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="dai_kd" string="Dải khả dụng"
+                           select="multi" icon="fa-tachometer"
+                           enable_counters="1"/>
+                    <field name="doi_chieu_hang" string="Đối chiếu với hãng"
+                           select="multi" icon="fa-balance-scale"
+                           enable_counters="1"/>
+                    <field name="tinh_trang_dung" string="Tình trạng dừng máy"
+                           select="multi" icon="fa-power-off"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

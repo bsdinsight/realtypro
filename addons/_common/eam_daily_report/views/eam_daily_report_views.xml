@@ -211,6 +211,42 @@
                         context="{'group_by': 'date'}"/>
                 <filter name="g_tt" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+                <!-- Pane lọc. Bốn ô chọn bằng cách ĐẾM trên 6 bản thật:
+
+                       nhà máy          PV50 3 · DG123 2 · SAVA1 1
+                       mẫu báo cáo      điện gió 3 · điện mặt trời 3
+                       tình trạng số    thiếu bắt buộc 2 · chưa đo 1 ·
+                                        còn ô trống 2 · đầy đủ 1
+                       trạng thái       nháp 4 · chốt 2
+
+                     Bị loại, kèm lý do:
+                       bản số           6/6 đều là bản 1
+                       đã sửa ra bản mới 6/6 chưa sửa lần nào
+                       người chốt       lặp lại y nguyên trạng thái
+                                        (chưa chốt 4 ↔ nháp 4)
+                       lý do sửa, múi giờ  là Char — pane chỉ nhận
+                                        many2one/many2many/selection,
+                                        nhét Char vào thì MỌI màn dùng
+                                        chung view này chết LÚC MỞ
+
+                     "Mẫu báo cáo" giữ lại dù mỗi nhà máy chỉ dùng một
+                     mẫu: nó là phép gom THEO LOẠI NGUỒN ĐIỆN, trả lời
+                     "xem hết báo cáo điện gió" bằng một cú bấm — câu
+                     mà ô nhà máy không trả lời được khi đội có nhiều
+                     SPV. KHÔNG khai `expand` ở hai ô many2one. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="profile_id" string="Mẫu báo cáo"
+                           select="multi" icon="fa-file-text-o"
+                           enable_counters="1"/>
+                    <field name="tinh_trang_so" string="Tình trạng số liệu"
+                           select="multi" icon="fa-check-square-o"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-flag"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

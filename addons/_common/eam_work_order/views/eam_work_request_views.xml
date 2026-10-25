@@ -13,6 +13,8 @@
                 <field name="date_request" string="Nêu lúc"/>
                 <field name="title" string="Nội dung" width="260px"/>
                 <field name="location_id" string="Vị trí" width="170px"/>
+                <field name="asset_id" string="Thiết bị" width="240px"
+                       optional="show"/>
                 <field name="requester_id" string="Người nêu"
                        optional="show"/>
                 <field name="source" string="Nguồn" optional="hide"/>

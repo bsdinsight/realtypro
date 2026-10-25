@@ -93,6 +93,25 @@ class EamWorkOrder(models.Model):
              'đích danh một cấu phần khác.')
     category_id = fields.Many2one(
         related='asset_id.category_id', store=True, string='Loại cấu phần')
+    # Nhà máy của lệnh. Suy ra từ vị trí, nhưng phải LƯU: pane lọc chỉ
+    # nhận trường của chính model, không đi theo quan hệ
+    # (`location_id.plant_id`), và trường không lưu thì không vào được
+    # domain. Một cơ sở dữ liệu đang giữ nhiều nhà máy thì "ở nhà máy
+    # nào" là câu lọc đầu tiên của người trực ca.
+    plant_id = fields.Many2one(
+        related='location_id.plant_id', store=True, index=True,
+        string='Nhà máy')
+    # Máy MẸ của cấu phần đang sửa. Không lưu — chỉ để NHÌN trên biểu
+    # mẫu, không ai lọc theo nó. Vị trí đã nói "chỗ nào", trường này nói
+    # "nằm trong con máy nào": khác nhau đúng lúc cấu phần quay vòng,
+    # vì cái hộp số tháo ra đem đại tu vẫn thuộc cụm cũ chứ không ở lại
+    # vị trí cũ.
+    asset_parent_id = fields.Many2one(
+        related='asset_id.parent_id', string='Lắp trong tài sản',
+        readonly=True)
+    asset_level = fields.Selection(
+        related='asset_id.asset_level', string='Cấp tài sản',
+        readonly=True)
 
     # Chiến dịch: thay cả 30 hộp số thì mỗi máy một lệnh, gom về một lệnh
     # cha. Không nhân bản nội dung, và không gộp 30 máy vào một lệnh —
@@ -134,7 +153,10 @@ class EamWorkOrder(models.Model):
          ('om_contract', 'Trong giá hợp đồng O&M'),
          ('om_chargeable', 'Đòi lại nhà thầu O&M'),
          ('insurance', 'Bảo hiểm'),
-         ('undetermined', 'Chưa quy')],
+         # Nói rõ quy CÁI GÌ. "Chưa quy" trơ trọi từng bị đọc
+         # thành "chưa phân công người làm" — mà người làm là
+         # trường `user_id` hoàn toàn khác.
+         ('undetermined', 'Chưa quy trách nhiệm')],
         # Hai cái bẫy ở đây đánh nhau, và lối ra là bỏ cả hai:
         #
         # ① KHÔNG khai ``default``. Trường vừa tính vừa cho sửa mà có

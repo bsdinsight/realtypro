@@ -508,7 +508,7 @@ class EamDailyReportLine(models.Model):
                 n=sum(x['so'] for x in cac), g=len(cac))
         if c.truong == 'gio_nm':
             # GIỜ-MÁY khác GIỜ-NHÀ MÁY, và đó là chỗ một tờ báo cáo nói
-            # sai mà không ai bắt được. Bốn bộ nghịch lưu dừng một tiếng
+            # sai mà không ai bắt được. Bốn bộ biến tần dừng một tiếng
             # là 4 giờ-máy, nhưng nhà máy vẫn chạy suốt — trừ 4 giờ ấy
             # khỏi giờ vận hành của NHÀ MÁY là trộn hai mẫu số, và ra
             # một con số nhỏ hơn thật mà vẫn dương nên trông vẫn hợp lý.

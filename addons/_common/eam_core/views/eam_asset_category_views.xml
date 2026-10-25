@@ -10,6 +10,12 @@
                 <field name="level" string="Cấp"/>
                 <field name="alias_names" string="Tên gọi khác"
                        optional="show"/>
+                <!-- Để ngay trên lưới, KHÔNG giấu sau `optional`: đây là
+                     cờ quyết định tài sản của loại có hiện trong sổ Tài
+                     sản hay không. Giấu đi là người dùng thấy sổ thiếu
+                     mà không biết hỏi ở đâu. -->
+                <field name="is_equipment" string="Là thiết bị"
+                       width="130px"/>
                 <field name="is_rotable_default" string="Quay vòng"/>
                 <field name="is_catch_all" string="Rổ Khác" optional="hide"/>
                 <field name="asset_count" string="Số tài sản"/>
@@ -30,6 +36,7 @@
                             <field name="complete_name"/>
                         </group>
                         <group>
+                            <field name="is_equipment"/>
                             <field name="is_rotable_default"/>
                             <field name="is_catch_all"/>
                             <field name="active" widget="boolean_toggle"/>

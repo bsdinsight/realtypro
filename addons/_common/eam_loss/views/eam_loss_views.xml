@@ -23,19 +23,44 @@
         <field name="name">eam.loss.day.list</field>
         <field name="model">eam.loss.day</field>
         <field name="arch" type="xml">
+            <!-- MỌI cột ở đây phải khai bề rộng, kể cả cột nhà máy.
+                 Cột chữ duy nhất không khai bề rộng sẽ nuốt sạch phần
+                 rộng thừa: đo ở khổ 2000px thì "Nhà máy" chiếm 870px
+                 dù chữ dài nhất chỉ 225px, còn tám cột số bị ép đều
+                 xuống 102px trong khi tiêu đề cần tới 221px.
+
+                 Hậu quả nặng hơn một bảng xấu: bảng này là SỔ HẠCH
+                 TOÁN, dòng cuối là dòng TỔNG. Tổng bị cắt thành
+                 "9.464.664,…" thì không ai đọc được con số mà cả màn
+                 hình sinh ra để nói. Một con số cụt trông vẫn như một
+                 con số, nên không ai báo lỗi — người ta chỉ ngừng tin.
+
+                 Bề rộng lấy từ chữ dài nhất THẬT (tiêu đề, giá trị,
+                 và dòng tổng) cộng chỗ thở. Tổng cộng 1.732px. -->
             <list>
-                <field name="date"/>
-                <field name="plant_id"/>
-                <field name="muc_ke_hoach" sum="Tổng" optional="show"/>
-                <field name="muc_tai_nguyen" sum="Tổng"/>
-                <field name="chenh_tai_nguyen" sum="Tổng" optional="show"/>
-                <field name="thuc_te" sum="Tổng"/>
-                <field name="tong_mat" sum="Tổng"/>
-                <field name="tong_tu_dung" sum="Tổng" optional="hide"/>
-                <field name="du" sum="Tổng"
+                <field name="date" width="120px"/>
+                <field name="plant_id" width="240px"/>
+                <field name="muc_ke_hoach" sum="Tổng" optional="show"
+                       width="200px"/>
+                <field name="muc_tai_nguyen" sum="Tổng" width="185px"/>
+                <!-- Rút NHÃN, không rút dữ liệu: đầy đủ là "Chênh do
+                     tài nguyên (kWh)" và "Phần dư chưa quy được (kWh)",
+                     hai tiêu đề này một mình đã dài 202 và 221px. Rút
+                     gọn trên bảng mua lại 55px — vừa đủ để bảng hết
+                     cuộn ngang — còn nghĩa đầy đủ vẫn nằm ở nhãn trường
+                     trên biểu mẫu và ở chú giải. Cắt tiêu đề thì người
+                     đọc đoán được; cắt con số thì không. -->
+                <field name="chenh_tai_nguyen" sum="Tổng" optional="show"
+                       string="Chênh tài nguyên (kWh)" width="190px"/>
+                <field name="thuc_te" sum="Tổng" width="160px"/>
+                <field name="tong_mat" sum="Tổng" width="195px"/>
+                <field name="tong_tu_dung" sum="Tổng" optional="hide"
+                       width="185px"/>
+                <field name="du" sum="Tổng" width="200px"
+                       string="Phần dư chưa quy (kWh)"
                        decoration-warning="du_dang_ke"/>
                 <field name="du_dang_ke" column_invisible="1"/>
-                <field name="du_pct" optional="show"
+                <field name="du_pct" optional="show" width="115px"
                        decoration-warning="du_dang_ke"/>
             </list>
         </field>

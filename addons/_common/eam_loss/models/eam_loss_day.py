@@ -378,9 +378,9 @@ class EamLossDay(models.Model):
                   f=k.ft, t=k.temp_ref, m=k.temp_module), '')
 
     def _mat_do_clipping(self, tu, den):
-        """Cắt đỉnh: công suất một chiều vượt trần của bộ nghịch lưu.
+        """Cắt đỉnh: công suất một chiều vượt trần của bộ biến tần.
 
-        Chỉ đếm những mốc đo mà bộ nghịch lưu ĐANG CHẠM TRẦN. Lấy mọi
+        Chỉ đếm những mốc đo mà bộ biến tần ĐANG CHẠM TRẦN. Lấy mọi
         lúc DC lớn hơn AC làm clipping là đếm luôn tổn hao biến đổi —
         khoản ấy đã có cột riêng, cộng hai lần thì thác nước vẫn khít mà
         sai cả hai cột.

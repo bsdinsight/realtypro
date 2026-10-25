@@ -79,6 +79,16 @@ class EamPmSchedule(models.Model):
                               compute='_compute_wo_count')
     company_id = fields.Many2one(
         related='location_id.company_id', store=True, index=True)
+    # Hai chiều dưới đây nằm ở bảng KHÁC (vị trí, kế hoạch) nhưng pane
+    # lọc chỉ nhận trường của chính model và không đi theo quan hệ, nên
+    # phải kéo về và LƯU. Lưu cũng là để lọc được bằng domain — trường
+    # tính không lưu thì không vào domain được.
+    plant_id = fields.Many2one(
+        related='location_id.plant_id', store=True, index=True,
+        string='Nhà máy')
+    work_type = fields.Selection(
+        related='plan_id.work_type', store=True, index=True,
+        string='Loại công việc')
 
     _uniq = models.Constraint(
         'UNIQUE(plan_id, location_id)',

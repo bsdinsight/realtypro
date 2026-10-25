@@ -193,7 +193,7 @@ class EamImportMap(models.Model):
          ('tay', 'Nhập tay')],
         string='Nguồn con số', default='scada', required=True,
         help='Chỉ dùng cho đích Bậc đo. Cùng một tờ báo cáo có dòng lấy từ '
-             'SCADA (sản lượng bộ nghịch lưu) và dòng lấy từ công-tơ (điện '
+             'SCADA (sản lượng bộ biến tần) và dòng lấy từ công-tơ (điện '
              'nhận tại trạm EVN). Ghi chung một nhãn thì về sau không biết '
              'con số nào có hoá đơn làm chứng.')
     tag_code = fields.Char(

@@ -6,7 +6,7 @@ Vì sao không lấy "mọi vị trí thiết bị"
 Cây vị trí của một nhà máy chứa cả thứ không phát điện: trạm khí tượng,
 nhà điều hành, trạm biến áp. Đếm bừa "mọi vị trí thiết bị" là đưa trạm
 khí tượng vào mẫu số — đúng cái đã dính ở khả dụng nhà máy điện mặt
-trời: mười sáu bộ nghịch lưu thành mười bảy đơn vị, khả dụng tụt 6%, và
+trời: mười sáu bộ biến tần thành mười bảy đơn vị, khả dụng tụt 6%, và
 con số vẫn nằm trong khoảng 0–100% nên không ai nghi.
 
 Nên có một cờ riêng. Và vì bắt người dùng tích tay hai mươi sáu ô là
@@ -22,7 +22,7 @@ class EamLocation(models.Model):
 
     la_to_may = fields.Boolean(
         string='Là tổ máy phát điện', index=True,
-        help='Tua-bin, bộ nghịch lưu — thứ thật sự phát ra điện. Trạm khí '
+        help='Tua-bin, bộ biến tần — thứ thật sự phát ra điện. Trạm khí '
              'tượng và nhà điều hành thì KHÔNG, dù chúng cũng là vị trí '
              'thiết bị. Cờ này quyết định bảng hiệu suất tổ máy có bao '
              'nhiêu dòng, và mẫu số khả dụng có bao nhiêu đơn vị.')

@@ -66,6 +66,12 @@ class EamAlarm(models.Model):
     location_id = fields.Many2one(
         'eam.location', string='Vị trí', required=True, ondelete='restrict',
         index=True, tracking=True)
+    # Nhà máy suy từ vị trí, nhưng phải LƯU: pane lọc bên trái chỉ nhận
+    # trường của chính model, không đi theo quan hệ `location_id.plant_id`,
+    # và trường không lưu thì không vào được domain.
+    plant_id = fields.Many2one(
+        related='location_id.plant_id', store=True, index=True,
+        string='Nhà máy')
     asset_id = fields.Many2one(
         'eam.asset', string='Thiết bị', compute='_compute_asset', store=True,
         readonly=False, index=True,

@@ -33,7 +33,7 @@ LOAI_DO = [
     ('power', 'Công suất (kW)'),
     # Phía MỘT CHIỀU phải là loại đo RIÊNG, không dùng chung mã với
     # công suất. Khai chung thì mọi chỗ cộng "công suất của nhà máy"
-    # đều cộng luôn cả hai phía của cùng một bộ nghịch lưu — ra con số
+    # đều cộng luôn cả hai phía của cùng một bộ biến tần — ra con số
     # gấp đôi mà đường cong vẫn mượt, vẫn đúng đơn vị kW.
     ('dc_power', 'Công suất một chiều (kW)'),
     ('energy', 'Điện năng luỹ kế (kWh)'),

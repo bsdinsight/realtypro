@@ -18,83 +18,110 @@
     <!-- ===== Dàn pin quang điện ===== -->
     <record id="cat_pvm" model="eam.asset.category">
         <field name="code">PVM</field>
+        <field name="is_equipment" eval="True"/>
         <field name="name">Dàn pin quang điện</field>
         <field name="alias_names">PV array, Dàn pin, Dàn tấm quang điện</field>
+            <field name="attr_definition" eval="[{'name': 'cong_suat_dc', 'type': 'float', 'string': 'Công suất một chiều (kWp)'}, {'name': 'so_chuoi', 'type': 'integer', 'string': 'Số chuỗi'}, {'name': 'so_tam', 'type': 'integer', 'string': 'Số tấm pin'}, {'name': 'hang_tam', 'type': 'char', 'string': 'Hãng tấm pin'}, {'name': 'model_tam', 'type': 'char', 'string': 'Model tấm pin'}, {'name': 'nam_lap', 'type': 'integer', 'string': 'Năm lắp'}]"/>
     </record>
     <record id="cat_pvm_mod" model="eam.asset.category">
         <field name="code">PVM-MOD</field>
         <field name="name">Tấm pin</field>
         <field name="parent_id" ref="cat_pvm"/>
         <field name="alias_names">PV module, Panel, Tấm quang điện</field>
+            <field name="attr_definition" eval="[{'name': 'cong_suat_wp', 'type': 'float', 'string': 'Công suất đỉnh (Wp)'}, {'name': 'cong_nghe', 'type': 'selection', 'string': 'Công nghệ tế bào', 'selection': [['perc', 'Mono PERC'], ['topcon', 'TOPCon'], ['hjt', 'HJT'], ['thin', 'Màng mỏng']]}, {'name': 'suy_giam', 'type': 'float', 'string': 'Suy giảm công suất (%/năm)'}, {'name': 'bh_cong_suat', 'type': 'integer', 'string': 'Bảo hành công suất (năm)'}]"/>
     </record>
     <record id="cat_pvm_str" model="eam.asset.category">
         <field name="code">PVM-STR</field>
         <field name="name">Chuỗi tấm pin</field>
         <field name="parent_id" ref="cat_pvm"/>
         <field name="alias_names">String, Chuỗi</field>
+            <field name="attr_definition" eval="[{'name': 'so_tam', 'type': 'integer', 'string': 'Số tấm trong chuỗi'}, {'name': 'u_ho_mach', 'type': 'float', 'string': 'Điện áp hở mạch Voc (V)'}, {'name': 'i_ngan_mach', 'type': 'float', 'string': 'Dòng ngắn mạch Isc (A)'}]"/>
     </record>
     <record id="cat_pvm_mnt" model="eam.asset.category">
         <field name="code">PVM-MNT</field>
         <field name="name">Khung giá đỡ</field>
         <field name="parent_id" ref="cat_pvm"/>
         <field name="alias_names">Mounting structure, Giá đỡ, Khung</field>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu giá đỡ', 'selection': [['co_dinh', 'Cố định'], ['mot_truc', 'Một trục'], ['hai_truc', 'Hai trục']]}, {'name': 'vat_lieu', 'type': 'char', 'string': 'Vật liệu'}, {'name': 'goc_nghieng', 'type': 'float', 'string': 'Góc nghiêng (độ)'}]"/>
     </record>
 
     <!-- ===== Hộp gom chuỗi ===== -->
     <record id="cat_scb" model="eam.asset.category">
         <field name="code">SCB</field>
+        <field name="is_equipment" eval="True"/>
         <field name="name">Hộp gom chuỗi</field>
         <field name="alias_names">String combiner box, SCB, Tủ gom chuỗi</field>
+            <field name="attr_definition" eval="[{'name': 'so_chuoi', 'type': 'integer', 'string': 'Số chuỗi gom'}, {'name': 'i_cau_chi', 'type': 'float', 'string': 'Dòng cầu chì (A)'}, {'name': 'co_spd', 'type': 'selection', 'string': 'Chống sét lan truyền', 'selection': [['co', 'Có'], ['khong', 'Không']]}, {'name': 'co_giam_sat', 'type': 'selection', 'string': 'Giám sát dòng chuỗi', 'selection': [['co', 'Có'], ['khong', 'Không']]}]"/>
     </record>
     <record id="cat_scb_fus" model="eam.asset.category">
         <field name="code">SCB-FUS</field>
         <field name="name">Cầu chì chuỗi</field>
         <field name="parent_id" ref="cat_scb"/>
         <field name="alias_names">String fuse</field>
+            <field name="attr_definition" eval="[{'name': 'i_dinh_muc', 'type': 'float', 'string': 'Dòng định mức (A)'}, {'name': 'kieu', 'type': 'char', 'string': 'Kiểu cầu chì'}]"/>
     </record>
     <record id="cat_scb_mon" model="eam.asset.category">
         <field name="code">SCB-MON</field>
         <field name="name">Bộ giám sát dòng chuỗi</field>
         <field name="parent_id" ref="cat_scb"/>
         <field name="alias_names">String monitoring unit</field>
+            <field name="attr_definition" eval="[{'name': 'so_kenh', 'type': 'integer', 'string': 'Số kênh đo'}, {'name': 'giao_thuc', 'type': 'char', 'string': 'Giao thức'}]"/>
     </record>
 
-    <!-- ===== Bộ nghịch lưu ===== -->
+    <!-- ===== Bộ biến tần ===== -->
     <record id="cat_pvs" model="eam.asset.category">
         <field name="code">PVS</field>
-        <field name="name">Bộ nghịch lưu</field>
-        <field name="alias_names">Inverter, PVS, Bộ biến tần</field>
+        <field name="is_equipment" eval="True"/>
+        <!-- Ngành điện mặt trời VN gọi là "biến tần", kể cả trong hồ sơ
+             đấu nối gửi EVN. Xét chặt theo sách thì nghịch lưu là DC→AC
+             còn biến tần là đổi tần số AC→AC — nên giữ "Bộ nghịch lưu"
+             làm từ đồng nghĩa để người quen thuật ngữ sách vẫn tra ra.
+             THÊM CHỮ "quang điện" và treo vào gốc dùng chung
+             `eam_core.cat_inverter`: xem lý do ở chính bản ghi gốc ấy.
+             Tóm lại, để trơ "Bộ biến tần" thì nút này là nút GỐC duy
+             nhất mang tên đó, và chọn nhà máy điện gió là nó hiện số
+             rỗng — người dùng tưởng nhà máy không có biến tần. -->
+        <field name="name">Bộ biến tần quang điện</field>
+        <field name="parent_id" ref="eam_core.cat_inverter"/>
+        <field name="alias_names">Inverter, PVS, Bộ nghịch lưu, Biến tần, Bộ biến tần</field>
+            <field name="attr_definition" eval="[{'name': 'cong_suat_ac', 'type': 'float', 'string': 'Công suất xoay chiều (kW)'}, {'name': 'so_mppt', 'type': 'integer', 'string': 'Số bộ MPPT'}, {'name': 'dai_mppt', 'type': 'char', 'string': 'Dải điện áp MPPT (V)'}, {'name': 'hieu_suat', 'type': 'float', 'string': 'Hiệu suất tối đa (%)'}, {'name': 'hang', 'type': 'char', 'string': 'Hãng'}, {'name': 'model', 'type': 'char', 'string': 'Model'}, {'name': 'nam_sx', 'type': 'integer', 'string': 'Năm sản xuất'}]"/>
     </record>
     <record id="cat_pvs_dc" model="eam.asset.category">
         <field name="code">PVS-DC</field>
         <field name="name">Phía một chiều</field>
         <field name="parent_id" ref="cat_pvs"/>
         <field name="alias_names">DC side, MPPT</field>
+            <field name="attr_definition" eval="[{'name': 'u_dc_max', 'type': 'float', 'string': 'Điện áp một chiều tối đa (V)'}, {'name': 'so_dau_vao', 'type': 'integer', 'string': 'Số đầu vào một chiều'}]"/>
     </record>
     <record id="cat_pvs_ac" model="eam.asset.category">
         <field name="code">PVS-AC</field>
         <field name="name">Phía xoay chiều</field>
         <field name="parent_id" ref="cat_pvs"/>
         <field name="alias_names">AC side</field>
+            <field name="attr_definition" eval="[{'name': 'u_ac', 'type': 'float', 'string': 'Điện áp xoay chiều (V)'}, {'name': 'tan_so', 'type': 'float', 'string': 'Tần số (Hz)'}, {'name': 'dai_cos_phi', 'type': 'char', 'string': 'Dải hệ số công suất'}]"/>
     </record>
     <record id="cat_pvs_ctl" model="eam.asset.category">
         <field name="code">PVS-CTL</field>
         <field name="name">Điều khiển &amp; truyền thông</field>
         <field name="parent_id" ref="cat_pvs"/>
         <field name="alias_names">Controller, Communication card</field>
+            <field name="attr_definition" eval="[{'name': 'giao_thuc', 'type': 'char', 'string': 'Giao thức truyền thông'}, {'name': 'dia_chi', 'type': 'char', 'string': 'Địa chỉ thiết bị'}, {'name': 'fw', 'type': 'char', 'string': 'Phiên bản phần mềm'}]"/>
     </record>
     <record id="cat_pvs_cool" model="eam.asset.category">
         <field name="code">PVS-COOL</field>
         <field name="name">Làm mát</field>
         <field name="parent_id" ref="cat_pvs"/>
         <field name="alias_names">Cooling, Quạt làm mát</field>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu làm mát', 'selection': [['quat', 'Quạt cưỡng bức'], ['tu_nhien', 'Đối lưu tự nhiên'], ['chat_long', 'Chất lỏng']]}]"/>
     </record>
 
     <!-- ===== Hệ xoay theo mặt trời ===== -->
     <record id="cat_trk" model="eam.asset.category">
         <field name="code">TRK</field>
+        <field name="is_equipment" eval="True"/>
         <field name="name">Hệ xoay theo mặt trời</field>
         <field name="alias_names">Tracker, Hệ tracking</field>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu hệ xoay', 'selection': [['ngang', 'Một trục ngang'], ['nghieng', 'Một trục nghiêng'], ['hai_truc', 'Hai trục']]}, {'name': 'goc_quay', 'type': 'char', 'string': 'Dải góc quay'}, {'name': 'so_hang', 'type': 'integer', 'string': 'Số hàng điều khiển'}, {'name': 'backtracking', 'type': 'selection', 'string': 'Chống che bóng', 'selection': [['co', 'Có'], ['khong', 'Không']]}]"/>
     </record>
     <record id="cat_trk_drv" model="eam.asset.category">
         <field name="code">TRK-DRV</field>
@@ -102,37 +129,44 @@
         <field name="parent_id" ref="cat_trk"/>
         <field name="alias_names">Drive, Motor, Gearbox</field>
         <field name="is_rotable_default" eval="True"/>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu truyền động', 'selection': [['dien', 'Động cơ điện'], ['thuy_luc', 'Thuỷ lực']]}, {'name': 'momen', 'type': 'float', 'string': 'Mô-men định mức (Nm)'}, {'name': 'nguon', 'type': 'char', 'string': 'Nguồn cấp'}]"/>
     </record>
     <record id="cat_trk_ctl" model="eam.asset.category">
         <field name="code">TRK-CTL</field>
         <field name="name">Điều khiển hệ xoay</field>
         <field name="parent_id" ref="cat_trk"/>
         <field name="alias_names">Tracker controller</field>
+            <field name="attr_definition" eval="[{'name': 'thuat_toan', 'type': 'char', 'string': 'Thuật toán bám'}, {'name': 'cam_bien', 'type': 'char', 'string': 'Cảm biến dùng'}, {'name': 'che_do_bao', 'type': 'char', 'string': 'Chế độ gió bão'}]"/>
     </record>
 
     <!-- ===== Trạm khí tượng ===== -->
     <record id="cat_wst" model="eam.asset.category">
         <field name="code">WST</field>
+        <field name="is_equipment" eval="True"/>
         <field name="name">Trạm khí tượng</field>
         <field name="alias_names">Weather station, Trạm thời tiết</field>
+            <field name="attr_definition" eval="[{'name': 'so_cam_bien', 'type': 'integer', 'string': 'Số cảm biến lắp đặt'}, {'name': 'vi_tri_dat', 'type': 'char', 'string': 'Vị trí đặt trạm'}, {'name': 'chu_ky_doc', 'type': 'integer', 'string': 'Chu kỳ đọc (giây)'}]"/>
     </record>
     <record id="cat_wst_irr" model="eam.asset.category">
         <field name="code">WST-IRR</field>
         <field name="name">Cảm biến bức xạ</field>
         <field name="parent_id" ref="cat_wst"/>
         <field name="alias_names">Pyranometer, Cảm biến bức xạ mặt trời</field>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu cảm biến', 'selection': [['pyra', 'Pyranometer nhiệt điện'], ['ref_cell', 'Tế bào tham chiếu'], ['pyra_si', 'Pyranometer silic']]}, {'name': 'cap_iso', 'type': 'char', 'string': 'Cấp theo ISO 9060'}, {'name': 'mat_phang', 'type': 'selection', 'string': 'Mặt phẳng đo', 'selection': [['ghi', 'Nằm ngang (GHI)'], ['poa', 'Mặt phẳng dàn (POA)']]}, {'name': 'ngay_hieu_chuan', 'type': 'date', 'string': 'Hiệu chuẩn gần nhất'}, {'name': 'han_hieu_chuan', 'type': 'date', 'string': 'Hạn hiệu chuẩn'}, {'name': 'he_so', 'type': 'float', 'string': 'Hệ số nhạy (µV/W/m²)'}]"/>
     </record>
     <record id="cat_wst_tmp" model="eam.asset.category">
         <field name="code">WST-TMP</field>
         <field name="name">Cảm biến nhiệt độ</field>
         <field name="parent_id" ref="cat_wst"/>
         <field name="alias_names">Temperature sensor, Cảm biến nhiệt mô-đun</field>
+            <field name="attr_definition" eval="[{'name': 'do_do', 'type': 'selection', 'string': 'Đo gì', 'selection': [['moi_truong', 'Nhiệt độ môi trường'], ['mo_dun', 'Nhiệt độ mô-đun']]}, {'name': 'kieu', 'type': 'char', 'string': 'Kiểu đầu dò'}, {'name': 'ngay_hieu_chuan', 'type': 'date', 'string': 'Hiệu chuẩn gần nhất'}]"/>
     </record>
     <record id="cat_wst_wnd" model="eam.asset.category">
         <field name="code">WST-WND</field>
         <field name="name">Cảm biến gió</field>
         <field name="parent_id" ref="cat_wst"/>
         <field name="alias_names">Anemometer, Cảm biến tốc độ gió</field>
+            <field name="attr_definition" eval="[{'name': 'kieu', 'type': 'selection', 'string': 'Kiểu cảm biến', 'selection': [['cup', 'Gáo quay'], ['sieu_am', 'Siêu âm']]}, {'name': 'do_cao', 'type': 'float', 'string': 'Độ cao lắp (m)'}, {'name': 'ngay_hieu_chuan', 'type': 'date', 'string': 'Hiệu chuẩn gần nhất'}]"/>
     </record>
 
   </data>

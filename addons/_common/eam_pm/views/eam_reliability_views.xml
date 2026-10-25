@@ -1,31 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- MỘT bảng số, HAI màn đọc. Không phải hai bộ dữ liệu.
+
+         `eam.reliability` tính một lần ra đủ cả hai nhóm chỉ số, vì
+         chúng dùng CHUNG mẫu số (giờ máy chạy, số lần hỏng, giờ nằm).
+         Nhưng chúng trả lời hai câu khác nhau cho hai người khác nhau:
+
+           MTBF, số lần hỏng, giờ chạy   → CÁI MÁY có bền không
+                                           (người quyết thay máy, đòi
+                                           bảo hành, dự trữ phụ tùng)
+           MTTR, MDT, % nằm chờ,         → BỘ PHẬN BẢO TRÌ làm tốt không
+           % phòng ngừa, % bắt sớm         (trưởng bảo trì)
+
+         Gộp vào một menu gốc tên "Độ tin cậy & KPI bảo trì" là để dấu
+         "&" làm thay việc phân loại: một nhánh gốc chỉ có đúng một màn,
+         mà màn đó lại trả lời hai câu. Nay tách làm hai mục, mỗi mục về
+         đúng nhánh của người đọc nó. Cột của nhóm kia vẫn bật lại được
+         bằng nút chọn cột — vì vẫn là MỘT bảng. -->
     <record id="view_eam_reliability_list" model="ir.ui.view">
         <field name="name">eam.reliability.list</field>
         <field name="model">eam.reliability</field>
         <field name="arch" type="xml">
-            <list string="Độ tin cậy &amp; KPI bảo trì" create="false"
-                  default_order="mtbf_hours asc"
-                  decoration-danger="failure_count > 0 and pm_ratio &lt; 50"
+            <!-- Sắp xếp phải bắt đầu bằng SỐ LẦN HỎNG, không bằng MTBF.
+                 Mẫu số bằng 0 hiện đang ghi 0,0 chứ không để rỗng (xem
+                 `_compute_kpi`), nên "chưa hỏng lần nào" và "hỏng liên
+                 tục tới mức MTBF gần 0" ra CÙNG một con số. Xếp tăng
+                 dần theo MTBF thì 10 máy khoẻ nhất chiếm đúng đầu bảng
+                 vốn để xếp xấu-trước — bảng lật ngược mà vẫn trông như
+                 đã sắp xếp. -->
+            <list string="Độ tin cậy thiết bị" create="false"
+                  default_order="failure_count desc, mtbf_hours asc"
+                  decoration-danger="failure_count > 1"
                   decoration-muted="failure_count == 0">
                 <field name="asset_id" string="Tài sản" width="220px"/>
+                <field name="location_id" string="Vị trí" width="200px"
+                       optional="show"/>
                 <field name="date_from" string="Từ" optional="hide"/>
                 <field name="date_to" string="Đến" optional="show"/>
+                <field name="operating_hours" string="Giờ chạy" sum="Σ"/>
                 <field name="failure_count" string="Số lần hỏng" sum="Σ"/>
-                <field name="operating_hours" string="Giờ chạy" sum="Σ"
-                       optional="show"/>
                 <field name="mtbf_hours" string="MTBF (giờ chạy)"/>
+                <field name="has_meter" string="Có đồng hồ giờ chạy"
+                       optional="show"/>
+                <field name="mttr_hours" string="MTTR (giờ sửa)"
+                       optional="hide"/>
+                <field name="pm_ratio" string="% phòng ngừa"
+                       optional="hide"/>
+                <field name="cost_total" string="Chi phí" sum="Σ"
+                       widget="monetary" optional="hide" width="185px"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="kpi_note" string="Vì sao để trống"
+                       optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_maint_kpi_list" model="ir.ui.view">
+        <field name="name">eam.reliability.kpi.list</field>
+        <field name="model">eam.reliability</field>
+        <field name="arch" type="xml">
+            <!-- Cùng một bẫy: tài sản KHÔNG có lệnh nào trong kỳ cũng ra
+                 % phòng ngừa = 0,0, y hệt tài sản chạy hoàn toàn theo
+                 sự cố. Xếp theo số lệnh khắc phục trước thì đầu bảng là
+                 nơi thật sự đang chữa cháy. -->
+            <list string="KPI bảo trì" create="false"
+                  default_order="wo_cm_count desc, pm_ratio asc"
+                  decoration-danger="wo_cm_count > 0 and pm_ratio &lt; 50"
+                  decoration-warning="wait_share > 50">
+                <field name="asset_id" string="Tài sản" width="220px"/>
+                <field name="date_to" string="Đến" optional="show"/>
+                <field name="failure_count" string="Số lần hỏng" sum="Σ"/>
                 <field name="mttr_hours" string="MTTR (giờ sửa)"/>
                 <field name="mdt_hours" string="MDT (giờ nằm)"/>
-                <field name="wait_share" string="% nằm là chờ"
-                       optional="show"/>
+                <!-- Hai cột sát nhau vì khoảng cách giữa chúng mới là
+                     điều cần nhìn: MDT trừ MTTR là giờ CHỜ, tức tiền
+                     hậu cần, không phải tay nghề thợ. -->
+                <field name="wait_share" string="% nằm là chờ"/>
+                <field name="wo_pm_count" string="Lệnh phòng ngừa"
+                       sum="Σ" optional="show"/>
+                <field name="wo_cm_count" string="Lệnh khắc phục"
+                       sum="Σ" optional="show"/>
                 <field name="pm_ratio" string="% phòng ngừa"/>
-                <field name="detect_early_pct" string="% bắt sớm"
-                       optional="show"/>
+                <field name="detect_early_pct" string="% bắt sớm"/>
                 <field name="cost_total" string="Chi phí" sum="Σ"
                        widget="monetary" optional="show" width="185px"/>
                 <field name="currency_id" column_invisible="1"/>
+                <field name="mtbf_hours" string="MTBF (giờ chạy)"
+                       optional="hide"/>
                 <field name="kpi_note" string="Vì sao để trống"
                        optional="show"/>
             </list>
@@ -111,21 +173,65 @@
     </record>
 
     <record id="action_eam_reliability" model="ir.actions.act_window">
-        <field name="name">Độ tin cậy &amp; KPI bảo trì</field>
+        <field name="name">Độ tin cậy thiết bị</field>
         <field name="res_model">eam.reliability</field>
         <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_eam_reliability_list"/>
+        <field name="search_view_id" ref="view_eam_reliability_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Chưa tính kỳ nào</p>
-            <p>
-                MTBF, MTTR, MDT và bộ KPI bảo trì theo từng tài sản.
-                Mỗi dòng lưu <b>cả tử số lẫn mẫu số</b> — ai cãi con số thì
-                mở ra đối chiếu được.
-            </p>
+            <p><b>Độ tin cậy</b> là câu hỏi về <b>cái máy</b>: trong kỳ
+            này nó chạy bao nhiêu giờ, hỏng mấy lần, và trung bình chạy
+            được bao lâu thì hỏng một lần (<b>MTBF</b>).</p>
+            <p>Dùng để quyết <b>thay máy hay sửa tiếp</b>, <b>đòi bảo
+            hành</b> khi một lô hỏng bất thường, và <b>dự trữ phụ
+            tùng</b> cho thứ hay hỏng. Đây KHÔNG phải điểm chấm cho đội
+            bảo trì — cái đó ở <i>Bảo trì ▸ KPI bảo trì</i>, đọc từ cùng
+            một bảng số.</p>
+            <p>MTBF chia cho <b>giờ máy chạy</b>, không phải giờ theo
+            lịch: máy ít chạy mà hay hỏng thì lấy giờ lịch sẽ trông bền
+            hơn máy chạy khoẻ. Không có đồng hồ giờ chạy thì để
+            <b>trống</b>, không thay bằng giờ lịch.</p>
         </field>
     </record>
 
-    <menuitem id="menu_eam_reliability" name="Độ tin cậy &amp; KPI bảo trì"
-              parent="eam_core.menu_eam_root"
+    <record id="action_eam_maint_kpi" model="ir.actions.act_window">
+        <field name="name">KPI bảo trì</field>
+        <field name="res_model">eam.reliability</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_eam_maint_kpi_list"/>
+        <field name="search_view_id" ref="view_eam_reliability_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa tính kỳ nào</p>
+            <p><b>KPI bảo trì</b> là câu hỏi về <b>bộ phận bảo trì</b>:
+            sửa nhanh không (<b>MTTR</b>), máy nằm bao lâu
+            (<b>MDT</b>), bao nhiêu phần của giờ nằm là <b>ngồi chờ</b>,
+            và công việc là chủ động hay chạy theo sự cố
+            (<b>% phòng ngừa</b>, <b>% bắt sớm</b>).</p>
+            <p>MTTR <b>không</b> tính giờ chờ cẩu, chờ vật tư, chờ lặng
+            gió — phần đó nằm ở MDT. Khoảng cách giữa hai số là
+            <b>chi phí hậu cần</b>, không phải tay nghề thợ; gộp vào là
+            đổ lỗi nhầm người.</p>
+            <p>Cùng một bảng số với <i>Tài sản ▸ Độ tin cậy thiết bị</i>,
+            chỉ khác nhóm cột mặc định.</p>
+        </field>
+    </record>
+
+    <!-- Bỏ nhánh gốc "Độ tin cậy & KPI bảo trì". Lý do: nó là nhánh gốc
+         DUY NHẤT không có mục con nào — tức không phải một nhánh, mà là
+         một màn hình bị đẩy lên ngang hàng với Tài sản, Vận hành, Bảo
+         trì. Và cái tên có dấu "&" là dấu hiệu nó gom hai câu hỏi của
+         hai người đọc khác nhau.
+
+         Nay mỗi mục về đúng nhánh theo VAI, như luật đã ghi ở
+         eam_core/views/eam_menus.xml:
+           Tài sản  (sổ sách tài sản) → máy có bền không
+           Bảo trì  (thợ, trưởng bảo trì) → đội làm tốt không -->
+    <menuitem id="menu_eam_reliability" name="Độ tin cậy thiết bị"
+              parent="eam_core.menu_eam_asset_group"
               action="action_eam_reliability" sequence="60"/>
+    <menuitem id="menu_eam_maint_kpi" name="KPI bảo trì"
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_maint_kpi" sequence="80"/>
 
 </odoo>

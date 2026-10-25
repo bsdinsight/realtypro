@@ -105,10 +105,10 @@ class EamAsset(models.Model):
     # chỉ 30 dòng là CÁI MÁY. Mở danh sách ra mà không tách cấp thì hai
     # mươi dòng đầu toàn cánh quạt, và người dùng tưởng mất máy. Mặc
     # định màn hình chỉ hiện thiết bị chính; muốn xem cấu phần thì bấm
-    # vào máy, hoặc đổi ô lọc.
+    # dấu × trên chip bộ lọc.
     asset_level = fields.Selection(
         [('main', 'Thiết bị chính'), ('component', 'Cấu phần')],
-        string='Cấp tài sản', compute='_compute_child_count', store=True,
+        string='Cấp tài sản', compute='_compute_asset_level', store=True,
         index=True)
     installation_ids = fields.One2many(
         'eam.installation', 'asset_id', string='Lịch sử lắp đặt')
@@ -146,11 +146,37 @@ class EamAsset(models.Model):
         'UNIQUE(company_id, category_id, serial_no)',
         'Số sê-ri đã tồn tại cho loại cấu phần này.')
 
-    @api.depends('child_ids', 'parent_id')
+    @api.depends('child_ids')
     def _compute_child_count(self):
         for a in self:
             a.child_count = len(a.child_ids)
-            a.asset_level = 'component' if a.parent_id else 'main'
+
+    @api.depends('category_id.is_equipment', 'parent_id')
+    def _compute_asset_level(self):
+        """Thiết bị hay cấu phần là chuyện của LOẠI, không phải của chỗ lắp.
+
+        Cách cũ suy từ `parent_id`: không lắp trong tài sản nào thì là
+        thiết bị chính. Nghe hợp lý mà sai, vì nó trả lời câu "lắp bên
+        trong cái gì" chứ không phải câu "có phải một thiết bị không".
+        Đo trên `aip` ngày 26/10/2026, ba nhóm thiết bị thật bị xếp nhầm
+        thành cấu phần rồi biến khỏi sổ tài sản: 192 hộp gom chuỗi (lắp
+        trong dàn pin), 48 hệ xoay theo mặt trời, và 12 bộ biến tần của
+        nhà máy điện gió DG123 (lắp trong cụm điện tua-bin). Người dùng
+        bấm nhóm "Bộ biến tần" ở pane và thấy rỗng.
+
+        Nay đọc cờ `is_equipment` trên loại — một quyết định nghiệp vụ,
+        người dùng tự tick trên màn Loại cấu phần.
+
+        Tài sản chưa gán loại thì không có gì để đọc, đành giữ cách suy
+        cũ: đứng đầu cây lắp ráp thì coi là thiết bị. Thà lọt vào sổ còn
+        hơn biến mất không dấu vết.
+        """
+        for a in self:
+            if a.category_id:
+                a.asset_level = ('main' if a.category_id.is_equipment
+                                 else 'component')
+            else:
+                a.asset_level = 'component' if a.parent_id else 'main'
 
     @api.constrains('parent_id')
     def _check_vong_lap_rap(self):

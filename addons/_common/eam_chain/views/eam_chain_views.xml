@@ -101,7 +101,16 @@
         <field name="name">eam.chain.day.list</field>
         <field name="model">eam.chain.day</field>
         <field name="arch" type="xml">
+            <!-- `default_order` PHẢI khai, dù model đã có
+                 `_order = 'date desc, node_id'`. Màn này mở sẵn ở trạng
+                 thái gom nhóm theo ngày, mà khi gom nhóm thì thứ tự
+                 NHÓM do `order` của view quyết, không phải `_order` của
+                 model — nên tháng 9 nằm trên tháng 10, tức ngày cũ nhất
+                 đứng đầu một màn người ta mở ra để xem HÔM QUA.
+                 Đã thử ở máy chủ: cùng dữ liệu, `date:month DESC` trả
+                 về tháng 10 trước. Lỗi nằm đúng ở chỗ khai. -->
             <list string="Sản lượng theo bậc" expand="1"
+                  default_order="date desc, sequence"
                   decoration-danger="canh_bao_lech"
                   decoration-muted="node_type != 'san_luong'">
                 <field name="date"/>
@@ -194,8 +203,20 @@
                 <filter name="g_thang" string="Tháng"
                         context="{'group_by': 'date:month'}"/>
                 <searchpanel>
+                    <!-- KHÔNG dùng expand trên ô many2one trỏ vào bảng lớn.
+                         `expand` nghĩa là "liệt kê MỌI giá trị của
+                         bảng kia", kể cả giá trị không có dòng nào —
+                         với eam.location là 1.335 vị trí, vượt hạn mức
+                         200 của pane. Lõi trả về {'error_msg': 'Too
+                         many items to display.'} và web client vẽ ra
+                         một mục RỖNG: không lỗi đỏ, không dòng log,
+                         người dùng chỉ thấy pane thiếu hẳn ô lọc.
+                         Bỏ expand thì pane chỉ liệt kê nhà máy CÓ
+                         trong dữ liệu — đúng thứ cần, và chạy.
+                         Giữ expand ở ô Selection thì vô hại: vài lựa
+                         chọn, liệt kê hết là có ích. -->
                     <field name="plant_id" icon="fa-industry"
-                           enable_counters="1" expand="1"/>
+                           enable_counters="1"/>
                     <field name="node_type" select="multi" icon="fa-sitemap"
                            enable_counters="1" expand="1"/>
                     <field name="nguon" select="multi" icon="fa-database"

@@ -145,6 +145,34 @@ class EamDailyReport(models.Model):
     thieu_bat_buoc = fields.Boolean(
         string='Còn ô bắt buộc để trống', compute='_compute_kiem',
         store=True)
+    tinh_trang_so = fields.Selection(
+        [('thieu_bb', 'Thiếu ô BẮT BUỘC'),
+         ('chua_do', 'Có dòng chưa đo được'),
+         ('con_trong', 'Còn ô trống (không bắt buộc)'),
+         ('du', 'Đầy đủ')],
+        string='Tình trạng số liệu', compute='_compute_tinh_trang_so',
+        store=True, index=True,
+        help='Ba ô đếm ở trên là số nguyên và cờ luận lý — pane lọc bên '
+             'trái không nhận hai kiểu đó. Ô này quy chúng về một bậc '
+             'thang để lọc được, và lấy bậc NẶNG NHẤT khi một bản thiếu '
+             'nhiều thứ cùng lúc.')
+
+    # ------------------------------------------------------------------
+    @api.depends('thieu_bat_buoc', 'so_chua_do', 'so_o_trong')
+    def _compute_tinh_trang_so(self):
+        for r in self:
+            # Thứ tự NẶNG trước, và ba bậc này khác nhau về bản chất:
+            #   thiếu ô BẮT BUỘC  → tờ báo cáo chưa phát hành được
+            #   chưa đo được      → máy không tính ra, đã khai lý do
+            #   còn ô trống       → người trực chưa gõ, nhưng không bắt
+            #                       buộc nên vẫn phát hành được
+            # Xếp ngược lại thì một bản thiếu ô bắt buộc sẽ hiện là
+            # "còn ô trống" — nghe như chuyện nhỏ, trong khi tờ đó
+            # chưa đủ điều kiện chốt.
+            r.tinh_trang_so = ('thieu_bb' if r.thieu_bat_buoc
+                               else 'chua_do' if r.so_chua_do
+                               else 'con_trong' if r.so_o_trong
+                               else 'du')
 
     display_name = fields.Char(compute='_compute_display_name',
                                store=True)

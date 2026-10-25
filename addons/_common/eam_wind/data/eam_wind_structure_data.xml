@@ -181,7 +181,7 @@
             <field name="parent_line_id" ref="tpl_l_ele"/>
             <field name="sequence">51</field>
             <field name="code">CNV</field>
-            <field name="name">Bộ biến đổi công suất</field>
+            <field name="name">Bộ biến tần công suất</field>
             <field name="category_id" ref="cat_wtg_ele_cnv"/>
             <field name="is_rotable_slot" eval="True"/>
         </record>

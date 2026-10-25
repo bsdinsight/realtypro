@@ -9,12 +9,28 @@
                   decoration-danger="delay_days &gt; 7"
                   decoration-warning="is_on_hold"
                   decoration-muted="state in ('closed','cancelled')">
-                <field name="name" width="150px"/>
+                <!-- Hai cột này phải khai ĐỦ bề rộng cho nội dung thật:
+                     số hiệu luôn 13 ký tự ("WO/2026/00004"), vị trí tới
+                     28 ("[DG123/WTG/T06] Tua-bin T06"). Cột không khai
+                     bề rộng bị rút về mức tối thiểu khi bảng rộng hơn
+                     màn hình, và cắt cụt hai cột này là cắt đúng phần
+                     định danh — số hiệu cụt thì không tra được lệnh
+                     nào, vị trí cụt thì mất đúng mã tổ máy ở cuối. -->
+                <field name="name" width="175px"/>
                 <field name="title" width="320px"/>
                 <field name="work_type" width="170px"/>
                 <field name="priority" widget="priority" optional="show"/>
-                <field name="location_id" string="Vị trí" width="180px"/>
-                <field name="asset_id" optional="hide"/>
+                <field name="location_id" string="Vị trí" width="300px"/>
+                <!-- Thiết bị đứng CẠNH vị trí, không thay vị trí.
+                     Vị trí trả lời "chỗ này hỏng hộp số mấy lần" (lỗi
+                     nền móng, dòng gió, lắp đặt); thiết bị trả lời "con
+                     hộp số này hỏng ở mấy chỗ" (lỗi lô hàng). Bỏ một
+                     trong hai là mất hẳn một câu hỏi. Trước đây cột này
+                     ẩn mặc định, nên thợ phải tự mở mới biết đang sửa
+                     con máy nào — và cũng không ai thấy những lệnh suy
+                     KHÔNG RA thiết bị. -->
+                <field name="asset_id" string="Thiết bị" width="260px"
+                       optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user"
                        optional="show"/>
                 <field name="executor" string="Bên làm" optional="show"/>
@@ -99,7 +115,22 @@
                             <field name="priority" widget="priority"/>
                             <field name="location_id"/>
                             <field name="asset_id"/>
-                            <field name="category_id" invisible="1"/>
+                            <!-- Ba ô dưới đây chỉ để NHÌN, và chỉ hiện
+                                 khi có thiết bị: mở một lệnh sửa mà
+                                 phải bấm sang sổ tài sản mới biết đang
+                                 động vào cấu phần loại gì, nằm trong
+                                 máy nào, là bắt thợ tra cứu giữa lúc
+                                 đang làm. `category_id` vốn đã có sẵn
+                                 trong arch (domain của mẫu biểu cần
+                                 nó) nhưng bị ẩn — chỉ việc cho hiện.
+                                 Số sê-ri KHÔNG thêm ô riêng: tên hiển
+                                 thị của tài sản đã mang sẵn nó. -->
+                            <field name="asset_level"
+                                   invisible="not asset_id"/>
+                            <field name="category_id"
+                                   invisible="not asset_id"/>
+                            <field name="asset_parent_id"
+                                   invisible="not asset_parent_id"/>
                             <field name="outage_id"
                                    domain="[('location_id','=',location_id)]"/>
                             <field name="parent_id"
@@ -432,6 +463,42 @@
                         context="{'group_by': 'failure_mode_id'}"/>
                 <filter name="g_phat_hien" string="Phát hiện bằng"
                         context="{'group_by': 'detection_method'}"/>
+                <!-- Pane lọc bên trái. Bốn chiều này chọn bằng cách ĐẾM
+                     trên dữ liệu thật, không chọn theo cảm giác:
+
+                       nhà máy      2 giá trị  (24 / 16), trống 0
+                       loại việc    6 giá trị  (14/13/4/4/4/1), trống 0
+                       trạng thái   5 giá trị  (24/9/5/1/1), trống 0
+                       bên làm      3 giá trị  (25/12/3), trống 0
+
+                     Bị loại, kèm lý do:
+                       chờ vì           40/40 TRỐNG — pane sẽ rỗng
+                       phát hiện bằng   36/40 trống
+                       loại cấu phần    chỉ một giá trị thật (16/40 trống)
+                       bên chịu chi phí 34/40 dồn vào "chưa quy" — có
+                                        sẵn bộ lọc riêng, pane không
+                                        tách thêm được gì
+                       vị trí           hàng trăm giá trị. Mục nhiều-chọn
+                                        KHÔNG co lại theo mục đã chọn ở
+                                        trên (lõi chỉ đổi CON SỐ ĐẾM),
+                                        nên chiều này phải nằm ở ô tìm
+                                        kiếm và "Nhóm theo".
+
+                     `plant_id` là trường LƯU trên chính lệnh, không phải
+                     `location_id.plant_id`: pane không đi theo quan hệ. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="work_type" string="Loại công việc"
+                           select="multi" icon="fa-wrench"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-tasks"
+                           enable_counters="1"/>
+                    <field name="executor" string="Bên thực hiện"
+                           select="multi" icon="fa-users"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -440,6 +507,15 @@
         <field name="name">Lệnh công việc</field>
         <field name="res_model">eam.work.order</field>
         <field name="view_mode">list,form</field>
+        <!-- PHẢI chỉ đích danh view. Không khai thì Odoo tự chọn view
+             list "mặc định" theo thứ tự `priority,name,id` — cùng
+             priority thì so TÊN, nên "eam.work.order.ke.hoach.list"
+             (module tiến độ) đứng trước "eam.work.order.list" và menu
+             này mở nhầm bảng kế hoạch–thực tế. Cùng một model, cùng
+             tiêu đề, chỉ khác bộ cột, nên không ai nhận ra là nhầm;
+             thêm một module có view list mới là lại đổi lần nữa. -->
+        <field name="view_id" ref="view_eam_work_order_list"/>
+        <field name="search_view_id" ref="view_eam_work_order_search"/>
         <field name="context">{'search_default_f_mo': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Tạo lệnh công việc đầu tiên</p>
@@ -453,6 +529,8 @@
         <field name="name">Lệnh đang chờ</field>
         <field name="res_model">eam.work.order</field>
         <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_eam_work_order_list"/>
+        <field name="search_view_id" ref="view_eam_work_order_search"/>
         <field name="domain">[('is_on_hold','=',True)]</field>
         <field name="context">{'search_default_g_cho': 1}</field>
         <field name="help" type="html">

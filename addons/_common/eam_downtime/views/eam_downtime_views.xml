@@ -80,6 +80,38 @@
     <!-- ============================================================ -->
     <!-- A17.3 / A17.4 — kWh mất và tiền, trên sổ dừng máy            -->
     <!-- ============================================================ -->
+    <!-- Nhóm thời gian báo cáo là trục mạnh nhất của sổ dừng máy —
+         nó trả lời "VÌ SAO dừng" theo bảy nhóm của IEC 61400-26. Nhưng
+         `group_id` do chính module này khai, nên ô pane phải chèn từ
+         đây chứ không nằm sẵn trong view của eam_core: đặt nhầm chỗ là
+         cài EAMOne thiếu module quy trách nhiệm sẽ vỡ search view, mà
+         vỡ search view thì chết MỌI màn dùng chung nó.
+
+         Đếm trên 398 khoảng dừng thật, không nhóm nào để trống:
+           nhà thầu O&M 166 · bảo trì theo kế hoạch 92 ·
+           cắt giảm theo lệnh điều độ 60 · bất khả kháng 34 ·
+           lưới ngoài 19 · sự cố thiết bị 17 · mất dữ liệu 10
+
+         Chèn NGAY SAU ô nhà máy, để pane đọc theo đúng thứ tự người
+         trực hỏi: ở đâu → vì sao → ai chịu → đã chốt chưa. -->
+    <record id="view_eam_outage_search_downtime" model="ir.ui.view">
+        <field name="name">eam.outage.search.downtime</field>
+        <field name="model">eam.outage</field>
+        <field name="inherit_id" ref="eam_core.view_eam_outage_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//searchpanel/field[@name='plant_id']"
+                   position="after">
+                <field name="group_id" string="Nhóm thời gian"
+                       select="multi" icon="fa-sitemap"
+                       enable_counters="1"/>
+            </xpath>
+            <filter name="g_cat" position="before">
+                <filter name="g_nhom" string="Nhóm thời gian"
+                        context="{'group_by': 'group_id'}"/>
+            </filter>
+        </field>
+    </record>
+
     <record id="view_eam_outage_form_downtime" model="ir.ui.view">
         <field name="name">eam.outage.form.downtime</field>
         <field name="model">eam.outage</field>

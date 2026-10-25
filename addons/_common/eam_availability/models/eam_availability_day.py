@@ -84,6 +84,51 @@ class EamAvailabilityDay(models.Model):
     luy_ke_nam = fields.Float(
         string='Luỹ kế năm (%)', digits=(6, 2), compute='_compute_luy_ke')
 
+    # ----- Hai chiều để LỌC ------------------------------------------
+    #
+    # Pane lọc bên trái chỉ nhận many2one, many2many và selection. Bảng
+    # này gần như toàn số và cờ luận lý, nên hai câu hỏi hay dùng nhất
+    # của màn — *"ngày nào tụt khả dụng"* và *"con số này có tin được
+    # không"* — không lọc được. Hai trường dưới đây quy chúng về dạng
+    # chọn, và LƯU để vào được domain.
+    dai_kd = fields.Selection(
+        [('cao', 'Từ 98% trở lên'),
+         ('kha', '95% đến dưới 98%'),
+         ('thap', '90% đến dưới 95%'),
+         ('rat_thap', 'Dưới 90%')],
+        string='Dải khả dụng (thời gian)', compute='_compute_loc',
+        store=True, index=True,
+        help='Mốc để QUÉT MẮT, không phải ngưỡng hợp đồng. Mỗi hợp đồng '
+             'O&M cam kết một mức khác nhau; việc chấm theo cam kết nằm '
+             'ở Hợp đồng ▸ Đánh giá & thanh toán, không ở đây.')
+    can_cu = fields.Selection(
+        [('du', 'Đủ căn cứ'),
+         ('thieu_sl', 'Chưa đo được sản lượng'),
+         ('con_khoang', 'Còn khoảng dừng chưa tính kWh'),
+         ('chua_quy', 'Có giờ chưa quy trách nhiệm')],
+        string='Căn cứ con số', compute='_compute_loc', store=True,
+        index=True,
+        help='Một dòng có thể thiếu nhiều thứ cùng lúc; ô này lấy cái '
+             'NẶNG NHẤT. Thiếu sản lượng thì khả dụng theo sản lượng '
+             'không tính được chút nào, nên nó đứng trên; còn giờ chưa '
+             'quy trách nhiệm thì con số vẫn ra, chỉ chưa biết đổ cho ai.')
+
+    @api.depends('kd_thoi_gian', 'do_duoc_sl', 'so_khoang_chua_tinh',
+                 'gio_chua_quy')
+    def _compute_loc(self):
+        for r in self:
+            kd = r.kd_thoi_gian or 0.0
+            r.dai_kd = ('cao' if kd >= 98 else 'kha' if kd >= 95
+                        else 'thap' if kd >= 90 else 'rat_thap')
+            # Thứ tự NẶNG trước. Xếp ngược lại thì một ngày vừa thiếu
+            # sản lượng vừa có giờ chưa quy sẽ hiện là "chưa quy" —
+            # nghe như chỉ còn thiếu một chữ ký, trong khi thực ra nửa
+            # bảng số chưa đo được.
+            r.can_cu = ('thieu_sl' if not r.do_duoc_sl
+                        else 'con_khoang' if r.so_khoang_chua_tinh
+                        else 'chua_quy' if r.gio_chua_quy
+                        else 'du')
+
     _uniq_ngay = models.Constraint(
         'UNIQUE(plant_id, date)',
         'Mỗi nhà máy chỉ có một dòng khả dụng cho một ngày.')

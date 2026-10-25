@@ -8,3 +8,4 @@ from . import eam_work_order_step
 from . import eam_form_wo
 from . import eam_work_request
 from . import eam_outage
+from . import eam_installation

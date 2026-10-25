@@ -43,6 +43,7 @@ một vị trí, hoặc một con "đang nằm" ở hai nơi.
     'data': [
         'security/ir.model.access.csv',
         'data/eam_sequence_data.xml',
+        'data/eam_asset_category_data.xml',
         'views/eam_asset_category_views.xml',
         'views/eam_structure_template_views.xml',
         'views/eam_location_views.xml',

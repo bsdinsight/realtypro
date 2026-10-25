@@ -474,7 +474,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
 
     <!-- ================= B05: bốn khối còn thiếu của tờ PV ============ -->
 
-    <!-- 1. Bảng từng bộ nghịch lưu — dùng lại khối đã dựng cho tua-bin -->
+    <!-- 1. Bảng từng bộ biến tần — dùng lại khối đã dựng cho tua-bin -->
     <record id="pl_pv_btm" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
         <field name="sequence">10</field>
@@ -512,7 +512,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
 
     <!-- 4. Mốc đồng bộ đầu ngày và ngắt cuối ngày.
          Ngưỡng 100 kW chứ không phải 0: nhà máy nhả vài kW lúc tờ mờ
-         sáng do bộ nghịch lưu tự kiểm tra, lấy mốc đó làm "bắt đầu
+         sáng do bộ biến tần tự kiểm tra, lấy mốc đó làm "bắt đầu
          phát" thì ngày nào cũng sớm hơn thật chừng nửa tiếng. -->
     <record id="pl_pv_md" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_pv"/>
@@ -914,7 +914,7 @@ Cần chuỗi bậc đo có các mã: INV, MCB, GNT, EVN, TD, BD. Thiếu mã n�
     </record>
 
     <!-- ======== Nhóm ③: phía MỘT CHIỀU lên tờ ========
-         Bậc "đầu vào một chiều" đứng trước bậc đầu ra bộ nghịch lưu,
+         Bậc "đầu vào một chiều" đứng trước bậc đầu ra bộ biến tần,
          nên tổn thất của bậc ấy CHÍNH LÀ tổn hao biến đổi DC→AC. Hiệu
          suất đọc ra từ đó, không tính riêng một chỗ khác. -->
     <record id="pl_pv_edc" model="eam.daily.profile.line">

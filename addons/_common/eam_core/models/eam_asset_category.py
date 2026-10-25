@@ -45,6 +45,21 @@ class EamAssetCategory(models.Model):
         string='Mặc định là vật tư quay vòng',
         help='Cấu phần tháo ra đem đi đại tu rồi lắp lại, giữ nguyên lịch '
              'sử theo sê-ri. Giá trị gợi ý khi tạo tài sản mới.')
+    is_equipment = fields.Boolean(
+        string='Là thiết bị',
+        help='Bật khi loại này là một THIẾT BỊ — thứ có lý lịch riêng, '
+             'có lệnh công việc, có phụ tùng, và đáng đứng một dòng '
+             'trong sổ thiết bị. Tắt khi nó là CẤU PHẦN nằm bên trong '
+             'một thiết bị khác.\n\n'
+             'Cờ này quyết định cột "Cấp tài sản" của mọi tài sản thuộc '
+             'loại, và quyết định tài sản ấy có hiện khi mở sổ Tài sản '
+             'hay không. Đây là quyết định NGHIỆP VỤ nên để ở đây cho '
+             'người dùng tự đổi, không suy từ dữ liệu.\n\n'
+             'Trước đây máy tự suy: tài sản nào không lắp trong tài sản '
+             'nào thì là thiết bị. Suy vậy là sai — hộp gom chuỗi lắp '
+             'trong dàn pin, bộ biến tần tua-bin lắp trong cụm điện, cả '
+             'hai đều là thiết bị thật mà bị xem là cấu phần rồi biến '
+             'mất khỏi sổ.')
     is_catch_all = fields.Boolean(
         string='Rổ "Khác"',
         help='Mỗi cây phân loại phải có một rổ Khác. Không có thì người '

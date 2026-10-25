@@ -3,7 +3,7 @@
     'name': 'EAMOne — Hiệu suất tổ máy theo ngày',
     'version': '19.0.1.0.0',
     'category': 'EAMOne',
-    'summary': 'Một dòng cho mỗi tua-bin / bộ nghịch lưu, mỗi ngày — để '
+    'summary': 'Một dòng cho mỗi tua-bin / bộ biến tần, mỗi ngày — để '
                'trả lời được "máy nào đang kéo cả trại xuống".',
     'description': """
 EAMOne — Hiệu suất tổ máy theo ngày
@@ -13,7 +13,7 @@ Khối chiếm nửa tờ báo cáo
 --------------------------
 Tờ báo cáo ngày của nhà máy điện gió dành nửa trang cho bảng hai mươi
 sáu tua-bin; tờ điện mặt trời dành một khối tương tự cho mười chín bộ
-nghịch lưu. **Cùng một hình dạng** — mỗi dòng một máy, mỗi cột một chỉ
+biến tần. **Cùng một hình dạng** — mỗi dòng một máy, mỗi cột một chỉ
 tiêu, cuối bảng một dòng TỔNG — nên bảng này dựng một lần, dùng cho cả
 hai công nghệ. Phần riêng của từng ngành do gói ngành thêm vào.
 
@@ -30,7 +30,7 @@ Tổ máy phải KHAI, không đoán
 Cây vị trí chứa cả thứ không phát điện: trạm khí tượng, nhà điều hành,
 trạm biến áp. Đếm bừa "mọi vị trí thiết bị" là đưa trạm khí tượng vào
 bảng — đúng cái đã dính ở khả dụng nhà máy điện mặt trời: mười sáu bộ
-nghịch lưu thành mười bảy đơn vị, và con số vẫn nằm trong khoảng 0–100%
+biến tần thành mười bảy đơn vị, và con số vẫn nằm trong khoảng 0–100%
 nên không ai nghi.
 
 Có nút **gợi ý** (vị trí nào có điểm đo điện năng thì gần như chắc chắn

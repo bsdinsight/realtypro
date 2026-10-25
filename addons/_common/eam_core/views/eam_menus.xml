@@ -13,21 +13,28 @@
     <menuitem id="menu_eam_installation" name="Lịch sử lắp đặt"
               parent="menu_eam_asset_group" action="action_eam_installation"
               sequence="30"/>
-    <!-- ===== Bảy nhánh gốc, chia theo VAI người dùng =====
+    <!-- ===== Nhánh gốc chia theo VAI người dùng =====
          Trước đây mọi module đều gắn menu vào "Vận hành", nên nhánh đó
          phình lên 34 mục con và có 5 cặp trùng số thứ tự — dấu hiệu
          không ai nhìn tổng thể. Nay mỗi nhánh một vai:
 
-           Tài sản      sổ sách tài sản
+           Dự án        bàn giao từ EPCOne
+           Tài sản      sổ sách tài sản — gồm "máy có bền không" (MTBF)
            Vận hành     người trực ca
-           Bảo trì      thợ
+           Bảo trì      thợ và trưởng bảo trì — gồm KPI bảo trì
            Kho phụ tùng thủ kho
-           Hiệu suất    kỹ sư phân tích
-           Độ tin cậy   quản lý (eam_pm khai)
+           Hiệu suất    kỹ sư phân tích — sản lượng, tổn thất, khả dụng
+           Hợp đồng     hợp đồng O&amp;M, chấm KPI/SLA
            Cấu hình     quản trị
 
          Module mới gắn menu vào ĐÚNG nhánh theo vai, không gắn bừa vào
-         Vận hành. -->
+         Vận hành.
+
+         LUẬT: nhánh gốc phải có NHIỀU HƠN MỘT mục con. Một màn hình
+         đứng riêng ở cấp gốc trông như một nhánh nhưng không phải —
+         "Độ tin cậy & KPI bảo trì" từng như vậy, và cái tên có dấu "&"
+         để lộ rằng nó còn gom hai câu hỏi của hai người đọc khác nhau.
+         Đã tách: MTBF về Tài sản, MTTR/%phòng ngừa về Bảo trì. -->
 
     <menuitem id="menu_eam_ops" name="Vận hành"
               parent="menu_eam_root" sequence="20"/>

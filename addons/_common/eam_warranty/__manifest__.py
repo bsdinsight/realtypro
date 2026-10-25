@@ -68,7 +68,10 @@ cần thấy, không phải lý do để thôi báo.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_stock'],
+    # Thêm eam_work_order: bảo hành không chỉ là một thuộc tính của con
+    # máy, nó còn là một QUYẾT ĐỊNH trên lệnh sửa — "ai trả tiền lần
+    # này". Màn "Còn bảo hành mà chưa đòi" nối hai thứ đó lại.
+    'depends': ['eam_core', 'eam_stock', 'eam_work_order'],
     'data': [
         'data/eam_warranty_cron.xml',
         'views/eam_warranty_views.xml',

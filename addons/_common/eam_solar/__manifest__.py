@@ -16,7 +16,7 @@ Ba phần, đi cùng nhau vì không phần nào đứng một mình có nghĩa.
 
 Không có chuẩn phân loại công khai nào cho điện mặt trời tương đương
 ReliaWind của điện gió, nên cây này dựng theo **đường đi của dòng điện**:
-tấm pin → chuỗi → hộp gom → bộ nghịch lưu → phía xoay chiều. Đi theo
+tấm pin → chuỗi → hộp gom → bộ biến tần → phía xoay chiều. Đi theo
 dòng điện thì quy lỗi về đúng cấu phần dễ hơn hẳn so với chia theo nhà
 cung cấp hay theo vị trí địa lý. Thêm hệ xoay và trạm khí tượng.
 

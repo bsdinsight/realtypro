@@ -151,6 +151,30 @@ class EamShift(models.Model):
     so_may_dung = fields.Integer(
         string='Tổ máy đang dừng', compute='_compute_dem', store=True)
 
+    # Ba con số trên là Integer và một cờ luận lý — pane lọc bên trái
+    # không nhận kiểu nào trong đó. Ô dưới đây quy chúng về một bậc
+    # thang để lọc được, lấy bậc NẶNG NHẤT khi một ca dính nhiều lỗi.
+    chat_luong_ban_giao = fields.Selection(
+        [('mot_chieu', 'Bàn giao MỘT CHIỀU — chưa ai ký nhận'),
+         ('lan_lau', 'Có việc lăn nhiều ca'),
+         ('con_mo', 'Còn việc mở'),
+         ('sach', 'Bàn giao sạch')],
+        string='Chất lượng bàn giao', compute='_compute_chat_luong',
+        store=True, index=True,
+        help='Thứ tự nặng: chưa ai ký nhận là nặng nhất, vì khi tranh '
+             'chấp thì không có ai đứng ra nhận ca. Việc lăn nhiều ca '
+             'nặng hơn việc còn mở: còn mở là bình thường ở cuối ca, '
+             'lăn qua ba ca là đang bị đùn.')
+
+    @api.depends('ban_giao_mot_chieu', 'so_viec_lan_lau', 'so_viec_mo')
+    def _compute_chat_luong(self):
+        for r in self:
+            r.chat_luong_ban_giao = (
+                'mot_chieu' if r.ban_giao_mot_chieu
+                else 'lan_lau' if r.so_viec_lan_lau
+                else 'con_mo' if r.so_viec_mo
+                else 'sach')
+
     _uniq_ca = models.Constraint(
         'UNIQUE(plant_id, pattern_id, ngay)',
         'Nhà máy đã có ca này trong ngày đó.')

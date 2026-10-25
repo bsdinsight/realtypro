@@ -145,6 +145,46 @@
                         context="{'group_by': 'state'}"/>
                 <filter name="g_vi" string="Tới hạn vì"
                         context="{'group_by': 'due_by'}"/>
+                <!-- Pane lọc bên trái. Bốn chiều chọn bằng cách ĐẾM trên
+                     66 dòng lịch thật:
+
+                       nhà máy      PV50 97 · DG123 48 · SAVA1 18
+                       tình trạng   còn hạn 124 · đã có lệnh 16 ·
+                                    QUÁ HẠN 12 · sắp tới hạn 11
+                       loại việc    phòng ngừa 84 · theo trạng thái 44 ·
+                                    bắt buộc 19 · xem xét 16
+                       tới hạn vì   theo lịch 145 · theo đồng hồ 18
+
+                     Bị loại, kèm lý do:
+                       nghề         60/66 dồn vào "cơ khí", 6 trống —
+                                    một giá trị thật thì pane không
+                                    tách được gì
+                       ưu tiên      66/66 cùng một mức
+                       mốc tính     lặp y hệt "tới hạn vì" (48/18) —
+                                    hai ô cho cùng một phép chia
+                       loại cấu phần  trùng vai với loại việc trên bộ
+                                      số này; để ở "Nhóm theo"
+                       kế hoạch     đã là nhóm mặc định của màn này
+
+                     Ghi chú cũ ở đây từng viết "tình trạng chỉ có 2
+                     giá trị vì lịch đang sạch" — lúc đó cả hệ mới có
+                     lịch của điện GIÓ. Nay PV50 đã có 7 kế hoạch riêng
+                     (vệ sinh tấm pin, bảo dưỡng bộ biến tần, hệ
+                     xoay, nhiệt ảnh, đo I-V, hộp gom chuỗi, hiệu
+                     chuẩn cảm biến bức xạ) nên ô này đủ cả bốn mức. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="state" string="Tình trạng"
+                           select="multi" icon="fa-heartbeat"
+                           enable_counters="1"/>
+                    <field name="work_type" string="Loại công việc"
+                           select="multi" icon="fa-wrench"
+                           enable_counters="1"/>
+                    <field name="due_by" string="Tới hạn vì"
+                           select="multi" icon="fa-clock-o"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -153,6 +193,12 @@
         <field name="name">Lịch bảo trì</field>
         <field name="res_model">eam.pm.schedule</field>
         <field name="view_mode">list,form</field>
+        <!-- Ghim đích danh view tìm kiếm. Không ghim thì Odoo chọn
+             "mặc định" theo `priority,name,id` — cùng priority là so
+             TÊN, nên một module sau thêm search view tên đứng trước là
+             màn này lặng lẽ mất cả pane lẫn bộ lọc. Đã dính đúng bẫy
+             đó ở danh sách Lệnh công việc. -->
+        <field name="search_view_id" ref="view_eam_pm_schedule_search"/>
         <field name="context">{'search_default_g_kh': 1}</field>
     </record>
 
@@ -160,6 +206,7 @@
         <field name="name">Sắp tới hạn &amp; quá hạn</field>
         <field name="res_model">eam.pm.schedule</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_eam_pm_schedule_search"/>
         <field name="domain">[('state', 'in', ('overdue', 'due_soon'))]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Không có kế hoạch nào

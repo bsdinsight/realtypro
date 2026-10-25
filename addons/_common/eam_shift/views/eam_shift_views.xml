@@ -209,6 +209,41 @@
                         context="{'group_by': 'ngay'}"/>
                 <filter name="g_tt" string="Trạng thái"
                         context="{'group_by': 'state'}"/>
+                <!-- Pane lọc. Bốn ô, đếm trên 9 ca thật:
+
+                       nhà máy     PV50 9  ← MỘT giá trị, xem ghi chú
+                       ca          Ca 1 (06–14h) 3 · Ca 2 (14–22h) 3 ·
+                                   Ca 3 (22–06h) 3
+                       trạng thái  đã bàn giao 5 · kế hoạch 3 ·
+                                   đang trực 1
+                       bàn giao    MỘT CHIỀU 4 · lăn nhiều ca 1 ·
+                                   còn việc mở 1 · sạch 3
+
+                     Bị loại: ba ô đếm (việc mở, việc lăn lâu, tổ máy
+                     dừng) đều là Integer, và cờ "bàn giao một chiều"
+                     là Boolean — pane không nhận kiểu nào. Cả bốn đã
+                     gộp vào ô "Chất lượng bàn giao" ở trên, nên không
+                     mất gì. Trưởng ca (many2one) thì mới có một người,
+                     để ở "Nhóm theo".
+
+                     "Nhà máy" một giá trị — giữ vì là trục xương sống
+                     dùng chung với mọi màn EAMOne, và vì nó đang nói
+                     một điều thật: mới chỉ PV50 chạy sổ ca trực.
+                     KHÔNG khai `expand` ở hai ô many2one. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="pattern_id" string="Ca"
+                           select="multi" icon="fa-clock-o"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-flag"
+                           enable_counters="1"/>
+                    <field name="chat_luong_ban_giao"
+                           string="Chất lượng bàn giao"
+                           select="multi" icon="fa-handshake-o"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

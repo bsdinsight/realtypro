@@ -11,6 +11,7 @@
 
     <record id="cat_wtg" model="eam.asset.category">
         <field name="code">WTG</field>
+        <field name="is_equipment" eval="True"/>
         <field name="name">Tua-bin gió</field>
         <field name="alias_names">Wind turbine generator, WTG</field>
         <field name="reference_note">Cây 3 cấp theo phân loại ReliaWind — bộ de-facto trong tài liệu nghiên cứu độ tin cậy điện gió. 11 phân hệ + rổ Khác, 19 cụm.</field>
@@ -102,9 +103,25 @@
     </record>
     <record id="cat_wtg_ele_cnv" model="eam.asset.category">
         <field name="code">WTG-ELE-CNV</field>
-        <field name="name">Bộ biến đổi</field>
-        <field name="parent_id" ref="cat_wtg_ele"/>
-        <field name="alias_names">Converter, Frequency converter, Inverter, Bộ nghịch lưu</field>
+        <field name="is_equipment" eval="True"/>
+        <!-- Gọi là "biến tần" cho thống nhất một chữ với bên điện mặt
+             trời. Ở tua-bin thì chữ này còn đúng nghĩa đen hơn: thiết bị
+             đổi AC tần số thay đổi từ máy phát sang AC 50 Hz, tức ĐỔI
+             TẦN SỐ thật. Giữ "Bộ biến đổi" làm từ đồng nghĩa để người
+             quen cách gọi cũ vẫn tra ra.
+             NẰM NGOÀI NHÁNH ReliaWind, treo vào gốc dùng chung
+             `eam_core.cat_inverter` chứ không vào `cat_wtg_ele` — lý do
+             đầy đủ ở chính bản ghi gốc ấy. Tóm lại: pane "Loại cấu
+             phần" là cây và hai ô kiểu-cây không lọc nhau, nên nút biến
+             tần phải ở cấp gốc mới đếm đúng khi chọn nhà máy điện gió.
+             Chỗ này KHÔNG mất gì về mặt vật lý: cây vị trí vẫn giữ ô
+             `.../WTG/Txx/ELE/CNV` trong tua-bin, và tài sản vẫn lắp
+             trong "Cụm điện Txx" qua `parent_id`. Chỉ cây PHÂN LOẠI
+             khác đi, nên lưu ý `Hệ điện` từ nay không gộp số của biến
+             tần nữa — thống kê độ tin cậy IGBT đọc ở nút này. -->
+        <field name="name">Bộ biến tần tua-bin</field>
+        <field name="parent_id" ref="eam_core.cat_inverter"/>
+        <field name="alias_names">Converter, Frequency converter, Inverter, Bộ biến đổi, Bộ nghịch lưu</field>
         <field name="is_rotable_default" eval="True"/>
         <field name="reference_note">IGBT hỏng thường xuyên nhưng thay nhanh — đây là lý do số lần hỏng và thời gian dừng xếp hạng khác nhau.</field>
     </record>
@@ -186,31 +203,16 @@
         <field name="alias_names">Balance of plant, BOP</field>
         <field name="reference_note">ReliaWind chỉ phủ tua-bin. Nhánh này do BSD tự dựng cho phần còn lại của nhà máy — KHÔNG phải nội dung ReliaWind.</field>
     </record>
-    <record id="cat_bop_sub" model="eam.asset.category">
-        <field name="code">BOP-SUB</field>
-        <field name="name">Trạm nâng áp</field>
-        <field name="parent_id" ref="cat_bop"/>
-        <field name="alias_names">Substation, Step-up station</field>
-    </record>
-    <record id="cat_bop_sub_trf" model="eam.asset.category">
-        <field name="code">BOP-SUB-TRF</field>
-        <field name="name">Máy biến áp lực</field>
-        <field name="parent_id" ref="cat_bop_sub"/>
-        <field name="alias_names">Power transformer, MBA lực</field>
-        <field name="is_rotable_default" eval="True"/>
-    </record>
-    <record id="cat_bop_sub_swg" model="eam.asset.category">
-        <field name="code">BOP-SUB-SWG</field>
-        <field name="name">Thiết bị đóng cắt</field>
-        <field name="parent_id" ref="cat_bop_sub"/>
-        <field name="alias_names">Switchgear, GIS, Máy cắt</field>
-    </record>
-    <record id="cat_bop_sub_pro" model="eam.asset.category">
-        <field name="code">BOP-SUB-PRO</field>
-        <field name="name">Rơ-le bảo vệ</field>
-        <field name="parent_id" ref="cat_bop_sub"/>
-        <field name="alias_names">Protection relay</field>
-    </record>
+    <!-- BOP-SUB và ba loại con của nó ĐÃ DỜI sang module
+         `eam_substation`, nơi cây trạm được dựng đủ 24 loại thay vì ba
+         loại gộp. Lý do dời: trạm nâng áp có ở MỌI nhà máy điện, để
+         trong module điện gió thì nhà máy quang điện không có trạm —
+         đúng điều chú thích cây cấu phần điện mặt trời đã nói trước.
+         Bốn loại cũ lúc dời chưa gắn tài sản, vị trí, mẫu hay kế hoạch
+         nào nên dời được sạch; bộ thuộc tính máy biến áp đã khai ở đây
+         thì mang theo nguyên vẹn sang `TBA-MBA`.
+         Phần BOP còn lại (cáp ngầm, đường dây, SCADA, hạ tầng dân
+         dụng) tạm giữ ở đây — cùng một lý do, nên dời tiếp khi tới. -->
     <record id="cat_bop_mvc" model="eam.asset.category">
         <field name="code">BOP-MVC</field>
         <field name="name">Cáp ngầm trung thế</field>

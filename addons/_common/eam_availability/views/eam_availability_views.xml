@@ -25,6 +25,8 @@
                 <field name="so_khoang_chua_tinh" optional="show"/>
                 <field name="nguon_sl" optional="hide"/>
                 <field name="ly_do_chua_do"/>
+                <field name="dai_kd" optional="hide"/>
+                <field name="can_cu" optional="hide"/>
                 <field name="do_duoc_sl" column_invisible="1"/>
             </list>
         </field>
@@ -97,6 +99,38 @@
                         context="{'group_by': 'plant_id'}"/>
                 <filter name="g_thang" string="Tháng"
                         context="{'group_by': 'date:month'}"/>
+                <!-- Pane lọc. Ba ô này chọn bằng cách ĐẾM trên 63 ngày
+                     thật, không chọn theo cảm giác:
+
+                       nhà máy       DG123 32 · PV50 29 · SAVA1 2
+                       dải khả dụng  ≥98% 58 · 95–98% 3 · 90–95% 2
+                       căn cứ        đủ 56 · chưa quy 5 · thiếu SL 2
+
+                     Bị loại, kèm lý do:
+                       mẫu số hệ đoán       63/63 cùng một giá trị
+                       khoảng chưa tính kWh 63/63 cùng một giá trị
+                       nguồn sản lượng      là Char. Pane chỉ nhận
+                                            many2one / many2many /
+                                            selection; nhét Char vào
+                                            thì MỌI màn dùng chung view
+                                            tìm kiếm này chết lúc mở,
+                                            không phải lúc nạp module.
+                       công ty              một công ty
+
+                     KHÔNG khai `expand` ở ô nhà máy: `expand` bắt liệt
+                     kê mọi bản ghi eam.location (1.335 vị trí), vượt
+                     hạn mức 200 và pane vẽ ra một ô RỖNG mà không báo
+                     gì — đã dính đúng vậy ở Sản lượng theo bậc đo. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="dai_kd" string="Dải khả dụng"
+                           select="multi" icon="fa-tachometer"
+                           enable_counters="1"/>
+                    <field name="can_cu" string="Căn cứ con số"
+                           select="multi" icon="fa-check-square-o"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -105,6 +139,11 @@
         <field name="name">Khả dụng theo ngày</field>
         <field name="res_model">eam.availability.day</field>
         <field name="view_mode">list,form</field>
+        <!-- Ghim view tìm kiếm: không ghim thì Odoo chọn "mặc định"
+             theo `priority,name,id`, cùng priority là so TÊN — một
+             module sau thêm search view tên đứng trước là màn này mất
+             sạch pane lẫn bộ lọc. Đã dính đúng bẫy đó ở Lệnh công việc. -->
+        <field name="search_view_id" ref="view_eam_availability_day_search"/>
         <field name="context">{'search_default_g_nm': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Chưa dựng ngày nào</p>

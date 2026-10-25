@@ -142,7 +142,7 @@ class EamChainDay(models.Model):
     #
     # Hậu quả không hề báo: bậc sau giữ nguyên tổn thất CŨ, mà số cũ
     # trông y hệt số mới. Dựng bậc "đầu vào một chiều" xong thì tổn hao
-    # biến đổi của bộ nghịch lưu vẫn hiện là trống, và người đọc kết
+    # biến đổi của bộ biến tần vẫn hiện là trống, và người đọc kết
     # luận nhà máy không đo được hiệu suất.
     # ==================================================================
     def _tinh_lai_ke_ben(self):

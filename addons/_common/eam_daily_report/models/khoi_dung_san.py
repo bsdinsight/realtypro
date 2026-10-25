@@ -126,7 +126,7 @@ class EamDailyReport(models.Model):
         ước đặt tên viết cứng trong mã thì nhà máy thứ ba lại phá.
 
         Chỗ dễ sai là TRÙNG: điện mặt trời có cả điểm đo tổng ở cấp nhà
-        máy lẫn mười sáu điểm đo từng bộ nghịch lưu. Cộng cả mười bảy ra
+        máy lẫn mười sáu điểm đo từng bộ biến tần. Cộng cả mười bảy ra
         gấp đôi — một đường cong trông vẫn mượt, chỉ cao gấp đôi. Nên có
         điểm đo ở CẤP NHÀ MÁY thì dùng riêng nó; không có mới cộng các
         điểm đo cấp máy.
@@ -309,7 +309,7 @@ class EamDailyReport(models.Model):
         """Bảng tổ máy XOAY NGANG: chỉ tiêu làm hàng, từng bộ làm cột.
 
         Tờ báo cáo của nhà máy điện mặt trời xếp ngược với bảng tua-bin:
-        bảy chỉ tiêu nằm dọc, mười chín bộ nghịch lưu nằm ngang. Không
+        bảy chỉ tiêu nằm dọc, mười chín bộ biến tần nằm ngang. Không
         phải chuyện thẩm mỹ — mười chín dòng bảy cột thì mắt phải quét
         dọc để so các bộ với nhau, còn bảy dòng mười chín cột thì một
         hàng là một chỉ tiêu và máy nào lệch đàn lộ ra ngay.

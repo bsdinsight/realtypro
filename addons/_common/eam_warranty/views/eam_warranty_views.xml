@@ -232,4 +232,72 @@
               parent="eam_core.menu_eam_asset_group"
               action="action_eam_asset_warranty" sequence="35"/>
 
+    <!-- ================================================================
+         Bảo hành đứng ở BA chỗ, và đó không phải trùng lặp — ba câu hỏi
+         khác nhau của ba người khác nhau:
+
+           Tài sản ▸ Bảo hành theo sê-ri   máy này AI CẤP, hết hạn bao
+                                           giờ, ai theo dõi  (sổ sách)
+           Bảo trì ▸ Còn bảo hành chưa đòi lần sửa NÀY ai trả tiền
+                                           (quyết định, màn dưới đây)
+           Kho ▸ Trả hàng / bảo hành       con hàng hỏng đang nằm ở đâu
+                                           (hiện vật, eam.rma)
+
+         Thiếu màn giữa thì sổ bảo hành chỉ nằm đó làm cảnh: thợ đang mở
+         lệnh sửa không có đường nào thấy máy còn hạn. Đo trên dữ liệu
+         thật 25/10/2026: 19 lệnh trên máy CÒN bảo hành mà chưa quy ai
+         trả, 2 lệnh đã quy cho chủ đầu tư tự chịu. -->
+    <record id="action_eam_wo_con_bao_hanh" model="ir.actions.act_window">
+        <field name="name">Còn bảo hành mà chưa đòi</field>
+        <field name="res_model">eam.work.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="eam_work_order.view_eam_work_order_list"/>
+        <field name="search_view_id"
+               ref="eam_work_order.view_eam_work_order_search"/>
+        <!-- `warranty_state` KHÔNG lưu (số ngày còn lại đổi theo từng
+             ngày), nhưng có hàm tìm kiếm nên vẫn lọc được qua quan hệ.
+             Lấy cả `valid` lẫn `expiring`: "sắp hết trong 90 ngày" vẫn
+             là CÒN hạn — bỏ sót nhánh này là đúng lúc gấp nhất thì màn
+             hình im lặng. -->
+        <!-- LOẠI bảo dưỡng định kỳ và kiểm định bắt buộc. Thay dầu hộp
+             số, bảo dưỡng 6 tháng, kiểm định nâng hạ đều là việc của
+             chủ đầu tư dù máy còn mới tinh — không hãng nào trả tiền
+             thay dầu. Để chúng vào thì đo trên dữ liệu thật ra 20 dòng
+             mà 14 là định kỳ, 0 dòng có hỏng hóc: một màn hình toàn
+             nhiễu thì sau vài lần không ai mở nữa, và 5 dòng đáng xem
+             chết chìm cùng nó.
+
+             Lọc theo LOẠI VIỆC cũng chưa đủ: thử "khắc phục + theo
+             trạng thái" thì 4/5 dòng ra là *vòng đo rung định kỳ* —
+             giám sát trạng thái là việc theo lịch, không phải máy đang
+             báo hỏng. Loại việc nói CÁCH LÀM, không nói CÓ HỎNG KHÔNG.
+
+             Điều kiện đúng là có một cái HỎNG để mà đòi: lệnh khắc
+             phục, HOẶC bất kỳ lệnh nào đã ghi nhận hỏng hóc. Bảo dưỡng
+             định kỳ mà phát hiện hỏng thì cờ `is_failure` bật lên và nó
+             rơi vào đây — đúng lúc cần, không sớm hơn. -->
+        <field name="domain">[
+            ('state', 'not in', ('closed', 'cancelled')),
+            ('asset_id.warranty_state', 'in', ('valid', 'expiring')),
+            ('cost_bearer', 'in', ('undetermined', 'owner')),
+            '|', ('work_type', '=', 'corrective'),
+                 ('is_failure', '=', True),
+        ]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Không có lệnh nào
+            đang bỏ sót bảo hành</p>
+            <p>Đây là <b>tiền đang rơi</b>: lệnh sửa trên con máy
+            <b>còn hạn bảo hành</b>, mà bên chịu chi phí đang để
+            <i>Chưa quy</i> hoặc <i>Chủ đầu tư tự chịu</i>.</p>
+            <p>Màn này <b>không</b> tự đổi bên chịu chi phí. Còn hạn
+            không có nghĩa là đòi được — hỏng do vận hành sai, do sét,
+            do hết tuổi thọ đều nằm ngoài phạm vi bảo hành. Việc của màn
+            này là <b>bắt phải xem</b>, không phải quyết hộ.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_wo_con_bao_hanh" name="Còn bảo hành mà chưa đòi"
+              parent="eam_core.menu_eam_maint"
+              action="action_eam_wo_con_bao_hanh" sequence="85"/>
+
 </odoo>

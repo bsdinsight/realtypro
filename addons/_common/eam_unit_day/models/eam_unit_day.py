@@ -5,11 +5,11 @@ Khối chiếm nửa tờ báo cáo
 --------------------------
 Tờ báo cáo ngày của nhà máy điện gió dành nửa trang cho bảng hai mươi
 sáu tua-bin; tờ điện mặt trời dành một khối tương tự cho mười chín bộ
-nghịch lưu. Cùng một hình dạng: mỗi dòng một máy, mỗi cột một chỉ tiêu,
+biến tần. Cùng một hình dạng: mỗi dòng một máy, mỗi cột một chỉ tiêu,
 cuối bảng một dòng TỔNG.
 
 Nên bảng này là **chung cho cả hai công nghệ**. Phần riêng — tốc độ gió
-của tua-bin, giờ đồng bộ của bộ nghịch lưu — do gói ngành thêm vào.
+của tua-bin, giờ đồng bộ của bộ biến tần — do gói ngành thêm vào.
 
 Vì sao nó đáng có bảng riêng, không phải tính lúc in
 -----------------------------------------------------
@@ -173,6 +173,66 @@ class EamUnitDay(models.Model):
              'cao hơn. Chính khoảng lệch này là thứ đưa ra bàn họp — '
              'gộp hai cột lại là xoá mất nó.')
 
+    # ----- Ba trục để LỌC ở pane bên trái -----------------------------
+    #
+    # Pane chỉ nhận many2one / many2many / selection. Mọi con số của
+    # bảng này là Float và Integer, mọi cờ là Boolean — không lọc được
+    # thứ nào. Ba ô dưới đây quy ba câu hỏi thật của màn về dạng chọn.
+    # Phân bố đo trên 848 dòng thật, không ước lượng.
+    dai_kd = fields.Selection(
+        [('cao', 'Từ 99% trở lên'),
+         ('kha', '95% đến dưới 99%'),
+         ('thap', '90% đến dưới 95%'),
+         ('rat_thap', 'Dưới 90%'),
+         ('chua_do', 'Chưa đo được khả dụng')],
+        string='Dải khả dụng', compute='_compute_truc_loc', store=True,
+        index=True,
+        help='Mốc để quét mắt, KHÔNG phải ngưỡng hợp đồng — mỗi hợp '
+             'đồng O&M cam kết một mức riêng, việc chấm theo cam kết ở '
+             'Hợp đồng ▸ Đánh giá & thanh toán.')
+    doi_chieu_hang = fields.Selection(
+        [('lech_lon', 'Lệch trên 5 điểm'),
+         ('lech_nho', 'Lệch 1–5 điểm'),
+         ('khop', 'Khớp (dưới 1 điểm)'),
+         ('chua_co', 'Chưa nhập số của hãng')],
+        string='Đối chiếu với hãng', compute='_compute_truc_loc',
+        store=True, index=True,
+        help='Lấy TRỊ TUYỆT ĐỐI của độ lệch. Hãng thường trừ ít nguyên '
+             'nhân hơn ta nên lệch hay dương, nhưng lệch ÂM còn đáng '
+             'xem hơn — nghĩa là hãng tự nhận thấp hơn cả ta.')
+    tinh_trang_dung = fields.Selection(
+        [('chua_quy', 'Còn khoảng dừng chưa quy ra kWh'),
+         ('da_quy', 'Có dừng máy, đã quy đủ'),
+         ('khong_dung', 'Không dừng máy')],
+        string='Tình trạng dừng máy', compute='_compute_truc_loc',
+        store=True, index=True,
+        help='Khoảng dừng chưa quy ra kWh thì không vào mẫu số, nên khả '
+             'dụng đang CAO HƠN thật. Đây là nhóm phải xử trước.')
+
+    @api.depends('kd_san_luong', 'do_duoc_kd', 'kd_nha_san_xuat',
+                 'lech_kd', 'so_khoang', 'so_khoang_chua_tinh')
+    def _compute_truc_loc(self):
+        for r in self:
+            if not r.do_duoc_kd:
+                # Chưa đo được thì kd_san_luong là 0,0 chứ không rỗng —
+                # xếp nó vào "dưới 90%" là biến một ô CHƯA BIẾT thành
+                # một ngày tệ, và nhóm tệ nhất sẽ đầy những ngày không
+                # có gì sai.
+                r.dai_kd = 'chua_do'
+            else:
+                k = r.kd_san_luong or 0.0
+                r.dai_kd = ('cao' if k >= 99 else 'kha' if k >= 95
+                            else 'thap' if k >= 90 else 'rat_thap')
+            if not r.kd_nha_san_xuat:
+                r.doi_chieu_hang = 'chua_co'
+            else:
+                l = abs(r.lech_kd or 0.0)
+                r.doi_chieu_hang = ('lech_lon' if l > 5
+                                    else 'lech_nho' if l > 1 else 'khop')
+            r.tinh_trang_dung = ('chua_quy' if r.so_khoang_chua_tinh
+                                 else 'da_quy' if r.so_khoang
+                                 else 'khong_dung')
+
     ghi_chu = fields.Char(string='Ghi chú')
     display_name = fields.Char(compute='_compute_display_name', store=True)
 
@@ -287,7 +347,7 @@ class EamUnitDay(models.Model):
 
         Tổ máy nào chưa có điểm đo phía MỘT CHIỀU thì hai cột DC để
         trống kèm lý do — không điền 0. Hiệu suất bằng 0% đọc ra là
-        "bộ nghịch lưu không chuyển được gì", ngược hẳn sự thật là
+        "bộ biến tần không chuyển được gì", ngược hẳn sự thật là
         "nhà máy này không đo phía một chiều".
         """
         T = self.env['eam.tag']
@@ -295,7 +355,7 @@ class EamUnitDay(models.Model):
         v = {'moc_dong_bo': False, 'moc_ngat': False, 'gio_danh_nghia': 0.0,
              'dinh_ac': 0.0, 'dinh_dc': 0.0, 'hieu_suat_bd': 0.0,
              'gio_tb': 0.0, 'do_duoc_dc': False, 'ly_do_dc': False}
-        # Ngưỡng 1% công suất đặt: bộ nghịch lưu nhả vài kW lúc tự kiểm
+        # Ngưỡng 1% công suất đặt: bộ biến tần nhả vài kW lúc tự kiểm
         # tra trước bình minh, lấy mốc đó làm "đồng bộ" thì ngày nào
         # cũng sớm hơn thật chừng nửa tiếng.
         nguong = max((cs or 0.0) * 0.01, 1.0)

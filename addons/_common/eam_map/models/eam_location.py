@@ -324,7 +324,7 @@ class EamLocation(models.Model):
         # biến áp — vẫn cắm trên bản đồ vì người ra hiện trường cần biết
         # chúng ở đâu, nhưng KHÔNG được đếm vào ô trạng thái phát điện.
         # Trạm khí tượng không có khoảng dừng nào nên lọt vào "đang
-        # phát", và một nhà máy 16 bộ nghịch lưu báo "đang phát 17".
+        # phát", và một nhà máy 16 bộ biến tần báo "đang phát 17".
         #
         # Chỉ hạ bậc khi nhà máy ĐÃ KHAI tổ máy. Nhà máy chưa khai thì
         # tập cờ rỗng, hạ bậc tất cả thành "không phát điện" là biến một

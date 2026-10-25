@@ -18,15 +18,34 @@
         <field name="name">re.project.eam.list</field>
         <field name="model">re.project</field>
         <field name="arch" type="xml">
-            <list string="Dự án vận hành"
+            <!-- `expand="1"`: bung sẵn mọi nhóm. Màn này mở kèm gom
+                 nhóm theo loại dự án (`search_default_g_loai`), mà cả
+                 hệ chỉ có vài dự án chia làm hai nhóm — gập lại là
+                 giấu TOÀN BỘ dòng sau một cú bấm, đổi lại không được
+                 gì. Gom nhóm ở đây chỉ để có cái nhãn phân loại, không
+                 phải để thu gọn.
+                 Rẻ vì số dòng nhỏ; bảng vài nghìn dòng thì đừng bung
+                 sẵn — Odoo nạp và vẽ hết mọi nhóm ngay khi mở. -->
+            <list string="Dự án vận hành" expand="1"
                   decoration-muted="not plant_location_id">
-                <field name="code" string="Mã dự án"/>
-                <field name="name" string="Tên dự án"/>
-                <field name="project_type" string="Loại"/>
+                <!-- Bốn cột chữ PHẢI khai bề rộng, vì màn này mặc định
+                     mở ở trạng thái GOM NHÓM ĐANG GẬP: không có dòng dữ
+                     liệu nào để Odoo đo, nên nó chia đều phần rộng còn
+                     lại cho mọi cột chưa khai — đo thật ở khổ 2000px là
+                     bốn cột cùng ra 366px, tạo mấy khoảng trắng mênh
+                     mông giữa các tiêu đề. Bung nhóm ra thì cột tự co
+                     lại, tức giao diện NHẢY ngay khi bấm.
+                     Bề rộng dưới đây lấy từ chữ dài nhất THẬT trong dữ
+                     liệu, cộng chỗ thở: tên dự án đo được 331px (một
+                     tên tiếng Anh 47 ký tự), tên nhà máy 223px. -->
+                <field name="code" string="Mã dự án" width="130px"/>
+                <field name="name" string="Tên dự án" width="360px"/>
+                <field name="project_type" string="Loại" width="150px"/>
                 <field name="capacity_mw" string="Công suất (MW)"
-                       sum="Tổng công suất"/>
-                <field name="date_cod" string="Vận hành từ"/>
-                <field name="plant_location_id" string="Nhà máy"/>
+                       sum="Tổng công suất" width="140px"/>
+                <field name="date_cod" string="Vận hành từ" width="140px"/>
+                <field name="plant_location_id" string="Nhà máy"
+                       width="280px"/>
                 <field name="eam_location_count"/>
                 <field name="eam_asset_count"/>
                 <field name="eam_outage_count" optional="show"/>

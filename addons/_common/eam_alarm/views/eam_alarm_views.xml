@@ -160,6 +160,48 @@
                             context="{'group_by': 'state'}"/>
                     <filter name="g_ngay" string="Tháng nổ"
                             context="{'group_by': 'date_raised:month'}"/>
+                <!-- Pane lọc. Bốn ô, đếm trên 44 cảnh báo thật:
+
+                       nhà máy     DG123 44  ← MỘT giá trị, xem ghi chú
+                       mức         cao 27 · trung bình 17
+                       trạng thái  đã hết 42 · đã có lệnh 1 · mới 1
+                       luật        nhiệt dầu hộp số cao 25 · nhiệt hộp
+                                   số ngoài dải 15 · hai cảm biến gió
+                                   lệch 2 · vòng quay đứng im 2
+
+                     Bị loại, kèm lý do:
+                       tái phát sau sửa  44/44 chưa cái nào tái phát
+                       nguồn             40/2/2 — và mỗi luật vốn đã
+                                         thuộc đúng một nguồn, nên ô này
+                                         chỉ là bản thô hơn của ô "Luật"
+                       wo_state          KHÔNG có cột trong DB (trường
+                                         related không lưu) → không lọc
+                                         được, kể cả bằng domain
+                       số lần nổ         là số nguyên; đã có bộ lọc
+                                         "Nổ trên 10 lần" trên thanh
+                       VỊ TRÍ            12 tua-bin. Ô nhiều-chọn không
+                                         co lại theo ô đã chọn ở trên,
+                                         nên để ở "Nhóm theo" như cũ
+
+                     "Nhà máy" hiện chỉ có MỘT giá trị — đúng ra theo
+                     nếp thì bỏ. Giữ lại vì đây là trục xương sống dùng
+                     chung với mọi màn EAMOne khác, và vì một giá trị ở
+                     đây đang NÓI một điều: mới chỉ DG123 có luật cảnh
+                     báo chạy. PV50 khai luật là ô thứ hai hiện ra.
+                     KHÔNG khai `expand` ở hai ô many2one. -->
+                <searchpanel view_types="list,kanban,pivot,graph">
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="severity" string="Mức nghiêm trọng"
+                           select="multi" icon="fa-exclamation-triangle"
+                           enable_counters="1"/>
+                    <field name="state" string="Trạng thái"
+                           select="multi" icon="fa-flag"
+                           enable_counters="1"/>
+                    <field name="rule_id" string="Luật"
+                           select="multi" icon="fa-filter"
+                           enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

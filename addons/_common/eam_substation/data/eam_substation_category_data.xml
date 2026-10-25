@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cây cấu phần TRẠM BIẾN ÁP NÂNG ÁP.
+
+     Chia theo NGĂN LỘ và theo hệ chức năng, không chia theo cấp điện
+     áp: một trạm 22/110 kV và một trạm 35/220 kV có cùng bấy nhiêu cụm,
+     chỉ khác thông số. Chia theo cấp điện áp thì mỗi dự án một cây và
+     không gom được lịch sử hỏng hóc giữa các nhà máy.
+
+     Ba cụm có `is_rotable_default`: máy cắt, rơ-le bảo vệ và bộ điều áp
+     dưới tải. Đó là những thứ tháo ra đem về xưởng rồi lắp lại — lịch
+     sử theo sê-ri của chúng mới trả lời được câu "con rơ-le này đã sự
+     cố ở mấy trạm".
+
+     Máy biến áp lực KHÔNG đánh dấu quay vòng dù rất đáng theo sê-ri:
+     nó không "tháo ra đại tu rồi lắp lại" theo nghĩa thông thường, và
+     đánh dấu sai thì màn kho phụ tùng mời người ta nhập nó vào kho.
+
+     noupdate="1": mỗi chủ đầu tư một cách chia cụm. Nâng cấp module
+     KHÔNG ghi đè chỉnh sửa của khách.
+-->
+<odoo>
+  <data noupdate="1">
+
+    <record id="cat_tba" model="eam.asset.category">
+        <field name="code">TBA</field>
+        <field name="is_equipment" eval="True"/>
+        <field name="name">Trạm biến áp</field>
+        <field name="alias_names">Substation, Trạm nâng áp, TBA, Switchyard</field>
+        <field name="note">Gốc của nhánh trạm. Dùng chung cho mọi loại
+            nhà máy điện. Mỗi nhà máy khai MỘT tài sản thuộc loại này —
+            đó là cái trạm, và mọi thiết bị trong trạm treo dưới nó.</field>
+        <field name="attr_definition" eval="[{'name': 'cap_dien_ap', 'type': 'char', 'string': 'Cấp điện áp'}, {'name': 'so_ngan_lo', 'type': 'integer', 'string': 'Số ngăn lộ'}, {'name': 'nam_van_hanh', 'type': 'integer', 'string': 'Năm đưa vào vận hành'}, {'name': 'don_vi_vh', 'type': 'char', 'string': 'Đơn vị quản lý vận hành'}, {'name': 'so_thoa_thuan', 'type': 'char', 'string': 'Số thoả thuận đấu nối'}]"/>
+    </record>
+
+    <!-- ===== 1. Máy biến áp lực ===== -->
+    <record id="cat_tba_mba" model="eam.asset.category">
+        <field name="code">TBA-MBA</field>
+        <field name="name">Máy biến áp lực</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Main power transformer, MBA lực, MBA nâng áp</field>
+            <field name="attr_definition" eval="[{'name': 'u_so_cap', 'type': 'float', 'string': 'Điện áp sơ cấp (kV)'}, {'name': 'u_thu_cap', 'type': 'float', 'string': 'Điện áp thứ cấp (kV)'}, {'name': 'cong_suat', 'type': 'float', 'string': 'Công suất (MVA)'}, {'name': 'to_dau_day', 'type': 'char', 'string': 'Tổ đấu dây'}, {'name': 'lam_mat', 'type': 'selection', 'string': 'Kiểu làm mát', 'selection': [['onan', 'ONAN'], ['onaf', 'ONAF'], ['ofaf', 'OFAF']]}, {'name': 'loai_dau', 'type': 'char', 'string': 'Loại dầu cách điện'}, {'name': 'kl_dau', 'type': 'float', 'string': 'Khối lượng dầu (kg)'}, {'name': 'nam_sx', 'type': 'integer', 'string': 'Năm sản xuất'}, {'name': 'ngay_kd', 'type': 'date', 'string': 'Kiểm định gần nhất'}]"/>
+    </record>
+    <record id="cat_tba_oltc" model="eam.asset.category">
+        <field name="code">TBA-OLTC</field>
+        <field name="name">Bộ điều áp dưới tải</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="alias_names">OLTC, On-load tap changer, Bộ đổi nấc</field>
+            <field name="attr_definition" eval="[{'name': 'so_nac', 'type': 'integer', 'string': 'Số nấc'}, {'name': 'dai_dc', 'type': 'char', 'string': 'Dải điều chỉnh'}, {'name': 'so_lan_chuyen', 'type': 'integer', 'string': 'Số lần chuyển nấc'}]"/>
+    </record>
+    <record id="cat_tba_cool" model="eam.asset.category">
+        <field name="code">TBA-COOL</field>
+        <field name="name">Hệ làm mát máy biến áp</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">Cooling system, Quạt làm mát, Bơm dầu</field>
+    </record>
+    <record id="cat_tba_buch" model="eam.asset.category">
+        <field name="code">TBA-BUCH</field>
+        <field name="name">Rơ-le hơi và bảo vệ bản thể</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">Buchholz relay, Rơ-le hơi, Bảo vệ bản thể</field>
+    </record>
+    <record id="cat_tba_bush" model="eam.asset.category">
+        <field name="code">TBA-BUSH</field>
+        <field name="name">Sứ xuyên</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">Bushing, Sứ đầu vào, Sứ xuyên cao áp</field>
+    </record>
+    <record id="cat_tba_oil" model="eam.asset.category">
+        <field name="code">TBA-OIL</field>
+        <field name="name">Hệ dầu và bình giãn nở</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">Oil system, Conservator, Bình dầu phụ</field>
+    </record>
+
+    <!-- ===== 2. Ngăn lộ cao áp ===== -->
+    <record id="cat_tba_hvb" model="eam.asset.category">
+        <field name="code">TBA-HVB</field>
+        <field name="name">Ngăn lộ cao áp</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">HV bay, Ngăn cao áp, Phía cao áp</field>
+    </record>
+    <record id="cat_tba_cb" model="eam.asset.category">
+        <field name="code">TBA-CB</field>
+        <field name="name">Máy cắt</field>
+        <field name="parent_id" ref="cat_tba_hvb"/>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="alias_names">Circuit breaker, Máy cắt SF6, Máy cắt chân không</field>
+            <field name="attr_definition" eval="[{'name': 'moi_truong', 'type': 'selection', 'string': 'Môi trường dập hồ quang', 'selection': [['sf6', 'SF6'], ['chan_khong', 'Chân không'], ['dau', 'Dầu']]}, {'name': 'i_dinh_muc', 'type': 'float', 'string': 'Dòng định mức (A)'}, {'name': 'i_cat', 'type': 'float', 'string': 'Dòng cắt ngắn mạch (kA)'}, {'name': 'so_lan_cat', 'type': 'integer', 'string': 'Số lần cắt'}]"/>
+    </record>
+    <record id="cat_tba_ds" model="eam.asset.category">
+        <field name="code">TBA-DS</field>
+        <field name="name">Dao cách ly và dao tiếp địa</field>
+        <field name="parent_id" ref="cat_tba_hvb"/>
+        <field name="alias_names">Disconnector, Earthing switch, DCL, DTĐ</field>
+    </record>
+    <record id="cat_tba_ct" model="eam.asset.category">
+        <field name="code">TBA-CT</field>
+        <field name="name">Biến dòng đo lường</field>
+        <field name="parent_id" ref="cat_tba_hvb"/>
+        <field name="alias_names">Current transformer, CT, TI, Máy biến dòng</field>
+            <field name="attr_definition" eval="[{'name': 'ty_so', 'type': 'char', 'string': 'Tỷ số biến'}, {'name': 'cap_cx', 'type': 'char', 'string': 'Cấp chính xác'}, {'name': 'cong_suat_va', 'type': 'float', 'string': 'Công suất (VA)'}]"/>
+    </record>
+    <record id="cat_tba_vt" model="eam.asset.category">
+        <field name="code">TBA-VT</field>
+        <field name="name">Biến điện áp đo lường</field>
+        <field name="parent_id" ref="cat_tba_hvb"/>
+        <field name="alias_names">Voltage transformer, VT, TU, Máy biến điện áp</field>
+            <field name="attr_definition" eval="[{'name': 'ty_so', 'type': 'char', 'string': 'Tỷ số biến'}, {'name': 'cap_cx', 'type': 'char', 'string': 'Cấp chính xác'}, {'name': 'cong_suat_va', 'type': 'float', 'string': 'Công suất (VA)'}]"/>
+    </record>
+    <record id="cat_tba_sa" model="eam.asset.category">
+        <field name="code">TBA-SA</field>
+        <field name="name">Chống sét van</field>
+        <field name="parent_id" ref="cat_tba_hvb"/>
+        <field name="alias_names">Surge arrester, CSV, Chống sét ống</field>
+            <field name="attr_definition" eval="[{'name': 'u_dinh_muc', 'type': 'float', 'string': 'Điện áp định mức (kV)'}, {'name': 'i_xa', 'type': 'float', 'string': 'Dòng xả định mức (kA)'}, {'name': 'so_lan_tac_dong', 'type': 'integer', 'string': 'Số lần tác động'}]"/>
+    </record>
+
+    <!-- ===== 3. Ngăn lộ trung áp ===== -->
+    <record id="cat_tba_mvb" model="eam.asset.category">
+        <field name="code">TBA-MVB</field>
+        <field name="name">Ngăn lộ trung áp</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">MV bay, Tủ hợp bộ, Ngăn trung áp</field>
+    </record>
+    <record id="cat_tba_bus" model="eam.asset.category">
+        <field name="code">TBA-BUS</field>
+        <field name="name">Thanh cái và tủ hợp bộ</field>
+        <field name="parent_id" ref="cat_tba_mvb"/>
+        <field name="alias_names">Busbar, Switchgear panel, Thanh góp</field>
+    </record>
+
+    <!-- ===== 4. Bảo vệ và điều khiển ===== -->
+    <record id="cat_tba_pro" model="eam.asset.category">
+        <field name="code">TBA-PRO</field>
+        <field name="name">Hệ bảo vệ và điều khiển</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Protection and control, Hệ P&amp;C, Phòng điều khiển</field>
+    </record>
+    <record id="cat_tba_rel" model="eam.asset.category">
+        <field name="code">TBA-REL</field>
+        <field name="name">Rơ-le bảo vệ</field>
+        <field name="parent_id" ref="cat_tba_pro"/>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="alias_names">Protection relay, Rơ-le số, IED</field>
+            <field name="attr_definition" eval="[{'name': 'hang', 'type': 'char', 'string': 'Hãng'}, {'name': 'model', 'type': 'char', 'string': 'Model'}, {'name': 'fw', 'type': 'char', 'string': 'Phiên bản phần mềm'}, {'name': 'ansi', 'type': 'char', 'string': 'Mã chức năng bảo vệ (ANSI)'}]"/>
+    </record>
+    <record id="cat_tba_rtu" model="eam.asset.category">
+        <field name="code">TBA-RTU</field>
+        <field name="name">RTU và cổng truyền thông SCADA</field>
+        <field name="parent_id" ref="cat_tba_pro"/>
+        <field name="alias_names">RTU, Gateway, Thiết bị đầu cuối</field>
+    </record>
+
+    <!-- ===== 5. Nguồn tự dùng ===== -->
+    <record id="cat_tba_aux" model="eam.asset.category">
+        <field name="code">TBA-AUX</field>
+        <field name="name">Nguồn tự dùng và một chiều</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Auxiliary supply, Tự dùng, Nguồn AC/DC</field>
+    </record>
+    <record id="cat_tba_bat" model="eam.asset.category">
+        <field name="code">TBA-BAT</field>
+        <field name="name">Hệ ắc-quy một chiều</field>
+        <field name="parent_id" ref="cat_tba_aux"/>
+        <field name="is_rotable_default" eval="True"/>
+        <field name="alias_names">Battery bank, Ắc-quy, Tủ ắc-quy</field>
+            <field name="attr_definition" eval="[{'name': 'u_he', 'type': 'float', 'string': 'Điện áp hệ (V DC)'}, {'name': 'dung_luong', 'type': 'float', 'string': 'Dung lượng (Ah)'}, {'name': 'cong_nghe', 'type': 'selection', 'string': 'Công nghệ', 'selection': [['pb', 'Chì-axit'], ['nicd', 'Ni-Cd'], ['li', 'Li-ion']]}, {'name': 'nam_lap', 'type': 'integer', 'string': 'Năm lắp'}]"/>
+    </record>
+    <record id="cat_tba_chg" model="eam.asset.category">
+        <field name="code">TBA-CHG</field>
+        <field name="name">Bộ nạp và tủ phân phối một chiều</field>
+        <field name="parent_id" ref="cat_tba_aux"/>
+        <field name="alias_names">Battery charger, Tủ DC, Bộ chỉnh lưu</field>
+    </record>
+    <record id="cat_tba_atr" model="eam.asset.category">
+        <field name="code">TBA-ATR</field>
+        <field name="name">Máy biến áp tự dùng</field>
+        <field name="parent_id" ref="cat_tba_aux"/>
+        <field name="alias_names">Auxiliary transformer, MBA tự dùng</field>
+    </record>
+
+    <!-- ===== 6. Nối đất và chống sét ===== -->
+    <record id="cat_tba_ear" model="eam.asset.category">
+        <field name="code">TBA-EAR</field>
+        <field name="name">Hệ nối đất và chống sét</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Earthing and lightning protection, Tiếp địa, Kim thu sét</field>
+        <field name="note">Thuộc diện kiểm định định kỳ theo quy định —
+            lịch kiểm định gắn vào vị trí này.</field>
+            <field name="attr_definition" eval="[{'name': 'r_noi_dat', 'type': 'float', 'string': 'Điện trở nối đất (Ω)'}, {'name': 'ngay_do', 'type': 'date', 'string': 'Ngày đo gần nhất'}]"/>
+    </record>
+
+    <!-- ===== 7. Đo đếm giao nhận ===== -->
+    <record id="cat_tba_met" model="eam.asset.category">
+        <field name="code">TBA-MET</field>
+        <field name="name">Đo đếm điện năng giao nhận</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Revenue metering, Công tơ giao nhận, Hệ đo đếm</field>
+        <field name="note">Chỗ TIỀN đi qua. Khi tranh chấp sản lượng thì
+            người ta hỏi đúng con công tơ này — số chế tạo, ngày kiểm
+            định, lần thay gần nhất.</field>
+            <field name="attr_definition" eval="[{'name': 'cap_cx', 'type': 'char', 'string': 'Cấp chính xác'}, {'name': 'ty_so_ti', 'type': 'char', 'string': 'Tỷ số biến dòng'}, {'name': 'ty_so_tu', 'type': 'char', 'string': 'Tỷ số biến áp'}, {'name': 'ngay_kd', 'type': 'date', 'string': 'Ngày kiểm định'}, {'name': 'han_kd', 'type': 'date', 'string': 'Hạn kiểm định'}]"/>
+    </record>
+
+    <!-- ===== 8. Bù công suất phản kháng ===== -->
+    <record id="cat_tba_svg" model="eam.asset.category">
+        <field name="code">TBA-SVG</field>
+        <field name="name">Thiết bị bù công suất phản kháng</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">SVG, STATCOM, Tụ bù, Reactive compensation</field>
+        <field name="note">CÓ hay KHÔNG tuỳ thoả thuận đấu nối với điện
+            lực. Nhà máy tái tạo VN thường đáp ứng hệ số công suất bằng
+            chính biến tần của nhà máy quang điện hoặc bộ biến tần tua-bin; khi lưới đòi dải
+            rộng hơn thì mới đặt thêm SVG ở trạm.</field>
+    </record>
+    <record id="cat_tba_svgc" model="eam.asset.category">
+        <field name="code">TBA-SVGC</field>
+        <field name="name">Bộ biến đổi bù</field>
+        <field name="parent_id" ref="cat_tba_svg"/>
+        <field name="alias_names">SVG converter, Bộ biến đổi SVG</field>
+    </record>
+    <record id="cat_tba_cap" model="eam.asset.category">
+        <field name="code">TBA-CAP</field>
+        <field name="name">Tủ tụ bù</field>
+        <field name="parent_id" ref="cat_tba_svg"/>
+        <field name="alias_names">Capacitor bank, Giàn tụ</field>
+    </record>
+
+    <!-- ===== 9. Chữa cháy ===== -->
+    <record id="cat_tba_fir" model="eam.asset.category">
+        <field name="code">TBA-FIR</field>
+        <field name="name">Hệ thống chữa cháy trạm</field>
+        <field name="parent_id" ref="cat_tba"/>
+        <field name="alias_names">Fire fighting, PCCC, Chữa cháy MBA</field>
+        <field name="note">Thuộc diện kiểm định định kỳ của cơ quan
+            PCCC — hồ sơ kiểm định treo ở vị trí này.</field>
+    </record>
+
+    <!-- ===== Bổ sung bên trong máy biến áp ===== -->
+    <record id="cat_tba_wti" model="eam.asset.category">
+        <field name="code">TBA-WTI</field>
+        <field name="name">Đồng hồ nhiệt độ dầu và cuộn dây</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">WTI, OTI, Winding temperature indicator</field>
+    </record>
+    <record id="cat_tba_ner" model="eam.asset.category">
+        <field name="code">TBA-NER</field>
+        <field name="name">Nối đất trung tính</field>
+        <field name="parent_id" ref="cat_tba_mba"/>
+        <field name="alias_names">NER, Neutral earthing resistor, Kháng trung tính</field>
+        <field name="note">Phía trung áp của máy biến áp nâng áp thường
+            nối đất qua điện trở hoặc kháng để hạn dòng chạm đất.</field>
+    </record>
+
+  </data>
+</odoo>

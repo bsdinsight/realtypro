@@ -48,6 +48,12 @@ class EamOutage(models.Model):
         index=True, tracking=True,
         help='Dừng máy xảy ra ở một CHỖ. Thiết bị đang nằm ở đó suy ra '
              'từ lịch sử lắp đặt.')
+    # Nhà máy suy từ vị trí, nhưng phải LƯU: pane lọc bên trái chỉ nhận
+    # trường của chính model, không đi theo quan hệ
+    # `location_id.plant_id`, và trường không lưu thì không vào domain.
+    plant_id = fields.Many2one(
+        related='location_id.plant_id', store=True, index=True,
+        string='Nhà máy')
     asset_id = fields.Many2one(
         'eam.asset', string='Thiết bị liên quan',
         compute='_compute_asset', store=True, readonly=False,
@@ -92,7 +98,7 @@ class EamOutage(models.Model):
              'ra để khỏi đếm đúp.')
 
     liability = fields.Selection(
-        [('undetermined', 'Chưa quy'),
+        [('undetermined', 'Chưa quy trách nhiệm'),
          ('warranty', 'Bảo hành thiết bị'),
          ('om_contract', 'Nghĩa vụ hợp đồng O&M'),
          ('owner', 'Chủ đầu tư tự chịu'),

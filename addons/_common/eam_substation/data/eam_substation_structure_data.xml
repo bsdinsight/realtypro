@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Mẫu cấu trúc một TRẠM BIẾN ÁP NÂNG ÁP — 31 vị trí, hai cấp
+        DƯỚI chính tài sản trạm (nên trên cây tài sản là ba cấp).
+
+        Cùng tiêu chí đã dùng cho tua-bin: chỉ lập vị trí chức năng cho
+        thứ **thay được tại chỗ và đáng theo dõi lịch sử theo sê-ri**.
+        Thanh cái và sứ xuyên lập ở mức CỤM chứ không tách từng cái —
+        tách ra thì một trạm vài trăm vị trí và không ai ghi nổi, đúng
+        như bài học của con bu-lông bên tua-bin.
+
+        Vì sao máy cắt dùng cùng mã `CB` ở cả hai ngăn lộ
+        ~~~~~~~~~~
+        Ràng buộc là `UNIQUE(template_id, parent_line_id, code)` — trùng
+        mã khác cha thì hợp lệ. Và đường dẫn đầy đủ tự phân biệt:
+        `TBA01/HVB/CB` với `TBA01/MVB/CB`. Đặt thành HVCB/MVCB thì mã
+        dài ra mà không nói thêm được gì.
+
+        Công tơ giao nhận và hệ nối đất để ở CẤP MỘT, không có con
+        ~~~~~~~~~~
+        Một cụm chỉ có đúng một vị trí con thì cái cụm ấy thừa. Hai thứ
+        này tự nó đã là vị trí cần theo dõi: công tơ vì là chỗ tiền đi
+        qua, nối đất vì thuộc diện kiểm định định kỳ.
+
+        noupdate="1": mỗi chủ đầu tư một cách chia cụm. Khách sửa rồi
+        thì bản nâng cấp không được đạp lên.
+    -->
+    <data noupdate="1">
+
+        <record id="tpl_tba" model="eam.structure.template">
+            <field name="code">TBA-STD</field>
+            <field name="name">Trạm biến áp nâng áp — cấu trúc chuẩn</field>
+            <field name="category_id" ref="cat_tba"/>
+            <field name="note">31 vị trí, hai cấp. Chia theo ngăn lộ và hệ
+                chức năng, KHÔNG chia theo cấp điện áp: trạm 22/110 kV và
+                trạm 35/220 kV có cùng bấy nhiêu cụm, chỉ khác thông số.</field>
+        </record>
+
+        <!-- ===== Cấp 1 ===== -->
+        <record id="tpl_t_mba" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">10</field>
+            <field name="code">MBA</field>
+            <field name="name">Máy biến áp lực</field>
+            <field name="category_id" ref="cat_tba_mba"/>
+        </record>
+        <record id="tpl_t_hvb" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">20</field>
+            <field name="code">HVB</field>
+            <field name="name">Ngăn lộ cao áp</field>
+            <field name="category_id" ref="cat_tba_hvb"/>
+        </record>
+        <record id="tpl_t_mvb" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">30</field>
+            <field name="code">MVB</field>
+            <field name="name">Ngăn lộ trung áp</field>
+            <field name="category_id" ref="cat_tba_mvb"/>
+        </record>
+        <record id="tpl_t_pro" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">40</field>
+            <field name="code">PRO</field>
+            <field name="name">Hệ bảo vệ và điều khiển</field>
+            <field name="category_id" ref="cat_tba_pro"/>
+        </record>
+        <record id="tpl_t_aux" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">50</field>
+            <field name="code">AUX</field>
+            <field name="name">Nguồn tự dùng và một chiều</field>
+            <field name="category_id" ref="cat_tba_aux"/>
+        </record>
+        <record id="tpl_t_ear" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">60</field>
+            <field name="code">EAR</field>
+            <field name="name">Hệ nối đất và chống sét</field>
+            <field name="category_id" ref="cat_tba_ear"/>
+            <field name="note">Thuộc diện kiểm định định kỳ — gắn lịch
+                kiểm định vào đây.</field>
+        </record>
+        <record id="tpl_t_met" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">70</field>
+            <field name="code">MET</field>
+            <field name="name">Đo đếm điện năng giao nhận</field>
+            <field name="category_id" ref="cat_tba_met"/>
+            <field name="is_rotable_slot" eval="True"/>
+            <field name="note">Chỗ tiền đi qua. Thay công tơ phải để lại
+                vết: số chế tạo cũ, số mới, ngày thay.</field>
+        </record>
+
+        <!-- ===== Cấp 2 — trong máy biến áp lực ===== -->
+        <record id="tpl_t_oltc" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">11</field>
+            <field name="code">OLTC</field>
+            <field name="name">Bộ điều áp dưới tải</field>
+            <field name="category_id" ref="cat_tba_oltc"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_cool" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">12</field>
+            <field name="code">COOL</field>
+            <field name="name">Hệ làm mát</field>
+            <field name="category_id" ref="cat_tba_cool"/>
+        </record>
+        <record id="tpl_t_buch" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">13</field>
+            <field name="code">BUCH</field>
+            <field name="name">Rơ-le hơi và bảo vệ bản thể</field>
+            <field name="category_id" ref="cat_tba_buch"/>
+        </record>
+        <record id="tpl_t_bush" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">14</field>
+            <field name="code">BUSH</field>
+            <field name="name">Sứ xuyên</field>
+            <field name="category_id" ref="cat_tba_bush"/>
+        </record>
+        <record id="tpl_t_oil" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">15</field>
+            <field name="code">OIL</field>
+            <field name="name">Hệ dầu và bình giãn nở</field>
+            <field name="category_id" ref="cat_tba_oil"/>
+        </record>
+
+        <!-- ===== Cấp 2 — trong ngăn lộ cao áp ===== -->
+        <record id="tpl_t_hv_cb" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_hvb"/>
+            <field name="sequence">21</field>
+            <field name="code">CB</field>
+            <field name="name">Máy cắt</field>
+            <field name="category_id" ref="cat_tba_cb"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_hv_ds" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_hvb"/>
+            <field name="sequence">22</field>
+            <field name="code">DS</field>
+            <field name="name">Dao cách ly và dao tiếp địa</field>
+            <field name="category_id" ref="cat_tba_ds"/>
+        </record>
+        <record id="tpl_t_hv_ct" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_hvb"/>
+            <field name="sequence">23</field>
+            <field name="code">CT</field>
+            <field name="name">Biến dòng đo lường</field>
+            <field name="category_id" ref="cat_tba_ct"/>
+        </record>
+        <record id="tpl_t_hv_vt" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_hvb"/>
+            <field name="sequence">24</field>
+            <field name="code">VT</field>
+            <field name="name">Biến điện áp đo lường</field>
+            <field name="category_id" ref="cat_tba_vt"/>
+        </record>
+        <record id="tpl_t_hv_sa" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_hvb"/>
+            <field name="sequence">25</field>
+            <field name="code">SA</field>
+            <field name="name">Chống sét van</field>
+            <field name="category_id" ref="cat_tba_sa"/>
+        </record>
+
+        <!-- ===== Cấp 2 — trong ngăn lộ trung áp ===== -->
+        <record id="tpl_t_mv_cb" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mvb"/>
+            <field name="sequence">31</field>
+            <field name="code">CB</field>
+            <field name="name">Máy cắt</field>
+            <field name="category_id" ref="cat_tba_cb"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_mv_bus" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mvb"/>
+            <field name="sequence">32</field>
+            <field name="code">BUS</field>
+            <field name="name">Thanh cái và tủ hợp bộ</field>
+            <field name="category_id" ref="cat_tba_bus"/>
+        </record>
+
+        <!-- ===== Cấp 2 — trong hệ bảo vệ, điều khiển ===== -->
+        <record id="tpl_t_rel" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_pro"/>
+            <field name="sequence">41</field>
+            <field name="code">REL</field>
+            <field name="name">Rơ-le bảo vệ</field>
+            <field name="category_id" ref="cat_tba_rel"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_rtu" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_pro"/>
+            <field name="sequence">42</field>
+            <field name="code">RTU</field>
+            <field name="name">RTU và cổng truyền thông SCADA</field>
+            <field name="category_id" ref="cat_tba_rtu"/>
+        </record>
+
+        <!-- ===== Cấp 2 — trong nguồn tự dùng ===== -->
+        <record id="tpl_t_bat" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_aux"/>
+            <field name="sequence">51</field>
+            <field name="code">BAT</field>
+            <field name="name">Hệ ắc-quy một chiều</field>
+            <field name="category_id" ref="cat_tba_bat"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_chg" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_aux"/>
+            <field name="sequence">52</field>
+            <field name="code">CHG</field>
+            <field name="name">Bộ nạp và tủ phân phối một chiều</field>
+            <field name="category_id" ref="cat_tba_chg"/>
+        </record>
+        <record id="tpl_t_atr" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_aux"/>
+            <field name="sequence">53</field>
+            <field name="code">ATR</field>
+            <field name="name">Máy biến áp tự dùng</field>
+            <field name="category_id" ref="cat_tba_atr"/>
+        </record>
+
+        <!-- ===== Cấp 1 bổ sung ===== -->
+        <record id="tpl_t_svg" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">80</field>
+            <field name="code">SVG</field>
+            <field name="name">Thiết bị bù công suất phản kháng</field>
+            <field name="category_id" ref="cat_tba_svg"/>
+            <field name="note">Chỉ dựng khi thoả thuận đấu nối đòi dải
+                công suất phản kháng rộng hơn khả năng của biến tần.</field>
+        </record>
+        <record id="tpl_t_fir" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="sequence">90</field>
+            <field name="code">FIR</field>
+            <field name="name">Hệ thống chữa cháy trạm</field>
+            <field name="category_id" ref="cat_tba_fir"/>
+        </record>
+
+        <!-- ===== Cấp 2 bổ sung ===== -->
+        <record id="tpl_t_wti" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">16</field>
+            <field name="code">WTI</field>
+            <field name="name">Đồng hồ nhiệt độ dầu và cuộn dây</field>
+            <field name="category_id" ref="cat_tba_wti"/>
+        </record>
+        <record id="tpl_t_ner" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mba"/>
+            <field name="sequence">17</field>
+            <field name="code">NER</field>
+            <field name="name">Nối đất trung tính</field>
+            <field name="category_id" ref="cat_tba_ner"/>
+        </record>
+        <record id="tpl_t_mv_sa" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_mvb"/>
+            <field name="sequence">33</field>
+            <field name="code">SA</field>
+            <field name="name">Chống sét van trung áp</field>
+            <field name="category_id" ref="cat_tba_sa"/>
+        </record>
+        <record id="tpl_t_svg_cnv" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_svg"/>
+            <field name="sequence">81</field>
+            <field name="code">CNV</field>
+            <field name="name">Bộ biến đổi bù</field>
+            <field name="category_id" ref="cat_tba_svgc"/>
+            <field name="is_rotable_slot" eval="True"/>
+        </record>
+        <record id="tpl_t_svg_cap" model="eam.structure.template.line">
+            <field name="template_id" ref="tpl_tba"/>
+            <field name="parent_line_id" ref="tpl_t_svg"/>
+            <field name="sequence">82</field>
+            <field name="code">CAP</field>
+            <field name="name">Tủ tụ bù</field>
+            <field name="category_id" ref="cat_tba_cap"/>
+        </record>
+
+    </data>
+</odoo>

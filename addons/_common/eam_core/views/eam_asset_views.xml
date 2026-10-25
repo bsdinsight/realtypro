@@ -4,7 +4,9 @@
         <field name="name">eam.asset.list</field>
         <field name="model">eam.asset</field>
         <field name="arch" type="xml">
-            <list string="Tài sản" expand="1"
+            <!-- KHÔNG `expand`: khi người dùng tự bật gom nhóm thì bung
+                 sẵn là đổ cả 1.396 dòng ra, mất hẳn tác dụng gom. -->
+            <list string="Tài sản"
                   decoration-muted="state == 'scrapped'"
                   decoration-danger="warranty_state == 'expired'"
                   decoration-warning="warranty_state == 'expiring'">
@@ -187,30 +189,52 @@
                        trạng bảo hành" ở đây (nó phụ thuộc hôm nay nên
                        không được lưu).
                     ② KHÔNG dùng `groupby`: nó sinh lỗi `group_domain=None`.
-                    ③ Pane không tự co theo lựa chọn ở ô khác — chọn một
-                       nhà máy thì danh sách loại cấu phần vẫn hiện đủ.
-                       Bật `enable_counters` để người dùng thấy ngay ô nào
-                       bằng 0 thay vì bấm vào rồi mới biết trống.
+                    ③ Pane CÓ co theo lựa chọn ở ô khác, nhưng chỉ khi
+                       KHÔNG bật `expand`. Bật `expand` là mọi ô đều vẽ
+                       ra kể cả ô bằng 0 — chọn Điện gió thì ô GỐC tên
+                       "Bộ biến tần" (vốn là biến tần quang điện của
+                       PV50) vẫn nằm đó với số 0, còn biến tần của
+                       tua-bin thì nằm hai cấp dưới trong nhánh Tua-bin
+                       gió. Người dùng đọc pane rồi kết luận nhà máy
+                       không có biến tần — đã vấp đúng vậy.
+                       Giữ `enable_counters` để thấy ngay số lượng.
                 -->
                 <searchpanel>
-                    <field name="asset_level" string="Cấp tài sản"
-                           select="multi" icon="fa-layer-group"
-                           enable_counters="1"/>
+                    <!-- KHÔNG đặt `asset_level` vào pane. Màn mở sẵn bộ
+                         lọc "Chỉ thiết bị chính" trên THANH TÌM KIẾM, mà
+                         ô trong pane thì không bật sẵn được — nên pane sẽ
+                         hiện ô "Thiết bị chính" CHƯA TICK trong khi danh
+                         sách đang bị lọc đúng bằng trường ấy. Người dùng
+                         nhìn pane, thấy không tick gì, kết luận là dữ
+                         liệu thiếu. Đã vấp bốn lần liên tiếp.
+                         Một khái niệm thì một chỗ điều khiển: giữ ở chip
+                         trên thanh — nhìn thấy được, có dấu × để tắt. -->
                     <field name="plant_id" string="Nhà máy"
                            icon="fa-industry" enable_counters="1"/>
+                    <!-- KHÔNG `expand` — xem ③. Không bung thì cây co
+                         đúng theo nhà máy đang chọn: DG123 còn 51 ô thay
+                         vì 79, hết sạch ô bằng 0, mà lõi vẫn tự thêm các
+                         cấp cha nên cây không đứt đoạn.
+                         Cũng đừng bật lại khi danh mục phình to: vượt 200
+                         bản ghi là lõi trả error_msg và ô này vẽ ra RỖNG
+                         mà không báo gì. -->
                     <field name="category_id" string="Loại cấu phần"
-                           icon="fa-sitemap" enable_counters="1"
-                           expand="1"/>
+                           icon="fa-sitemap" enable_counters="1"/>
                     <field name="state" string="Vòng đời" select="multi"
                            icon="fa-heartbeat" enable_counters="1"/>
                     <field name="criticality" string="Mức quan trọng"
                            select="multi" icon="fa-exclamation-triangle"
                            enable_counters="1"/>
                 </searchpanel>
+                <!-- Lọc theo `asset_level`, KHÔNG theo `parent_id`.
+                     `parent_id = False` nghĩa là "đứng đầu cây lắp ráp",
+                     khác hẳn "là một thiết bị": hộp gom chuỗi lắp trong
+                     dàn pin, biến tần tua-bin lắp trong cụm điện — đều
+                     là thiết bị thật mà cách cũ giấu sạch. -->
                 <filter name="f_chinh" string="Chỉ thiết bị chính"
-                        domain="[('parent_id', '=', False)]"/>
+                        domain="[('asset_level', '=', 'main')]"/>
                 <filter name="f_cauphan" string="Chỉ cấu phần"
-                        domain="[('parent_id', '!=', False)]"/>
+                        domain="[('asset_level', '=', 'component')]"/>
                 <separator/>
                 <filter name="f_lap" string="Đang lắp trên máy"
                         domain="[('is_installed', '=', True)]"/>
@@ -227,6 +251,8 @@
                 <filter name="f_bh_het" string="Bảo hành đã hết"
                         domain="[('warranty_end', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <separator/>
+                <filter name="g_cap" string="Cấp tài sản"
+                        context="{'group_by': 'asset_level'}"/>
                 <filter name="g_nm" string="Nhà máy"
                         context="{'group_by': 'plant_id'}"/>
                 <filter name="g_cat" string="Loại cấu phần"
@@ -242,12 +268,49 @@
         <field name="name">Tài sản</field>
         <field name="res_model">eam.asset</field>
         <field name="view_mode">list,hierarchy,form</field>
-        <!-- Mặc định CHỈ hiện thiết bị chính. Gần bảy trăm cấu phần đổ
-             vào một danh sách phẳng thì hai mươi dòng đầu toàn cánh
-             quạt và người dùng tưởng mất máy. -->
+        <!-- MỞ SẴN bộ lọc "Chỉ thiết bị chính". Anh Đại chốt 26/10/2026,
+             sau khi đã thử cả ba cách — ĐỪNG đổi lại nếu không có quyết
+             định mới, cả ba đều đã được cân nhắc:
+             ① `search_default_f_chinh` (đang dùng) — 1.396 tài sản còn
+                329 THIẾT BỊ. Bấm Bộ biến tần ra đúng 60 cái biến tần,
+                Dàn pin quang điện ra đúng 16 dàn pin, Tua-bin gió ở
+                DG123 ra đúng 12 trụ. Đây là thứ người vận hành mở sổ
+                tài sản ra để tìm.
+             ② Không đặt gì — danh sách phẳng 1.396 dòng, bấm Dàn pin
+                quang điện ra 32 vì Odoo gộp cả nhánh con Khung giá đỡ.
+                Người dùng không cần 16 cái khung ở màn ấy.
+             ③ `search_default_g_cap` (gom nhóm theo cấp) — không giấu
+                gì, nhưng MỌI đường lần xuống đều chết ở một dòng nhóm
+                GẬP: bấm nhà máy, bấm loại, rồi vẫn phải bấm lần nữa.
+
+             Bộ lọc này CHỈ an toàn vì `asset_level` nay đọc cờ
+             `is_equipment` trên LOẠI. Hồi nó còn suy từ `parent_id`
+             ("đứng đầu cây lắp ráp"), bật bộ lọc là ba nhóm thiết bị
+             thật về 0 và biến khỏi cả pane: 192 hộp gom chuỗi, 48 hệ
+             xoay theo mặt trời, 12 bộ biến tần của DG123. ĐỪNG đổi
+             domain hai bộ lọc về `parent_id` — xem ghi chú ở chúng.
+
+             PHẢI ghi đủ thẻ chứ không được xoá đi: nâng cấp module chỉ
+             ghi những trường CÓ MẶT trong XML, bỏ thẻ ra là giá trị cũ
+             nằm nguyên trong DB. -->
         <field name="context">{'search_default_f_chinh': 1}</field>
+        <!-- Câu trống không được đổ tại bộ lọc nữa (nay không bật sẵn
+             cái nào), mà phải chỉ sang hai nơi người dùng thực sự vừa
+             bấm: thanh tìm kiếm và các ô ở khung bên trái. -->
+
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiley_face">Chưa có tài sản nào</p>
+            <p class="o_view_nocontent_smiley_face">Không có tài sản nào
+               <b>khớp điều kiện đang lọc</b></p>
+            <p>Màn này mở sẵn bộ lọc <b>“Chỉ thiết bị chính”</b> — hiện
+               thiết bị, ẩn cấu phần nằm bên trong chúng (cánh quạt, khung
+               giá đỡ, sứ xuyên, rơ-le…). Loại anh vừa chọn có thể toàn là
+               cấu phần, nên danh sách trống.</p>
+            <p><b>Bấm dấu × trên chip “Chỉ thiết bị chính”</b> ở thanh tìm
+               kiếm là thấy đủ. Sau đó vẫn trống thì mới là chưa có dữ liệu —
+               hãy xem lại các ô đã chọn ở khung bên trái.</p>
+            <p>Một loại là thiết bị hay cấu phần do <b>chính anh quyết</b>:
+               mở <i>Cấu hình ▸ Loại cấu phần</i>, tick ô <b>“Là thiết bị”</b>.
+               Máy không tự suy điều đó.</p>
             <p>Tài sản là <b>vật</b>, mang theo lịch sử của chính nó qua mọi
                lần tháo ra và lắp lại. Vị trí nó đang nằm là thuộc tính tạm
                thời, suy ra từ lịch sử lắp đặt.</p>

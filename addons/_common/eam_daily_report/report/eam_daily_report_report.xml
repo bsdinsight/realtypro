@@ -31,6 +31,12 @@
                         <t t-call="eam_daily_report.bao_cao_ngay_luoi"/>
                     </div>
                 </t>
+                <t t-elif="o.profile_id.bo_cuc == 'luoi_gio'"
+                   t-call="web.external_layout">
+                    <div class="page">
+                        <t t-call="eam_daily_report.bao_cao_ngay_luoi_gio"/>
+                    </div>
+                </t>
                 <t t-else="" t-call="web.external_layout">
                     <div class="page">
 

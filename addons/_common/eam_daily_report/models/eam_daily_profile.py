@@ -115,7 +115,8 @@ class EamDailyProfile(models.Model):
         'res.company', default=lambda s: s.env.company)
     bo_cuc = fields.Selection(
         [('doc', 'Danh sách dọc theo khối'),
-         ('luoi', 'Lưới ngang — ba khung cạnh nhau')],
+         ('luoi', 'Lưới ngang — ba khung cạnh nhau'),
+         ('luoi_gio', 'Lưới ngang — bảy mục đánh số (điện gió)')],
         string='Bố cục bản in', default='doc', required=True,
         help='Tờ báo cáo của nhà máy điện mặt trời không phải danh sách '
              'dọc: ba khung năng lượng / giờ / khí tượng nằm cạnh nhau, '

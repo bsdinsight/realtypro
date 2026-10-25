@@ -14,11 +14,15 @@
         <field name="name">Báo cáo ngày — A4 ngang</field>
         <field name="format">A4</field>
         <field name="orientation">Landscape</field>
-        <field name="margin_top">12</field>
+        <!-- Lề trên phải chừa chỗ cho ĐẦU TRANG của khung chuẩn: nó
+             đặt tên công ty ở vị trí tuyệt đối, nên lề hẹp thì nội dung
+             chui lên nằm đè chữ. Khổ ngang càng dễ dính vì nội dung bắt
+             đầu ngay sát mép. -->
+        <field name="margin_top">48</field>
         <field name="margin_bottom">8</field>
         <field name="margin_left">6</field>
         <field name="margin_right">6</field>
-        <field name="header_spacing">6</field>
+        <field name="header_spacing">20</field>
         <field name="dpi">96</field>
     </record>
 

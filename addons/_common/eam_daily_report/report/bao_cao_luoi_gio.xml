@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bố cục BẢY MỤC ĐÁNH SỐ, dựng theo tờ báo cáo ngày của nhà máy điện
+     gió. Bảng nằm trái, biểu đồ nằm phải trên cùng một hàng.
+
+     Số mục không phải trang trí: người vận hành gọi nhau bằng "mục 4"
+     chứ không bằng "khung khả dụng". Bỏ số đi là bắt họ đổi cách nói. -->
+<odoo>
+
+    <template id="muc_gio">
+        <div class="bcn-muc">
+            <span class="bcn-so" t-esc="so"/>
+            <span t-esc="ten"/>
+        </div>
+    </template>
+
+    <template id="bao_cao_ngay_luoi_gio">
+        <t t-set="g" t-value="o.luoi_gio()"/>
+        <style>
+            .bcng .bcn-muc { background:#1F3864; color:#fff; font-weight:bold;
+                             padding:2px 5px; font-size:8.5px;
+                             margin-top:3px; }
+            .bcng .bcn-so { display:inline-block; width:14px; }
+            .bcng .table td, .bcng .table th { padding:1px 3px;
+                                               vertical-align:middle; }
+            .bcng .table { font-size:8px; margin-bottom:0; }
+            .bcng .nhan { color:#666; }
+            .eam-hoa-gio-hep .d-flex { display:block !important; }
+            .eam-hoa-gio-hep svg { width:150px; height:150px; }
+        </style>
+        <div class="bcng">
+            <table style="width:100%; border:0">
+                <tr>
+                    <td style="border:0">
+                        <!-- MỘT dòng, không phải khối tiêu đề: đầu trang
+                             của khung chuẩn đã in tên công ty ngay phía
+                             trên, hai khối chữ to chồng nhau thì cả hai
+                             đều khó đọc. -->
+                        <b style="font-size:11px">
+                            <span t-field="o.plant_id.name"/></b>
+                        <span style="font-size:9px"> · <i>DAILY REPORT</i> ·
+                            <b><span t-field="o.date"/></b></span>
+                    </td>
+                    <td style="border:0; text-align:right; font-size:8px"
+                        class="text-muted">
+                        <div>Report creation: <span t-field="o.create_date"/></div>
+                        <div t-if="o.nguoi_chot_id">Report validation:
+                            <span t-field="o.nguoi_chot_id.name"/> ·
+                            <span t-field="o.ngay_chot"/></div>
+                        <div t-else=""><b>NHÁP — chưa chốt</b></div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== 1 WEATHER ===== -->
+            <t t-set="so" t-value="1"/><t t-set="ten" t-value="'WEATHER'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <table style="width:100%; border:0">
+                <tr style="vertical-align:top">
+                    <td style="width:55%; border:0; padding-right:4px">
+                        <table class="table table-sm table-bordered">
+                            <tr><th>Weather</th><th class="text-end">Data</th>
+                                <th class="text-center">Unit</th></tr>
+                            <tr t-foreach="g['thoi_tiet']" t-as="l">
+                                <td t-esc="l.name"/>
+                                <td class="text-end fw-bold"
+                                    t-esc="l.hien_thi"/>
+                                <td class="text-center nhan"
+                                    t-esc="l.don_vi or ''"/>
+                            </tr>
+                            <tr t-foreach="g['quan_trac']" t-as="l">
+                                <td t-esc="l.name"/>
+                                <td colspan="2" t-esc="l.hien_thi"/>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width:45%; border:0">
+                        <!-- Hoa gió nằm trong ô hẹp. Chữ giải thích
+                             đặt cạnh hình thì tràn mép phải, nên cho
+                             xuống DƯỚI hình và thu nhỏ lại. -->
+                        <div style="font-size:6.5px"
+                             class="eam-hoa-gio-hep">
+                            <t t-if="g['hoa_gio']"
+                               t-call="eam_daily_report.khoi_hoa_gio"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ===== 2 WIND TURBINE REPORT ===== -->
+            <t t-set="so" t-value="2"/>
+            <t t-set="ten" t-value="'WIND TURBINE REPORT'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <t t-if="g['bang_may']"
+               t-call="eam_daily_report.khoi_bang_to_may"/>
+
+            <!-- ===== 3 FARM REPORT ===== -->
+            <t t-set="so" t-value="3"/><t t-set="ten" t-value="'FARM REPORT'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <t t-if="g['cong_to']" t-call="eam_daily_report.khoi_cong_to"/>
+            <table class="table table-sm table-bordered mt-1">
+                <tr t-foreach="g['san_luong']" t-as="l">
+                    <td style="width:56%" t-esc="l.name"/>
+                    <td class="text-end fw-bold" style="width:30%"
+                        t-esc="l.hien_thi"/>
+                    <td class="nhan" style="width:14%"
+                        t-esc="l.don_vi or ''"/>
+                </tr>
+            </table>
+
+            <!-- ===== 4 AVAILABILITY &amp; CURTAILMENT ===== -->
+            <t t-set="so" t-value="4"/>
+            <t t-set="ten" t-value="'AVAILABILITY &amp; CURTAILMENT REPORT'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <table class="table table-sm table-bordered">
+                <tr t-foreach="g['kha_dung']" t-as="l">
+                    <td style="width:56%" t-esc="l.name"/>
+                    <td class="text-end fw-bold" style="width:30%">
+                        <span t-if="l.do_duoc" t-esc="l.hien_thi"/>
+                        <span t-else="" class="nhan"
+                              style="font-weight:normal; font-size:6.5px"
+                              t-esc="l.ly_do_chua_do"/>
+                    </td>
+                    <td class="nhan" style="width:14%"
+                        t-esc="l.don_vi or ''"/>
+                </tr>
+            </table>
+
+            <!-- ===== 5 LOSSES ===== -->
+            <t t-set="so" t-value="5"/><t t-set="ten" t-value="'LOSSES'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <table class="table table-sm table-bordered">
+                <tr t-foreach="g['ton_that']" t-as="l">
+                    <td style="width:56%" t-esc="l.name"/>
+                    <td class="text-end fw-bold" style="width:30%"
+                        t-esc="l.hien_thi"/>
+                    <td class="nhan" style="width:14%"
+                        t-esc="l.don_vi or ''"/>
+                </tr>
+            </table>
+
+            <!-- ===== 6 DAILY TREND ===== -->
+            <t t-if="g['bieu_do']">
+                <t t-set="so" t-value="6"/>
+                <t t-set="ten" t-value="'DAILY TREND'"/>
+                <t t-call="eam_daily_report.muc_gio"/>
+                <t t-call="eam_daily_report.khoi_bieu_do"/>
+            </t>
+
+            <!-- ===== 7 ACTIVITY ===== -->
+            <t t-set="so" t-value="7"/><t t-set="ten" t-value="'ACTIVITY'"/>
+            <t t-call="eam_daily_report.muc_gio"/>
+            <table class="table table-sm table-bordered">
+                <tr style="vertical-align:top">
+                    <td style="width:50%"><b>ACCOMPLISHMENTS</b>
+                        <div t-field="o.hoat_dong"/></td>
+                    <td style="width:50%"><b>DAY-AHEAD ACTIVITY PLANS</b>
+                        <div t-field="o.ke_hoach_mai"/></td>
+                </tr>
+                <tr style="vertical-align:top">
+                    <td><b>INCIDENTS</b>
+                        <div t-field="o.su_co"/></td>
+                    <td><b>REMARK</b>
+                        <div t-field="o.ghi_chu_bc"/>
+                        <t t-foreach="g['ghi_chu'] + g['nhan_su']" t-as="l">
+                            <div><span class="nhan" t-esc="l.name"/>:
+                                <b t-esc="l.hien_thi"/></div>
+                        </t>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+</odoo>

@@ -542,6 +542,47 @@ class EamDailyReport(models.Model):
         co = set(self.line_ids.mapped('khoi'))
         return [{'ma': ma, 'ten': ten} for ma, ten in KHOI if ma in co]
 
+    def luoi_gio(self):
+        """Xếp ô cho tờ ĐIỆN GIÓ — bảy mục đánh số của nhà máy.
+
+        Tờ gió xếp khác tờ điện mặt trời, và khác ở chỗ có lý do: nó
+        chia BẢY MỤC ĐÁNH SỐ, bảng nằm trái và biểu đồ nằm phải trên
+        cùng một hàng. Người đọc tìm "mục 4" chứ không tìm "khung khả
+        dụng" — số mục là một phần của cách họ nói chuyện với nhau.
+        """
+        self.ensure_one()
+        ds = self.line_ids.filtered(
+            lambda l: l.do_duoc or l.profile_line_id.in_khi_trong)
+        khoi = ds.filtered(lambda l: l.profile_line_id.nguon == 'khoi')
+
+        def o(khoi_ma, nguon=None, khac=None):
+            r = ds.filtered(lambda l: l.khoi == khoi_ma)
+            if nguon:
+                r = r.filtered(lambda l: l.profile_line_id.nguon in nguon)
+            if khac:
+                r = r.filtered(lambda l: l.profile_line_id.nguon not in khac)
+            return r.sorted(lambda l: l.sequence)
+
+        def kb(ma):
+            return khoi.filtered(
+                lambda l: l.profile_line_id.khoi_dac_biet == ma)[:1]
+
+        return {
+            'thoi_tiet': o('khi_tuong', khac=('khoi', 'nguoi')),
+            'quan_trac': o('khi_tuong', nguon=('nguoi',)),
+            'hoa_gio': kb('hoa_gio'),
+            'bang_may': kb('bang_to_may') or kb('bang_inverter'),
+            'cong_to': kb('cong_to'),
+            'san_luong': o('san_luong', khac=('khoi',)),
+            # Mục 4 gộp khả dụng với giờ dừng và cắt giảm — đúng như tờ
+            # của nhà máy: ba thứ ấy đọc cùng nhau mới có nghĩa.
+            'kha_dung': o('kha_dung') + o('dung_may', khac=('khoi',)),
+            'ton_that': o('ton_that'),
+            'bieu_do': kb('bieu_do_ngay'),
+            'nhan_su': o('nhan_su'),
+            'ghi_chu': o('ghi_chu'),
+        }
+
     def _bao(self, loi_nhan, kieu='info'):
         return {
             'type': 'ir.actions.client', 'tag': 'display_notification',
@@ -672,7 +713,7 @@ class EamDailyReport(models.Model):
         """
         self.ensure_one()
         ref = ('eam_daily_report.action_in_bao_cao_ngang'
-               if self.profile_id.bo_cuc == 'luoi'
+               if self.profile_id.bo_cuc in ('luoi', 'luoi_gio')
                else 'eam_daily_report.action_in_bao_cao_ngay')
         return self.env.ref(ref).report_action(self)
 

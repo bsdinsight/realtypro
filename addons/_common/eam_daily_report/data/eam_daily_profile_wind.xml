@@ -22,6 +22,7 @@
         <field name="tieu_de">DAILY REPORT — WIND FARM</field>
         <field name="note">Dựng theo bảy khối của tờ báo cáo ngày khách đang dùng.
 Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_T_AMB, *_P_BAR; bảng hiệu suất tổ máy đã dựng cho ngày đó; mục tiêu P50/P75/P90 của tháng; và chuỗi điểm đo khai các bậc SUB, MBA, EVN.</field>
+        <field name="bo_cuc">luoi_gio</field>
     </record>
     <record id="pl_wd_tam" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_wind"/>

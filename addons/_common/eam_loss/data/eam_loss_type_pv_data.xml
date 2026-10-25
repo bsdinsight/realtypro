@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mười loại tổn thất RIÊNG của tấm quang điện, khai thêm vào CHÍNH
+     bảng loại tổn thất dùng chung — không phải bảng thứ hai.
+
+     Bốn loại đo được ngay từ dữ liệu đang có. Sáu loại còn lại để NGƯỜI
+     NHẬP, và mỗi loại ghi rõ cần đo thêm cái gì mới tự tính được. Khai
+     chúng thành "chưa đo được" vẫn hơn bỏ trống: tờ giấy nói ra rằng
+     phần dư có thể đang chứa chúng, và danh sách này chính là thứ để
+     bàn với nhà máy xem nên lắp thêm đo gì. -->
+<odoo>
+  <data noupdate="1">
+
+    <!-- ===== ĐO ĐƯỢC NGAY ===== -->
+    <record id="lt_pv_nhiet" model="eam.loss.type">
+        <field name="code">PV-TEMP</field>
+        <field name="name">Hụt do nhiệt mô-đun</field>
+        <field name="sequence">300</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">nhiet</field>
+        <field name="note">Tấm pin nóng thì hụt công suất. Lấy lại hệ số
+            hiệu chỉnh nhiệt ĐÃ TÍNH ở bảng hiệu suất ngày chứ không
+            tính lần hai — hệ số ấy dựng trên nhiệt độ tham chiếu của
+            HỢP ĐỒNG, có thể khác 25 °C, và hai nơi tính hai mốc cho
+            cùng một ngày là chỗ cãi nhau.</field>
+    </record>
+    <record id="lt_pv_clip" model="eam.loss.type">
+        <field name="code">PV-CLIP</field>
+        <field name="name">Cắt đỉnh (clipping)</field>
+        <field name="sequence">310</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">clipping</field>
+        <field name="note">Chỉ đếm mốc đo mà bộ nghịch lưu ĐANG CHẠM
+            TRẦN. Lấy mọi lúc DC lớn hơn AC làm clipping là đếm luôn tổn
+            hao biến đổi — khoản ấy đã có cột riêng, cộng hai lần thì
+            thác nước vẫn khít mà sai cả hai cột.</field>
+    </record>
+    <record id="lt_pv_inv" model="eam.loss.type">
+        <field name="code">PV-INV</field>
+        <field name="name">Tổn hao biến đổi bộ nghịch lưu</field>
+        <field name="sequence">320</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">INV</field>
+        <field name="note">Đọc từ bậc "đầu ra bộ nghịch lưu" trong chuỗi
+            điểm đo — bậc trước nó là đầu vào một chiều, nên tổn thất
+            của bậc này CHÍNH LÀ tổn hao biến đổi.</field>
+    </record>
+
+    <record id="lt_pv_mcb" model="eam.loss.type">
+        <field name="code">PV-LINE</field>
+        <field name="name">Tổn thất cáp tới thanh cái trung thế</field>
+        <field name="sequence">325</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">MCB</field>
+    </record>
+    <record id="lt_pv_gnt" model="eam.loss.type">
+        <field name="code">PV-TRAFO</field>
+        <field name="name">Tổn thất tới ranh giới giao nhận</field>
+        <field name="sequence">326</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">bac_do</field>
+        <field name="node_code">GNT</field>
+    </record>
+
+    <!-- ===== CHƯA ĐO ĐƯỢC — ghi rõ cần đo thêm gì ===== -->
+    <record id="lt_pv_bui" model="eam.loss.type">
+        <field name="code">PV-SOIL</field>
+        <field name="name">Bụi bẩn</field>
+        <field name="sequence">340</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Tự tính được khi có MỘT trong hai: cặp cảm
+            biến bức xạ sạch–bẩn, hoặc một dãy pin đối chứng được vệ
+            sinh theo lịch. Suy từ xu hướng tỷ số hiệu suất thì không
+            tách được bụi khỏi suy giảm và khỏi che bóng — ba thứ cùng
+            kéo tỷ số xuống theo một kiểu.</field>
+    </record>
+    <record id="lt_pv_bong" model="eam.loss.type">
+        <field name="code">PV-SHADE</field>
+        <field name="name">Che bóng</field>
+        <field name="sequence">350</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Cần mô hình bóng đổ theo vị trí mặt trời và
+            địa hình, hoặc số đo ở cấp DÃY. Che bóng buổi sớm và buổi
+            chiều có dấu vết rất riêng trên chuỗi công suất từng dãy —
+            nhưng ta mới đo tới cấp bộ nghịch lưu.</field>
+    </record>
+    <record id="lt_pv_suygiam" model="eam.loss.type">
+        <field name="code">PV-DEGR</field>
+        <field name="name">Suy giảm mô-đun</field>
+        <field name="sequence">360</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Đo bằng xu hướng tỷ số hiệu suất qua NHIỀU
+            NĂM, sau khi đã trừ bụi bẩn. Một ngày không nói được gì về
+            suy giảm; con số ở đây là phân bổ theo tỷ lệ suy giảm năm đã
+            khai trong hợp đồng.</field>
+    </record>
+    <record id="lt_pv_string" model="eam.loss.type">
+        <field name="code">PV-STRW</field>
+        <field name="name">Dãy pin kém hiệu suất</field>
+        <field name="sequence">370</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Cần dòng điện từng DÃY từ hộp gom. Ta mới đo
+            tới cấp bộ nghịch lưu, nên một dãy yếu trong mười sáu dãy
+            chỉ làm bộ ấy thấp hơn đàn vài phần trăm — thấy được là có
+            vấn đề, không chỉ được dãy nào.</field>
+    </record>
+    <record id="lt_pv_stringchet" model="eam.loss.type">
+        <field name="code">PV-STRD</field>
+        <field name="name">Dãy pin chết</field>
+        <field name="sequence">380</field>
+        <field name="nhom">ky_thuat</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Cùng điều kiện với dãy kém, nhưng dễ bắt hơn:
+            mất hẳn một dãy làm dòng bộ nghịch lưu tụt một bậc rõ rệt và
+            giữ nguyên suốt ngày.</field>
+    </record>
+    <record id="lt_pv_khac" model="eam.loss.type">
+        <field name="code">PV-OTHER</field>
+        <field name="name">Tổn thất khác — công suất phản kháng</field>
+        <field name="sequence">390</field>
+        <field name="nhom">khac</field>
+        <field name="cach_do">tay</field>
+        <field name="note">Phát công suất phản kháng theo lệnh điều độ
+            làm giảm công suất tác dụng phát được. Cần số đo Q của bộ
+            nghịch lưu để tách khỏi các nguyên nhân khác.</field>
+    </record>
+
+  </data>
+</odoo>

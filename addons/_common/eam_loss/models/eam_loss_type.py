@@ -28,6 +28,8 @@ NHOM = [
 CACH_DO = [
     ('dung_may', 'Sổ dừng máy — theo nhóm giờ dừng'),
     ('bac_do', 'Chuỗi điểm đo — tổn thất của một bậc'),
+    ('nhiet', 'Hụt do nhiệt — từ hệ số hiệu chỉnh nhiệt'),
+    ('clipping', 'Cắt đỉnh — công suất một chiều vượt trần xoay chiều'),
     ('tay', 'Người nhập tay'),
 ]
 

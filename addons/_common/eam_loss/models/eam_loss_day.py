@@ -142,7 +142,7 @@ class EamLossDay(models.Model):
         tu, den = self._bien_ngay(plant, ngay)
         v = {'plant_id': plant.id, 'date': ngay}
         v.update(self._moc_ke_hoach(plant, ngay))
-        v.update(self._moc_tai_nguyen(plant, tu, den))
+        v.update(self._moc_tai_nguyen(plant, tu, den, ngay))
         v['thuc_te'] = self._thuc_te(plant, ngay)
 
         r = self.search([('plant_id', '=', plant.id),
@@ -166,7 +166,7 @@ class EamLossDay(models.Model):
                 'do_duoc_kh': True, 'ly_do_kh': False}
 
     @api.model
-    def _moc_tai_nguyen(self, plant, tu, den):
+    def _moc_tai_nguyen(self, plant, tu, den, ngay=None):
         """Đường cong công suất nhân gió ĐO ĐƯỢC tại từng tổ máy.
 
         Chỉ tính cho tổ máy ĐÃ GẮN đường cong và CÓ điểm đo gió của
@@ -180,6 +180,12 @@ class EamLossDay(models.Model):
                        ('la_to_may', '=', True)])
         co = ds.filtered('power_curve_id')
         if not co:
+            # ĐIỆN MẶT TRỜI không có đường cong công suất, nhưng có thứ
+            # tương đương và đã tính sẵn: MẪU SỐ TỶ SỐ HIỆU SUẤT. Nó
+            # chính là "lẽ ra phát bao nhiêu với bức xạ hôm nay".
+            pv = self._moc_tai_nguyen_pv(plant, ngay)
+            if pv:
+                return pv
             return {'muc_tai_nguyen': 0.0, 'do_duoc_tn': False,
                     'ly_do_tn': _(
                         'chưa tổ máy nào gắn đường cong công suất — không '
@@ -240,6 +246,34 @@ class EamLossDay(models.Model):
                 'ly_do_tn': ' · '.join(vet) if vet else False}
 
     @api.model
+    def _moc_tai_nguyen_pv(self, plant, ngay):
+        """Mốc tài nguyên của điện mặt trời — ở điều kiện CHUẨN.
+
+        Bức xạ nhân diện tích nhân hiệu suất tấm pin: tấm pin lẽ ra làm
+        ra bấy nhiêu nếu nhiệt độ đúng mốc chuẩn. CỐ Ý chưa nhân hệ số
+        hiệu chỉnh nhiệt — phần hụt do tấm nóng là một LOẠI TỔN THẤT có
+        tên, phải hiện thành cột riêng trên thác nước. Lấy thẳng mẫu số
+        tỷ số hiệu suất (đã nhân hệ số nhiệt) làm mốc thì tổn thất nhiệt
+        biến mất khỏi tờ giấy mà tổng vẫn khít.
+        """
+        if not ngay or 'eam.solar.kpi' not in self.env:
+            return None
+        k = self.env['eam.solar.kpi'].search(
+            [('plant_id', '=', plant.id), ('date', '=', ngay)], limit=1)
+        if not k:
+            return None
+        if not (k.e_nominal and k.module_eff):
+            return {'muc_tai_nguyen': 0.0, 'do_duoc_tn': False,
+                    'ly_do_tn': _(
+                        'hiệu suất ngày %s chưa có điện năng danh định '
+                        'hoặc hiệu suất mô-đun', ngay)}
+        return {'muc_tai_nguyen': k.e_nominal * k.module_eff / 100.0,
+                'do_duoc_tn': True,
+                'ly_do_tn': _(
+                    'bức xạ × diện tích × hiệu suất mô-đun, ở điều kiện '
+                    'chuẩn — phần hụt do nhiệt hiện thành cột riêng')}
+
+    @api.model
     def _thuc_te(self, plant, ngay):
         ds = self.env['eam.unit.day'].search(
             [('plant_id', '=', plant.id), ('date', '=', ngay),
@@ -275,7 +309,13 @@ class EamLossDay(models.Model):
                     [('plant_id', '=', self.plant_id.id),
                      ('code', '=', lt.node_code)], limit=1)
                 if not nut:
-                    ly_do = _('nhà máy chưa có bậc đo mã "%s"', lt.node_code)
+                    # Nhà máy KHÔNG CÓ bậc ấy khác hẳn "có mà chưa đo
+                    # được": điện mặt trời không có máy biến áp nâng của
+                    # trại gió, và ngược lại. Bỏ hẳn dòng thay vì ghi
+                    # "chưa đo được" — danh sách chưa-đo-được là thứ đem
+                    # ra bàn lắp thêm đo, đừng độn vào đó những thứ nhà
+                    # máy này vĩnh viễn không có.
+                    continue
                 else:
                     r = self.env['eam.chain.day'].search(
                         [('node_id', '=', nut.id),
@@ -290,6 +330,10 @@ class EamLossDay(models.Model):
                         nguon = _('bậc %(m)s · %(t)s', m=lt.node_code,
                                   t=dict(nut._fields['node_type'].selection
                                          ).get(nut.node_type, ''))
+            elif lt.cach_do == 'nhiet':
+                kwh, nguon, ly_do = self._mat_do_nhiet()
+            elif lt.cach_do == 'clipping':
+                kwh, nguon, ly_do = self._mat_do_clipping(tu, den)
             else:
                 ly_do = _('loại này do người nhập tay')
             tao.append({
@@ -299,6 +343,85 @@ class EamLossDay(models.Model):
             })
         if tao:
             L.create(tao)
+
+    # ==================================================================
+    def _mat_do_nhiet(self):
+        """Phần hụt vì tấm pin nóng hơn điều kiện chuẩn.
+
+        Hệ số hiệu chỉnh nhiệt đã được tính sẵn ở bảng hiệu suất ngày.
+        Lấy lại nó chứ không tính lần hai: hệ số ấy dựng trên nhiệt độ
+        tham chiếu của HỢP ĐỒNG, mà hợp đồng có thể chốt mốc khác 25 °C
+        — tính lại ở đây là hai nơi dùng hai mốc cho cùng một ngày.
+        """
+        self.ensure_one()
+        if 'eam.solar.kpi' not in self.env:
+            return 0.0, '', _('hệ chưa có bảng hiệu suất điện mặt trời')
+        k = self.env['eam.solar.kpi'].search(
+            [('plant_id', '=', self.plant_id.id),
+             ('date', '=', self.date)], limit=1)
+        if not k:
+            return 0.0, '', _('ngày này chưa có dòng hiệu suất')
+        if not k.ft:
+            return 0.0, '', _(
+                'chưa có hệ số hiệu chỉnh nhiệt — thiếu nhiệt độ mô-đun '
+                'hoặc hệ số nhiệt của tấm pin')
+        chuan = k.e_nominal * k.module_eff / 100.0
+        return (chuan * (1.0 - k.ft),
+                _('(1 − Ft) × mốc chuẩn · Ft = %(f).4f, mốc tham chiếu '
+                  '%(t).1f °C, mô-đun %(m).1f °C',
+                  f=k.ft, t=k.temp_ref, m=k.temp_module), '')
+
+    def _mat_do_clipping(self, tu, den):
+        """Cắt đỉnh: công suất một chiều vượt trần của bộ nghịch lưu.
+
+        Chỉ đếm những mốc đo mà bộ nghịch lưu ĐANG CHẠM TRẦN. Lấy mọi
+        lúc DC lớn hơn AC làm clipping là đếm luôn tổn hao biến đổi —
+        khoản ấy đã có cột riêng, cộng hai lần thì thác nước vẫn khít mà
+        sai cả hai cột.
+        """
+        self.ensure_one()
+        T = self.env['eam.tag']
+        U = self.env['eam.unit.day']
+        ds = U.search([('plant_id', '=', self.plant_id.id),
+                       ('date', '=', self.date), ('do_duoc_dc', '=', True)])
+        if not ds:
+            return 0.0, '', _(
+                'không tổ máy nào có số phía một chiều — không biết DC có '
+                'vượt trần AC hay không')
+        tong, n_may = 0.0, 0
+        for d in ds:
+            cs = d.cong_suat_kw
+            if not cs or not d.hieu_suat_bd:
+                continue
+            ac = T.search([('location_id', '=', d.location_id.id),
+                           ('tag_type', '=', 'power')], limit=1)
+            dc = T.search([('location_id', '=', d.location_id.id),
+                           ('tag_type', '=', 'dc_power')], limit=1)
+            if not (ac and dc):
+                continue
+            eta = d.hieu_suat_bd / 100.0
+            nhip = (ac.sample_seconds or 600) / 3600.0
+            self.env.cr.execute("""
+                SELECT a.value, b.value
+                  FROM eam_tag_reading a JOIN eam_tag_reading b
+                    ON b.tag_id = %s AND b.ts = a.ts
+                 WHERE a.tag_id = %s AND a.ts >= %s AND a.ts < %s
+                   AND a.value >= %s
+            """, (dc.id, ac.id, tu, den, cs * 0.98))
+            co = False
+            for p_ac, p_dc in self.env.cr.fetchall():
+                du = float(p_dc or 0) * eta - float(p_ac or 0)
+                if du > 0:
+                    tong += du * nhip
+                    co = True
+            if co:
+                n_may += 1
+        if not tong:
+            return 0.0, _(
+                '%d tổ máy có số hai phía, không mốc nào chạm trần',
+                len(ds)), ''
+        return tong, _('%(n)d/%(t)d tổ máy có lúc chạm trần',
+                       n=n_may, t=len(ds)), ''
 
     # ==================================================================
     def action_dung_lai(self):

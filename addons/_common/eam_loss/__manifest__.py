@@ -41,10 +41,12 @@ Gộp hai mốc làm một là đổ cho vận hành phần trời không cho.
     'license': 'LGPL-3',
     'category': 'Industries/Energy',
     'depends': ['eam_core', 'eam_downtime', 'eam_chain', 'eam_unit_day',
-                'eam_target', 'eam_historian', 'eam_availability'],
+                'eam_target', 'eam_historian', 'eam_availability',
+                'eam_solar'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_loss_type_data.xml',
+        'data/eam_loss_type_pv_data.xml',
         'views/eam_loss_views.xml',
     ],
     'installable': True,

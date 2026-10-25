@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hoá đơn tiền điện và công nợ bên mua, NGAY TRONG app Kinh doanh.
+
+     Không dựng màn kế toán riêng: hoá đơn vẫn là `account.move` thật,
+     vẫn đi qua sổ sách, vẫn dùng nút "Đăng ký thanh toán" chuẩn của
+     Odoo. Đây chỉ là một lối vào đã lọc sẵn, để người vận hành nhà máy
+     không phải mở app Kế toán rồi tự mò giữa mọi hoá đơn bán của công
+     ty. -->
+<odoo>
+    <record id="view_energy_invoice_list" model="ir.ui.view">
+        <field name="name">account.move.energy.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Hoá đơn tiền điện" create="false"
+                  decoration-info="state == 'draft'"
+                  decoration-muted="state == 'cancel'"
+                  decoration-danger="payment_state == 'not_paid' and state == 'posted'">
+                <field name="name" string="Số hoá đơn" width="170px"/>
+                <field name="invoice_date" string="Ngày hoá đơn"
+                       width="140px"/>
+                <field name="energy_project_id" string="Dự án"
+                       width="230px"/>
+                <field name="partner_id" string="Bên mua" width="250px"/>
+                <field name="energy_mwh" string="Sản lượng (MWh)"
+                       sum="Tổng MWh" width="150px"/>
+                <!-- Cột tiền để 185–200px theo quy ước chung: hẹp hơn là
+                     số tiền lớn bị cắt mất chữ số đầu. -->
+                <field name="amount_total" string="Thành tiền"
+                       sum="Tổng tiền" width="190px"/>
+                <field name="amount_residual" string="Còn phải thu"
+                       sum="Tổng còn phải thu" width="190px"/>
+                <field name="invoice_date_due" string="Hạn thanh toán"
+                       width="150px"/>
+                <field name="payment_state" string="Thanh toán"
+                       widget="badge"
+                       decoration-success="payment_state in ('paid', 'in_payment')"
+                       decoration-warning="payment_state == 'partial'"/>
+                <field name="state" string="Trạng thái" widget="badge"
+                       decoration-success="state == 'posted'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_energy_invoice_search" model="ir.ui.view">
+        <field name="name">account.move.energy.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search string="Hoá đơn tiền điện">
+                <field name="name" string="Số hoá đơn"/>
+                <field name="partner_id" string="Bên mua"/>
+                <field name="energy_project_id" string="Dự án"/>
+                <filter name="f_chua_thu" string="Còn phải thu"
+                        domain="[('payment_state', 'in', ('not_paid', 'partial')), ('state', '=', 'posted')]"/>
+                <filter name="f_qua_han" string="Quá hạn"
+                        domain="[('invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d')), ('payment_state', 'in', ('not_paid', 'partial')), ('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="f_nhap" string="Còn nháp"
+                        domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter name="g_duan" string="Dự án"
+                        context="{'group_by': 'energy_project_id'}"/>
+                <filter name="g_benmua" string="Bên mua"
+                        context="{'group_by': 'partner_id'}"/>
+                <filter name="g_thang" string="Tháng hoá đơn"
+                        context="{'group_by': 'invoice_date:month'}"/>
+                <!-- Pane chỉ hai ô: dự án và bên mua. Trạng thái thanh
+                     toán KHÔNG đưa vào pane vì `payment_state` là trường
+                     tính có lưu của Odoo, nhưng mang tới sáu giá trị mà
+                     ở đây chỉ dùng ba — pane sẽ hiện ba ô luôn bằng 0. -->
+                <searchpanel>
+                    <field name="energy_project_id" string="Dự án"
+                           icon="fa-bolt" enable_counters="1"/>
+                    <field name="partner_id" string="Bên mua"
+                           icon="fa-building" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_energy_invoice" model="ir.actions.act_window">
+        <field name="name">Hoá đơn tiền điện</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <!-- Lọc bằng quan hệ ngược tới dòng sản lượng: chỉ hoá đơn nào
+             thực sự sinh ra từ một kỳ mới lọt vào đây. -->
+        <field name="domain">[('energy_line_ids', '!=', False)]</field>
+        <field name="context">{'move_type': 'out_invoice'}</field>
+        <field name="view_id" ref="view_energy_invoice_list"/>
+        <field name="search_view_id" ref="view_energy_invoice_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa có hoá đơn tiền
+               điện nào</p>
+            <p>Hoá đơn không tạo tay ở đây mà sinh từ <b>sản lượng</b>: mở
+               <i>Sản lượng &amp; doanh thu</i>, chốt công-tơ một kỳ rồi bấm
+               <b>Xuất hoá đơn</b>; hoặc dùng <i>Xuất hoá đơn tiền điện</i>
+               để gộp nhiều kỳ vào một hoá đơn cho cùng một bên mua.</p>
+            <p>Thu tiền thì bấm <b>Đăng ký thanh toán</b> ngay trên hoá đơn —
+               vẫn là nghiệp vụ kế toán chuẩn, không có đường riêng.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_energy_invoice" name="Hoá đơn tiền điện"
+              parent="menu_energy_sale" action="action_energy_invoice"
+              sequence="40"/>
+    <!-- Wizard gộp kỳ vốn đã viết xong từ lâu nhưng KHÔNG có lối vào
+         nào — action nằm đó mà không menu hay nút nào gọi, nên không ai
+         dùng được. Đặt ngay dưới màn hoá đơn. -->
+    <menuitem id="menu_rp_energy_invoice_wizard"
+              name="Xuất hoá đơn gộp kỳ"
+              parent="menu_energy_sale"
+              action="action_rp_energy_invoice_wizard"
+              sequence="50"/>
+</odoo>

@@ -3,3 +3,4 @@ from . import rp_energy_meter
 from . import rp_ppa
 from . import rp_energy_period
 from . import re_project
+from . import account_move

@@ -92,21 +92,26 @@ class RpEnergyInvoiceWizard(models.TransientModel):
         if len(tien_te) > 1:
             raise UserError(_('Các kỳ đang chọn dùng %s loại tiền khác nhau.',
                               len(tien_te)))
-        # Điều khoản thanh toán lấy từ PPA → Odoo tự tính hạn thanh toán.
-        # Một bên mua có thể có nhiều PPA; khác điều khoản thì không gộp
-        # chung một tờ được, vì một hoá đơn chỉ mang được một hạn.
-        dieu_khoan = self.line_ids.mapped('ppa_id.payment_term_id')
-        if len(dieu_khoan) > 1:
+        # Hạn thanh toán lấy từ PPA. Một bên mua có thể có nhiều PPA;
+        # khác hạn thì không gộp chung một tờ được, vì một hoá đơn chỉ
+        # mang được một hạn.
+        # Hỏi qua `_ky_han_hoa_don` chứ đừng đọc thẳng `payment_term_id`:
+        # hợp đồng khai hạn bằng SỐ NGÀY thì trường ấy trống, và so sánh
+        # hai hợp đồng "cùng trống" sẽ kết luận nhầm là cùng hạn.
+        hop_dong = self.line_ids.mapped('ppa_id')
+        ky_han = {p._ky_han_hoa_don(self.invoice_date) for p in hop_dong}
+        if len(ky_han) > 1:
             raise UserError(_(
-                'Các kỳ đang chọn thuộc %s điều khoản thanh toán khác nhau '
-                '(%s). Một hoá đơn chỉ mang được một hạn thanh toán — hãy '
-                'lọc theo khoảng thời gian để tách ra.',
-                len(dieu_khoan), ', '.join(dieu_khoan.mapped('name'))))
+                'Các kỳ đang chọn thuộc %s hạn thanh toán khác nhau (%s). '
+                'Một hoá đơn chỉ mang được một hạn — hãy lọc theo khoảng '
+                'thời gian hoặc theo hợp đồng để tách ra.',
+                len(ky_han), ', '.join(hop_dong.mapped('name'))))
+        dieu_khoan, den_han = ky_han.pop() if ky_han else (False, False)
         dong_hd = []
         for l in self.line_ids.sorted(lambda x: x.period_id.date_from):
             dong_hd += l._dong_hoa_don()
         ky = self.line_ids.mapped('period_id').sorted('date_from')
-        hd = self.env['account.move'].create({
+        vals = {
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'invoice_date': self.invoice_date,
@@ -115,9 +120,12 @@ class RpEnergyInvoiceWizard(models.TransientModel):
                      tu=ky[0].date_from.strftime('%m/%Y'),
                      den=ky[-1].date_to.strftime('%m/%Y'),
                      hd=', '.join(self.line_ids.mapped('ppa_id.name'))),
-            'invoice_payment_term_id': dieu_khoan.id or False,
+            'invoice_payment_term_id': dieu_khoan,
             'invoice_line_ids': dong_hd,
-        })
+        }
+        if den_han:
+            vals['invoice_date_due'] = den_han
+        hd = self.env['account.move'].create(vals)
         self.line_ids.invoice_id = hd.id
         # Kỳ chỉ chuyển sang "đã xuất hoá đơn" khi MỌI dòng của nó đã có
         # hoá đơn — kỳ bán cho hai bên mà mới xuất một bên thì chưa xong.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EPCOne — Bán điện (PPA)",
-    "version": "19.0.1.3.0",
+    "version": "19.0.1.4.0",
     "category": "Realty/Project",
     "summary": "Hợp đồng mua bán điện, sản lượng theo kỳ và hoá đơn tiền "
                "điện cho chủ đầu tư nhà máy điện.",
@@ -55,6 +55,7 @@ làm thành trường riêng chứ không gộp:
         "views/rp_ppa_views.xml",
         "views/rp_energy_period_views.xml",
         "views/rp_energy_invoice_wizard_views.xml",
+        "views/rp_energy_invoice_views.xml",
         "views/re_project_views.xml",
     ],
     "installable": True,

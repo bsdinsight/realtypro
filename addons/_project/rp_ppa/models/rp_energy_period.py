@@ -207,17 +207,23 @@ class RpEnergyPeriod(models.Model):
         for l in self.line_ids:
             if l.invoice_id:
                 continue
-            hd = Move.create({
+            dieu_khoan, den_han = l.ppa_id._ky_han_hoa_don(self.date_to)
+            vals = {
                 'move_type': 'out_invoice',
                 'partner_id': l.ppa_id.partner_id.id,
                 'invoice_date': self.date_to,
                 'currency_id': l.ppa_id.currency_id.id,
-                'invoice_payment_term_id': (
-                    l.ppa_id.payment_term_id.id or False),
+                'invoice_payment_term_id': dieu_khoan,
                 'ref': _('Tiền điện %(ky)s — %(hd)s',
                          ky=self.name, hd=l.ppa_id.name),
                 'invoice_line_ids': l._dong_hoa_don(),
-            })
+            }
+            # Chỉ đặt tay khi hợp đồng khai bằng SỐ NGÀY. Có điều khoản
+            # thì để Odoo tự tính, đặt tay là ghi đè mất cả lịch trả nhiều
+            # đợt mà điều khoản mô tả.
+            if den_han:
+                vals['invoice_date_due'] = den_han
+            hd = Move.create(vals)
             l.invoice_id = hd.id
             tao |= hd
         self.state = 'invoiced'

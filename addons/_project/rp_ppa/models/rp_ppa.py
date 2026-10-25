@@ -101,7 +101,10 @@ class RpPpa(models.Model):
         string='Tỷ lệ trả khi bị cắt giảm (%)', digits=(6, 2), default=100.0)
 
     payment_term_days = fields.Integer(
-        string='Hạn thanh toán (ngày)', default=30)
+        string='Hạn thanh toán (ngày)', default=30,
+        help='Dùng khi không khai "Điều khoản thanh toán". Để trống cả '
+             'hai thì hạn thanh toán bằng chính ngày hoá đơn, tức hoá '
+             'đơn quá hạn ngay lúc phát hành.')
     meter_reading_day = fields.Integer(
         string='Ngày chốt công-tơ', default=31,
         help='31 = ngày cuối tháng.')
@@ -161,6 +164,28 @@ class RpPpa(models.Model):
                 }))
             rec.tariff_line_ids = dong
         return True
+
+    def _ky_han_hoa_don(self, ngay_hd):
+        """Điều khoản và hạn thanh toán cho hoá đơn phát hành ngày ``ngay_hd``.
+
+        Hai trường cùng nói về một chuyện: ``payment_term_id`` là điều
+        khoản chuẩn của kế toán, ``payment_term_days`` chỉ là con số
+        ngày khai nhanh lúc nhập hợp đồng. Trước đây chỗ tạo hoá đơn chỉ
+        đọc trường đầu, nên hợp đồng nào khai bằng số ngày — là phần lớn
+        — ra hoá đơn có hạn thanh toán BẰNG ngày hoá đơn, tức quá hạn
+        ngay lúc phát hành và cả bảng tuổi nợ đỏ oan.
+
+        Trả về ``(id điều khoản hoặc False, ngày đến hạn hoặc False)``.
+        Điều khoản thắng khi có cả hai, vì nó diễn tả được cả kiểu trả
+        làm nhiều đợt mà một con số ngày không diễn tả nổi.
+        """
+        self.ensure_one()
+        if self.payment_term_id:
+            return self.payment_term_id.id, False
+        so_ngay = self.payment_term_days or 0
+        if ngay_hd and so_ngay:
+            return False, ngay_hd + relativedelta(days=so_ngay)
+        return False, False
 
     def _gia_tai_ngay(self, ngay):
         """Giá áp dụng cho một ngày. Ngoài thời hạn thì trả 0."""

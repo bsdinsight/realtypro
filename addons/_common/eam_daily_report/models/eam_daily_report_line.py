@@ -775,6 +775,52 @@ class EamDailyReportLine(models.Model):
             '%s=%s' % (k, round(v, 3)) for k, v in sorted(so.items())
             if k in can)))
 
+    def _rot_cong_to(self, ctx, c):
+        """Chênh hai lần đọc của MỘT công-tơ — cùng luật với khối bảng.
+
+        Thiếu một trong hai lần đọc thì TỪ CHỐI. Lấy số đọc gần nhất
+        thay cho số đọc hôm qua là âm thầm cộng sản lượng nhiều ngày vào
+        một ngày — con số vẫn dương, vẫn hợp lý, và chỉ lộ khi cộng cả
+        tháng lại thấy vượt.
+        """
+        from datetime import timedelta
+        vt = self.env['eam.location'].search(
+            [('code', '=', c.ma_cong_to),
+             ('id', 'child_of', self.report_id.plant_id.id)], limit=1)
+        if not vt:
+            return self._chua_do(_(
+                'nhà máy chưa có vị trí đo mã "%s"', c.ma_cong_to))
+        m = self.env['eam.meter'].search(
+            [('location_id', '=', vt.id)], limit=1)
+        if not m:
+            return self._chua_do(_(
+                'vị trí "%s" chưa gắn công-tơ nào', vt.display_name))
+        R = self.env['eam.meter.reading']
+        hq = R.search([('meter_id', '=', m.id),
+                       ('date', '=', self.report_id.date - timedelta(days=1))],
+                      limit=1)
+        hn = R.search([('meter_id', '=', m.id),
+                       ('date', '=', self.report_id.date)], limit=1)
+        if not hn:
+            return self._chua_do(_('công-tơ "%s" chưa có số đọc hôm nay',
+                                   vt.name or vt.code))
+        if not hq:
+            return self._chua_do(_(
+                'công-tơ "%s" chưa có số đọc hôm qua — không tính chênh '
+                'được', vt.name or vt.code))
+        if hn.is_reset:
+            return self._chua_do(_(
+                'công-tơ "%s" đã được thay hoặc quay vòng trong ngày',
+                vt.name or vt.code))
+        ra = (hn.effective_value or 0.0) - (hq.effective_value or 0.0)
+        if ra < 0:
+            return self._chua_do(_(
+                'số đọc hôm nay (%(b)s) NHỎ HƠN hôm qua (%(a)s)',
+                b=hn.effective_value, a=hq.effective_value))
+        self._dat(ra * c.he_so, _(
+            '%(v)s · %(a)s → %(b)s', v=vt.name or vt.code,
+            a=hq.effective_value, b=hn.effective_value))
+
     def _rot_khoi(self, ctx, c):
         """Khối dựng sẵn — bản in tự chèn, dòng này chỉ đánh dấu chỗ."""
         nhan = dict(c._fields['khoi_dac_biet'].selection).get(

@@ -54,6 +54,7 @@ NGUON = [
     ('target', 'Mục tiêu sản lượng'),
     ('nha_may', 'Hằng số khai trên hồ sơ nhà máy'),
     ('ky', 'Sản lượng / doanh thu theo kỳ'),
+    ('cong_to', 'Một công-tơ: chênh hai lần đọc'),
     ('cong_thuc', 'Tính từ các dòng khác trên cùng tờ'),
     ('khoi', 'Khối dựng sẵn (bảng, biểu đồ)'),
     ('nguoi', 'Người trực tự điền'),
@@ -176,6 +177,12 @@ class EamDailyProfileLine(models.Model):
         help='Tên kỹ thuật của trường trên bảng nguồn, ví dụ '
              '"irradiation" hay "kd_thoi_gian". Khai sai thì nhật ký nói '
              'rõ bảng đó có những trường nào.')
+    ma_cong_to = fields.Char(
+        string='Mã vị trí đo',
+        help='Chỉ dùng khi nguồn là "một công-tơ". Khai MÃ VỊ TRÍ nơi '
+             'đặt công-tơ, không phải mã công-tơ — một vị trí chỉ mang '
+             'một công-tơ mỗi loại, nên vị trí là thứ người vận hành '
+             'gọi tên và là thứ in trên tờ báo cáo.')
     node_code = fields.Char(
         string='Mã bậc đo',
         help='Chỉ dùng khi lấy từ chuỗi bậc đo: INV, MCB, GNT, EVN…')
@@ -268,6 +275,10 @@ class EamDailyProfileLine(models.Model):
                     'Dòng "%s" lấy mục tiêu thì phải chọn mức P50, P75 '
                     'hay P90 — "mục tiêu" không kèm mức là câu nói dở.',
                     l.name))
+            if l.nguon == 'cong_to' and not l.ma_cong_to:
+                raise ValidationError(_(
+                    'Dòng "%s" lấy từ một công-tơ thì phải khai mã vị '
+                    'trí đặt công-tơ ấy.', l.name))
             if l.nguon == 'ky' and not (l.truong and l.loai_ky):
                 raise ValidationError(_(
                     'Dòng "%s" lấy theo kỳ thì phải khai CẢ kỳ lẫn tên '

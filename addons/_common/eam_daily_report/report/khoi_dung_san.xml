@@ -105,11 +105,17 @@
                 </tr>
             </tbody>
         </table>
-        <p t-if="b['tong'] and b['tong'].get('so_chua_co_sl')"
-           class="small text-muted mb-0 mt-1">
-            <b><span t-esc="b['tong']['so_chua_co_sl']"/> tổ máy chưa có
-            số sản lượng</b> và được in là "—". Dòng TỔNG cộng tử số và
-            mẫu số rồi mới chia, không phải trung bình các phần trăm.
+        <p t-if="b['tong']" class="small text-muted mb-0 mt-1"
+           style="font-size:6.5px">
+            <t t-if="b['tong'].get('so_chua_co_sl')">
+                <b><span t-esc="b['tong']['so_chua_co_sl']"/> tổ máy chưa
+                có số sản lượng</b> và được in là "—".
+            </t>
+            Dòng TỔNG cộng tử số và mẫu số rồi mới chia, không phải trung
+            bình các phần trăm — <b>trừ cột của hãng</b>: đó là số hãng
+            gửi sang, không kèm tử/mẫu để cộng, nên TỔNG của nó là trung
+            bình các phần trăm và KHÔNG so trực tiếp được với hai cột
+            bên trái.
         </p>
     </template>
 

@@ -53,6 +53,7 @@ NGUON = [
     ('unit', 'Tổng bảng tổ máy'),
     ('target', 'Mục tiêu sản lượng'),
     ('nha_may', 'Hằng số khai trên hồ sơ nhà máy'),
+    ('ky', 'Sản lượng / doanh thu theo kỳ'),
     ('cong_thuc', 'Tính từ các dòng khác trên cùng tờ'),
     ('khoi', 'Khối dựng sẵn (bảng, biểu đồ)'),
     ('nguoi', 'Người trực tự điền'),
@@ -192,12 +193,21 @@ class EamDailyProfileLine(models.Model):
              'có bộ điểm đo riêng. Kết thúc bằng "*" để khớp nhiều điểm '
              '— "T*_P" là công suất mọi tua-bin.')
     gop_nhieu = fields.Selection(
-        [('tong', 'Cộng lại'), ('tb', 'Trung bình'), ('max', 'Lớn nhất')],
+        [('tong', 'Cộng lại'), ('tb', 'Trung bình'),
+         ('max', 'Lớn nhất'), ('vector', 'Trung bình VECTƠ (hướng)')],
         string='Nhiều điểm đo thì gộp kiểu gì',
         help='Bắt buộc khi mã khớp nhiều hơn một điểm đo. Cộng công suất '
              'các tua-bin ra công suất nhà máy thì đúng; cộng nhiệt độ '
              'thì vô nghĩa — nên hệ KHÔNG đoán, mã khớp nhiều mà chưa '
              'khai thì dòng đó báo thiếu khai báo.')
+    loai_ky = fields.Selection(
+        [('ngay', 'Ngày'), ('tuan', 'Tuần'), ('thang', 'Tháng'),
+         ('nam', 'Năm')],
+        string='Kỳ',
+        help='Dùng cho nguồn "theo kỳ", và cho nguồn "bậc đo" khi muốn '
+             'LUỸ KẾ tới ngày này thay vì số của riêng ngày — tờ báo cáo '
+             'in cả tổn thất hôm nay lẫn tổn thất luỹ kế năm, cùng một '
+             'trường, khác mỗi phạm vi cộng.')
     cach_lay = fields.Selection(
         CACH_LAY, string='Cách rút số ngày', default='gop')
     nguong = fields.Float(
@@ -236,10 +246,15 @@ class EamDailyProfileLine(models.Model):
                 raise ValidationError(_(
                     'Dòng "%s" lấy số từ một bảng có sẵn thì phải khai '
                     'tên trường.', l.name))
-            if l.nguon == 'chain' and not (l.node_code and l.truong):
+            # Mã bậc BỎ TRỐNG là hợp lệ và có nghĩa: cộng trường ấy
+            # trên MỌI bậc sản lượng — dòng tổng tổn thất của chuỗi.
+            # Tên trường thì vẫn bắt buộc: không có nó thì không biết
+            # đang cộng cái gì.
+            if l.nguon == 'chain' and not l.truong:
                 raise ValidationError(_(
-                    'Dòng "%s" lấy từ chuỗi bậc đo thì phải khai CẢ mã '
-                    'bậc lẫn tên trường.', l.name))
+                    'Dòng "%s" lấy từ chuỗi bậc đo thì phải khai tên '
+                    'trường. Mã bậc để trống nghĩa là cộng mọi bậc sản '
+                    'lượng.', l.name))
             if l.nguon == 'khoi' and not l.khoi_dac_biet:
                 raise ValidationError(_(
                     'Dòng "%s" là khối dựng sẵn thì phải chọn khối nào.',
@@ -249,6 +264,19 @@ class EamDailyProfileLine(models.Model):
                     'Dòng "%s" lấy mục tiêu thì phải chọn mức P50, P75 '
                     'hay P90 — "mục tiêu" không kèm mức là câu nói dở.',
                     l.name))
+            if l.nguon == 'ky' and not (l.truong and l.loai_ky):
+                raise ValidationError(_(
+                    'Dòng "%s" lấy theo kỳ thì phải khai CẢ kỳ lẫn tên '
+                    'trường — "doanh thu" không kèm kỳ là câu nói dở.',
+                    l.name))
+            if l.nguon == 'nha_may' and not l.truong:
+                raise ValidationError(_(
+                    'Dòng "%s" lấy hằng số nhà máy thì phải khai tên '
+                    'trường trên hồ sơ nhà máy.', l.name))
+            if l.nguon == 'cong_thuc' and not l.cong_thuc:
+                raise ValidationError(_(
+                    'Dòng "%s" khai nguồn công thức thì phải viết công '
+                    'thức.', l.name))
             if l.nguon == 'unit' and not l.truong:
                 raise ValidationError(_(
                     'Dòng "%s" lấy từ bảng tổ máy thì phải khai lấy ô '

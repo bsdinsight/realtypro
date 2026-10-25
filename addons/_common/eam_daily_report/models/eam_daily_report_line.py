@@ -13,6 +13,7 @@ Nên mỗi dòng mang ``do_duoc`` kèm ``ly_do_chua_do``, và bản in ghi "—"
 import logging
 
 import re
+from datetime import timedelta
 
 import pytz
 
@@ -298,6 +299,13 @@ class EamDailyReportLine(models.Model):
         self._dat(gt * c.he_so, a.display_name)
 
     def _rot_chain(self, ctx, c):
+        # Bỏ TRỐNG mã bậc nghĩa là "mọi bậc sản lượng" — dùng cho dòng
+        # tổng tổn thất. Trước đây dòng ấy phải mượn nguồn giờ dừng, mà
+        # giờ dừng cho ra SẢN LƯỢNG MẤT DO DỪNG MÁY: hai khái niệm khác
+        # hẳn nhau, và con số mượn ấy lớn gấp mười sáu lần tổn thất thật
+        # trên cùng tờ giấy.
+        if not c.node_code:
+            return self._rot_chain_tong(c)
         nut = self.env['eam.chain.node'].search([
             ('plant_id', '=', self.report_id.plant_id.id),
             ('code', '=', c.node_code)], limit=1)
@@ -308,6 +316,8 @@ class EamDailyReportLine(models.Model):
             return self._chua_do(_(
                 'nhà máy chưa có bậc đo mã "%(m)s"; đang có: %(c)s',
                 m=c.node_code, c=co or _('chưa khai bậc nào')))
+        if c.loai_ky and c.loai_ky != 'ngay':
+            return self._rot_chain_luy_ke(c, nut)
         d = self.env['eam.chain.day'].search([
             ('node_id', '=', nut.id), ('date', '=', self.report_id.date)],
             limit=1)
@@ -318,6 +328,97 @@ class EamDailyReportLine(models.Model):
             return self._dat(self._ra_chu(d, c.truong, gt),
                              d.display_name, chu=True)
         self._dat(gt * c.he_so, d.display_name)
+
+    def _rot_chain_tong(self, c):
+        """Cộng một trường trên MỌI bậc sản lượng — dòng tổng của chuỗi.
+
+        Chỉ cộng bậc loại SẢN LƯỢNG. Điện tự dùng và tiêu thụ ban đêm
+        là tiêu thụ CÓ CHỦ ĐÍCH, không phải tổn thất; gộp chúng vào tổng
+        tổn thất là đổ cho đường dây một khoản mà đường dây không gây ra.
+        """
+        N = self.env['eam.chain.node']
+        D = self.env['eam.chain.day']
+        nut = N.search([('plant_id', '=', self.report_id.plant_id.id),
+                        ('node_type', '=', 'san_luong')])
+        if not nut:
+            return self._chua_do(_('nhà máy chưa khai bậc sản lượng nào'))
+        if c.loai_ky and c.loai_ky != 'ngay':
+            tu, den = self._bien_ky(c.loai_ky)
+        else:
+            tu = den = self.report_id.date
+        ds = D.search([('node_id', 'in', nut.ids),
+                       ('date', '>=', tu), ('date', '<=', den)])
+        if not ds:
+            return self._chua_do(_(
+                'chuỗi đo chưa có dòng ngày nào trong %(t)s–%(d)s',
+                t=tu, d=den))
+        if c.truong not in ds._fields:
+            return self._chua_do(_(
+                'bảng bậc đo không có trường "%s"', c.truong))
+        self._dat(sum(ds.mapped(c.truong)) * c.he_so, _(
+            '%(b)d bậc sản lượng · %(n)d dòng ngày · %(t)s–%(d)s',
+            b=len(nut), n=len(ds), t=tu, d=den))
+
+    def _bien_ky(self, loai):
+        """Biên của kỳ, tính TỚI NGÀY CỦA TỜ chứ không tới hết kỳ.
+
+        Tờ báo cáo ngày 17/10 nói "luỹ kế tháng", nghĩa là 01→17/10 —
+        không phải cả tháng 10. Lấy cả kỳ thì con số luôn to hơn, và to
+        hơn theo một cách trông vẫn hợp lý.
+        """
+        ngay = self.report_id.date
+        if loai == 'tuan':
+            return ngay - timedelta(days=ngay.weekday()), ngay
+        if loai == 'thang':
+            return ngay.replace(day=1), ngay
+        if loai == 'nam':
+            return ngay.replace(month=1, day=1), ngay
+        return ngay, ngay
+
+    def _rot_chain_luy_ke(self, c, nut):
+        """Cộng một trường của bậc đo trên cả kỳ, tới ngày của tờ."""
+        tu, den = self._bien_ky(c.loai_ky)
+        ds = self.env['eam.chain.day'].search([
+            ('node_id', '=', nut.id),
+            ('date', '>=', tu), ('date', '<=', den)])
+        if not ds:
+            return self._chua_do(_(
+                'bậc đo "%(m)s" chưa có dòng ngày nào trong kỳ %(t)s–%(d)s',
+                m=c.node_code, t=tu, d=den))
+        if c.truong not in ds._fields:
+            return self._chua_do(_(
+                'bảng bậc đo không có trường "%s"', c.truong))
+        thieu = (den - tu).days + 1 - len(ds)
+        self._dat(sum(ds.mapped(c.truong)) * c.he_so, _(
+            '%(n)d ngày có số, %(t)s–%(d)s%(x)s', n=len(ds), t=tu, d=den,
+            x=(_(' · THIẾU %d ngày') % thieu) if thieu > 0 else ''))
+
+    def _rot_ky(self, ctx, c):
+        """Sản lượng / doanh thu của một KỲ, đọc bảng kỳ đã dựng sẵn.
+
+        Không cộng lại ở đây: bảng kỳ đã là nơi quyết định "kỳ này nhà
+        máy phát bao nhiêu", kèm số ngày CÓ số và số ngày thiếu. Cộng
+        lần hai là mở đường cho hai con số cho cùng một tháng.
+        """
+        P = self.env['eam.energy.period']
+        loai = c.loai_ky or 'ngay'
+        tu, _den = self._bien_ky(loai)
+        r = P.search([('plant_id', '=', self.report_id.plant_id.id),
+                      ('loai_ky', '=', loai), ('tu_ngay', '=', tu)], limit=1)
+        if not r:
+            return self._chua_do(_(
+                'chưa dựng dòng kỳ %(l)s bắt đầu %(t)s cho nhà máy này — '
+                'mở Hiệu suất → Sản lượng theo kỳ và dựng', l=loai, t=tu))
+        gt, loi = self._lay_truong(r, c.truong, _('sản lượng theo kỳ'))
+        if loi:
+            return self._chua_do(loi)
+        vet = r.nhan_ky or ''
+        if r.so_ngay_thieu:
+            # Kỳ thiếu ngày vẫn ra một con số dương trông bình thường,
+            # chỉ nhỏ hơn thật. Đặt số ngày thiếu ngay cạnh.
+            vet = _('%(k)s · THIẾU %(n)d/%(t)d ngày', k=vet,
+                    n=r.so_ngay_thieu, t=r.so_ngay)
+        self._dat(gt * c.he_so, vet)
 
     def _rot_downtime(self, ctx, c):
         if ctx.get('dung') is None:

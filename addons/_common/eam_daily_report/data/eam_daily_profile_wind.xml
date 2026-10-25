@@ -237,10 +237,10 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="khoi">ton_that</field>
         <field name="name">Total loss for reporting day</field>
         <field name="kieu">so</field>
-        <field name="nguon">downtime</field>
+        <field name="nguon">chain</field>
         <field name="don_vi">kWh</field>
         <field name="so_le">1</field>
-        <field name="truong">kwh</field>
+        <field name="truong">loss_kwh</field>
     </record>
     <record id="pl_wd_eba" model="eam.daily.profile.line">
         <field name="profile_id" ref="profile_wind"/>
@@ -408,4 +408,151 @@ Cần: điểm đo đặt mã theo nếp T&lt;số&gt;_E / _P / _WS / _WD và *_
         <field name="in_khi_trong" eval="True"/>
         <field name="goi_y">Mọi nguyên nhân: ta mất sản lượng thật bất kể lỗi ai. Phạm vi hợp đồng: chỉ phần quy được cho nhà thầu. Theo hãng: họ loại trừ thêm phần ngoài trách nhiệm họ.</field>
     </record>
+
+    <!-- ============ Nhóm ③: sáu dòng của mẫu BT1 còn thiếu ============ -->
+
+    <!-- Hướng gió gộp từ 12 tua-bin bằng phép VECTƠ. Cộng số học thì
+         350° với 10° ra 180° — ngược hẳn hướng thật, mà vẫn là một con
+         số hợp lệ trong khoảng 0–360. -->
+    <record id="pl_wd_wdir" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">30</field>
+        <field name="khoi">khi_tuong</field>
+        <field name="name">Average Wind Direction</field>
+        <field name="kieu">so</field>
+        <field name="nguon">historian</field>
+        <field name="tag_code">T*_WD</field>
+        <field name="gop_nhieu">vector</field>
+        <field name="cach_lay">gop</field>
+        <field name="don_vi">Degrees</field>
+        <field name="so_le">0</field>
+    </record>
+
+    <!-- Khả dụng luỹ kế: sổ khả dụng đã cộng sẵn, đọc chứ không cộng
+         lại — cộng lần hai là mở đường cho hai con số cho cùng tháng. -->
+    <record id="pl_wd_ebam" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">12</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Energy Based Availability Cumulative in the month</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="truong">luy_ke_thang</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+    <record id="pl_wd_ebay" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">14</field>
+        <field name="khoi">kha_dung</field>
+        <field name="name">Energy Based Availability Cumulative in the year</field>
+        <field name="kieu">so</field>
+        <field name="nguon">avail</field>
+        <field name="truong">luy_ke_nam</field>
+        <field name="don_vi">%</field>
+        <field name="so_le">2</field>
+    </record>
+
+    <!-- Tổn thất: mẫu in CẢ kWh lẫn %. Ta mới in %, mà % một mình không
+         cộng được và không đối chiếu được với dòng tổng. -->
+    <record id="pl_wd_lsub_k" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">11</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Farm internal Line Loss from WT to 331 (kWh)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">SUB</field>
+        <field name="truong">loss_kwh</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_lmba_k" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">21</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Step-up Transformer Loss (kWh)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">MBA</field>
+        <field name="truong">loss_kwh</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_levn_k" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">31</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Loss from BT1 to connection point (kWh)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="node_code">EVN</field>
+        <field name="truong">loss_kwh</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+    <!-- Luỹ kế tổn thất cả năm: cùng một trường, khác mỗi phạm vi cộng. -->
+    <record id="pl_wd_lnam" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">50</field>
+        <field name="khoi">ton_that</field>
+        <field name="name">Cumulative loss for reporting year</field>
+        <field name="kieu">so</field>
+        <field name="nguon">chain</field>
+        <field name="truong">loss_kwh</field>
+        <field name="loai_ky">nam</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+
+    <!-- Doanh thu: bảng kỳ đã có sẵn, kèm SỐ NGÀY THIẾU đi cùng con số. -->
+    <record id="pl_wd_rev_d" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">70</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Daily Revenue (Export to EVN grid)</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">ngay</field>
+        <field name="truong">doanh_thu</field>
+        <field name="don_vi">VND</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_dtt" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">80</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Revenue accumulated of month</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">thang</field>
+        <field name="truong">doanh_thu</field>
+        <field name="don_vi">VND</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_dty" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">90</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Revenue accumulated of year</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">nam</field>
+        <field name="truong">doanh_thu</field>
+        <field name="don_vi">VND</field>
+        <field name="so_le">0</field>
+    </record>
+    <record id="pl_wd_slnam" model="eam.daily.profile.line">
+        <field name="profile_id" ref="profile_wind"/>
+        <field name="sequence">85</field>
+        <field name="khoi">san_luong</field>
+        <field name="name">Actual energy accumulated of year</field>
+        <field name="kieu">so</field>
+        <field name="nguon">ky</field>
+        <field name="loai_ky">nam</field>
+        <field name="truong">san_luong</field>
+        <field name="don_vi">kWh</field>
+        <field name="so_le">0</field>
+    </record>
+
 </odoo>

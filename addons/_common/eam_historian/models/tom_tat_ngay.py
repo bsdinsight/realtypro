@@ -45,7 +45,13 @@ from .eam_historian import BANG
 _logger = logging.getLogger(__name__)
 
 #: Cách cộng nhiều điểm đo lại thành một con số của nhà máy.
-GOP_NHIEU = {'tong': 'sum', 'tb': 'avg', 'max': 'max'}
+GOP_NHIEU = {'tong': 'sum', 'tb': 'avg', 'max': 'max',
+             # Gộp nhiều điểm đo HƯỚNG: trung bình số học của 350° và
+             # 10° ra 180°, tức ngược hẳn hướng thật. Mỗi điểm đo đã có
+             # thể khai vector_avg cho riêng nó, nhưng cộng mười hai kết
+             # quả ấy lại bằng phép cộng thường thì vẫn vỡ ở chỗ vòng
+             # qua 0°.
+             'vector': 'vector'}
 
 
 class EamHistorian(models.AbstractModel):
@@ -71,6 +77,28 @@ class EamHistorian(models.AbstractModel):
                 n=len(tags))}
         cach_gop = GOP_NHIEU.get(gop_nhieu or 'tong', 'sum')
         cr = self.env.cr
+
+        if cach_gop == 'vector':
+            # Gộp VECTƠ phải làm MỘT LƯỢT trên toàn bộ số đo của mọi
+            # điểm, không gộp từng điểm rồi cộng lại: trung bình của các
+            # trung bình chỉ đúng khi các điểm có cùng số mẫu, và sai ở
+            # chỗ vòng qua 0° ngay cả khi cùng số mẫu.
+            cr.execute("""
+                SELECT degrees(atan2(avg(sin(radians(value))),
+                                     avg(cos(radians(value))))),
+                       count(*), count(*) FILTER (WHERE quality <> 0)
+                FROM {bang}
+                WHERE tag_id = ANY(%s) AND ts >= %s AND ts < %s
+            """.format(bang=BANG), (tags.ids, tu, den))
+            goc, n, n_nghi = cr.fetchone()
+            if not n:
+                return {'n': 0}
+            goc = (float(goc) + 360.0) % 360.0 if goc is not None else None
+            return {'gop': goc, 'dinh': None, 'dinh_luc': None,
+                    'gio_tren_nguong': None, 'moc_dau': None,
+                    'moc_cuoi': None, 'n': n, 'n_nghi': n_nghi,
+                    'n_moc': n, 'so_diem_do': len(tags),
+                    'nhip': max(tags.mapped('sample_seconds') or [0])}
 
         # ---- Lượt 1: TỔNG NGÀY — gộp từng điểm trước, rồi mới cộng ----
         tong = None

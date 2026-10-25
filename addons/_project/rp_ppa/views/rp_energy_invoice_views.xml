@@ -15,6 +15,12 @@
                   decoration-info="state == 'draft'"
                   decoration-muted="state == 'cancel'"
                   decoration-danger="payment_state == 'not_paid' and state == 'posted'">
+                <!-- ĐỪNG đặt nút gọi wizard vào <header> của list: nút ở
+                     đó chỉ hiện khi người dùng đã tick ít nhất một dòng,
+                     vì Odoo hiểu đó là lệnh tác động lên các dòng đang
+                     chọn. Wizard này thì tự lọc theo dự án và bên mua,
+                     không ăn dòng nào — đặt vào đây là nút tàng hình.
+                     Đã thử và nó không vẽ ra. Lối vào nằm ở menu con. -->
                 <field name="name" string="Số hoá đơn" width="170px"/>
                 <field name="invoice_date" string="Ngày hoá đơn"
                        width="140px"/>
@@ -100,15 +106,20 @@
         </field>
     </record>
 
+    <!-- MỘT mục trên thanh menu, mở ra hai việc — không phải hai mục
+         ngang hàng. Mỗi chức năng chiếm một mục thì mới năm bảy việc là
+         thanh menu dài bằng cả màn hình, và khách nhìn vào đọc ra ngay
+         là phần mềm chắp vá. Đây đúng là dáng của app Odoo chuẩn
+         (Invoicing ▸ Customers ▾ ▸ Invoices / Credit Notes).
+
+         Wizard gộp kỳ đã viết xong từ lâu mà KHÔNG có lối vào nào —
+         action nằm đó, không menu hay nút nào gọi. Nay nó là menu con. -->
+    <menuitem id="menu_rp_energy_invoice_root" name="Hoá đơn"
+              parent="menu_energy_sale" sequence="40"/>
     <menuitem id="menu_rp_energy_invoice" name="Hoá đơn tiền điện"
-              parent="menu_energy_sale" action="action_energy_invoice"
-              sequence="40"/>
-    <!-- Wizard gộp kỳ vốn đã viết xong từ lâu nhưng KHÔNG có lối vào
-         nào — action nằm đó mà không menu hay nút nào gọi, nên không ai
-         dùng được. Đặt ngay dưới màn hoá đơn. -->
-    <menuitem id="menu_rp_energy_invoice_wizard"
-              name="Xuất hoá đơn gộp kỳ"
-              parent="menu_energy_sale"
-              action="action_rp_energy_invoice_wizard"
-              sequence="50"/>
+              parent="menu_rp_energy_invoice_root"
+              action="action_energy_invoice" sequence="10"/>
+    <menuitem id="menu_rp_energy_invoice_wizard" name="Xuất hoá đơn gộp kỳ"
+              parent="menu_rp_energy_invoice_root"
+              action="action_rp_energy_invoice_wizard" sequence="20"/>
 </odoo>

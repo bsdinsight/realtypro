@@ -23,4 +23,14 @@
     <menuitem id="menu_energy_sale" name="Kinh doanh"
               web_icon="rp_ppa,static/description/icon.png"
               sequence="24"/>
+
+    <!-- Mục Cấu hình đứng CUỐI thanh, đúng lệ Odoo: mấy mục đầu là việc
+         làm hằng ngày, mục cuối là thứ khai một lần rồi thôi. Điểm giao
+         nhận và công-tơ thuộc loại sau — nó là ranh giới tài sản với
+         lưới, cả đời nhà máy khai một lần.
+         Khai ở file này chứ không ở file công-tơ, vì menu_root nạp đầu
+         tiên trong manifest nên mọi menu con sau đó đều tham chiếu
+         được. -->
+    <menuitem id="menu_energy_config" name="Cấu hình"
+              parent="menu_energy_sale" sequence="90"/>
 </odoo>

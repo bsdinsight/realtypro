@@ -25,7 +25,9 @@
         <field name="view_mode">list</field>
     </record>
 
+    <!-- Nằm trong Cấu hình, không ở thanh chính: đây là dữ liệu khai
+         một lần chứ không phải việc hằng ngày. -->
     <menuitem id="menu_rp_energy_meter" name="Điểm giao nhận &amp; công-tơ"
-              parent="menu_energy_sale" action="action_rp_energy_meter"
-              sequence="30"/>
+              parent="menu_energy_config" action="action_rp_energy_meter"
+              sequence="10"/>
 </odoo>

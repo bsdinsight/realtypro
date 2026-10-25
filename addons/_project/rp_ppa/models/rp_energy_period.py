@@ -80,6 +80,15 @@ class RpEnergyPeriod(models.Model):
         compute='_compute_currency', store=True, readonly=False,
         help='Lấy từ HỢP ĐỒNG mua bán điện của dự án. Sửa được, nhưng '
              'sửa lệch khỏi hợp đồng là tự chuốc một con số sai.')
+    company_currency_id = fields.Many2one(
+        'res.currency', string='Đồng tiền công ty',
+        related='company_id.currency_id', store=True)
+    revenue_company = fields.Monetary(
+        string='Doanh thu quy đổi', compute='_compute_revenue_company',
+        store=True, currency_field='company_currency_id',
+        help='Doanh thu của kỳ quy về đồng tiền công ty, theo tỷ giá ở '
+             'ngày cuối kỳ. Dùng khi cộng chéo nhiều nhà máy bán bằng '
+             'các loại tiền khác nhau.')
 
     @api.depends('project_id')
     def _compute_currency(self):
@@ -133,6 +142,38 @@ class RpEnergyPeriod(models.Model):
             rec.revenue_total = sum(rec.line_ids.mapped('amount'))
             rec.deemed_total = sum(rec.line_ids.mapped('deemed_amount'))
             rec.shortfall_mwh = rec._tinh_hut_kha_dung()
+
+    @api.depends('revenue_total', 'currency_id', 'company_id', 'date_to')
+    def _compute_revenue_company(self):
+        """Quy doanh thu về đồng tiền công ty, để NÓI RA cơ sở quy đổi.
+
+        Cột này KHÔNG phải để chữa một con số sai. Odoo vốn đã cộng
+        đúng: gặp dòng khác loại tiền thì nó tự quy về đồng tiền công
+        ty rồi gắn dấu `?` vào dòng tổng. Đã kiểm trên `aip` ngày
+        26/10/2026 — tổng ba nhà máy Odoo in ra khớp từng đồng với phép
+        quy đổi làm tay. (Tôi từng đọc dấu `?` ấy thành "số rác" và kết
+        luận nhầm là Odoo cộng đô với đồng. Nó không làm vậy.)
+
+        Lý do cột này tồn tại: dấu `?` ở cuối bảng không cho biết đã quy
+        theo tỷ giá nào, còn cột này hiện ngay trên TỪNG DÒNG nên đối
+        chiếu được. Và bảng xoay thì cần một thước đo không phụ thuộc
+        loại tiền để cộng chéo nhiều nhà máy.
+
+        Quy theo tỷ giá NGÀY CUỐI KỲ, không phải tỷ giá hôm nay: doanh
+        thu tháng 3 là tiền của tháng 3, lấy tỷ giá hôm nay mà quy thì
+        mỗi lần mở màn hình lại ra một con số khác cho cùng một quá khứ.
+        """
+        for rec in self:
+            cty = rec.company_id or self.env.company
+            dich = cty.currency_id
+            goc = rec.currency_id or dich
+            tien = rec.revenue_total or 0.0
+            if goc == dich:
+                rec.revenue_company = tien
+            else:
+                rec.revenue_company = goc._convert(
+                    tien, dich, cty,
+                    rec.date_to or fields.Date.context_today(rec))
 
     def _cam_ket_kha_dung(self):
         """Mức cam kết áp cho kỳ này: năm đầu sau COD khác các năm sau."""

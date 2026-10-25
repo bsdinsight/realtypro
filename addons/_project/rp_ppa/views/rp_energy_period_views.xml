@@ -27,11 +27,28 @@
                 <field name="availability_percent" string="Khả dụng %"/>
                 <field name="shortfall_mwh" string="Hụt khả dụng" sum="Σ"
                        optional="show"/>
+                <!-- Hai cột này VẪN cộng được. Khi các dòng khác loại
+                     tiền, Odoo tự quy về đồng tiền công ty rồi gắn dấu
+                     `?` vào dòng tổng để báo là có trộn tiền — con số
+                     ấy ĐÚNG, dấu `?` chỉ là lời cảnh báo chứ không phải
+                     dấu hiệu hỏng. Đã kiểm: tổng ba nhà máy Odoo in ra
+                     khớp từng đồng với phép quy đổi làm tay.
+                     Giữ nhóm ngoài cùng là Dự án thì mỗi dòng tổng chỉ
+                     có một loại tiền, nên không cần quy đổi và cũng
+                     không còn dấu `?`. -->
                 <field name="revenue_total" width="190" string="Doanh thu"
                        sum="Σ"/>
                 <field name="deemed_total" width="190" optional="show"
                        string="Trong đó cắt giảm" sum="Σ"/>
+                <!-- Cột quy đổi không phải để chữa con số trên, mà để
+                     NÓI RA cơ sở quy đổi: nó hiện ngay trên từng dòng
+                     nên người đọc thấy tỷ giá đã dùng, thay vì phải tin
+                     một dấu `?` ở cuối bảng. Và bảng xoay cần một thước
+                     đo không phụ thuộc loại tiền. -->
+                <field name="revenue_company" width="195" sum="Σ"
+                       string="Doanh thu quy đổi" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-warning="state == 'confirmed'"
@@ -145,7 +162,10 @@
                 <field name="project_id" type="row"/>
                 <field name="date_from" interval="year" type="col"/>
                 <field name="net_mwh" type="measure"/>
-                <field name="curtailed_mwh" type="measure"/>
+                <!-- Đo bằng cột QUY ĐỔI: bảng xoay vốn sinh ra để cộng
+                     chéo nhiều dự án, mà cộng cột theo đồng tiền hợp
+                     đồng là cộng đô với đồng. -->
+                <field name="revenue_company" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -164,13 +184,14 @@
                 <filter name="f_shortfall" string="Khả dụng dưới cam kết"
                         domain="[('shortfall_mwh', '&gt;', 0)]"/>
                 <separator/>
-                <!-- `g_duan` phải là nhóm NGOÀI CÙNG và luôn bật sẵn.
-                     Cột Doanh thu có `sum`, mà mỗi dự án bán bằng một
-                     loại tiền — SAVA1 thu đô, DG123 và PV50 thu đồng.
-                     Để phẳng là Odoo cộng thẳng đô với đồng ra một số
-                     trông rất bình thường mà sai hơn hai vạn lần. Gom
-                     theo dự án trước thì mỗi dòng tổng chỉ còn một loại
-                     tiền, và con số mới có nghĩa. -->
+                <!-- `g_duan` để NGOÀI CÙNG và bật sẵn. Mỗi dự án bán
+                     bằng một loại tiền — SAVA1 thu đô, DG123 và PV50
+                     thu đồng. Gom theo dự án trước thì mỗi dòng tổng
+                     chỉ có một loại tiền, đọc thẳng được, không phải
+                     qua quy đổi. (Để phẳng thì Odoo VẪN cộng đúng — nó
+                     tự quy về đồng tiền công ty và gắn dấu `?` — nhưng
+                     một con số đã quy đổi thì khó đối chiếu với hợp
+                     đồng hơn là con số nguyên tệ.) -->
                 <filter name="g_duan" string="Dự án"
                         context="{'group_by': 'project_id'}"/>
                 <filter name="g_nam" string="Năm"

@@ -54,7 +54,12 @@ class EamOmContractType(models.Model):
     _rec_name = 'display_name'
 
     code = fields.Char(string='Mã', required=True, index=True)
-    name = fields.Char(string='Loại hợp đồng', required=True)
+    # translate=True vì đây là DANH MỤC ngành, không phải tên do khách
+    # đặt: 35 loại hợp đồng giai đoạn vận hành ship theo module. Thiếu
+    # cờ này thì Odoo không xuất chúng ra tệp dịch, và chúng KHÔNG dịch
+    # được bằng bất cứ cách nào — kể cả sửa .po bằng tay.
+    name = fields.Char(string='Loại hợp đồng', required=True,
+                       translate=True)
     nhom = fields.Selection(NHOM, string='Nhóm', required=True, default='om')
     ap_dung = fields.Selection(
         AP_DUNG, string='Áp dụng cho', required=True, default='ca_hai')

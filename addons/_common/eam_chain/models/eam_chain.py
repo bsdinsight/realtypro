@@ -40,7 +40,8 @@ class EamChain(models.Model):
     _inherit = ['mail.thread']
     _order = 'plant_id, name'
 
-    name = fields.Char(string='Tên chuỗi', required=True, tracking=True)
+    name = fields.Char(string='Tên chuỗi', required=True, tracking=True,
+                       translate=True)
     plant_id = fields.Many2one(
         'eam.location', string='Nhà máy', required=True, index=True,
         domain="[('location_type', '=', 'plant')]", ondelete='cascade',
@@ -97,7 +98,10 @@ class EamChainNode(models.Model):
         string='Thứ tự', default=10,
         help='Thứ tự theo đường đi của điện, từ thiết bị phát ra lưới. '
              'Tổn thất tính giữa bậc này và bậc ĐỨNG NGAY TRƯỚC nó.')
-    name = fields.Char(string='Tên bậc', required=True)
+    # Tên bậc đo (INV, MCB, GNT…) là từ vựng ngành, ship theo module —
+    # dịch được thì báo cáo tiếng Anh mới đọc ra 'Inverter output'
+    # thay vì 'Đầu ra bộ biến tần'.
+    name = fields.Char(string='Tên bậc', required=True, translate=True)
     code = fields.Char(string='Mã bậc')
 
     node_type = fields.Selection(

@@ -95,7 +95,7 @@ class EamDailyProfile(models.Model):
     _description = 'Hồ sơ cấu hình báo cáo ngày'
     _order = 'name'
 
-    name = fields.Char(string='Tên hồ sơ', required=True)
+    name = fields.Char(string='Tên hồ sơ', required=True, translate=True)
     code = fields.Char(string='Mã', required=True)
     loai = fields.Selection(
         [('pv', 'Điện mặt trời'), ('wind', 'Điện gió'), ('khac', 'Khác')],

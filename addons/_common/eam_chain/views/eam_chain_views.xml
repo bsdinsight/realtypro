@@ -189,6 +189,8 @@
                 <field name="plant_id"/>
                 <field name="node_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_lech" string="Lệch SCADA quá ngưỡng"
                         domain="[('canh_bao_lech', '=', True)]"/>
                 <filter name="f_san_luong" string="Chỉ bậc sản lượng"

@@ -173,6 +173,8 @@
             <search>
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_hnay" string="Hôm nay"
                         domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter name="f_7" string="7 ngày gần nhất"
@@ -211,6 +213,8 @@
                 <field name="loss_type_id"/>
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_7" string="7 ngày gần nhất"
                         domain="[('date', '&gt;=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
                 <filter name="f_thang" string="Tháng này"

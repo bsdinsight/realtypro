@@ -108,6 +108,8 @@
                 <field name="location_id"/>
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_kem" string="Khả dụng dưới 90%"
                         domain="[('do_duoc_kd', '=', True),
                                  ('kd_san_luong', '&lt;', 90)]"/>

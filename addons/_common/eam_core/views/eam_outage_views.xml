@@ -143,6 +143,9 @@
                 <field name="name"/>
                 <field name="location_id"/>
                 <field name="category_id"/>
+                <filter name="f_d_date_start" string="Bắt đầu"
+                        date="date_start"/>
+                <separator/>
                 <filter name="f_open" string="Đang dừng"
                         domain="[('is_open', '=', True)]"/>
                 <filter name="f_dt" string="Tính là thời gian dừng"

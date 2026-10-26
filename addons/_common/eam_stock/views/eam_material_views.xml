@@ -162,6 +162,8 @@
                 <field name="name"/>
                 <field name="requester_id"/>
                 <field name="work_order_id"/>
+                <filter name="f_d_date" string="Ngày yêu cầu" date="date"/>
+                <separator/>
                 <filter name="f_cho_duyet" string="Chờ tôi duyệt"
                         domain="[('state', '=', 'to_approve')]"/>
                 <filter name="f_no_hs" string="Nợ hồ sơ xuất khẩn cấp"

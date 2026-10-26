@@ -129,6 +129,8 @@
                 <field name="product_id"/>
                 <field name="work_order_id"/>
                 <field name="location_id"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="g_nhamay" string="Nhà máy"
                         context="{'group_by': 'plant_id'}"/>
                 <filter name="g_vitri" string="Vị trí thiết bị"

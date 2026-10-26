@@ -151,6 +151,8 @@
             <search string="Độ tin cậy">
                 <field name="asset_id"/>
                 <field name="location_id"/>
+                <filter name="f_d_date_from" string="Từ ngày"
+                        date="date_from"/>
                 <separator/>
                 <filter name="f_hong" string="Có hỏng trong kỳ"
                         domain="[('failure_count', '&gt;', 0)]"/>

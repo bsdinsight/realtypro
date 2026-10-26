@@ -124,6 +124,8 @@
             <search string="Khí tượng ngày">
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_thieu_xa" string="Thiếu tổng xạ"
                         domain="[('irradiation', '=', 0)]"/>
                 <filter name="f_nguoi_sua" string="Người đã sửa số máy lấy"
@@ -268,6 +270,8 @@
             <search string="Hiệu suất ngày">
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_khong_dat" string="Không đạt cam kết"
                         domain="[('pr_guaranteed','>',0),
                                  ('dat_cam_ket','=',False)]"/>

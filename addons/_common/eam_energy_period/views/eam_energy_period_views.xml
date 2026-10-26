@@ -128,6 +128,9 @@
                      tháng, tháng đang chạy của năm nay là tháng DỞ còn
                      tháng ấy của năm trước là tháng ĐỦ. So ở bậc NGÀY
                      thì hai bên cùng số ngày, mới là phép so chặt. -->
+                <filter name="f_d_tu_ngay" string="Từ ngày"
+                        date="tu_ngay"/>
+                <separator/>
                 <filter name="f_ytd" string="Từ đầu năm tới nay"
                         domain="[('tu_ngay', '&gt;=', context_today().strftime('%Y-01-01')),
                                  ('tu_ngay', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>

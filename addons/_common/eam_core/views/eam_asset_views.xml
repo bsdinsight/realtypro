@@ -199,6 +199,8 @@
                        không có biến tần — đã vấp đúng vậy.
                        Giữ `enable_counters` để thấy ngay số lượng.
                 -->
+                <filter name="f_d_date_commissioned" string="Ngày đưa vào vận hành"
+                        date="date_commissioned"/>
                 <searchpanel>
                     <!-- KHÔNG đặt `asset_level` vào pane. Màn mở sẵn bộ
                          lọc "Chỉ thiết bị chính" trên THANH TÌM KIẾM, mà

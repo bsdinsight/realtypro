@@ -61,6 +61,9 @@
             <search string="Lịch sử lắp đặt">
                 <field name="asset_id"/>
                 <field name="location_id"/>
+                <filter name="f_d_date_install" string="Ngày lắp đặt"
+                        date="date_install"/>
+                <separator/>
                 <filter name="f_now" string="Đang lắp"
                         domain="[('is_current', '=', True)]"/>
                 <filter name="f_het" string="Đã tháo"

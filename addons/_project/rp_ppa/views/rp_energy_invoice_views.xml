@@ -72,6 +72,9 @@
                 <field name="name" string="Số hoá đơn"/>
                 <field name="partner_id" string="Bên mua"/>
                 <field name="energy_project_id" string="Dự án"/>
+                <filter name="f_d_invoice_date" string="Ngày hoá đơn"
+                        date="invoice_date"/>
+                <separator/>
                 <filter name="f_chua_thu" string="Còn phải thu"
                         domain="[('payment_state', 'in', ('not_paid', 'partial')), ('state', '=', 'posted')]"/>
                 <filter name="f_qua_han" string="Quá hạn"
@@ -163,6 +166,8 @@
                 <field name="partner_id" string="Bên mua"/>
                 <field name="energy_project_id" string="Dự án"/>
                 <field name="energy_invoice_ids" string="Hoá đơn"/>
+                <filter name="f_d_date" string="Ngày thu" date="date"/>
+                <separator/>
                 <filter name="f_gop" string="Thu gộp nhiều hoá đơn"
                         domain="[('energy_invoice_count', '&gt;', 1)]"/>
                 <separator/>

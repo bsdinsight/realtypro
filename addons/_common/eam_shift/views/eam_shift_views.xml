@@ -196,6 +196,8 @@
                 <field name="plant_id"/>
                 <field name="truong_ca_id"/>
                 <field name="ngay"/>
+                <filter name="f_d_ngay" string="Ngày" date="ngay"/>
+                <separator/>
                 <filter name="f_dun" string="Có việc bị đùn"
                         domain="[('so_viec_lan_lau', '>', 0)]"/>
                 <filter name="f_mot_chieu" string="Bàn giao một chiều"
@@ -289,6 +291,8 @@
                 <field name="name"/>
                 <field name="plant_id"/>
                 <field name="location_id"/>
+                <filter name="f_d_ngay" string="Ngày" date="ngay"/>
+                <separator/>
                 <filter name="f_dun" string="Đang bị đùn (≥3 ca)"
                         domain="[('bi_dun', '=', True)]"/>
                 <filter name="f_mo" string="Còn mở"

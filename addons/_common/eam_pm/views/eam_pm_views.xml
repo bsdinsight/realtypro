@@ -122,6 +122,8 @@
                 <field name="location_code"/>
                 <field name="location_id"/>
                 <field name="plan_id"/>
+                <filter name="f_d_date_next" string="Đến hạn lần tới"
+                        date="date_next"/>
                 <separator/>
                 <filter name="f_qua" string="QUÁ HẠN"
                         domain="[('state', '=', 'overdue')]"/>

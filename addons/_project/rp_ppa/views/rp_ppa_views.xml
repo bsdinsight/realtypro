@@ -130,6 +130,9 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="project_id"/>
+                <filter name="f_d_date_end" string="Ngày hết hạn"
+                        date="date_end"/>
+                <separator/>
                 <filter name="f_active" string="Đang hiệu lực"
                         domain="[('state', 'in', ('signed', 'active'))]"/>
                 <filter name="f_nego" string="Đang đàm phán"

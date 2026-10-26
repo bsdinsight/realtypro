@@ -416,6 +416,10 @@
                 <field name="asset_id"/>
                 <field name="permit_ref"/>
                 <field name="contractor_id"/>
+                <filter name="f_d_date_planned_start" string="Dự kiến bắt đầu"
+                        date="date_planned_start"/>
+                <filter name="f_d_date_end" string="Thực tế xong"
+                        date="date_end"/>
                 <separator/>
                 <filter name="f_mo" string="Chưa đóng"
                         domain="[('state','not in',('closed','cancelled'))]"/>

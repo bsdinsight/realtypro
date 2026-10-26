@@ -139,6 +139,9 @@
             <search string="Kỳ đánh giá">
                 <field name="contract_id"/>
                 <field name="partner_id"/>
+                <filter name="f_d_date_start" string="Từ ngày"
+                        date="date_start"/>
+                <separator/>
                 <filter name="f_khong_dat" string="Có cam kết không đạt"
                         domain="[('so_khong_dat', '>', 0)]"/>
                 <filter name="f_canh_bao" string="Có cảnh báo"
@@ -195,6 +198,9 @@
                 <field name="plant_id"/>
                 <field name="contract_id"/>
                 <field name="partner_id"/>
+                <filter name="f_d_date_start" string="Từ ngày"
+                        date="date_start"/>
+                <separator/>
                 <filter name="f_co_phat" string="Có bị phạt"
                         domain="[('phat', '>', 0)]"/>
                 <filter name="f_chot" string="Kỳ đã chốt"

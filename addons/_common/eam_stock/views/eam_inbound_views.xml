@@ -116,6 +116,8 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="picking_id"/>
+                <filter name="f_d_date" string="Ngày kiểm" date="date"/>
+                <separator/>
                 <filter name="f_sai" string="Có sai lệch"
                         domain="[('co_sai_lech', '=', True)]"/>
                 <filter name="f_nhap" string="Chưa kiểm"

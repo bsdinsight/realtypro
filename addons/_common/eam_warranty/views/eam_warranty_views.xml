@@ -103,6 +103,9 @@
                      gắn thêm ở eam_warranty: trường vẫn KHÔNG lưu (con
                      số "còn bao nhiêu ngày" đổi theo từng ngày), nhưng
                      hàm tự dựng điều kiện trên warranty_end. -->
+                <filter name="f_d_warranty_end" string="Bảo hành đến ngày"
+                        date="warranty_end"/>
+                <separator/>
                 <filter name="f_sap_het" string="Sắp hết bảo hành"
                         domain="[('warranty_state', '=', 'expiring')]"/>
                 <filter name="f_con" string="Còn hạn"

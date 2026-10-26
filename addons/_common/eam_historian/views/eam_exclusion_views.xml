@@ -88,6 +88,9 @@
                 <field name="name"/>
                 <field name="plant_id"/>
                 <field name="location_ids"/>
+                <filter name="f_d_date_from" string="Từ ngày"
+                        date="date_from"/>
+                <separator/>
                 <filter name="f_ap" string="Đang loại khỏi KPI"
                         domain="[('exclude_kpi', '=', True)]"/>
                 <filter name="f_ghi" string="Chỉ ghi nhận, chưa loại"

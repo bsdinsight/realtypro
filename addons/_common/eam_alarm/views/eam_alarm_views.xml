@@ -133,6 +133,9 @@
                 <field name="location_id"/>
                 <field name="asset_id"/>
                 <field name="rule_id"/>
+                <filter name="f_d_date_raised" string="Thời điểm"
+                        date="date_raised"/>
+                <separator/>
                 <filter name="f_dang_mo" string="Đang mở"
                         domain="[('state', 'in', ('new', 'ack', 'wo'))]"/>
                 <filter name="f_moi" string="Chưa xác nhận"

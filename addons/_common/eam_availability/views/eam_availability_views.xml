@@ -90,6 +90,8 @@
             <search string="Khả dụng theo ngày">
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_chua_do" string="Chưa đo được sản lượng"
                         domain="[('do_duoc_sl', '=', False)]"/>
                 <filter name="f_thieu" string="Còn khoảng chưa tính kWh"

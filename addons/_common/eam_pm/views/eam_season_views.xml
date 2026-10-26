@@ -169,6 +169,8 @@
         <field name="inherit_id" ref="eam_pm.view_eam_pm_schedule_search"/>
         <field name="arch" type="xml">
             <search position="inside">
+                <filter name="f_d_date_next" string="Đến hạn lần tới"
+                        date="date_next"/>
                 <separator/>
                 <filter name="f_mua_xung_dot" string="Vướng mùa"
                         domain="[('season_conflict', '=', True)]"/>

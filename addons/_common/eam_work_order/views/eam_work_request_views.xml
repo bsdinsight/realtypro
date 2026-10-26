@@ -136,6 +136,9 @@
                 <field name="name"/>
                 <field name="location_id"/>
                 <field name="requester_id"/>
+                <filter name="f_d_date_request" string="Ngày đề nghị"
+                        date="date_request"/>
+                <separator/>
                 <filter name="f_cho" string="Đang chờ phân loại"
                         domain="[('state', 'in', ('new', 'in_review'))]"/>
                 <filter name="f_moi" string="Chưa ai tiếp nhận"

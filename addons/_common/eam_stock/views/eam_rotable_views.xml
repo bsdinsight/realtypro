@@ -92,6 +92,8 @@
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="lot_id"/>
+                <filter name="f_d_date" string="Ngày lập" date="date"/>
+                <separator/>
                 <filter name="f_qua_han" string="Quá hạn"
                         domain="[('qua_han', '=', True)]"/>
                 <filter name="f_dang_mo" string="Chưa đóng"

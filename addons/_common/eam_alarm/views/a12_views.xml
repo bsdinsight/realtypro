@@ -117,6 +117,8 @@
         <field name="inherit_id" ref="eam_alarm.view_eam_alarm_search"/>
         <field name="arch" type="xml">
             <search position="inside">
+                <filter name="f_d_date_raised" string="Thời điểm"
+                        date="date_raised"/>
                 <separator/>
                 <filter name="f_dang_hoan" string="Đang hoãn"
                         domain="[('dang_hoan', '=', True)]"/>

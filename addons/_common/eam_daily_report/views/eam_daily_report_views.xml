@@ -191,6 +191,8 @@
             <search string="Tìm báo cáo ngày">
                 <field name="plant_id"/>
                 <field name="date"/>
+                <filter name="f_d_date" string="Ngày" date="date"/>
+                <separator/>
                 <filter name="f_nhap" string="Còn nháp"
                         domain="[('state', '=', 'nhap')]"/>
                 <filter name="f_chot" string="Đã chốt"

@@ -158,6 +158,9 @@
                 <field name="partner_id"/>
                 <field name="plant_line_ids" string="Nhà máy"/>
                 <field name="loai_id"/>
+                <filter name="f_d_date_end" string="Hiệu lực đến"
+                        date="date_end"/>
+                <separator/>
                 <filter name="f_chay" string="Đang hiệu lực"
                         domain="[('state', '=', 'chay')]"/>
                 <separator/>

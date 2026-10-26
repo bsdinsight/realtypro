@@ -32,6 +32,9 @@
             <search string="Tìm việc bảo quản">
                 <field name="product_id"/>
                 <field name="lot_id"/>
+                <filter name="f_d_date_due" string="Đến hạn"
+                        date="date_due"/>
+                <separator/>
                 <filter name="f_qua_han" string="Quá hạn"
                         domain="[('qua_han', '=', True)]"/>
                 <filter name="f_cho" string="Chờ làm"
@@ -161,6 +164,9 @@
                 <field name="name"/>
                 <field name="borrower_id"/>
                 <field name="product_id"/>
+                <filter name="f_d_date_out" string="Ngày mượn"
+                        date="date_out"/>
+                <separator/>
                 <filter name="f_qua_han" string="Quá hạn trả"
                         domain="[('qua_han', '=', True)]"/>
                 <filter name="f_dang_muon" string="Đang mượn"

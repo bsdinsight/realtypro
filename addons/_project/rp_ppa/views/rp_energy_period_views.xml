@@ -177,6 +177,9 @@
             <search>
                 <field name="name"/>
                 <field name="project_id"/>
+                <filter name="f_d_date_from" string="Từ ngày"
+                        date="date_from"/>
+                <separator/>
                 <filter name="f_pre_cod" string="Kỳ chạy thử"
                         domain="[('is_pre_cod', '=', True)]"/>
                 <filter name="f_curtailed" string="Có bị cắt giảm"

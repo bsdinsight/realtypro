@@ -1,0 +1,244 @@
+eam_availability.menu_eam_availability_day	Availability by day
+eam_chain.menu_eam_chain	Metering chain
+eam_chain.menu_eam_chain_day	Energy by metering stage
+eam_competency.menu_eam_competency	Certificates & competence
+eam_competency.menu_eam_competency_expiring	Certificates expired & expiring
+eam_downtime.menu_eam_time_category_map	Category → group mapping
+eam_downtime.menu_eam_time_group	Reporting time groups
+eam_energy_period.menu_period	Plant energy
+eam_historian.menu_eam_data_exclusion	KPI exclusion periods
+eam_historian.menu_eam_power_curve	Warranted power curve
+eam_historian.menu_eam_power_curve_run	Power curve
+eam_historian.menu_eam_quality	Data quality
+eam_historian.menu_eam_tag	Measurement points (tags)
+eam_historian.menu_eam_trend	Tag trends
+eam_import.menu_eam_import_run	Operational data import
+eam_import.menu_eam_import_template	Import templates
+eam_loss.menu_eam_loss_day	Loss accounting
+eam_loss.menu_eam_loss_expect	Expected loss
+eam_loss.menu_eam_loss_line	Loss breakdown
+eam_loss.menu_eam_loss_type	Loss types
+eam_map.menu_eam_plant_map	Field map
+eam_om_contract.menu_eam_om_contract	O&M contracts
+eam_om_contract.menu_eam_om_contract_type	Contract types
+eam_om_contract.menu_eam_om_danh_gia	Assessment & payment
+eam_om_contract.menu_eam_om_danh_muc	Reference data
+eam_om_contract.menu_eam_om_period	Assessment periods
+eam_om_contract.menu_eam_om_root	Contracts
+eam_om_contract.menu_eam_om_thanh_toan	Payment by plant
+eam_shift.menu_eam_shift	Shifts & handover
+eam_shift.menu_eam_shift_note_dun	Work pushed across shifts
+eam_shift.menu_eam_shift_pattern	Shift patterns
+eam_sign.menu_eam_ca_provider	Digital signing connection
+eam_solar.menu_eam_solar_kpi	Daily performance (PR/PA)
+eam_solar.menu_eam_solar_weather	Daily weather
+eam_tree.menu_eam_asset_tree	Asset register (tree grid)
+eam_unit_day.menu_unit_day	Unit performance
+eam_warranty.menu_eam_asset_warranty	Warranty by serial number
+eam_warranty.menu_eam_wo_con_bao_hanh	In warranty but not claimed
+eam_wo_progress.menu_eam_wo_ke_hoach	Plan vs actual
+eam_wo_progress.menu_eam_wo_tre_han	Overdue orders
+eam_work_order.menu_eam_work_order_hold	Orders on hold
+re_bank_sync.menu_re_bank_sync_root	Bank reconciliation
+re_bank_sync.menu_re_bank_transaction	Bank transactions
+re_bank_sync.menu_sepay_simulate	Simulate a transaction (demo)
+re_ca_sign.menu_re_ca_provider	Provider connection
+re_ca_sign.menu_re_ca_root	CA digital signing
+re_core.menu_re_core_admin_unit_ward	Wards
+re_guarantee.menu_re_bank_guarantee	Guarantee certificates
+re_guarantee.menu_re_guarantee_config_settings	Guarantee settings
+re_guarantee.menu_re_guarantee_request	Issue requests
+re_guarantee.menu_re_guarantee_root	Bank guarantees
+re_loan.menu_grp_credit_contract	Credit agreements
+re_loan.menu_grp_note	Drawdown notes
+re_loan.menu_grp_payment	Collection & repayment
+re_loan.menu_re_loan_adjustment_note	Debit / credit advices
+re_loan.menu_re_loan_appraiser	Valuers
+re_loan.menu_re_loan_bank	Banks
+re_loan.menu_re_loan_bank_advice	Automatic bank collection
+re_loan.menu_re_loan_bank_advice_import	Import debit advices (Excel/CSV)
+re_loan.menu_re_loan_bank_branch	Bank branches
+re_loan.menu_re_loan_collateral	Collateral
+re_loan.menu_re_loan_collateral_type	Collateral types
+re_loan.menu_re_loan_config	Configuration
+re_loan.menu_re_loan_config_settings	Lending settings
+re_loan.menu_re_loan_credit_contract	Credit agreements
+re_loan.menu_re_loan_facility	Credit facilities
+re_loan.menu_re_loan_note	Drawdown notes
+re_loan.menu_re_loan_onlending	On-lending
+re_loan.menu_re_loan_purpose	Use of funds
+re_loan.menu_re_loan_rate_mass	Bulk interest rate change
+re_loan.menu_re_loan_report	Reports
+re_loan.menu_re_loan_report_aging	Overdue debt (aging)
+re_loan.menu_re_loan_report_alloc_by_contract	Facility allocation by drawdown note
+re_loan.menu_re_loan_report_credit_contract_summary	Credit agreement summary (loans + guarantees)
+re_loan.menu_re_loan_report_due	Drawdown notes falling due
+re_loan.menu_re_loan_report_facility_alloc	Facility allocation by project × purpose
+re_loan.menu_re_loan_report_interest_overdue	Overdue interest schedule
+re_loan.menu_re_loan_report_outstanding	Outstanding loan balance
+re_loan.menu_re_loan_report_payment_plan	Drawdown note repayment plan (yearly)
+re_loan.menu_re_loan_report_progress	Repayment progress
+re_loan.menu_re_loan_root	Lending
+re_product_profile.menu_product_profile_settings	Product profile
+rp_advance_payment.menu_rp_advance_root	Advance payments
+rp_ai.menu_rp_ai_chat	AI data assistant
+rp_ai.menu_rp_ai_estimate_import	AI estimate reader
+rp_ai.menu_rp_ai_progress_import	AI progress report reader
+rp_ai.menu_rp_ai_root	AI assistant
+rp_ai.menu_rp_project_report_ai	AI period report writer
+rp_ai.menu_rp_report_crosscheck	AI contractor report cross-check
+rp_budget.menu_finance_budget	Budget
+rp_budget.menu_rp_budget_phase	Budget by month
+rp_budget.menu_rp_contingency_drawdown	Contingency drawdown register
+rp_budget.menu_rp_cost_baseline	Cost baseline
+rp_budget.menu_rp_cost_report	Cost control sheet
+rp_budget.menu_rp_disbursement	Disbursement by month
+rp_claim.menu_rp_claim	Contract claims
+rp_claim.menu_rp_claim_group	Claims & liquidated damages
+rp_claim.menu_rp_ld_assessment	Liquidated damages assessment
+rp_contract.menu_pm_rp_contract	Contractor agreements
+rp_contract.menu_rp_contract_amendment	Contract amendments
+rp_contract.menu_rp_contract_change	Changes
+rp_contract.menu_rp_contract_closure	Termination / closure
+rp_contract.menu_rp_contract_payment_due	Payment milestones due
+rp_contract.menu_rp_contract_report_pivot	Contractor agreements pivot
+rp_contract_guarantee.menu_pm_rp_contract_guarantee	Contractor guarantees
+rp_contract_guarantee.menu_rp_contract_guarantee_expiring	Guarantees expiring / expired
+rp_contractor.menu_cfg_supplier	Suppliers
+rp_cost_account.menu_rp_account_chart	Chart of accounts
+rp_doc_folder.menu_doc_folder	Project document folders
+rp_doc_folder.menu_doc_folder_template	Standard folder sets
+rp_document.menu_rp_document_all	Document register
+rp_document.menu_rp_document_blocked_tasks	Work not yet cleared to start
+rp_document.menu_rp_document_group	Technical document register
+rp_document.menu_rp_document_not_submitted	Not yet submitted by the contractor
+rp_document.menu_rp_document_overdue	Overdue on our side
+rp_document.menu_rp_document_pending	Under review
+rp_document.menu_rp_document_toc	Still missing for handover
+rp_document.menu_rp_transmittal	Transmittals
+rp_equipment.menu_rp_equipment_group	Main equipment
+rp_equipment.menu_rp_equipment_lot	Equipment lot register
+rp_erection.menu_rp_erection	Erection progress
+rp_erection.menu_rp_erection_blocked	Stuck & late
+rp_erection.menu_rp_erection_gate	Erection gates
+rp_erection.menu_rp_erection_generate	Generate the erection register
+rp_erection.menu_rp_erection_step	Erection register
+rp_estimate.menu_construction	Construction
+rp_estimate.menu_construction_reports	Reports
+rp_estimate.menu_contracts	Contracts
+rp_estimate.menu_contracts_tender	Tendering
+rp_estimate.menu_estimate_preliminary	Preliminary estimate
+rp_estimate.menu_finance	Finance
+rp_estimate.menu_finance_payable	Payables
+rp_estimate.menu_finance_reports	Reports
+rp_estimate.menu_pm_rp_contractor_specialty	Contractor specialities
+rp_estimate.menu_pm_rp_cost_category_master	Cost catalogue
+rp_estimate.menu_pm_rp_structure	Project structure
+rp_estimate.menu_pm_rp_tender_bidder	Bidders
+rp_estimate.menu_pm_rp_tender_package	Tender packages
+rp_estimate.menu_rp_configuration	Configuration
+rp_estimate.menu_schedule	Schedule
+rp_evm.menu_rp_risk	Risk
+rp_handover.menu_eam_project	Projects
+rp_handover.menu_rp_handover	Handover to operations
+rp_interface.menu_rp_interface_all	Interface point register
+rp_interface.menu_rp_interface_conflict	Interface points in conflict
+rp_interface.menu_rp_interface_group	Package interfaces
+rp_loan_bridge.menu_account_move_contractor_invoice	Contractor agreement invoices
+rp_loan_bridge.menu_rp_finance_vendor_bills_bridge	Contractor invoices
+rp_loan_bridge.menu_rp_loan_allocation_under_loan	Loan allocation by project
+rp_loan_bridge.menu_rp_loan_allocation_under_project	Loan allocation by project
+rp_loan_bridge.menu_rp_loan_disbursement_dossier	Disbursement via drawdown notes
+rp_loan_bridge.menu_supplier_debt	Contractor / supplier payables
+rp_obligation.menu_rp_contract_clause	Contract clauses
+rp_obligation.menu_rp_obligation	Contract obligation register
+rp_owner_contract.menu_cfg_contractor	Contractors
+rp_owner_contract.menu_cfg_partner_owner	Owners
+rp_owner_contract.menu_owner_cashflow	Cash receipt forecast
+rp_owner_contract.menu_owner_invoice	Invoices issued to the owner
+rp_owner_contract.menu_owner_receipt	Receipts
+rp_owner_contract.menu_rp_owner_acceptance	Acceptance sent to the owner
+rp_owner_contract.menu_rp_owner_advance	Advances from the owner
+rp_owner_contract.menu_rp_owner_contract	Owner agreements
+rp_owner_contract.menu_rp_owner_ipc	IPC (payment certificates)
+rp_ppa.menu_energy_config	Configuration
+rp_ppa.menu_rp_energy_invoice	Energy invoices
+rp_ppa.menu_rp_energy_invoice_root	Invoicing & collections
+rp_ppa.menu_rp_energy_invoice_wizard	Invoice several periods together
+rp_ppa.menu_rp_energy_meter	Delivery points & meters
+rp_ppa.menu_rp_energy_payment	Collections
+rp_ppa.menu_rp_energy_period	Energy & revenue
+rp_ppa.menu_rp_ppa	Power purchase agreements
+rp_progress.menu_finance_cost_reconcile	Reconciliation — by cost group
+rp_progress.menu_finance_estimate	Estimate
+rp_progress.menu_finance_package_reconcile	Reconciliation — by tender package
+rp_progress.menu_re_approval_rule	Approval & signatures
+rp_progress.menu_rp_progress_acceptance	Quantity acceptance certificates
+rp_progress.menu_rp_progress_root	Quantity acceptance
+rp_progress.menu_rp_progress_uom	Units of measure (construction)
+rp_purchase.menu_procure_config	Configuration
+rp_purchase.menu_procure_config_pricelist	Supplier price lists
+rp_purchase.menu_procure_config_product	Purchased products
+rp_purchase.menu_procure_config_settings	Purchasing settings
+rp_purchase.menu_procure_config_vendor	Suppliers
+rp_purchase.menu_procure_report_purchase	Purchasing analysis
+rp_purchase.menu_procure_reports	Reports
+rp_purchase.menu_procurement	Procurement
+rp_purchase.menu_procurement_buy	Buying
+rp_purchase.menu_procurement_pay	Payables & payment
+rp_purchase.menu_rp_goods_receipt	Goods receipt & acceptance
+rp_purchase.menu_rp_payment_request	Payment requests
+rp_purchase.menu_rp_procure_bills	Supplier invoices
+rp_purchase.menu_rp_procure_payments	Payments
+rp_purchase.menu_rp_purchase_order	Purchase orders
+rp_purchase.menu_rp_purchase_request	Purchase requisitions
+rp_purchase_stock.menu_rp_stock_product	Materials & spares
+rp_purchase_stock.menu_rp_stock_quant	Stock
+rp_purchase_stock.menu_rp_stock_receipts	Goods receipt notes
+rp_receivable.menu_rp_ap_aging	Payables
+rp_receivable.menu_rp_ap_payment	Payments out
+rp_receivable.menu_rp_ar_aging	Receivables
+rp_receivable.menu_rp_ar_group	Sales & receivables
+rp_receivable.menu_rp_ar_invoice	Sales invoices
+rp_receivable.menu_rp_ar_payment	Receipts
+rp_report.menu_rp_report_alert_critical	Critical alerts
+rp_report.menu_rp_report_alert_open	Open alerts
+rp_report.menu_rp_report_brief	Project brief
+rp_report.menu_rp_report_claim_open	Open claims
+rp_report.menu_rp_report_contract_value	Contracts — value & forecast
+rp_report.menu_rp_report_doc_blocked	Work not yet cleared to start
+rp_report.menu_rp_report_doc_overdue	Documents overdue on our side
+rp_report.menu_rp_report_doc_toc	Documents still missing for handover
+rp_report.menu_rp_report_exec	Executive
+rp_report.menu_rp_report_finance	Finance
+rp_report.menu_rp_report_interface_conflict	Interface points in conflict
+rp_report.menu_rp_report_ld	Expected liquidated damages
+rp_report.menu_rp_report_pmu	Project management unit
+rp_report.menu_rp_report_procure	Procurement & legal
+rp_report.menu_rp_report_root	Reports
+rp_report.menu_rp_report_task_critical	Tasks on the critical path
+rp_report.menu_rp_report_task_late	Tasks slipping
+rp_report.menu_rp_report_variation_money	Variations — value by state
+rp_report.menu_rp_report_variation_open	Variations in progress
+rp_rfi.menu_rp_rfi	RFI — requests for information
+rp_rfi.menu_rp_rfi_root	RFI & submittals
+rp_rfi.menu_rp_site_instruction	Site instructions
+rp_rfi.menu_rp_submittal	Submittals
+rp_schedule.menu_rp_milestone_gantt	Key milestones
+rp_schedule.menu_rp_milestones	Milestone list
+rp_schedule.menu_rp_schedule_baseline	Schedule baselines
+rp_schedule.menu_rp_schedule_gantt	Construction schedule Gantt
+rp_schedule.menu_rp_schedule_group	Construction schedule
+rp_schedule.menu_rp_schedule_my_tasks	My tasks
+rp_schedule.menu_rp_schedule_tasks	Task list
+rp_schedule.menu_rp_task_link	Dependency network
+rp_schedule.menu_rp_task_link_violated	Schedule links being violated
+rp_schedule_alert.menu_rp_schedule_alert	Schedule alerts
+rp_site.menu_rp_site_diary	Site diary
+rp_site.menu_rp_site_hse	Health & safety
+rp_site.menu_rp_site_incident	Incidents / near misses
+rp_site.menu_rp_site_punch	Punch list
+rp_site.menu_rp_site_root	Site
+rp_site.menu_rp_site_safety_inspection	Safety inspections
+rp_site_map.menu_rp_site_map	Site map
+rp_variation.menu_rp_variation	Contract variations

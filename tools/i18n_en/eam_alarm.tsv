@@ -1,0 +1,270 @@
+1	Code
+2	New
+3	Level
+4	times
+5	Snooze
+6	Other
+7	Rule
+8	Order
+9	Cancel
+10	Low
+11	above
+12	Reason
+13	Source
+14	Handle
+15	Raised
+16	Dismiss
+17	Reopen
+18	Threshold
+19	Location
+20	Cleared
+21	Unsnooze
+22	Company
+23	Cleared at
+24	Plant
+25	Comparison
+26	Open
+27	Retired
+28	To hour
+29	Meter
+30	Alarm
+31	Snooze until
+32	Emergency
+33	Message
+34	Equipment
+35	Month raised
+36	below
+37	Recurrence
+38	Rule name
+39	Search rules
+40	above
+41	Acknowledge
+42	below
+43	recurrence
+44	— reason:
+45	Comment
+46	Other
+47	Explanation
+48	Identification
+49	Scan now
+50	Times raised
+51	Under root
+52	Raised at
+53	Snoozed
+54	Condition
+55	Dismissed
+56	Previous episode
+57	Do NOT snooze
+58	Snooze reason
+59	Tag code
+60	No readings
+61	Snoozed by
+62	Average
+63	State
+64	Where it applies
+65	Order exists
+66	Normal
+67	Is a recurrence
+68	Upper threshold
+69	Alarms
+70	Alarm log
+71	Create order automatically
+72	threshold %.2f
+73	Acknowledged
+74	Running hours
+75	Create nothing
+76	Meter type
+77	Dismissal reason
+78	Deviation (%)
+79	Critical
+80	Search alarms
+81	Acknowledged at
+82	Acknowledged: %s
+83	Order priority
+84	Unacknowledged
+85	Alarm — %s
+86	Snooze alarm
+87	Alarm rule
+88	Automatic source
+89	OUTSIDE the band
+90	INSIDE the band
+91	Belongs to a root
+92	Last seen
+93	Value when raised
+94	Create order now
+95	Total alarms
+96	Snoozed until
+97	Raised %d times.
+98	Only alert from hour
+99	Work order
+100	Alarm source
+101	Reported by operator
+102	Acknowledged by
+103	Meter threshold
+104	Raised more than 10 times
+105	other alarms.
+106	Dismiss alarm
+107	This alarm has
+108	Alarms grouped
+109	Is the root alarm
+110	Child alarms
+111	Order state
+112	Tag stalled
+113	Mark as cleared
+114	Meter stalled
+115	ROOT alarm of
+116	Group into one incident
+117	Pushed in by an outside system
+118	Order type to create
+119	Severity
+120	Starts
+121	RECURRED after repair
+122	Recurred after repair
+123	Confirm it is real
+124	Dismissed. Reason: %s
+125	Alarms under the same root
+126	Equipment alarm
+127	Recurring alarms
+128	What to do when it is raised
+129	Inspect, examine
+130	Work at height
+131	Open work order
+132	Within … days
+133	Work request
+134	Snooze for how many hours
+135	Alerting window
+136	Order requires isolation
+137	Opened from alarm: %s
+138	Corrective repair
+139	Under root alarm
+140	Acknowledge in bulk
+141	Put into the request log
+142	High and critical
+143	Most recurrent
+144	What is abnormal, and where
+145	No alarms yet
+146	Record "detected by"
+147	Detach from root alarm
+148	Reference tag code
+149	Sustained for (minutes)
+150	Acknowledge %d alarms
+151	Applies to component category
+152	Tag stopped sending readings
+153	%s has no readings yet.
+154	Also grouped in: %s
+155	Explicitly named location
+156	Alarm "%s" is already closed.
+157	Limited to the plant
+158	Two sensors disagree
+159	Equipment alarm rule
+160	Cumulative energy (MWh)
+161	. Handle it on the root alarm.
+162	Alarm from the monitoring system
+163	Condition-based maintenance
+164	Order requires a work permit
+165	Source and timeline
+166	Recurrences after repair
+167	Take the steps from the plan
+168	Spotted by the operator
+169	Alarm recurring after repair
+170	Acknowledged, no order yet
+171	Unsnoozed, the alarm is back on.
+172	The alarm has no message
+173	Alarms in this order have
+174	Clear the alarm when the order is done
+175	Gearbox vibration above threshold
+176	Spotted through an energy shortfall
+177	The snooze must be longer than 0 hours.
+178	Acknowledge alarms in bulk
+179	The meter has no readings yet.
+180	Condition monitoring, vibration
+181	Snoozed until %(d)s. Reason: %(l)s
+182	Only alert while the plant is generating
+183	Alarm "%s" has already been handled.
+184	The alarm rule code must be unique.
+185	EAMOne: scan equipment alarm rules
+186	This order was raised by alarm %(m)s.
+187	Pick two or more alarms to group them.
+188	This alarm has no work order.
+189	Tag threshold (time-series store)
+190	Create the order once the operator acknowledges
+191	This alarm belongs to a larger incident:
+192	Open a REQUEST for the dispatcher to triage
+193	Alarm "%s" already has an order, or is closed.
+194	Opened from alarm %(m)s (raised %(n)d times).
+195	Checked on site, caused by an external grid loss…
+196	EAMOne: reopen alarms whose snooze has expired
+197	Rule "%s" needs a window of at least 1 day.
+198	Count as a RECURRENCE if it returns within … days
+199	Alarm "%s" is no longer in the new state.
+200	No alarm rule has been\n               defined yet
+201	Sensor noise, calibration booked with the vendor on…
+202	Order %s was cancelled. The alarm is back to be handled.
+203	No alarm has\n               recurred yet
+204	<span class="o_stat_text">Work orders</span>
+205	Grouped %(n)d alarms here as one incident: %(ds)s
+206	Rule "%s" compares a threshold, so it needs a meter type.
+207	Waiting for a spare · waiting for next month's outage window…
+208	At the deadline the system reopens it and writes a note on the alarm.
+209	The run of alarms on the same rule and location immediately before this one.
+210	%(nhan)s is at %(tri).2f %(dv)s, %(huong)s the %(ng).2f threshold.
+211	For BAND conditions: the lower bound goes in Threshold, the upper bound here.
+212	Snooze expired (%(d)s). The alarm is back on. Earlier snooze reason: %(l)s
+213	Plant local time. Leave it empty together with the other box to alert around the clock.
+214	Leave empty when the operator reports it — not every alarm comes from a machine.
+215	Write here what the person going on site needs to know: what to look at, and what to compare it with.
+216	One incident breeds a dozen alarms. Group them so that INCIDENTS are counted, not rows.
+217	RECURRENCE number %d after repair — do not repeat the same fix; look again at the root cause.
+218	Rule "%s" compares a threshold but the threshold is empty — it will fire on every reading, or never fire at all.
+219	Closed by order %(l)s. If this alarm is raised again within the next %(n)d days, it will count as a RECURRENCE.
+220	Three months on, this is the only thing that explains why a critical alarm was once silenced.
+221	Derived from the location: the equipment installed there. Editable when the alarm names a specific component inside.
+222	Readings keep arriving but %(nhan)s has NOT increased for %(n)d days. The machine really is idle — which is not the same as a lost signal.
+223	Some of the selected alarms already belong to a DIFFERENT root. Detach them first — an alarm belongs to one incident only.
+224	Dismissing is a decision with consequences. Write down why, so that\n                   it can still be read six months later.
+225	One sentence for the whole batch — but each alarm still records who acknowledged it and when, so each one can be traced later.
+226	%(ten)s is at %(v).3f %(dv)s — %(nhan)s %(dai)s, sustained for %(p)d minutes (%(n)d readings, none of them to the contrary).
+227	Untick when the alarm must clear itself through readings returning to normal — if vibration is still high after the repair, it was not repaired.
+228	For low-level alarms: send it to the request log for the dispatcher to triage, instead of straight onto the list of work to be done.
+229	At this moment the system REOPENS it automatically. An open-ended snooze is how a plant loses a whole layer of watchfulness with nobody remembering what was turned off.
+230	Acknowledged %(a)d alarms. SKIPPED %(b)d because they are no longer "New" or someone had already acknowledged them.
+231	Being raised again while the episode is open only adds to this count; it does not create a new row. Raised 47 times is nothing like just raised, however alike the two rows look.
+232	Order %s is done, but the alarm rule says it must clear through readings. The alarm stays until the value is back within threshold.
+233	).\n                    At the deadline the system <b>reopens it</b> and writes a note —\n                    whoever snoozed it does not have to remember.
+234	For "meter stalled" and "no readings". Set it shorter than the reading interval and the rule fires constantly — with a daily interval, do not set 1.
+235	For sensor-deviation rules. Computed as a percentage of the LARGER value, so that a sensor dying to 0 still shows up instead of dividing by zero.
+236	Copy this plan's work steps onto the order. Leave it empty and the order carries only a description — the person on site has to work out what to do.
+237	Keep the MEASURED value, not just the words. Without it there is no way to check afterwards by how much the alarm was over threshold.
+238	after repair. The last\n                        one did not hold — repeat the same fix and the result\n                        will be the same.
+239	An alarm coming straight back after an order is closed means that repair did not hold. This is the most worthwhile number in the whole alarm log.
+240	Leave it empty to apply to every plant. The vibration threshold of a 2 MW turbine does not work for a 4 MW one, so a scope is almost always needed.
+241	Dismissing alarm "%s" requires a reason. Without one, six months later the alarm log is full of "dismissed" rows and nobody remembers why — not even the person who dismissed them.
+242	times without being closed.\n                        If this is sensor noise, fix the threshold on the rule; if it\n                        is real, it has been left too long.
+243	No new reading for %(n)d days (last one %(d)s). Most likely the LINK is dead rather than the machine — check the connection before sending anyone up the tower.
+244	One incident breeds several rows — group them\n                    so that <i>incidents</i> can be counted afterwards, not\n                    <i>alarm rows</i>.
+245	%(ten)s has been frozen at %(v).3f for %(n)d minutes — readings keep arriving, so this is NOT a lost signal but a value that will not move. The two are fixed in different places.
+246	How many times the alarms in this order have recurred after repair. Above 0 means the previous repair did not hold — repeat the same fix and the result will be the same.
+247	This alarm has RECURRED for the %(n)d time since order %(l)s was closed on %(d)s. That repair did not hold — look again at the root cause instead of repeating it.
+248	after the repair order\n                        was closed. The previous repair did not hold — look again\n                        at the root cause instead of repeating it.
+249	A performance rule only means something while the machine is running. A PV panel producing 0 kW at night is normal, and alarming on it teaches users to ignore alarms.
+250	The default is INSPECT, not repair: the alarm says there is a sign of something wrong, not what is broken. Opening a repair order straight away is concluding before looking.
+251	Counts how many times an alarm COMES BACK after a repair order was closed. Above 0 means the previous repair did not hold — this is the only way to tell "repaired" from "order closed".
+252	One sentence for the whole batch, but <b>each alarm still records\n                    who acknowledged it and when</b> — three months later each one\n                    can still be traced.
+253	A band uses both Threshold (lower) and Upper threshold. "Outside the band" is what is needed most often: gearbox temperature too high OR too low both matter, and two separate rules mean fixing things twice.
+254	Only for SENSOR-DEVIATION rules: two sensors measuring the same quantity that disagree beyond the threshold mean one of them has drifted — and looking at one alone tells you nothing about which.
+255	Addressed by CODE, not by record: one rule has to work across every plant that follows the same code convention. End with "*" to match several points — "T*_TGB" is gearbox temperature on every turbine.
+256	%(ten)s has not sent a reading for %(gio).1f hours (last at %(c)s). While it is silent, every threshold rule watching this same tag is silent too — check the LINK before sending anyone up the tower.
+257	Thresholds belong on CONDITION meters (vibration, oil temperature). Putting one on running hours duplicates the preventive maintenance plan, and then two mechanisms raise orders for the same job.
+258	<b>No readings</b> means the link is dead, not the\n                                machine. The thing to do is check the\n                                connection — do not send anyone up the tower.
+259	Two sensors disagree by %(l).1f%%: %(a)s is at %(va).3f, %(b)s is at %(vb).3f. One of them has drifted — and taken separately both sit in a plausible range, so only this comparison reveals it.
+260	Close it against the order so that the indicator "what share of failures was caught before energy was lost" has data. Leave it open and that column stays empty for good, and condition monitoring cannot prove it pays for itself.
+261	Putting a threshold on <b>running hours</b> duplicates\n                                the preventive maintenance plan — and then two\n                                mechanisms raise orders for the same job.
+262	Alarms arrive from rules scanning meters, from outside systems pushing\n               them in, or from an operator reporting one. Each row is an <b>episode</b> —\n               being raised again within the episode only adds to the count, it does not\n               create a new row.
+263	This is the list of repairs that <b>did not hold</b>: alarms that\n               were closed by a work order and then came back. It is the only way to\n               tell "repaired" from "order closed".
+264	The moment the system FIRST RECORDED the condition — not the moment an operator opened the screen to look, and not the moment the alarm was raised again later: a later occurrence adds to "times raised" and updates "last seen", while this stamp stays put.
+265	A snooze <b>always has a deadline</b>. At the deadline the system\n                    reopens it and writes a note on the alarm — silencing something\n                    for good is how a plant loses a whole layer of watchfulness\n                    with nobody remembering what was turned off.
+266	<b>Meter stalled</b> means readings keep arriving\n                                while the running hours do not increase: the\n                                machine really is down. Quite different from\n                                no readings — confusing the two sends you the\n                                wrong way.
+267	The rule decides what counts as abnormal and what to do when it fires.\n               The alarm log is <b>source-agnostic</b>: today it runs on meters and\n               operators; when SCADA arrives it is simply one more source.
+268	The condition has to hold for this many minutes before an alarm is raised. Set 0 to raise it at once.\n\nThis is what separates a usable set of alarms from one that gets switched off in the first week: a single noisy sample also crosses the threshold, and people put up with about a dozen false alarms before ignoring the lot.
+269	<b>Create at once</b> should be reserved for critical\n                            severity. One noisy sensor raising 500 alarms in a\n                            night becomes 500 junk orders, after which nobody\n                            reads the order list any more — real ones included.
+270	"Create order now" should be reserved for critical severity. One noisy sensor raising 500 alarms in a night becomes 500 junk orders, after which nobody reads the order list any more.\n\n"Open a REQUEST" is the right choice for low-level alarms: it goes into the request log for the dispatcher to judge whether an order is warranted, instead of straight onto the list of work to be done.

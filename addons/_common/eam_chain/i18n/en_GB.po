@@ -35,3 +35,13 @@ msgstr "Source"
 msgid "Nhà máy"
 msgstr "Plant"
 
+#. module: eam_chain
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain
+msgid "Chuỗi điểm đo"
+msgstr "Metering chain"
+
+#. module: eam_chain
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain_day
+msgid "Sản lượng theo bậc đo"
+msgstr "Energy by metering stage"
+

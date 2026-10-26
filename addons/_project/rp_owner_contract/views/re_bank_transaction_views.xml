@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Giao dịch "Đã khớp" (nhiều IPC trùng mã / số tiền vượt còn phải
+         thu) chờ người chọn IPC rồi xác nhận. Nút ẩn khi chưa có IPC để
+         không lẫn với "Đã khớp" của nguồn khác (phiếu thu tiền thuê). -->
+    <record id="view_re_bank_transaction_form_ipc" model="ir.ui.view">
+        <field name="name">re.bank.transaction.form.ipc</field>
+        <field name="model">re.bank.transaction</field>
+        <field name="inherit_id" ref="re_bank_sync.view_re_bank_transaction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_confirm_ipc_match" type="object"
+                        string="Xác nhận đối soát IPC" class="btn-primary"
+                        invisible="state != 'matched' or not ipc_id"/>
+            </xpath>
+            <xpath expr="//field[@name='matched_ref']" position="before">
+                <field name="ipc_id" readonly="state != 'matched'"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

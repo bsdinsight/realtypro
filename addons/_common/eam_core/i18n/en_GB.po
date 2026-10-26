@@ -1328,7 +1328,7 @@ msgstr "Critical"
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
 msgid "Tài sản"
-msgstr "Asset"
+msgstr "Assets"
 
 #. module: eam_core
 #: code:addons/eam_core/models/eam_asset.py:0
@@ -1442,7 +1442,7 @@ msgstr "Lifecycle"
 #. module: eam_core
 #: model:ir.ui.menu,name:eam_core.menu_eam_ops
 msgid "Vận hành"
-msgstr "Operating"
+msgstr "Operations"
 
 #. module: eam_core
 #: model:ir.model.fields,field_description:eam_core.field_eam_asset__is_rotable

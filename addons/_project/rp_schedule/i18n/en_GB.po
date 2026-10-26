@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_schedule
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_milestone_gantt
+msgid "Mốc chính"
+msgstr "Key milestones"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_milestones
+msgid "Danh sách mốc"
+msgstr "Milestone list"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_baseline
+msgid "Bản chụp lịch (baseline)"
+msgstr "Schedule baselines"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_gantt
+msgid "Gantt lịch thi công"
+msgstr "Construction schedule Gantt"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_group
+msgid "Lịch thi công"
+msgstr "Construction schedule"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_my_tasks
+msgid "Công việc của tôi"
+msgstr "My tasks"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_tasks
+msgid "Danh sách công việc"
+msgstr "Task list"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_task_link
+msgid "Mạng phụ thuộc"
+msgstr "Dependency network"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_task_link_violated
+msgid "Quan hệ lịch đang bị vi phạm"
+msgstr "Schedule links being violated"
+

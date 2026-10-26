@@ -84,3 +84,18 @@ msgstr "Location"
 msgid "Đang dừng"
 msgstr "Down"
 
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift
+msgid "Ca trực & giao ca"
+msgstr "Shifts & handover"
+
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_note_dun
+msgid "Việc bị đùn qua nhiều ca"
+msgstr "Work pushed across shifts"
+
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_pattern
+msgid "Mẫu ca trực"
+msgstr "Shift patterns"
+

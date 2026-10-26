@@ -36,3 +36,13 @@ msgstr "Plant"
 msgid "Điện mặt trời"
 msgstr "Solar PV"
 
+#. module: eam_solar
+#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_kpi
+msgid "Hiệu suất ngày (PR/PA)"
+msgstr "Daily performance (PR/PA)"
+
+#. module: eam_solar
+#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_weather
+msgid "Khí tượng ngày"
+msgstr "Daily weather"
+

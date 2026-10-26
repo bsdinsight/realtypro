@@ -1,0 +1,281 @@
+2054	Yes
+2055	Unit
+2056	Due
+2057	Season
+2058	Every
+2059	Schedule
+2060	Trade
+2061	Electrical
+2062	Description
+2063	Indicator
+2064	Mechanical
+2065	Window
+2066	Field type
+2067	Reading
+2068	Done
+2069	Safety
+2070	Cost
+2071	Waiting hours
+2072	Storm season
+2073	Dry season
+2074	Wet season
+2075	OVERDUE
+2076	Rules
+2077	Season name
+2078	Applies
+2079	pushed back
+2080	Lower bound
+2081	Upper bound
+2082	Running hours
+2083	Plan
+2084	Continuous
+2085	Season type
+2086	Reading date
+2087	From month
+2088	Read on
+2089	% caught early
+2090	Lead time
+2091	Blade
+2092	Needs attention
+2093	Work type
+2094	Best avoided
+2095	Classification
+2096	On schedule
+2097	Clashes with a season
+2098	To month
+2099	Policy
+2100	Shift (days)
+2101	Cycle anchor
+2102	Main trade
+2103	Raw reading
+2104	Due because of
+2105	Why it was shifted
+2106	Reliability
+2107	Machine down hours
+2108	Meter due
+2109	Maintenance KPI
+2110	Every … months
+2111	Priority
+2112	Due soon
+2113	Failures
+2114	Daily meter reading
+2115	From the plan
+2116	brought forward
+2117	High voltage
+2118	% of downtime spent waiting
+2119	% preventive
+2120	Photo required
+2121	Caught early
+2122	Choices
+2123	Actual repair hours
+2124	Last done
+2125	Last time
+2126	Maintenance schedule
+2127	Order history
+2128	High-wind season
+2129	Low-wind season
+2130	High-output season
+2131	Import history
+2132	Reading (raw)
+2133	By meter
+2134	Plan name
+2135	Season clash
+2136	Hold point
+2137	Remaining (meter)
+2138	Calendar due date
+2139	Seasonal schedule
+2140	MDT (down hours)
+2141	Season of the year
+2142	Times done
+2143	% caught early
+2144	Work step
+2145	Campaign: %s
+2146	Cannot be done
+2147	Type of work
+2148	Rules within the season
+2149	Corrective order
+2150	MTTR (repair hours)
+2151	Which season, and where
+2152	Raise the order at once
+2153	Meter reading
+2154	Numerator / denominator
+2155	Work clashing with a season
+2156	Actual conditions
+2157	A photo is required
+2158	Maintenance cost
+2159	Not enough data yet
+2160	Only for the trade
+2161	Record it as done
+2162	Group by location
+2163	Preventive order
+2164	MTBF (running hours)
+2165	Readings suspected wrong
+2166	Why it is empty
+2167	The meter was replaced
+2168	Next due
+2169	Calendar cycle
+2170	No period computed yet
+2171	A failure occurred in the period
+2172	Continuous value
+2173	Planned labour hours
+2174	Group by asset
+2175	Meter due date
+2176	Maintenance plan
+2177	Schedule by location
+2178	Counting starts from
+2179	Raised from the plan
+2180	Current meter
+2181	Equipment meter
+2182	<span>days</span>
+2183	No season declared yet
+2184	Never maintained
+2185	Maintenance schedule line
+2186	Maximum shift (days)
+2187	Work at height
+2188	Maintenance schedule — %s
+2189	Seasonal schedule: %s
+2190	Attached form templates
+2191	Suggested date (season-aware)
+2192	Locations it applies to
+2193	Rope access
+2194	<span>months</span>
+2195	Preventive maintenance
+2196	Work steps
+2197	Mandatory statutory inspection
+2198	… plus … days
+2199	Step in the plan
+2200	Meter cycle
+2201	Indicators left empty:
+2202	Has a running-hour meter
+2203	Seasons & seasonal rules
+2204	Savannakhet wet season
+2205	When the order is raised
+2206	Criteria / target value
+2207	Other work the same day
+2208	Control, automation
+2209	Meter stretch skipped
+2210	Equipment reliability
+2211	Only for the type of work
+2212	Remaining (meter units)
+2213	The season cannot be avoided
+2214	Meter readings missing
+2215	Running reactively
+2216	Window (repeats every year)
+2217	Window — repeats every year
+2218	Running hours in the period
+2219	Seasonal priority rule
+2220	Last completed
+2221	Best done in this season
+2222	Requires isolation
+2223	Due soon & overdue
+2224	Due soon / overdue
+2225	Latest reading (raw)
+2226	Per the maintenance plan
+2227	% of downtime spent WAITING
+2228	Every … (meter units)
+2229	Suggested date (season-aware)
+2230	Applies to the locations
+2231	Overdue tolerance (days)
+2232	Meter value at the last service
+2233	A permit or work instruction is required
+2234	Maintenance schedule by location
+2235	From the last completion
+2236	Down and waiting more than half the time
+2237	Maximum shift allowed (days)
+2238	Has machine-readable criteria
+2239	Grouped %d locations falling due together.
+2240	Form templates attached to every order
+2241	Raise the order ahead of the due date (days)
+2242	Order duration LESS waiting hours.
+2243	The plan code must be unique.
+2244	From a fixed anchor (no drift)
+2245	no running-hour meter
+2246	Reliability & maintenance KPIs by period
+2247	no repair hours recorded, so there is no MTTR
+2248	no failure yet, so there is no MTBF
+2249	Waiting for a crane, for materials, for weather.
+2250	EAMOne: raise preventive maintenance orders
+2251	Work step in the maintenance plan
+2252	Season "%s": the day has to be between 1 and 31.
+2253	Season "%s": the month has to be between 1 and 12.
+2254	The due date falls in %s — the right season for it.
+2255	No plan is\n            due
+2256	Nothing clashes\n               with a season
+2257	A location has only one meter of each kind.
+2258	A meter has only one reading per day.
+2259	A plan has only one schedule per location.
+2260	From the outage log, counting only outages that count as downtime.
+2261	The due date falls in a season best avoided, or one in which it cannot be done.
+2262	Comma separated, for example: Dry, Slightly damp, Clearly wet.
+2263	For cycles that are not whole months, for example 90 days.
+2264	Counts the orders flagged is_failure. The DENOMINATOR of both MTBF and MTTR.
+2265	The due date falls in %(m)s but the rule allows no shift at all.
+2266	Without one, MTBF is left empty — it is not replaced by calendar hours.
+2267	The difference in running-hour meters. This is the NUMERATOR of MTBF.
+2268	Skipping this step ruins the whole service. Use it to tighten the checking.
+2269	The CUMULATIVE figure on the machine, not the increment since last time.
+2270	Plan "%s" has the meter cycle on but the interval is not positive.
+2271	Plan "%s" has the calendar cycle on but both the month and day counts are empty.
+2272	Due %(h)s falls in %(m)s. Suggested %(hg)s by %(n)d days, to be done on %(ng)s.%(c)s
+2273	What the mean wind is, whether the access road is passable, whether a crane can be rigged.
+2274	Nm, bar, °C, mm, V… Write it down so the person measuring need not guess the unit.
+2275	The most expensive question in maintenance: condition monitoring only pays when this share is high.
+2276	.\n                        Empty means <b>not enough evidence</b>, not zero.
+2277	Preventive over preventive + corrective. Low means the work is running reactively.
+2278	The part of downtime during which nobody is repairing. High means the problem is logistics, not skill.
+2279	On when the field is a Reading and at least one bound is set. Only then can the system conclude by itself.
+2280	Plan "%s" has no due condition at all — it will never raise a work order.
+2281	How many days overdue is still acceptable. It only changes the warning colour; it does not move the due date.
+2282	This work CANNOT avoid the season: %s. Different working conditions have to be arranged — postponing is not the answer.
+2283	This is the screen the operations crew opens <b>every morning</b>: which\n            machine has to be serviced today.
+2284	Traces back to the plan that produced this step — so that, in a dispute, it is clear where the criteria came from.
+2285	Record the service as done today without going through a work order? The next cycle will count from today.
+2286	Record the actual conditions: what the mean wind was, whether the access road was passable, whether a crane could be rigged.
+2287	The same figures as <i>Assets ▸ Equipment reliability</i>,\n            differing only in the default column grouping.
+2288	Raising it on the due date itself is too late: no time to order the spare, to roster the people, or to hire the crane.
+2289	Already compensated for meter replacements. This is the figure used for maintenance due dates — DIFFERENT from the raw reading on the machine.
+2290	Failures found through condition monitoring, vibration measurement or periodic inspection — that is, BEFORE energy was lost.
+2291	With two conditions, whichever comes FIRST wins. This column says which one is deciding, so nobody has to guess.
+2292	Used when it has never been serviced — usually the commissioning date. Leave it empty and the equipment's installation date is used.
+2293	The result cannot be recorded until a photo is attached. Use it for steps where words are not enough: the state of a weld, a crack, an oil level.
+2294	Tightening torque, clearance, vibration threshold… Write them down and the person doing the work need not look them up, and the checker knows what to compare against.
+2295	Choose "Reading" and also give a lower and upper bound — the system then concludes pass or fail itself, instead of leaving people to mark their own work.
+2296	A reading LOWER than the previous one that nobody has confirmed as a meter replacement. Most likely a typing error — until it is confirmed, no compensation is applied.
+2297	%s already has an open order (%s). Raising another means two orders for the same job, and whichever is finished, nobody knows which one to close.
+2298	 Note that this is a PUSH BACK: no earlier date outside the season could be found, so the equipment will run %d days beyond its design cycle.
+2299	The due date falls in %(m)s and CANNOT be avoided within the %(c)d-day limit. It has to be done during the season — read the reason on the seasonal rule and prepare accordingly.
+2300	Empty means it applies to every type. Note that a MANDATORY STATUTORY INSPECTION is always reported as a clash but is NEVER shifted — its deadline is set by law.
+2301	The original due date stays in the "Calendar due date" column. This column is the date suggested after the seasons are weighed — the gap between the two is what to look at.
+2302	Applies to every location holding an asset of this category (and of its child categories). Leave it empty and it applies only to the locations named explicitly below.
+2303	The number of reading stretches discarded for going backwards or outrunning real time. Above 0 means running hours are UNDERSTATED, and MTBF with them is lower than reality.
+2304	Required when the policy is "cannot be done". A bare "forbidden" with no reason will be worked around on site, because nobody knows what they are working around.
+2305	The location CURRENTLY holding it. A rotable component may have moved machines during the period — running hours taken from the current location are then an approximation, not an exact figure.
+2306	The inspection falls due in %(m)s. It CANNOT be shifted — the deadline is set by law and overrunning it means stopping the equipment. The answer is different preparation, not postponement.
+2307	Empty means it applies to every plant. Seasons are local — the Savannakhet wet season is not the Đắk Lắk wet season, so a plant almost always has to be named.
+2308	The limit on shifting to avoid a season. Beyond the limit the system REPORTS that the season cannot be avoided rather than shifting further — shifting three months to dodge the rain has already broken the maintenance cycle.
+2309	A "cannot be done" rule in season "%s" requires a reason. A bare "forbidden" with no reason will be worked around on site, because nobody knows what they are working around.
+2310	Tick it when the counter went back to 0 because the controller was replaced. Only then does the system compensate — otherwise a single typing error pushes back the due date of every hour-based plan.
+2311	Empty means it applies to every trade. This is where seasonal rules earn their keep: in the wet season "rope access" cannot be done, while work inside the tower carries on as usual.
+2312	Templates attached to every order raised from this plan — a source isolation permit, for instance. Unlike the steps above: a template is shared across plans, so editing it in one place changes them all.
+2313	This work <b>cannot avoid the season</b>. Different working\n                        conditions have to be arranged — postponing is not an\n                        option here.
+2314	There is a season clash with nowhere to shift to within the limit — or it is a mandatory statutory inspection, which is never shifted. This is the list that has to be done during the season, which means preparing differently.
+2315	Work whose due date falls in a season best avoided or one in which it\n               cannot be done. The <b>cannot be avoided</b> rows are where\n               different working conditions have to be arranged.
+2316	A plan falls due on <b>the calendar</b> or on <b>the meter</b> —\n            whichever comes first. The <i>Due because of</i> column says which\n            one is deciding, so nobody has to guess.
+2317	<b>Reliability</b> is a question about <b>the machine</b>: how many\n            hours it ran in the period, how many times it failed, and how long on\n            average it runs between failures (<b>MTBF</b>).
+2318	Declare only <b>day and month</b>, not the year — the window\n                        repeats itself. A season <b>spanning the new year</b> is\n                        declared normally: November to March is ONE season.
+2319	"From the last completion" is the right default for servicing: run late once and the next one moves with it. "Fixed anchor" is for mandatory statutory inspections — the deadline is set by law, so doing it early or late leaves the next date unchanged.
+2320	A negative number BRINGS IT FORWARD, a positive one pushes it back. For preventive maintenance, bringing it forward is safe while pushing it back lets equipment run beyond its design cycle — so the two directions are not equivalent, and a positive number always carries a warning.
+2321	Empty means it applies to EVERY plant. Narrow it down, because each plant has its own vendor service regime, its own machine age, its own O&M contract — one shared plan sweeps a plant still under construction into the maintenance schedule of one already running.
+2322	MTTR does <b>not</b> count hours waiting for a crane, for materials,\n            for the wind to drop — that part sits in MDT. The gap between the two is\n            the <b>cost of logistics</b>, not of the fitters' skill; merging them\n            blames the wrong people.
+2323	MTBF divides by <b>running hours</b>, not calendar hours: a machine\n            that runs little and fails often looks more reliable on calendar hours\n            than one working hard. Without a running-hour meter, leave it\n            <b>empty</b> rather than substituting calendar hours.
+2324	Turn both on and <b>whichever comes first wins</b> — for\n                        example <i>every 12 months or 8,000 running hours,\n                        whichever comes first</i>. The <i>Due because of</i>\n                        column on the schedule says which one is deciding.
+2325	This plan <b>runs on the meter only</b> but the location\n                        has no reading at all. It will <b>fall silently due,\n                        never</b> — not "still in time" but unmeasurable.\n                        Enter meter readings for this location.
+2326	A season is a window that <b>repeats every year</b>, declared once and\n               used for good. The rules within a season say which type of work is\n               best done, best avoided, or cannot be done — and the maintenance\n               schedule will suggest <b>bringing work forward</b> to escape a bad\n               season, not pushing it back.
+2327	pieces of work at this plant\n                        fall on the same suggested date. The seasonal rules\n                        optimise <b>each schedule on its own</b> and know nothing\n                        about how many people the crew has — a pile-up like this\n                        has to be spread out by the planner; the system does not\n                        spread it.
+2328	Used to decide <b>whether to replace or keep repairing</b>, whether to\n            <b>claim under warranty</b> when one batch fails abnormally, and what\n            <b>spares to stock</b> for the things that fail often. This is NOT a\n            scorecard for the maintenance crew — that lives in <i>Maintenance ▸\n            Maintenance KPIs</i>, read from the same figures.
+2329	<b>Maintenance KPIs</b> are a question about <b>the maintenance\n            department</b>: is the repair quick (<b>MTTR</b>), how long is the\n            machine down (<b>MDT</b>), what share of the downtime is\n            <b>sitting waiting</b>, and is the work proactive or reactive\n            (<b>% preventive</b>, <b>% caught early</b>).
+2330	There are readings <b>lower than the previous one</b> that\n                        nobody has confirmed as a meter replacement. The system\n                        <b>applies no compensation</b> to those rows, because a\n                        typing error is the likelier explanation — compensating\n                        for a typo would silently push back the due date of every\n                        hour-based plan.
+2331	The steps are copied into the description of the work\n                                order when it is raised. The <b>criteria /\n                                target value</b> field (tightening torque,\n                                clearance, vibration threshold) saves the\n                                person doing the work from looking them up and\n                                tells the checker what to compare against.
+2332	How many pieces of work at the same plant also fall on this suggested date. The seasonal rules optimise EACH schedule on its own and know nothing about how many people the crew has — so work tends to pile up on one date (usually the day before a bad season opens). This column makes the pile-up visible; the system does NOT spread it out, because spreading needs a figure for crew capacity, and that figure is declared nowhere.
+2333	<b>MTBF</b> divides by <b>running hours</b>, not calendar\n                        hours — a turbine stands still most of the time, and on\n                        calendar hours the one that runs least looks the most\n                        reliable.<br/>\n                        <b>MTTR</b> does NOT include hours waiting for a crane,\n                        for materials, for the wind to drop; that part sits in\n                        <b>MDT</b>. The gap between the two is the cost of\n                        logistics, not of the fitters' skill.
+2334	A <b>mandatory statutory inspection</b> is reported as a\n                                clash but is <b>never shifted</b>: its deadline\n                                is set by law, and overrunning it means stopping\n                                the equipment. The answer is different\n                                preparation, not postponement.<br/>\n                                <b>"Best done in this season"</b> never causes a\n                                shift — give it that power and the system would\n                                happily push work back three weeks to land in a\n                                nicer season, which is exactly the dangerous\n                                direction.

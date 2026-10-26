@@ -21,3 +21,8 @@ msgstr ""
 msgid "Trọng yếu"
 msgstr "Critical"
 
+#. module: eam_tree
+#: model:ir.ui.menu,name:eam_tree.menu_eam_asset_tree
+msgid "Sổ tài sản (lưới cây)"
+msgstr "Asset register (tree grid)"
+

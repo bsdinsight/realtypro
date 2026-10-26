@@ -1517,7 +1517,7 @@ msgstr "Traces back to the plan that produced this step — so that, in a disput
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
 msgid "Tài sản"
-msgstr "Asset"
+msgstr "Assets"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__name

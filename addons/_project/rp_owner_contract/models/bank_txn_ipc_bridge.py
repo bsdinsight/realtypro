@@ -4,7 +4,8 @@
 Sổ đệm `re.bank.transaction` (re_bank_sync, _common) KHÔNG biết IPC là gì.
 Bridge này (ở _project) dạy nó:
 - IPC là một đích đối soát hợp lệ (`_selection_matched_ref`).
-- Tự khớp: tiền VÀO, `code`/nội dung chứa số IPC → gắn vào IPC đó.
+- Tự khớp: tiền VÀO, `code`/nội dung chứa số IPC → gắn vào IPC đó; chỉ
+  tự đối soát khi đúng 1 IPC và số tiền vừa, còn lại chờ người xác nhận.
 
 IPC nhận thêm `amount_received` (Σ giao dịch đã khớp) — trả lời câu module
 đang hở: IPC đã ký nhận rồi thì CĐT trả được bao nhiêu.
@@ -12,6 +13,7 @@ IPC nhận thêm `amount_received` (Σ giao dịch đã khớp) — trả lời 
 import re
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ReBankTransactionIpc(models.Model):
@@ -27,44 +29,116 @@ class ReBankTransactionIpc(models.Model):
         return sel
 
     def _try_auto_match(self):
+        """Tiền VÀO có mã IPC → khớp.
+
+        Chỉ tự đối soát (`reconciled`) khi chắc: đúng MỘT IPC và số tiền
+        không vượt còn phải thu. Còn lại để `matched` chờ người xác nhận —
+        đối soát nhầm là IPC ghi đã thu + TSBĐ bị định giá lại sai.
+        """
         super()._try_auto_match()
         for txn in self:
             if txn.state != 'new' or txn.direction != 'in':
                 continue
-            ipc = txn._find_ipc()
-            if ipc:
-                txn.ipc_id = ipc.id
-                txn.matched_ref = 'rp.owner.ipc,%s' % ipc.id
-                txn.matched_note = _('Khớp IPC "%s" trong nội dung CK') % ipc.name
-                txn.state = 'reconciled'
-                ipc.message_post(body=_(
-                    'Nhận <b>%(amt)s</b> từ CĐT qua ngân hàng '
-                    '(%(bank)s, GD %(ref)s) — đã đối soát vào IPC.',
-                    amt='{:,.0f}'.format(txn.amount),
-                    bank=txn.bank_gateway or '', ref=txn.reference_code or ''))
+            ipcs = txn._find_ipc_candidates()
+            if not ipcs:
+                continue
+            if len(ipcs) > 1:
+                txn.write({
+                    'state': 'matched',
+                    'matched_note': _(
+                        'Nội dung CK chứa mã của nhiều IPC (%s) — chọn IPC '
+                        'rồi xác nhận', ', '.join(ipcs.mapped('name'))),
+                })
+                continue
+            vals = {'ipc_id': ipcs.id,
+                    'matched_ref': 'rp.owner.ipc,%s' % ipcs.id}
+            if txn._ipc_amount_fits(ipcs):
+                vals.update(state='reconciled', matched_note=_(
+                    'Khớp IPC "%s" trong nội dung CK') % ipcs.name)
+                txn.write(vals)
+                txn._post_ipc_received()
+            else:
+                vals.update(state='matched', matched_note=_(
+                    'Khớp mã IPC "%(n)s" nhưng số tiền %(a)s vượt còn phải '
+                    'thu %(o)s — chờ xác nhận',
+                    n=ipcs.name, a='{:,.0f}'.format(txn.amount),
+                    o='{:,.0f}'.format(ipcs.amount_receivable_open)))
+                txn.write(vals)
+
+    def action_confirm_ipc_match(self):
+        """Người đối soát chốt giao dịch `matched` vào IPC đã chọn."""
+        for txn in self:
+            if txn.state != 'matched':
+                raise UserError(_(
+                    'Chỉ giao dịch "Đã khớp" mới xác nhận đối soát được.'))
+            if not txn.ipc_id:
+                raise UserError(_('Chọn IPC trước khi xác nhận.'))
+            txn.write({
+                'state': 'reconciled',
+                'matched_ref': 'rp.owner.ipc,%s' % txn.ipc_id.id,
+                'matched_note': _('Xác nhận tay vào IPC "%s"')
+                % txn.ipc_id.name,
+            })
+            txn._post_ipc_received()
+
+    def _post_ipc_received(self):
+        self.ensure_one()
+        self.ipc_id.message_post(body=_(
+            'Nhận <b>%(amt)s</b> từ CĐT qua ngân hàng '
+            '(%(bank)s, GD %(ref)s) — đã đối soát vào IPC.',
+            amt='{:,.0f}'.format(self.amount),
+            bank=self.bank_gateway or '', ref=self.reference_code or ''))
+
+    def _ipc_amount_fits(self, ipc):
+        """Số tiền > 0, cùng loại tiền và ≤ còn phải thu của IPC."""
+        self.ensure_one()
+        if self.currency_id and ipc.currency_id \
+                and self.currency_id != ipc.currency_id:
+            return False
+        cur = ipc.currency_id or self.currency_id \
+            or self.env.company.currency_id
+        return (cur.compare_amounts(self.amount, 0.0) > 0
+                and cur.compare_amounts(
+                    self.amount, ipc.amount_receivable_open) <= 0)
 
     @staticmethod
-    def _norm_code(s):
-        """Bỏ mọi ký tự không phải chữ/số + viết hoa. IPC/2026/0006 →
-        IPC20260006 — khớp được dù nội dung CK dùng / _ - hay khoảng trắng."""
-        return re.sub(r'[^A-Z0-9]', '', (s or '').upper())
+    def _ipc_code_regex(name):
+        """Mẫu tìm số IPC trong nội dung CK, khớp theo RANH GIỚI token.
 
-    def _find_ipc(self):
-        """Tìm IPC mà TÊN (chuẩn hoá) xuất hiện trong code/nội dung CK.
+        Tách tên thành các cụm chữ / cụm số (IPC/2026/0006 → IPC, 2026,
+        0006), giữa các cụm cho phép ký tự phân cách bất kỳ hoặc không có
+        — nên IPC/2026/0006, IPC20260006, IPC 2026 0006 đều khớp. Hai đầu
+        không được dính tiếp cụm cùng loại: IPC_1 KHÔNG khớp trong IPC_12
+        (so chuỗi con cũ khớp nhầm vì tên không đệm số 0).
+        """
+        tokens = re.findall(r'[^\W\d_]+|\d+', name or '')
+        if not tokens:
+            return None
+        letter, digit = r'[^\W\d_]', r'\d'
+        head = digit if tokens[0].isdigit() else letter
+        tail = digit if tokens[-1].isdigit() else letter
+        body = r'[\W_]*'.join(re.escape(t) for t in tokens)
+        return re.compile(r'(?<!%s)%s(?!%s)' % (head, body, tail),
+                          re.IGNORECASE)
 
-        Format-agnostic: mã IPC có thể là IPC/2026/0006, IPC_0006, IPC0006 —
-        chuẩn hoá cả 2 vế rồi so chuỗi con. Không phụ thuộc dạng mã cố định.
+    def _find_ipc_candidates(self):
+        """Mọi IPC (chưa huỷ) có số xuất hiện trong code hoặc nội dung CK.
+
+        So riêng từng ô để một mã không bị ghép nửa bên code, nửa bên
+        nội dung. ⚠️ Vẫn quét mọi IPC mỗi giao dịch — nhiều IPC thì cần
+        field tên chuẩn hoá + index.
         """
         self.ensure_one()
-        blob = self._norm_code('%s %s' % (self.code or '', self.content or ''))
-        if not blob:
-            return False
+        texts = [t for t in (self.code, self.content) if t]
+        found = self.env['rp.owner.ipc']
+        if not texts:
+            return found
         for ipc in self.env['rp.owner.ipc'].search(
                 [('state', '!=', 'cancelled')]):
-            n = self._norm_code(ipc.name)
-            if n and n in blob:
-                return ipc
-        return False
+            rx = self._ipc_code_regex(ipc.name)
+            if rx and any(rx.search(t) for t in texts):
+                found |= ipc
+        return found
 
 
 class RpOwnerIpcReceived(models.Model):

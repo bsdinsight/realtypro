@@ -1,0 +1,394 @@
+764	Period
+765	Number
+766	Revision
+767	Text
+768	Hour
+769	Year
+770	Line
+771	Block
+772	Label
+773	Week
+774	Decimals
+775	Incident
+776	· rev.
+777	Revision no.
+778	Count
+779	Unit
+780	Unit
+781	Complete
+782	Built from
+783	Value
+784	Wind rose
+785	Line code
+786	Created from
+787	outages)
+788	first time
+789	Closed
+790	Closed by
+791	Closed at
+792	Still draft
+793	Has readings
+794	Total
+795	Downtime
+796	Display
+797	Availability
+798	Maximum
+799	Remarks
+800	availability
+801	last
+802	Wind
+803	Formula
+804	ACTIVITY
+805	Activity
+806	Weather
+807	Reason for the revision
+808	Metering stage code
+809	Prepared by
+810	Profile name
+811	metering stage %s
+812	performance
+813	observation
+814	(block: %s)
+815	<b>Hours</b>
+816	Entry hint
+817	Multiplier
+818	Taken from
+819	Closed by
+820	Printed label
+821	Refill the figures
+822	Revised from
+823	Field name
+824	Wind speed
+825	Export to Excel
+826	(not closed)
+827	<b>Total</b>
+828	Unit table
+829	Report layout
+830	Cause
+831	Create a new revision
+832	Per unit
+833	Superseded
+834	<b>INCIDENTS</b>
+835	Lines on the sheet
+836	Value type
+837	Plant type
+838	Metering location code
+839	Probability level
+840	Daily figures
+841	not assigned
+842	not measured
+843	in its place.
+844	Current revision
+845	Must be filled in
+846	Print layout
+847	Close the day's report
+848	Configuration line
+849	Value (text)
+850	Built-in block
+851	Where the figure comes from
+852	Downtime group
+853	Printed title
+854	the plant record
+855	Solar PV
+856	<b>NOTES</b>
+857	No report yet
+858	Configuration profile
+859	The operator may edit it
+860	Revise into a new version
+861	not classified
+862	block not built
+863	fields not measured
+864	Capacity factor
+865	Print even when empty
+866	O&M contract period
+867	Time zone used
+868	Peak for the day
+869	 (NOT finished)
+870	 · MISSING %d days
+871	Per-unit table
+872	How the daily figure is taken
+873	DRAFT — not closed
+874	MANDATORY field missing
+875	Search daily reports
+876	Wind speed (peak
+877	Unit table total
+878	plant record %s
+879	days have no figures.
+880	Superseded by revision
+881	%(t)s (rev. %(n)d)
+882	No profile yet
+883	Maintenance work
+884	Settlement meter
+885	Daily report line
+886	Plan for tomorrow
+887	People & safety
+888	Why there is no figure
+889	no metering stage declared
+890	built-in block: %s
+891	energy by period
+892	and plotted as zero.
+893	Done during the day
+894	<b>Prevailing direction:</b>
+895	= %(b)s, with %(v)s
+896	Metering stage in the chain
+897	Lines with no reading
+898	Downtime hours by group
+899	Daily report profile
+900	Vendor availability
+901	Energy target
+902	The duty operator fills it in
+903	Hours above threshold
+904	Time of the peak
+905	Data completeness
+906	Total energy sold
+907	no target declared
+908	formula error: %s
+909	error fetching the figure: %s
+910	and printed as "—".
+911	this field only accepts: %s
+912	Time-series store
+913	Availability for the day
+914	That profile code already exists.
+915	Energy sold (kWh)
+916	lines have no reading.
+917	Some lines could not be measured
+918	Wind rose — prevailing direction
+919	Activity during the day
+920	Weather during the day
+921	Daily energy (kWh)
+922	Loss across the metering stages
+923	<b>PREPARED BY</b><br/>
+924	Unit comparison chart
+925	Daily operations report
+926	Reopened revision %d for editing.
+927	<b>CLOSED BY</b><br/>
+928	Daily report not closed
+929	Groups counted as curtailment:
+930	no reading today
+931	the tag could not be found
+932	Operator fields still empty
+933	Had to be revised into a new version
+934	%(a)s → %(b)s at %(m)s
+935	:\n                missing
+936	<b>DRAFT — not closed</b>
+937	A mandatory field is still empty
+938	Vertical list by block
+939	Rebuild the activity block
+940	Operating hours for the day
+941	Solar PV performance
+942	The target cannot be plotted:
+943	TOTAL row of %d units
+944	<b>PLAN FOR TOMORROW</b>
+945	<b>DONE DURING THE DAY</b>
+946	First sample above threshold
+947	VECTOR average (direction)
+948	no monthly target declared
+949	Peak power for the day
+950	Line on the daily report sheet
+951	Last sample above threshold
+952	Units generating (peak
+953	Fields the operator must fill in
+954	Availability — all causes
+955	Time zone for the day boundary
+956	Daily report configuration profile
+957	Availability — contract scope
+958	Activity block edited by a person
+959	Revise the daily report into a new version
+960	operator entry, written to %s
+961	Power curve for the day
+962	Fields still empty (not mandatory)
+963	The report for %s is no longer a draft.
+964	no DC-side figure for this set
+965	the meter difference could not be computed
+966	Energy chart for the month
+967	Notes — only the duty operator knows
+968	Built-in block (table, chart)
+969	How several tags are aggregated
+970	Energy / revenue by period
+971	no outage in this group
+972	whole-month target · source: %s
+973	Hourly energy for the day
+974	%(k)s · MISSING %(n)d/%(t)d days
+975	%(n)d outages · %(g)d groups
+976	%(vt)s — %(ly)s, %(k)s kWh lost
+977	%(vt)s — %(ly)s, from %(a)s%(b)s
+978	Downtime hours split by cause
+979	One meter: difference between two readings
+980	today's reading is LOWER than yesterday's
+981	Curtailment table by dispatch order
+982	Aggregate the way the tag itself does
+983	Constant declared on the plant record
+984	Landscape grid — three panels side by side
+985	Created from revision %(n)d. Reason: %(l)s
+986	days\n                have no figures
+987	Leave it empty to take the TOTAL of all groups.
+988	.\n                        Reason:
+989	Daily operations report — wind
+990	the metering-stage table has no field "%s"
+991	location "%s" has no meter attached
+992	Refilled the figures on %(n)d reports%(t)s.
+993	peak %(d).1f at %(g)s %(m)s
+994	 · picked up %d new lines from the profile
+995	Daily operations report (landscape)
+996	Superseded by revision %(n)d. Reason: %(l)s
+997	the contract period has no energy yet
+998	the plant has no metering location with code "%s"
+999	%(n)d days with figures, %(t)s–%(d)s%(x)s
+1000	%d points · see the chart in the PDF
+1001	Computed from other lines on the same sheet
+1002	This report is not in the closed state.
+1003	the unit table has not been built for this day
+1004	the time of the peak cannot be determined
+1005	 — no line on the sheet carries that code
+1006	EAMOne: remind about unclosed daily reports
+1007	A closed report cannot be rebuilt.
+1008	Trace: which record produced this figure.
+1009	meter "%s" has no reading today
+1010	there is no %(b)s record for this day
+1011	there was no outage during the day
+1012	the plant has no energy metering stage declared
+1013	%d samples · see the chart in the PDF
+1014	.\n                            Reason:
+1015	There was no outage during the day.
+1016	the unit-day log has not been built for this day
+1017	%(l)s exceeded %(n).1f at %(g)s %(m)s
+1018	EAMOne: pre-build the daily operations report
+1019	division by zero in formula "%s"
+1020	<b>This revision HAS BEEN SUPERSEDED.</b> Use revision
+1021	Landscape grid — seven numbered sections (wind)
+1022	no power reading during the day
+1023	no day this month has any energy yet
+1024	Operator entry, written back to the source table
+1025	The lines of a closed report cannot be rebuilt.
+1026	the plant has no tag matching code "%s"
+1027	Meter: yesterday's reading / today's / difference
+1028	DRAFT — not closed. The figures may still change.
+1029	no reading exceeded the threshold during the day
+1030	Unit table transposed (indicators as rows)
+1031	— in place\n                            of revision
+1032	%(h)s · %(t)s→%(d)s · %(n)d days with figures%(x)s
+1033	Only used when the source is "Energy target".
+1034	The report for %(t)s is still a draft. %(a)d fields still to fill in.
+1035	units have\n                no energy figure
+1036	the meter was replaced or rotated during the day
+1037	%(d)d tags · %(n)d readings · %(q)d suspect
+1038	Revision %(n)d — in place of revision %(c)d. Reason: %(l)s
+1039	no sample exceeded the %.1f threshold during the day
+1040	the plant has no O&M contract covering %s
+1041	no reading yesterday — the difference cannot be computed
+1042	not yet valued\n                            (
+1043	lines have\n                            no reading
+1044	WHOLE-MONTH target %(t)02d/%(n)d · source: %(g)s
+1045	the plant has no tag of type "power" declared
+1046	today's reading (%(b)s) is LOWER than yesterday's (%(a)s)
+1047	the formula needs %(c)s but %(t)s has no figure%(v)s
+1048	<b>DRAFT — not closed.</b> The figures may still change.
+1049	the metering chain has no daily row between %(t)s and %(d)s
+1050	%(v)s · brought to plant level: divided by %(n)d units
+1051	No work order is scheduled for tomorrow.
+1052	Rebuilding would OVERWRITE those edits, so the system asks first.
+1053	the plant has no metering stage with code "%(m)s"; it has: %(c)s
+1054	Line "%s" is a built-in block, so a block has to be chosen.
+1055	constant "%(t)s" is not declared on plant record %(n)s
+1056	no reading in the %(a)02d–%(b)02d window
+1057	%(b)d energy stages · %(n)d daily rows · %(t)s–%(d)s
+1058	%(k).2f h generating window less %(d).2f h downtime · %(w)s
+1059	meter "%s" was replaced or rotated during the day
+1060	Only used when taking from the metering chain: INV, MCB, GNT, EVN…
+1061	the line declares source "formula" but no formula is written
+1062	This plant already has a report with the same number for that day.
+1063	there is no matching wind direction and speed sample during the day
+1064	Exactly as worded on the customer's sheet, even when the system calls it something else.
+1065	Line "%s" declares a formula source, so a formula has to be written.
+1066	there is no availability day in contract period %(t)s–%(d)s
+1067	monthly target spread evenly, %(a)d/%(b)d days · source: %(n)s
+1068	so the DC and\n                    performance rows are left as "—"
+1069	metering stage "%(m)s" has no daily row in period %(t)s–%(d)s
+1070	SCADA reloaded for 19/10 · T07 outage filed under the wrong group…
+1071	no target declared for %(t)02d/%(n)d at this plant
+1072	meter "%s" has no reading yesterday — the difference cannot be computed
+1073	the TOTAL row of the unit table has no field "%(t)s"; it has: %(c)s
+1074	Line "%s" takes its figure from an existing table, so a field name is required.
+1075	Line "%s" takes from the time-series store, so a tag code is required.
+1076	the plant has no wind-direction (*_WD) or wind-speed (*_WS) tag
+1077	%(n)d tags match code "%(m)s" but none of them has a reading during the day
+1078	Only a CLOSED report needs a new revision. A draft can simply be edited.
+1079	table %(b)s has no field "%(t)s"; its numeric fields are: %(c)s…
+1080	%(g)d groups with downtime · brought to plant level: divided by %(n)d units
+1081	Line "%s" takes from the unit table, so it has to say which field of the TOTAL row to use.
+1082	No outage of an incident category was RECORDED during the day.
+1083	Line "%s" takes from a single meter, so the code of the location holding that meter is required.
+1084	The part only the duty operator knows. The system cannot build it, and should not.
+1085	field "%s" of the TOTAL row could not be computed — see the reason on the unit table itself
+1086	Closed revision %(n)d. %(a)d lines have no reading, %(b)d operator fields left empty.
+1087	Line "%s" takes a plant constant, so a field name on the plant record is required.
+1088	Used for "hours above threshold": grid-connected hours are the hours with power above 0.
+1089	the plant does not declare a unit count, so unit-hours cannot be brought to plant level
+1090	<span style="color:#0E8C99">━</span> Plant-wide power\n                (peak
+1091	The heading line on the printout. Keep the customer's exact wording, so the sheet can be set beside the old one and compared.
+1092	downtime (%(d).2f h) exceeds the generating window (%(k).2f h) — some outage lies outside generating hours
+1093	the PR denominator still differs by %.2f%% from the plant's own sheet — until that is settled it does not belong in the report
+1094	hours outside the window\n                    are not printed, so this total is lower than the whole day's energy.
+1095	— each point is the <b>average of the per-sample totals</b>, not\n                a running sum.
+1096	the unit table has not been built for this day — open "Unit performance" and build it, or wait for the cron at 00:10
+1097	the %(l)s period row starting %(t)s has not been built for this plant — open Performance → Energy by period and build it
+1098	no downtime group is declared as CURTAILMENT — what the dispatcher cut cannot be separated from machine faults
+1099	Line "%s" takes a figure by period, so BOTH the period and the field name are required — "revenue" without a period is only half a sentence.
+1100	the plant declares no energy meter — twelve running-hour counters do not belong on a settlement sheet
+1101	A field the operator has to fill in before the report can be closed. Use it for fields whose emptiness makes the report meaningless.
+1102	Line "%s" takes a target, so P50, P75 or P90 has to be chosen — "target" without a level is only half a sentence.
+1103	If the source records MWh while the sheet prints kWh, set 1000. This is the quietest mistake in any report.
+1104	the tag's aggregation yields no figure for this day — usually a cumulative counter that was replaced or rolled over
+1105	The <b>Avg</b> column is computed over the units that HAVE a figure for that\n                indicator, not over all of them.
+1106	Taken from the line bound to the sales metering stage. Copied out here so it can be filtered and summed — a line in a sub-table cannot.
+1107	Reopening a closed report should only be done while it has NOT been sent. Once sent, use "Revise into a new version" to keep the trail.
+1108	Line "%s" takes from the metering chain, so a field name is required. An empty stage code means summing every energy stage.
+1109	Pre-built by the system from the day's work orders and outage log. The duty operator edits the wording rather than typing it all again.
+1110	Decides which lines this sheet has and where each one takes its figure from. Change the profile after the figures are filled in and they have to be filled again.
+1111	A short name for OTHER lines to reference in a formula, for example "e_inv". Only needed on lines used as inputs.
+1112	Empty is NOT zero. A line that could not be measured still appears on the printout, with its reason, rather than turning into a 0.
+1113	Only used when the source is "Built-in block". This line carries no figure — it marks the place where the printout inserts a whole section.
+1114	The report for %s is closed. A closed figure is the record of that day and cannot be overwritten — to change it, press "Revise into a new version".
+1115	Operator fields, or fields written back to the source table. The rest the system fills and locks — copying by hand a figure the system already holds is an invitation to error.
+1116	and left empty. Using the most recent reading in place of yesterday's\n            quietly adds several days' energy into one day.
+1117	Clear this flag and a line without a figure disappears from the printout. Think about it: a line that disappears leaves the reader unaware it ever existed.
+1118	The unit table has not been built for this day. Open <b>Operations → Unit\n            performance</b> and build it, or wait for the cron at 00:10.
+1119	<span style="color:#C0392B">▮</span> Energy today ·\n                <span style="color:#1F3864">━</span> Month to date ·
+1120	The system <b>builds</b> the sheet; it does not close it and does not send it — a\n            report sent before anyone has read it is one nobody opens three days later.
+1121	Wind direction uses a <b>vector</b> average — the arithmetic mean\n                    of 350° and 10° is 180°, the exact opposite of the true direction.
+1122	%(n)d mandatory fields are still empty: %(ds)s.\n\nLeaving these empty makes the report meaningless — that is exactly why they are marked mandatory.
+1123	samples.\n                    Petal length is <b>frequency</b>; shading is the\n                    <b>mean speed</b> for that direction.
+1124	Say plainly why the figures changed: SCADA reloaded, downtime regrouped… Three months later this is the only thing that explains why one day has two sheets.
+1125	period %(k)s has figures for only %(a)d/%(b)d days — a RATIO computed over half a period is wrong rather than merely smaller, because the denominator is the whole period
+1126	NO time category is declared as an incident, so this section is always empty. Open Configuration → Time categories and tick "Is an incident" on the relevant ones.
+1127	A closed report cannot be deleted. It is the record of what was reported that day — to change it, create a new revision; to delete it is to lose the fact that anything was reported at all.
+1128	Built by the system from the work orders scheduled for tomorrow. This is the part of the report most often left blank, and the first thing the next shift reads.
+1129	The technical field name on the source table, for example "irradiation" or "kd_thoi_gian". Get it wrong and the log says exactly which fields that table has.
+1130	and printed as "—". An empty field is NOT\n                            a zero — the reason is written beside each\n                            line.
+1131	The activity block of the %s report has been edited by hand. Rebuilding would OVERWRITE those edits. Clear the field and press again if rebuilding from scratch is really what you want.
+1132	This number is a promise to the duty operator. Past fifteen fields the report turns back into copying by hand, and people fill it in to be done rather than to be right.
+1133	Unplanned outages during the day. Kept apart from the activity block because readers look for it separately — merged in, an incident hides among routine maintenance.
+1134	%(n)d outages have an energy loss that has NOT been valued — declare a tariff on the plant or on the power purchase agreement, then press the valuation button on the outage log
+1135	They print as "—" with\n                        a reason, <b>not</b> as 0 — an empty field and a\n                        zero are two quite different things.
+1136	<b>This revision has been superseded.</b> It is kept so that\n                        what was reported that day is still known — the figures\n                        to work from are in
+1137	CAPTURED when the sheet is created. The day boundary belongs to the plant, not to whoever has the screen open — without capturing it, the same sheet refilled from another machine gives different figures and nothing says so.
+1138	— three different units, each curve normalised to ITS OWN\n                peak. The SHAPE can be read (which tower lags the flock),\n                the values cannot.
+1139	The old revision is <b>not lost</b> — it becomes "superseded"\n                    and can still be opened. Overwriting a sheet that has been\n                    sent erases what was reported that day.
+1140	A <b>mandatory</b> field is still empty — closing will be\n                        blocked, and will say which one. Those fields are marked\n                        mandatory because leaving them empty makes the report\n                        meaningless.
+1141	plant local time.\n                Each bar is the MEAN power during the hour times one hour —\n                summing the raw samples gives a figure several times larger that\n                still carries the unit kWh.
+1142	.\n            The percentage uses as its denominator the energy that WOULD have been\n            generated (actual + curtailed) — divide by actual alone and a day cut in\n            half comes out as "100% curtailment".
+1143	The three counters above are integers and a boolean — the left-hand filter panel accepts neither. This field reduces them to a single ladder so they can be filtered, and takes the WORST rung when a report is missing several things at once.
+1144	Every morning the system pre-builds yesterday's sheet from the <b>figures it\n            already holds</b>: weather, energy by stage, performance, availability,\n            downtime hours. The duty operator edits the dozen or so fields only they know, then closes it.
+1145	Used for the "by period" source, and for the "metering stage" source when the CUMULATIVE figure to date is wanted rather than the day's own — the report prints both today's loss and the year-to-date loss, from the same field, differing only in the range summed.
+1146	Only used when the source is "a single meter". Declare the LOCATION CODE where the meter sits, not the meter code — a location carries only one meter of each kind, so the location is what operators name and what gets printed on the report.
+1147	Address tags by CODE, not by record: a configuration profile has to work for every plant of the same kind, and each plant has its own set of tags. End with "*" to match several — "T*_P" is the power of every turbine.
+1148	Required when the code matches more than one tag. Summing turbine power into plant power is right; summing temperature is meaningless — so the system does NOT guess, and a code that matches several tags without this declared is reported as a missing declaration.
+1149	<b>More than fifteen fields for the operator to fill in.</b> At\n                        this point the report turns back into copying by hand,\n                        and people fill it in to be done rather than to be\n                        right. Look again at which fields the system already has.
+1150	A wind sheet and a solar sheet differ in <b>what each line says</b>,\n            not in how the work is done. So the lines on the sheet are\n            <b>data</b> — adding a third plant type means adding a profile, not\n            writing another report.
+1151	Only used when the source is "Computed from other lines". Write it with LINE CODES, for example "100 * e_td / e_inv". If an input line could not be measured, this line also reads NOT MEASURED together with the missing code — it is not replaced by 0, because a ratio computed over a fake zero still produces a plausible-looking number.
+1152	Visual observation (sky 06–09, 09–12…) is WEATHER DATA — its home is the observation log, not the report sheet. But making the operator open two screens every morning means one of them gets skipped. This flag puts the field right on the sheet, and the system writes it straight into the observation log — one home, one screen.
+1153	A solar plant's sheet is not a vertical list: three panels — energy / hours / weather — sit side by side, then the constants and the KPIs, then the hourly energy band. The operator reads by PLACE — where a field sits is part of reading it quickly, so changing the layout changes reading speed, not just appearance.
+1154	The TOTAL row sums numerators and denominators before dividing, rather than\n            averaging percentages — <b>except the vendor column</b>: that figure comes\n            from the vendor with no numerator or denominator to sum, so its TOTAL is an\n            average of percentages and is NOT directly comparable with the two columns\n            to its left.
+1155	Pre-built by the system from the day's <b>work orders</b>\n                                and <b>outage log</b>. Edit the wording\n                                here; to rebuild from scratch, clear it\n                                all and press the button at the top —\n                                the system does not overwrite edits.
+1156	Each line below is a line on the printed sheet. Where the\n                        <b>system can fetch</b> the figure, declare where from;\n                        where only the operator knows it, leave\n                        <b>“The duty operator fills it in”</b>.\n                        The system <b>counts</b> the fields the operator has to\n                        touch — that number is a promise to them.
+1157	<span style="color:#C0392B">▮</span> Daily energy ·\n                <span style="color:#1F3864">━</span> Cumulative ·\n                <span style="color:#1a9850">╌</span> P50 ·\n                <span style="color:#fd8d3c">╌</span> P75 ·\n                <span style="color:#999">╌</span> P90.\n                The target is drawn as a cumulative line spread EVENLY across the days —\n                compare the cumulative so far with the whole month's target and every\n                month looks about to fall short.

@@ -21,3 +21,13 @@ msgstr ""
 msgid "Mức"
 msgstr "Level"
 
+#. module: eam_competency
+#: model:ir.ui.menu,name:eam_competency.menu_eam_competency
+msgid "Chứng chỉ & năng lực"
+msgstr "Certificates & competence"
+
+#. module: eam_competency
+#: model:ir.ui.menu,name:eam_competency.menu_eam_competency_expiring
+msgid "Chứng chỉ hết hạn & sắp hết"
+msgstr "Certificates expired & expiring"
+

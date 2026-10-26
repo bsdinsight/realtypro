@@ -1,0 +1,48 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_budget
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_finance_budget
+msgid "Ngân sách"
+msgstr "Budget"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_rp_budget_phase
+msgid "Ngân sách theo tháng"
+msgstr "Budget by month"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_rp_contingency_drawdown
+msgid "Sổ rút dự phòng"
+msgstr "Contingency drawdown register"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_rp_cost_baseline
+msgid "Mốc ngân sách"
+msgstr "Cost baseline"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_rp_cost_report
+msgid "Bảng kiểm soát chi phí"
+msgstr "Cost control sheet"
+
+#. module: rp_budget
+#: model:ir.ui.menu,name:rp_budget.menu_rp_disbursement
+msgid "Giải ngân theo tháng"
+msgstr "Disbursement by month"
+

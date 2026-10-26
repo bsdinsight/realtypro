@@ -36,3 +36,8 @@ msgstr "Plant"
 msgid "chưa đo được"
 msgstr "not measured"
 
+#. module: eam_sign
+#: model:ir.ui.menu,name:eam_sign.menu_eam_ca_provider
+msgid "Kết nối ký số"
+msgstr "Digital signing connection"
+

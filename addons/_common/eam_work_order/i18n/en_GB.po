@@ -2546,3 +2546,8 @@ msgstr "Photo"
 msgid "Ảnh / chứng cứ"
 msgstr "Photo / evidence"
 
+#. module: eam_work_order
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_order_hold
+msgid "Lệnh đang chờ"
+msgstr "Orders on hold"
+

@@ -1,0 +1,38 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_rfi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_rfi
+#: model:ir.ui.menu,name:rp_rfi.menu_rp_rfi
+msgid "RFI — Yêu cầu làm rõ"
+msgstr "RFI — requests for information"
+
+#. module: rp_rfi
+#: model:ir.ui.menu,name:rp_rfi.menu_rp_rfi_root
+msgid "RFI & Trình duyệt"
+msgstr "RFI & submittals"
+
+#. module: rp_rfi
+#: model:ir.ui.menu,name:rp_rfi.menu_rp_site_instruction
+msgid "Chỉ thị công trường"
+msgstr "Site instructions"
+
+#. module: rp_rfi
+#: model:ir.ui.menu,name:rp_rfi.menu_rp_submittal
+msgid "Trình duyệt (Submittal)"
+msgstr "Submittals"
+

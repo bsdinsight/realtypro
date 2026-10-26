@@ -27,3 +27,8 @@ msgstr "Company"
 msgid "Nhà máy"
 msgstr "Plant"
 
+#. module: eam_availability
+#: model:ir.ui.menu,name:eam_availability.menu_eam_availability_day
+msgid "Khả dụng theo ngày"
+msgstr "Availability by day"
+

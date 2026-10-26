@@ -1,0 +1,48 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_contract
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_pm_rp_contract
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_rp_contract_amendment
+msgid "Phụ lục HĐ"
+msgstr "Contract amendments"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_rp_contract_change
+msgid "Thay đổi (Change)"
+msgstr "Changes"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_rp_contract_closure
+msgid "Chấm dứt / Thanh lý"
+msgstr "Termination / closure"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_rp_contract_payment_due
+msgid "Mốc thanh toán đến hạn"
+msgstr "Payment milestones due"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_rp_contract_report_pivot
+msgid "Pivot HĐ nhà thầu"
+msgstr "Contractor agreements pivot"
+

@@ -1,0 +1,113 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_alert_critical
+msgid "Cảnh báo nghiêm trọng"
+msgstr "Critical alerts"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_alert_open
+msgid "Cảnh báo đang mở"
+msgstr "Open alerts"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_brief
+msgid "Bản tổng hợp dự án"
+msgstr "Project brief"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_claim_open
+msgid "Khiếu nại đang mở"
+msgstr "Open claims"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_contract_value
+msgid "Hợp đồng — giá trị & dự báo"
+msgstr "Contracts — value & forecast"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_doc_blocked
+msgid "Việc chưa được phép khởi công"
+msgstr "Work not yet cleared to start"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_doc_overdue
+msgid "Hồ sơ bên mình giữ quá hạn"
+msgstr "Documents overdue on our side"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_doc_toc
+msgid "Hồ sơ còn thiếu để bàn giao"
+msgstr "Documents still missing for handover"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_exec
+msgid "Lãnh đạo"
+msgstr "Executive"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_finance
+msgid "Tài chính"
+msgstr "Finance"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_interface_conflict
+msgid "Điểm bàn giao đang mâu thuẫn"
+msgstr "Interface points in conflict"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_ld
+msgid "Phạt chậm dự kiến"
+msgstr "Expected liquidated damages"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_pmu
+msgid "Ban quản lý dự án"
+msgstr "Project management unit"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_procure
+msgid "Mua sắm & pháp chế"
+msgstr "Procurement & legal"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_root
+msgid "Báo cáo"
+msgstr "Reports"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_task_critical
+msgid "Công việc trên đường găng"
+msgstr "Tasks on the critical path"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_task_late
+msgid "Công việc đang trượt"
+msgstr "Tasks slipping"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_variation_money
+msgid "Phát sinh — tiền theo trạng thái"
+msgstr "Variations — value by state"
+
+#. module: rp_report
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_variation_open
+msgid "Phát sinh đang xử lý"
+msgstr "Variations in progress"
+

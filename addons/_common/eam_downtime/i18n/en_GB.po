@@ -27,3 +27,13 @@ msgstr "Time category"
 msgid "Mã"
 msgstr "Code"
 
+#. module: eam_downtime
+#: model:ir.ui.menu,name:eam_downtime.menu_eam_time_category_map
+msgid "Ánh xạ loại → nhóm"
+msgstr "Category → group mapping"
+
+#. module: eam_downtime
+#: model:ir.ui.menu,name:eam_downtime.menu_eam_time_group
+msgid "Nhóm thời gian báo cáo"
+msgstr "Reporting time groups"
+

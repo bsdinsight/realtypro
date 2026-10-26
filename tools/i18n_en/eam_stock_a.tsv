@@ -1,0 +1,316 @@
+2635	Waiting
+2636	Cancel
+2637	Stock
+2638	UoM
+2639	Loan
+2640	Job
+2641	Approve
+2642	Note
+2643	reason
+2644	Drawing
+2645	Send out
+2646	OEM code
+2647	Qty sent
+2648	Qty ordered
+2649	Book figure
+2650	From store
+2651	Material
+2652	dropped: %s
+2653	due %s
+2654	Currently at
+2655	Cancelled
+2656	Returned
+2657	Reported lost
+2658	To do
+2659	Still good
+2660	Tool
+2661	Send to
+2662	Damaged
+2663	Return due
+2664	Sending store
+2665	Spare type
+2666	Code type
+2667	Renew
+2668	Cross-reference
+2669	What is borrowed
+2670	Overdue
+2671	Qty received
+2672	Return
+2673	Reject
+2674	Request
+2675	In transit
+2676	Used
+2677	Checked
+2678	Received
+2679	Issued
+2680	Closed
+2681	Unit price
+2682	Due
+2683	To store
+2684	Handed over by
+2685	Received by
+2686	Category only
+2687	Procurement
+2688	Issue
+2689	Notes…
+2690	Record
+2691	Dispatch
+2692	File complete
+2693	Receiving store
+2694	Issuing store
+2695	Urgency
+2696	Sent on
+2697	Raised on
+2698	Returned on
+2699	Count date
+2700	Receive back
+2701	Quantity
+2702	Note number
+2703	Summary
+2704	added: %s
+2705	On loan
+2706	Approved
+2707	Not checked
+2708	Not closed
+2709	Awaiting approval
+2710	Approval level
+2711	Approval required
+2712	Approved at
+2713	Over-delivered
+2714	Two-way
+2715	Instructions
+2716	File deadline
+2717	Fail
+2718	Check date
+2719	Borrowed on
+2720	Received on
+2721	Carried out by
+2722	Counted by
+2723	RMA note
+2724	By rule
+2725	Model name
+2726	Back to the bin
+2727	Requested at store
+2728	On loan
+2729	Sent out
+2730	Impact
+2731	Evidence
+2732	Discrepancy
+2733	Owner
+2734	Approved on
+2735	Under-delivered
+2736	Value from
+2737	Approval rule
+2738	Batch / serial
+2739	Taken from store
+2740	Acceptance
+2741	Source of goods
+2742	Other source
+2743	Checked by
+2744	Borrower
+2745	Recipient
+2746	Approval group
+2747	Short delivery
+2748	Check note
+2749	Goods receipt note
+2750	Issue note
+2751	Important
+2752	Decision
+2753	Qty rejected
+2754	Serial / batch
+2755	Request number
+2756	Amount
+2757	Material requested
+2758	Reserved
+2759	Applied
+2760	Revision
+2761	High and above
+2762	There is a discrepancy
+2763	Whose it is
+2764	Consignment stock
+2765	Where the goods come from
+2766	Where the goods are
+2767	Next due
+2768	General reason
+2769	Approver
+2770	Handled by
+2771	Receipts – issues
+2772	Return overdue
+2773	Spare parts
+2774	Submit for approval
+2775	Actual stock
+2776	Issue materials
+2777	Issued
+2778	Done on
+2779	Completed
+2780	Received back
+2781	Issued from store
+2782	Counted
+2783	Not reserved
+2784	Original document
+2785	Has a certificate
+2786	Stock alert
+2787	Manufacturer
+2788	When it comes back
+2789	Stoppage
+2790	Tool loan
+2791	Requested on
+2792	Proposed on
+2793	Arising from
+2794	Original spare
+2795	Document title
+2796	Attachment
+2797	Total value
+2798	To do
+2799	Being reserved
+2800	Warranty claim
+2801	Purchase order
+2802	Awaiting my approval
+2803	Still usable
+2804	Check line
+2805	Discrepancy line
+2806	Disposal line
+2807	Used for the order
+2808	Our own goods
+2809	Assigned store
+2810	Not through the store
+2811	Spare type
+2812	Reason / description
+2813	Storage care schedule
+2814	Requester
+2815	Proposed by
+2816	Scrap note
+2817	Stock analysis
+2818	Qty accepted
+2819	Certificate number
+2820	What if it is missing
+2821	Search RMA notes
+2822	Stock & counting
+2823	Emergency issue
+2824	Applies to the material
+2825	You may approve it
+2826	Cycle (months)
+2827	Reserve the material
+2828	Old core return due
+2829	Spare part record
+2830	Engineering approval
+2831	Reason for the discrepancy
+2832	Equipment model
+2833	Issue date
+2834	Checked by
+2835	Handled by
+2836	Discontinued
+2837	Battery recharge
+2838	Dormant (months)
+2839	Return note
+2840	Goods receipt note
+2841	Disposal note
+2842	Can be replaced by
+2843	Mislaid / lost
+2844	Stock state
+2845	Search check notes
+2846	Search loan notes
+2847	Condition on return
+2848	Stock optimisation
+2849	Material each time
+2850	Material request
+2851	In the store
+2852	Stock adjustment
+2853	The other side refused
+2854	Personal protective equipment
+2855	Only for the category
+2856	Lead time (days)
+2857	Technical justification
+2858	Adjustment line
+2859	Tool (serial)
+2860	Excess value
+2861	Certificate
+2862	Reservation incomplete
+2863	Who it is sent to
+2864	Damaged, dented
+2865	Past its shelf life
+2866	Not accepted
+2867	Stock count due
+2868	Calibration date
+2869	Goods received by
+2870	Approving group
+2871	Dispose of material
+2872	Replace the desiccant
+2873	Above the maximum level
+2874	Material for disposal
+2875	Consumable
+2876	goods received by
+2877	Spare part cost
+2878	Nothing to do
+2879	Slow moving
+2880	Replace only when needed
+2881	Stock still in transit
+2882	Approve & dispose
+2883	Transfer line
+2884	Oils, greases, chemicals
+2885	Disposal value
+2886	Send for repair / overhaul
+2887	Deadlines & references
+2888	Incoming inspection
+2889	Spare part cross-reference
+2890	Distributor code
+2891	Spare part demand
+2892	Where it arose
+2893	Discrepancy lines
+2894	Quantity each time
+2895	Book figure (at the count)
+2896	Incident / stoppage
+2897	Spare parts stock
+2898	Confirm receipt
+2899	EXPIRED since %s
+2900	Reservation completed.
+2901	Who requested it, and where
+2902	Handed over from the project
+2903	The other side accepted
+2904	Stock alert board
+2905	No note yet
+2906	No pair declared yet
+2907	Certificates & records
+2908	Emergency issue
+2909	Unreserved lines
+2910	Lines awaiting return
+2911	Lines awaiting issue
+2912	Record the return
+2913	Long lead-time order
+2914	Manufacturer & code
+2915	EAM component category
+2916	Material approval rule
+2917	Last movement
+2918	Superseded code
+2919	Arising from an order
+2920	Spares that fit
+2921	Replacement spare
+2922	Documents & drawings
+2923	Spare part documents
+2924	Corresponding asset
+2925	Search storage care jobs
+2926	Summary to date
+2927	Confirm the check
+2928	location / equipment
+2929	Conditions of application
+2930	Calibration body
+2931	Affects the value
+2932	No material yet
+2933	No rule declared yet
+2934	Awaiting engineering approval
+2935	Needs recalibration
+2936	The machine is fully stopped
+2937	Urgent — the machine is waiting
+2938	What is sent, and to whom
+2939	Manufacturer (OEM)
+2940	Conclusion & notes
+2941	Batch/serial in store
+2942	Raise a disposal note
+2943	Fits the model
+2944	Calibration history
+2945	Tool loan note
+2946	Critical spare
+2947	Certificate number
+2948	Search material requests
+2949	Condition on return
+2950	Passes after adjustment

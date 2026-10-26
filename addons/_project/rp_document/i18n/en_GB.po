@@ -1,0 +1,58 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_document
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_all
+msgid "Sổ hồ sơ"
+msgstr "Document register"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_blocked_tasks
+msgid "Việc chưa được phép khởi công"
+msgstr "Work not yet cleared to start"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_group
+msgid "Sổ hồ sơ kỹ thuật"
+msgstr "Technical document register"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_not_submitted
+msgid "Nhà thầu chưa trình"
+msgstr "Not yet submitted by the contractor"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_overdue
+msgid "Bên mình giữ quá hạn"
+msgstr "Overdue on our side"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_pending
+msgid "Đang xem xét"
+msgstr "Under review"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_toc
+msgid "Còn thiếu để bàn giao"
+msgstr "Still missing for handover"
+
+#. module: rp_document
+#: model:ir.ui.menu,name:rp_document.menu_rp_transmittal
+msgid "Phiếu chuyển hồ sơ"
+msgstr "Transmittals"
+

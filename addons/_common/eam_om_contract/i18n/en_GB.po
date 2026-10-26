@@ -92,3 +92,38 @@ msgstr "Solar PV"
 msgid "Đã chốt"
 msgstr "Closed"
 
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_contract
+msgid "Hợp đồng O&M"
+msgstr "O&M contracts"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_contract_type
+msgid "Loại hợp đồng"
+msgstr "Contract types"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_danh_gia
+msgid "Đánh giá & thanh toán"
+msgstr "Assessment & payment"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_danh_muc
+msgid "Danh mục"
+msgstr "Reference data"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_period
+msgid "Kỳ đánh giá"
+msgstr "Assessment periods"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_root
+msgid "Hợp đồng"
+msgstr "Contracts"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_thanh_toan
+msgid "Thanh toán theo nhà máy"
+msgstr "Payment by plant"
+

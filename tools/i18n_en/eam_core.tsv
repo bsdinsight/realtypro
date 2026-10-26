@@ -1,0 +1,275 @@
+489	Level
+490	Template
+491	Failed
+492	Category
+493	Draft
+494	Overlap
+495	Serial
+496	Where
+497	Warranty to
+498	Gearbox
+499	Criticality
+500	Hours
+501	Maintenance
+502	Start
+503	In warranty
+504	When
+505	Which category
+506	Installation
+507	New installation
+508	MWh lost
+509	"Other" bucket
+510	Expiring soon
+511	Reference
+512	Currency
+513	Assets
+514	Template name
+515	Removed
+516	Priority
+517	Warranty
+518	Mandatory
+519	Configuration
+520	Component
+521	System
+522	End
+523	Child category
+524	Installed on
+525	Upgrade
+526	Serial number
+527	Disposal
+528	Replacement
+529	Category name
+530	Total hours
+531	Standard clause
+532	Lifecycle
+533	Operations
+534	Installed
+535	Performance
+536	Installation reason
+537	Grid
+538	Installed in
+539	Location code
+540	Full code
+541	Origin
+542	Removed on
+543	Accepts category
+544	Inside
+545	Rotable
+546	"Other" bucket
+547	Locations
+548	Critical
+549	Nature
+550	Active
+551	Down
+552	Path
+553	Identifier
+554	Not declared
+555	Removal reason
+556	Asset code
+557	Environment
+558	Installations
+559	Assets
+560	Of category
+561	Location name
+562	Full name
+563	Parent location
+564	Child locations
+565	Σ loss
+566	Inverter
+567	Nothing installed
+568	Assembly tree
+569	Planned
+570	Asset level
+571	Monitoring system
+572	Location type
+573	Is equipment
+574	Installation
+575	Data loss
+576	Outage log
+577	Part of outage
+578	Asset name
+579	Disposed
+580	Close period
+581	Operator
+582	Components only
+583	Spare parts store
+584	Is root outage
+585	Knock-on units
+586	Installation date
+587	Manufacturer
+588	The log is empty
+589	Aliases
+590	Counts as downtime
+591	Installed at
+592	Warranty left (days)
+593	Force majeure
+594	Move location
+595	Revenue lost
+596	Mandatory category
+597	Component category
+598	Knock-on units
+599	Timestamp
+600	Manufacturing date
+601	Multiple assets
+602	Plant
+603	Start month
+604	Under repair
+605	Component inside
+606	Time category
+607	Criticality level
+608	Main equipment
+609	Usually attributed to
+610	Priority order
+611	Standard clause
+612	View location tree
+613	Warranty expired
+614	Location tree — %s
+615	Record new installation
+616	Outage period
+617	Installation history
+618	Plant time zone
+619	Responsibility
+620	Component location
+621	Equipment location
+622	Current location
+623	View assembly tree
+624	Contractor report
+625	Assembly tree — %s
+626	Planned downtime
+627	Record removal today
+628	Current installation
+629	Model / platform
+630	Owned by
+631	Installed asset
+632	Rotable spare
+633	Functional location
+634	installed asset
+635	Equipment warranty
+636	Warranty to
+637	Not installed
+638	Overlaps another period
+639	Refurbished part
+640	Overlapping periods — %s
+641	Installed in asset
+642	Turbine location 07
+643	Currently installed
+644	No locations yet
+645	Main equipment only
+646	Owner's own account
+647	Installed capacity (MW)
+648	Internal components
+649	Not installed in a machine
+650	Refitted after overhaul
+651	Knock-on units
+652	Days at location
+653	Planned replacement
+654	Related equipment
+655	internal components
+656	Warranty terms
+657	Warranty left (days)
+658	Source reference
+659	Origin & notes
+660	Energy lost (MWh)
+661	Installed assets
+662	No asset installed
+663	Responsibility not attributed
+664	Knock-on outages
+665	Historical data import
+666	Applies to equipment category
+667	No responsibility attributed
+668	Is a data-loss period
+669	How much was lost, and from whom
+670	Component structure template
+671	O&M contract obligation
+672	Commissioning date
+673	Internal components
+674	Counts as downtime
+675	The category tree is empty
+676	Accepted component category
+677	Manufacturer / warranty
+678	Overlapping periods, needs arbitration
+679	Rotable component location
+680	Location in structure template
+681	Warranty expiring (90 days)
+682	This period was closed at %s.
+683	This period was closed on %s.
+684	This is a <b>root outage</b>, with
+685	Rotable spare by default
+686	Child periods only (no double counting)
+687	Allow several assets at once
+688	Generate locations for all equipment
+689	Structure template code must be unique.
+690	Component category code must be unique.
+691	Time category code must be unique.
+692	The removal date cannot precede the installation date.
+693	Open period, measured up to this moment.
+694	Not counted as downtime (curtailment, low wind…)
+695	The clause of the standard this category derives from.
+696	That serial number already exists for this component category.
+697	Converter, Frequency converter, Power converter
+698	Two locations under the same parent cannot share a code.
+699	Created %(n)d new locations for %(v)d pieces of equipment.
+700	<span class="o_stat_text">Overlaps</span>
+701	A component cannot be installed inside itself.
+702	<span class="o_stat_text">Installation history</span>
+703	The asset code must be unique within one company.
+704	Structure templates apply to EQUIPMENT LOCATIONS only. "%s" is %s.
+705	Terms, scope, notice deadline under the contract…
+706	The end time cannot precede the start time.
+707	This source record has already been imported — re-importing must not create a duplicate.
+708	No asset\n               <b>matches the current filter</b>
+709	Alarm code or record id in the source system. Used so that re-importing creates no duplicates.
+710	Set it and the system warns when equipment of the wrong category is installed at this location.
+711	Empty means still installed. Do not invent a removal date for equipment that is still in the machine.
+712	Child periods point back to this one. Unit-hour reports must EXCLUDE this row to avoid double counting.
+713	An outage happens at a PLACE. Which equipment was there is derived from the installation history.
+714	Template "%s" does not say which equipment category it applies to — there is no way to know which locations to generate.
+715	Empty means STILL DOWN. Do not invent an end date for an outage that has not been resolved.
+716	Location "%(vt)s" accepts category "%(mong)s", but asset "%(ts)s" belongs to category "%(co)s".
+717	This location path already exists — two child locations under the same parent cannot share a code.
+718	Derived from the location and the start time. Editable when a different component has to be named explicitly.
+719	knock-on units. Unit-hour reports\n                        must exclude this row to avoid double counting.
+720	An opening suggestion. REAL responsibility is decided by the contract terms, and every contract differs.
+721	This is the field that earns money. Without it an outage is only a log entry; with it, it is a claim you can make.
+722	Leave empty and it sits directly under the equipment. Set it and a multi-level tree is generated — for example three blades inside the rotor.
+723	Which equipment category this template describes the internals of. Usually a root category — for example "Wind turbine".
+724	The LOWER number wins. When two categories occur at the same time on the same equipment, those hours count against the lower-numbered one.
+725	Empty means any category is accepted. Set it and the system warns when equipment of the wrong category is installed here.
+726	A component sits INSIDE another asset and travels with it when removed. Unlike a functional location — the place stays put.
+727	Components removed for overhaul and refitted afterwards, keeping their serial-number history. Suggested value when creating a new asset.
+728	Free-text reference to the handover source. The handover bridge replaces this field with a real link to the contract and the BOQ line.
+729	Every category tree needs an "Other" bucket. Without one, whoever enters data forces records into the nearest category and ruins the statistics.
+730	Loss of the monitoring link. It has to be accounted for as a time category — neither skipped nor treated as a healthy machine.
+731	Equipment locations and component locations hold exactly ONE asset at a time. Plants and systems hold several.
+732	Outage "%s" has no responsibility attributed. Confirm it with this field empty and it stays that way for good — and this is precisely the field that earns money.
+733	OEM contractors usually claim the right to fit refurbished parts. Without recording it, in a few years nobody knows what is actually inside the machine.
+734	.\n                        To move it, record a new installation — do not edit\n                        by hand, because editing by hand loses the history.
+735	The core only builds an empty tree. The domain content — for example the 11\n               subsystems and 19 assemblies of a wind turbine — is loaded by the industry package.
+736	Holds the things removed for overhaul and refitted afterwards — gearbox, generator, blades, converter. These are the locations where serial-number history is worth the most.
+737	Removed, overhauled, then refitted — keeping the serial-number history intact. Gearbox, generator, blades and converter are of this kind. Quite different from consumables.
+738	Same location, same moment, two different time categories. NOT an error — the standard provides a category priority mechanism. But a person has to arbitrate; do not let the machine choose.
+739	Other names for this same category, comma separated. Use it when importing from an OEM or contractor source that uses different words — it stops two categories meaning the same thing being created.
+740	Derived from the failure history of THIS fleet, not from a generic ranking. Data from several sources shows this order differs widely from fleet to fleet.
+741	This location holds <b>one</b> asset at a time.\n                        To replace the equipment you have to close the old period before\n                        opening a new one.
+742	A location is a <b>place</b>, not a <b>thing</b>. A location code never\n               changes when the equipment is replaced — that is why this table is\n               separate from the asset table.
+743	CANNOT be derived from the name. Curtailment under grid constraints is classified as OPERATING (partial output, derated) — not downtime. Get this field wrong and the whole availability figure is wrong.
+744	A step-up substation fault stops the whole fleet: record one outage at the substation, then point each turbine's outage at it. Reports add up the CHILD periods, not the parent — adding both is double counting.
+745	Rated capacity of the unit installed at this location. Used to compute the capacity factor — while it is not declared the system does NOT guess, because dividing by a guessed number gives a plausible-looking ratio that is wrong.
+746	Empty means it is your own. Set it when a removed component belongs to the contractor under a service agreement — this is a clause that has to be negotiated, and without recording it the asset is lost track of.
+747	The day boundary of every daily report follows this time zone. Leave it empty and the company time zone is used, then Asia/Ho_Chi_Minh — but stating it explicitly is better, especially with plants outside Vietnam.
+748	Whether a category is equipment or a component is <b>your own decision</b>:\n               open <i>Configuration ▸ Component categories</i> and tick <b>“Is equipment”</b>.\n               The system does not infer it.
+749	Mandatory and optional classification under the standard. The availability figure depends on whether the OPTIONAL categories are collected — so compliance with the standard cannot be claimed merely by naming an indicator.
+750	This category does <b>not</b> count as downtime. The textbook\n                        example is curtailment under grid constraints — the machine is\n                        still operating, just at partial output.
+751	An asset is a <b>thing</b>, carrying its own history through every\n               removal and refit. The location it currently sits in is a temporary\n               attribute, derived from the installation history.
+752	Per an APPROVED model — wind conditions and power curve, or a reference turbine. Do NOT take rated power times downtime hours: that is the commonest mis-statement in wind reports.
+753	The same assembly carries different names depending on the source.\n                            Without aliases, importing from two OEMs creates two\n                            categories meaning the same thing, and the statistics add up wrongly.
+754	Each outage is a span of time during which one location is in one\n               state. The <b>Responsibility</b> field is the one that earns money:\n               without it, an outage is only a log entry.
+755	<b>Click the × on the “Main equipment only” chip</b> in the search\n               bar and you see everything. If it is still empty after that, there really\n               is no data — check the selections in the left-hand panel.
+756	%(nhan)s "%(ten)s" already has an installation period overlapping this one: %(tu)s → %(den)s.\n\nTwo periods must not overlap. To replace equipment you have to CLOSE the old period (fill in the removal date) before opening the new one — otherwise the history becomes wrong and nobody notices.
+757	Asset "%(con)s" installed at %(vtc)s must sit inside assembly "%(dung)s" (at %(vtd)s), not "%(cha)s".\n\nSkipping a level puts the child at the SAME level as the assembly that contains it — the location tree says one thing, the assembly tree another, and anyone looking sees it at once.
+758	This screen opens with the <b>“Main equipment only”</b> filter on — it shows\n               equipment and hides the components inside them (blades, support frames,\n               bushings, relays…). The category you just picked may contain nothing but\n               components, which is why the list is empty.
+759	Same location, same moment, an outage of another category.\n                        <b>Not an error</b> — a machine can be faulty and curtailed\n                        at once. But a person has to arbitrate which category those\n                        hours count against; do not let the machine choose.
+760	<b>The assembly tree follows the THING</b>, unlike the\n                                functional location tree, which stays with the\n                                PLACE. Remove a gearbox for overhaul and the\n                                bearings inside travel with it. The two trees\n                                answer two different questions:\n                                <i>"how many times has this location lost a gearbox"</i>\n                                (foundation, wind flow, installation faults) and\n                                <i>"in how many locations has this gearbox failed"</i>\n                                (batch faults).
+761	Downtime known in advance and schedulable: planned maintenance, planned repair work. Distinct from fault downtime — both are downtime hours, but one is inside the plan and the other is not, and the field map colours them differently.\n\nCANNOT be derived from the name. The map used to look for the word "planned" in the category name: the name is a TRANSLATABLE field, so anyone reading the screen in English saw "Planned maintenance" — no string match — and a machine under maintenance showed RED as though it were faulty. A category named "Periodic maintenance" fell into the same hole.
+762	The template generates the <b>functional LOCATION tree</b> — the PLACE,\n                        which exists for the life of the plant. However many times the\n                        gearbox is replaced, the place stays the same. History anchored\n                        here answers <i>"how many times has this location lost a\n                        gearbox"</i> — the question that points to foundation, wind-flow\n                        or installation faults.<br/>\n                        Different from the <b>asset assembly tree</b> (the "Installed in\n                        asset" field), which answers the opposite question: <i>"in how\n                        many locations has this gearbox failed"</i> — the question that\n                        points to batch faults.
+763	Turn this on when the category is a piece of EQUIPMENT — something with a record of its own, its own work orders, its own spare parts, and worth a line of its own in the asset register. Turn it off when it is a COMPONENT sitting inside another piece of equipment.\n\nThis flag decides the "Asset level" column of every asset in the category, and decides whether that asset shows up when the Asset register is opened. It is a BUSINESS decision, so it lives here for users to change rather than being inferred from the data.\n\nThe system used to infer it: any asset not installed inside another asset was equipment. That inference was wrong — string combiner boxes sit inside PV arrays and turbine inverters sit inside the electrical assembly; both are real equipment, and both vanished from the register.

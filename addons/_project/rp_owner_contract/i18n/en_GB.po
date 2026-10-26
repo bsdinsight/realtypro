@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_owner_contract
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_cfg_contractor
+msgid "Nhà thầu"
+msgstr "Contractors"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_cfg_partner_owner
+msgid "Chủ đầu tư"
+msgstr "Owners"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_owner_cashflow
+msgid "Kế hoạch dòng tiền thu"
+msgstr "Cash receipt forecast"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_owner_invoice
+msgid "Hoá đơn phát hành CĐT"
+msgstr "Invoices issued to the owner"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_owner_receipt
+msgid "Thu tiền (Receipt)"
+msgstr "Receipts"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_rp_owner_acceptance
+msgid "Nghiệm thu gửi CĐT"
+msgstr "Acceptance sent to the owner"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_rp_owner_advance
+msgid "Tạm ứng CĐT"
+msgstr "Advances from the owner"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_rp_owner_contract
+msgid "HĐ với Chủ đầu tư"
+msgstr "Owner agreements"
+
+#. module: rp_owner_contract
+#: model:ir.ui.menu,name:rp_owner_contract.menu_rp_owner_ipc
+msgid "IPC (hồ sơ thanh toán)"
+msgstr "IPC (payment certificates)"
+

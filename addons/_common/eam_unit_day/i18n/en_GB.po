@@ -49,3 +49,8 @@ msgstr "Unit"
 msgid "Vị trí chức năng"
 msgstr "Functional location"
 
+#. module: eam_unit_day
+#: model:ir.ui.menu,name:eam_unit_day.menu_unit_day
+msgid "Hiệu suất tổ máy"
+msgstr "Unit performance"
+

@@ -1,0 +1,168 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* re_loan
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_grp_credit_contract
+msgid "HĐ tín dụng"
+msgstr "Credit agreements"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_grp_note
+msgid "Khế ước"
+msgstr "Drawdown notes"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_grp_payment
+msgid "Trích thu & Thanh toán"
+msgstr "Collection & repayment"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_adjustment_note
+msgid "Thông báo Nợ/Có"
+msgstr "Debit / credit advices"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_appraiser
+msgid "Tổ chức / Người định giá"
+msgstr "Valuers"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_bank
+msgid "Ngân hàng"
+msgstr "Banks"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_bank_advice
+msgid "Trích thu tự động (NH)"
+msgstr "Automatic bank collection"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_bank_advice_import
+msgid "Import giấy báo nợ (Excel/CSV)"
+msgstr "Import debit advices (Excel/CSV)"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_bank_branch
+msgid "Chi nhánh ngân hàng"
+msgstr "Bank branches"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_collateral
+msgid "Tài sản đảm bảo"
+msgstr "Collateral"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_collateral_type
+msgid "Loại tài sản đảm bảo"
+msgstr "Collateral types"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_config
+msgid "Cấu hình"
+msgstr "Configuration"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_config_settings
+msgid "Tham số phân hệ Vay"
+msgstr "Lending settings"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_credit_contract
+msgid "Hợp đồng tín dụng"
+msgstr "Credit agreements"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_facility
+msgid "Hạn mức tín dụng"
+msgstr "Credit facilities"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_note
+msgid "Khế ước nhận nợ"
+msgstr "Drawdown notes"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_onlending
+msgid "Vay nội bộ"
+msgstr "On-lending"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_purpose
+msgid "Mục đích sử dụng vốn"
+msgstr "Use of funds"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_rate_mass
+msgid "Điều chỉnh LS hàng loạt"
+msgstr "Bulk interest rate change"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report
+msgid "Báo cáo"
+msgstr "Reports"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_aging
+msgid "Nợ quá hạn (Aging)"
+msgstr "Overdue debt (aging)"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_alloc_by_contract
+msgid "Phân bổ HĐTD theo Khế ước"
+msgstr "Facility allocation by drawdown note"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_credit_contract_summary
+msgid "Tổng hợp HĐTD (cho vay + BL)"
+msgstr "Credit agreement summary (loans + guarantees)"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_due
+msgid "Khế ước đến hạn"
+msgstr "Drawdown notes falling due"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_facility_alloc
+msgid "Phân bổ HĐTD theo Dự án × Mục đích"
+msgstr "Facility allocation by project × purpose"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_interest_overdue
+msgid "Lịch lãi quá hạn"
+msgstr "Overdue interest schedule"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_outstanding
+msgid "Dư nợ vay"
+msgstr "Outstanding loan balance"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_payment_plan
+msgid "Kế hoạch thanh toán KW (năm)"
+msgstr "Drawdown note repayment plan (yearly)"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_report_progress
+msgid "Tiến độ thanh toán"
+msgstr "Repayment progress"
+
+#. module: re_loan
+#: model:ir.ui.menu,name:re_loan.menu_re_loan_root
+msgid "Quản lý Vay"
+msgstr "Lending"
+

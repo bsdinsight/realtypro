@@ -110,15 +110,32 @@
                     </div>
                     <field name="thac_nuoc" readonly="1"/>
                     <field name="line_ids" readonly="1">
-                        <list>
+                        <!-- Tô đỏ dòng VƯỢT kỳ vọng, không tô dòng mất
+                             nhiều: mất nhiều mà vẫn trong mức thiết kế
+                             thì không có gì để đi tìm. -->
+                        <list decoration-danger="vuot_ky_vong">
                             <field name="loss_type_id"/>
                             <field name="nhom"/>
                             <field name="kwh" sum="Tổng"/>
                             <field name="ty_le"/>
+                            <field name="kwh_ky_vong" string="Kỳ vọng"
+                                   sum="Tổng" optional="show"/>
+                            <!-- Để trống phép so khi CHƯA ĐO ĐƯỢC, và
+                                 nói rõ bằng cột "So được". Điền 0 vào
+                                 đó là biến "chưa ai đo" thành "mất ít
+                                 hơn thiết kế" — tin vui bịa. -->
+                            <field name="chenh_ky_vong" string="Vượt"
+                                   sum="Tổng" optional="show"
+                                   invisible="not so_duoc"/>
+                            <field name="so_duoc" string="So được"
+                                   optional="show"/>
+                            <field name="co_ky_vong" string="Đã khai mốc"
+                                   optional="hide"/>
                             <field name="tien" sum="Tổng" optional="show"/>
                             <field name="nguon" optional="show"/>
                             <field name="do_duoc" optional="hide"/>
                             <field name="ly_do" optional="show"/>
+                            <field name="vuot_ky_vong" column_invisible="1"/>
                         </list>
                     </field>
                 </sheet>
@@ -282,5 +299,64 @@
     <menuitem id="menu_eam_loss_type" name="Loại tổn thất"
               parent="eam_core.menu_eam_config"
               action="action_eam_loss_type" sequence="30"/>
+
+    <!-- ============ Tổn thất kỳ vọng theo loại ============ -->
+    <record id="view_eam_loss_expect_list" model="ir.ui.view">
+        <field name="name">eam.loss.expect.list</field>
+        <field name="model">eam.loss.expect</field>
+        <field name="arch" type="xml">
+            <list string="Tổn thất kỳ vọng" editable="bottom">
+                <field name="plant_id" width="240px"/>
+                <field name="loss_type_id" width="260px"/>
+                <field name="ty_le_pct" width="200px"/>
+                <field name="nguon" width="320px"
+                       placeholder="PVsyst bản nào, điều khoản nào"/>
+                <field name="company_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_eam_loss_expect_search" model="ir.ui.view">
+        <field name="name">eam.loss.expect.search</field>
+        <field name="model">eam.loss.expect</field>
+        <field name="arch" type="xml">
+            <search string="Tổn thất kỳ vọng">
+                <field name="plant_id"/>
+                <field name="loss_type_id"/>
+                <filter name="g_nm" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
+                <searchpanel>
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_eam_loss_expect" model="ir.actions.act_window">
+        <field name="name">Tổn thất kỳ vọng</field>
+        <field name="res_model">eam.loss.expect</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_eam_loss_expect_list"/>
+        <field name="search_view_id" ref="view_eam_loss_expect_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">Chưa khai mức kỳ vọng
+               nào</p>
+            <p>Sổ tổn thất trả lời <b>"mất bao nhiêu"</b>. Khai mức kỳ
+               vọng ở đây thì nó trả lời thêm được câu quan trọng hơn:
+               <b>"mất thế là nhiều hay ít"</b> — bụi bẩn ăn 2,1% là tốt
+               hay tồi, chỉ biết khi có mốc để so.</p>
+            <p>Khai theo <b>từng nhà máy</b>, vì hai nhà máy cách nhau ba
+               trăm cây số có mức bụi khác hẳn nhau, và hồ sơ thiết kế
+               (PVsyst, PVGIS) của mỗi dự án đã ghi sẵn tỷ lệ riêng. Ghi
+               luôn <b>căn cứ</b> để sau này còn cãi được với nhà thầu.</p>
+            <p>Loại nào <b>chưa khai</b> thì phần rã vẫn chạy bình thường
+               và ghi rõ là chưa có mốc — chưa khai KHÁC với khai bằng 0.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_eam_loss_expect" name="Tổn thất kỳ vọng"
+              parent="eam_core.menu_eam_config"
+              action="action_eam_loss_expect" sequence="31"/>
 
 </odoo>

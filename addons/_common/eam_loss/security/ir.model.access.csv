@@ -5,3 +5,5 @@ access_eam_loss_day_user,eam.loss.day user,model_eam_loss_day,re_base.group_re_u
 access_eam_loss_day_mgr,eam.loss.day manager,model_eam_loss_day,re_base.group_re_manager,1,1,1,1
 access_eam_loss_line_user,eam.loss.day.line user,model_eam_loss_day_line,re_base.group_re_user,1,1,1,0
 access_eam_loss_line_mgr,eam.loss.day.line manager,model_eam_loss_day_line,re_base.group_re_manager,1,1,1,1
+access_eam_loss_expect_user,eam.loss.expect user,model_eam_loss_expect,re_base.group_re_user,1,0,0,0
+access_eam_loss_expect_mgr,eam.loss.expect manager,model_eam_loss_expect,re_base.group_re_manager,1,1,1,1

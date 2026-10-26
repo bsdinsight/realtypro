@@ -446,7 +446,8 @@ class EamLossDay(models.Model):
                 _logger.exception('eam_loss: %s ngày %s', nm.code, hom_qua)
 
     # ==================================================================
-    @api.depends('line_ids.kwh', 'muc_tai_nguyen', 'thuc_te', 'du')
+    @api.depends('line_ids.kwh', 'muc_tai_nguyen', 'thuc_te', 'du',
+                 'muc_ke_hoach', 'do_duoc_kh', 'chenh_tai_nguyen')
     def _compute_thac(self):
         """Thác nước vẽ bằng SVG, và nói thẳng khi mốc chưa có."""
         for r in self:
@@ -455,7 +456,24 @@ class EamLossDay(models.Model):
                     '<p class="text-muted">Chưa vẽ được thác nước: %s.</p>'
                     % (r.ly_do_tn or ''))
                 continue
-            cot = [('Mốc tài nguyên', r.muc_tai_nguyen, '#1F3864')]
+            # Bắt đầu từ MỐC KẾ HOẠCH khi đã khai mục tiêu, rồi bắc một
+            # nhịp sang mốc tài nguyên. Nhịp ấy KHÔNG phải tổn thất —
+            # trời cho ít hơn năm P50 thì không ai làm gì sai — nên nó
+            # mang màu riêng và đi được cả hai chiều.
+            # Thiếu nhịp này thì thác nước không trả lời được câu "so
+            # với KẾ HOẠCH thì sao", mà đó mới là câu bên cho vay và
+            # hội đồng quản trị hỏi.
+            cot = []
+            if r.do_duoc_kh and r.muc_ke_hoach:
+                cot.append((_('Mốc kế hoạch P50'), r.muc_ke_hoach, '#5B6B8C'))
+                if abs(r.chenh_tai_nguyen) > 0.01:
+                    cot.append((
+                        _('Trời cho ít hơn P50') if r.chenh_tai_nguyen > 0
+                        else _('Trời cho nhiều hơn P50'),
+                        -r.chenh_tai_nguyen, '#7E9BC4'))
+                cot.append((_('Mốc tài nguyên'), 'TONG', '#1F3864'))
+            else:
+                cot.append((_('Mốc tài nguyên'), r.muc_tai_nguyen, '#1F3864'))
             for l in r.line_ids.filtered(
                     lambda x: x.do_duoc and x.kwh).sorted(
                         lambda x: (x.loss_type_id.sequence,
@@ -498,6 +516,8 @@ class EamLossDay(models.Model):
             if i == 0:
                 moc = gt
                 a, b, nhan = 0.0, gt, gt
+            elif gt == 'TONG':          # mốc giữa chừng: vẽ luỹ kế tới đây
+                a, b, nhan = 0.0, moc, moc
             elif gt is None:                      # cột cuối: thực tế
                 a, b, nhan = 0.0, self.thuc_te, self.thuc_te
             else:
@@ -508,7 +528,7 @@ class EamLossDay(models.Model):
             cao_cot = max(cao * (tren - duoi) / dinh, 1.0)
             # Bước đi LÊN tô màu khác và viền nét đứt: nó không phải
             # tổn thất, nó là phần mô hình đoán thấp hơn thực tế.
-            len_ = (gt is not None and i and gt > 0)
+            len_ = (isinstance(gt, (int, float)) and i and gt > 0)
             ra.append('<rect x="%f" y="%f" width="%f" height="%f" fill="%s"%s/>'
                       % (x, y(tren), bw, cao_cot,
                          '#2E86C1' if len_ else mau,
@@ -562,6 +582,60 @@ class EamLossDayLine(models.Model):
     currency_id = fields.Many2one(related='day_id.currency_id')
 
     kwh = fields.Float(string='kWh', digits=(16, 1))
+
+    # ----- So với mức KỲ VỌNG -------------------------------------------
+    # "Mất bao nhiêu" chưa trả lời được câu "thế là nhiều hay ít". Ba
+    # trường dưới đây đặt con số thực tế cạnh mốc thiết kế.
+    co_ky_vong = fields.Boolean(
+        string='Đã khai kỳ vọng', compute='_compute_ky_vong', store=True,
+        help='Chưa khai thì KHÔNG coi mốc bằng 0 — hai chuyện khác hẳn '
+             'nhau, và coi lẫn là đẻ ra số mồ côi.')
+    kwh_ky_vong = fields.Float(
+        string='Kỳ vọng (kWh)', digits=(16, 1),
+        compute='_compute_ky_vong', store=True)
+    so_duoc = fields.Boolean(
+        string='So được với kỳ vọng', compute='_compute_ky_vong',
+        store=True,
+        help='Phải CÓ mốc kỳ vọng VÀ số thực tế phải quy được. Thiếu '
+             'một trong hai thì không có phép so nào cả.')
+    chenh_ky_vong = fields.Float(
+        string='Vượt kỳ vọng (kWh)', digits=(16, 1),
+        compute='_compute_ky_vong', store=True,
+        help='Dương là mất NHIỀU HƠN mức thiết kế cho phép — đây mới là '
+             'phần đáng đi tìm nguyên nhân.')
+    vuot_ky_vong = fields.Boolean(
+        string='Vượt mức', compute='_compute_ky_vong', store=True)
+
+    @api.depends('kwh', 'do_duoc', 'loss_type_id',
+                 'day_id.muc_tai_nguyen', 'day_id.plant_id')
+    def _compute_ky_vong(self):
+        """So thực tế với kỳ vọng — và KHÔNG so khi chưa đo được.
+
+        Loại tổn thất nào do người nhập tay mà chưa ai nhập thì `kwh`
+        bằng 0 và `do_duoc` bằng False. Lấy số 0 ấy trừ đi mức kỳ vọng
+        ra một con số ÂM to, trình bày lên là "mất ít hơn thiết kế
+        5.951 kWh" — một tin vui hoàn toàn bịa, và bịa đúng ở chỗ người
+        ta muốn nghe nên không ai kiểm.
+
+        Đo trên PV50 ngày 24/10/2026: năm loại bụi bẩn, che bóng, suy
+        giảm, dãy pin kém, dãy pin chết đều rơi vào đúng cảnh ấy. Nên
+        chưa đo được thì để trống phép so, và nói rõ là chưa so được.
+        """
+        E = self.env['eam.loss.expect']
+        for l in self:
+            pct = (E.muc_cua(l.day_id.plant_id, l.loss_type_id)
+                   if l.day_id.plant_id and l.loss_type_id else None)
+            l.co_ky_vong = pct is not None
+            l.kwh_ky_vong = ((l.day_id.muc_tai_nguyen or 0.0) * pct / 100.0
+                             if pct is not None else 0.0)
+            l.so_duoc = bool(pct is not None and l.do_duoc)
+            if l.so_duoc:
+                l.chenh_ky_vong = (l.kwh or 0.0) - l.kwh_ky_vong
+                l.vuot_ky_vong = l.chenh_ky_vong > 0
+            else:
+                l.chenh_ky_vong = 0.0
+                l.vuot_ky_vong = False
+
     tien = fields.Monetary(string='Doanh thu mất',
                            currency_field='currency_id')
     ty_le = fields.Float(string='% của mốc', digits=(6, 3),

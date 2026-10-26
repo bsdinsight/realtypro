@@ -1,0 +1,216 @@
+// Khuôn dùng chung cho mọi bảng điều khiển EAMOne.
+//
+// Lấy nguyên cấu trúc và nhịp của bảng EVM (rp_evm) — thứ đã chạy thật
+// và đã trả giá cho mấy cái bẫy bố cục — rồi đổi dải màu sang
+// NAVY–TEAL của bộ nhận diện, để hai sản phẩm nhìn ra là cùng một nhà
+// mà không bị nhầm là cùng một màn.
+//
+// MỌI dashboard EAMOne dùng CHUNG tệp này. Màn nào cần nét riêng thì
+// thêm lớp con dưới `.eam-dash`, KHÔNG sửa biến gốc ở đây — sửa ở đây
+// là đổi luôn màn của người khác.
+
+.eam-dash {
+    // ---- Bảng màu ----
+    --navy:  #0f2c3f;   // mực chính, cũng là nền khối nổi
+    --teal:  #0e8c99;   // màu nhấn
+    --bg:    #f1f4f5;   // nền trang, tông nguội
+    --card:  #ffffff;
+    --ink:   #0f2c3f;
+    --muted: #5c7480;
+    --line:  #dde6e9;
+    --good:  #2e7d5b;
+    --warn:  #c99a2e;
+    --bad:   #c0453b;
+    // Màu riêng cho "CHƯA ĐO ĐƯỢC". Cố ý KHÔNG phải màu xấu: chưa đo
+    // được không phải là tin xấu, nó là tin "không biết". Tô đỏ thì
+    // người đọc hiểu nhầm là hỏng; để trắng thì họ đọc nhầm là 0.
+    --unknown: #8fa3ad;
+
+    background: var(--bg);
+    padding: 16px;
+    color: var(--ink);
+    font-size: 13px;
+    box-sizing: border-box;
+
+    // Khung cha (.o_action_manager) có overflow:hidden → dashboard PHẢI
+    // tự cuộn nội bộ. Dùng height:100%, KHÔNG min-height: min-height làm
+    // nó nở hết chiều cao nội dung rồi CHẶN LUÔN cuộn chuột, và lỗi đó
+    // trông y như trang bị đơ.
+    height: 100%;
+    overflow-y: auto;
+
+    // ---- Đầu trang ----
+    .eam-dash-header {
+        display: flex; align-items: flex-end; justify-content: space-between;
+        gap: 16px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .eam-dash-eyebrow {
+        font-size: 11px; font-weight: 700; letter-spacing: .09em;
+        color: var(--teal); text-transform: uppercase;
+    }
+    .eam-dash-title h2 { margin: 2px 0 0; font-size: 22px; font-weight: 700; }
+    .eam-dash-tools {
+        display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .eam-dash-today { font-size: 12px; color: var(--muted); }
+
+    // ---- Trạng thái ----
+    .eam-dash-loading, .eam-dash-empty {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 12px; padding: 80px 0;
+        color: var(--muted);
+    }
+
+    // ---- Thẻ số ----
+    .eam-kpis {
+        display: grid; gap: 12px; margin-bottom: 14px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .eam-kpis-3 { grid-template-columns: repeat(3, 1fr); }
+    .eam-kpis-2 { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 1200px) {
+        .eam-kpis, .eam-kpis-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+        .eam-kpis, .eam-kpis-3, .eam-kpis-2 { grid-template-columns: 1fr; }
+    }
+
+    .eam-card {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 12px; padding: 14px 16px;
+        border-left: 4px solid var(--teal);
+        box-shadow: 0 1px 2px rgba(15, 44, 63, .05);
+    }
+    .eam-card-label {
+        font-size: 11.5px; color: var(--muted); font-weight: 600;
+        text-transform: uppercase; letter-spacing: .03em;
+    }
+    .eam-card-value {
+        font-size: 26px; font-weight: 700; line-height: 1.15; margin-top: 4px;
+        .u { font-size: 14px; color: var(--muted); font-weight: 600; }
+    }
+    .eam-card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .eam-card.is-good { border-left-color: var(--good); }
+    .eam-card.is-warn { border-left-color: var(--warn); }
+    .eam-card.is-bad  { border-left-color: var(--bad); }
+    .eam-card.is-good .eam-card-value { color: var(--good); }
+    .eam-card.is-warn .eam-card-value { color: #a9791a; }
+    .eam-card.is-bad  .eam-card-value { color: var(--bad); }
+
+    // Thẻ CHƯA ĐO ĐƯỢC — dùng thay vì hiện số 0.
+    .eam-card.is-unknown { border-left-color: var(--unknown); }
+    .eam-card.is-unknown .eam-card-value { color: var(--unknown); font-weight: 600; }
+
+    .eam-hero {
+        background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+        border: none; color: #fff;
+        .eam-card-label { color: rgba(255, 255, 255, .82); }
+        .eam-card-sub   { color: rgba(255, 255, 255, .76); }
+        .eam-card-value { color: #fff; }
+        &.is-good { box-shadow: inset 4px 0 0 #7fd6a8; }
+        &.is-warn { box-shadow: inset 4px 0 0 #f0c65a; }
+        &.is-bad  { box-shadow: inset 4px 0 0 #e79a94; }
+    }
+
+    // ---- Hàng / khối ----
+    .eam-row {
+        display: grid; gap: 12px; margin-bottom: 12px;
+        grid-template-columns: 2fr 1fr;
+    }
+    .eam-row-even { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 980px) {
+        .eam-row, .eam-row-even { grid-template-columns: 1fr; }
+    }
+
+    .eam-panel {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;
+        box-shadow: 0 1px 2px rgba(15, 44, 63, .05);
+    }
+    .eam-panel-head {
+        display: flex; align-items: baseline; justify-content: space-between;
+        gap: 10px; flex-wrap: wrap; margin-bottom: 8px;
+        h3 { margin: 0; font-size: 15px; font-weight: 700; }
+    }
+    .eam-panel-note { font-size: 11.5px; color: var(--muted); }
+    .eam-chart { width: 100%; min-height: 300px; }
+
+    // ---- Thanh tiến độ ----
+    .eam-bars { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+    .eam-bar-top {
+        display: flex; justify-content: space-between; gap: 8px;
+        font-size: 12.5px; margin-bottom: 4px;
+    }
+    .eam-bar-name { font-weight: 600; }
+    .eam-bar-val { color: var(--muted); white-space: nowrap; }
+    .eam-bar-track {
+        position: relative; height: 10px; border-radius: 6px;
+        background: #e3eaec; overflow: hidden;
+    }
+    .eam-bar-fill {
+        position: absolute; inset: 0 auto 0 0; height: 100%;
+        border-radius: 6px;
+        background: linear-gradient(90deg, var(--navy), var(--teal));
+    }
+    .eam-bar-fill.is-good { background: linear-gradient(90deg, #2e7d5b, #6fae83); }
+    .eam-bar-fill.is-warn { background: linear-gradient(90deg, #a9791a, #d4a72c); }
+    .eam-bar-fill.is-bad  { background: linear-gradient(90deg, #a2362e, #c0453b); }
+    .eam-bar-pct {
+        font-size: 11.5px; color: var(--muted); text-align: right; margin-top: 2px;
+    }
+
+    // ---- Bảng ----
+    .eam-table {
+        width: 100%; border-collapse: collapse; font-size: 12.5px;
+        th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+        th { color: var(--muted); font-weight: 600; text-transform: uppercase;
+             font-size: 11px; letter-spacing: .03em; }
+        td.num, th.num { text-align: right; white-space: nowrap; }
+        td.c, th.c { text-align: center; }
+        td.muted { color: var(--muted); }
+        // Ô chưa đo được: in dấu gạch, KHÔNG in số 0.
+        td.unknown { color: var(--unknown); text-align: right; }
+        tbody tr:hover { background: #f6fafb; }
+        tbody tr.is-bad td  { background: #fdf4f3; }
+        tbody tr.is-warn td { background: #fdfaf2; }
+    }
+
+    .eam-chip {
+        display: inline-block; padding: 2px 9px; border-radius: 999px;
+        background: #e7f1f2; color: var(--navy); font-size: 11px; font-weight: 600;
+    }
+    .eam-chip.is-good { background: #e5f3ec; color: var(--good); }
+    .eam-chip.is-warn { background: #fbf3e0; color: #a9791a; }
+    .eam-chip.is-bad  { background: #fbeae8; color: var(--bad); }
+    .eam-chip.is-unknown { background: #eef2f4; color: var(--unknown); }
+
+    // ---- Dải chia mục ----
+    .eam-divider {
+        display: flex; align-items: center; gap: 12px; margin: 20px 0 12px;
+        span {
+            font-size: 12px; font-weight: 700; letter-spacing: .06em;
+            text-transform: uppercase; color: var(--teal); white-space: nowrap;
+        }
+        &::before, &::after {
+            content: ""; flex: 1; height: 1px; background: var(--line);
+        }
+    }
+
+    // ---- Dòng việc phải làm ----
+    .eam-todo {
+        display: flex; align-items: center; gap: 10px;
+        padding: 8px 0; border-bottom: 1px solid var(--line);
+        &:last-child { border-bottom: none; }
+        .eam-todo-count {
+            min-width: 38px; text-align: right;
+            font-size: 18px; font-weight: 700;
+        }
+        .eam-todo-text { flex: 1; }
+        .eam-todo-sub { font-size: 11.5px; color: var(--muted); }
+        &.is-bad  .eam-todo-count { color: var(--bad); }
+        &.is-warn .eam-todo-count { color: #a9791a; }
+        &.is-good .eam-todo-count { color: var(--good); }
+        &.is-zero .eam-todo-count { color: var(--muted); font-weight: 600; }
+    }
+}

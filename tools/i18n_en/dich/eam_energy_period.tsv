@@ -1,0 +1,46 @@
+1272	Search
+1273	Period type
+1274	From
+1275	P50 met
+1276	P75 met
+1277	P90 met
+1278	Days complete
+1279	Below P90
+1280	Total P50
+1281	Total lost
+1282	To
+1283	Lost (kWh)
+1284	Has a target
+1285	Units — %s
+1286	Level reached
+1287	This period is short of
+1288	Days WITH a figure
+1289	Days missing
+1290	days of data.
+1291	Total revenue
+1292	Total energy
+1293	Against target
+1294	Days in the period
+1295	Same period last year
+1296	Plant energy
+1297	Energy by period
+1298	Installed capacity (kW)
+1299	Year to date
+1300	Achieved against P50 (%)
+1301	Capacity factor (%)
+1302	Why it is not yet comparable
+1303	View this period's unit table
+1304	Energy availability (%)
+1305	EAMOne: build the energy periods
+1306	no target declared for %s
+1307	<b>Not yet comparable with the target:</b>
+1308	No day has a figure\n            yet
+1309	This plant already has a row for that period.
+1310	A readable label: 2026-W42, 10/2026, 2026.
+1311	The HIGHEST level exceeded. "Below P90" is a signal worth alarm, not a display fault.
+1312	Days with no row at all in the unit table. The running total does NOT add them as 0 — but the figure is therefore lower than reality, and this is how much lower.
+1313	.\n                        Left empty rather than written as 0% — "0% of plan\n                        achieved" and "nobody has declared a plan" are two quite\n                        different things.
+1314	The system does NOT add the missing days as 0,\n                        so the figure below is <b>lower than reality</b> — do not\n                        compare it with a complete period without allowing for\n                        this.
+1315	This screen opens as a <b>pivot</b>. Change the time granularity by\n            clicking the <b>column header</b> and choosing Day / Week / Month /\n            Quarter / Year — not by hunting for a filter.
+1316	Taking <b>Plant</b> out of the rows <b>adds the plants\n            together</b>; leaving it in <b>sets them side by side</b>. For a\n            running total from the start of the year turn on <b>Year to date</b>,\n            and add <b>Same period last year</b> to compare two years.
+1317	Only the figures that <b>can be added</b> are here — energy, energy\n            lost, revenue. Capacity factor, availability % and the level achieved\n            against P50 are <b>ratios</b>, wrong to add and wrong to average, so\n            they live on the <i>Availability by day</i> and <i>Energy target</i>\n            screens.

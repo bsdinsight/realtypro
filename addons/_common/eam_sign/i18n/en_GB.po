@@ -17,9 +17,130 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid ""
+"%)\n"
+"                                    chưa quy trách nhiệm."
+msgstr ""
+"%)\n"
+"                                    with no responsibility attributed."
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "(ký, ghi rõ họ tên)"
+msgstr "(sign and print the name)"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "(kỳ chấm điểm, không tính phí)"
+msgstr "(assessment period, no fee charged)"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "1. Kết quả từng cam kết"
+msgstr "1. Result of each commitment"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "2. Thanh toán theo nhà máy"
+msgstr "2. Payment by plant"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid ""
+"<b>BẢN NHÁP — kỳ chưa chốt.</b> Mức cam kết,\n"
+"                            số đo được và phí còn đổi được. Không dùng\n"
+"                            tờ này làm căn cứ thanh toán."
+msgstr ""
+"<b>DRAFT — the period is not closed.</b> The committed\n"
+"                            levels, the measured figures and the fee can still\n"
+"                            change. Do not use this sheet as a basis for payment."
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Chu kỳ</b>"
+msgstr "<b>Cycle</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid ""
+"<b>Còn cảnh báo chất lượng số liệu.</b> Có\n"
+"                            dòng chưa đo được, hoặc giờ dừng chưa quy\n"
+"                            trách nhiệm vượt ngưỡng — con số khả dụng có\n"
+"                            thể đang đẹp vì chưa ai phân loại."
+msgstr ""
+"<b>A data quality warning remains.</b> Some rows could\n"
+"                            not be measured, or the unattributed downtime hours\n"
+"                            exceed the threshold — the availability figure may be\n"
+"                            flattering because nobody has classified them."
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Ghi chú giờ chưa quy trách nhiệm:</b>"
+msgstr "<b>Note on hours with no responsibility attributed:</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Ghi chú:</b>"
+msgstr "<b>Notes:</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Hợp đồng</b>"
+msgstr "<b>Contract</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Nhà thầu O&amp;M</b>"
+msgstr "<b>O&amp;M contractor</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>Đo lúc</b>"
+msgstr "<b>Measured at</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>ĐẠI DIỆN CHỦ ĐẦU TƯ</b>"
+msgstr "<b>FOR THE OWNER</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "<b>ĐẠI DIỆN NHÀ THẦU O&amp;M</b>"
+msgstr "<b>FOR THE O&amp;M CONTRACTOR</b>"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "BIÊN BẢN XÁC NHẬN KPI/SLA"
+msgstr "KPI/SLA CONFIRMATION CERTIFICATE"
+
+#. module: eam_sign
+#: model:ir.actions.report,name:eam_sign.action_in_bien_ban_kpi
+msgid "Biên bản xác nhận KPI/SLA"
+msgstr "KPI/SLA confirmation certificate"
+
+#. module: eam_sign
 #: model:ir.model,name:eam_sign.model_eam_daily_report
 msgid "Báo cáo vận hành ngày"
 msgstr "Daily operations report"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__approval_rule_ids
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__approval_rule_ids
+msgid "Bước duyệt áp dụng"
+msgstr "Approval step that applies"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__ca_signature_ids
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__ca_signature_ids
+msgid "Bản PDF đã ký số"
+msgstr "Digitally signed PDF"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_eam_om_period_form_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_report_form_sign
+msgid "Bản đã ký số ("
+msgstr "Signed copies ("
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
@@ -27,14 +148,92 @@ msgid "Cam kết"
 msgstr "Commitment"
 
 #. module: eam_sign
+#: code:addons/eam_sign/models/eam_daily_report.py:0
+msgid "Chỉ ký số được bản ĐÃ CHỐT. Bản này đang ở trạng thái \"%s\" — số còn rót lại được, ký bây giờ là đóng dấu vào con số sẽ đổi."
+msgstr "Only a CLOSED revision can be digitally signed. This one is at \"%s\" — the figures can still be refilled, and signing now stamps a figure that will change."
+
+#. module: eam_sign
+#: code:addons/eam_sign/models/eam_om_period.py:0
+msgid "Chỉ ký được kỳ ĐÃ CHỐT. Kỳ này đang ở \"%s\" — mức cam kết và phí chưa đóng băng, đo lại một lượt là số đổi."
+msgstr "Only a CLOSED period can be signed. This one is at \"%s\" — the committed levels and the fee are not frozen, and one more measurement run changes the figures."
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__signature_ids
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__signature_ids
+msgid "Chữ ký"
+msgstr "Signature"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__approval_missing
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__approval_missing
+msgid "Còn thiếu chữ ký"
+msgstr "Signatures still missing"
+
+#. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "Cơ sở đo"
 msgstr "Measurement basis"
 
 #. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__sign_warning
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__sign_warning
+msgid "Cảnh báo chữ ký"
+msgstr "Signature warning"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Cộng"
+msgstr "Total"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "KHÔNG ĐẠT"
+msgstr "FAIL"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_report_form_sign
+msgid "Ký số"
+msgstr "Digital signature"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_eam_om_period_form_sign
+msgid "Ký số biên bản"
+msgstr "Digitally sign the certificate"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_eam_om_period_form_sign
+msgid "Ký số lên biên bản xác nhận KPI/SLA của kỳ này. Đây là chứng từ làm căn cứ thanh toán và phạt."
+msgstr "Digitally sign this period's KPI/SLA confirmation certificate. This is the document that payment and penalties rest on."
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.view_report_form_sign
+msgid "Ký số lên bản PDF của báo cáo này. Người ký xác nhận trên ứng dụng của nhà cung cấp chứng thực nếu đang dùng ký số từ xa."
+msgstr "Digitally sign the PDF of this report. The signer confirms it in the certification provider's app if remote signing is in use."
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Kết luận"
+msgstr "Conclusion"
+
+#. module: eam_sign
+#: model:ir.ui.menu,name:eam_sign.menu_eam_ca_provider
+msgid "Kết nối ký số"
+msgstr "Digital signing connection"
+
+#. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "Kỳ"
 msgstr "Period"
+
+#. module: eam_sign
+#: code:addons/eam_sign/models/eam_om_period.py:0
+msgid "Kỳ này còn cảnh báo nên chưa nên ký: có dòng chưa đo được, hoặc giờ dừng chưa quy trách nhiệm vượt ngưỡng. Con số khả dụng có thể đang đẹp vì chưa ai phân loại — phân loại xong, đo lại, chốt lại rồi hãy ký."
+msgstr "This period still has a warning, so it should not be signed yet: some rows could not be measured, or the unattributed downtime hours exceed the threshold. The availability figure may be flattering simply because nobody has classified them — classify them, measure again, close again, and only then sign."
+
+#. module: eam_sign
+#: model:ir.model,name:eam_sign.model_eam_om_period
+msgid "Kỳ đánh giá hợp đồng O&M"
+msgstr "O&M contract assessment period"
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
@@ -62,12 +261,65 @@ msgid "Phải trả"
 msgstr "Payable"
 
 #. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__ca_sign_count
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__ca_sign_count
+msgid "Số bản ký số"
+msgstr "Digitally signed copies"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__sign_count
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__sign_count
+msgid "Số chữ ký"
+msgstr "Signatures"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Thiếu hụt"
+msgstr "Shortfall"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__sign_state
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__sign_state
+msgid "Tình trạng ký"
+msgstr "Signature status"
+
+#. module: eam_sign
+#: code:addons/eam_sign/models/eam_om_period.py:0
+msgid "Xác nhận KPI/SLA kỳ %(a)s → %(b)s"
+msgstr "Confirming KPI/SLA for the period %(a)s → %(b)s"
+
+#. module: eam_sign
+#: code:addons/eam_sign/models/eam_daily_report.py:0
+msgid "Xác nhận báo cáo vận hành ngày %s"
+msgstr "Confirming the daily operations report for %s"
+
+#. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "chưa đo được"
 msgstr "not measured"
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid ""
+"giờ\n"
+"                                    ("
+msgstr ""
+"hours\n"
+"                                    ("
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "Đo được"
 msgstr "Measured"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "ĐẠT"
+msgstr "PASS"
+
+#. module: eam_sign
+#: model:ir.model.fields,field_description:eam_sign.field_eam_daily_report__approval_ok
+#: model:ir.model.fields,field_description:eam_sign.field_eam_om_period__approval_ok
+msgid "Đủ chữ ký theo luật"
+msgstr "Fully signed as required"
 

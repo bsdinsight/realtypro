@@ -1,0 +1,34 @@
+2354	location
+2355	Reissue the code
+2356	QR image
+2357	Scan code
+2358	equipment
+2359	Blank label
+2360	NO CODE ISSUED
+2361	Issue a scan code
+2362	Location QR label
+2363	Back to the main page
+2364	Scan URL
+2365	Equipment QR label
+2366	The location is empty
+2367	Label not found
+2368	The code is malformed
+2369	Field scan labels
+2370	The label carries no code.
+2371	The URL carries no code.
+2372	The location scan code must be unique.
+2373	The equipment scan code must be unique.
+2374	No equipment carries the code "%s".
+2375	Reissuing the code KILLS every label already stuck on this equipment — they have to be reprinted and refitted.
+2376	The code has to start with "L" (a location label) or "A" (an equipment label). Received: %s
+2377	A scan code has to start with "L" (a location label) or "A" (an equipment label). Received: %s
+2378	The scan code has been reissued. Old labels out in the field no longer open anything — they have to be reprinted and refitted.
+2379	An EQUIPMENT label (a code starting with A): stuck on the\n                    equipment itself and travelling with it. Different from a\n                    location label.
+2380	This is the label of location %(ma)s — %(ten)s. No equipment is installed there today, so no equipment record can be opened.
+2381	No location carries the code "%s". The label may have been reissued — do not record readings against another record; tell the asset manager.
+2382	Reissuing the code KILLS every label out in the field for this location — they have to be reprinted and refitted. Only do it when a label has been copied or stuck in the wrong place.
+2383	The code printed on the QR label out in the field. Random, with a prefix by type — not a sequence number, so that nobody can work out how much equipment the plant has.
+2384	A LOCATION label (a code starting with L): scanning it gives\n                    the equipment installed here <b>today</b>. Replacing the\n                    equipment needs no new label.
+2385	No %(loai)s carries the code "%(ma)s". The label may have been reissued, or the record deleted. Do not record readings against another record — tell the asset manager to print a new label.
+2386	An <b>equipment</b> label: stuck on the equipment\n                            itself and travelling with it. Different from a\n                            location label, which is fixed to the tower and goes\n                            nowhere.
+2387	A <b>location</b> label: scanning it gives the\n                            equipment installed here <b>today</b>, looked up\n                            through the installation history. Replacing the\n                            equipment needs no new label.

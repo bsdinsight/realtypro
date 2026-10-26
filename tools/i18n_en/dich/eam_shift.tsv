@@ -1,0 +1,86 @@
+2388	Urgent
+2389	Open the shift
+2390	Passed along
+2391	Still open
+2392	Severity
+2393	Normal
+2394	Shift name
+2395	Shift
+2396	Handed over at
+2397	Taken over at
+2398	In progress
+2399	Needs attention
+2400	Length (hours)
+2401	Handover
+2402	Shift supervisor
+2403	On duty
+2404	Sign for the shift
+2405	Duty operator
+2406	Work still open
+2407	Declare a shift pattern
+2408	Shift pattern
+2409	Work still open
+2410	Being passed along
+2411	Handed over
+2412	Clean handover
+2413	Start (hour)
+2414	Handed over by
+2415	Taken over by
+2416	Per the plan
+2417	Work during the shift
+2418	Carried over from
+2419	No shift yet
+2420	Work is being passed along
+2421	Work & notes
+2422	Work / note
+2423	Work carried over
+2424	Rolled over (shifts)
+2425	Shift %s is already open.
+2426	Repair history
+2427	Units currently down
+2428	Original entry — shift %s
+2429	Shifts & handover
+2430	What is being handed over
+2431	State at the start of the shift
+2432	Work rolling across several shifts
+2433	Location / equipment
+2434	ONE-WAY handover
+2435	One-way handover
+2436	Carried over from the previous shift
+2437	Arose during the shift
+2438	Waiting on someone outside
+2439	Handover quality
+2440	Being passed along (≥3 shifts)
+2441	Work is rolling across several shifts
+2442	Crosses midnight
+2443	Shift %s has not been handed over.
+2444	Go back to the original entry
+2445	Work history — %s
+2446	Work / notes during the shift
+2447	Nothing is being passed along
+2448	Work passed along across several shifts
+2449	The handover in words.
+2450	Equipment state when the shift opened
+2451	Shift %s is not open, so it cannot be handed over.
+2452	Plant "%s" has no shift pattern declared.
+2453	The plant already has this shift on that day.
+2454	ONE-WAY handover — nobody has signed for it
+2455	The shift code must be unique within one plant.
+2456	Shift "%s" is %s hours long — it has to lie between 0 and 24.
+2457	The hour of the day: 6.0 is 06:00, 14.5 is 14:30.
+2458	<i class="fa fa-repeat me-1"/>\n                        Yes
+2459	A night shift starts at 22:00 and ends at 06:00 the next day. Forget that and the night shift comes out minus sixteen hours long.
+2460	Counted back along the chain of handovers. Three shifts or more means work being passed along, not work that is hard.
+2461	Work carried over three shifts or more. Work that has rolled five shifts is being passed along, not hard.
+2462	Work still open is carried into the next shift with a trail. Where there is no next shift yet, the system writes a warning into the log.
+2463	%d items are unfinished with NO next shift to carry them into. Create the next shift and open it, otherwise nobody takes these on.
+2464	Work carried over <b>three shifts or more</b> and still unfinished.\n            Rolling five shifts does not mean it is hard — it means nobody is taking it on.
+2465	It may be left empty. Plenty of things need handing over before they become work orders — insisting on an order first is exactly how they disappear.
+2466	items have rolled over <b>three shifts or\n                        more</b>. Work that rolls five shifts is not hard — it is\n                        being passed along.
+2467	Handed over but nobody has signed for it. It does not block operations — blocking it makes people sign for each other and the signature stops meaning anything — but it has to be visible, because this is the classic excuse when there is a dispute.
+2468	Declare the <b>shift pattern</b> first, then generate shifts for a range\n            of days. Opening a shift makes the system capture the plant's state and\n            pull the previous shift's unfinished work across — <b>nothing falls\n            between two shifts</b>.
+2469	Three eight-hour shifts, for example: 06:00, 14:00, 22:00. A shift\n            starting at 22:00 ends at 06:00 the next day — the <b>Crosses\n            midnight</b> column turns itself on so that nobody computes a night\n            shift as minus sixteen hours long.
+2470	Ordered by severity: nobody having signed for it is the worst, because in a dispute there is no one who took the shift on. Work rolling across several shifts outranks work still open: still open is normal at the end of a shift, rolling three shifts means it is being passed along.
+2471	Record even the things that are <b>not yet work\n                                orders</b>: a word of advice, something spotted at\n                                the end of the shift, something waiting on a\n                                contractor's answer. Insisting on an order before\n                                anything may be recorded is exactly how they\n                                disappear.
+2472	<i class="fa fa-exclamation-triangle me-1"/>\n                        <b>One-way handover</b> — handed over but nobody has\n                        signed for it. It does not block operations, but this is\n                        precisely the classic excuse in a dispute: <i>"that was\n                        never handed over to me"</i>.
+2473	This is a <b>snapshot taken when the shift\n                                opened</b>; it is not recomputed when it is\n                                opened again later. The point is to record\n                                <i>what the person coming on shift saw</i> —\n                                recompute it and six months later it shows today's\n                                state, and the record loses all its value.

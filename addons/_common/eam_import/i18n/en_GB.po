@@ -143,6 +143,11 @@ msgid "Bậc %s"
 msgstr "Stage %s"
 
 #. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Bậc đo"
+msgstr "Metering stage"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__bat_buoc
 msgid "Bắt buộc"
 msgstr "Mandatory"
@@ -333,6 +338,11 @@ msgstr "Mapping line of the import template"
 #: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__dich__kpi
 msgid "Hiệu suất ngày (PR/PA)"
 msgstr "Daily performance (PR/PA)"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__nguon_so__cong_to
+msgid "Hiệu số đọc công-tơ"
+msgstr "Difference between meter readings"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__kieu
@@ -543,6 +553,11 @@ msgid "Nguồn con số"
 msgstr "Where the figure comes from"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ngay
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_import
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Ngày báo cáo"
 msgstr "Report date"
@@ -583,6 +598,11 @@ msgstr "Multiply the raw value by this. If the report is in MWh while our table 
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__name
 msgid "Nhãn trong tệp"
 msgstr "Label in the file"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__nguon_so__tay
+msgid "Nhập tay"
+msgstr "Entered by hand"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__log_ids
@@ -693,6 +713,11 @@ msgid "Tên tệp"
 msgstr "File name"
 
 #. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__nguon_so__scada
+msgid "Tích phân từ SCADA"
+msgstr "Integrated from SCADA"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__file
 msgid "Tệp"
 msgstr "File"
@@ -706,6 +731,11 @@ msgstr "Form sheet — labels and figures sit in fixed cells"
 #: model:ir.model.fields,help:eam_import.field_eam_import_map__o
 msgid "Tờ biểu: địa chỉ ô, ví dụ B20. Với dải giờ thì khai vùng một dòng, ví dụ D40:P40 — và ô Vùng giá trị bên cạnh."
 msgstr "Form sheet: a cell address, for example B20. For an hourly range, declare a single-row range such as D40:P40 — with the Value range field beside it."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__ngay_dau
+msgid "Từ ngày"
+msgstr "From"
 
 #. module: eam_import
 #: model:ir.model.fields,help:eam_import.field_eam_import_template__o_ngay
@@ -905,6 +935,11 @@ msgid "Đích"
 msgstr "Target"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__ngay_cuoi
+msgid "Đến ngày"
+msgstr "To"
+
+#. module: eam_import
 #: model:ir.model.fields,help:eam_import.field_eam_import_template__plant_id
 msgid "Để trống thì mỗi lượt nạp phải chọn nhà máy. Khai sẵn khi mẫu này chỉ dùng cho một nhà máy."
 msgstr "Leave it empty and every run has to choose a plant. Fill it in when the template serves only one plant."
@@ -963,4 +998,14 @@ msgstr "the target is numeric but the cell holds \"%s\""
 #: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
 msgid "để trống = đọc mọi sheet"
 msgstr "empty = read every sheet"
+
+#. module: eam_import
+#: model:ir.ui.menu,name:eam_import.menu_eam_import_run
+msgid "Nạp dữ liệu vận hành"
+msgstr "Operational data import"
+
+#. module: eam_import
+#: model:ir.ui.menu,name:eam_import.menu_eam_import_template
+msgid "Mẫu nạp dữ liệu"
+msgstr "Import templates"
 

@@ -18,13 +18,185 @@ msgstr ""
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+",\n"
+"                        không dùng để kết luận."
+msgstr ""
+",\n"
+"                        not for drawing conclusions."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+",\n"
+"                    hoặc nhà máy đó chưa có vị trí nào được khai toạ độ.\n"
+"                    Hệ thống"
+msgstr ""
+",\n"
+"                    or that plant has no location with coordinates declared.\n"
+"                    The system"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+", không về 100%: ngày lặng gió cả trại\n"
+"                        dưới 10%, tô theo 100% thì mười hai chấm đỏ như\n"
+"                        nhau và không còn phân biệt được máy nào kém."
+msgstr ""
+", not to 100%: on a windless day the whole site is\n"
+"                        below 10%, and scaled to 100% the twelve dots are all\n"
+"                        equally red with no telling which machine is the poor one."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "1 tháng"
+msgstr "1 month"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "12 tháng"
+msgstr "12 months"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "3 tháng"
+msgstr "3 months"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "5 năm"
+msgstr "5 years"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+": dòng khí\n"
+"                        có hướng, thực tế cần giãn 7–10D xuôi gió nhưng chỉ\n"
+"                        3–5D ngang gió. Không có hoa gió thì không tính đúng\n"
+"                        được — con số này dùng để"
+msgstr ""
+": a wake\n"
+"                        has a direction — in practice 7–10D is needed downwind but\n"
+"                        only 3–5D crosswind. Without a wind rose it cannot be\n"
+"                        computed properly, so this figure is there to"
+
+#. module: eam_map
+#: model:ir.actions.client,name:eam_map.action_eam_plant_map
+#: model:ir.ui.menu,name:eam_map.menu_eam_plant_map
+msgid "Bản đồ hiện trường"
+msgstr "Field map"
+
+#. module: eam_map
+#: code:addons/eam_map/models/eam_location.py:0
+msgid "Bản đồ — %s"
+msgstr "Map — %s"
+
+#. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__elevation_m
+msgid "Cao độ (m)"
+msgstr "Elevation (m)"
+
+#. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__hub_height_m
+msgid "Cao độ trục (m)"
+msgstr "Hub height (m)"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Chưa so được với kế hoạch:"
+msgstr "Not yet comparable with the plan:"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"Các ô sản lượng\n"
+"                        để trống chứ không hiện 0 — chưa có số khác với\n"
+"                        bằng không."
+msgstr ""
+"The energy cells are left\n"
+"                        empty rather than showing 0 — no figure is not the\n"
+"                        same as zero."
+
+#. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__has_coords
+#: model_terms:ir.ui.view,arch_db:eam_map.view_eam_location_list_map
+msgid "Có toạ độ"
+msgstr "Has coordinates"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Công suất SẴN SÀNG"
+msgstr "AVAILABLE capacity"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Công suất TRUNG BÌNH ngày"
+msgstr "MEAN power for the day"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Công suất đặt"
+msgstr "Installed capacity"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Cặp quá gần nhau"
+msgstr "Pairs too close together"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Cỡ điểm theo sản lượng MẤT"
+msgstr "Dot size by energy LOST"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Cửa sổ thống kê"
+msgstr "Statistics window"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Danh sách"
+msgstr "List"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Doanh thu tổn thất"
+msgstr "Lost revenue"
+
+#. module: eam_map
+#: model:ir.model.fields,help:eam_map.field_eam_location__rotor_diameter_m
+msgid "Dùng để vẽ vòng ảnh hưởng dòng khí. Khoảng cách giữa hai tua-bin tính theo BỘI SỐ của con số này, không tính theo mét tuyệt đối."
+msgstr "Used to draw the wake influence ring. The distance between two turbines is measured as a MULTIPLE of this figure, not in absolute metres."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Hệ số công suất"
 msgstr "Capacity factor"
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Khoảng dừng"
+msgstr "Outage"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/js/eam_map.js:0
+msgid "Khoảng dừng — %s"
+msgstr "Outages — %s"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Không tìm thấy nhà máy"
+msgstr "Plant not found"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Khả dụng"
 msgstr "Availability"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Khả dụng bình quân"
+msgstr "Mean availability"
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
@@ -37,9 +209,94 @@ msgid "Khả dụng — phạm vi hợp đồng"
 msgstr "Availability — contract scope"
 
 #. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__longitude
+msgid "Kinh độ"
+msgstr "Longitude"
+
+#. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Lệnh công việc"
 msgstr "Work order"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/js/eam_map.js:0
+msgid "Lệnh công việc — %s"
+msgstr "Work orders — %s"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Lệnh đang chờ"
+msgstr "Orders on hold"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Lệnh đang mở"
+msgstr "Open orders"
+
+#. module: eam_map
+#: model:ir.model.fields,help:eam_map.field_eam_location__has_coords
+msgid "Lọc nhanh các vị trí chưa cắm được lên bản đồ."
+msgstr "Quickly filter the locations that could not be placed on the map."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Lớp hiển thị"
+msgstr "Layers"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Mất trong tháng"
+msgstr "Lost during the month"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Mốc xem"
+msgstr "Viewing date"
+
+#. module: eam_map
+#: model_terms:ir.ui.view,arch_db:eam_map.view_eam_location_form_map
+msgid "Mở bản đồ"
+msgstr "Open the map"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Mở hồ sơ vị trí"
+msgstr "Open the location record"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Ngày đang xem chưa có số."
+msgstr "The date being viewed has no figures."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Nhãn mã vị trí"
+msgstr "Location code labels"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Nối cặp quá gần"
+msgstr "Link pairs that are too close"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Quá gần máy khác"
+msgstr "Too close to another machine"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Sản lượng"
+msgstr "Energy"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Sản lượng mất"
+msgstr "Energy lost"
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
@@ -48,11 +305,215 @@ msgstr "Locations"
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Sổ dừng máy có dữ liệu từ"
+msgstr "The outage log has data from"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Thang tô chuẩn hoá về"
+msgstr "The colour scale is normalised to"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Tháng này còn"
+msgstr "Left this month"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Tiến độ dựng máy"
+msgstr "Erection progress"
+
+#. module: eam_map
+#: model_terms:ir.ui.view,arch_db:eam_map.view_eam_location_form_map
+msgid "Toạ độ và thông số hiện trường"
+msgstr "Coordinates and site parameters"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Trạng thái"
 msgstr "State"
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Tô màu theo"
+msgstr "Colour by"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Tại mốc này"
+msgstr "On this date"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Vòng giãn cách"
+msgstr "Spacing ring"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Vòng giãn cách là"
+msgstr "The spacing ring is"
+
+#. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__latitude
+msgid "Vĩ độ"
+msgstr "Latitude"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Vị trí"
 msgstr "Location"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Vị trí thiếu toạ độ"
+msgstr "Locations missing coordinates"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Xem lúc đang vận hành"
+msgstr "View it while operating"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "chưa có số của ngày đang xem"
+msgstr "there is no figure for the date being viewed"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "chưa có sổ dựng máy"
+msgstr "there is no erection register yet"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "chưa lắp máy nào"
+msgstr "no machine installed yet"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "không tự chuyển sang nhà máy khác"
+msgstr "does not switch to another plant by itself"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"mức cao nhất trong\n"
+"                        ngày"
+msgstr ""
+"the highest level during the\n"
+"                        day"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "ngày chưa có dữ liệu"
+msgstr "days have no data"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "phép đơn giản hoá"
+msgstr "a simplification"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "soi chỗ đáng ngờ"
+msgstr "points at what looks doubtful"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "vị trí)"
+msgstr "locations)"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Đang nạp…"
+msgstr "Loading…"
+
+#. module: eam_map
+#: model:ir.model.fields,field_description:eam_map.field_eam_location__rotor_diameter_m
+msgid "Đường kính rô-to (m)"
+msgstr "Rotor diameter (m)"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Đạt so với P50"
+msgstr "Achieved against P50"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Địa hình"
+msgstr "Terrain"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "đến"
+msgstr "to"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"để\n"
+"                        xám. Một bản đồ xanh rờn trong ngày chưa có số\n"
+"                        nào là bản đồ đang nói dối."
+msgstr ""
+"grey. A map glowing green on a day with no\n"
+"                        figures at all is a map that is lying."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"để xám, không tô\n"
+"                        đỏ — chưa khai khác với chưa làm, tô đỏ sẽ biến\n"
+"                        một lỗ hổng dữ liệu thành báo động giả."
+msgstr ""
+"grey rather than red — not\n"
+"                        declared is not the same as not done, and colouring it\n"
+"                        red turns a hole in the data into a false alarm."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Ảnh vệ tinh"
+msgstr "Satellite imagery"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"—\n"
+"                    hỏi nhà máy này mà nhận số của nhà máy kia là loại sai\n"
+"                    không nhìn ra được."
+msgstr ""
+"—\n"
+"                    asking about this plant and receiving another plant's figures\n"
+"                    is the kind of mistake nobody can see."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"— con số trên NHỎ HƠN\n"
+"                            thật, và tỷ lệ đạt kế hoạch cũng vậy."
+msgstr ""
+"— the figure above is LOWER than\n"
+"                            reality, and so is the percentage against plan."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid ""
+"— nhà máy còn\n"
+"                        đang xây."
+msgstr ""
+"— the plant is still\n"
+"                        under construction."
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "— trong đó đang chờ"
+msgstr "— of which on hold"
+
+#. module: eam_map
+#: model:ir.ui.menu,name:eam_map.menu_eam_plant_map
+msgid "Bản đồ hiện trường"
+msgstr "Field map"
 

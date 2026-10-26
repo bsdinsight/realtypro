@@ -18,6 +18,82 @@ msgstr ""
 
 #. module: eam_target
 #: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
+msgid ""
+"<b>P50 ≥ P75 ≥ P90.</b> Càng chắc chắn đạt thì con\n"
+"                        số càng thấp — P90 là mức vượt qua 90% số năm, và\n"
+"                        là mức <b>ngân hàng</b> dùng để tính khả năng trả\n"
+"                        nợ. Khai ngược chiều thì mọi phân tích rủi ro sau\n"
+"                        đó lộn ngược mà vẫn chạy trơn tru, nên hệ chặn\n"
+"                        ngay lúc lưu."
+msgstr ""
+"<b>P50 ≥ P75 ≥ P90.</b> The more certain it is to be\n"
+"                        achieved, the lower the figure — P90 is the level\n"
+"                        exceeded in 90% of years, and it is the level a\n"
+"                        <b>bank</b> uses to assess debt service. Declared the\n"
+"                        other way round, every subsequent risk analysis is\n"
+"                        inverted while still running perfectly smoothly, so the\n"
+"                        system blocks it at save time."
+
+#. module: eam_target
+#: model_terms:ir.actions.act_window,help:eam_target.action_target
+msgid ""
+"<b>P50</b> là kỳ vọng, dùng lập kế hoạch. <b>P90</b> là mức\n"
+"            ngân hàng dùng tính khả năng trả nợ. Khai một mức rồi gọi nó\n"
+"            là \"kế hoạch\" thì mọi câu hỏi về rủi ro sản lượng đều mất chỗ\n"
+"            trả lời."
+msgstr ""
+"<b>P50</b> is the expectation, used for planning. <b>P90</b> is the\n"
+"            level a bank uses to assess debt service. Declare one level and call\n"
+"            it \"the plan\" and every question about energy risk loses its place to\n"
+"            be answered."
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
+msgid "Ba mức xác suất"
+msgstr "Three probability levels"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
+msgid "Báo cáo mô phỏng gió WAsP 2025 · Phụ lục 3 HĐ vay…"
+msgstr "WAsP wind simulation report 2025 · Annex 3 of the loan agreement…"
+
+#. module: eam_target
+#: model:ir.model.fields,help:eam_target.field_eam_energy_target__nguon
+msgid "Báo cáo mô phỏng gió/bức xạ, phụ lục hợp đồng vay, hay kế hoạch nội bộ — ghi rõ. Ba năm sau khi con số bị chất vấn, đây là thứ duy nhất trả lời được nó từ đâu ra."
+msgstr "A wind or irradiance simulation report, an annex to the loan agreement, or an internal plan — say which. Three years on, when the figure is challenged, this is the only thing that can answer where it came from."
+
+#. module: eam_target
+#: model:ir.model.fields.selection,name:eam_target.selection__eam_energy_target__cach_rai__deu
+msgid "Chia đều theo ngày"
+msgstr "Spread evenly across the days"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_search
+msgid "Chưa khai P90"
+msgstr "No P90 declared"
+
+#. module: eam_target
+#: model_terms:ir.actions.act_window,help:eam_target.action_target
+msgid "Chưa khai mục tiêu nào"
+msgstr "No target declared yet"
+
+#. module: eam_target
+#: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__ghi_chu
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_search
+msgid "Không rải theo ngày"
+msgstr "Not spread across the days"
+
+#. module: eam_target
+#: model:ir.model.fields.selection,name:eam_target.selection__eam_energy_target__cach_rai__khong
+msgid "Không rải — chỉ so cả tháng"
+msgstr "Not spread — compared for the whole month only"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
 msgid "Kỳ"
 msgstr "Period"
 
@@ -25,6 +101,11 @@ msgstr "Period"
 #: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__nguon
 msgid "Lấy từ đâu"
 msgstr "Taken from"
+
+#. module: eam_target
+#: model:ir.model.fields,help:eam_target.field_eam_energy_target__cach_rai
+msgid "Mục tiêu khai theo THÁNG. Chia đều là một phép xấp xỉ: gió không thổi đều suốt tháng. Chọn \"không rải\" nếu chỉ muốn đối chiếu vào cuối tháng."
+msgstr "The target is declared by MONTH. Spreading it evenly is an approximation: the wind does not blow evenly all month. Choose \"not spread\" to compare only at the end of the month."
 
 #. module: eam_target
 #: model:ir.actions.act_window,name:eam_target.action_target
@@ -35,10 +116,30 @@ msgid "Mục tiêu sản lượng"
 msgstr "Energy target"
 
 #. module: eam_target
+#: model:ir.model,name:eam_target.model_eam_energy_target
+msgid "Mục tiêu sản lượng theo tháng"
+msgstr "Monthly energy target"
+
+#. module: eam_target
 #: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__plant_id
 #: model_terms:ir.ui.view,arch_db:eam_target.view_target_search
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_target
+#: model:ir.model.constraint,message:eam_target.constraint_eam_energy_target_uniq
+msgid "Nhà máy này đã có mục tiêu cho tháng đó rồi."
+msgstr "This plant already has a target for that month."
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
+msgid "Nhân bản %(a)d dòng sang năm sau. Nhớ soi lại: mục tiêu năm mới hiếm khi bằng y năm cũ."
+msgstr "Duplicated %(a)d rows into next year. Remember to review them: a new year's target is rarely identical to the old one."
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
+msgid "Nhân bản sang năm sau"
+msgstr "Duplicate into next year"
 
 #. module: eam_target
 #: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__nam
@@ -48,6 +149,82 @@ msgstr "Year"
 
 #. module: eam_target
 #: code:addons/eam_target/models/eam_energy_target.py:0
+msgid "Năm phải là bốn chữ số, đang khai \"%s\"."
+msgstr "The year has to be four digits; it is \"%s\"."
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
+msgid ""
+"Phải có P50 ≥ P75 ≥ P90. Đang khai %(ds)s.\n"
+"\n"
+"P90 là mức vượt qua 90%% số năm nên nó là con số THẤP NHẤT — ngân hàng dùng đúng mức ấy vì cần gần như chắc chắn đạt. Khai ngược chiều thì mọi phân tích rủi ro sau đó lộn ngược mà vẫn chạy trơn tru."
+msgstr ""
+"It must hold that P50 ≥ P75 ≥ P90. The declared figures are %(ds)s.\n"
+"\n"
+"P90 is the level exceeded in 90%% of years, so it is the LOWEST figure — a bank uses exactly that level because it needs near certainty. Declared the other way round, every subsequent risk analysis is inverted while still running perfectly smoothly."
+
+#. module: eam_target
+#: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__cach_rai
+msgid "Rải theo ngày"
+msgstr "Spread across the days"
+
+#. module: eam_target
+#: model_terms:ir.actions.act_window,help:eam_target.action_target
+msgid ""
+"Sản lượng không phải một con số mà là một <b>phân phối</b>:\n"
+"            gió năm nay mạnh hơn năm ngoái thì sản lượng khác, và không ai\n"
+"            điều khiển được chuyện đó."
+msgstr ""
+"Energy is not a single number but a <b>distribution</b>: a windier\n"
+"            year than the last gives different energy, and nobody controls that."
+
+#. module: eam_target
+#: model:ir.model.fields,field_description:eam_target.field_eam_energy_target__thang
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
+msgid "Tháng phải từ 1 tới 12."
+msgstr "The month has to be between 1 and 12."
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_form
+msgid "Truy nguồn"
+msgstr "Source"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_search
+msgid "Tìm mục tiêu"
+msgstr "Search targets"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_list
+msgid "Tổng P50"
+msgstr "Total P50"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_list
+msgid "Tổng P75"
+msgstr "Total P75"
+
+#. module: eam_target
+#: model_terms:ir.ui.view,arch_db:eam_target.view_target_list
+msgid "Tổng P90"
+msgstr "Total P90"
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "chưa khai mục tiêu cho tháng %(t)02d/%(n)d của nhà máy này"
 msgstr "no target declared for %(t)02d/%(n)d at this plant"
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
+msgid "mục tiêu tháng này khai là KHÔNG rải theo ngày, nên chỉ đối chiếu vào ngày cuối tháng"
+msgstr "this month's target is declared as NOT spread across the days, so it is only compared on the last day of the month"
+
+#. module: eam_target
+#: code:addons/eam_target/models/eam_energy_target.py:0
+msgid "nhân bản từ năm %s"
+msgstr "duplicated from %s"
 

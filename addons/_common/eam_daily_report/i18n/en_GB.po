@@ -779,6 +779,15 @@ msgid "EAMOne: nhắc báo cáo ngày chưa chốt"
 msgstr "EAMOne: remind about unclosed daily reports"
 
 #. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__note
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__note
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ghi_chu_bc
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_daily_report
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
 msgid "Ghi chú — chỉ người trực biết"
 msgstr "Notes — only the duty operator knows"
@@ -1051,6 +1060,11 @@ msgid "Loại nhà máy"
 msgstr "Plant type"
 
 #. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Luỹ kế tháng (kWh)"
+msgstr "Month to date (kWh)"
+
+#. module: eam_daily_report
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ly_do_sua
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_revise_wizard__ly_do
 msgid "Lý do sửa"
@@ -1250,6 +1264,13 @@ msgid "Nguồn ghi bằng MWh mà tờ in bằng kWh thì để 1000. Đây là 
 msgstr "If the source records MWh while the sheet prints kWh, set 1000. This is the quietest mistake in any report."
 
 #. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__date
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__loai_ky__ngay
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_daily_report
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__nguoi_chot_id
 msgid "Người chốt"
@@ -1379,6 +1400,11 @@ msgid "Sinh từ bản %(n)d. Lý do: %(l)s"
 msgstr "Created from revision %(n)d. Reason: %(l)s"
 
 #. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__san_luong
+msgid "Sản lượng"
+msgstr "Energy"
+
+#. module: eam_daily_report
 #: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__ky
 msgid "Sản lượng / doanh thu theo kỳ"
 msgstr "Energy / revenue by period"
@@ -1387,6 +1413,11 @@ msgstr "Energy / revenue by period"
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__sl_ban
 msgid "Sản lượng bán (kWh)"
 msgstr "Energy sold (kWh)"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+msgid "Sản lượng mất (kWh)"
+msgstr "Energy lost (kWh)"
 
 #. module: eam_daily_report
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
@@ -1462,6 +1493,11 @@ msgstr "Superseded by revision %(n)d. Reason: %(l)s"
 #: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__tinh_trang_so__thieu_bb
 msgid "Thiếu ô BẮT BUỘC"
 msgstr "MANDATORY field missing"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__loai_ky__thang
+msgid "Tháng"
+msgstr "Month"
 
 #. module: eam_daily_report
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form

@@ -17,6 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_unit_day
+#: model:ir.model.fields.selection,name:eam_unit_day.selection__eam_unit_day__dai_kd__thap
+msgid "90% đến dưới 95%"
+msgstr "90% to under 95%"
+
+#. module: eam_unit_day
 #: model:ir.model.fields.selection,name:eam_unit_day.selection__eam_unit_day__dai_kd__kha
 msgid "95% đến dưới 99%"
 msgstr "95% to under 99%"
@@ -135,6 +140,17 @@ msgid "CỦA TA đo: sản lượng thực ÷ (thực + mất). Tính HẾT mọ
 msgstr "AS WE measure it: actual energy ÷ (actual + lost). It counts EVERY cause, because we really do lose the energy whoever is at fault."
 
 #. module: eam_unit_day
+#: model:ir.model.fields.selection,name:eam_unit_day.selection__eam_unit_day__dai_kd__rat_thap
+msgid "Dưới 90%"
+msgstr "Below 90%"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__dai_kd
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_search
+msgid "Dải khả dụng"
+msgstr "Availability band"
+
+#. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
 msgid "Dừng chưa quy kWh"
 msgstr "Downtime not valued in kWh"
@@ -143,6 +159,11 @@ msgstr "Downtime not valued in kWh"
 #: model:ir.actions.server,name:eam_unit_day.cron_dung_to_may_ir_actions_server
 msgid "EAMOne: dựng hiệu suất tổ máy của hôm qua"
 msgstr "EAMOne: build yesterday's unit performance"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__ghi_chu
+msgid "Ghi chú"
+msgstr "Note"
 
 #. module: eam_unit_day
 #: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__gio_danh_nghia
@@ -181,6 +202,11 @@ msgstr "The vendor deducts fewer causes than we do, so their column is usually h
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_form
 msgid "Hệ số công suất"
 msgstr "Capacity factor"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__he_so_cong_suat
+msgid "Hệ số công suất (%)"
+msgstr "Capacity factor (%)"
 
 #. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_graph
@@ -243,6 +269,11 @@ msgid "Khả dụng theo hãng (%)"
 msgstr "Vendor availability (%)"
 
 #. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__kd_san_luong
+msgid "Khả dụng theo sản lượng (%)"
+msgstr "Energy availability (%)"
+
+#. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_form
 msgid "Khả dụng — CỦA TA đo"
 msgstr "Availability — AS WE measure it"
@@ -261,6 +292,16 @@ msgstr "Matching (under 1 point)"
 #: model:ir.model.fields,help:eam_unit_day.field_eam_unit_day__so_ngay_thang
 msgid "Luỹ kế cộng từ những ngày CÓ SỐ. Thiếu ngày thì con số nhỏ hơn thật — nên nó được in ra cạnh luỹ kế, chứ không giấu đi để tổng trông liền mạch."
 msgstr "The running total adds only the days that HAVE a figure. With days missing it is lower than reality — which is why it is printed beside the total rather than hidden to make the sum look seamless."
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__luy_ke_nam
+msgid "Luỹ kế năm (kWh)"
+msgstr "Year to date (kWh)"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__luy_ke_thang
+msgid "Luỹ kế tháng (kWh)"
+msgstr "Month to date (kWh)"
 
 #. module: eam_unit_day
 #: model:ir.model.fields,field_description:eam_unit_day.field_eam_location__la_to_may
@@ -308,6 +349,12 @@ msgid "Mốc để quét mắt, KHÔNG phải ngưỡng hợp đồng — mỗi 
 msgstr "A level for scanning by eye, NOT a contract threshold — every O&M contract commits to its own figure, and assessment against the commitment happens in Contracts ▸ Assessment & payment."
 
 #. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__date
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
 msgid "Ngày đã cộng"
 msgstr "Days added"
@@ -339,9 +386,19 @@ msgid "SL mất (kWh)"
 msgstr "Energy lost (kWh)"
 
 #. module: eam_unit_day
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_form
+msgid "Sản lượng"
+msgstr "Energy"
+
+#. module: eam_unit_day
 #: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__nguon_sl
 msgid "Sản lượng lấy từ đâu"
 msgstr "Where the energy figure comes from"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__sl_mat
+msgid "Sản lượng mất (kWh)"
+msgstr "Energy lost (kWh)"
 
 #. module: eam_unit_day
 #: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__san_luong
@@ -352,6 +409,16 @@ msgstr "Daily energy (kWh)"
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_pivot
 msgid "Sản lượng theo tổ máy"
 msgstr "Energy by unit"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__sl_that
+msgid "Sản lượng thực (kWh)"
+msgstr "Actual energy (kWh)"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__so_khoang
+msgid "Số khoảng dừng"
+msgstr "Outages"
 
 #. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
@@ -377,6 +444,11 @@ msgstr "The mean at THIS unit, not at the weather station. Two towers five hundr
 #: model:ir.model.fields,help:eam_unit_day.field_eam_location__la_to_may
 msgid "Tua-bin, bộ biến tần — thứ thật sự phát ra điện. Trạm khí tượng và nhà điều hành thì KHÔNG, dù chúng cũng là vị trí thiết bị. Cờ này quyết định bảng hiệu suất tổ máy có bao nhiêu dòng, và mẫu số khả dụng có bao nhiêu đơn vị."
 msgstr "Turbines and inverters — the things that actually generate. A weather station or a control building does NOT, even though they are equipment locations too. This flag decides how many rows the unit performance table has, and how many units go into the availability denominator."
+
+#. module: eam_unit_day
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_search
+msgid "Tìm"
+msgstr "Search"
 
 #. module: eam_unit_day
 #: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__tinh_trang_dung
@@ -412,6 +484,11 @@ msgid "Tổng luỹ kế tháng"
 msgstr "Month-to-date total"
 
 #. module: eam_unit_day
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
+msgid "Tổng sản lượng"
+msgstr "Total energy"
+
+#. module: eam_unit_day
 #: model:ir.model.fields.selection,name:eam_unit_day.selection__eam_unit_day__dai_kd__cao
 msgid "Từ 99% trở lên"
 msgstr "99% and above"
@@ -435,6 +512,11 @@ msgstr "Why there is no DC figure"
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
 msgid "Vì sao chưa đo"
 msgstr "Why it was not measured"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__ly_do_kd
+msgid "Vì sao chưa đo được"
+msgstr "Why it could not be measured"
 
 #. module: eam_unit_day
 #: model:ir.model,name:eam_unit_day.model_eam_location
@@ -531,4 +613,9 @@ msgstr "the DC-side tag has no reading for the day"
 #: code:addons/eam_unit_day/models/eam_location.py:0
 msgid "đường cong công suất \"%s\""
 msgstr "power curve \"%s\""
+
+#. module: eam_unit_day
+#: model:ir.ui.menu,name:eam_unit_day.menu_unit_day
+msgid "Hiệu suất tổ máy"
+msgstr "Unit performance"
 

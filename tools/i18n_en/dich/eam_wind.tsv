@@ -1,0 +1,80 @@
+3483	Blade
+3484	Foundation
+3485	Tower
+3486	Yaw system
+3487	Hub
+3488	Electrical system
+3489	Structure
+3490	Sensors
+3491	Electrical assembly
+3492	Pitch system
+3493	Generator
+3494	Platform
+3495	Mechanical brake
+3496	Blade 1
+3497	Blade 2
+3498	Blade 3
+3499	Rotor assembly
+3500	Downtime rank
+3501	Failure rank
+3502	RDS-PP code
+3503	Suspended
+3504	Forced outage
+3505	Structural assembly
+3506	Hydraulic system
+3507	Transformer
+3508	Full performance
+3509	Wind turbine
+3510	Awaiting engineering
+3511	Every platform
+3512	Technical standby
+3513	Control system
+3514	Partial performance
+3515	Drive train
+3516	Other (balance of plant)
+3517	Other (turbine)
+3518	Out of electrical specification
+3519	Aerodynamic brake
+3520	Shaft and bearings
+3521	Operating
+3522	Drive train assembly
+3523	Not operating
+3524	Turbine transformer
+3525	Civil infrastructure
+3526	Geared machines only
+3527	Requested shutdown
+3528	Protection and switchgear
+3529	MV underground cable
+3530	Reference note
+3531	Information available
+3532	Turbine converter
+3533	Main shaft & bearings
+3534	Reference ranking
+3535	Out of environmental specification
+3536	Applies to the platform
+3537	Transmission line
+3538	Power converter
+3539	Sensor and wind measurement assembly
+3540	Forced outage — under repair
+3541	Rank by NUMBER of failures
+3542	SCADA and communications
+3543	Available
+3544	Forced outage — diagnosis
+3545	Not available
+3546	Rank by DOWNTIME
+3547	Balance-of-plant systems
+3548	Information unavailable
+3549	Force majeure
+3550	Forced outage — awaiting a response
+3551	Curtailment due to grid constraints
+3552	Nacelle cover & lifting equipment
+3553	Direct-drive machines only
+3554	Planned repair intervention
+3555	Forced outage — awaiting materials or equipment
+3556	the customer fills it in themselves if they hold a VGB licence
+3557	Onshore wind turbine — standard structure
+3558	A direct-drive machine has NO gearbox. Hard-coding a gearbox into every turbine is wrong from the very first line.
+3559	A REFERENCE figure aggregated from 18 public databases (over 18,000 turbines). It only suggests an initial criticality.
+3560	Two DIFFERENT rankings: the assembly that fails most often is not the assembly that causes the longest downtime. The reason is how complex the repair is, not how often it fails.
+3561	Left empty. RDS-PP is VGB's copyrighted property, so it does not ship with the product; a customer holding a licence fills it in themselves. The mapping is one-way: ReliaWind can be reduced to RDS-PP, but not the reverse.
+3562	Two <b>different</b> rankings: the assembly that\n                            fails most often is not the assembly that causes\n                            the longest downtime. These are <b>reference\n                            figures</b> — the real criticality has to be\n                            derived from the history of this fleet itself.

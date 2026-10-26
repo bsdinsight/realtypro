@@ -17,7 +17,205 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__lan_canh_bao_cuoi
+msgid "Báo lần cuối"
+msgstr "Last notified"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__lech_bat_dau
+msgid "Bắt đầu trễ (giờ)"
+msgstr "Started late by (hours)"
+
+#. module: eam_wo_progress
+#: model_terms:ir.actions.act_window,help:eam_wo_progress.action_eam_wo_ke_hoach
+msgid ""
+"Bốn mốc đặt cạnh nhau — dự kiến và thực tế, bắt đầu và kết\n"
+"            thúc — cộng ba con số lệch tính sẵn. Đổi sang\n"
+"            <b>lịch</b> để nhìn tuần/tháng, <b>kanban</b> để kéo thả đổi\n"
+"            trạng thái, <b>pivot</b> để xem ai đang quá tải."
+msgstr ""
+"Four dates side by side — planned and actual, start and finish — plus\n"
+"            three variances computed in advance. Switch to <b>calendar</b> for a\n"
+"            week or month view, <b>kanban</b> to drag states, and <b>pivot</b> to\n"
+"            see who is overloaded."
+
+#. module: eam_wo_progress
+#: model:ir.model.fields.selection,name:eam_wo_progress.selection__eam_work_order__muc_canh_bao__khong
+msgid "Chưa báo"
+msgstr "Not yet notified"
+
+#. module: eam_wo_progress
+#: model_terms:ir.actions.act_window,help:eam_wo_progress.action_eam_wo_ke_hoach
+msgid "Chưa có lệnh nào"
+msgstr "No order yet"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,help:eam_wo_progress.field_eam_work_order__tre_han
+msgid "Cron cập nhật. KHÔNG phải trường tính: \"đã quá hạn chưa\" phụ thuộc vào bây giờ là mấy giờ, mà thời điểm hiện tại không nằm được trong @api.depends — khai thành trường tính có lưu thì cờ đứng yên mãi mà không gì báo."
+msgstr "Updated by cron. NOT a computed field: \"is it overdue yet\" depends on what time it is now, and the present moment cannot sit inside @api.depends — declared as a stored computed field, the flag would stand still for ever with nothing to say so."
+
+#. module: eam_wo_progress
+#: model_terms:ir.actions.act_window,help:eam_wo_progress.action_eam_wo_tre_han
+msgid ""
+"Dòng <b>đỏ</b> là trễ vì bị bỏ quên — người phụ trách đã\n"
+"            được đẩy việc cần làm. Dòng <b>vàng</b> là trễ vì đang chờ\n"
+"            bên ngoài: đó là vấn đề của chuỗi cung ứng, không phải của\n"
+"            người thợ, nên hệ không nhắc họ."
+msgstr ""
+"A <b>red</b> row is late through being forgotten — the person\n"
+"            responsible has been sent the job. A <b>yellow</b> row is late\n"
+"            because it is waiting on someone outside: that is a supply chain\n"
+"            problem rather than the fitter's, so the system does not chase them."
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_ke_hoach_list
+msgid "Dự kiến bắt đầu"
+msgstr "Planned start"
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_ke_hoach_list
+msgid "Dự kiến xong"
+msgstr "Planned finish"
+
+#. module: eam_wo_progress
+#: model:ir.actions.server,name:eam_wo_progress.cron_eam_wo_tre_han_ir_actions_server
+msgid "EAMOne: quét lệnh công việc trễ hạn"
+msgstr "EAMOne: scan for overdue work orders"
+
+#. module: eam_wo_progress
+#: model_terms:ir.actions.act_window,help:eam_wo_progress.action_eam_wo_tre_han
+msgid "Không có lệnh nào trễ hạn"
+msgstr "No order is overdue"
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_ke_hoach_list
+msgid "Kế hoạch so với thực tế"
+msgstr "Plan against actual"
+
+#. module: eam_wo_progress
+#: model:ir.actions.act_window,name:eam_wo_progress.action_eam_wo_ke_hoach
+#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_ke_hoach
+msgid "Kế hoạch vs thực tế"
+msgstr "Plan vs actual"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__lech_gio_cong
+msgid "Lệch giờ công"
+msgstr "Labour hour variance"
+
+#. module: eam_wo_progress
+#: code:addons/eam_wo_progress/models/eam_work_order.py:0
+msgid "Lệnh \"%(ten)s\" tại %(vt)s đã quá hạn %(g).0f giờ (dự kiến xong %(h)s)."
+msgstr "Order \"%(ten)s\" at %(vt)s is %(g).0f hours overdue (planned finish %(h)s)."
+
+#. module: eam_wo_progress
+#: code:addons/eam_wo_progress/models/eam_work_order.py:0
+msgid "Lệnh công việc trễ hạn — %s"
+msgstr "Overdue work orders — %s"
+
+#. module: eam_wo_progress
+#: model:ir.actions.act_window,name:eam_wo_progress.action_eam_wo_tre_han
+#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_tre_han
+msgid "Lệnh trễ hạn"
+msgstr "Overdue orders"
+
+#. module: eam_wo_progress
 #: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_calendar
 msgid "Lịch bảo trì"
 msgstr "Maintenance schedule"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields.selection,name:eam_wo_progress.selection__eam_work_order__muc_canh_bao__ba_ngay
+msgid "Quá 3 ngày"
+msgstr "More than 3 days"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields.selection,name:eam_wo_progress.selection__eam_work_order__muc_canh_bao__bay_ngay
+msgid "Quá 7 ngày"
+msgstr "More than 7 days"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__so_gio_tre
+msgid "Quá hạn (giờ)"
+msgstr "Overdue by (hours)"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,help:eam_wo_progress.field_eam_work_order__tre_vi_cho
+msgid "Quá hạn nhưng lệnh đang ở trạng thái chờ. Đây là vấn đề của chuỗi cung ứng chứ không phải của người thợ, nên KHÔNG đẩy thông báo — nhắc người ta mỗi ngày về việc họ không giải quyết được là cách nhanh nhất khiến họ bỏ qua mọi thông báo về sau."
+msgstr "Overdue, but the order is on hold. That is a supply chain problem rather than the fitter's, so NO notification is sent — reminding someone every day about something they cannot solve is the fastest way to make them ignore every notification afterwards."
+
+#. module: eam_wo_progress
+#: code:addons/eam_wo_progress/models/eam_work_order.py:0
+msgid "Quét xong: %(t)d lệnh đang trễ, đã đẩy %(d)d thông báo mới."
+msgstr "Scan complete: %(t)d orders overdue, %(d)d new notifications sent."
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,help:eam_wo_progress.field_eam_work_order__lech_gio_cong
+msgid "Số giờ làm thực tế trừ khoảng dự kiến. Dương là làm lâu hơn dự tính."
+msgstr "The actual hours worked less the planned span. Positive means it took longer than expected."
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_ke_hoach_list
+msgid "Thực tế bắt đầu"
+msgstr "Actual start"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,help:eam_wo_progress.field_eam_work_order__lech_bat_dau
+msgid "Thực tế bắt đầu trừ dự kiến bắt đầu. Âm là bắt đầu sớm."
+msgstr "The actual start less the planned start. Negative means it started early."
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_ke_hoach_list
+msgid "Thực tế xong"
+msgstr "Actual finish"
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_kanban
+msgid "Trễ hạn"
+msgstr "Overdue"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__tre_vi_cho
+msgid "Trễ vì đang chờ"
+msgstr "Late because it is on hold"
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_kanban
+msgid "Trễ — đang chờ"
+msgstr "Late — on hold"
+
+#. module: eam_wo_progress
+#: model_terms:ir.ui.view,arch_db:eam_wo_progress.view_eam_wo_pivot_tai
+msgid "Tải công việc theo người"
+msgstr "Workload by person"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields.selection,name:eam_wo_progress.selection__eam_work_order__muc_canh_bao__moi
+msgid "Vừa quá hạn"
+msgstr "Just gone overdue"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__lech_ket_thuc
+msgid "Xong trễ (giờ)"
+msgstr "Finished late by (hours)"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__tre_han
+msgid "Đang trễ hạn"
+msgstr "Currently overdue"
+
+#. module: eam_wo_progress
+#: model:ir.model.fields,field_description:eam_wo_progress.field_eam_work_order__muc_canh_bao
+msgid "Đã báo tới nấc"
+msgstr "Notified up to level"
+
+#. module: eam_wo_progress
+#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_ke_hoach
+msgid "Kế hoạch vs thực tế"
+msgstr "Plan vs actual"
+
+#. module: eam_wo_progress
+#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_tre_han
+msgid "Lệnh trễ hạn"
+msgstr "Overdue orders"
 

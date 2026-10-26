@@ -1,0 +1,77 @@
+339	Stage
+340	Chain
+341	Metering stage
+342	Cumulative
+343	Stage code
+344	Stages
+345	Order
+346	Stages
+347	Meter
+348	Note
+349	Days
+350	Stage name
+351	Stage type
+352	Entered by hand
+353	Previous stage
+354	Energy
+355	By day
+356	Chain name
+357	Stages and days
+358	Has a loss
+359	Loss (%)
+360	Auxiliary consumption
+361	Energy stage
+362	Metering chain
+363	SCADA tag
+364	Main metering chain
+365	SCADA difference (%)
+366	Loss (kWh)
+367	Fetched %s rows
+368	Previous stage (kWh)
+369	Difference above the threshold
+370	Energy (kWh)
+371	Sales meter
+372	Year to date (kWh)
+373	Overnight consumption
+374	Energy stages only
+375	Month to date (kWh)
+376	Energy by stage
+377	Integrated from SCADA
+378	No chain declared yet
+379	Build the daily energy figures
+380	Difference between meter readings
+381	Taken from the sales stage
+382	Difference alert threshold (%)
+383	Taken from the metering chain
+384	Built %s daily rows
+385	SCADA difference above the threshold
+386	Energy by metering stage
+387	PR numerator
+388	Stage in the metering chain
+389	Daily energy by stage
+390	The plant's metering chain
+391	Loss against the previous stage
+392	Daily energy by metering stage
+393	Standalone measurement point — outside the loss chain
+394	A stage has one row per day.
+395	A plant cannot have two chains with the same name.
+396	The figure from the SCADA tag, declared for cross-checking against the meter.
+397	The stage that produces revenue. Only one stage per chain may be marked.
+398	The daily energy row at the chain's sales meter stage.
+399	When the meter and SCADA differ by more than this, the daily row is flagged.
+400	Declare it as well to CROSS-CHECK against the meter. Declare it alone where there is no meter at this stage yet.
+401	Only built for stages with a meter attached. A stage taking its figure from SCADA or entered by hand is filled in separately.
+402	<i class="fa fa-exclamation-triangle me-1"/>\n                        The meter and SCADA differ
+403	Chain "%(c)s" already has another stage marked as %(t)s. Only ONE is allowed — with two reference points there is no telling which to use.
+404	Ordered along the path the electricity takes, from the generating equipment out to the grid. The loss is computed between a stage and the one IMMEDIATELY BEFORE it.
+405	Takes the daily energy as the difference between two consecutive readings. Meter replacement and counter rollover are already handled.
+406	— above the declared threshold. One of the two sources is\n                        wrong, and which one it is has different consequences.
+407	Two stages in the same chain cannot share an order — the order is what decides which stage the loss is computed against.
+408	Negative energy (%s kWh) at stage "%s" on %s. Two common causes: the meter has just been replaced without being marked, or two readings have had their dates swapped.
+409	The row could not be fetched because the chain has no stage marked as "PR numerator". It deliberately does not fall back to the sales stage — the two reference points differ by a few per cent.
+410	A stage with neither a meter nor a tag has to be filled in by someone every day. That is acceptable — auxiliary consumption often has no meter of its own — but it should be plain which stages are like that.
+411	The running total is <b>recomputed on every read</b>,\n                                not stored. Correct a day mid-month and every\n                                day after it is right at once, with nothing to\n                                re-run.
+412	Declare the stages the electricity passes through, from the generating\n               equipment to the sales meter. Declared once and used for every day —\n               and the same structure works for both wind and solar.
+413	The stage used as the AC energy when computing the performance ratio.\n\nDIFFERENT from the sales stage, and it has to be declared separately. Checked against a real report from an operating plant: their PR numerator is 3% lower than the energy at the sales meter — because PR is measured over its own operating window, shorter than the whole day. Treating the two as one is being 3% wrong while still looking plausible.
+414	Only ENERGY stages take part in the loss-by-stage calculation.\n\nAuxiliary and overnight consumption are intentional use — fold them into losses and the figure swells with nobody able to trace why.\n\nA standalone measurement point is measured for another purpose and does not lie on the path of the electricity — for example the energy used as the PR numerator, which is measured over its own window. Leave it in the chain and it enters the subtraction and produces a meaningless loss figure.
+415	<i class="fa fa-info-circle me-1"/>\n                                Order the stages along the <b>path the\n                                electricity takes</b>, from the generating\n                                equipment out to the grid. The loss is computed\n                                between each stage and the one immediately\n                                before it — so <b>the order is what decides the\n                                figure</b>.\n                                <br/>The <b>auxiliary</b> and <b>overnight</b>\n                                stages take no part in the subtraction: they are\n                                intentional consumption, not losses.

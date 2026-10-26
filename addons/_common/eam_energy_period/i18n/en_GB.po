@@ -17,10 +17,139 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid ""
+".\n"
+"                        Để trống chứ không ghi 0% — \"đạt 0% kế hoạch\" và\n"
+"                        \"chưa ai khai kế hoạch\" là hai chuyện khác hẳn."
+msgstr ""
+".\n"
+"                        Left empty rather than written as 0% — \"0% of plan\n"
+"                        achieved\" and \"nobody has declared a plan\" are two quite\n"
+"                        different things."
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "<b>Chưa so được với mục tiêu:</b>"
+msgstr "<b>Not yet comparable with the target:</b>"
+
+#. module: eam_energy_period
+#: model_terms:ir.actions.act_window,help:eam_energy_period.action_period
+msgid ""
+"Bỏ <b>Nhà máy</b> khỏi hàng là <b>cộng gộp</b> nhiều nhà\n"
+"            máy; để lại là <b>đặt cạnh nhau</b>. Muốn luỹ kế từ đầu năm\n"
+"            thì bật <b>Từ đầu năm tới nay</b>, thêm <b>Cùng kỳ năm\n"
+"            trước</b> để so hai năm."
+msgstr ""
+"Taking <b>Plant</b> out of the rows <b>adds the plants\n"
+"            together</b>; leaving it in <b>sets them side by side</b>. For a\n"
+"            running total from the start of the year turn on <b>Year to date</b>,\n"
+"            and add <b>Same period last year</b> to compare two years."
+
+#. module: eam_energy_period
+#: model_terms:ir.actions.act_window,help:eam_energy_period.action_period
+msgid ""
+"Chưa có ngày nào có\n"
+"            số"
+msgstr ""
+"No day has a figure\n"
+"            yet"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__co_muc_tieu
+msgid "Có mục tiêu"
+msgstr "Has a target"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__cong_suat_dat_kw
+msgid "Công suất đặt (kW)"
+msgstr "Installed capacity (kW)"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Cùng kỳ năm trước"
+msgstr "Same period last year"
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__dat_muc__duoi
+msgid "Dưới P90"
+msgstr "Below P90"
+
+#. module: eam_energy_period
+#: model:ir.actions.server,name:eam_energy_period.cron_dung_ky_ir_actions_server
+msgid "EAMOne: dựng sản lượng theo kỳ"
+msgstr "EAMOne: build the energy periods"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid ""
+"Hệ KHÔNG cộng ngày thiếu thành 0,\n"
+"                        nên con số dưới đây <b>nhỏ hơn thật</b> — đừng\n"
+"                        đem so với một kỳ đủ ngày mà chưa trừ phần này."
+msgstr ""
+"The system does NOT add the missing days as 0,\n"
+"                        so the figure below is <b>lower than reality</b> — do not\n"
+"                        compare it with a complete period without allowing for\n"
+"                        this."
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__he_so_cong_suat
+msgid "Hệ số công suất (%)"
+msgstr "Capacity factor (%)"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__kd_san_luong
+msgid "Khả dụng theo sản lượng (%)"
+msgstr "Energy availability (%)"
+
+#. module: eam_energy_period
 #: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__nhan_ky
 #: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
 msgid "Kỳ"
 msgstr "Period"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "Kỳ này thiếu"
+msgstr "This period is short of"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__loai_ky
+msgid "Loại kỳ"
+msgstr "Period type"
+
+#. module: eam_energy_period
+#: model_terms:ir.actions.act_window,help:eam_energy_period.action_period
+msgid ""
+"Màn này mở sẵn ở dạng <b>bảng xoay</b>. Đổi độ mịn thời\n"
+"            gian bằng cách bấm lên <b>đầu cột</b> rồi chọn Ngày / Tuần /\n"
+"            Tháng / Quý / Năm — không phải đi tìm bộ lọc."
+msgstr ""
+"This screen opens as a <b>pivot</b>. Change the time granularity by\n"
+"            clicking the <b>column header</b> and choosing Day / Week / Month /\n"
+"            Quarter / Year — not by hunting for a filter."
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+msgid "Mất (kWh)"
+msgstr "Lost (kWh)"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,help:eam_energy_period.field_eam_energy_period__dat_muc
+msgid "Mức CAO NHẤT đã vượt. \"Dưới P90\" là tín hiệu đáng báo động, không phải lỗi hiển thị."
+msgstr "The HIGHEST level exceeded. \"Below P90\" is a signal worth alarm, not a display fault."
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__loai_ky__ngay
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,help:eam_energy_period.field_eam_energy_period__so_ngay_thieu
+msgid "Ngày không có dòng nào trong bảng tổ máy. Luỹ kế KHÔNG cộng chúng thành 0 — nhưng con số vì thế nhỏ hơn thật, và đây là mức độ nhỏ hơn."
+msgstr "Days with no row at all in the unit table. The running total does NOT add them as 0 — but the figure is therefore lower than reality, and this is how much lower."
 
 #. module: eam_energy_period
 #: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__plant_id
@@ -30,14 +159,196 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_energy_period
+#: model:ir.model.constraint,message:eam_energy_period.constraint_eam_energy_period_uniq
+msgid "Nhà máy này đã có dòng cho kỳ đó rồi."
+msgstr "This plant already has a row for that period."
+
+#. module: eam_energy_period
+#: model:ir.model.fields,help:eam_energy_period.field_eam_energy_period__nhan_ky
+msgid "Nhãn đọc được: 2026-W42, 10/2026, 2026."
+msgstr "A readable label: 2026-W42, 10/2026, 2026."
+
+#. module: eam_energy_period
 #: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__loai_ky__nam
 #: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
 msgid "Năm"
 msgstr "Year"
 
 #. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "So với mục tiêu"
+msgstr "Against target"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_graph
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_pivot
+msgid "Sản lượng"
+msgstr "Energy"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__san_luong
+msgid "Sản lượng (kWh)"
+msgstr "Energy (kWh)"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__sl_mat
+msgid "Sản lượng mất (kWh)"
+msgstr "Energy lost (kWh)"
+
+#. module: eam_energy_period
+#: model:ir.actions.act_window,name:eam_energy_period.action_period
+#: model:ir.ui.menu,name:eam_energy_period.menu_period
+msgid "Sản lượng nhà máy"
+msgstr "Plant energy"
+
+#. module: eam_energy_period
+#: model:ir.model,name:eam_energy_period.model_eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "Sản lượng theo kỳ"
+msgstr "Energy by period"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__so_ngay_co_so
+msgid "Số ngày CÓ số"
+msgstr "Days WITH a figure"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__so_ngay_thieu
+msgid "Số ngày thiếu"
+msgstr "Days missing"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__so_ngay
+msgid "Số ngày trong kỳ"
+msgstr "Days in the period"
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__loai_ky__thang
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_energy_period
 #: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__loai_ky__tuan
 #: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
 msgid "Tuần"
 msgstr "Week"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Tìm"
+msgstr "Search"
+
+#. module: eam_energy_period
+#: code:addons/eam_energy_period/models/eam_energy_period.py:0
+msgid "Tổ máy — %s"
+msgstr "Units — %s"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+msgid "Tổng P50"
+msgstr "Total P50"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+msgid "Tổng doanh thu"
+msgstr "Total revenue"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+msgid "Tổng mất"
+msgstr "Total lost"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_list
+msgid "Tổng sản lượng"
+msgstr "Total energy"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__tu_ngay
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Từ ngày"
+msgstr "From"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_search
+msgid "Từ đầu năm tới nay"
+msgstr "Year to date"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__ly_do_khong_so
+msgid "Vì sao chưa so được"
+msgstr "Why it is not yet comparable"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "Xem bảng tổ máy của kỳ này"
+msgstr "View this period's unit table"
+
+#. module: eam_energy_period
+#: code:addons/eam_energy_period/models/eam_energy_period.py:0
+msgid "chưa khai mục tiêu cho tháng %s"
+msgstr "no target declared for %s"
+
+#. module: eam_energy_period
+#: model_terms:ir.ui.view,arch_db:eam_energy_period.view_period_form
+msgid "ngày dữ liệu."
+msgstr "days of data."
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__dat_muc__p50
+msgid "Đạt P50"
+msgstr "P50 met"
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__dat_muc__p75
+msgid "Đạt P75"
+msgstr "P75 met"
+
+#. module: eam_energy_period
+#: model:ir.model.fields.selection,name:eam_energy_period.selection__eam_energy_period__dat_muc__p90
+msgid "Đạt P90"
+msgstr "P90 met"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__ty_le_p50
+msgid "Đạt so với P50 (%)"
+msgstr "Achieved against P50 (%)"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__dat_muc
+msgid "Đạt tới mức"
+msgstr "Level reached"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__den_ngay
+msgid "Đến ngày"
+msgstr "To"
+
+#. module: eam_energy_period
+#: model:ir.model.fields,field_description:eam_energy_period.field_eam_energy_period__du_lieu_day
+msgid "Đủ ngày"
+msgstr "Days complete"
+
+#. module: eam_energy_period
+#: model_terms:ir.actions.act_window,help:eam_energy_period.action_period
+msgid ""
+"Ở đây chỉ có những con số <b>cộng được</b> — sản lượng,\n"
+"            sản lượng mất, doanh thu. Hệ số công suất, khả dụng % và\n"
+"            mức đạt so với P50 là <b>tỷ số</b>, cộng hay lấy trung bình\n"
+"            đều sai, nên chúng ở màn <i>Khả dụng theo ngày</i> và\n"
+"            <i>Mục tiêu sản lượng</i>."
+msgstr ""
+"Only the figures that <b>can be added</b> are here — energy, energy\n"
+"            lost, revenue. Capacity factor, availability % and the level achieved\n"
+"            against P50 are <b>ratios</b>, wrong to add and wrong to average, so\n"
+"            they live on the <i>Availability by day</i> and <i>Energy target</i>\n"
+"            screens."
+
+#. module: eam_energy_period
+#: model:ir.ui.menu,name:eam_energy_period.menu_period
+msgid "Sản lượng nhà máy"
+msgstr "Plant energy"
 

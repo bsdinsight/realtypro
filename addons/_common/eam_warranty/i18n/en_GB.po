@@ -17,9 +17,85 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "%(a)d máy sắp hết bảo hành · đẩy %(b)d thông báo · %(c)d máy CHƯA AI THEO DÕI."
+msgstr "%(a)d machines with warranties expiring · %(b)d notifications sent · %(c)d machines WITH NOBODY TRACKING THEM."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "%(c)d máy là SUY từ vị trí đang lắp, không phải biên bản liệt kê đích danh — soi lại trước khi dùng để đòi bảo hành."
+msgstr "%(c)d machines are DERIVED from the location they are installed at rather than from a certificate naming them explicitly — check them before using this to claim under warranty."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "%(d)d máy chỉ có số hợp đồng — biên bản bàn giao không khai bên cấp. Khai tay vào đó, vì số hợp đồng không phải cái tên để gọi khi đòi bảo hành."
+msgstr "%(d)d machines have only a contract number — the handover certificate does not name the supplier. Enter it by hand, because a contract number is not a name to call when claiming under warranty."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_form_warranty
+msgid ""
+"<b>Hai hạn bảo hành lệch nhau.</b> Hạn trên lô hàng\n"
+"                    tính từ ngày NHẬN, hạn ở trên tính khi đã vận hành —\n"
+"                    cả hai đều đúng, nhưng chỉ một cái trả lời được\n"
+"                    <i>lần sửa này ai trả tiền</i>. Hệ lấy hạn trên tài\n"
+"                    sản và <b>không tự chọn hộ</b>: lệch là dấu hiệu có\n"
+"                    người khai nhầm một trong hai, chọn hộ là giấu mất\n"
+"                    chuyện đó."
+msgstr ""
+"<b>The two warranty deadlines disagree.</b> The deadline on\n"
+"                    the batch is counted from the date RECEIVED, while the one\n"
+"                    above is counted from entry into service — both are correct,\n"
+"                    but only one answers <i>who pays for this repair</i>. The\n"
+"                    system takes the deadline on the asset and <b>does not choose\n"
+"                    for you</b>: a difference is a sign that one of the two was\n"
+"                    entered wrongly, and choosing for you hides that."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_form_warranty
+msgid ""
+"<b>Phiếu khai loại bảo hành, nhưng lúc lập con máy đã\n"
+"                    hết hạn.</b> Phiếu vẫn gửi đi được — nhưng bên kia sẽ\n"
+"                    từ chối, và cả quãng chờ đó là thời gian chết. Đổi\n"
+"                    loại phiếu, hoặc nêu rõ căn cứ đòi ngoài hạn."
+msgstr ""
+"<b>The note declares a warranty type, but the machine was\n"
+"                    already out of warranty when it was raised.</b> It can still\n"
+"                    be sent — but the other side will refuse it, and the whole\n"
+"                    waiting time is dead time. Change the note type, or state the\n"
+"                    grounds for claiming out of warranty."
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__supplier_partner_id
+msgid "Ai CẤP con máy này — khác với nhà sản xuất là ai LÀM ra nó. Bảo hành đòi ở bên cấp, không đòi ở bên làm."
+msgstr "Who SUPPLIED this machine — different from the manufacturer, who MADE it. A warranty is claimed from the supplier, not from the maker."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_list_warranty
+msgid "BH lúc lập"
+msgstr "Warranty when raised"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "BH theo lô"
+msgstr "Batch warranty"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "BH đến"
 msgstr "Warranty to"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_asset_warranty
+msgid ""
+"Ba năm sau khi hộp số hỏng, câu đầu tiên luôn là\n"
+"            <b>con này do ai cấp, theo hợp đồng nào, còn bảo hành\n"
+"            không</b> — trả lời được hay không quyết định <b>ai trả\n"
+"            tiền</b> cho lần sửa đó. Màn này là chỗ trả lời."
+msgstr ""
+"Three years after the gearbox fails, the first question is always\n"
+"            <b>who supplied this one, under which contract, and is it still in\n"
+"            warranty</b> — whether that can be answered decides <b>who pays</b>\n"
+"            for the repair. This screen is where it is answered."
 
 #. module: eam_warranty
 #: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__ban_giao
@@ -32,9 +108,106 @@ msgid "Bảo hành"
 msgstr "Warranty"
 
 #. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_rma__bao_hanh_luc_lap
+msgid "Bảo hành lúc lập phiếu"
+msgstr "Warranty when the note was raised"
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "Bảo hành sắp hết — còn %d ngày"
+msgstr "Warranty expiring — %d days left"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__warranty_lot_end
+msgid "Bảo hành theo lô (từ ngày nhận)"
+msgstr "Batch warranty (from the date received)"
+
+#. module: eam_warranty
+#: model:ir.actions.act_window,name:eam_warranty.action_eam_asset_warranty
+#: model:ir.ui.menu,name:eam_warranty.menu_eam_asset_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "Bảo hành theo sê-ri"
+msgstr "Warranty by serial number"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_rma__supplier_goc_id
+msgid "Bảo hành đòi ở bên CẤP. Khác bên nhận phiếu thì phải có lý do, nếu không là đòi nhầm cửa."
+msgstr "A warranty is claimed from whoever SUPPLIED it. A different party from the one receiving the note needs a reason, otherwise the claim goes to the wrong door."
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
 msgid "Bảo hành đến ngày"
 msgstr "Warranty to"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_asset_warranty
+msgid ""
+"Bỏ bộ lọc để xem toàn bộ, hoặc lọc <b>Chưa biết nhà cung\n"
+"            cấp</b> để thấy đúng chỗ còn thiếu hồ sơ."
+msgstr ""
+"Clear the filter to see everything, or filter on <b>The supplier is not\n"
+"            known</b> to see exactly where the paperwork is still missing."
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_rma__bao_hanh_luc_lap
+msgid "CHỤP LẠI lúc lập, không tính lại về sau. Tình trạng bảo hành đổi theo ngày; tính lại thì ba tháng sau biên bản tự lật ngược kết luận của chính nó."
+msgstr "CAPTURED when the note is raised; not recomputed afterwards. Warranty status changes by the day; recompute it and three months later the record reverses its own conclusion."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Chưa ai theo dõi"
+msgstr "Nobody is tracking it"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Chưa biết nhà cung cấp"
+msgstr "The supplier is not known"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Chưa khai hạn bảo hành"
+msgstr "No warranty expiry declared"
+
+#. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__khong_ro
+msgid "Chưa rõ"
+msgstr "Unknown"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__canh_bao_het_han
+msgid "Chặn nhắc lại mỗi ngày về cùng một con máy."
+msgstr "Stops a reminder about the same machine every day."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "Chỉ so sánh bằng, khác, in hoặc not in được."
+msgstr "Only =, !=, in and not in can be compared."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_form_warranty
+msgid "Chụp lại tình trạng bảo hành"
+msgstr "Capture the warranty status"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_form_warranty
+msgid "Con máy này do ai cấp"
+msgstr "Who supplied this machine"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "Còn (ngày)"
+msgstr "Remaining (days)"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_rma__ngay_con_lai_luc_lap
+msgid "Còn (ngày) lúc lập"
+msgstr "Remaining (days) when raised"
+
+#. module: eam_warranty
+#: model:ir.actions.act_window,name:eam_warranty.action_eam_wo_con_bao_hanh
+#: model:ir.ui.menu,name:eam_warranty.menu_eam_wo_con_bao_hanh
+msgid "Còn bảo hành mà chưa đòi"
+msgstr "In warranty but not claimed"
 
 #. module: eam_warranty
 #: model:ir.model.fields.selection,name:eam_warranty.selection__eam_rma__bao_hanh_luc_lap__valid
@@ -43,9 +216,84 @@ msgid "Còn hạn"
 msgstr "In warranty"
 
 #. module: eam_warranty
+#: model:ir.actions.server,name:eam_warranty.cron_eam_warranty_ir_actions_server
+msgid "EAMOne: cảnh báo bảo hành sắp hết"
+msgstr "EAMOne: warn about warranties expiring"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__nguon_tham_chieu
+msgid "Ghi số để ba năm sau lần ngược được tới bộ hồ sơ gốc. Một dòng chữ, nhưng là dòng cứu được một cuộc tranh cãi."
+msgstr "Record the number so that in three years the original file can be traced. One line of text, but the line that settles an argument."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Hai hạn LỆCH nhau"
+msgstr "The two deadlines DISAGREE"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__lech_bao_hanh
+msgid "Hai hạn bảo hành LỆCH nhau"
+msgstr "The two warranty deadlines DISAGREE"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "HĐ / đơn mua"
+msgstr "Contract / purchase order"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_rma__han_bao_hanh_luc_lap
+msgid "Hạn bảo hành lúc lập"
+msgstr "Warranty expiry when raised"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__warranty_lot_end
+msgid "Hạn ghi trên lô hàng trong kho, tính từ ngày NHẬN. Để đối chiếu, không dùng để quyết ai trả tiền."
+msgstr "The deadline recorded on the batch in store, counted from the date RECEIVED. For cross-checking, not for deciding who pays."
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__lech_bao_hanh
+msgid "Hạn trên tài sản khác hạn trên lô hàng. Hệ KHÔNG tự chọn — lệch là dấu hiệu có người khai nhầm một trong hai, và chọn hộ là giấu mất chuyện đó."
+msgstr "The deadline on the asset differs from the one on the batch. The system does NOT choose for you — a difference is a sign that one of the two was entered wrongly, and choosing for you hides that."
+
+#. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_rma__bao_hanh_luc_lap__expired
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Hết hạn"
+msgstr "Expired"
+
+#. module: eam_warranty
 #: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__khac
 msgid "Khác"
 msgstr "Other"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_wo_con_bao_hanh
+msgid ""
+"Không có lệnh nào\n"
+"            đang bỏ sót bảo hành"
+msgstr ""
+"No order is\n"
+"            missing a warranty"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_asset_warranty
+msgid "Không có máy nào sắp hết bảo hành"
+msgstr "No machine has a warranty expiring soon"
+
+#. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_rma__bao_hanh_luc_lap__none
+msgid "Không khai hạn"
+msgstr "No deadline declared"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_form_warranty
+msgid "Kéo nguồn gốc từ biên bản bàn giao"
+msgstr "Pull the origin from the handover certificate"
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "Kéo được cho %(a)d trên %(b)d máy, %(c)d máy có tên nhà cung cấp."
+msgstr "Pulled for %(a)d of %(b)d machines; %(c)d have a supplier name."
 
 #. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
@@ -53,14 +301,112 @@ msgid "Lệch"
 msgstr "Difference"
 
 #. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__mua_sam
+msgid "Mua sắm / phụ tùng"
+msgstr "Procurement / spares"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_wo_con_bao_hanh
+msgid ""
+"Màn này <b>không</b> tự đổi bên chịu chi phí. Còn hạn\n"
+"            không có nghĩa là đòi được — hỏng do vận hành sai, do sét,\n"
+"            do hết tuổi thọ đều nằm ngoài phạm vi bảo hành. Việc của màn\n"
+"            này là <b>bắt phải xem</b>, không phải quyết hộ."
+msgstr ""
+"This screen does <b>not</b> change who bears the cost by itself.\n"
+"            Being in warranty does not mean it can be claimed — failure through\n"
+"            misoperation, lightning or end of life all fall outside the warranty.\n"
+"            This screen's job is to <b>force a look</b>, not to decide for you."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "Máy %(m)s hết bảo hành ngày %(d)s. Nhà cung cấp: %(n)s. Hồ sơ gốc: %(h)s."
+msgstr "Machine %(m)s goes out of warranty on %(d)s. Supplier: %(n)s. Source file: %(h)s."
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Mã"
 msgstr "Code"
 
 #. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__nguon_ghi_chu
+msgid "Nguồn gốc lấy từ đâu"
+msgstr "Where the origin came from"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Người theo dõi"
+msgstr "Tracked by"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__nguoi_theo_doi_id
+msgid "Người theo dõi bảo hành"
+msgstr "Warranty tracked by"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__supplier_partner_id
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Nhà cung cấp"
+msgstr "Supplier"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_rma__supplier_goc_id
+msgid "Nhà cung cấp gốc của máy"
+msgstr "The machine's original supplier"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Nhà sản xuất"
 msgstr "Manufacturer"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__nguoi_theo_doi_id
+msgid "Nhận cảnh báo khi bảo hành sắp hết. Không khai thì máy vẫn được đếm vào mục \"chưa ai theo dõi\" — im lặng bỏ qua mới là cách làm mất hạn."
+msgstr "Receive a warning when the warranty is about to expire. Left empty, the machine is still counted under \"nobody is tracking it\" — quietly passing over it is how deadlines get missed."
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_rma__doi_bao_hanh_nhung_het_han
+msgid "Phiếu khai loại bảo hành trong khi máy đã hết hạn. Vẫn gửi đi được, nhưng bên kia sẽ từ chối — và cả quãng chờ đó là thời gian chết."
+msgstr "The note declares a warranty type while the machine is already out of warranty. It can still be sent, but the other side will refuse it — and the whole waiting time is dead time."
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_form_warranty
+msgid ""
+"Phiếu này <b>không có ảnh chụp tình trạng bảo hành</b>\n"
+"                    — lập trước khi phần theo dõi bảo hành có mặt. Hệ\n"
+"                    KHÔNG tính bù, vì tính theo hôm nay là để biên bản\n"
+"                    tự lật ngược kết luận của chính nó.\n"
+"                    <span invisible=\"state != 'draft'\">Phiếu còn ở nháp\n"
+"                    thì bấm <i>Chụp lại tình trạng bảo hành</i> để lấy\n"
+"                    tình trạng hiện tại — và hiểu đó là con số của hôm\n"
+"                    nay, không phải của ngày lập.</span>\n"
+"                    <span invisible=\"state == 'draft'\">Phiếu đã gửi đi\n"
+"                    rồi thì không chụp nữa: ghi con số của hôm nay vào\n"
+"                    một phiếu lập từ trước là bịa ra chứng cứ.</span>"
+msgstr ""
+"This note has <b>no snapshot of the warranty status</b>\n"
+"                    — it was raised before warranty tracking existed. The system\n"
+"                    does NOT backfill it, because computing it as of today is how\n"
+"                    a record comes to reverse its own conclusion.\n"
+"                    <span invisible=\"state != 'draft'\">While the note is still a\n"
+"                    draft, press <i>Capture the warranty status</i> to take the\n"
+"                    current status — understanding that it is today's figure, not\n"
+"                    the figure of the date it was raised.</span>\n"
+"                    <span invisible=\"state == 'draft'\">Once the note has been sent\n"
+"                    it is not captured again: writing today's figure into a note\n"
+"                    raised earlier is inventing evidence.</span>"
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "Phần bàn giao dự án không có trên bản cài này, nên không có nguồn nào để kéo. Khai tay nhà cung cấp và số hợp đồng."
+msgstr "The project handover module is not on this installation, so there is no source to pull from. Enter the supplier and contract number by hand."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "SUY từ vị trí đang lắp"
+msgstr "DERIVED from the location it is installed at"
 
 #. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
@@ -73,12 +419,121 @@ msgid "Sắp hết"
 msgstr "Expiring soon"
 
 #. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Sắp hết bảo hành"
+msgstr "Warranty expiring soon"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Số HĐ / đơn mua"
+msgstr "Contract / purchase order no."
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__nguon_tham_chieu
+msgid "Số hợp đồng / đơn mua"
+msgstr "Contract / purchase order number"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_form_warranty
+msgid "Theo dõi hạn"
+msgstr "Tracking the deadline"
+
+#. module: eam_warranty
+#: model:ir.model,name:eam_warranty.model_eam_rma
+msgid "Trả hàng / đòi bảo hành / hoàn lõi"
+msgstr "Returns / warranty claims / core returns"
+
+#. module: eam_warranty
+#: model:ir.model,name:eam_warranty.model_eam_asset
+msgid "Tài sản mang sê-ri"
+msgstr "Serialised assets"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Tên"
 msgstr "Name"
 
 #. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__warranty_state
+msgid "Tình trạng bảo hành"
+msgstr "Warranty status"
+
+#. module: eam_warranty
+#: model:ir.model.fields,help:eam_warranty.field_eam_asset__nguon_ghi_chu
+msgid "Vết của việc kéo tự động: kéo từ bản ghi nào, lúc nào."
+msgstr "The trail of the automatic pull: which record it came from, and when."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "chưa khai"
+msgstr "not declared"
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "kéo từ biên bản bàn giao %(bb)s, vị trí %(vt)s (%(c)s)"
+msgstr "pulled from handover certificate %(bb)s, location %(vt)s (%(c)s)"
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_asset.py:0
+msgid "liệt kê đích danh máy này"
+msgstr "names this machine explicitly"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Đang lắp tại"
 msgstr "Installed at"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_form_warranty
+msgid "Điều kiện bảo hành theo hợp đồng"
+msgstr "Warranty terms under the contract"
+
+#. module: eam_warranty
+#: model_terms:ir.actions.act_window,help:eam_warranty.action_eam_wo_con_bao_hanh
+msgid ""
+"Đây là <b>tiền đang rơi</b>: lệnh sửa trên con máy\n"
+"            <b>còn hạn bảo hành</b>, mà bên chịu chi phí đang để\n"
+"            <i>Chưa quy</i> hoặc <i>Chủ đầu tư tự chịu</i>."
+msgstr ""
+"This is <b>money falling through the floor</b>: a repair order on a\n"
+"            machine <b>still in warranty</b>, while the party bearing the cost is\n"
+"            left as <i>Not attributed</i> or <i>Owner's own account</i>."
+
+#. module: eam_warranty
+#: code:addons/eam_warranty/models/eam_rma.py:0
+msgid "Đã chụp tình trạng bảo hành của HÔM NAY. Đây không phải tình trạng ở ngày lập phiếu — không có ảnh cũ nào để phục hồi."
+msgstr "The warranty status of TODAY has been captured. This is not the status on the date the note was raised — there is no older snapshot to restore."
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__canh_bao_het_han
+msgid "Đã cảnh báo hết hạn ngày"
+msgstr "An expiry warning was sent on"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_rma__doi_bao_hanh_nhung_het_han
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_search_warranty
+msgid "Đòi bảo hành nhưng đã hết hạn"
+msgstr "A warranty claim, but the warranty has expired"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_rma_list_warranty
+msgid "Đòi ngoài hạn"
+msgstr "Out-of-warranty claim"
+
+#. module: eam_warranty
+#: model:ir.model.fields,field_description:eam_warranty.field_eam_asset__nguon_goc
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
+msgid "Đến từ đâu"
+msgstr "Where it came from"
+
+#. module: eam_warranty
+#: model:ir.ui.menu,name:eam_warranty.menu_eam_asset_warranty
+msgid "Bảo hành theo sê-ri"
+msgstr "Warranty by serial number"
+
+#. module: eam_warranty
+#: model:ir.ui.menu,name:eam_warranty.menu_eam_wo_con_bao_hanh
+msgid "Còn bảo hành mà chưa đòi"
+msgstr "In warranty but not claimed"
 

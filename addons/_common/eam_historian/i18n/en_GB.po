@@ -100,6 +100,11 @@ msgid "Bảo dưỡng định kỳ T07"
 msgstr "Scheduled servicing of T07"
 
 #. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__maintenance
+msgid "Bảo trì theo kế hoạch"
+msgstr "Planned maintenance"
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__force_majeure
 msgid "Bất khả kháng"
 msgstr "Force majeure"
@@ -352,6 +357,12 @@ msgid "EAMOne: tạo trước phân mảnh kho chuỗi thời gian"
 msgstr "EAMOne: pre-create time-series store partitions"
 
 #. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__note
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_historian
 #: model_terms:ir.actions.act_window,help:eam_historian.action_eam_data_exclusion
 msgid ""
 "Ghi lại những kỳ mà số đo <b>đúng</b> nhưng <b>không tính\n"
@@ -436,6 +447,11 @@ msgstr "When"
 #: model:ir.model,name:eam_historian.model_eam_historian
 msgid "Kho chuỗi thời gian (historian)"
 msgstr "Time-series store (historian)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__outage_id
+msgid "Khoảng dừng"
+msgstr "Outage"
 
 #. module: eam_historian
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
@@ -691,6 +707,11 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__manual
+msgid "Nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_historian
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
 msgid "Nhịp (giây)"
 msgstr "Interval (seconds)"
@@ -833,6 +854,11 @@ msgid "Thiếu ô này thì KHÔNG hiệu chỉnh mật độ được, và kế
 msgstr "Without this field air density CANNOT be corrected for, and the result will say plainly that it was not corrected."
 
 #. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__0
 msgid "Thô (không gộp)"
 msgstr "Raw (not aggregated)"
@@ -957,6 +983,11 @@ msgstr "Rotational speed (rpm)"
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
 msgid "Từ"
+msgstr "From"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Từ ngày"
 msgstr "From"
 
 #. module: eam_historian
@@ -1252,6 +1283,15 @@ msgid "Đường cong cam kết"
 msgstr "Warranted power curve"
 
 #. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_power_curve
+#: model:ir.model,name:eam_historian.model_eam_power_curve
+#: model:ir.ui.menu,name:eam_historian.menu_eam_power_curve_run
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Đường cong công suất"
+msgstr "Power curve"
+
+#. module: eam_historian
 #: model:ir.actions.act_window,name:eam_historian.action_eam_power_curve_run
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
 msgid "Đường cong công suất thực tế"
@@ -1326,4 +1366,24 @@ msgstr "Vibration"
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "đo áp suất trực tiếp"
 msgstr "measured pressure directly"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
+msgid "Khoảng loại trừ KPI"
+msgstr "KPI exclusion periods"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_power_curve_run
+msgid "Đường cong công suất"
+msgstr "Power curve"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_quality
+msgid "Chất lượng dữ liệu"
+msgstr "Data quality"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_tag
+msgid "Điểm đo (tag)"
+msgstr "Measurement points (tags)"
 

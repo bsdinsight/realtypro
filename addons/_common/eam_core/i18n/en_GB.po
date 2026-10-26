@@ -443,6 +443,22 @@ msgid "Dừng máy xảy ra ở một CHỖ. Thiết bị đang nằm ở đó s
 msgstr "An outage happens at a PLACE. Which equipment was there is derived from the installation history."
 
 #. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__note
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__note
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
 msgid "Ghi lần lắp mới"
 msgstr "Record new installation"
@@ -471,6 +487,11 @@ msgstr "Performance"
 #: model:ir.model.fields,field_description:eam_core.field_eam_asset__is_refurbished
 msgid "Hàng đã tân trang"
 msgstr "Refurbished part"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__warranty_state__expired
+msgid "Hết hạn"
+msgstr "Expired"
 
 #. module: eam_core
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__source__scada
@@ -1060,6 +1081,11 @@ msgid "Nhập dữ liệu lịch sử"
 msgstr "Historical data import"
 
 #. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__source__manual
+msgid "Nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_core
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__upgrade
 msgid "Nâng cấp"
 msgstr "Upgrade"
@@ -1153,6 +1179,13 @@ msgstr "Installations"
 #: model:ir.model.fields,field_description:eam_core.field_eam_outage__child_count
 msgid "Số máy bị kéo theo"
 msgstr "Knock-on units"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid "Số ngày"
+msgstr "Days"
 
 #. module: eam_core
 #: model:ir.model.fields,field_description:eam_core.field_eam_installation__duration_days

@@ -238,6 +238,11 @@ msgid "Khai mẫu ca"
 msgstr "Declare a shift pattern"
 
 #. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__outage_id
+msgid "Khoảng dừng"
+msgstr "Outage"
+
+#. module: eam_shift
 #: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift_note_dun
 msgid "Không có việc nào bị đùn"
 msgstr "Nothing is being passed along"
@@ -310,6 +315,14 @@ msgstr "Open the shift"
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__muc_do
 msgid "Mức độ"
 msgstr "Severity"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__ngay
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__ngay
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Ngày"
+msgstr "Day"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__nguoi_giao_id
@@ -407,6 +420,12 @@ msgstr "State at the start of the shift"
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__name
 msgid "Tên ca"
 msgstr "Shift name"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__state
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+msgid "Tình trạng"
+msgstr "Status"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__so_may_dung
@@ -594,4 +613,19 @@ msgstr "Counted back along the chain of handovers. Three shifts or more means wo
 #: model:ir.model.fields,help:eam_shift.field_eam_shift_note__work_order_id
 msgid "Để trống cũng được. Nhiều thứ cần bàn giao chưa kịp thành lệnh công việc — ép phải có lệnh trước khi ghi là đúng cách làm chúng biến mất."
 msgstr "It may be left empty. Plenty of things need handing over before they become work orders — insisting on an order first is exactly how they disappear."
+
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift
+msgid "Ca trực & giao ca"
+msgstr "Shifts & handover"
+
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_note_dun
+msgid "Việc bị đùn qua nhiều ca"
+msgstr "Work pushed across shifts"
+
+#. module: eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_pattern
+msgid "Mẫu ca trực"
+msgstr "Shift patterns"
 

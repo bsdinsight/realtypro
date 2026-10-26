@@ -382,6 +382,12 @@ msgid "Câu đắt nhất của bảo trì: giám sát trạng thái chỉ đán
 msgstr "The most expensive question in maintenance: condition monitoring only pays when this share is high."
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__days_to_due
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Còn (ngày)"
+msgstr "Remaining (days)"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__meter_to_due
 msgid "Còn (đơn vị đồng hồ)"
 msgstr "Remaining (meter units)"
@@ -573,6 +579,11 @@ msgstr "Maximum shift (days)"
 #: model:ir.actions.server,name:eam_pm.cron_eam_pm_sinh_lenh_ir_actions_server
 msgid "EAMOne: sinh lệnh bảo trì phòng ngừa"
 msgstr "EAMOne: raise preventive maintenance orders"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__note
+msgid "Ghi chú"
+msgstr "Note"
 
 #. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
@@ -939,6 +950,12 @@ msgid "Lệnh phòng ngừa"
 msgstr "Preventive order"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__wo_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Lệnh đang mở"
+msgstr "Open orders"
+
+#. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
 msgid "Lịch"
 msgstr "Schedule"
@@ -1259,6 +1276,11 @@ msgid "Nhập lịch sử"
 msgstr "Import history"
 
 #. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter_reading__source__manual
+msgid "Nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_pm
 #: model:ir.model.fields,help:eam_pm.field_eam_pm_task__uom_label
 msgid "Nm, bar, °C, mm, V… Ghi ra để người đo khỏi phải đoán đang đo bằng đơn vị gì."
 msgstr "Nm, bar, °C, mm, V… Write it down so the person measuring need not guess the unit."
@@ -1482,6 +1504,11 @@ msgid "Thiếu số đọc đồng hồ"
 msgstr "Meter readings missing"
 
 #. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__0
 msgid "Thấp"
 msgstr "Low"
@@ -1532,6 +1559,12 @@ msgid "Tên mùa"
 msgstr "Season name"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__state
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Tình trạng"
+msgstr "Status"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__due_by
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
@@ -1553,6 +1586,13 @@ msgstr "From the plan"
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__anchor__from_last_done
 msgid "Từ lần làm xong gần nhất"
 msgstr "From the last completion"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__date_from
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__day_from
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Từ ngày"
+msgstr "From"
 
 #. module: eam_pm
 #: model:ir.model.fields,help:eam_pm.field_eam_reliability__downtime_hours
@@ -1808,6 +1848,12 @@ msgstr "To"
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search_season
 msgid "Đến hạn lần tới"
 msgstr "Next due"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__date_to
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__day_to
+msgid "Đến ngày"
+msgstr "To"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_season__month_to

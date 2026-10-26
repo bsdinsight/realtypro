@@ -48,3 +48,48 @@ msgstr "Erection register"
 msgid "Vị trí"
 msgstr "Location"
 
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_percent
+msgid "% dựng máy"
+msgstr "% erected"
+
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_out_of_order
+msgid "Cổng ghi lệch thứ tự"
+msgstr "Gates recorded out of order"
+
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_blocked_why
+#: model:ir.model.fields,field_description:rp_erection.field_rp_erection_step__blocked_reason
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_list
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_search
+msgid "Kẹt vì"
+msgstr "Stuck because of"
+
+#. module: rp_erection
+#: model:ir.actions.act_window,name:rp_erection.action_rp_erection_step
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_step_ids
+#: model:ir.ui.menu,name:rp_erection.menu_rp_erection_step
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_list
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_search
+msgid "Sổ dựng máy"
+msgstr "Erection register"
+
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_days_late
+msgid "Trễ nhất (ngày)"
+msgstr "Worst delay (days)"
+
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_blocked
+#: model:ir.model.fields.selection,name:rp_erection.selection__rp_erection_step__state__blocked
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_form
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_search
+msgid "Đang kẹt"
+msgstr "Stuck"
+
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_eam_location__erection_gate_id
+msgid "Đang ở cổng"
+msgstr "Currently at gate"
+

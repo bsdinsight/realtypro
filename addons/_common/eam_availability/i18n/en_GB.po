@@ -17,13 +17,319 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__dai_kd__thap
+msgid "90% đến dưới 95%"
+msgstr "90% to under 95%"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__dai_kd__kha
+msgid "95% đến dưới 98%"
+msgstr "95% to under 98%"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        Ngày này có"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        This day has"
+
+#. module: eam_availability
+#: model_terms:ir.actions.act_window,help:eam_availability.action_eam_availability_day
+msgid "Chưa dựng ngày nào"
+msgstr "No day has been built yet"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+msgid "Chưa quy"
+msgstr "Unattributed"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__can_cu__thieu_sl
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Chưa đo được sản lượng"
+msgstr "The energy could not be measured"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Còn khoảng chưa tính kWh"
+msgstr "Some outages have no kWh computed"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__can_cu__con_khoang
+msgid "Còn khoảng dừng chưa tính kWh"
+msgstr "Some outages still have no kWh computed"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__can_cu__chua_quy
+msgid "Có giờ chưa quy trách nhiệm"
+msgstr "There are hours with no responsibility attributed"
+
+#. module: eam_availability
 #: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__company_id
 msgid "Công ty"
 msgstr "Company"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__can_cu
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Căn cứ con số"
+msgstr "Basis of the figure"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__dai_kd__rat_thap
+msgid "Dưới 90%"
+msgstr "Below 90%"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Dải khả dụng"
+msgstr "Availability band"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__dai_kd
+msgid "Dải khả dụng (thời gian)"
+msgstr "Availability band (by time)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__gio_chua_quy
+msgid "Giờ chưa quy trách nhiệm"
+msgstr "Hours with no responsibility attributed"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+msgid "Giờ dừng"
+msgstr "Downtime hours"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__gio_dung
+msgid "Giờ dừng tính"
+msgstr "Downtime hours counted"
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_availability_day__so_may_kha_dung
+msgid "Giờ-máy sẵn sàng chia số giờ trong ngày. Hai mươi tư trên hai mươi tư tổ máy thì bằng đúng số tổ máy; có máy dừng nửa ngày thì ra số lẻ."
+msgstr "Available unit-hours divided by the hours in the day. Twenty-four out of twenty-four units gives exactly the unit count; with a machine down for half a day it comes out fractional."
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__gio_ky
+msgid "Giờ-máy trong ngày"
+msgstr "Unit-hours in the day"
+
+#. module: eam_availability
+#: model_terms:ir.actions.act_window,help:eam_availability.action_eam_availability_day
+msgid ""
+"Hai con số song song: khả dụng theo <b>thời gian</b> và\n"
+"            theo <b>sản lượng</b>. Chúng khác nhau, và khác nhiều — một\n"
+"            tua-bin dừng giữa mùa lặng gió mất gần như không gì, dừng\n"
+"            giữa mùa gió mạnh mất cả chục nghìn kWh."
+msgstr ""
+"Two figures side by side: availability by <b>time</b> and by\n"
+"            <b>energy</b>. They differ, and they differ widely — a turbine down\n"
+"            in a windless spell loses almost nothing, while one down in a windy\n"
+"            spell loses tens of thousands of kWh."
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_location__so_don_vi_kha_dung
+msgid "Khai ở cấp NHÀ MÁY. Để 0 thì hệ đếm mọi vị trí thiết bị con — và đếm nhầm: trạm khí tượng cũng là một vị trí thiết bị nhưng không phát điện, nên nhà máy mười sáu trạm nghịch lưu ra mười bảy tổ máy. Khả dụng khi đó thấp đi một phần mười bảy mà vẫn nằm trong khoảng trông hợp lý."
+msgstr "Declared at PLANT level. At 0 the system counts every child equipment location — and counts wrongly: a weather station is an equipment location too but generates nothing, so a plant with sixteen inverter stations comes out with seventeen units. Availability is then one seventeenth too low while still sitting in a plausible-looking range."
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_location__power_curve_id
+msgid "Khai ở cấp VỊ TRÍ TỔ MÁY. Phải khai tường minh: trên bản demo, đường cong có sẵn để trống ô loại cấu phần, nên phép dò \"đường cong nào khớp tổ máy này\" khớp nhầm vì rỗng khớp rỗng — một phép so trả về đúng mà không có gì đúng cả."
+msgstr "Declared at UNIT LOCATION level. It has to be explicit: on the demo, the shipped curve leaves the component category empty, so the \"which curve matches this unit\" lookup matched wrongly because empty matches empty — a comparison that returns true with nothing actually being true."
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__so_khoang_chua_tinh
+msgid "Khoảng dừng chưa tính kWh"
+msgstr "Outages with no kWh computed"
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_availability_day__so_khoang_chua_tinh
+msgid "Khoảng dừng trong ngày mà sản lượng mất còn để trống. Mẫu số thiếu đúng phần đó, nên khả dụng đang cao hơn sự thật."
+msgstr "Outages during the day whose energy lost is still empty. The denominator is short by exactly that much, so availability is higher than the truth."
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid "Khả dụng ngày"
+msgstr "Daily availability"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__kd_san_luong
+msgid "Khả dụng sản lượng (%)"
+msgstr "Energy availability (%)"
+
+#. module: eam_availability
+#: model:ir.actions.act_window,name:eam_availability.action_eam_availability_day
+#: model:ir.model,name:eam_availability.model_eam_availability_day
+#: model:ir.ui.menu,name:eam_availability.menu_eam_availability_day
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Khả dụng theo ngày"
+msgstr "Availability by day"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__kd_thoi_gian
+msgid "Khả dụng thời gian (%)"
+msgstr "Time availability (%)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__luy_ke_nam
+msgid "Luỹ kế năm (%)"
+msgstr "Year to date (%)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__luy_ke_thang
+msgid "Luỹ kế tháng (%)"
+msgstr "Month to date (%)"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid "Luỹ kế — cộng tử số rồi chia tổng mẫu số,                                    KHÔNG trung bình phần trăm các ngày"
+msgstr "Running total — numerators summed then divided by the summed denominator,                                    NOT an average of the daily percentages"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+msgid "Mất"
+msgstr "Lost"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__mau_so_doan
+msgid "Mẫu số do hệ đoán"
+msgstr "The denominator was guessed by the system"
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_availability_day__dai_kd
+msgid "Mốc để QUÉT MẮT, không phải ngưỡng hợp đồng. Mỗi hợp đồng O&M cam kết một mức khác nhau; việc chấm theo cam kết nằm ở Hợp đồng ▸ Đánh giá & thanh toán, không ở đây."
+msgstr "A level for SCANNING BY EYE, not a contract threshold. Every O&M contract commits to a different figure; assessment against the commitment lives in Contracts ▸ Assessment & payment, not here."
+
+#. module: eam_availability
+#: model:ir.model.constraint,message:eam_availability.constraint_eam_availability_day_uniq_ngay
+msgid "Mỗi nhà máy chỉ có một dòng khả dụng cho một ngày."
+msgstr "A plant has one availability row per day."
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_availability_day__can_cu
+msgid "Một dòng có thể thiếu nhiều thứ cùng lúc; ô này lấy cái NẶNG NHẤT. Thiếu sản lượng thì khả dụng theo sản lượng không tính được chút nào, nên nó đứng trên; còn giờ chưa quy trách nhiệm thì con số vẫn ra, chỉ chưa biết đổ cho ai."
+msgstr "One row can be missing several things at once; this field takes the WORST. Without the energy figure, energy availability cannot be computed at all, so it ranks above; with unattributed hours the figure still comes out, it is just not yet known who to charge."
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__date
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Ngày"
+msgstr "Day"
 
 #. module: eam_availability
 #: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__plant_id
 #: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_availability
+#: model:ir.model.fields,help:eam_availability.field_eam_availability_day__mau_so_doan
+msgid "Nhà máy chưa khai số tổ máy nên hệ đếm vị trí thiết bị con — trong đó có cả trạm khí tượng, vốn không phát điện. Khai số thật vào rồi dựng lại."
+msgstr "The plant declares no unit count, so the system counted the child equipment locations — which include the weather station, and that generates nothing. Declare the real figure and rebuild."
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__sl_mat
+msgid "Sản lượng mất (kWh)"
+msgstr "Energy lost (kWh)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__sl_that
+msgid "Sản lượng thực (kWh)"
+msgstr "Actual energy (kWh)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__nguon_sl
+msgid "Sản lượng thực lấy từ đâu"
+msgstr "Where the actual energy comes from"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__so_don_vi
+msgid "Số tổ máy"
+msgstr "Units"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_location__so_don_vi_kha_dung
+msgid "Số tổ máy dùng làm mẫu số khả dụng"
+msgstr "The number of units used as the availability denominator"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__so_may_kha_dung
+msgid "Số tổ máy khả dụng bình quân"
+msgstr "Mean available units"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid "Theo sản lượng"
+msgstr "By energy"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid "Theo thời gian"
+msgstr "By time"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+msgid "Thực"
+msgstr "Actual"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__dai_kd__cao
+msgid "Từ 98% trở lên"
+msgstr "98% and above"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__ly_do_chua_do
+msgid "Vì sao chưa đo được"
+msgstr "Why it could not be measured"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_form
+msgid ""
+"khoảng dừng chưa\n"
+"                        tính được sản lượng mất. Mẫu số thiếu đúng phần\n"
+"                        đó, nên <b>khả dụng đang cao hơn sự thật</b>."
+msgstr ""
+"outages whose energy lost\n"
+"                        could not be computed. The denominator is short by\n"
+"                        exactly that much, so <b>availability is higher than the\n"
+"                        truth</b>."
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__do_duoc_sl
+msgid "Đo được sản lượng"
+msgstr "Energy was measured"
+
+#. module: eam_availability
+#: model_terms:ir.ui.view,arch_db:eam_availability.view_eam_availability_day_list
+msgid "Đáng lẽ"
+msgstr "Should have been"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_availability_day__sl_dang_le
+msgid "Đáng lẽ phát (kWh)"
+msgstr "Should have generated (kWh)"
+
+#. module: eam_availability
+#: model:ir.model.fields,field_description:eam_availability.field_eam_location__power_curve_id
+msgid "Đường cong công suất"
+msgstr "Power curve"
+
+#. module: eam_availability
+#: model:ir.model.fields.selection,name:eam_availability.selection__eam_availability_day__can_cu__du
+msgid "Đủ căn cứ"
+msgstr "Enough evidence"
+
+#. module: eam_availability
+#: model:ir.ui.menu,name:eam_availability.menu_eam_availability_day
+msgid "Khả dụng theo ngày"
+msgstr "Availability by day"
 

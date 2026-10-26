@@ -1,0 +1,62 @@
+1210	Money
+1211	Deemed
+1212	Coverage %
+1213	Spans two periods
+1214	Value lost
+1215	Price applied
+1216	Outage
+1217	Energy period
+1218	MWh — grid caused
+1219	How it is valued
+1220	Outages
+1221	Unexplained
+1222	Explained
+1223	Outages — %s
+1224	Suspected data error
+1225	Recoverable loss
+1226	Lost revenue
+1227	Unexplained MWh
+1228	MWh — force majeure
+1229	MWh — grid curtailment
+1230	Outages during the period
+1231	MWh — under warranty
+1232	View each outage
+1233	Rows suspected of data error
+1234	Value of the energy lost
+1235	Price applied (USD/kWh)
+1236	Lost to unavailability
+1237	Cross-check against the outage log
+1238	Coverage of the log (%)
+1239	Energy by period
+1240	By responsibility (MWh)
+1241	Contractual liability cap
+1242	Explained MWh lost
+1243	MWh — owner's own account
+1244	MWh — under the O&M contract
+1245	Deemed energy
+1246	No energy there to lose
+1247	Genuine loss — nobody compensates it
+1248	Lost revenue that can be claimed
+1249	Loss from unavailability (MWh)
+1250	Economic damage — caused by a third party
+1251	Deemed under the deemed energy clause
+1252	Energy lost — explained and attributed
+1253	The real shortfall: the deemed energy portion has been deducted.
+1254	Energy lost × price. The deemed portion is not yet deducted — see "Lost revenue" for the real shortfall.
+1255	The value of the energy lost attributed to warranty and to O&M contract obligations. THIS IS NOT YET THE RECOVERABLE AMOUNT.
+1256	Genuinely lost with nobody to claim from. Kept apart so it is not confused with the part the owner bears through poor management.
+1257	Derived from the START time. An outage spanning two periods still counts wholly in the period it started in — see the "spans two periods" flag.
+1258	The part caused by the grid that the power purchase agreement still pays for. The share comes from the period's own contract, not a default of 100%.
+1259	The part of the availability loss whose cause the outage log cannot identify. This is where money leaks away with nobody claiming it.
+1260	The value of the shortfall BELOW THE AVAILABILITY COMMITMENT. Above the commitment the contractor owes nothing, even though the energy is still lost.
+1261	The number of outages declaring lost MWh on a time category of "no energy there to lose" — below cut-in wind speed, nothing is lost.
+1262	The REAL shortfall = the value of the energy lost − the deemed portion. An outage caused by grid curtailment has a large energy value but a shortfall of zero.
+1263	Cross-check against the period's "Curtailed" field. Under IEC 61400-26 curtailment is NOT downtime — the machine remains available — so it does not enter the availability denominator.
+1264	The outage ends in a different period from the one it started in. For now it counts wholly in the starting period — it is not yet apportioned. This flag marks where the figure is not quite exact, rather than hiding it.
+1265	Only CHILD outages are summed — the root outage of an incident spanning several machines is excluded to avoid double counting. And only the categories valued as a genuine loss are summed: grid curtailment sits in a column of its own.
+1266	A WEIGHTED AVERAGE price by that period's own energy. Where a project sells to several offtakers at different prices, the energy lost has to be valued at the real weighting rather than at one contract's price.
+1267	Decides whether energy lost under this category enters lost revenue. The system pre-fills it, but it is EDITABLE: on a project with no deemed energy clause, grid curtailment is a genuine loss.
+1268	Derived from the period's own availability percentage: the energy that would have been achieved at 100% availability. This is the denominator for cross-checking the outage log — DIFFERENT from "Availability shortfall", which is only the part below the commitment, that is, the part recoverable from the contractor.
+1269	Explained MWh ÷ loss from unavailability. Below 100% means THERE IS ENERGY LOST THAT NOBODY KNOWS THE REASON FOR — so look at this figure before believing any availability report. Above 100% means the log records more than was really lost: overlapping outages, or MWh estimated too generously.
+1270	Takes the LOWER of the damage caused by a third party and the contractual liability cap. It is still an ESTIMATE: the O&M contract's availability regime has its own formula, an annual liability cap, and usually excludes grid or force majeure hours from the availability denominator. This figure is for negotiating with, not for the books.
+1271	<b>Cross-check on "Lost to unavailability", claim on\n                        "Availability shortfall".</b> The two figures diverge\n                        widely: a 98% availability commitment means 2% of downtime\n                        is allowed to happen — energy lost that nobody has to pay\n                        for.<br/>\n                        <b>Coverage below 100% means there is energy lost that\n                        nobody knows the reason for.</b> Look at this figure before\n                        believing any availability report, including your own.<br/>\n                        <b>Recoverable loss is still a figure for negotiating.</b>\n                        An O&amp;M contract's regime has its own availability\n                        penalty formula, an annual liability cap, and usually\n                        excludes grid or force majeure hours from the availability\n                        denominator.

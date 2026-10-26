@@ -1,0 +1,55 @@
+284	Lost
+285	Day
+286	Actual
+287	Month
+288	Should have been
+289	Unattributed
+290	Below 90%
+291	Downtime hours
+292	Units
+293	Enough evidence
+294	Availability band
+295	Basis of the figure
+296	Downtime hours counted
+297	Daily availability
+298	Year to date (%)
+299	By energy
+300	By time
+301	98% and above
+302	90% to under 95%
+303	95% to under 98%
+304	Month to date (%)
+305	The denominator was guessed by the system
+306	Energy was measured
+307	No day has been built yet
+308	Unit-hours in the day
+309	Availability by day
+310	Should have generated (kWh)
+311	Energy lost (kWh)
+312	Why it could not be measured
+313	Actual energy (kWh)
+314	Power curve
+315	The energy could not be measured
+316	Energy availability (%)
+317	Time availability (%)
+318	Some outages have no kWh computed
+319	Availability band (by time)
+320	Hours with no responsibility attributed
+321	Outages with no kWh computed
+322	Where the actual energy comes from
+323	There are hours with no responsibility attributed
+324	Mean available units
+325	Some outages still have no kWh computed
+326	The number of units used as the availability denominator
+327	A plant has one availability row per day.
+328	<i class="fa fa-exclamation-triangle me-1"/>\n                        This day has
+329	Running total — numerators summed then divided by the summed denominator,                                    NOT an average of the daily percentages
+330	Outages during the day whose energy lost is still empty. The denominator is short by exactly that much, so availability is higher than the truth.
+331	Available unit-hours divided by the hours in the day. Twenty-four out of twenty-four units gives exactly the unit count; with a machine down for half a day it comes out fractional.
+332	The plant declares no unit count, so the system counted the child equipment locations — which include the weather station, and that generates nothing. Declare the real figure and rebuild.
+333	outages whose energy lost\n                        could not be computed. The denominator is short by\n                        exactly that much, so <b>availability is higher than the\n                        truth</b>.
+334	A level for SCANNING BY EYE, not a contract threshold. Every O&M contract commits to a different figure; assessment against the commitment lives in Contracts ▸ Assessment & payment, not here.
+335	One row can be missing several things at once; this field takes the WORST. Without the energy figure, energy availability cannot be computed at all, so it ranks above; with unattributed hours the figure still comes out, it is just not yet known who to charge.
+336	Declared at UNIT LOCATION level. It has to be explicit: on the demo, the shipped curve leaves the component category empty, so the "which curve matches this unit" lookup matched wrongly because empty matches empty — a comparison that returns true with nothing actually being true.
+337	Two figures side by side: availability by <b>time</b> and by\n            <b>energy</b>. They differ, and they differ widely — a turbine down\n            in a windless spell loses almost nothing, while one down in a windy\n            spell loses tens of thousands of kWh.
+338	Declared at PLANT level. At 0 the system counts every child equipment location — and counts wrongly: a weather station is an equipment location too but generates nothing, so a plant with sixteen inverter stations comes out with seventeen units. Availability is then one seventeenth too low while still sitting in a plausible-looking range.

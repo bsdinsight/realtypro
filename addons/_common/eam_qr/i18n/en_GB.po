@@ -1,0 +1,232 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_qr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.report_asset_label_document
+#: model_terms:ir.ui.view,arch_db:eam_qr.report_location_label_document
+msgid "CHƯA CẤP MÃ"
+msgstr "NO CODE ISSUED"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_form_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_form_qr
+msgid "Cấp mã quét"
+msgstr "Issue a scan code"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Không có %(loai)s nào mang mã \"%(ma)s\". Tem có thể đã được cấp lại mã, hoặc bản ghi đã bị xoá. Đừng ghi số đo vào một hồ sơ khác — báo người quản lý tài sản để in tem mới."
+msgstr "No %(loai)s carries the code \"%(ma)s\". The label may have been reissued, or the record deleted. Do not record readings against another record — tell the asset manager to print a new label."
+
+#. module: eam_qr
+#: code:addons/eam_qr/models/eam_qr_mixin.py:0
+msgid "Không có thiết bị nào mang mã \"%s\"."
+msgstr "No equipment carries the code \"%s\"."
+
+#. module: eam_qr
+#: code:addons/eam_qr/models/eam_qr_mixin.py:0
+msgid "Không có vị trí nào mang mã \"%s\". Tem có thể đã được cấp lại mã — đừng ghi số đo vào hồ sơ khác, báo người quản lý tài sản."
+msgstr "No location carries the code \"%s\". The label may have been reissued — do not record readings against another record; tell the asset manager."
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Không tìm thấy tem"
+msgstr "Label not found"
+
+#. module: eam_qr
+#: model:ir.model.fields,help:eam_qr.field_eam_asset__qr_token
+#: model:ir.model.fields,help:eam_qr.field_eam_location__qr_token
+#: model:ir.model.fields,help:eam_qr.field_eam_qr_mixin__qr_token
+msgid "Mã in trên tem QR dán ngoài hiện trường. Ngẫu nhiên, có tiền tố theo loại — không phải số thứ tự, để không ai dò được số lượng thiết bị của nhà máy."
+msgstr "The code printed on the QR label out in the field. Random, with a prefix by type — not a sequence number, so that nobody can work out how much equipment the plant has."
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Mã không đúng dạng"
+msgstr "The code is malformed"
+
+#. module: eam_qr
+#: code:addons/eam_qr/models/eam_qr_mixin.py:0
+msgid "Mã phải bắt đầu bằng \"L\" (tem vị trí) hoặc \"A\" (tem thiết bị). Nhận được: %s"
+msgstr "The code has to start with \"L\" (a location label) or \"A\" (an equipment label). Received: %s"
+
+#. module: eam_qr
+#: model:ir.model.fields,field_description:eam_qr.field_eam_asset__qr_token
+#: model:ir.model.fields,field_description:eam_qr.field_eam_location__qr_token
+#: model:ir.model.fields,field_description:eam_qr.field_eam_qr_mixin__qr_token
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_list_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_list_qr
+msgid "Mã quét"
+msgstr "Scan code"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Mã quét phải bắt đầu bằng \"L\" (tem vị trí) hoặc \"A\" (tem thiết bị). Mã nhận được: %s"
+msgstr "A scan code has to start with \"L\" (a location label) or \"A\" (an equipment label). Received: %s"
+
+#. module: eam_qr
+#: model:ir.model.constraint,message:eam_qr.constraint_eam_asset_uniq_qr
+msgid "Mã quét thiết bị không được trùng."
+msgstr "The equipment scan code must be unique."
+
+#. module: eam_qr
+#: model:ir.model.constraint,message:eam_qr.constraint_eam_location_uniq_qr
+msgid "Mã quét vị trí không được trùng."
+msgstr "The location scan code must be unique."
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Mở hồ sơ vị trí"
+msgstr "Open the location record"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_form_qr
+msgid ""
+"Tem <b>thiết bị</b>: dán lên chính thiết bị, theo\n"
+"                            nó đi khắp nơi. Khác tem vị trí — tem vị trí dán\n"
+"                            trên tháp và không đi đâu cả."
+msgstr ""
+"An <b>equipment</b> label: stuck on the equipment\n"
+"                            itself and travelling with it. Different from a\n"
+"                            location label, which is fixed to the tower and goes\n"
+"                            nowhere."
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_form_qr
+msgid ""
+"Tem <b>vị trí</b>: quét ra thiết bị đang lắp ở\n"
+"                            chỗ này <b>hôm nay</b>, tra qua lịch sử lắp đặt.\n"
+"                            Thay thiết bị không cần in lại tem."
+msgstr ""
+"A <b>location</b> label: scanning it gives the\n"
+"                            equipment installed here <b>today</b>, looked up\n"
+"                            through the installation history. Replacing the\n"
+"                            equipment needs no new label."
+
+#. module: eam_qr
+#: model:ir.actions.report,name:eam_qr.action_report_asset_label
+msgid "Tem QR thiết bị"
+msgstr "Equipment QR label"
+
+#. module: eam_qr
+#: model:ir.actions.report,name:eam_qr.action_report_location_label
+msgid "Tem QR vị trí"
+msgstr "Location QR label"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.report_asset_label_document
+msgid ""
+"Tem THIẾT BỊ (mã bắt đầu bằng A): dán lên chính thiết\n"
+"                    bị, theo nó đi khắp nơi. Khác tem vị trí."
+msgstr ""
+"An EQUIPMENT label (a code starting with A): stuck on the\n"
+"                    equipment itself and travelling with it. Different from a\n"
+"                    location label."
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.report_location_label_document
+msgid ""
+"Tem VỊ TRÍ (mã bắt đầu bằng L): quét ra thiết bị đang\n"
+"                    lắp ở chỗ này <b>hôm nay</b>. Thay thiết bị không cần\n"
+"                    in lại tem."
+msgstr ""
+"A LOCATION label (a code starting with L): scanning it gives\n"
+"                    the equipment installed here <b>today</b>. Replacing the\n"
+"                    equipment needs no new label."
+
+#. module: eam_qr
+#: code:addons/eam_qr/models/eam_qr_mixin.py:0
+msgid "Tem không mang mã nào."
+msgstr "The label carries no code."
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Tem này là tem của vị trí %(ma)s — %(ten)s. Hôm nay không có thiết bị nào đang lắp ở đó, nên không mở được hồ sơ thiết bị."
+msgstr "This is the label of location %(ma)s — %(ten)s. No equipment is installed there today, so no equipment record can be opened."
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_form_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_form_qr
+msgid "Tem quét hiện trường"
+msgstr "Field scan labels"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Tem trống"
+msgstr "Blank label"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.page_thong_bao
+msgid "Về trang chính"
+msgstr "Back to the main page"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Vị trí đang trống"
+msgstr "The location is empty"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "thiết bị"
+msgstr "equipment"
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "vị trí"
+msgstr "location"
+
+#. module: eam_qr
+#: code:addons/eam_qr/models/eam_qr_mixin.py:0
+msgid "Đã đổi mã quét. Tem cũ dán ngoài hiện trường không còn mở được gì — phải in và dán lại."
+msgstr "The scan code has been reissued. Old labels out in the field no longer open anything — they have to be reprinted and refitted."
+
+#. module: eam_qr
+#: code:addons/eam_qr/controllers/main.py:0
+msgid "Đường dẫn không mang mã nào."
+msgstr "The URL carries no code."
+
+#. module: eam_qr
+#: model:ir.model.fields,field_description:eam_qr.field_eam_asset__qr_url
+#: model:ir.model.fields,field_description:eam_qr.field_eam_location__qr_url
+#: model:ir.model.fields,field_description:eam_qr.field_eam_qr_mixin__qr_url
+msgid "Đường dẫn quét"
+msgstr "Scan URL"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_form_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_form_qr
+msgid "Đổi mã"
+msgstr "Reissue the code"
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_location_form_qr
+msgid "Đổi mã sẽ làm CHẾT mọi tem đang dán ngoài hiện trường của vị trí này — phải in và dán lại. Chỉ làm khi tem bị sao chép hoặc dán sai chỗ."
+msgstr "Reissuing the code KILLS every label out in the field for this location — they have to be reprinted and refitted. Only do it when a label has been copied or stuck in the wrong place."
+
+#. module: eam_qr
+#: model_terms:ir.ui.view,arch_db:eam_qr.view_eam_asset_form_qr
+msgid "Đổi mã sẽ làm CHẾT mọi tem đang dán trên thiết bị này — phải in và dán lại."
+msgstr "Reissuing the code KILLS every label already stuck on this equipment — they have to be reprinted and refitted."
+
+#. module: eam_qr
+#: model:ir.model.fields,field_description:eam_qr.field_eam_asset__qr_image_url
+#: model:ir.model.fields,field_description:eam_qr.field_eam_location__qr_image_url
+#: model:ir.model.fields,field_description:eam_qr.field_eam_qr_mixin__qr_image_url
+msgid "Ảnh QR"
+msgstr "QR image"
+

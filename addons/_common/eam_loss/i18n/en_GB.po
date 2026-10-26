@@ -73,6 +73,16 @@ msgid "Biểu đồ thác nước"
 msgstr "Waterfall chart"
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_bt
+msgid "Bảo trì theo kế hoạch"
+msgstr "Planned maintenance"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_bkk
+msgid "Bất khả kháng & môi trường"
+msgstr "Force majeure & environment"
+
+#. module: eam_loss
 #: model:eam.loss.type,name:eam_loss.lt_pv_bui
 msgid "Bụi bẩn"
 msgstr "Soiling"
@@ -176,6 +186,11 @@ msgid "Căn cứ"
 msgstr "Basis"
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_catgiam
+msgid "Cắt giảm theo lệnh điều độ"
+msgstr "Curtailment by dispatch order"
+
+#. module: eam_loss
 #: model:eam.loss.type,name:eam_loss.lt_pv_clip
 msgid "Cắt đỉnh (clipping)"
 msgstr "Clipping"
@@ -217,6 +232,11 @@ msgid "Dưới mốc kế hoạch"
 msgstr "Below the plan baseline"
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_om
+msgid "Dừng do nhà thầu O&M"
+msgstr "Downtime caused by the O&M contractor"
+
+#. module: eam_loss
 #: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__dung_may
 msgid "Dừng máy"
 msgstr "Downtime"
@@ -225,6 +245,11 @@ msgstr "Downtime"
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
 msgid "Dựng lại"
 msgstr "Rebuild"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__note
+msgid "Ghi chú"
+msgstr "Note"
 
 #. module: eam_loss
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
@@ -395,6 +420,11 @@ msgstr ""
 "                        nacelle differs from the wind reaching the blades."
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_mdl
+msgid "Mất dữ liệu giám sát"
+msgstr "Loss of monitoring data"
+
+#. module: eam_loss
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Mốc kế hoạch P50"
 msgstr "P50 plan baseline"
@@ -445,6 +475,14 @@ msgid "Mức kỳ vọng phải nằm trong khoảng 0–100%%. Đang khai %(gt)
 msgstr "The expected level has to lie between 0 and 100%%. It is %(gt)s%% for \"%(loai)s\"."
 
 #. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__date
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__date
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_loss
 #: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__tay
 msgid "Người nhập tay"
 msgstr "Entered by hand"
@@ -458,6 +496,14 @@ msgstr "Entered by hand"
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__nhom
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__nhom
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_type_search
+msgid "Nhóm"
+msgstr "Group"
 
 #. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__group_id
@@ -562,10 +608,32 @@ msgstr ""
 "               taking 2.1% is good or bad can only be known against a baseline."
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_ngoai
+msgid "Sự cố ngoài phạm vi"
+msgstr "Fault outside the scope"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_suco
+msgid "Sự cố thiết bị"
+msgstr "Equipment fault"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_loss
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
 msgid "Tháng này"
 msgstr "This month"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__sequence
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__sequence
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__sequence
+msgid "Thứ tự"
+msgstr "Order"
 
 #. module: eam_loss
 #: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__sequence
@@ -583,6 +651,11 @@ msgstr "Actual"
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__thuc_te
 msgid "Thực tế (kWh)"
 msgstr "Actual (kWh)"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_bandem
+msgid "Tiêu thụ ban đêm"
+msgstr "Overnight consumption"
 
 #. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__la_tu_dung
@@ -771,6 +844,11 @@ msgid "ngày này chưa có dòng hiệu suất"
 msgstr "there is no performance row for this day"
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_tudung
+msgid "Điện tự dùng"
+msgstr "Auxiliary consumption"
+
+#. module: eam_loss
 #: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__la_tu_dung
 #: model:ir.model.fields,help:eam_loss.field_eam_loss_type__la_tu_dung
 msgid "Điện tự dùng và tiêu thụ ban đêm KHÔNG phải tổn thất — nhà máy cố tình dùng chúng. Vẫn trừ khỏi sản lượng bán được, nhưng xếp riêng: gộp vào tổn thất là đổ cho vận hành một khoản mà vận hành không làm gì sai."
@@ -795,4 +873,24 @@ msgstr "Attributed"
 #: model:ir.model.fields,help:eam_loss.field_eam_loss_day__muc_tai_nguyen
 msgid "Đường cong công suất nhân tốc độ gió ĐO ĐƯỢC tại từng tổ máy. Đây mới là mốc vận hành chịu trách nhiệm."
 msgstr "The power curve applied to the wind speed MEASURED at each unit. This is the operational baseline that carries responsibility."
+
+#. module: eam_loss
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_day
+msgid "Hạch toán tổn thất"
+msgstr "Loss accounting"
+
+#. module: eam_loss
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_expect
+msgid "Tổn thất kỳ vọng"
+msgstr "Expected loss"
+
+#. module: eam_loss
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_line
+msgid "Phân rã tổn thất"
+msgstr "Loss breakdown"
+
+#. module: eam_loss
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_type
+msgid "Loại tổn thất"
+msgstr "Loss types"
 

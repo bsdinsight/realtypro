@@ -17,7 +17,436 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid " (hết hạn %s)"
+msgstr " (expired %s)"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "%(nv)s đã làm việc này nhưng chứng chỉ %(kn)s hết hạn %(d)s."
+msgstr "%(nv)s carried out this work but their %(kn)s certificate expired on %(d)s."
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "%(nv)s đã làm việc này nhưng không có %(kn)s."
+msgstr "%(nv)s carried out this work without %(kn)s."
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "<b>Tổ chưa đủ năng lực.</b>"
+msgstr "<b>The crew is not competent.</b>"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "Ai đủ năng lực?"
+msgstr "Who is competent?"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_inverter
+msgid "Bảo trì inverter điện mặt trời"
+msgstr "Solar PV inverter maintenance"
+
+#. module: eam_competency
+#: model_terms:ir.actions.act_window,help:eam_competency.action_eam_competency_matrix
+msgid ""
+"Chưa nhập chứng chỉ\n"
+"               nào"
+msgstr ""
+"No certificate has been\n"
+"               entered yet"
+
+#. module: eam_competency
+#: model:ir.model.fields.selection,name:eam_competency.selection__hr_employee_skill__eam_state__future
+msgid "Chưa tới hiệu lực"
+msgstr "Not yet valid"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Chứng chỉ"
+msgstr "Certificate"
+
+#. module: eam_competency
+#: model:ir.actions.act_window,name:eam_competency.action_eam_competency_matrix
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Chứng chỉ & hiệu lực"
+msgstr "Certificates & validity"
+
+#. module: eam_competency
+#: model:ir.ui.menu,name:eam_competency.menu_eam_competency
+msgid "Chứng chỉ & năng lực"
+msgstr "Certificates & competence"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Chứng chỉ / kỹ năng"
+msgstr "Certificate / skill"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/hr_employee_skill.py:0
+msgid "Chứng chỉ <b>%(ten)s</b> hết hạn ngày %(d)s — còn %(n)d ngày. Hết hạn là lỗi xếp lịch đào tạo, sửa được trong tuần; để quá hạn rồi mới biết thì mất cả buổi của một đội."
+msgstr "Certificate <b>%(ten)s</b> expires on %(d)s — %(n)d days left. An expiry is a training scheduling failure, fixable within the week; finding out only once it has lapsed costs a crew half a day."
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "Chứng chỉ của tổ"
+msgstr "The crew's certificates"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Chứng chỉ của tổ — %s"
+msgstr "The crew's certificates — %s"
+
+#. module: eam_competency
+#: model:ir.actions.act_window,name:eam_competency.action_eam_competency_expiring
+#: model:ir.ui.menu,name:eam_competency.menu_eam_competency_expiring
+msgid "Chứng chỉ hết hạn & sắp hết"
+msgstr "Certificates expired & expiring"
+
+#. module: eam_competency
+#: model:hr.skill.type,name:eam_competency.skill_type_om
+msgid "Chứng chỉ vận hành & bảo trì (O&M)"
+msgstr "Operation & maintenance (O&M) certificate"
+
+#. module: eam_competency
+#: model:ir.model.fields,help:eam_competency.field_eam_work_order__skill_ids
+msgid "Chứng chỉ, giấy phép, kỹ năng mà người làm PHẢI có. Lấy sẵn từ kế hoạch bảo trì khi lệnh sinh tự động."
+msgstr "The certificates, licences and skills whoever does the work MUST hold. Carried over from the maintenance plan when the order is raised automatically."
+
+#. module: eam_competency
+#: model:ir.model.fields,help:eam_competency.field_eam_pm_plan__skill_ids
+msgid "Chứng chỉ, giấy phép, kỹ năng mà người làm phải có. Mọi lệnh sinh từ kế hoạch này đều mang theo danh sách này."
+msgstr "The certificates, licences and skills whoever does the work must hold. Every order raised from this plan carries this list with it."
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_hr_employee_skill__eam_days_left
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Còn (ngày)"
+msgstr "Remaining (days)"
+
+#. module: eam_competency
+#: model:ir.model.fields.selection,name:eam_competency.selection__hr_employee_skill__eam_state__valid
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Còn hiệu lực"
+msgstr "Still valid"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Có người ghi giờ công mà không nằm trong tổ được phân công: %s."
+msgstr "Someone recorded labour hours without being on the assigned crew: %s."
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_rescue
+msgid "Cứu hộ trên cao, hạ người từ tháp"
+msgstr "Rescue at height, lowering from the tower"
+
+#. module: eam_competency
+#: model:ir.actions.server,name:eam_competency.cron_eam_competency_nhac_ir_actions_server
+msgid "EAMOne: nhắc chứng chỉ sắp hết hạn"
+msgstr "EAMOne: remind about expiring certificates"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_gwo_bst
+msgid "GWO — An toàn cơ bản (BST)"
+msgstr "GWO — Basic Safety Training (BST)"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_gwo_btt
+msgid "GWO — Kỹ thuật cơ bản (BTT)"
+msgstr "GWO — Basic Technical Training (BTT)"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_gwo_wah
+msgid "GWO — Làm việc trên cao"
+msgstr "GWO — Working at Height"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Ghi nhận sau khi làm (không chặn đóng lệnh):"
+msgstr "Recorded after the fact (does not block closing the order):"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_hr_employee_skill__eam_state
+msgid "Hiệu lực"
+msgstr "Validity"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid ""
+"Hiệu lực chứng chỉ được soi tại <b>ngày làm</b> của\n"
+"                        lệnh, không phải hôm nay — chứng chỉ còn hạn hôm nay\n"
+"                        mà hết hạn trước ngày làm thì vẫn bị chặn.<br/>\n"
+"                        <b>Hết hạn</b> là lỗi xếp lịch đào tạo, gia hạn được\n"
+"                        trong tuần. <b>Thiếu hẳn</b> là lỗi kế hoạch nhân\n"
+"                        lực, mất hàng tháng để bù — nên hai cái được tách\n"
+"                        riêng chứ không gộp thành \"không đủ năng lực\"."
+msgstr ""
+"Certificate validity is checked against the order's <b>work\n"
+"                        date</b>, not today — a certificate valid today that\n"
+"                        expires before the work date is still blocked.<br/>\n"
+"                        <b>Expired</b> is a training scheduling failure,\n"
+"                        renewable within the week. <b>Missing altogether</b> is a\n"
+"                        workforce planning failure, taking months to make up — so\n"
+"                        the two are kept apart rather than lumped together as\n"
+"                        \"not competent\"."
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Hiệu lực từ"
+msgstr "Valid from"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "HẾT HẠN (lỗi xếp lịch đào tạo — gia hạn được trong tuần):"
+msgstr "EXPIRED (a training scheduling failure — renewable within the week):"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Hết hạn"
+msgstr "Expired"
+
+#. module: eam_competency
+#: model:ir.model.fields,help:eam_competency.field_eam_work_order__crew_ids
+msgid "Khai TRƯỚC khi bắt đầu. Đây là danh sách bị cổng năng lực soi — dòng giờ công ghi sau chỉ được ghi nhận, không chặn."
+msgstr "Declare it BEFORE starting. This is the list the competence gate checks — a labour-hour line recorded afterwards is only noted, it does not block."
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Không ai đủ cả %s vào ngày này"
+msgstr "Nobody holds all of %s on this date"
+
+#. module: eam_competency
+#: model_terms:ir.actions.act_window,help:eam_competency.action_eam_competency_expiring
+msgid ""
+"Không có chứng chỉ nào\n"
+"               hết hạn hay sắp hết"
+msgstr ""
+"No certificate has expired\n"
+"               or is expiring"
+
+#. module: eam_competency
+#: model:ir.model.fields.selection,name:eam_competency.selection__hr_employee_skill__eam_state__no_expiry
+msgid "Không có thời hạn"
+msgstr "No expiry"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Không khai thời hạn"
+msgstr "No expiry declared"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_confined
+msgid "Làm việc trong không gian hạn chế"
+msgstr "Confined space working"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Lệnh \"%(ten)s\" yêu cầu năng lực (%(kn)s) nhưng chưa khai tổ được phân công — nên không kiểm được ai sẽ làm."
+msgstr "Order \"%(ten)s\" requires competence (%(kn)s) but has no crew assigned — so there is no checking who will do it."
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid ""
+"Lệnh có yêu cầu năng lực nhưng <b>chưa khai tổ</b> —\n"
+"                        chưa kiểm được ai sẽ làm."
+msgstr ""
+"The order has a competence requirement but <b>no crew declared</b> —\n"
+"                        there is no checking who will do it."
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Lệnh này chưa khai năng lực yêu cầu, nên chưa có gì để lọc người."
+msgstr "This order declares no competence requirement, so there is nothing to filter people by."
+
+#. module: eam_competency
 #: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
 msgid "Mức"
 msgstr "Level"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Nhân viên"
+msgstr "Employee"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+msgid "Nhóm"
+msgstr "Group"
+
+#. module: eam_competency
+#: model_terms:ir.actions.act_window,help:eam_competency.action_eam_competency_matrix
+msgid ""
+"Nhập <b>ngày hết hạn</b> thì cổng năng lực mới soi được. Để\n"
+"               trống là coi như vô thời hạn."
+msgstr ""
+"Enter an <b>expiry date</b> and the competence gate can check it. Left\n"
+"               empty it is treated as having no expiry."
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__crew_gap
+msgid "Năng lực còn thiếu"
+msgstr "Competence still missing"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "Năng lực lệnh này đòi"
+msgstr "Competence this order requires"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_pm_plan__skill_ids
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__skill_ids
+msgid "Năng lực yêu cầu"
+msgstr "Competence required"
+
+#. module: eam_competency
+#: model_terms:ir.actions.act_window,help:eam_competency.action_eam_competency_expiring
+msgid ""
+"Phát hiện hết hạn vào đúng buổi sáng đội đã lên tới chân trụ\n"
+"               thì thông tin đó không còn dùng được để làm gì. Danh sách\n"
+"               này để nhìn trước."
+msgstr ""
+"Discovering an expiry on the very morning the crew has reached the foot\n"
+"               of the tower is information that can no longer be used for\n"
+"               anything. This list is for seeing it in advance."
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Soi hiệu lực tại ngày làm: %s."
+msgstr "Validity checked on the work date: %s."
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_firstaid
+msgid "Sơ cấp cứu"
+msgstr "First aid"
+
+#. module: eam_competency
+#: model:ir.model.fields.selection,name:eam_competency.selection__hr_employee_skill__eam_state__expiring
+msgid "Sắp hết hạn"
+msgstr "Expiring soon"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Sắp hết hạn (60 ngày)"
+msgstr "Expiring soon (60 days)"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__crew_gap_expired
+msgid "Số chỗ hết hạn"
+msgstr "Expired entries"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__crew_gap_missing
+msgid "Số chỗ thiếu hẳn"
+msgstr "Entries missing altogether"
+
+#. module: eam_competency
+#: model:ir.model.fields,help:eam_competency.field_hr_employee_skill__eam_days_left
+msgid "Số ngày tới ngày hết hạn. Âm là đã quá hạn bao nhiêu ngày."
+msgstr "Days until expiry. Negative is how many days it is already overdue."
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_blade
+msgid "Sửa chữa cánh quạt"
+msgstr "Blade repair"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "THIẾU HẲN (lỗi kế hoạch nhân lực — mất hàng tháng để bù, hoặc phải thuê ngoài):"
+msgstr "MISSING ALTOGETHER (a workforce planning failure — months to make up, or it has to be subcontracted):"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_hv
+msgid "Thao tác điện cao áp (có thẻ an toàn điện)"
+msgstr "High-voltage switching (with an electrical safety card)"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Tháng hết hạn"
+msgstr "Month of expiry"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_dien_bac5
+msgid "Thẻ an toàn điện bậc 4/5"
+msgstr "Electrical safety card, level 4/5"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_rope
+msgid "Tiếp cận bằng dây (rope access)"
+msgstr "Rope access"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Tìm chứng chỉ"
+msgstr "Search certificates"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "Tình trạng"
+msgstr "Status"
+
+#. module: eam_competency
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "Tổ & năng lực"
+msgstr "Crew & competence"
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid ""
+"Tổ của lệnh \"%(ten)s\" chưa đủ năng lực:\n"
+"\n"
+"%(gap)s"
+msgstr ""
+"The crew on order \"%(ten)s\" is not competent:\n"
+"\n"
+"%(gap)s"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__crew_ids
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_form_competency
+msgid "Tổ được phân công"
+msgstr "Crew assigned"
+
+#. module: eam_competency
+#: model:ir.model.fields,field_description:eam_competency.field_eam_work_order__crew_ok
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_eam_work_order_list_competency
+msgid "Tổ đủ năng lực"
+msgstr "Crew is competent"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_crane
+msgid "Vận hành cẩu, thiết bị nâng"
+msgstr "Crane and lifting equipment operation"
+
+#. module: eam_competency
+#: model:ir.model.fields.selection,name:eam_competency.selection__hr_employee_skill__eam_state__expired
+#: model_terms:ir.ui.view,arch_db:eam_competency.view_hr_employee_skill_search_eam
+msgid "ĐÃ HẾT HẠN"
+msgstr "EXPIRED"
+
+#. module: eam_competency
+#: model:hr.skill,name:eam_competency.skill_oem_turbine
+msgid "Đào tạo nền tảng tua-bin của hãng"
+msgstr "The manufacturer's turbine platform training"
+
+#. module: eam_competency
+#: model_terms:ir.actions.act_window,help:eam_competency.action_eam_competency_matrix
+msgid ""
+"Đây là bảng kỹ năng <b>sẵn có của Odoo</b>, không phải một\n"
+"               bảng riêng của EAMOne — để phòng nhân sự và đội bảo trì\n"
+"               không có hai nguồn sự thật về cùng một tờ giấy."
+msgstr ""
+"This is <b>Odoo's own</b> skills table, not a separate EAMOne one —\n"
+"               so that HR and the maintenance crew do not keep two sources of\n"
+"               truth about the same piece of paper."
+
+#. module: eam_competency
+#: code:addons/eam_competency/models/eam_work_order.py:0
+msgid "Đủ năng lực ngày %s"
+msgstr "Competent on %s"
+
+#. module: eam_competency
+#: model:ir.ui.menu,name:eam_competency.menu_eam_competency_expiring
+msgid "Chứng chỉ hết hạn & sắp hết"
+msgstr "Certificates expired & expiring"
 

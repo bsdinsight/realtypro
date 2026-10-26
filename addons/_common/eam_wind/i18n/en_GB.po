@@ -17,6 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_sched_maint
+msgid "Bảo trì theo kế hoạch"
+msgstr "Planned maintenance"
+
+#. module: eam_wind
 #: model:eam.asset.category,name:eam_wind.cat_wtg_ele_pro
 msgid "Bảo vệ và đóng cắt"
 msgstr "Protection and switchgear"

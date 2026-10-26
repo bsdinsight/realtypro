@@ -1030,6 +1030,26 @@ msgid "Dừng máy hoàn toàn"
 msgstr "The machine is fully stopped"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_xref__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__note
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
 msgid "Ghi chú…"
 msgstr "Notes…"
@@ -1688,6 +1708,11 @@ msgid "Kế hoạch bảo trì phòng ngừa"
 msgstr "Preventive maintenance plan"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Kết luận"
+msgstr "Conclusion"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__note
 msgid "Kết luận & ghi chú"
 msgstr "Conclusion & notes"
@@ -2088,6 +2113,12 @@ msgid "Mã của hãng nào / nhà phân phối nào. Bỏ trống nếu là mã
 msgstr "Whose code it is — which manufacturer or distributor. Leave it empty for an industry-standard code."
 
 #. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_location__qr_token
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__qr_token
+msgid "Mã in trên tem QR dán ngoài hiện trường. Ngẫu nhiên, có tiền tố theo loại — không phải số thứ tự, để không ai dò được số lượng thiết bị của nhà máy."
+msgstr "The code printed on the QR label out in the field. Random, with a prefix by type — not a sequence number, so that nobody can work out how much equipment the plant has."
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_xref__code_type__vendor
 msgid "Mã nhà phân phối"
 msgstr "Distributor code"
@@ -2103,6 +2134,12 @@ msgstr "The spare manufacturer's code"
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "Mã phải bắt đầu bằng \"L\" (vị trí chức năng), \"A\" (thiết bị), \"K\" (ô chứa trong kho) hoặc \"S\" (lô / sê-ri). Nhận được: %s"
 msgstr "The code has to start with \"L\" (functional location), \"A\" (equipment), \"K\" (bin in a store) or \"S\" (batch / serial). Received: %s"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_location__qr_token
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__qr_token
+msgid "Mã quét"
+msgstr "Scan code"
 
 #. module: eam_stock
 #: model:ir.model,name:eam_stock.model_eam_qr_mixin
@@ -2192,6 +2229,14 @@ msgstr "Other source"
 #: model:ir.model.fields,help:eam_stock.field_eam_inbound_check__source
 msgid "Nguồn khác nhau thì hồ sơ đi kèm khác nhau, và người chịu trách nhiệm khi sai cũng khác."
 msgstr "Different sources come with different paperwork, and with different people answerable when something is wrong."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Ngày"
+msgstr "Day"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__date
@@ -2662,6 +2707,13 @@ msgid "Phải khai tình trạng khi trả. Nhận lại mà không nhìn thì l
 msgstr "The condition on return has to be recorded. Take it back without looking and the next person to borrow it gets a broken one."
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__product_tmpl_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_spec__product_tmpl_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_xref__product_tmpl_id
+msgid "Phụ tùng"
+msgstr "Spare parts"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__product_id
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
 msgid "Phụ tùng gốc"
@@ -2974,6 +3026,11 @@ msgid "Thành tiền"
 msgstr "Amount"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_stock
 #: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__tinh_trang_tra
 msgid "Tháo khỏi máy KHÔNG có nghĩa là dùng lại được. Hàng cần kiểm tra hoặc đã hỏng đi vào vị trí riêng, không cộng vào tồn khả dụng cho tới khi có người xác nhận."
 msgstr "Being removed from a machine does NOT mean it is usable again. Goods needing inspection or already damaged go to a separate location and are not added to available stock until someone confirms it."
@@ -2983,6 +3040,14 @@ msgstr "Being removed from a machine does NOT mean it is usable again. Goods nee
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
 msgid "Thông số"
 msgstr "Specification"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_spec_ids
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_spec_ids
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__datasheet
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Thông số kỹ thuật"
+msgstr "Specifications"
 
 #. module: eam_stock
 #: model:ir.model,name:eam_stock.model_eam_part_spec
@@ -3195,6 +3260,11 @@ msgstr "Search storage care jobs"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
 msgid "Tìm yêu cầu vật tư"
 msgstr "Search material requests"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Tình trạng"
+msgstr "Status"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__tinh_trang_tra
@@ -3975,6 +4045,12 @@ msgid "Đơn vị hiệu chuẩn"
 msgstr "Calibration body"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_location__qr_url
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__qr_url
+msgid "Đường dẫn quét"
+msgstr "Scan URL"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_calibration__result__pass
 msgid "Đạt"
 msgstr "Pass"
@@ -4031,6 +4107,12 @@ msgstr "The minimum level does NOT distinguish owners — deduct that when calcu
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Ưu tiên dùng lô này trước"
 msgstr "Use this batch first"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_location__qr_image_url
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__qr_image_url
+msgid "Ảnh QR"
+msgstr "QR image"
 
 #. module: eam_stock
 #: model:ir.model.fields,help:eam_stock.field_eam_disposal__attachment_ids

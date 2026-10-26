@@ -1,0 +1,212 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_substation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_ct
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hv_ct
+msgid "Biến dòng đo lường"
+msgstr "Current transformer"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_vt
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hv_vt
+msgid "Biến điện áp đo lường"
+msgstr "Voltage transformer"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_svgc
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_svg_cnv
+msgid "Bộ biến đổi bù"
+msgstr "Compensation converter"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_chg
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_chg
+msgid "Bộ nạp và tủ phân phối một chiều"
+msgstr "Chargers and DC distribution board"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_oltc
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_oltc
+msgid "Bộ điều áp dưới tải"
+msgstr "On-load tap changer"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_sa
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hv_sa
+msgid "Chống sét van"
+msgstr "Surge arrester"
+
+#. module: eam_substation
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_mv_sa
+msgid "Chống sét van trung áp"
+msgstr "MV surge arrester"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_ds
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hv_ds
+msgid "Dao cách ly và dao tiếp địa"
+msgstr "Disconnectors and earthing switches"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_pro
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_pro
+msgid "Hệ bảo vệ và điều khiển"
+msgstr "Protection and control system"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_oil
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_oil
+msgid "Hệ dầu và bình giãn nở"
+msgstr "Oil system and conservator"
+
+#. module: eam_substation
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_cool
+msgid "Hệ làm mát"
+msgstr "Cooling system"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_cool
+msgid "Hệ làm mát máy biến áp"
+msgstr "Transformer cooling system"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_ear
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_ear
+msgid "Hệ nối đất và chống sét"
+msgstr "Earthing and lightning protection"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_fir
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_fir
+msgid "Hệ thống chữa cháy trạm"
+msgstr "Substation fire-fighting system"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_bat
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_bat
+msgid "Hệ ắc-quy một chiều"
+msgstr "DC battery system"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_mba
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_mba
+msgid "Máy biến áp lực"
+msgstr "Power transformer"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_atr
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_atr
+msgid "Máy biến áp tự dùng"
+msgstr "Auxiliary transformer"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_cb
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hv_cb
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_mv_cb
+msgid "Máy cắt"
+msgstr "Circuit breaker"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_aux
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_aux
+msgid "Nguồn tự dùng và một chiều"
+msgstr "Auxiliary and DC supplies"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_hvb
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_hvb
+msgid "Ngăn lộ cao áp"
+msgstr "HV bay"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_mvb
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_mvb
+msgid "Ngăn lộ trung áp"
+msgstr "MV bay"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_ner
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_ner
+msgid "Nối đất trung tính"
+msgstr "Neutral earthing"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_rtu
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_rtu
+msgid "RTU và cổng truyền thông SCADA"
+msgstr "RTU and SCADA gateway"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_rel
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_rel
+msgid "Rơ-le bảo vệ"
+msgstr "Protection relay"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_buch
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_buch
+msgid "Rơ-le hơi và bảo vệ bản thể"
+msgstr "Buchholz relay and transformer body protection"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_bush
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_bush
+msgid "Sứ xuyên"
+msgstr "Bushing"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_bus
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_mv_bus
+msgid "Thanh cái và tủ hợp bộ"
+msgstr "Busbars and switchgear cubicles"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_svg
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_svg
+msgid "Thiết bị bù công suất phản kháng"
+msgstr "Reactive power compensation equipment"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba
+msgid "Trạm biến áp"
+msgstr "Substation"
+
+#. module: eam_substation
+#: model:eam.structure.template,name:eam_substation.tpl_tba
+msgid "Trạm biến áp nâng áp — cấu trúc chuẩn"
+msgstr "Step-up substation — standard structure"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_cap
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_svg_cap
+msgid "Tủ tụ bù"
+msgstr "Capacitor bank cubicle"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_met
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_met
+msgid "Đo đếm điện năng giao nhận"
+msgstr "Settlement metering"
+
+#. module: eam_substation
+#: model:eam.asset.category,name:eam_substation.cat_tba_wti
+#: model:eam.structure.template.line,name:eam_substation.tpl_t_wti
+msgid "Đồng hồ nhiệt độ dầu và cuộn dây"
+msgstr "Oil and winding temperature gauges"
+

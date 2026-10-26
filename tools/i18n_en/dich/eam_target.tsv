@@ -1,0 +1,26 @@
+3276	Total P75
+3277	Total P90
+3278	Source
+3279	Search targets
+3280	No P90 declared
+3281	Spread across the days
+3282	Three probability levels
+3283	Spread evenly across the days
+3284	duplicated from %s
+3285	Not spread across the days
+3286	Duplicate into next year
+3287	No target declared yet
+3288	The month has to be between 1 and 12.
+3289	Not spread — compared for the whole month only
+3290	Monthly energy target
+3291	The year has to be four digits; it is "%s".
+3292	This plant already has a target for that month.
+3293	WAsP wind simulation report 2025 · Annex 3 of the loan agreement…
+3294	this month's target is declared as NOT spread across the days, so it is only compared on the last day of the month
+3295	Duplicated %(a)d rows into next year. Remember to review them: a new year's target is rarely identical to the old one.
+3296	The target is declared by MONTH. Spreading it evenly is an approximation: the wind does not blow evenly all month. Choose "not spread" to compare only at the end of the month.
+3297	A wind or irradiance simulation report, an annex to the loan agreement, or an internal plan — say which. Three years on, when the figure is challenged, this is the only thing that can answer where it came from.
+3298	Energy is not a single number but a <b>distribution</b>: a windier\n            year than the last gives different energy, and nobody controls that.
+3299	<b>P50</b> is the expectation, used for planning. <b>P90</b> is the\n            level a bank uses to assess debt service. Declare one level and call\n            it "the plan" and every question about energy risk loses its place to\n            be answered.
+3300	It must hold that P50 ≥ P75 ≥ P90. The declared figures are %(ds)s.\n\nP90 is the level exceeded in 90%% of years, so it is the LOWEST figure — a bank uses exactly that level because it needs near certainty. Declared the other way round, every subsequent risk analysis is inverted while still running perfectly smoothly.
+3301	<b>P50 ≥ P75 ≥ P90.</b> The more certain it is to be\n                        achieved, the lower the figure — P90 is the level\n                        exceeded in 90% of years, and it is the level a\n                        <b>bank</b> uses to assess debt service. Declared the\n                        other way round, every subsequent risk analysis is\n                        inverted while still running perfectly smoothly, so the\n                        system blocks it at save time.

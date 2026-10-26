@@ -863,6 +863,29 @@ msgid "Dừng dài mà không có lệnh công việc"
 msgstr "A long outage with no work order"
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__date_planned_start
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Dự kiến bắt đầu"
+msgstr "Planned start"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__date_planned_end
+msgid "Dự kiến xong"
+msgstr "Planned finish"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__note
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__note
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__note
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__note
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request_merge_wizard__note
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__safety_note
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
 msgid "Ghi chú an toàn"
@@ -1063,6 +1086,12 @@ msgstr "Idempotency key"
 #: model:ir.model.constraint,message:eam_work_order.constraint_eam_work_request_uniq_client_key
 msgid "Khoá chống trùng đã được dùng."
 msgstr "That idempotency key has already been used."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__outage_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Khoảng dừng"
+msgstr "Outage"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
@@ -1385,6 +1414,11 @@ msgid "Lệnh công việc mới"
 msgstr "New work order"
 
 #. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_outage.py:0
+msgid "Lệnh công việc — %s"
+msgstr "Work orders — %s"
+
+#. module: eam_work_order
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Lệnh này mở từ yêu cầu %(s)s — mức khẩn người nêu: %(m)s.%(at)s"
 msgstr "This order was opened from request %(s)s — urgency as raised: %(m)s.%(at)s"
@@ -1411,6 +1445,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__child_ids
 msgid "Lệnh trong chiến dịch"
 msgstr "Orders in the campaign"
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_work_order_hold
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_order_hold
+msgid "Lệnh đang chờ"
+msgstr "Orders on hold"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
@@ -1698,6 +1738,11 @@ msgid "Nháp"
 msgstr "Draft"
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_list
+msgid "Nhóm"
+msgstr "Group"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__category
 msgid "Nhóm mẫu"
 msgstr "Template group"
@@ -1829,6 +1874,11 @@ msgstr "Overload"
 #: model:ir.model.fields,help:eam_work_order.field_eam_work_request__asset_id
 msgid "Suy từ vị trí: thiết bị đang lắp ở đó. Sửa được khi yêu cầu chỉ đích danh một cấu phần bên trong."
 msgstr "Derived from the location: the equipment installed there. Editable when the request names a component inside."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Sản lượng mất"
+msgstr "Energy lost"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_downtime
@@ -2026,6 +2076,17 @@ msgstr "What was seen, where, and when. The more specific it is, the less the tr
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
 msgid "Thấy gì, ở đâu, lúc nào. Càng cụ thể thì người phân loại càng ít phải đi hỏi lại."
 msgstr "What was seen, where, and when. The more specific it is, the less the triager has to go back and ask."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__date_start
+msgid "Thực tế bắt đầu"
+msgstr "Actual start"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__date_end
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Thực tế xong"
+msgstr "Actual finish"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__spec_display
@@ -2588,4 +2649,9 @@ msgstr "Photo"
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__attachment_ids
 msgid "Ảnh / chứng cứ"
 msgstr "Photo / evidence"
+
+#. module: eam_work_order
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_order_hold
+msgid "Lệnh đang chờ"
+msgstr "Orders on hold"
 

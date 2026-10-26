@@ -17,12 +17,354 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid ""
+"<b>Đối chiếu theo \"Mất do không khả dụng\", đòi tiền\n"
+"                        theo \"Hụt do khả dụng\".</b> Hai con số lệch nhau rất\n"
+"                        xa: cam kết khả dụng 98% nghĩa là 2% dừng máy được\n"
+"                        phép xảy ra — mất sản lượng mà không ai phải trả.<br/>\n"
+"                        <b>Độ bao phủ dưới 100% nghĩa là có sản lượng mất mà\n"
+"                        không ai biết vì sao.</b> Nhìn con số này trước khi\n"
+"                        tin bất kỳ báo cáo khả dụng nào, kể cả của chính\n"
+"                        mình.<br/>\n"
+"                        <b>Tổn thất đòi được vẫn là số để đàm phán.</b> Chế\n"
+"                        tài hợp đồng O&amp;M có công thức phạt khả dụng\n"
+"                        riêng, có trần trách nhiệm theo năm, và thường loại\n"
+"                        trừ giờ do lưới hoặc bất khả kháng khỏi mẫu số khả\n"
+"                        dụng."
+msgstr ""
+"<b>Cross-check on \"Lost to unavailability\", claim on\n"
+"                        \"Availability shortfall\".</b> The two figures diverge\n"
+"                        widely: a 98% availability commitment means 2% of downtime\n"
+"                        is allowed to happen — energy lost that nobody has to pay\n"
+"                        for.<br/>\n"
+"                        <b>Coverage below 100% means there is energy lost that\n"
+"                        nobody knows the reason for.</b> Look at this figure before\n"
+"                        believing any availability report, including your own.<br/>\n"
+"                        <b>Recoverable loss is still a figure for negotiating.</b>\n"
+"                        An O&amp;M contract's regime has its own availability\n"
+"                        penalty formula, an annual liability cap, and usually\n"
+"                        excludes grid or force majeure hours from the availability\n"
+"                        denominator."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Bao phủ %"
+msgstr "Coverage %"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Chưa giải thích"
+msgstr "Unexplained"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_lost_mwh
+msgid "Chỉ cộng khoảng CON — khoảng gốc của sự cố lan nhiều máy bị loại ra để khỏi đếm đúp. Và chỉ cộng loại tính tiền là tổn thất thật: phần lưới bắt giảm nằm ở cột riêng."
+msgstr "Only CHILD outages are summed — the root outage of an incident spanning several machines is excluded to avoid double counting. And only the categories valued as a genuine loss are summed: grid curtailment sits in a column of its own."
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__energy_treatment
+#: model:ir.model.fields,field_description:eam_energy.field_eam_time_category__energy_treatment
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Cách tính tiền"
+msgstr "How it is valued"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__lost_revenue
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_lost_revenue
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Doanh thu tổn thất"
+msgstr "Lost revenue"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__revenue_claimable
+msgid "Doanh thu tổn thất có thể đòi"
+msgstr "Lost revenue that can be claimed"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_warning_count
+msgid "Dòng nghi lỗi dữ liệu"
+msgstr "Rows suspected of data error"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__tariff_applied
+msgid "Giá BÌNH QUÂN GIA QUYỀN theo sản lượng của chính kỳ đó. Dự án bán cho nhiều bên mua với giá khác nhau thì sản lượng mất phải định giá theo tỷ trọng thật, không lấy giá của một hợp đồng."
+msgstr "A WEIGHTED AVERAGE price by that period's own energy. Where a project sells to several offtakers at different prices, the energy lost has to be valued at the real weighting rather than at one contract's price."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__revenue_claim_cap
+msgid "Giá trị của phần hụt DƯỚI MỨC CAM KẾT khả dụng. Trên mức cam kết thì nhà thầu không nợ gì, dù sản lượng vẫn mất."
+msgstr "The value of the shortfall BELOW THE AVAILABILITY COMMITMENT. Above the commitment the contractor owes nothing, even though the energy is still lost."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Giá trị mất"
+msgstr "Value lost"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__energy_value
+msgid "Giá trị sản lượng mất"
+msgstr "Value of the energy lost"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__revenue_economic_loss
+msgid "Giá trị sản lượng mất quy cho bảo hành và nghĩa vụ hợp đồng O&M. ĐÂY CHƯA PHẢI SỐ ĐÒI ĐƯỢC."
+msgstr "The value of the energy lost attributed to warranty and to O&M contract obligations. THIS IS NOT YET THE RECOVERABLE AMOUNT."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Giá áp dụng"
+msgstr "Price applied"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__tariff_applied
+msgid "Giá áp dụng (USD/kWh)"
+msgstr "Price applied (USD/kWh)"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Giải thích được"
+msgstr "Explained"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Khoảng dừng"
+msgstr "Outage"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_ids
+msgid "Khoảng dừng trong kỳ"
+msgstr "Outages during the period"
+
+#. module: eam_energy
+#: code:addons/eam_energy/models/rp_energy_period.py:0
+msgid "Khoảng dừng — %s"
+msgstr "Outages — %s"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__spans_period
+msgid "Khoảng kết thúc ở kỳ khác kỳ bắt đầu. Hiện tại tính trọn vào kỳ bắt đầu — chưa chia theo tỷ lệ. Cờ này để biết chỗ nào con số chưa thật chính xác, thay vì giấu đi."
+msgstr "The outage ends in a different period from the one it started in. For now it counts wholly in the starting period — it is not yet apportioned. This flag marks where the figure is not quite exact, rather than hiding it."
+
+#. module: eam_energy
+#: model:ir.model.fields.selection,name:eam_energy.selection__eam_time_category__energy_treatment__no_loss
+msgid "Không có sản lượng để mất"
+msgstr "No energy there to lose"
+
+#. module: eam_energy
 #: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
 msgid "Kỳ"
 msgstr "Period"
 
 #. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__period_id
+msgid "Kỳ sản lượng"
+msgstr "Energy period"
+
+#. module: eam_energy
 #: model:ir.model,name:eam_energy.model_eam_time_category
 msgid "Loại thời gian"
 msgstr "Time category"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__revenue_claimable
+msgid "Lấy số NHỎ HƠN giữa thiệt hại do bên thứ ba gây và trần đòi theo hợp đồng. Vẫn là số ƯỚC: chế tài khả dụng của hợp đồng O&M còn có công thức riêng, trần trách nhiệm theo năm, và thường loại trừ giờ do lưới hoặc bất khả kháng khỏi mẫu số khả dụng. Con số này để đi đàm phán, không phải để ghi sổ."
+msgstr "Takes the LOWER of the damage caused by a third party and the contractual liability cap. It is still an ESTIMATE: the O&M contract's availability regime has its own formula, an annual liability cap, and usually excludes grid or force majeure hours from the availability denominator. This figure is for negotiating with, not for the books."
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_unexplained_mwh
+msgid "MWh chưa giải thích"
+msgstr "Unexplained MWh"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_coverage_percent
+msgid "MWh giải thích được / tổn thất do không khả dụng. Dưới 100% là CÓ SẢN LƯỢNG MẤT MÀ KHÔNG AI BIẾT VÌ SAO — nên nhìn con số này trước khi tin bất kỳ báo cáo khả dụng nào. Trên 100% là sổ ghi nhiều hơn thực mất: trùng khoảng, hoặc ước lượng MWh quá tay."
+msgstr "Explained MWh ÷ loss from unavailability. Below 100% means THERE IS ENERGY LOST THAT NOBODY KNOWS THE REASON FOR — so look at this figure before believing any availability report. Above 100% means the log records more than was really lost: overlapping outages, or MWh estimated too generously."
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_lost_mwh
+msgid "MWh mất giải thích được"
+msgstr "Explained MWh lost"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__mwh_force_majeure
+msgid "MWh — bất khả kháng"
+msgstr "MWh — force majeure"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__mwh_owner
+msgid "MWh — chủ đầu tư tự chịu"
+msgstr "MWh — owner's own account"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__mwh_grid
+msgid "MWh — do lưới"
+msgstr "MWh — grid caused"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_deemed_mwh
+msgid "MWh — lưới bắt giảm"
+msgstr "MWh — grid curtailment"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__mwh_warranty
+msgid "MWh — thuộc bảo hành"
+msgstr "MWh — under warranty"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__mwh_om
+msgid "MWh — thuộc hợp đồng O&M"
+msgstr "MWh — under the O&M contract"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Mất do không khả dụng"
+msgstr "Lost to unavailability"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__mwh_force_majeure
+msgid "Mất thật và không đòi được ai. Tách riêng để khỏi lẫn vào phần chủ đầu tư tự chịu do quản lý kém."
+msgstr "Genuinely lost with nobody to claim from. Kept apart so it is not confused with the part the owner bears through poor management."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Nghi lỗi dữ liệu"
+msgstr "Suspected data error"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__revenue_deemed
+msgid "Phần lưới gây ra mà hợp đồng mua bán điện vẫn trả. Tỷ lệ lấy từ chính hợp đồng của kỳ, không mặc định 100%."
+msgstr "The part caused by the grid that the power purchase agreement still pays for. The share comes from the period's own contract, not a default of 100%."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_unexplained_mwh
+msgid "Phần tổn thất khả dụng mà sổ dừng máy không chỉ ra được nguyên nhân. Đây là chỗ tiền chảy đi mà không ai đòi."
+msgstr "The part of the availability loss whose cause the outage log cannot identify. This is where money leaks away with nobody claiming it."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__energy_treatment
+#: model:ir.model.fields,help:eam_energy.field_eam_time_category__energy_treatment
+msgid "Quyết định sản lượng mất ở loại này có vào doanh thu tổn thất hay không. Hệ thống suy sẵn, nhưng SỬA ĐƯỢC: dự án không có điều khoản deemed energy thì cắt giảm do lưới là tổn thất thật."
+msgstr "Decides whether energy lost under this category enters lost revenue. The system pre-fills it, but it is EDITABLE: on a project with no deemed energy clause, grid curtailment is a genuine loss."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__unavail_mwh
+msgid "Suy từ chính phần trăm khả dụng của kỳ: sản lượng lẽ ra đạt được nếu máy khả dụng 100%. Đây là mẫu số để đối chiếu sổ dừng máy — KHÁC \"Hụt do khả dụng\" vốn chỉ là phần dưới mức cam kết, tức phần đòi được nhà thầu."
+msgstr "Derived from the period's own availability percentage: the energy that would have been achieved at 100% availability. This is the denominator for cross-checking the outage log — DIFFERENT from \"Availability shortfall\", which is only the part below the commitment, that is, the part recoverable from the contractor."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__period_id
+msgid "Suy từ thời điểm BẮT ĐẦU. Khoảng vắt qua hai kỳ vẫn tính trọn vào kỳ bắt đầu — xem cờ \"vắt qua kỳ\"."
+msgstr "Derived from the START time. An outage spanning two periods still counts wholly in the period it started in — see the \"spans two periods\" flag."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__energy_value
+msgid "Sản lượng mất × giá. Chưa trừ phần được đền — xem \"Doanh thu tổn thất\" để biết số lỗ thật."
+msgstr "Energy lost × price. The deemed portion is not yet deducted — see \"Lost revenue\" for the real shortfall."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid "Sản lượng mất — giải thích và quy trách nhiệm"
+msgstr "Energy lost — explained and attributed"
+
+#. module: eam_energy
+#: model:ir.model,name:eam_energy.model_rp_energy_period
+msgid "Sản lượng điện theo kỳ"
+msgstr "Energy by period"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_eam_outage__lost_revenue
+msgid "Số LỖ THẬT = giá trị sản lượng mất − phần được đền. Khoảng bị lưới cắt giảm có giá trị sản lượng lớn nhưng lỗ bằng 0."
+msgstr "The REAL shortfall = the value of the energy lost − the deemed portion. An outage caused by grid curtailment has a large energy value but a shortfall of zero."
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_count
+msgid "Số khoảng dừng"
+msgstr "Outages"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_warning_count
+msgid "Số khoảng khai MWh mất trên loại thời gian \"không có sản lượng để mất\" — gió dưới ngưỡng khởi động thì không mất gì."
+msgstr "The number of outages declaring lost MWh on a time category of \"no energy there to lose\" — below cut-in wind speed, nothing is lost."
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_lost_revenue
+msgid "Số lỗ thật: đã trừ phần được đền theo deemed energy."
+msgstr "The real shortfall: the deemed energy portion has been deducted."
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid "Theo trách nhiệm (MWh)"
+msgstr "By responsibility (MWh)"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__revenue_economic_loss
+msgid "Thiệt hại kinh tế — bên thứ ba gây"
+msgstr "Economic damage — caused by a third party"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid "Tiền"
+msgstr "Money"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__revenue_claim_cap
+msgid "Trần đòi theo hợp đồng"
+msgstr "Contractual liability cap"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__unavail_mwh
+msgid "Tổn thất do không khả dụng (MWh)"
+msgstr "Loss from unavailability (MWh)"
+
+#. module: eam_energy
+#: model:ir.model.fields.selection,name:eam_energy.selection__eam_time_category__energy_treatment__loss
+msgid "Tổn thất thật — không ai đền"
+msgstr "Genuine loss — nobody compensates it"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_list_eam
+msgid "Tổn thất đòi được"
+msgstr "Recoverable loss"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__spans_period
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Vắt qua kỳ"
+msgstr "Spans two periods"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid "Xem từng khoảng dừng"
+msgstr "View each outage"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Được đền"
+msgstr "Deemed"
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_eam_outage__revenue_deemed
+msgid "Được đền (deemed energy)"
+msgstr "Deemed energy"
+
+#. module: eam_energy
+#: model:ir.model.fields.selection,name:eam_energy.selection__eam_time_category__energy_treatment__deemed
+msgid "Được đền theo điều khoản deemed energy"
+msgstr "Deemed under the deemed energy clause"
+
+#. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_rp_energy_period_form_eam
+msgid "Đối chiếu sổ dừng máy"
+msgstr "Cross-check against the outage log"
+
+#. module: eam_energy
+#: model:ir.model.fields,help:eam_energy.field_rp_energy_period__outage_deemed_mwh
+msgid "Đối chiếu với ô \"Bị cắt giảm\" của kỳ. Theo IEC 61400-26 thì cắt giảm KHÔNG phải thời gian dừng — máy vẫn khả dụng — nên nó không nằm trong mẫu số khả dụng."
+msgstr "Cross-check against the period's \"Curtailed\" field. Under IEC 61400-26 curtailment is NOT downtime — the machine remains available — so it does not enter the availability denominator."
+
+#. module: eam_energy
+#: model:ir.model.fields,field_description:eam_energy.field_rp_energy_period__outage_coverage_percent
+msgid "Độ bao phủ của sổ (%)"
+msgstr "Coverage of the log (%)"
 

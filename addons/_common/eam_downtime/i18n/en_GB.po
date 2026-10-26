@@ -17,13 +17,318 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_pm
+msgid "Bảo trì theo kế hoạch"
+msgstr "Planned maintenance"
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_fm
+msgid "Bất khả kháng & môi trường"
+msgstr "Force majeure & environment"
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid ""
+"Chưa tính được: %s\n"
+"\n"
+"Con số cũ giữ nguyên — \"không tính được\" khác với \"bằng 0\"."
+msgstr ""
+"Could not be computed: %s\n"
+"\n"
+"The old figure is left as it was — \"could not be computed\" is not the same as \"zero\"."
+
+#. module: eam_downtime
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_time_category_search_group
+msgid "Chưa xếp nhóm"
+msgstr "Not grouped yet"
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_location__gia_dien_kwh
+msgid "Chỉ khai ở cấp nhà máy, và chỉ dùng khi không có hợp đồng mua bán điện để tra. Có hợp đồng thì giá lấy từ biểu giá của hợp đồng — hai nơi khai giá thì sớm muộn hai nơi lệch."
+msgstr "Declared at plant level only, and used only where there is no power purchase agreement to look up. With an agreement, the price comes from the agreement's tariff — declare a price in two places and sooner or later the two disagree."
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_time_group__tinh_cho_nha_thau
+msgid "Chỉ là GỢI Ý khi người dùng quy trách nhiệm cho từng khoảng dừng. Quy trách nhiệm thật vẫn nằm ở từng bản ghi, vì cùng một nhóm có lần do nhà thầu có lần không."
+msgstr "Only a SUGGESTION when the user attributes responsibility for each outage. The real attribution still lives on each record, because the same group is sometimes the contractor's fault and sometimes not."
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_outage__gia_kwh
+msgid "Chụp lại giá tại thời điểm tính. Biểu giá mua bán điện trượt theo năm, nên tính lại sau hai năm mà không chụp giá thì con số cũ đổi mà không ai biết."
+msgstr "Captures the price at the moment of calculation. A power purchase tariff escalates year by year, so recomputing two years later without a captured price changes the old figure with nobody aware of it."
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_outage__nguon_mat
+msgid "Con số trong ô \"sản lượng mất\" đến từ đâu. Giữ lại vì một khoảng do người gõ tay và một khoảng do máy tính ra có sức nặng rất khác khi đem đi đòi nhà thầu."
+msgstr "Where the figure in the \"energy lost\" field came from. Kept because an outage typed in by a person and one computed by the system carry very different weight when the claim goes to the contractor."
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_curtail
+msgid "Cắt giảm theo lệnh điều độ"
+msgstr "Curtailment by dispatch order"
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_grid
+msgid "Dừng do lưới ngoài"
+msgstr "Downtime caused by the external grid"
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_om
+msgid "Dừng do nhà thầu O&M"
+msgstr "Downtime caused by the O&M contractor"
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_outage__mat_that
+msgid "Dừng một phần thì máy vẫn phát. Phần đã vào công-tơ không được tính là mất."
+msgstr "In a partial outage the machine is still generating. Whatever reached the meter must not be counted as lost."
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__nguon_gia
+msgid "Giá lấy từ đâu"
+msgstr "Where the price comes from"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__gia_kwh
+msgid "Giá áp dụng (/kWh)"
+msgstr "Price applied (/kWh)"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_location__gia_dien_kwh
+msgid "Giá điện (/kWh)"
+msgstr "Energy price (/kWh)"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__mo_ta
+msgid "Gồm những gì"
+msgstr "What it covers"
+
+#. module: eam_downtime
+#: model_terms:ir.actions.act_window,help:eam_downtime.action_eam_time_group
+msgid ""
+"Hai mươi ba loại chuẩn gộp lại thành ít dòng mà người vận\n"
+"            hành đọc được. Lưu theo <b>chuẩn</b>, hiện theo <b>nhóm</b> —\n"
+"            báo cáo điện gió và điện mặt trời gộp khác nhau nên phép ánh\n"
+"            xạ phải khai được."
+msgstr ""
+"Twenty-three standard categories folded into the few rows an operator can\n"
+"            actually read. Stored by the <b>standard</b>, shown by <b>group</b> —\n"
+"            wind and solar reports fold them differently, so the mapping has to be\n"
+"            declarable."
+
+#. module: eam_downtime
+#: model_terms:ir.actions.act_window,help:eam_downtime.action_eam_time_category_map
+msgid ""
+"Loại chưa xếp nhóm thì giờ của nó rơi vào dòng\n"
+"            <b>\"chưa xếp nhóm\"</b> trên báo cáo — hiện ra chứ không biến\n"
+"            mất, nhưng vẫn nên xếp cho đủ."
+msgstr ""
+"The hours of an ungrouped category fall into the\n"
+"            <b>\"not grouped yet\"</b> row on the report — shown rather than\n"
+"            disappearing, but they should still be grouped."
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_time_category__la_su_co
+msgid ""
+"Loại này tính vào mục SỰ CỐ của tờ báo cáo ngày.\n"
+"\n"
+"Cờ nằm ở LOẠI THỜI GIAN chứ không ở nhóm báo cáo, vì ngữ nghĩa nằm ở đây: nhóm \"Sự cố thiết bị\" vẫn chứa loại \"Can thiệp sửa chữa CÓ KẾ HOẠCH\", còn loại \"Dừng sự cố — chờ vật tư\" lại nằm trong nhóm \"Dừng do nhà thầu O&M\". Lấy nhóm làm thước thì mục sự cố vừa thiếu vừa thừa.\n"
+"\n"
+"KHAI chứ không dò theo tên: tên đổi một chữ là mục sự cố trống rỗng mà không gì báo."
+msgstr ""
+"This category counts towards the INCIDENTS section of the daily report.\n"
+"\n"
+"The flag sits on the TIME CATEGORY rather than the reporting group, because that is where the meaning lies: the \"Equipment fault\" group still contains the category \"PLANNED repair intervention\", while the category \"Forced outage — awaiting materials\" sits in the \"Downtime caused by the O&M contractor\" group. Use the group as the measure and the incidents section is both short and padded at once.\n"
+"\n"
+"DECLARED rather than detected by name: change one word of the name and the incidents section is empty with nothing to say so."
+
+#. module: eam_downtime
 #: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__category_ids
 #: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_time_category_search_group
 msgid "Loại thời gian"
 msgstr "Time category"
 
 #. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__la_cat_giam
+msgid "Là nhóm cắt giảm"
+msgstr "Is a curtailment group"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_category__la_su_co
+msgid "Là sự cố"
+msgstr "Is an incident"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__mat_that
+msgid "Máy này vẫn phát (kWh)"
+msgstr "This machine was still generating (kWh)"
+
+#. module: eam_downtime
+#: model:ir.model.fields.selection,name:eam_downtime.selection__eam_outage__nguon_mat__doi_chung
+msgid "Máy đối chứng"
+msgstr "Reference machine"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__mat_mong_doi
+msgid "Máy đối chứng phát được (kWh)"
+msgstr "The reference machine generated (kWh)"
+
+#. module: eam_downtime
 #: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__code
 msgid "Mã"
 msgstr "Code"
+
+#. module: eam_downtime
+#: model:ir.model.constraint,message:eam_downtime.constraint_eam_time_group_uniq_code
+msgid "Mã nhóm thời gian không được trùng."
+msgstr "The time group code must be unique."
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_data
+msgid "Mất dữ liệu giám sát"
+msgstr "Loss of monitoring data"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__tinh_cho_nha_thau
+msgid "Mặc định tính cho nhà thầu O&M"
+msgstr "Charged to the O&M contractor by default"
+
+#. module: eam_downtime
+#: model_terms:ir.actions.act_window,help:eam_downtime.action_eam_time_category_map
+msgid "Mọi loại đã xếp nhóm"
+msgstr "Every category is grouped"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__group_id
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_time_category_search_group
+msgid "Nhóm báo cáo"
+msgstr "Reporting group"
+
+#. module: eam_downtime
+#: model_terms:ir.actions.act_window,help:eam_downtime.action_eam_time_group
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_outage_search_downtime
+msgid "Nhóm thời gian"
+msgstr "Time group"
+
+#. module: eam_downtime
+#: model:ir.ui.menu,name:eam_downtime.menu_eam_time_group
+msgid "Nhóm thời gian báo cáo"
+msgstr "Reporting time group"
+
+#. module: eam_downtime
+#: model:ir.actions.act_window,name:eam_downtime.action_eam_time_group
+#: model:ir.model,name:eam_downtime.model_eam_time_group
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_time_group_list
+msgid "Nhóm thời gian trên báo cáo"
+msgstr "The time group on the report"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_category__group_id
+msgid "Nhóm trên báo cáo"
+msgstr "Group on the report"
+
+#. module: eam_downtime
+#: model:ir.model.fields.selection,name:eam_downtime.selection__eam_outage__nguon_mat__tay
+msgid "Nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_downtime
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_outage_form_downtime
+msgid "Quy ra tiền"
+msgstr "Valued in money"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__nguon_mat
+msgid "Sản lượng mất lấy từ đâu"
+msgstr "Where the energy lost comes from"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__category_count
+msgid "Số loại"
+msgstr "Categories"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__so_doi_chung
+msgid "Số máy đối chứng"
+msgstr "Reference machines"
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_ext
+msgid "Sự cố ngoài phạm vi"
+msgstr "Fault outside the scope"
+
+#. module: eam_downtime
+#: model:eam.time.group,name:eam_downtime.group_comp
+msgid "Sự cố thiết bị"
+msgstr "Equipment fault"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__name
+msgid "Tên nhóm"
+msgstr "Group name"
+
+#. module: eam_downtime
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_outage_form_downtime
+msgid "Tính kWh mất (máy đối chứng)"
+msgstr "Compute the kWh lost (reference machine)"
+
+#. module: eam_downtime
+#: model_terms:ir.ui.view,arch_db:eam_downtime.view_eam_time_category_search_group
+msgid "Tính là dừng máy"
+msgstr "Counts as downtime"
+
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_outage__ly_do_khong_tinh
+msgid "Vì sao chưa tính được"
+msgstr "Why it could not be computed"
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid "biểu giá %s, kỳ %s → %s"
+msgstr "tariff %s, period %s → %s"
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid "chưa biết giá — nhà máy chưa có hợp đồng mua bán điện và cũng chưa khai giá; để trống còn hơn nhân với 0"
+msgstr "the price is unknown — the plant has no power purchase agreement and no price declared; leaving it empty is better than multiplying by 0"
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid "giá gốc của %s"
+msgstr "the list price of %s"
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid "giá khai trên nhà máy %s"
+msgstr "the price declared on plant %s"
+
+#. module: eam_downtime
+#: model:ir.actions.act_window,name:eam_downtime.action_eam_time_category_map
+msgid "Ánh xạ loại thời gian → nhóm"
+msgstr "Time category → group mapping"
+
+#. module: eam_downtime
+#: model:ir.ui.menu,name:eam_downtime.menu_eam_time_category_map
+msgid "Ánh xạ loại → nhóm"
+msgstr "Category → group mapping"
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_time_group__la_cat_giam
+msgid "Đánh dấu đúng MỘT nhóm. Giờ cắt giảm bị trừ khi tính giờ vận hành dùng cho tỷ số hiệu suất — máy vẫn sẵn sàng, chỉ là lưới không nhận. Không đánh dấu thì hai cách tính giờ vận hành ra cùng một số, và phần hiệu suất sai theo."
+msgstr "Mark exactly ONE group. Curtailment hours are deducted when computing the operating hours used for the performance ratio — the machine was still available, the grid simply would not take it. Without the mark, the two ways of computing operating hours give the same figure, and the performance section is wrong with it."
+
+#. module: eam_downtime
+#: code:addons/eam_downtime/models/eam_outage.py:0
+msgid "Đã XOÁ con số cũ do máy tính ở lượt trước, vì lượt này không dựng lại được: %s"
+msgstr "The old figure computed by the system on the previous run has been DELETED, because this run could not rebuild it: %s"
+
+#. module: eam_downtime
+#: model:ir.model.fields.selection,name:eam_downtime.selection__eam_outage__nguon_mat__duong_cong
+msgid "Đường cong công suất"
+msgstr "Power curve"
+
+#. module: eam_downtime
+#: model:ir.model.fields,help:eam_downtime.field_eam_outage__group_id
+#: model:ir.model.fields,help:eam_downtime.field_eam_time_category__group_id
+msgid "Để trống thì giờ của loại này rơi vào dòng \"chưa xếp nhóm\" trên báo cáo — hiện ra chứ không biến mất."
+msgstr "Leave it empty and this category's hours fall into the \"not grouped yet\" row on the report — shown rather than disappearing."
 

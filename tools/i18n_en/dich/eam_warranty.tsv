@@ -1,0 +1,70 @@
+3413	Unknown
+3414	not declared
+3415	Warranty when raised
+3416	Batch warranty
+3417	Where it came from
+3418	Contract / purchase order
+3419	Supplier
+3420	Tracking the deadline
+3421	Out-of-warranty claim
+3422	No deadline declared
+3423	Tracked by
+3424	Contract / purchase order no.
+3425	Nobody is tracking it
+3426	Warranty expiring soon
+3427	The two deadlines DISAGREE
+3428	Remaining (days) when raised
+3429	Procurement / spares
+3430	Serialised assets
+3431	Warranty by serial number
+3432	Warranty status
+3433	Warranty expiry when raised
+3434	Where the origin came from
+3435	Who supplied this machine
+3436	Contract / purchase order number
+3437	Warranty when the note was raised
+3438	The supplier is not known
+3439	No warranty expiry declared
+3440	DERIVED from the location it is installed at
+3441	Warranty tracked by
+3442	In warranty but not claimed
+3443	The machine's original supplier
+3444	An expiry warning was sent on
+3445	names this machine explicitly
+3446	The two warranty deadlines DISAGREE
+3447	Capture the warranty status
+3448	A warranty claim, but the warranty has expired
+3449	Warranty expiring — %d days left
+3450	Batch warranty (from the date received)
+3451	Warranty terms under the contract
+3452	EAMOne: warn about warranties expiring
+3453	No machine has a warranty expiring soon
+3454	Pull the origin from the handover certificate
+3455	Returns / warranty claims / core returns
+3456	Stops a reminder about the same machine every day.
+3457	Only =, !=, in and not in can be compared.
+3458	No order is\n            missing a warranty
+3459	The trail of the automatic pull: which record it came from, and when.
+3460	pulled from handover certificate %(bb)s, location %(vt)s (%(c)s)
+3461	Pulled for %(a)d of %(b)d machines; %(c)d have a supplier name.
+3462	Machine %(m)s goes out of warranty on %(d)s. Supplier: %(n)s. Source file: %(h)s.
+3463	%(a)d machines with warranties expiring · %(b)d notifications sent · %(c)d machines WITH NOBODY TRACKING THEM.
+3464	A warranty is claimed from whoever SUPPLIED it. A different party from the one receiving the note needs a reason, otherwise the claim goes to the wrong door.
+3465	The deadline recorded on the batch in store, counted from the date RECEIVED. For cross-checking, not for deciding who pays.
+3466	Who SUPPLIED this machine — different from the manufacturer, who MADE it. A warranty is claimed from the supplier, not from the maker.
+3467	Clear the filter to see everything, or filter on <b>The supplier is not\n            known</b> to see exactly where the paperwork is still missing.
+3468	Record the number so that in three years the original file can be traced. One line of text, but the line that settles an argument.
+3469	The project handover module is not on this installation, so there is no source to pull from. Enter the supplier and contract number by hand.
+3470	%(c)d machines are DERIVED from the location they are installed at rather than from a certificate naming them explicitly — check them before using this to claim under warranty.
+3471	The warranty status of TODAY has been captured. This is not the status on the date the note was raised — there is no older snapshot to restore.
+3472	The note declares a warranty type while the machine is already out of warranty. It can still be sent, but the other side will refuse it — and the whole waiting time is dead time.
+3473	Receive a warning when the warranty is about to expire. Left empty, the machine is still counted under "nobody is tracking it" — quietly passing over it is how deadlines get missed.
+3474	The deadline on the asset differs from the one on the batch. The system does NOT choose for you — a difference is a sign that one of the two was entered wrongly, and choosing for you hides that.
+3475	%(d)d machines have only a contract number — the handover certificate does not name the supplier. Enter it by hand, because a contract number is not a name to call when claiming under warranty.
+3476	CAPTURED when the note is raised; not recomputed afterwards. Warranty status changes by the day; recompute it and three months later the record reverses its own conclusion.
+3477	This is <b>money falling through the floor</b>: a repair order on a\n            machine <b>still in warranty</b>, while the party bearing the cost is\n            left as <i>Not attributed</i> or <i>Owner's own account</i>.
+3478	Three years after the gearbox fails, the first question is always\n            <b>who supplied this one, under which contract, and is it still in\n            warranty</b> — whether that can be answered decides <b>who pays</b>\n            for the repair. This screen is where it is answered.
+3479	This screen does <b>not</b> change who bears the cost by itself.\n            Being in warranty does not mean it can be claimed — failure through\n            misoperation, lightning or end of life all fall outside the warranty.\n            This screen's job is to <b>force a look</b>, not to decide for you.
+3480	<b>The note declares a warranty type, but the machine was\n                    already out of warranty when it was raised.</b> It can still\n                    be sent — but the other side will refuse it, and the whole\n                    waiting time is dead time. Change the note type, or state the\n                    grounds for claiming out of warranty.
+3481	<b>The two warranty deadlines disagree.</b> The deadline on\n                    the batch is counted from the date RECEIVED, while the one\n                    above is counted from entry into service — both are correct,\n                    but only one answers <i>who pays for this repair</i>. The\n                    system takes the deadline on the asset and <b>does not choose\n                    for you</b>: a difference is a sign that one of the two was\n                    entered wrongly, and choosing for you hides that.
+3482	This note has <b>no snapshot of the warranty status</b>\n                    — it was raised before warranty tracking existed. The system\n                    does NOT backfill it, because computing it as of today is how\n                    a record comes to reverse its own conclusion.\n                    <span invisible="state != 'draft'">While the note is still a\n                    draft, press <i>Capture the warranty status</i> to take the\n                    current status — understanding that it is today's figure, not\n                    the figure of the date it was raised.</span>\n                    <span invisible="state == 'draft'">Once the note has been sent\n                    it is not captured again: writing today's figure into a note\n                    raised earlier is inventing evidence.</span>

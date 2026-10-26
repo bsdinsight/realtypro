@@ -1,0 +1,73 @@
+1803	to
+1804	5 years
+1805	Latitude
+1806	1 month
+1807	3 months
+1808	Longitude
+1809	Viewing date
+1810	locations)
+1811	12 months
+1812	Terrain
+1813	Has coordinates
+1814	List
+1815	Open the map
+1816	Loading…
+1817	Elevation (m)
+1818	Map — %s
+1819	Colour by
+1820	On this date
+1821	Satellite imagery
+1822	Open orders
+1823	Layers
+1824	Installed capacity
+1825	Orders on hold
+1826	Energy lost
+1827	Left this month
+1828	Location code labels
+1829	Spacing ring
+1830	Achieved against P50
+1831	Hub height (m)
+1832	Statistics window
+1833	Lost during the month
+1834	Open the location record
+1835	Link pairs that are too close
+1836	Pairs too close together
+1837	Too close to another machine
+1838	Erection progress
+1839	no machine installed yet
+1840	points at what looks doubtful
+1841	The spacing ring is
+1842	a simplification
+1843	Field map
+1844	AVAILABLE capacity
+1845	Mean availability
+1846	Work orders — %s
+1847	Locations missing coordinates
+1848	there is no erection register yet
+1849	— of which on hold
+1850	days have no data
+1851	Rotor diameter (m)
+1852	The colour scale is normalised to
+1853	View it while operating
+1854	Plant not found
+1855	MEAN power for the day
+1856	The date being viewed has no figures.
+1857	The outage log has data from
+1858	Not yet comparable with the plan:
+1859	Dot size by energy LOST
+1860	there is no figure for the date being viewed
+1861	Coordinates and site parameters
+1862	does not switch to another plant by itself
+1863	Quickly filter the locations that could not be placed on the map.
+1864	the highest level during the\n                        day
+1865	— the plant is still\n                        under construction.
+1866	,\n                        not for drawing conclusions.
+1867	— the figure above is LOWER than\n                            reality, and so is the percentage against plan.
+1868	,\n                    or that plant has no location with coordinates declared.\n                    The system
+1869	—\n                    asking about this plant and receiving another plant's figures\n                    is the kind of mistake nobody can see.
+1870	The energy cells are left\n                        empty rather than showing 0 — no figure is not the\n                        same as zero.
+1871	grey. A map glowing green on a day with no\n                        figures at all is a map that is lying.
+1872	Used to draw the wake influence ring. The distance between two turbines is measured as a MULTIPLE of this figure, not in absolute metres.
+1873	grey rather than red — not\n                        declared is not the same as not done, and colouring it\n                        red turns a hole in the data into a false alarm.
+1874	, not to 100%: on a windless day the whole site is\n                        below 10%, and scaled to 100% the twelve dots are all\n                        equally red with no telling which machine is the poor one.
+1875	: a wake\n                        has a direction — in practice 7–10D is needed downwind but\n                        only 3–5D crosswind. Without a wind rose it cannot be\n                        computed properly, so this figure is there to

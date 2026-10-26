@@ -319,6 +319,15 @@ msgstr ""
 "                                while the certificate still looks complete."
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__note
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_plant__note
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_type__note
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_form
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_type_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period__note
 msgid "Ghi chú biên bản"
 msgstr "Notes for the certificate"
@@ -352,6 +361,11 @@ msgid "Giai đoạn vận hành có nhiều loại hợp đồng chứ không ch
 msgstr "The operating phase has many kinds of contract, not just one overall O&M agreement. Any type that already has a home of its own (power purchase, EPC, lending) cannot be chosen here."
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__gio_chua_quy
+msgid "Giờ chưa quy trách nhiệm"
+msgstr "Hours with no responsibility attributed"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,help:eam_om_contract.field_eam_om_period_line__canh_bao_chua_quy
 msgid "Giờ chưa quy trách nhiệm vượt ngưỡng của cam kết. Con số khả dụng có thể đang đẹp vì chưa ai phân loại."
 msgstr "The unattributed hours exceed this commitment's threshold. The availability figure may be flattering simply because nobody has classified them."
@@ -377,6 +391,11 @@ msgid "Giữ lại để truy lại khi có tranh cãi về chỗ làm tròn."
 msgstr "Kept so that a dispute about the rounding can be traced back."
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__date_start
+msgid "Hiệu lực từ"
+msgstr "Valid from"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__date_end
 #: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_search
 msgid "Hiệu lực đến"
@@ -386,6 +405,11 @@ msgstr "Effective to"
 #: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_form
 msgid "HĐ-OM-2026-001"
 msgstr "OM-CTR-2026-001"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract__state__het
+msgid "Hết hạn"
+msgstr "Expired"
 
 #. module: eam_om_contract
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_commitment__do_duoc
@@ -470,6 +494,12 @@ msgstr "No penalty"
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__huong__toi_da
 msgid "Không được vượt (≤)"
 msgstr "Must not exceed (≤)"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__loai__kd_san_luong
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_period_line__loai__kd_san_luong
+msgid "Khả dụng theo sản lượng (%)"
+msgstr "Energy availability (%)"
 
 #. module: eam_om_contract
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__loai__kd_thoi_gian
@@ -706,6 +736,14 @@ msgid "Nháp"
 msgstr "Draft"
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__nhom
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_type__nhom
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_search
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_type_search
+msgid "Nhóm"
+msgstr "Group"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,help:eam_om_contract.field_eam_om_contract_type__noi_dung
 msgid "Những thứ hợp đồng loại này phải theo dõi được. Dùng làm danh sách kiểm khi khảo sát, không phải điều khoản."
 msgstr "What a contract of this type has to be able to track. Used as a checklist during a survey, not as contract terms."
@@ -864,6 +902,11 @@ msgid "Số hợp đồng O&M không được trùng."
 msgstr "The O&M contract number must be unique."
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__so_khoang
+msgid "Số khoảng dừng"
+msgstr "Outages"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__period_count
 msgid "Số kỳ"
 msgstr "Periods"
@@ -931,6 +974,14 @@ msgstr "Per point: an amount for each percentage point of shortfall. As a %% of 
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__thieu_hut
 msgid "Thiếu hụt (điểm)"
 msgstr "Shortfall (points)"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__chu_ky__thang
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__chu_ky_hieu_luc__thang
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract__chu_ky__thang
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_period__chu_ky__thang
+msgid "Tháng"
+msgstr "Month"
 
 #. module: eam_om_contract
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract_type__nhom__thuong_mai
@@ -1030,10 +1081,25 @@ msgid "Tổng phạt"
 msgstr "Total penalty"
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period__date_start
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__date_start
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__date_start
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_period_plant_search
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_period_search
+msgid "Từ ngày"
+msgstr "From"
+
+#. module: eam_om_contract
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_commitment__loai__pr
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_period_line__loai__pr
 msgid "Tỷ số hiệu suất PR (%)"
 msgstr "Performance ratio PR (%)"
+
+#. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_commitment__ly_do_chua_do
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__ly_do_chua_do
+msgid "Vì sao chưa đo được"
+msgstr "Why it could not be measured"
 
 #. module: eam_om_contract
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract_type__nhom__om
@@ -1130,6 +1196,11 @@ msgid "Đếm thử số vị trí thiết bị con"
 msgstr "Count the child equipment locations"
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period__date_end
+msgid "Đến ngày"
+msgstr "To"
+
+#. module: eam_om_contract
 #: model:ir.model.fields,help:eam_om_contract.field_eam_om_commitment__chu_ky
 msgid "Để trống là theo chu kỳ của hợp đồng. Khai riêng khi hợp đồng có NHIỀU tầng cam kết — gió thường có cả sàn tháng lẫn khả dụng năm. Chấm cam kết năm bằng số liệu một tháng là phạt oan: một tháng xấu kéo cả năm xuống, trong khi hợp đồng cho phép bù bằng các tháng còn lại."
 msgstr "Leave it empty to follow the contract's own cycle. Set it when the contract has SEVERAL tiers of commitment — wind usually has both a monthly floor and an annual availability. Assessing an annual commitment with one month's figures penalises unfairly: one bad month drags the whole year down, while the contract allows the remaining months to make up for it."
@@ -1143,4 +1214,29 @@ msgstr "Leave it empty and the commitment applies to EVERY plant in the contract
 #: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_type_search
 msgid "Ưu tiên demo"
 msgstr "Demo priority"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_contract
+msgid "Hợp đồng O&M"
+msgstr "O&M contracts"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_contract_type
+msgid "Loại hợp đồng"
+msgstr "Contract types"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_period
+msgid "Kỳ đánh giá"
+msgstr "Assessment periods"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_root
+msgid "Hợp đồng"
+msgstr "Contracts"
+
+#. module: eam_om_contract
+#: model:ir.ui.menu,name:eam_om_contract.menu_eam_om_thanh_toan
+msgid "Thanh toán theo nhà máy"
+msgstr "Payment by plant"
 

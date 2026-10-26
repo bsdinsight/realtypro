@@ -1,0 +1,34 @@
+3563	Overdue
+3564	Not yet notified
+3565	More than 3 days
+3566	More than 7 days
+3567	Just gone overdue
+3568	Last notified
+3569	Planned finish
+3570	Overdue orders
+3571	Actual finish
+3572	Currently overdue
+3573	Labour hour variance
+3574	Overdue by (hours)
+3575	Late — on hold
+3576	Finished late by (hours)
+3577	Notified up to level
+3578	Planned start
+3579	Actual start
+3580	Late because it is on hold
+3581	No order yet
+3582	Started late by (hours)
+3583	Plan vs actual
+3584	Plan against actual
+3585	Workload by person
+3586	No order is overdue
+3587	Overdue work orders — %s
+3588	EAMOne: scan for overdue work orders
+3589	The actual start less the planned start. Negative means it started early.
+3590	Scan complete: %(t)d orders overdue, %(d)d new notifications sent.
+3591	The actual hours worked less the planned span. Positive means it took longer than expected.
+3592	Order "%(ten)s" at %(vt)s is %(g).0f hours overdue (planned finish %(h)s).
+3593	Updated by cron. NOT a computed field: "is it overdue yet" depends on what time it is now, and the present moment cannot sit inside @api.depends — declared as a stored computed field, the flag would stand still for ever with nothing to say so.
+3594	A <b>red</b> row is late through being forgotten — the person\n            responsible has been sent the job. A <b>yellow</b> row is late\n            because it is waiting on someone outside: that is a supply chain\n            problem rather than the fitter's, so the system does not chase them.
+3595	Overdue, but the order is on hold. That is a supply chain problem rather than the fitter's, so NO notification is sent — reminding someone every day about something they cannot solve is the fastest way to make them ignore every notification afterwards.
+3596	Four dates side by side — planned and actual, start and finish — plus\n            three variances computed in advance. Switch to <b>calendar</b> for a\n            week or month view, <b>kanban</b> to drag states, and <b>pivot</b> to\n            see who is overloaded.

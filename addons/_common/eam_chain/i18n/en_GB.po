@@ -17,6 +17,166 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        Công-tơ và SCADA lệch"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        The meter and SCADA differ"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                                Xếp bậc theo <b>đường đi của điện</b>, từ\n"
+"                                thiết bị phát ra lưới. Tổn thất tính giữa\n"
+"                                mỗi bậc và bậc đứng ngay trước nó — nên\n"
+"                                <b>thứ tự là thứ quyết định con số</b>.\n"
+"                                <br/>Bậc <b>tự dùng</b> và <b>ban đêm</b>\n"
+"                                không tham gia phép trừ: chúng là tiêu thụ\n"
+"                                có chủ đích, không phải thất thoát."
+msgstr ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                                Order the stages along the <b>path the\n"
+"                                electricity takes</b>, from the generating\n"
+"                                equipment out to the grid. The loss is computed\n"
+"                                between each stage and the one immediately\n"
+"                                before it — so <b>the order is what decides the\n"
+"                                figure</b>.\n"
+"                                <br/>The <b>auxiliary</b> and <b>overnight</b>\n"
+"                                stages take no part in the subtraction: they are\n"
+"                                intentional consumption, not losses."
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_list
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Bậc"
+msgstr "Stage"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__is_pr_source
+msgid ""
+"Bậc dùng làm điện năng AC khi tính tỷ số hiệu suất.\n"
+"\n"
+"KHÁC bậc bán điện, và phải khai riêng. Đối chiếu báo cáo thật của một nhà máy đang vận hành: tử số PR của họ thấp hơn sản lượng tại công-tơ bán điện 3% — vì PR đo trong khoảng giờ vận hành riêng, ngắn hơn cả ngày. Gán cứng hai thứ làm một là sai 3% mà nhìn vẫn hợp lý."
+msgstr ""
+"The stage used as the AC energy when computing the performance ratio.\n"
+"\n"
+"DIFFERENT from the sales stage, and it has to be declared separately. Checked against a real report from an operating plant: their PR numerator is 3% lower than the energy at the sales meter — because PR is measured over its own operating window, shorter than the whole day. Treating the two as one is being 3% wrong while still looking plausible."
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__nhap_tay
+msgid "Bậc không gắn công-tơ lẫn điểm đo thì mỗi ngày phải có người điền. Chấp nhận được — điện tự dùng thường không có công-tơ riêng — nhưng nên thấy rõ bậc nào đang như vậy."
+msgstr "A stage with neither a meter nor a tag has to be filled in by someone every day. That is acceptable — auxiliary consumption often has no meter of its own — but it should be plain which stages are like that."
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__is_billing
+msgid "Bậc ra doanh thu. Mỗi chuỗi chỉ một bậc được đánh dấu."
+msgstr "The stage that produces revenue. Only one stage per chain may be marked."
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_node__node_type__san_luong
+msgid "Bậc sản lượng"
+msgstr "Energy stage"
+
+#. module: eam_chain
+#: model:ir.model,name:eam_chain.model_eam_chain_node
+msgid "Bậc trong chuỗi điểm đo"
+msgstr "Stage in the metering chain"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_list
+msgid "Bậc trước"
+msgstr "Previous stage"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__energy_truoc
+msgid "Bậc trước (kWh)"
+msgstr "Previous stage (kWh)"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid "Bậc và ngày"
+msgstr "Stages and days"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__node_id
+msgid "Bậc đo"
+msgstr "Metering stage"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__chain_id
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__chain_id
+msgid "Chuỗi"
+msgstr "Chain"
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_chain.py:0
+msgid "Chuỗi \"%(c)s\" đã có bậc khác đánh dấu là %(t)s. Chỉ được MỘT — hai mốc thì không biết lấy cái nào."
+msgstr "Chain \"%(c)s\" already has another stage marked as %(t)s. Only ONE is allowed — with two reference points there is no telling which to use."
+
+#. module: eam_chain
+#: model:ir.actions.act_window,name:eam_chain.action_eam_chain
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_list
+msgid "Chuỗi điểm đo"
+msgstr "Metering chain"
+
+#. module: eam_chain
+#: model:ir.model,name:eam_chain.model_eam_chain
+msgid "Chuỗi điểm đo của nhà máy"
+msgstr "The plant's metering chain"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+msgid "Chuỗi đo chính"
+msgstr "Main metering chain"
+
+#. module: eam_chain
+#: model_terms:ir.actions.act_window,help:eam_chain.action_eam_chain
+msgid "Chưa khai chuỗi nào"
+msgstr "No chain declared yet"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_day__node_type
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__node_type
+msgid ""
+"Chỉ bậc SẢN LƯỢNG mới tham gia tính tổn thất theo bậc.\n"
+"\n"
+"Tự dùng và ban đêm là tiêu thụ có chủ đích — gộp vào tổn thất thì con số phồng lên mà không ai truy được tại sao.\n"
+"\n"
+"Điểm đo riêng là chỗ đo cho mục đích khác, không nằm trên đường điện đi — ví dụ điện năng dùng làm tử số tỷ số hiệu suất, vốn đo trong khoảng giờ riêng. Để nó trong chuỗi thì nó ăn vào phép trừ và sinh ra một con số tổn thất vô nghĩa."
+msgstr ""
+"Only ENERGY stages take part in the loss-by-stage calculation.\n"
+"\n"
+"Auxiliary and overnight consumption are intentional use — fold them into losses and the figure swells with nobody able to trace why.\n"
+"\n"
+"A standalone measurement point is measured for another purpose and does not lie on the path of the electricity — for example the energy used as the PR numerator, which is measured over its own window. Leave it in the chain and it enters the subtraction and produces a meaningless loss figure."
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Chỉ bậc sản lượng"
+msgstr "Energy stages only"
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_chain.py:0
+msgid "Chỉ dựng cho bậc có gắn công-tơ. Bậc lấy số từ SCADA hoặc nhập tay thì điền riêng."
+msgstr "Only built for stages with a meter attached. A stage taking its figure from SCADA or entered by hand is filled in separately."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain__node_ids
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+msgid "Các bậc"
+msgstr "Stages"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Có tổn thất"
+msgstr "Has a loss"
+
+#. module: eam_chain
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain__company_id
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__company_id
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__company_id
@@ -24,9 +184,161 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__meter_id
+msgid "Công-tơ"
+msgstr "Meter"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__is_billing
+msgid "Công-tơ bán điện"
+msgstr "Sales meter"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__doi_chieu_nguong
+msgid "Công-tơ và SCADA lệch quá mức này thì dòng ngày bị gắn cờ."
+msgstr "When the meter and SCADA differ by more than this, the daily row is flagged."
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_solar_kpi.py:0
+msgid "Dòng không lấy được là do chuỗi chưa đánh dấu bậc \"Tử số tỷ số hiệu suất\". Cố ý không tự lấy bậc bán điện thay thế — hai mốc đó lệch nhau vài phần trăm."
+msgstr "The row could not be fetched because the chain has no stage marked as \"PR numerator\". It deliberately does not fall back to the sales stage — the two reference points differ by a few per cent."
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_solar_kpi__chain_day_id
+msgid "Dòng sản lượng ngày tại bậc công-tơ bán điện của chuỗi."
+msgstr "The daily energy row at the chain's sales meter stage."
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+msgid "Dựng sản lượng ngày"
+msgstr "Build the daily energy figures"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain__note
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__note
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_form
+msgid "Ghi chú"
+msgstr "Note"
+
+#. module: eam_chain
+#: model:ir.model.constraint,message:eam_chain.constraint_eam_chain_node_uniq_seq
+msgid "Hai bậc trong cùng một chuỗi không được trùng thứ tự — thứ tự là thứ quyết định tổn thất tính giữa bậc nào với bậc nào."
+msgstr "Two stages in the same chain cannot share an order — the order is what decides which stage the loss is computed against."
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_day__nguon__cong_to
+msgid "Hiệu số đọc công-tơ"
+msgstr "Difference between meter readings"
+
+#. module: eam_chain
+#: model_terms:ir.actions.act_window,help:eam_chain.action_eam_chain
+msgid ""
+"Khai các bậc điện đi qua, từ thiết bị phát tới công-tơ bán\n"
+"               điện. Khai một lần, dùng cho mọi ngày — và cùng một cấu\n"
+"               trúc chạy được cho cả điện gió lẫn điện mặt trời."
+msgstr ""
+"Declare the stages the electricity passes through, from the generating\n"
+"               equipment to the sales meter. Declared once and used for every day —\n"
+"               and the same structure works for both wind and solar."
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__tag_id
+msgid "Khai thêm để ĐỐI CHIẾU với công-tơ. Khai một mình khi chưa có công-tơ ở bậc này."
+msgstr "Declare it as well to CROSS-CHECK against the meter. Declare it alone where there is no meter at this stage yet."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__node_type
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__node_type
+msgid "Loại bậc"
+msgstr "Stage type"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid "Luỹ kế"
+msgstr "Cumulative"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid ""
+"Luỹ kế <b>tính lại mỗi lần đọc</b>, không\n"
+"                                lưu. Sửa một ngày giữa tháng thì mọi ngày\n"
+"                                sau nó đúng ngay, không phải chạy lại gì."
+msgstr ""
+"The running total is <b>recomputed on every read</b>,\n"
+"                                not stored. Correct a day mid-month and every\n"
+"                                day after it is right at once, with nothing to\n"
+"                                re-run."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__luy_ke_nam
+msgid "Luỹ kế năm (kWh)"
+msgstr "Year to date (kWh)"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__luy_ke_thang
+msgid "Luỹ kế tháng (kWh)"
+msgstr "Month to date (kWh)"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__meter_id
+msgid "Lấy sản lượng ngày bằng hiệu hai số đọc liên tiếp. Đã xử lý sẵn trường hợp thay đồng hồ hoặc đồng hồ quay vòng."
+msgstr "Takes the daily energy as the difference between two consecutive readings. Meter replacement and counter rollover are already handled."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_solar_kpi__chain_day_id
+msgid "Lấy từ bậc bán điện"
+msgstr "Taken from the sales stage"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_solar_kpi_form_chain
+msgid "Lấy từ chuỗi điểm đo"
+msgstr "Taken from the metering chain"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__lech_scada_pct
+msgid "Lệch SCADA (%)"
+msgstr "SCADA difference (%)"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Lệch SCADA quá ngưỡng"
+msgstr "SCADA difference above the threshold"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__canh_bao_lech
+msgid "Lệch quá ngưỡng"
+msgstr "Difference above the threshold"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__code
+msgid "Mã bậc"
+msgstr "Stage code"
+
+#. module: eam_chain
+#: model:ir.model.constraint,message:eam_chain.constraint_eam_chain_day_uniq_ngay
+msgid "Mỗi bậc chỉ có một dòng cho một ngày."
+msgstr "A stage has one row per day."
+
+#. module: eam_chain
+#: model:ir.model.constraint,message:eam_chain.constraint_eam_chain_uniq_plant
+msgid "Một nhà máy không có hai chuỗi trùng tên."
+msgstr "A plant cannot have two chains with the same name."
+
+#. module: eam_chain
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__nguon
 msgid "Nguồn"
 msgstr "Source"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__date
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__doi_chieu_nguong
+msgid "Ngưỡng báo lệch (%)"
+msgstr "Difference alert threshold (%)"
 
 #. module: eam_chain
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain__plant_id
@@ -34,4 +346,168 @@ msgstr "Source"
 #: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__plant_id
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__nhap_tay
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_day__nguon__tay
+msgid "Nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid "Sản lượng"
+msgstr "Energy"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__energy
+msgid "Sản lượng (kWh)"
+msgstr "Energy (kWh)"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid "Sản lượng ngày theo bậc"
+msgstr "Daily energy by stage"
+
+#. module: eam_chain
+#: model:ir.model,name:eam_chain.model_eam_chain_day
+msgid "Sản lượng ngày theo bậc đo"
+msgstr "Daily energy by metering stage"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_list
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Sản lượng theo bậc"
+msgstr "Energy by stage"
+
+#. module: eam_chain
+#: model:ir.actions.act_window,name:eam_chain.action_eam_chain_day
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain_day
+msgid "Sản lượng theo bậc đo"
+msgstr "Energy by metering stage"
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_chain_day.py:0
+msgid "Sản lượng âm (%s kWh) ở bậc \"%s\" ngày %s. Hai nguyên nhân thường gặp: công-tơ vừa được thay mà chưa đánh dấu, hoặc hai số đọc bị đảo ngày."
+msgstr "Negative energy (%s kWh) at stage \"%s\" on %s. Two common causes: the meter has just been replaced without being marked, or two readings have had their dates swapped."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain__node_count
+msgid "Số bậc"
+msgstr "Stages"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain__day_count
+msgid "Số ngày"
+msgstr "Days"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_day__energy_scada
+msgid "Số từ điểm đo SCADA, khai để đối chiếu với công-tơ."
+msgstr "The figure from the SCADA tag, declared for cross-checking against the meter."
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__day_ids
+msgid "Theo ngày"
+msgstr "By day"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_search
+msgid "Tháng"
+msgstr "Month"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__sequence
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__sequence
+msgid "Thứ tự"
+msgstr "Order"
+
+#. module: eam_chain
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_day__sequence
+#: model:ir.model.fields,help:eam_chain.field_eam_chain_node__sequence
+msgid "Thứ tự theo đường đi của điện, từ thiết bị phát ra lưới. Tổn thất tính giữa bậc này và bậc ĐỨNG NGAY TRƯỚC nó."
+msgstr "Ordered along the path the electricity takes, from the generating equipment out to the grid. The loss is computed between a stage and the one IMMEDIATELY BEFORE it."
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_node__node_type__ban_dem
+msgid "Tiêu thụ ban đêm"
+msgstr "Overnight consumption"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__name
+msgid "Tên bậc"
+msgstr "Stage name"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain__name
+msgid "Tên chuỗi"
+msgstr "Chain name"
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_day__nguon__scada
+msgid "Tích phân từ SCADA"
+msgstr "Integrated from SCADA"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__loss_pct
+msgid "Tổn thất (%)"
+msgstr "Loss (%)"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_day__loss_kwh
+msgid "Tổn thất (kWh)"
+msgstr "Loss (kWh)"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid "Tổn thất so với bậc trước"
+msgstr "Loss against the previous stage"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__is_pr_source
+msgid "Tử số tỷ số hiệu suất"
+msgstr "PR numerator"
+
+#. module: eam_chain
+#: model:ir.model.fields,field_description:eam_chain.field_eam_chain_node__tag_id
+msgid "Điểm đo SCADA"
+msgstr "SCADA tag"
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_node__node_type__do_rieng
+msgid "Điểm đo riêng — ngoài chuỗi tổn thất"
+msgstr "Standalone measurement point — outside the loss chain"
+
+#. module: eam_chain
+#: model:ir.model.fields.selection,name:eam_chain.selection__eam_chain_node__node_type__tu_dung
+msgid "Điện tự dùng"
+msgstr "Auxiliary consumption"
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_chain.py:0
+msgid "Đã dựng %s dòng ngày"
+msgstr "Built %s daily rows"
+
+#. module: eam_chain
+#: code:addons/eam_chain/models/eam_solar_kpi.py:0
+msgid "Đã lấy %s dòng"
+msgstr "Fetched %s rows"
+
+#. module: eam_chain
+#: model_terms:ir.ui.view,arch_db:eam_chain.view_eam_chain_day_form
+msgid ""
+"— vượt ngưỡng đã khai. Một trong hai nguồn sai, và\n"
+"                        sai nguồn nào thì hậu quả khác nhau."
+msgstr ""
+"— above the declared threshold. One of the two sources is\n"
+"                        wrong, and which one it is has different consequences."
+
+#. module: eam_chain
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain
+msgid "Chuỗi điểm đo"
+msgstr "Metering chain"
+
+#. module: eam_chain
+#: model:ir.ui.menu,name:eam_chain.menu_eam_chain_day
+msgid "Sản lượng theo bậc đo"
+msgstr "Energy by metering stage"
 

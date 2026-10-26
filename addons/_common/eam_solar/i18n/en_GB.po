@@ -435,6 +435,14 @@ msgid "Nguồn số liệu"
 msgstr "Data source"
 
 #. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__date
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__date
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
+msgid "Ngày"
+msgstr "Day"
+
+#. module: eam_solar
 #: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__nguon__tay
 msgid "Người nhập tay"
 msgstr "Entered by hand"
@@ -583,6 +591,12 @@ msgstr "Weather data missing"
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
 msgid "Thiếu tổng xạ"
 msgstr "Irradiation missing"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
+msgid "Tháng"
+msgstr "Month"
 
 #. module: eam_solar
 #: model:ir.model.fields,help:eam_solar.field_eam_location__pv_irr_tag_ids
@@ -746,4 +760,9 @@ msgstr "Leave it empty and the module area above is used. Declare it separately 
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
 msgid "để trống = bằng diện tích mô-đun"
 msgstr "empty = equal to the module area"
+
+#. module: eam_solar
+#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_weather
+msgid "Khí tượng ngày"
+msgstr "Daily weather"
 

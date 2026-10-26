@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_attr
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_attr
+#: model_terms:ir.ui.view,arch_db:eam_attr.view_eam_asset_form_attr
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                        Chọn <b>nhóm tài sản</b> trước — bộ thông số hiện ra\n"
+"                        là do nhóm quyết định."
+msgstr ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                        Choose the <b>asset group</b> first — the set of\n"
+"                        specifications shown is decided by the group."
+
+#. module: eam_attr
+#: model_terms:ir.ui.view,arch_db:eam_attr.view_eam_asset_category_form_attr
+msgid "Chép thuộc tính từ nhóm cha"
+msgstr "Copy the attributes from the parent group"
+
+#. module: eam_attr
+#: code:addons/eam_attr/models/eam_asset_category.py:0
+msgid "Chỉ thêm thuộc tính còn thiếu; phần đã khai ở nhóm này giữ nguyên."
+msgstr "Only the missing attributes are added; anything already declared on this group is left as it is."
+
+#. module: eam_attr
+#: model:ir.model.fields,help:eam_attr.field_eam_asset__attrs
+msgid "Các ô ở đây do nhóm tài sản quyết định. Đổi nhóm thì bộ ô đổi theo — giá trị cũ không mất, nhưng chỉ hiện lại khi quay về đúng nhóm."
+msgstr "The fields here are decided by the asset group. Change the group and the set of fields changes with it — the old values are not lost, but they only reappear on returning to the right group."
+
+#. module: eam_attr
+#: model:ir.model.fields,help:eam_attr.field_eam_asset_category__attr_definition
+msgid "Khai các thông số mà mọi tài sản thuộc nhóm này đều có. Tài sản sẽ hiện đúng những ô này để điền."
+msgstr "Declare the specifications that every asset in this group has. Assets then show exactly these fields to fill in."
+
+#. module: eam_attr
+#: model_terms:ir.ui.view,arch_db:eam_attr.view_eam_asset_category_form_attr
+msgid ""
+"Khai ở đây những thông số mà <b>mọi tài sản thuộc nhóm\n"
+"                        này</b> đều có — ví dụ máy biến áp cần điện áp sơ cấp,\n"
+"                        thứ cấp, tổ đấu dây. Thêm ô mới không cần lập trình.\n"
+"                        <br/>Thuộc tính <b>không tự chảy xuống nhóm con</b>:\n"
+"                        gộp ngầm thì sửa một chỗ làm đổi dữ liệu hàng trăm tài\n"
+"                        sản mà không ai thấy. Dùng nút bên dưới nếu muốn chép."
+msgstr ""
+"Declare here the specifications that <b>every asset in this\n"
+"                        group</b> has — a transformer, for example, needs primary\n"
+"                        and secondary voltage and a vector group. Adding a new\n"
+"                        field needs no programming.\n"
+"                        <br/>Attributes <b>do not flow down to child groups</b>:\n"
+"                        inherit them implicitly and one edit changes the data of\n"
+"                        hundreds of assets with nobody seeing it. Use the button\n"
+"                        below to copy them deliberately."
+
+#. module: eam_attr
+#: code:addons/eam_attr/models/eam_asset_category.py:0
+msgid "Nhóm \"%s\" không có nhóm cha để chép."
+msgstr "Group \"%s\" has no parent group to copy from."
+
+#. module: eam_attr
+#: code:addons/eam_attr/models/eam_asset_category.py:0
+msgid "Nhóm cha \"%s\" chưa khai thuộc tính nào."
+msgstr "Parent group \"%s\" has no attribute declared."
+
+#. module: eam_attr
+#: model:ir.model.fields,field_description:eam_attr.field_eam_asset_category__attr_count
+msgid "Số thuộc tính"
+msgstr "Attributes"
+
+#. module: eam_attr
+#: model:ir.model.fields,field_description:eam_attr.field_eam_asset_category__attr_definition
+msgid "Thuộc tính của nhóm"
+msgstr "The group's attributes"
+
+#. module: eam_attr
+#: model:ir.model.fields,field_description:eam_attr.field_eam_asset__attrs
+#: model_terms:ir.ui.view,arch_db:eam_attr.view_eam_asset_form_attr
+msgid "Thông số kỹ thuật"
+msgstr "Specifications"
+
+#. module: eam_attr
+#: model_terms:ir.ui.view,arch_db:eam_attr.view_eam_asset_category_form_attr
+msgid "Thông số kỹ thuật của nhóm"
+msgstr "The group's specifications"
+
+#. module: eam_attr
+#: code:addons/eam_attr/models/eam_asset_category.py:0
+msgid "Đã chép %s thuộc tính"
+msgstr "Copied %s attributes"
+

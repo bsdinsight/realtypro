@@ -17,11 +17,88 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_procurement
+#: code:addons/eam_procurement/models/stock_orderpoint.py:0
+msgid "Bổ sung tồn kho phụ tùng — %(n)d mặt hàng dưới định mức tối thiểu"
+msgstr "Replenish the spare parts stock — %(n)d items below the minimum level"
+
+#. module: eam_procurement
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_list_eam
+msgid "Cho tài sản"
+msgstr "For the asset"
+
+#. module: eam_procurement
+#: code:addons/eam_procurement/models/stock_orderpoint.py:0
+msgid "Các dòng đã chọn đều đã lập yêu cầu mua rồi."
+msgstr "Every selected line already has a purchase requisition."
+
+#. module: eam_procurement
+#: model:ir.model.fields,help:eam_procurement.field_rp_purchase_request__eam_category_id
+msgid "Khi mua dự phòng cho kho, chưa biết lắp vào đâu. Chọn tài sản thì trường này tự suy."
+msgstr "When buying a spare for stock, with no idea yet where it will be fitted. Choosing an asset fills this field in automatically."
+
+#. module: eam_procurement
+#: model:ir.model.fields,help:eam_procurement.field_rp_purchase_request__eam_asset_id
+msgid "Khi đã biết thay đúng con nào."
+msgstr "Once it is known which one is being replaced."
+
+#. module: eam_procurement
+#: code:addons/eam_procurement/models/stock_orderpoint.py:0
+msgid "Không dòng nào có số lượng cần đặt lớn hơn 0."
+msgstr "No line has an order quantity above 0."
+
+#. module: eam_procurement
 #: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_category_id
 #: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_list_eam
 #: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
 msgid "Loại cấu phần"
 msgstr "Component category"
+
+#. module: eam_procurement
+#: code:addons/eam_procurement/models/stock_orderpoint.py:0
+msgid "Lập từ <b>bổ sung tồn kho</b>: %(n)s mặt hàng dưới định mức, ước %(t)s."
+msgstr "Raised from a <b>stock replenishment</b>: %(n)s items below the minimum level, estimated %(t)s."
+
+#. module: eam_procurement
+#: model:ir.actions.server,name:eam_procurement.action_orderpoint_tao_yeu_cau
+msgid "Lập yêu cầu mua (Realty)"
+msgstr "Raise a purchase requisition (Realty)"
+
+#. module: eam_procurement
+#: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_asset_id
+msgid "Mua cho tài sản"
+msgstr "Purchased for the asset"
+
+#. module: eam_procurement
+#: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__is_spare
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
+msgid "Mua phụ tùng bảo trì"
+msgstr "Buying maintenance spares"
+
+#. module: eam_procurement
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
+msgid "Mua sắm thi công"
+msgstr "Construction procurement"
+
+#. module: eam_procurement
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_list_eam
+msgid "Phụ tùng"
+msgstr "Spare parts"
+
+#. module: eam_procurement
+#: model:ir.model.fields,help:eam_procurement.field_rp_purchase_request__eam_location_id
+msgid "Suy ra từ tài sản — để sau này cộng được chi phí bảo trì theo từng vị trí."
+msgstr "Derived from the asset — so that maintenance cost can later be summed per location."
+
+#. module: eam_procurement
+#: code:addons/eam_procurement/models/stock_orderpoint.py:0
+msgid ""
+"Tổng giá trị %(t)s thấp hơn ngưỡng %(n)s nên không cần qua Yêu cầu mua — bấm \"Đặt hàng\" của Odoo để ra đơn mua thẳng.\n"
+"\n"
+"Ngưỡng đổi ở Tham số hệ thống \"%(p)s\"."
+msgstr ""
+"The total of %(t)s is below the %(n)s threshold, so no purchase requisition is needed — press Odoo's \"Order\" to raise a purchase order directly.\n"
+"\n"
+"The threshold is changed in the system parameter \"%(p)s\"."
 
 #. module: eam_procurement
 #: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
@@ -32,4 +109,29 @@ msgstr "Location"
 #: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_location_id
 msgid "Vị trí đang lắp"
 msgstr "Current location"
+
+#. module: eam_procurement
+#: code:addons/eam_procurement/models/rp_purchase_request.py:0
+msgid "Yêu cầu \"%s\" đánh dấu là mua phụ tùng bảo trì thì phải nêu mua cho TÀI SẢN nào, hoặc ít nhất cho LOẠI CẤU PHẦN nào. Không có thì sau này không cộng được chi phí bảo trì theo tài sản."
+msgstr "Requisition \"%s\" is marked as buying maintenance spares, so it has to say which ASSET it is for, or at least which COMPONENT CATEGORY. Without that, maintenance cost cannot later be summed per asset."
+
+#. module: eam_procurement
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_orderpoint_list_eam
+msgid "Yêu cầu mua"
+msgstr "Purchase requisition"
+
+#. module: eam_procurement
+#: model:ir.model,name:eam_procurement.model_rp_purchase_request
+msgid "Yêu cầu mua sắm"
+msgstr "Purchase requisitions"
+
+#. module: eam_procurement
+#: model:ir.model.fields,field_description:eam_procurement.field_stock_warehouse_orderpoint__eam_request_id
+msgid "Yêu cầu mua đã lập"
+msgstr "Requisition raised"
+
+#. module: eam_procurement
+#: model:ir.model.fields,help:eam_procurement.field_rp_purchase_request__is_spare
+msgid "Đánh dấu để phân biệt với mua sắm phục vụ thi công. Chi phí bảo trì và chi phí đầu tư không được trộn."
+msgstr "Mark it to distinguish it from procurement for construction. Maintenance cost and capital cost must not be mixed."
 

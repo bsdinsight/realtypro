@@ -1,0 +1,13 @@
+271	Attributes
+272	Specifications
+273	The group's attributes
+274	Copied %s attributes
+275	The group's specifications
+276	Copy the attributes from the parent group
+277	Group "%s" has no parent group to copy from.
+278	Parent group "%s" has no attribute declared.
+279	Only the missing attributes are added; anything already declared on this group is left as it is.
+280	Declare the specifications that every asset in this group has. Assets then show exactly these fields to fill in.
+281	The fields here are decided by the asset group. Change the group and the set of fields changes with it — the old values are not lost, but they only reappear on returning to the right group.
+282	<i class="fa fa-info-circle me-1"/>\n                        Choose the <b>asset group</b> first — the set of\n                        specifications shown is decided by the group.
+283	Declare here the specifications that <b>every asset in this\n                        group</b> has — a transformer, for example, needs primary\n                        and secondary voltage and a vector group. Adding a new\n                        field needs no programming.\n                        <br/>Attributes <b>do not flow down to child groups</b>:\n                        inherit them implicitly and one edit changes the data of\n                        hundreds of assets with nobody seeing it. Use the button\n                        below to copy them deliberately.

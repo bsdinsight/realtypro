@@ -1,0 +1,44 @@
+2474	PASS
+2475	Total
+2476	Digital signature
+2477	Signature
+2478	Conclusion
+2479	FAIL
+2480	Signatures
+2481	Shortfall
+2482	Digitally signed copies
+2483	<b>Cycle</b>
+2484	<b>Measured at</b>
+2485	Digital signing connection
+2486	Signature status
+2487	Signed copies (
+2488	Digitally sign the certificate
+2489	<b>Notes:</b>
+2490	<b>Contract</b>
+2491	Signature warning
+2492	Digitally signed PDF
+2493	Signatures still missing
+2494	Approval step that applies
+2495	(sign and print the name)
+2496	Fully signed as required
+2497	1. Result of each commitment
+2498	<b>O&amp;M contractor</b>
+2499	O&M contract assessment period
+2500	KPI/SLA CONFIRMATION CERTIFICATE
+2501	KPI/SLA confirmation certificate
+2502	2. Payment by plant
+2503	<b>FOR THE OWNER</b>
+2504	(assessment period, no fee charged)
+2505	<b>FOR THE O&amp;M CONTRACTOR</b>
+2506	Confirming KPI/SLA for the period %(a)s → %(b)s
+2507	Confirming the daily operations report for %s
+2508	<b>Note on hours with no responsibility attributed:</b>
+2509	hours\n                                    (
+2510	%)\n                                    with no responsibility attributed.
+2511	Digitally sign this period's KPI/SLA confirmation certificate. This is the document that payment and penalties rest on.
+2512	Only a CLOSED period can be signed. This one is at "%s" — the committed levels and the fee are not frozen, and one more measurement run changes the figures.
+2513	Digitally sign the PDF of this report. The signer confirms it in the certification provider's app if remote signing is in use.
+2514	Only a CLOSED revision can be digitally signed. This one is at "%s" — the figures can still be refilled, and signing now stamps a figure that will change.
+2515	<b>DRAFT — the period is not closed.</b> The committed\n                            levels, the measured figures and the fee can still\n                            change. Do not use this sheet as a basis for payment.
+2516	This period still has a warning, so it should not be signed yet: some rows could not be measured, or the unattributed downtime hours exceed the threshold. The availability figure may be flattering simply because nobody has classified them — classify them, measure again, close again, and only then sign.
+2517	<b>A data quality warning remains.</b> Some rows could\n                            not be measured, or the unattributed downtime hours\n                            exceed the threshold — the availability figure may be\n                            flattering because nobody has classified them.

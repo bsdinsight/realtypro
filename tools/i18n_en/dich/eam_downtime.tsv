@@ -1,0 +1,52 @@
+1158	Categories
+1159	Is an incident
+1160	Group name
+1161	Valued in money
+1162	What it covers
+1163	Reporting group
+1164	Not grouped yet
+1165	Reference machine
+1166	Where the price comes from
+1167	Time group
+1168	Equipment fault
+1169	the list price of %s
+1170	Energy price (/kWh)
+1171	Is a curtailment group
+1172	Reference machines
+1173	Counts as downtime
+1174	Group on the report
+1175	Downtime caused by the external grid
+1176	Price applied (/kWh)
+1177	Category → group mapping
+1178	Fault outside the scope
+1179	Downtime caused by the O&M contractor
+1180	Loss of monitoring data
+1181	Every category is grouped
+1182	Planned maintenance
+1183	Why it could not be computed
+1184	This machine was still generating (kWh)
+1185	Reporting time group
+1186	tariff %s, period %s → %s
+1187	Where the energy lost comes from
+1188	the price declared on plant %s
+1189	Force majeure & environment
+1190	Curtailment by dispatch order
+1191	The time group on the report
+1192	Compute the kWh lost (reference machine)
+1193	Time category → group mapping
+1194	The reference machine generated (kWh)
+1195	Charged to the O&M contractor by default
+1196	The time group code must be unique.
+1197	In a partial outage the machine is still generating. Whatever reached the meter must not be counted as lost.
+1198	The old figure computed by the system on the previous run has been DELETED, because this run could not rebuild it: %s
+1199	Could not be computed: %s\n\nThe old figure is left as it was — "could not be computed" is not the same as "zero".
+1200	Leave it empty and this category's hours fall into the "not grouped yet" row on the report — shown rather than disappearing.
+1201	the price is unknown — the plant has no power purchase agreement and no price declared; leaving it empty is better than multiplying by 0
+1202	Captures the price at the moment of calculation. A power purchase tariff escalates year by year, so recomputing two years later without a captured price changes the old figure with nobody aware of it.
+1203	Where the figure in the "energy lost" field came from. Kept because an outage typed in by a person and one computed by the system carry very different weight when the claim goes to the contractor.
+1204	Only a SUGGESTION when the user attributes responsibility for each outage. The real attribution still lives on each record, because the same group is sometimes the contractor's fault and sometimes not.
+1205	The hours of an ungrouped category fall into the\n            <b>"not grouped yet"</b> row on the report — shown rather than\n            disappearing, but they should still be grouped.
+1206	Declared at plant level only, and used only where there is no power purchase agreement to look up. With an agreement, the price comes from the agreement's tariff — declare a price in two places and sooner or later the two disagree.
+1207	Mark exactly ONE group. Curtailment hours are deducted when computing the operating hours used for the performance ratio — the machine was still available, the grid simply would not take it. Without the mark, the two ways of computing operating hours give the same figure, and the performance section is wrong with it.
+1208	Twenty-three standard categories folded into the few rows an operator can\n            actually read. Stored by the <b>standard</b>, shown by <b>group</b> —\n            wind and solar reports fold them differently, so the mapping has to be\n            declarable.
+1209	This category counts towards the INCIDENTS section of the daily report.\n\nThe flag sits on the TIME CATEGORY rather than the reporting group, because that is where the meaning lies: the "Equipment fault" group still contains the category "PLANNED repair intervention", while the category "Forced outage — awaiting materials" sits in the "Downtime caused by the O&M contractor" group. Use the group as the measure and the incidents section is both short and padded at once.\n\nDECLARED rather than detected by name: change one word of the name and the incidents section is empty with nothing to say so.

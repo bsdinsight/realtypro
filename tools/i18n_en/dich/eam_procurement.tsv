@@ -1,0 +1,19 @@
+2335	Spare parts
+2336	For the asset
+2337	Purchase requisition
+2338	Purchased for the asset
+2339	Purchase requisitions
+2340	Construction procurement
+2341	Requisition raised
+2342	Buying maintenance spares
+2343	Raise a purchase requisition (Realty)
+2344	Once it is known which one is being replaced.
+2345	Every selected line already has a purchase requisition.
+2346	No line has an order quantity above 0.
+2347	Replenish the spare parts stock — %(n)d items below the minimum level
+2348	Raised from a <b>stock replenishment</b>: %(n)s items below the minimum level, estimated %(t)s.
+2349	Derived from the asset — so that maintenance cost can later be summed per location.
+2350	When buying a spare for stock, with no idea yet where it will be fitted. Choosing an asset fills this field in automatically.
+2351	Mark it to distinguish it from procurement for construction. Maintenance cost and capital cost must not be mixed.
+2352	The total of %(t)s is below the %(n)s threshold, so no purchase requisition is needed — press Odoo's "Order" to raise a purchase order directly.\n\nThe threshold is changed in the system parameter "%(p)s".
+2353	Requisition "%s" is marked as buying maintenance spares, so it has to say which ASSET it is for, or at least which COMPONENT CATEGORY. Without that, maintenance cost cannot later be summed per asset.

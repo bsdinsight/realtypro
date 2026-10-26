@@ -1,0 +1,73 @@
+416	Group
+417	Expired
+418	Validity
+419	Certificate
+420	Employee
+421	Remaining (days)
+422	First aid
+423	Status
+424	EXPIRED
+425	Valid from
+426	Expiring soon
+427	Still valid
+428	 (expired %s)
+429	Month of expiry
+430	Search certificates
+431	Crew & competence
+432	Expired entries
+433	Crew is competent
+434	Who is competent?
+435	The crew's certificates
+436	Competence required
+437	Entries missing altogether
+438	Not yet valid
+439	No expiry
+440	Crew assigned
+441	Competence still missing
+442	Blade repair
+443	Certificate / skill
+444	No expiry declared
+445	Competent on %s
+446	Certificates & validity
+447	Certificates & competence
+448	The crew's certificates — %s
+449	Competence this order requires
+450	Expiring soon (60 days)
+451	GWO — Working at Height
+452	Electrical safety card, level 4/5
+453	GWO — Basic Safety Training (BST)
+454	<b>The crew is not competent.</b>
+455	Certificates expired & expiring
+456	GWO — Basic Technical Training (BTT)
+457	Crane and lifting equipment operation
+458	Solar PV inverter maintenance
+459	Nobody holds all of %s on this date
+460	Validity checked on the work date: %s.
+461	Rope access
+462	Rescue at height, lowering from the tower
+463	Confined space working
+464	The manufacturer's turbine platform training
+465	Operation & maintenance (O&M) certificate
+466	EAMOne: remind about expiring certificates
+467	No certificate has been\n               entered yet
+468	High-voltage switching (with an electrical safety card)
+469	Recorded after the fact (does not block closing the order):
+470	%(nv)s carried out this work without %(kn)s.
+471	The crew on order "%(ten)s" is not competent:\n\n%(gap)s
+472	EXPIRED (a training scheduling failure — renewable within the week):
+473	No certificate has expired\n               or is expiring
+474	Days until expiry. Negative is how many days it is already overdue.
+475	%(nv)s carried out this work but their %(kn)s certificate expired on %(d)s.
+476	Someone recorded labour hours without being on the assigned crew: %s.
+477	This order declares no competence requirement, so there is nothing to filter people by.
+478	MISSING ALTOGETHER (a workforce planning failure — months to make up, or it has to be subcontracted):
+479	The certificates, licences and skills whoever does the work MUST hold. Carried over from the maintenance plan when the order is raised automatically.
+480	The order has a competence requirement but <b>no crew declared</b> —\n                        there is no checking who will do it.
+481	Enter an <b>expiry date</b> and the competence gate can check it. Left\n               empty it is treated as having no expiry.
+482	Order "%(ten)s" requires competence (%(kn)s) but has no crew assigned — so there is no checking who will do it.
+483	The certificates, licences and skills whoever does the work must hold. Every order raised from this plan carries this list with it.
+484	Declare it BEFORE starting. This is the list the competence gate checks — a labour-hour line recorded afterwards is only noted, it does not block.
+485	Discovering an expiry on the very morning the crew has reached the foot\n               of the tower is information that can no longer be used for\n               anything. This list is for seeing it in advance.
+486	Certificate <b>%(ten)s</b> expires on %(d)s — %(n)d days left. An expiry is a training scheduling failure, fixable within the week; finding out only once it has lapsed costs a crew half a day.
+487	This is <b>Odoo's own</b> skills table, not a separate EAMOne one —\n               so that HR and the maintenance crew do not keep two sources of\n               truth about the same piece of paper.
+488	Certificate validity is checked against the order's <b>work\n                        date</b>, not today — a certificate valid today that\n                        expires before the work date is still blocked.<br/>\n                        <b>Expired</b> is a training scheduling failure,\n                        renewable within the week. <b>Missing altogether</b> is a\n                        workforce planning failure, taking months to make up — so\n                        the two are kept apart rather than lumped together as\n                        "not competent".

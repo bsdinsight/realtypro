@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- Ca trực sáng nay. Mọi lớp lấy từ khuôn dùng chung eam_dashboard;
+     thẻ ngoài cùng BẮT BUỘC là .eam-dash, vì mọi lớp bên dưới chỉ có
+     tác dụng bên trong nó. -->
+<t t-name="eam_dash_shift.Board">
+<div class="eam-dash">
+
+    <div class="eam-dash-header">
+        <div class="eam-dash-title">
+            <div class="eam-dash-eyebrow">EAMOne</div>
+            <h2>Ca trực sáng nay</h2>
+            <div class="eam-dash-today" t-if="state.data">
+                Số liệu ngày <b t-esc="state.data.ngay"/>
+                <t t-if="state.data.plant">
+                    · <t t-esc="state.data.plant.name"/>
+                </t>
+                <t t-else=""> · toàn bộ nhà máy</t>
+            </div>
+        </div>
+        <div class="eam-dash-tools" t-if="state.data">
+            <select class="form-select form-select-sm"
+                    t-on-change="doiNhaMay">
+                <option value="">Tất cả nhà máy</option>
+                <option t-foreach="state.data.plants" t-as="p" t-key="p.code"
+                        t-att-value="p.code"
+                        t-att-selected="p.code === state.plantCode">
+                    <t t-esc="p.name"/>
+                </option>
+            </select>
+            <input type="date" class="form-control form-control-sm"
+                   t-att-value="state.ngay" t-on-change="doiNgay"
+                   t-att-max="state.data.hom_nay"/>
+        </div>
+    </div>
+
+    <div class="eam-dash-loading" t-if="state.loading">
+        <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+        <div>Đang lấy số liệu ca trực…</div>
+    </div>
+
+    <div class="eam-dash-empty" t-elif="state.error">
+        <i class="fa fa-exclamation-triangle fa-2x"/>
+        <div>Không lấy được số liệu.</div>
+        <div class="eam-panel-note" t-esc="state.error"/>
+    </div>
+
+    <t t-elif="state.data">
+        <t t-set="hq" t-value="state.data.hom_qua"/>
+
+        <!-- ① Hôm qua trại chạy thế nào -->
+        <div class="eam-kpis">
+            <div t-att-class="'eam-hero ' + lopThe(hq.san_luong_do_duoc, '')">
+                <div class="eam-card-label">Sản lượng ngày</div>
+                <div class="eam-card-value">
+                    <t t-esc="so(hq.san_luong_do_duoc ? hq.san_luong_mwh : null)"/>
+                    <span class="u"> MWh</span>
+                </div>
+                <div class="eam-card-sub"
+                     t-esc="mauSo(hq.san_luong_mau_so)"/>
+            </div>
+
+            <div t-att-class="lopThe(hq.kd_do_duoc, mucKhaDung(hq.kd))">
+                <div class="eam-card-label">Khả dụng — của ta đo</div>
+                <div class="eam-card-value">
+                    <t t-esc="so(hq.kd_do_duoc ? hq.kd : null, 2)"/>
+                    <span class="u" t-if="hq.kd_do_duoc"> %</span>
+                </div>
+                <!-- Hai con số khả dụng CỐ Ý không gộp: của ta trừ hết
+                     mọi nguyên nhân, phạm vi hợp đồng chỉ trừ phần thuộc
+                     nhà thầu. Khoảng lệch mới là thứ đem ra họp. -->
+                <div class="eam-card-sub">
+                    <t t-if="hq.kd_do_duoc">
+                        phạm vi hợp đồng <t t-esc="so(hq.kd_om, 2)"/>% ·
+                    </t>
+                    <t t-esc="mauSo(hq.kd_mau_so)"/>
+                </div>
+            </div>
+
+            <div t-att-class="lopThe(hq.he_so_do_duoc, '')">
+                <div class="eam-card-label">Hệ số công suất</div>
+                <div class="eam-card-value">
+                    <t t-esc="so(hq.he_so_do_duoc ? hq.he_so : null, 2)"/>
+                    <span class="u" t-if="hq.he_so_do_duoc"> %</span>
+                </div>
+                <div class="eam-card-sub" t-esc="mauSo(hq.he_so_mau_so)"/>
+            </div>
+
+            <div t-att-class="lopThe(hq.pr_do_duoc, '')">
+                <div class="eam-card-label">PR điện mặt trời</div>
+                <div class="eam-card-value">
+                    <t t-esc="so(hq.pr_do_duoc ? hq.pr : null, 2)"/>
+                    <span class="u" t-if="hq.pr_do_duoc"> %</span>
+                </div>
+                <div class="eam-card-sub" t-esc="hq.pr_ghi_chu"/>
+            </div>
+        </div>
+
+        <div class="eam-row">
+            <!-- ② Việc phải làm, xếp theo mức gấp -->
+            <div class="eam-panel">
+                <div class="eam-panel-head">
+                    <h3>Việc phải làm hôm nay</h3>
+                    <span class="eam-panel-note">
+                        bấm một dòng để mở danh sách
+                    </span>
+                </div>
+                <div t-foreach="state.data.viec" t-as="v" t-key="v.ma"
+                     t-att-class="'eam-todo is-' + (v.muc === 'zero' ? 'zero' : v.muc)"
+                     style="cursor:pointer"
+                     t-on-click="() => this.moDanhSach(v.ma)">
+                    <div class="eam-todo-count" t-esc="v.so"/>
+                    <div class="eam-todo-text">
+                        <div t-esc="v.chu"/>
+                        <div class="eam-todo-sub" t-esc="v.phu"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Luỹ kế tháng tới ĐÚNG ngày đang xem -->
+            <div class="eam-panel">
+                <div class="eam-panel-head">
+                    <h3>Từ đầu tháng</h3>
+                    <span class="eam-panel-note">
+                        tới ngày <t t-esc="state.data.thang.den_ngay"/>
+                    </span>
+                </div>
+                <t t-set="th" t-value="state.data.thang"/>
+                <div class="eam-kpis eam-kpis-2" style="margin-bottom:0">
+                    <div t-att-class="lopThe(th.do_duoc, '')">
+                        <div class="eam-card-label">Sản lượng</div>
+                        <div class="eam-card-value">
+                            <t t-esc="so(th.do_duoc ? th.san_luong_mwh : null)"/>
+                            <span class="u"> MWh</span>
+                        </div>
+                        <div class="eam-card-sub"
+                             t-esc="mauSo(th.mau_so, 'ngày')"/>
+                    </div>
+                    <div t-att-class="lopThe(th.do_duoc, 'warn')">
+                        <div class="eam-card-label">Sản lượng mất</div>
+                        <div class="eam-card-value">
+                            <t t-esc="so(th.do_duoc ? th.sl_mat_mwh : null)"/>
+                            <span class="u"> MWh</span>
+                        </div>
+                        <div class="eam-card-sub">
+                            hôm qua <t t-esc="so(hq.sl_mat_mwh)"/> MWh ·
+                            <t t-esc="hq.so_khoang"/> khoảng dừng
+                        </div>
+                    </div>
+                </div>
+                <div class="eam-panel-note" style="margin-top:10px"
+                     t-if="hq.so_khoang_chua_tinh">
+                    <b t-esc="hq.so_khoang_chua_tinh"/> khoảng dừng hôm qua
+                    chưa quy ra kWh — khả dụng ở trên đang CAO HƠN thật
+                    đúng phần ấy.
+                </div>
+            </div>
+        </div>
+
+        <!-- ③ Máy nào kéo trại xuống -->
+        <div class="eam-divider"><span>Từng tổ máy</span></div>
+        <div class="eam-panel">
+            <div class="eam-panel-head">
+                <h3>Tổ máy ngày <t t-esc="state.data.ngay"/></h3>
+                <span class="eam-panel-note">
+                    kém nhất xếp trước · tổ máy chưa có số xếp cuối
+                </span>
+            </div>
+            <table class="eam-table">
+                <thead>
+                    <tr>
+                        <th>Tổ máy</th>
+                        <th>Nhà máy</th>
+                        <th class="num">Sản lượng (MWh)</th>
+                        <th class="num">Khả dụng</th>
+                        <th class="num">Hệ số CS</th>
+                        <th class="num">Mất (MWh)</th>
+                        <th class="c">Khoảng dừng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="state.data.to_may" t-as="u"
+                        t-key="u.ma + u.ten"
+                        t-att-class="u.muc ? 'is-' + u.muc : ''">
+                        <td><b t-esc="u.ten"/></td>
+                        <td class="muted" t-esc="u.nha_may"/>
+                        <t t-if="!u.co_dong">
+                            <!-- Không có dòng nào cho ngày này. Vẫn liệt
+                                 kê, vì "hôm qua máy này không có số" đúng
+                                 là thứ người trực cần biết nhất. -->
+                            <td class="unknown" colspan="4">
+                                chưa có số cho ngày này
+                            </td>
+                            <td class="c unknown">—</td>
+                        </t>
+                        <t t-else="">
+                            <td t-att-class="u.san_luong === null ? 'unknown' : 'num'"
+                                t-esc="so(u.san_luong, 2)"/>
+                            <td t-att-class="u.kd === null ? 'unknown' : 'num'">
+                                <t t-esc="so(u.kd, 2)"/><t t-if="u.kd !== null">%</t>
+                            </td>
+                            <td t-att-class="u.he_so === null ? 'unknown' : 'num'">
+                                <t t-esc="so(u.he_so, 2)"/><t t-if="u.he_so !== null">%</t>
+                            </td>
+                            <td t-att-class="u.sl_mat === null ? 'unknown' : 'num'"
+                                t-esc="so(u.sl_mat, 2)"/>
+                            <td class="c">
+                                <span t-if="u.so_khoang"
+                                      class="eam-chip is-warn"
+                                      t-esc="u.so_khoang"/>
+                                <span t-else="" class="muted">—</span>
+                            </td>
+                        </t>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</div>
+</t>
+
+</templates>

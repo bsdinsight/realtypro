@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_eam_dash_shift" model="ir.actions.client">
+        <field name="name">Ca trực sáng nay</field>
+        <field name="tag">eam_dash_shift.board</field>
+    </record>
+
+    <!-- Đặt ở nhánh Vận hành, sequence 1: đây là màn người trực mở
+         ĐẦU TIÊN mỗi sáng, nên nó phải là mục đầu của nhánh chứ không
+         nằm lẫn giữa các sổ. -->
+    <menuitem id="menu_eam_dash_shift" name="Ca trực sáng nay"
+              parent="eam_core.menu_eam_ops"
+              action="action_eam_dash_shift" sequence="1"/>
+
+</odoo>

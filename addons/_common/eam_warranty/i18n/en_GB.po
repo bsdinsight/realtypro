@@ -22,6 +22,11 @@ msgid "BH đến"
 msgstr "Warranty to"
 
 #. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__ban_giao
+msgid "Bàn giao từ dự án"
+msgstr "Handed over from the project"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_search_warranty
 msgid "Bảo hành"
 msgstr "Warranty"

@@ -17,9 +17,288 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"\n"
+"\n"
+"Hàng đang nằm ở: %s"
+msgstr ""
+"\n"
+"\n"
+"The goods are currently at: %s"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_equivalent
+msgid ""
+"\"Hai con này thay nhau được\" là một <b>kết luận kỹ\n"
+"               thuật</b>, không phải ghi chú. Khai xong là chờ duyệt —\n"
+"               chỉ khi kỹ thuật duyệt mới được dùng thay."
+msgstr ""
+"\"These two are interchangeable\" is an <b>engineering\n"
+"               conclusion</b>, not a note. Once declared it waits for approval —\n"
+"               only once engineering has approved it may one be used for the other."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_demand.py:0
+msgid ""
+"%(n)d lịch bảo trì tới hạn nhưng KHÔNG kế hoạch nào khai vật tư.\n"
+"\n"
+"Khai vật tư cho kế hoạch bảo trì trước — không có dữ liệu gốc thì không tổng hợp được nhu cầu."
+msgstr ""
+"%(n)d maintenance schedules fall due but NO plan declares any material.\n"
+"\n"
+"Declare materials on the maintenance plans first — without the source data there is no demand to consolidate."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "%(n)g đơn vị ở %(vt)s, chủ sở hữu %(ch)s"
+msgstr "%(n)g units at %(vt)s, owned by %(ch)s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "%(sp)s: giữ được %(g)g / cần %(c)g"
+msgstr "%(sp)s: reserved %(g)g / needed %(c)g"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "(chưa khai kho nào)"
+msgstr "(no store declared)"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid ""
+"<b>Ba số khác nhau.</b> <i>Yêu cầu</i> là số xin và là\n"
+"                    số đem đi giữ chỗ; <i>Đã xuất</i> là số kho đưa ra;\n"
+"                    <i>Đã trả</i> là số mang về. <b>Đã dùng = Đã xuất −\n"
+"                    Đã trả, và đó mới là số tính tiền.</b><br/>\n"
+"                    Hàng trả về <b>không vào thẳng tồn khả dụng</b> trừ khi\n"
+"                    chọn \"Còn tốt\". Tháo khỏi máy không có nghĩa là dùng\n"
+"                    lại được."
+msgstr ""
+"<b>Three different figures.</b> <i>Requested</i> is what was\n"
+"                    asked for and what gets reserved; <i>Issued</i> is what the\n"
+"                    store handed out; <i>Returned</i> is what came back.\n"
+"                    <b>Used = Issued − Returned, and that is the figure that is\n"
+"                    charged.</b><br/>\n"
+"                    Returned goods do <b>not</b> go straight into available stock\n"
+"                    unless \"Still good\" is chosen. Being removed from a machine\n"
+"                    does not mean it is usable again."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_stock_toiuu
+msgid ""
+"<b>Ba thứ khác nhau, đừng gộp.</b> <i>Chậm luân chuyển</i>\n"
+"               có thể vẫn đúng — phụ tùng cho sự cố hiếm thì nằm im là\n"
+"               bình thường. <i>Dư thừa</i> mới là tiền chết.\n"
+"               <i>Ngừng sản xuất</i> thì xử ngược lại: phải mua thêm\n"
+"               trước khi hết."
+msgstr ""
+"<b>Three different things; do not merge them.</b> <i>Slow\n"
+"               moving</i> may still be right — a spare for a rare failure is\n"
+"               supposed to sit still. <i>Excess</i> is the dead money.\n"
+"               <i>Discontinued</i> works the other way round: buy more before it\n"
+"               runs out."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+msgid "<b>Có sai lệch ở %(n)d dòng.</b> Hàng từ chối đã vào <i>Cách ly</i> — chưa trả nhà cung cấp. Lập yêu cầu xử lý với bên giao trước khi chuyển hàng đi."
+msgstr "<b>A discrepancy on %(n)d lines.</b> The rejected goods have gone to <i>Quarantine</i> — they have not been returned to the supplier. Raise a case with the sender before moving them."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid ""
+"<b>Hàng đang đi.</b> Đã rời kho gửi, chưa vào kho\n"
+"                        nhận — đang nằm ở vị trí trung chuyển và vẫn thuộc\n"
+"                        trách nhiệm bên gửi cho tới khi bên nhận ký."
+msgstr ""
+"<b>In transit.</b> It has left the sending store and\n"
+"                        not yet arrived at the receiving one — it sits at the\n"
+"                        transit location and remains the sender's\n"
+"                        responsibility until the receiver signs."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid ""
+"<b>Hàng đặt dài ngày.</b> Hết hàng thì không mua\n"
+"                        kịp — mức dự trữ phải tính theo thời gian cung ứng\n"
+"                        chứ không theo nhịp tiêu dùng."
+msgstr ""
+"<b>Long lead-time order.</b> Run out and there is no\n"
+"                        buying it in time — the stock level has to follow the\n"
+"                        lead time, not the rate of use."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid ""
+"<b>Nhận thiếu.</b> Phần thiếu vẫn nằm ở vị trí\n"
+"                        trung chuyển — phải tìm ra, nó không tự xoá."
+msgstr ""
+"<b>Short receipt.</b> The missing part stays at the\n"
+"                        transit location — it has to be found; it does not clear itself."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid ""
+"<b>Quá hạn trả.</b> Không có sổ mượn thì dụng cụ\n"
+"                        biến mất dần mà không ai biết lúc nào."
+msgstr ""
+"<b>Overdue for return.</b> Without a loan book, tools\n"
+"                        disappear gradually and nobody knows when."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid ""
+"<b>Quá hạn.</b> Trả lõi quá hạn thì bị tính thêm\n"
+"                        tiền; đòi bảo hành quá hạn thì mất quyền."
+msgstr ""
+"<b>Overdue.</b> A core returned late is charged for;\n"
+"                        a warranty claim made late is lost."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid ""
+"<b>Xuất khẩn cấp — còn NỢ HỒ SƠ.</b> Hàng đã rời\n"
+"                        kho khi chưa ai duyệt. Yêu cầu này nằm trong danh\n"
+"                        sách nợ cho tới khi bấm <i>Đã hoàn thiện hồ sơ</i>.\n"
+"                        Hạn:"
+msgstr ""
+"<b>Emergency issue — PAPERWORK OUTSTANDING.</b> The goods\n"
+"                        left the store before anyone approved it. This request\n"
+"                        stays on the outstanding list until <i>The file has been\n"
+"                        completed</i> is pressed. Due:"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/res_users.py:0
+msgid "<b>Đổi kho được giao</b> cho %(ng)s — %(pt)s."
+msgstr "<b>Changed the assigned stores</b> for %(ng)s — %(pt)s."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Ai kiểm, kiểm ở đâu"
+msgstr "Who checked it, and where"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Ai mượn, bao giờ trả"
+msgstr "Who borrowed it, when it is due back"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_approval_rule__group_id
+msgid "Ai thuộc nhóm này thì duyệt được cấp này."
+msgstr "Anyone in this group can approve at this level."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Ai xin, xin ở đâu"
+msgstr "Who requested it, and where"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__source__handover
+msgid "Bàn giao từ dự án"
+msgstr "Handed over from the project"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Báo MẤT dụng cụ. Người mượn: %s."
+msgstr "Tool reported LOST. Borrower: %s."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__state__lost
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Báo mất"
+msgstr "Reported lost"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__partner_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Bên giao"
+msgstr "Handed over by"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__accepted
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Bên kia chấp nhận"
+msgstr "The other side accepted"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__rejected
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Bên kia từ chối"
+msgstr "The other side refused"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+msgid "Bên nhận"
+msgstr "Received by"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__urgency__normal
 msgid "Bình thường"
 msgstr "Normal"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__preserve
+msgid "Bôi mỡ bảo quản / chống gỉ"
+msgstr "Preservative grease / rust protection"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__can_duyet
+msgid "Bạn duyệt được"
+msgstr "You may approve it"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid ""
+"Bạn không thuộc cấp duyệt nào đang chờ của yêu cầu \"%(ten)s\".\n"
+"\n"
+"Đang chờ: %(ds)s"
+msgstr ""
+"You are not in any approval level currently waiting on request \"%(ten)s\".\n"
+"\n"
+"Waiting on: %(ds)s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Bạn không thuộc cấp duyệt nào đang chờ."
+msgstr "You are not in any approval level that is waiting."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Bạn không được giao kho \"%(kho)s\" nên không lấy hàng từ \"%(vt)s\" được.\n"
+"\n"
+"Kho được giao: %(ds)s"
+msgstr ""
+"You are not assigned to store \"%(kho)s\", so you cannot take goods from \"%(vt)s\".\n"
+"\n"
+"Stores assigned to you: %(ds)s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Bản này cấp phát qua lệnh công việc. Yêu cầu phát sinh từ sự cố hoặc kế hoạch bảo trì thì mở lệnh công việc trước rồi gắn vào."
+msgstr "This copy is issued through a work order. A request arising from an incident or a maintenance plan should open a work order first and attach to it."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__revision
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Bản sửa đổi"
+msgstr "Revision"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__drawing
+msgid "Bản vẽ"
+msgstr "Drawing"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_doc__revision
+msgid "Bản vẽ không có số hiệu bản sửa đổi là bản vẽ không dùng để đặt hàng được — hãng sẽ hỏi lại ngay."
+msgstr "A drawing with no revision number cannot be used for ordering — the manufacturer will come straight back and ask."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_stock_alert
+msgid "Bảng cảnh báo kho"
+msgstr "Stock alert board"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_end
@@ -27,14 +306,444 @@ msgid "Bảo hành đến ngày"
 msgstr "Warranty to"
 
 #. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__ppe
+msgid "Bảo hộ lao động"
+msgstr "Personal protective equipment"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_storage_care
+#: model:ir.ui.menu,name:eam_stock.menu_eam_storage_care
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Bảo quản hàng lưu kho"
+msgstr "Storage care of stored goods"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_demand__gom_tuy_chon
+msgid "Bật thì ra con số an toàn nhưng mua thừa; tắt thì sát thực tế hơn nhưng có lúc phải mua gấp."
+msgstr "On, the figure is safe but over-buys; off, it is closer to reality but sometimes means buying in a hurry."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Bắt buộc khi xuất khẩn cấp"
+msgstr "Required on an emergency issue"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__lot_id
+msgid "Bắt buộc với vật tư quay vòng. Hãng chỉ bảo hành con mang đúng số sê-ri này — để hệ thống tự chọn một con bất kỳ trong kho là vứt đi quyền đòi bảo hành."
+msgstr "Required for rotable materials. The manufacturer only warrants the one carrying that exact serial number — letting the system pick any one in store throws the warranty claim away."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__attachment_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid "Bằng chứng"
+msgstr "Evidence"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care__state__skipped
 msgid "Bỏ qua"
 msgstr "Dismiss"
 
 #. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_approval_rule__criticality
+msgid "Bỏ trống là không xét mức quan trọng."
+msgstr "Leave it empty to ignore criticality."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_approval_rule__part_kind
+msgid "Bỏ trống là áp cho mọi loại."
+msgstr "Leave it empty to apply to every type."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_inbound_check_line__dest_location_id
+msgid "Bỏ trống thì về vị trí tồn mặc định của kho."
+msgstr "Leave it empty and it goes back to the store's default stock location."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Bổ sung hàng hoặc dời lịch"
+msgstr "Order more stock or move the schedule"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__criticality__high
+msgid "Cao trở lên"
+msgstr "High and above"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_part_cost
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Chi phí phụ tùng"
+msgstr "Spare part cost"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_part_cost
+#: model:ir.model,name:eam_stock.model_eam_part_cost_report
+msgid "Chi phí phụ tùng theo chiều"
+msgstr "Spare part cost by dimension"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__location_id
+msgid "Cho vị trí / thiết bị"
+msgstr "For a location / equipment"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__interval_months
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+msgid "Chu kỳ (tháng)"
+msgstr "Cycle (months)"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Chu kỳ phải lớn hơn 0 tháng — chu kỳ 0 nghĩa là lúc nào cũng quá hạn, và danh sách quá hạn mà lúc nào cũng đầy thì không ai đọc nữa."
+msgstr "The cycle has to be more than 0 months — a cycle of 0 means it is always overdue, and an overdue list that is always full stops being read."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_transfer
+msgid ""
+"Chuyển hai nhịp qua vị trí trung chuyển. Giữa hai nhịp,\n"
+"               hàng <b>đang đi</b> — đếm được, tra được, và thuộc trách\n"
+"               nhiệm bên gửi cho tới khi bên nhận ký."
+msgstr ""
+"Moved in two steps through a transit location. Between them the goods are\n"
+"               <b>in transit</b> — countable, traceable, and the sender's\n"
+"               responsibility until the receiver signs."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_demand__date_to
+msgid "Chân trời dự trù. Nên đặt ít nhất bằng thời gian cung ứng dài nhất, nếu không thì biết thiếu lúc đã không mua kịp."
+msgstr "The planning horizon. Set it at least as long as the longest lead time, or the shortage is discovered when it is already too late to buy."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__qty_diff
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__chenh
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "Chênh lệch"
+msgstr "Discrepancy"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Chưa chỉ rõ lần dừng máy."
+msgstr "The stoppage has not been identified."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Chưa chọn \"Kho xuất\" cho lệnh \"%s\"."
+msgstr "No \"Issuing store\" has been chosen for order \"%s\"."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_calib
+msgid "Chưa có lần hiệu chuẩn nào"
+msgstr "No calibration yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_inbound_check
+msgid "Chưa có phiếu kiểm nào"
+msgstr "No check note yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_adjustment
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_rma
+msgid "Chưa có phiếu nào"
+msgstr "No note yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_transfer
+msgid "Chưa có phiếu điều chuyển"
+msgstr "No transfer note yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_storage_care
+msgid "Chưa có việc nào"
+msgstr "Nothing to do"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_stock_toiuu
+msgid "Chưa có vật tư nào"
+msgstr "No material yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_material_request
+msgid "Chưa có yêu cầu nào"
+msgstr "No request yet"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__trang_thai_kho__chua
+msgid "Chưa giữ chỗ"
+msgstr "Not reserved"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_equivalent
+msgid "Chưa khai cặp nào"
+msgstr "No pair declared yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_approval_rule
+msgid "Chưa khai luật nào"
+msgstr "No rule declared yet"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_equipment_model
+msgid "Chưa khai model nào"
+msgstr "No model declared yet"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Chưa kiểm"
+msgstr "Not checked"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+msgid "Chưa đóng"
+msgstr "Not closed"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_slow_moving
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_slow_moving
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Chậm luân chuyển"
+msgstr "Slow moving"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_res_users__eam_warehouse_ids
+msgid "Chỉ có tác dụng khi người dùng thuộc nhóm \"Chỉ thấy kho được giao\". Bỏ trống mà vẫn ở trong nhóm đó thì không thấy kho nào — đó là có chủ đích, để quên khai là lộ ra ngay chứ không âm thầm cho xem hết."
+msgstr "It only takes effect for users in the \"Stores — only the assigned ones are visible\" group. Leave it empty while in that group and NO store is visible — deliberately, so that forgetting to fill it in shows up at once rather than quietly granting a view of everything."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_users_form_eam_warehouse
+msgid ""
+"Chỉ có tác dụng với người thuộc nhóm\n"
+"                        <b>Kho — Chỉ thấy kho được giao</b>. Bỏ trống mà\n"
+"                        vẫn ở trong nhóm đó thì <b>không thấy kho nào</b> —\n"
+"                        có chủ đích, để quên khai là lộ ra ngay chứ không\n"
+"                        âm thầm cho xem hết."
+msgstr ""
+"It only takes effect for users in the\n"
+"                        <b>Stores — only the assigned ones are visible</b> group.\n"
+"                        Leave it empty while in that group and <b>no store is\n"
+"                        visible</b> — deliberately, so that forgetting to fill it\n"
+"                        in shows up at once rather than quietly granting a view\n"
+"                        of everything."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+msgid "Chỉ loại"
+msgstr "Category only"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__is_optional
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+msgid "Chỉ thay khi cần"
+msgstr "Replace only when needed"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Chỉ yêu cầu mức \"Khẩn cấp\" mới đi đường này. Yêu cầu thường phải trình duyệt."
+msgstr "Only \"Emergency\" requests take this route. An ordinary request has to go through approval."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__part_kind
+msgid "Chỉ áp cho loại"
+msgstr "Only for the category"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__rotable_only
+msgid "Chỉ áp cho vật tư quay vòng"
+msgstr "Only applies to rotable materials"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Chỉ áp cho yêu cầu khẩn cấp."
+msgstr "Only applies to emergency requests."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__criticality
+msgid "Chỉ áp khi mức quan trọng"
+msgstr "Only applies at criticality"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request_approval__state__pending
+msgid "Chờ"
+msgstr "Waiting"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__to_approve
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__to_approve
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__state__to_approve
+msgid "Chờ duyệt"
+msgstr "Awaiting approval"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_equivalent__state__draft
+msgid "Chờ duyệt kỹ thuật"
+msgstr "Awaiting engineering approval"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care__state__due
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+msgid "Chờ làm"
+msgstr "To do"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+msgid "Chờ tôi duyệt"
+msgstr "Awaiting my approval"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_stock_adjustment_line__qty_system
+msgid "Chụp lại lúc lập phiếu. Lúc duyệt sẽ đối chiếu với tồn hiện tại — khác nhau nghĩa là kho đã phát sinh tiếp."
+msgstr "Captured when the note is raised. At approval it is compared against current stock — a difference means the store has moved since."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+msgid "Chủ sở hữu"
+msgstr "Owner"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Chứng chỉ & hồ sơ"
+msgstr "Certificates & records"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__attachment_ids
+msgid "Chứng chỉ & hồ sơ đi kèm"
+msgstr "Certificates & accompanying records"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__cert
+msgid "Chứng chỉ / chứng nhận"
+msgstr "Certificates"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_inbound_check__attachment_ids
+msgid "Chứng chỉ xuất xưởng, phiếu thí nghiệm, CO/CQ. Thiếu hồ sơ cũng là một dạng sai lệch — đánh dấu ở dòng tương ứng."
+msgstr "Works certificates, test reports, CO/CQ. Missing paperwork is a discrepancy too — mark it on the matching line."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__origin
+msgid "Chứng từ gốc"
+msgstr "Original document"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Cung ứng"
+msgstr "Procurement"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Cung ứng (ngày)"
+msgstr "Lead time (days)"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid ""
+"Các dòng có chênh lệch phải khai lý do: %s.\n"
+"\n"
+"Số lệch do đếm nhầm và số lệch do mất hàng trông giống hệt nhau nếu không ai ghi lại vì sao."
+msgstr ""
+"Lines with a discrepancy have to state a reason: %s.\n"
+"\n"
+"A difference caused by miscounting and a difference caused by a loss look exactly alike unless someone writes down why."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid ""
+"Còn dòng vật tư <b>chưa trừ kho</b>. Đóng hồ sơ lệnh sẽ\n"
+"                    bị chặn cho tới khi xuất kho, hoặc đánh dấu\n"
+"                    <i>Không qua kho</i> cho vật tư mua thẳng và hàng hãng\n"
+"                    cấp theo bảo hành."
+msgstr ""
+"Some material lines have <b>not been taken off stock</b>. Closing the\n"
+"                    order's file will be blocked until they are issued, or marked\n"
+"                    <i>Not through the store</i> for direct purchases and for goods\n"
+"                    supplied by the manufacturer under warranty."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_dung_duoc
+msgid "Còn dùng được"
+msgstr "Still usable"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__con_thieu
+msgid "Còn hàng đang đi"
+msgstr "Stock still in transit"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__tinh_trang_tra__ok
+msgid "Còn tốt"
+msgstr "Still good"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__tinh_trang_tra__kho
+msgid "Còn tốt — về thẳng kho"
+msgstr "Still good — straight back to stock"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Có chứng chỉ"
+msgstr "Has a certificate"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__has_cert
+msgid "Có chứng chỉ đi kèm"
+msgstr "Comes with a certificate"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid ""
+"Có dòng khai <b>trả lại</b> nhưng chưa ghi nhận. Bấm\n"
+"                    <b>Ghi nhận hoàn trả</b> — nếu không, số hàng đó bị\n"
+"                    tính là đã tiêu dùng vĩnh viễn."
+msgstr ""
+"Some lines declare a <b>return</b> that has not been recorded. Press\n"
+"                    <b>Record the return</b> — otherwise those goods are counted\n"
+"                    as consumed for good."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid ""
+"Có hàng từ chối thì <b>bắt buộc khai lý do</b>.\n"
+"                        Không khai thì sáu tháng sau không ai trả lời được\n"
+"                        câu \"nhà cung cấp này giao sai những gì\"."
+msgstr ""
+"Rejected goods make a <b>reason mandatory</b>.\n"
+"                        Without one, six months later nobody can answer the\n"
+"                        question \"what exactly did this supplier get wrong\"."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__co_sai_lech
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Có sai lệch"
+msgstr "There is a discrepancy"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_pm_plan_material__is_optional
+msgid "Có thứ lần nào cũng thay (lọc, dầu); có thứ chỉ thay khi kiểm thấy hỏng. Gộp cả hai vào dự trù thì mua thừa đều đặn."
+msgstr "Some things are replaced every time (filters, oil); some only when an inspection finds them worn. Put both into the forecast and you over-buy steadily."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_asset__eam_in_stock
+msgid "Có tồn ở vị trí nội bộ nào không. Khác với \"đang lắp\" — một con vừa tháo ra, chưa về kho, thì không ở đâu cả, và đó chính là lúc dễ mất dấu nhất."
+msgstr "Whether there is any stock at an internal location. Different from \"currently installed\" — one just removed and not yet back in store is nowhere at all, and that is exactly when it is easiest to lose."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__note
+msgid "Căn cứ kỹ thuật"
+msgstr "Technical justification"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_stock_alert__ket_qua
 msgid "Cảnh báo"
 msgstr "Alarm"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_stock_alert
+#: model:ir.ui.menu,name:eam_stock.menu_eam_stock_alert
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_stock_alert_form
+msgid "Cảnh báo kho"
+msgstr "Stock alert"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__sequence
@@ -43,10 +752,71 @@ msgid "Cấp"
 msgstr "Level"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__approval_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Cấp duyệt"
+msgstr "Approval level"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_material_request_approval
+msgid "Cấp duyệt yêu cầu vật tư"
+msgstr "Approval level for material requests"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Cấp phát"
+msgstr "Issue"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Cấp phát KHẨN CẤP, bỏ qua duyệt. Người nhận: %(ng)s. Hạn hoàn thiện hồ sơ: %(h)s."
+msgstr "EMERGENCY issue, bypassing approval. Recipient: %(ng)s. Paperwork due: %(h)s."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Cấp phát khẩn cấp"
+msgstr "Emergency issue"
+
+#. module: eam_stock
 #: model:ir.model.fields,help:eam_stock.field_product_product__eam_is_rotable
 #: model:ir.model.fields,help:eam_stock.field_product_template__eam_is_rotable
 msgid "Cấu phần tháo ra đem đi đại tu rồi lắp lại, giữ nguyên lịch sử theo sê-ri. Giá trị gợi ý khi tạo tài sản mới."
 msgstr "Components removed for overhaul and refitted afterwards, keeping their serial-number history. Suggested value when creating a new asset."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__can_duyet
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+msgid "Cần duyệt"
+msgstr "Approval required"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__tinh_trang_tra__calib
+msgid "Cần hiệu chuẩn lại"
+msgstr "Needs recalibration"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__tinh_trang_tra__kiem
+msgid "Cần kiểm tra trước khi dùng lại"
+msgstr "Needs checking before it is used again"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_xref__partner_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Của bên nào"
+msgstr "Whose it is"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_equipment_model
+msgid ""
+"Danh mục này trả lời câu người giữ kho hỏi trước khi xuất:\n"
+"               <b>phụ tùng này có lắp được cho máy đó không</b>. Để model\n"
+"               là chữ tự do thì \"V150-4.2MW\" và \"V150 4,2 MW\" là hai thứ\n"
+"               khác nhau với máy tính."
+msgstr ""
+"This catalogue answers the question the storekeeper asks before issuing:\n"
+"               <b>does this spare fit that machine</b>. Leave the model as free\n"
+"               text and \"V150-4.2MW\" and \"V150 4,2 MW\" are two different things\n"
+"               to a computer."
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__note
@@ -56,6 +826,228 @@ msgstr "Components removed for overhaul and refitted afterwards, keeping their s
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
 msgid "Diễn giải"
 msgstr "Explanation"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Duyệt"
+msgstr "Approve"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid "Duyệt & thanh lý"
+msgstr "Approve & dispose"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid ""
+"Duyệt là hàng <b>rời sổ thật</b>, không lấy lại\n"
+"                        được. Phải có bằng chứng kèm theo — thanh lý không\n"
+"                        bằng chứng thì trên sổ không khác gì mất hàng."
+msgstr ""
+"Approval takes the goods <b>off the books for real</b>, with no\n"
+"                        way back. Evidence has to be attached — a disposal\n"
+"                        without evidence is indistinguishable from a loss on\n"
+"                        the books."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__date_approved
+msgid "Duyệt lúc"
+msgstr "Approved at"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__date_approved
+msgid "Duyệt ngày"
+msgstr "Approved on"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Dòng \"%(sp)s\" trả %(tra)g nhưng chỉ còn %(con)g chưa trả (đã xuất %(xuat)g, đã trả %(dtra)g)."
+msgstr "Line \"%(sp)s\" returns %(tra)g but only %(con)g is still outstanding (issued %(xuat)g, returned %(dtra)g)."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+msgid "Dòng \"%(sp)s\": nghiệm thu %(dat)g + từ chối %(tu)g vượt quá số đã nhận %(nhan)g."
+msgstr "Line \"%(sp)s\": accepted %(dat)g + rejected %(tu)g exceeds the %(nhan)g received."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Dòng \"%(sp)s\": nhận %(n)g nhiều hơn gửi %(g)g."
+msgstr "Line \"%(sp)s\": received %(n)g, more than the %(g)g sent."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+msgid "Dòng \"%s\" có hàng từ chối nhưng chưa khai lý do. Không khai thì sáu tháng sau không ai trả lời được nhà cung cấp này sai những gì."
+msgstr "Line \"%s\" has rejected goods but no reason. Without one, six months later nobody can answer what exactly this supplier got wrong."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order__part_cho_giu
+msgid "Dòng chưa giữ chỗ"
+msgstr "Unreserved lines"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order__part_cho_tra
+msgid "Dòng chờ hoàn trả"
+msgstr "Lines awaiting return"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order__part_cho_xuat
+msgid "Dòng chờ xuất kho"
+msgstr "Lines awaiting issue"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__line_ids
+msgid "Dòng kiểm tra"
+msgstr "Check line"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_inbound_check_line
+msgid "Dòng kiểm tra đầu vào"
+msgstr "Incoming inspection line"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+msgid "Dòng sai lệch"
+msgstr "Discrepancy line"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_disposal_line
+msgid "Dòng thanh lý"
+msgstr "Disposal line"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Dòng vật tư \"%s\" có số lượng bằng 0."
+msgstr "Material line \"%s\" has a quantity of 0."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_material_request_line
+msgid "Dòng yêu cầu vật tư"
+msgstr "Material request line"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_stock_transfer_line
+msgid "Dòng điều chuyển"
+msgstr "Transfer line"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__line_ids
+msgid "Dòng điều chỉnh"
+msgstr "Adjustment line"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_stock_adjustment_line
+msgid "Dòng điều chỉnh tồn"
+msgstr "Stock adjustment line"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__work_order_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Dùng cho lệnh"
+msgstr "Used for the order"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_criticality
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_criticality
+msgid "Dùng chung thang với tài sản (eam.asset) để lọc chéo được."
+msgstr "Shares a scale with assets (eam.asset) so that the two can be filtered together."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_stock_adjustment__amount_impact
+msgid "Dương là tăng tài sản, âm là giảm. Đây là con số quyết định phiếu có phải qua duyệt hay không."
+msgstr "Positive increases the asset, negative decreases it. This is the figure that decides whether the note needs approval."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/product_template.py:0
+msgid "Dầu mỡ thường có hạn dùng"
+msgstr "Oils and greases usually have a shelf life"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__part_kind__lubricant
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__lubricant
+msgid "Dầu mỡ, hoá chất"
+msgstr "Oils, greases, chemicals"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__product_id
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__part_kind__tool
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__tool
+#: model:ir.ui.menu,name:eam_stock.menu_eam_store_tool
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Dụng cụ"
+msgstr "Tool"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid ""
+"Dụng cụ \"%(dc)s\" %(ly_do)s — không cho mượn.\n"
+"\n"
+"Dụng cụ đo hết hiệu lực vẫn cho ra một con số, và con số đó trông đúng. Bu-lông bắt non lực thì vài tháng sau mới gãy."
+msgstr ""
+"Tool \"%(dc)s\" %(ly_do)s — it cannot be lent out.\n"
+"\n"
+"A measuring tool past its validity still gives a number, and that number looks right. A bolt tightened under torque only snaps months later."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__lot_id
+msgid "Dụng cụ (sê-ri)"
+msgstr "Tool (serial)"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_tool_overdue
+#: model:ir.ui.menu,name:eam_stock.menu_eam_tool_overdue
+msgid "Dụng cụ quá hạn trả"
+msgstr "Tools overdue for return"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_calib
+msgid ""
+"Dụng cụ đo quá hạn hiệu chuẩn vẫn quay, vẫn kêu tách, vẫn\n"
+"               cho một con số — và con số đó <b>trông đúng</b>. Nên hết\n"
+"               hạn là <b>cấm mượn</b>, không phải nhắc nhở."
+msgstr ""
+"A measuring tool past its calibration date still turns, still clicks,\n"
+"               still gives a number — and that number <b>looks right</b>. So an\n"
+"               expired calibration <b>bars the loan</b> rather than prompting a\n"
+"               reminder."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__eam_dung_duoc
+msgid "Dụng cụ đo quá hạn hiệu chuẩn vẫn quay, vẫn kêu tách, vẫn cho một con số — và con số đó TRÔNG ĐÚNG. Nên hết hạn là cấm mượn, không phải nhắc nhở."
+msgstr "A measuring tool past its calibration date still turns, still clicks, still gives a number — and that number LOOKS right. So an expired calibration bars the loan rather than prompting a reminder."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_shortage_impact__stop
+msgid "Dừng máy hoàn toàn"
+msgstr "The machine is fully stopped"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Ghi chú…"
+msgstr "Notes…"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__note
+msgid "Ghi nhận"
+msgstr "Record"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Ghi nhận hoàn trả"
+msgstr "Record the return"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__thieu
+msgid "Giao thiếu"
+msgstr "Under-delivered"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__thua
+msgid "Giao thừa"
+msgstr "Over-delivered"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__amount
@@ -70,9 +1062,434 @@ msgid "Giá trị"
 msgstr "Value"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_excess_value
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_excess_value
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Giá trị dư thừa"
+msgstr "Excess value"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__amount_total
+msgid "Giá trị thanh lý"
+msgstr "Disposal value"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__amount_from
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+msgid "Giá trị từ"
+msgstr "Value from"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Giá trị ảnh hưởng dưới ngưỡng duyệt — áp dụng ngay."
+msgstr "The value affected is below the approval threshold — applied at once."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_shortage_impact__derate
+msgid "Giảm công suất / chạy hạn chế"
+msgstr "Derated / restricted operation"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__attachment_ids
+msgid "Giấy chứng nhận"
+msgstr "Certificate"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Giục nhà cung cấp %s"
+msgstr "Chase supplier %s"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__trang_thai_kho__thieu
+msgid "Giữ chỗ chưa đủ"
+msgstr "Reservation incomplete"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Giữ chỗ vật tư"
+msgstr "Reserve the material"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_spec_key
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_spec_key
+msgid "Gom các thông số đã đánh dấu \"quyết định\" để nhìn thấy ngay trên danh sách, trước khi đưa hàng ra khỏi kho."
+msgstr "Gathers the specifications marked \"critical\" so they are visible on the list itself, before the goods leave the store."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__urgency__urgent
+msgid "Gấp — máy đang chờ"
+msgstr "Urgent — the machine is waiting"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_rma
+msgid ""
+"Gộp bốn việc cùng hình dạng: <b>đòi bảo hành</b>,\n"
+"               <b>gửi sửa/đại tu</b>, <b>trả lõi cũ</b> theo cam kết đổi\n"
+"               lõi, và <b>trả hàng sai</b>. Cái nào cũng có hạn — và hạn\n"
+"               là thứ duy nhất ngăn phiếu nằm quên."
+msgstr ""
+"Gathers four things of the same shape: a <b>warranty claim</b>, a\n"
+"               <b>repair or overhaul</b>, an <b>old core return</b> under a\n"
+"               core-exchange agreement, and a <b>wrong-goods return</b>. Every\n"
+"               one has a deadline — and the deadline is the only thing that stops\n"
+"               a note being forgotten."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+msgid "Gửi cho"
+msgstr "Send to"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__partner_id
+msgid "Gửi cho bên nào"
+msgstr "Who it is sent to"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Gửi cái gì, cho ai"
+msgstr "What is sent, and to whom"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "Gửi hàng"
+msgstr "Dispatch"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__rma_type__repair
+msgid "Gửi sửa / đại tu"
+msgstr "Send for repair / overhaul"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Gửi đi"
+msgstr "Send out"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Hai chiều"
+msgstr "Two-way"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_calib
+#: model:ir.ui.menu,name:eam_stock.menu_eam_calib
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Hiệu chuẩn dụng cụ đo"
+msgstr "Calibration of measuring tools"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__date_next
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_calib_due
+msgid "Hiệu chuẩn lại trước ngày"
+msgstr "Recalibrate before"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Hoàn trả %(q)g %(sp)s về \"%(dich)s\" — %(tt)s."
+msgstr "Returned %(q)g %(sp)s to \"%(dich)s\" — %(tt)s."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "Huỷ"
+msgstr "Cancel"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+msgid "Hàng của mình"
+msgstr "Our own goods"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_rma_overdue
+msgid ""
+"Hàng gửi đi sửa, đòi bảo hành hoặc trả lõi mà quá hạn —\n"
+"               trả lõi quá hạn bị tính thêm tiền, đòi bảo hành quá hạn\n"
+"               thì mất quyền."
+msgstr ""
+"Goods away for repair, under warranty claim, or on core return, past the\n"
+"               deadline — a core returned late is charged for, a warranty claim\n"
+"               made late is lost."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+msgid "Hàng ký gửi"
+msgstr "Consignment stock"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_rma_overdue
+msgid "Hàng nằm lâu ở bên ngoài"
+msgstr "Goods sitting outside for a long time"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_rma_overdue
+msgid "Hàng nằm lâu ở nhà thầu / hãng"
+msgstr "Goods sitting for a long time at a contractor or the manufacturer"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_location__eam_cam_xuat
+msgid "Hàng nằm ở đây chưa đủ điều kiện lắp lên máy: chờ kiểm tra, cách ly, hỏng, hoặc đang gửi đi sửa. Vị trí này sẽ không chọn được làm kho xuất."
+msgstr "Goods here are not yet fit to be fitted to a machine: awaiting inspection, quarantined, damaged, or away for repair. This location cannot be chosen as an issuing store."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Hàng từ đâu"
+msgstr "Where the goods come from"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid ""
+"Hàng đang nằm ở <b>Chờ kiểm tra</b> và\n"
+"                        <b>chưa tính vào tồn khả dụng</b>. Xác nhận xong,\n"
+"                        phần nghiệm thu về ô chứa, phần từ chối vào\n"
+"                        <b>Cách ly</b> — không trả thẳng nhà cung cấp, vì\n"
+"                        trả hàng là chứng từ riêng."
+msgstr ""
+"The goods are sitting in <b>Awaiting inspection</b> and are\n"
+"                        <b>not counted in available stock</b>. Once confirmed,\n"
+"                        what is accepted goes to its bin and what is rejected\n"
+"                        goes to <b>Quarantine</b> — not straight back to the\n"
+"                        supplier, because a return is a document of its own."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__location_id
+msgid "Hàng đang ở"
+msgstr "Where the goods are"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_material_request_no_hs
+msgid ""
+"Hàng đã rời kho khi chưa ai duyệt. Mỗi dòng ở đây là một\n"
+"               món nợ chứng từ — đóng sớm chừng nào tốt chừng ấy, vì\n"
+"               người nhớ sự việc cũng quên dần."
+msgstr ""
+"Goods that left the store before anyone approved it. Each row here is\n"
+"               a paperwork debt — the sooner it is closed the better, because\n"
+"               whoever remembers the event forgets it too."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_is_long_lead
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_is_long_lead
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Hàng đặt dài ngày"
+msgstr "Long lead-time order"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__manufacturer_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+msgid "Hãng chế tạo"
+msgstr "Manufacturer"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Hãng chế tạo & mã"
+msgstr "Manufacturer & code"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_oem_partner_id
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_oem_partner_id
+msgid "Hãng chế tạo (OEM)"
+msgstr "Manufacturer (OEM)"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_discontinued
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_discontinued
+msgid "Hãng ngừng sản xuất"
+msgstr "Discontinued by the manufacturer"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__tinh_trang_tra__damaged
+msgid "Hư hỏng"
+msgstr "Damaged"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__damage
+msgid "Hư hỏng không sửa được"
+msgstr "Damaged beyond repair"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__damage
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__damage
+msgid "Hư hỏng trong lưu kho"
+msgstr "Damaged in storage"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__hu_hong
+msgid "Hư hỏng, móp vỡ"
+msgstr "Damaged, dented"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+msgid "Hướng dẫn"
+msgstr "Instructions"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__instruction
+msgid "Hướng dẫn / yêu cầu OEM"
+msgstr "OEM instructions / requirements"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__manual
+msgid "Hướng dẫn lắp đặt / bảo dưỡng"
+msgstr "Installation / servicing instructions"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
 msgid "Hạn"
 msgstr "Due"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Hạn & tham chiếu"
+msgstr "Deadlines & references"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__eam_mfg_date
+msgid "Hạn dùng của dầu mỡ tính từ ngày sản xuất, không phải ngày nhập kho. Hàng nằm ở kho nhà cung cấp một năm rồi mới về thì hạn còn lại đã ngắn hơn nhiều so với tưởng."
+msgstr "The shelf life of a lubricant runs from the date of manufacture, not the date it was received. Sit at the supplier for a year before arriving and the remaining life is far shorter than it appears."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__han_hoan_thien
+msgid "Hạn hoàn thiện hồ sơ"
+msgstr "Deadline to complete the file"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Hạn hồ sơ"
+msgstr "File deadline"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Hạn lần sau"
+msgstr "Next due"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__date_due
+msgid "Hạn phải trả / phải xong"
+msgstr "Due back / due to be finished"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_core_due
+msgid "Hạn trả lõi cũ"
+msgstr "Old core return due"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_shortage_impact
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_shortage_impact
+msgid "Hậu quả nếu cần mà không có. Đây mới là thứ quyết định nên dự trữ bao nhiêu — không phải giá trị con hàng."
+msgstr "The consequence of needing it and not having it. This, not the price of the part, is what decides how much to stock."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__date_due
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Hẹn trả"
+msgstr "Return due"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__expired
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__expired
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__expired
+msgid "Hết hạn sử dụng"
+msgstr "Past its shelf life"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__tinh_trang_tra__hong
+msgid "Hỏng — không dùng lại được"
+msgstr "Failed — cannot be reused"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Hồ sơ phụ tùng"
+msgstr "Spare part record"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__ho_so_du
+msgid "Hồ sơ đã hoàn thiện"
+msgstr "The file is complete"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Hồ sơ đủ"
+msgstr "File complete"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_approval_rule__rotable_only
+msgid "Hộp số, máy phát, cánh, bộ biến đổi — thứ tháo ra đem đại tu rồi lắp lại."
+msgstr "Gearbox, generator, blades, converter — the things removed for overhaul and refitted."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "KHÔNG dùng được — hiệu chuẩn hết hiệu lực"
+msgstr "NOT usable — the calibration has expired"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+msgid ""
+"Khai ở đây thì mới tổng hợp được <b>nhu cầu phụ\n"
+"                        tùng từ lịch bảo trì</b>. Đánh dấu <i>chỉ thay khi\n"
+"                        cần</i> cho thứ không phải lần nào cũng thay —\n"
+"                        gộp cả vào dự trù thì mua thừa đều đặn."
+msgstr ""
+"Declaring it here is what makes it possible to consolidate\n"
+"                        <b>spare part demand from the maintenance schedule</b>.\n"
+"                        Tick <i>replace only when needed</i> for things not\n"
+"                        changed every time — put them all into the forecast and\n"
+"                        you over-buy steadily."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Khi nhận lại"
+msgstr "When it comes back"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Kho \"%(kho)s\" chỉ còn %(con)g khả dụng \"%(sp)s\", cần gửi %(can)g."
+msgstr "Store \"%(kho)s\" has only %(con)g of \"%(sp)s\" available; %(can)g need to be sent."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Kho \"%(kho)s\" không đủ \"%(sp)s\": giữ chỗ được %(giu)g / cần %(can)g.%(goiy)s"
+msgstr "Store \"%(kho)s\" does not have enough \"%(sp)s\": reserved %(giu)g / needed %(can)g.%(goiy)s"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__warehouse_from_id
+msgid "Kho gửi"
+msgstr "Sending store"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Kho gửi và kho nhận phải khác nhau."
+msgstr "The sending and receiving stores have to be different."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_location__eam_plant_id
+#: model:ir.model.fields,help:eam_stock.field_stock_warehouse__eam_plant_id
+msgid "Kho hiện trường thì chọn nhà máy. ĐỂ TRỐNG nghĩa là kho dùng chung cho mọi nhà máy — đó là trường hợp của kho trung tâm, nơi giữ phụ tùng lớn luân chuyển giữa các nhà máy. Để trống không phải là khai thiếu."
+msgstr "For a site store, choose the plant. LEAVE IT EMPTY for a store shared by every plant — which is the case for the central store holding large spares that move between plants. Empty is not an omission."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__warehouse_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__warehouse_to_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Kho nhận"
+msgstr "Receiving store"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order__stock_location_id
+msgid "Kho xuất"
+msgstr "Issuing store"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_res_users__eam_warehouse_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_users_form_eam_warehouse
+msgid "Kho được giao"
+msgstr "Assigned store"
+
+#. module: eam_stock
+#: model:res.groups,name:eam_stock.group_eam_warehouse_limited
+msgid "Kho — Chỉ thấy kho được giao"
+msgstr "Stores — only the assigned ones are visible"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__other
@@ -86,6 +1503,133 @@ msgid "Khác"
 msgstr "Other"
 
 #. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_part_kind
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_part_kind
+msgid "Khác với \"loại cấu phần\" (phụ tùng này thuộc cụm nào). Đây là phụ tùng thay thế, vật tư tiêu hao, dầu mỡ hay dụng cụ — ba thứ này đi theo ba luật kho khác nhau."
+msgstr "Different from the \"component category\" (which assembly this spare belongs to). This is whether it is a replacement spare, a consumable, a lubricant or a tool — three things that follow three different stock rules."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_storage_care
+msgid ""
+"Khác với bảo trì phòng ngừa — cái đó đếm theo <b>giờ máy\n"
+"               chạy</b>. Hàng nằm trong kho thì giờ máy chạy bằng 0 mãi\n"
+"               mãi, nên không bao giờ tới hạn; trong khi thực tế vẫn phải\n"
+"               xoay trục, thay hạt hút ẩm, nạp lại ắc-quy."
+msgstr ""
+"Unlike preventive maintenance, which counts <b>running hours</b>.\n"
+"               Goods sitting in a store run 0 hours for ever, so they never fall\n"
+"               due; while in reality shafts still have to be turned, desiccant\n"
+"               replaced, batteries recharged."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_adjustment
+msgid ""
+"Khác với điều chỉnh tồn gốc của Odoo: ở đây <b>bắt buộc lý\n"
+"               do</b>, <b>phải duyệt khi giá trị lớn</b>, và <b>lưu cả số\n"
+"               trước lẫn số sau</b>. Số lệch do đếm nhầm và số lệch do mất\n"
+"               hàng trông giống hệt nhau nếu không ai ghi lại vì sao."
+msgstr ""
+"Unlike Odoo's own stock adjustment: here a <b>reason is\n"
+"               mandatory</b>, <b>approval is required above a value</b>, and\n"
+"               <b>both the before and after figures are kept</b>. A difference\n"
+"               caused by miscounting and one caused by a loss look exactly alike\n"
+"               unless someone writes down why."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_equivalent__state__rejected
+msgid "Không chấp nhận"
+msgstr "Not accepted"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__obsolete
+msgid "Không còn dùng cho thiết bị nào"
+msgstr "No longer used on any equipment"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_material_request_no_hs
+msgid "Không còn nợ hồ sơ nào"
+msgstr "No outstanding paperwork"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "Không có lô/sê-ri nào mang mã \"%s\"."
+msgstr "No batch/serial carries the code \"%s\"."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_demand.py:0
+msgid "Không có lịch bảo trì nào tới hạn trước %s."
+msgstr "No maintenance schedule falls due before %s."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_rma_overdue
+msgid "Không có phiếu nào quá hạn"
+msgstr "No note is overdue"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_slow_moving
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_slow_moving
+msgid "Không có phát sinh nào trong 12 tháng. CHƯA chắc là thừa — phụ tùng cho sự cố hiếm thì nằm im là đúng."
+msgstr "Nothing has moved in 12 months. NOT necessarily excess — a spare for a rare failure is supposed to sit still."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "Không có ô chứa nào mang mã \"%s\"."
+msgstr "No bin carries the code \"%s\"."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_location__eam_cam_xuat
+msgid "Không dùng được cho bảo trì"
+msgstr "Not usable for maintenance"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Không luật duyệt nào áp dụng (giá trị dưới mọi ngưỡng) — duyệt tự động."
+msgstr "No approval rule applies (the value is below every threshold) — approved automatically."
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_approval_rule
+msgid ""
+"Không luật nào áp dụng nghĩa là <b>duyệt tự động</b> — giá\n"
+"               trị dưới mọi ngưỡng. Để yêu cầu treo chờ một người duyệt\n"
+"               không tồn tại là cách chắc chắn làm tắc kho."
+msgstr ""
+"No rule applying means <b>automatic approval</b> — the value is\n"
+"               below every threshold. Leaving a request hanging for an approver\n"
+"               who does not exist is a sure way to jam the store."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_equivalent__two_way
+msgid "Không phải cặp nào cũng đối xứng: con đời mới thay được con đời cũ, nhưng ngược lại thì không."
+msgstr "Not every pair is symmetrical: a newer one may replace an older one while the reverse does not hold."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__khong_qua_kho
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__trang_thai_kho__ngoai
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Không qua kho"
+msgstr "Not through the store"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_calibration__result__fail
+msgid "Không đạt"
+msgstr "Fail"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__fail_test
+msgid "Không đạt sau kiểm tra / đại tu"
+msgstr "Failed after inspection / overhaul"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__khong_dat_ky_thuat
+msgid "Không đạt thông số kỹ thuật"
+msgstr "Does not meet the specification"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_shortage_impact__none
+msgid "Không ảnh hưởng vận hành"
+msgstr "Does not affect operation"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__ton_kha_dung
 #: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__ton_kha_dung
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
@@ -95,10 +1639,64 @@ msgid "Khả dụng"
 msgstr "Availability"
 
 #. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__urgency__emergency
+msgid "Khẩn cấp — sự cố, dừng máy"
+msgstr "Emergency — incident, machine down"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__count
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__count
+msgid "Kiểm kê thực tế lệch sổ"
+msgstr "The physical count differs from the book"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+msgid "Kiểm kê tới hạn"
+msgstr "Stock count due"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__inspect
+msgid "Kiểm tra ngoại quan"
+msgstr "Visual inspection"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__seal
+msgid "Kiểm tra niêm phong, bao gói"
+msgstr "Check the seals and the packaging"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_inbound_check
+#: model:ir.ui.menu,name:eam_stock.menu_eam_inbound_check
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+msgid "Kiểm tra đầu vào"
+msgstr "Incoming inspection"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__plan_id
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__source__pm
 msgid "Kế hoạch bảo trì"
 msgstr "Maintenance plan"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_pm_plan
+msgid "Kế hoạch bảo trì phòng ngừa"
+msgstr "Preventive maintenance plan"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__note
+msgid "Kết luận & ghi chú"
+msgstr "Conclusion & notes"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Kết luận chung, cam kết khắc phục của bên giao…"
+msgstr "Overall conclusion, the sender's undertaking to put it right…"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__approver_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Kỹ thuật duyệt"
+msgstr "Engineering approval"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__doc_type
@@ -108,6 +1706,11 @@ msgstr "Maintenance plan"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
 msgid "Loại"
 msgstr "Category"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_eam
+msgid "Loại PT"
+msgstr "Spare type"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__work_type
@@ -124,11 +1727,85 @@ msgid "Loại cấu phần"
 msgstr "Component category"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_category_id
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_category_id
+msgid "Loại cấu phần EAM"
+msgstr "EAM component category"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_xref__code_type
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Loại mã"
+msgstr "Code type"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_discontinued
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_discontinued
+msgid "Loại này xử NGƯỢC với dư thừa: phải mua thêm trước khi hết, không phải cắt."
+msgstr "This kind works the OPPOSITE way to excess: buy more before it runs out, do not cut back."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_part_kind
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_part_kind
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Loại phụ tùng"
+msgstr "Spare type"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__care_type
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
 msgid "Loại việc"
 msgstr "Work type"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+msgid "Luật duyệt"
+msgstr "Approval rule"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_approval_rule
+msgid "Luật duyệt vật tư"
+msgstr "Material approval rule"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_approval_rule
+#: model:ir.model,name:eam_stock.model_eam_approval_rule
+msgid "Luật duyệt yêu cầu vật tư"
+msgstr "Material request approval rule"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_stock_alert_form
+msgid "Làm mới"
+msgstr "Renew"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__lot_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Lô / sê-ri"
+msgstr "Batch / serial"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_asset__lot_id
+msgid "Lô/sê-ri trong kho"
+msgstr "Batch/serial in store"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid ""
+"Lúc duyệt, hệ thống <b>đọc lại tồn</b> và so với số\n"
+"                        đã chụp lúc đếm. Khác nhau là dừng — áp số cũ vào\n"
+"                        sẽ xoá mất những phát sinh hợp lệ trong khoảng đó."
+msgstr ""
+"At approval the system <b>reads stock again</b> and compares\n"
+"                        it with the figure captured at the count. A difference\n"
+"                        stops it — applying the old figures would erase\n"
+"                        legitimate movements in between."
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__reason
@@ -142,6 +1819,142 @@ msgid "Lý do"
 msgstr "Reason"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Lý do / mô tả"
+msgstr "Reason / description"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__reason
+msgid "Lý do / mô tả hỏng hóc"
+msgstr "Reason / description of the failure"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__reason
+msgid "Lý do chung"
+msgstr "General reason"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__ly_do_sai_lech
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Lý do sai lệch"
+msgstr "Reason for the discrepancy"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_demand__warehouse_id
+msgid "Lấy từ kho"
+msgstr "Taken from store"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_lead_days
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_lead_days
+msgid "Lấy từ nhà cung cấp nhanh nhất đã khai. Cộng với \"thiếu thì sao\" mới ra được mức dự trữ hợp lý."
+msgstr "Taken from the fastest supplier declared. Combine it with \"what if it is missing\" to arrive at a sensible stock level."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order__stock_location_id
+msgid "Lấy vật tư từ kho nào. Tổ thợ lấy ở container ngoài hiện trường thì chọn đúng kho đó — chọn sai thì sổ kho đúng tổng nhưng sai chỗ, và lần sau không ai tìm thấy hàng."
+msgstr "Which store the material comes from. If the crew takes it from the container out on site, choose that store — choose the wrong one and the book is right in total but wrong by place, and nobody finds the goods next time."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_storage_care
+msgid "Lần bảo quản hàng lưu kho"
+msgstr "Storage care job"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__outage_id
+msgid "Lần dừng máy"
+msgstr "Stoppage"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_tool_calibration
+msgid "Lần hiệu chuẩn dụng cụ đo"
+msgstr "Measuring tool calibration"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_calib_ok
+msgid "Lần hiệu chuẩn gần nhất đạt"
+msgstr "Last calibration passed"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Lần này đã xử lý rồi."
+msgstr "This one has already been handled."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_last_move
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_last_move
+msgid "Lần động gần nhất"
+msgstr "Last movement"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Lập phiếu thanh lý"
+msgstr "Raise a disposal note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_model_ids
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_model_ids
+msgid "Lắp được cho model"
+msgstr "Fits the model"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Lắp được cho model thiết bị"
+msgstr "Fits the equipment model"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_equivalent__affects_warranty
+msgid "Lắp đồ không chính hãng vào máy còn bảo hành thường làm mất bảo hành CẢ CỤM, không riêng con đó."
+msgstr "Fitting a non-genuine part to a machine still under warranty usually voids the warranty on the WHOLE assembly, not just that part."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Lệnh \"%(lenh)s\" còn %(n)d dòng vật tư chưa xuất kho: %(ten)s.\n"
+"\n"
+"Xuất kho, hoặc đánh dấu \"Không qua kho\" cho vật tư mua thẳng và hàng hãng cấp theo bảo hành."
+msgstr ""
+"Order \"%(lenh)s\" still has %(n)d material lines not issued: %(ten)s.\n"
+"\n"
+"Issue them, or tick \"Not through the store\" for direct purchases and for goods supplied by the manufacturer under warranty."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Lệnh \"%(lenh)s\" còn khai số lượng trả lại nhưng chưa ghi nhận: %(ten)s.\n"
+"\n"
+"Bấm \"Ghi nhận hoàn trả\" trước khi đóng, nếu không số hàng đó bị tính là đã tiêu dùng vĩnh viễn."
+msgstr ""
+"Order \"%(lenh)s\" still declares a return quantity that has not been recorded: %(ten)s.\n"
+"\n"
+"Press \"Record the return\" before closing, otherwise those goods are counted as consumed for good."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" không còn dòng vật tư nào chờ xuất kho."
+msgstr "Order \"%s\" has no material line left awaiting issue."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" không còn dòng vật tư nào cần giữ chỗ."
+msgstr "Order \"%s\" has no material line left to reserve."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" không có dòng nào khai số lượng trả lại."
+msgstr "Order \"%s\" has no line with a return quantity declared."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" đang ở trạng thái nháp hoặc đã huỷ — chưa giữ chỗ vật tư được."
+msgstr "Order \"%s\" is a draft or cancelled — no material can be reserved against it yet."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" đang ở trạng thái nháp hoặc đã huỷ — chưa xuất kho được."
+msgstr "Order \"%s\" is a draft or cancelled — nothing can be issued against it yet."
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__work_order_id
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__work_order_id
 #: model:ir.model.fields,field_description:eam_stock.field_stock_move__eam_work_order_id
@@ -153,9 +1966,53 @@ msgid "Lệnh công việc"
 msgstr "Work order"
 
 #. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_move__eam_work_order_id
+msgid "Lệnh đã lấy vật tư này. Là khoá ngoại thật chứ không phải chuỗi ghi chú, nên lọc được, thống kê được, và không hỏng khi lệnh đổi số hiệu."
+msgstr "The order that drew this material. It is a real foreign key rather than a note in text, so it can be filtered, counted, and does not break when the order is renumbered."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+msgid "Lịch bảo quản"
+msgstr "Storage care schedule"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_storage_care_plan
+#: model:ir.model,name:eam_stock.model_eam_storage_care_plan
+msgid "Lịch bảo quản hàng lưu kho"
+msgstr "Storage care schedule for stored goods"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_storage_care_plan
+msgid "Lịch bảo quản lưu kho"
+msgstr "Storage care schedule"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__pm_schedule_id
 msgid "Lịch bảo trì"
 msgstr "Maintenance schedule"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_calib_ids
+msgid "Lịch sử hiệu chuẩn"
+msgstr "Calibration history"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_equipment_model
+msgid "Model / nền tảng thiết bị"
+msgstr "Equipment model / platform"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_equipment_model__category_id
+msgid "Model này thuộc loại cấu phần nào — tua-bin, máy biến áp, bộ biến đổi…"
+msgstr "Which component category this model belongs to — turbine, transformer, converter…"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_equipment_model
+#: model:ir.ui.menu,name:eam_stock.menu_eam_equipment_model
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+msgid "Model thiết bị"
+msgstr "Equipment model"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__code
@@ -165,6 +2022,106 @@ msgstr "Maintenance schedule"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
 msgid "Mã"
 msgstr "Code"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_oem_code
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_oem_code
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Mã OEM"
+msgstr "OEM code"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_part_detail.py:0
+msgid "Mã OEM \"%(ma)s\" đang trỏ tới \"%(sp)s\". Một mã OEM chỉ được trỏ tới một phụ tùng — nếu đúng là hai thứ thay thế được cho nhau, khai ở mục Phụ tùng tương đương chứ không khai trùng mã."
+msgstr "OEM code \"%(ma)s\" already points to \"%(sp)s\". An OEM code may point to only one spare part — if the two really are interchangeable, declare that under Equivalent spares rather than duplicating the code."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_xref__code_type__oem
+msgid "Mã OEM (hãng chế tạo thiết bị)"
+msgstr "OEM code (equipment manufacturer)"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_xref_ids
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_xref_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Mã chéo"
+msgstr "Cross-reference"
+
+#. module: eam_stock
+#: model:ir.model.constraint,message:eam_stock.constraint_eam_part_xref_uniq
+msgid "Mã chéo này đã khai cho phụ tùng rồi."
+msgstr "This cross-reference is already declared for a spare part."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_part_xref
+msgid "Mã chéo phụ tùng"
+msgstr "Spare part cross-reference"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_xref__code_type__old
+msgid "Mã cũ đã thay thế"
+msgstr "Superseded code"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_xref__partner_id
+msgid "Mã của hãng nào / nhà phân phối nào. Bỏ trống nếu là mã chung của ngành."
+msgstr "Whose code it is — which manufacturer or distributor. Leave it empty for an industry-standard code."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_xref__code_type__vendor
+msgid "Mã nhà phân phối"
+msgstr "Distributor code"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_mfr_code
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_mfr_code
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_xref__code_type__mfr
+msgid "Mã nhà sản xuất phụ tùng"
+msgstr "The spare manufacturer's code"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "Mã phải bắt đầu bằng \"L\" (vị trí chức năng), \"A\" (thiết bị), \"K\" (ô chứa trong kho) hoặc \"S\" (lô / sê-ri). Nhận được: %s"
+msgstr "The code has to start with \"L\" (functional location), \"A\" (equipment), \"K\" (bin in a store) or \"S\" (batch / serial). Received: %s"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_qr_mixin
+msgid "Mã quét hiện trường"
+msgstr "Field scan code"
+
+#. module: eam_stock
+#: model:ir.model.constraint,message:eam_stock.constraint_stock_lot_uniq_qr
+msgid "Mã quét lô/sê-ri không được trùng."
+msgstr "The batch/serial scan code must be unique."
+
+#. module: eam_stock
+#: model:ir.model.constraint,message:eam_stock.constraint_stock_location_uniq_qr
+msgid "Mã quét ô chứa không được trùng."
+msgstr "The bin scan code must be unique."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Mượn"
+msgstr "Loan"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_tool_loan
+#: model:ir.ui.menu,name:eam_stock.menu_eam_tool_loan
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Mượn dụng cụ"
+msgstr "Tool loan"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Mượn gì"
+msgstr "What is borrowed"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Một phụ tùng không thể tương đương với chính nó."
+msgstr "A spare part cannot be equivalent to itself."
 
 #. module: eam_stock
 #: code:addons/eam_stock/models/eam_adjustment.py:0
@@ -177,6 +2134,13 @@ msgid "Mới"
 msgstr "New"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__urgency
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+msgid "Mức khẩn"
+msgstr "Urgency"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_criticality
 #: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_criticality
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
@@ -186,14 +2150,231 @@ msgid "Mức quan trọng"
 msgstr "Criticality level"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Nghiệm thu"
+msgstr "Acceptance"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
 msgid "Nguồn"
 msgstr "Source"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__source
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Nguồn hàng"
+msgstr "Source of goods"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__source__other
+msgid "Nguồn khác"
+msgstr "Other source"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_inbound_check__source
+msgid "Nguồn khác nhau thì hồ sơ đi kèm khác nhau, và người chịu trách nhiệm khi sai cũng khác."
+msgstr "Different sources come with different paperwork, and with different people answerable when something is wrong."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Ngày gửi"
+msgstr "Sent on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Ngày hiệu chuẩn"
+msgstr "Calibration date"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Ngày kiểm"
+msgstr "Check date"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+msgid "Ngày lập"
+msgstr "Raised on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__date_out
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_search
+msgid "Ngày mượn"
+msgstr "Borrowed on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__date_received
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Ngày nhận"
+msgstr "Received on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__doc_date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Ngày phát hành"
+msgstr "Issue date"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_mfg_date
 msgid "Ngày sản xuất"
 msgstr "Manufacturing date"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__date_in
+msgid "Ngày trả"
+msgstr "Returned on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+msgid "Ngày yêu cầu"
+msgstr "Requested on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+msgid "Ngày đếm"
+msgstr "Count date"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__date
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+msgid "Ngày đề nghị"
+msgstr "Proposed on"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__approver_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__approver_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+msgid "Người duyệt"
+msgstr "Approver"
+
+#. module: eam_stock
+#: model:res.groups,comment:eam_stock.group_eam_warehouse_limited
+msgid ""
+"Người dùng trong nhóm này chỉ thấy và chỉ\n"
+"                thao tác được trên những kho đã khai ở ô \"Kho được giao\".\n"
+"                Ai không ở trong nhóm thì không bị ảnh hưởng — quản trị,\n"
+"                kế toán, ban giám đốc vẫn thấy toàn bộ."
+msgstr ""
+"Users in this group see, and can act on, only the\n"
+"                stores declared in the \"Assigned stores\" field.\n"
+"                Anyone outside the group is unaffected — administration,\n"
+"                accounting and management still see everything."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+msgid "Người kiểm"
+msgstr "Checked by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__inspector_id
+msgid "Người kiểm tra"
+msgstr "Checked by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__user_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Người làm"
+msgstr "Carried out by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__borrower_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_search
+msgid "Người mượn"
+msgstr "Borrower"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__receiver_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Người nhận"
+msgstr "Recipient"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__receiver_name
+msgid "Người nhận hàng"
+msgstr "Goods received by"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid ""
+"Người ta tìm phụ tùng bằng cách cầm con cũ, đọc số\n"
+"                        dập trên vỏ. Số đó hiếm khi là mã nội bộ của mình."
+msgstr ""
+"People look for a spare by holding the old one and reading\n"
+"                        the number stamped on its casing. That number is rarely\n"
+"                        an internal code of ours."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Người xử lý"
+msgstr "Handled by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__requester_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Người yêu cầu"
+msgstr "Requester"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__user_id
+msgid "Người đã xử lý"
+msgstr "Handled by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__counter_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+msgid "Người đếm"
+msgstr "Counted by"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Người đếm và người duyệt phải là hai người khác nhau. Tự đếm tự duyệt thì bước duyệt không còn ý nghĩa gì."
+msgstr "The person counting and the person approving have to be two different people. Count and approve yourself and the approval step means nothing at all."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__requester_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+msgid "Người đề nghị"
+msgstr "Proposed by"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Người đề nghị và người duyệt phải khác nhau."
+msgstr "The proposer and the approver have to be two different people."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Ngừng sản xuất"
+msgstr "Discontinued"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__eam_core_due
+msgid "Nhiều hãng bán phụ tùng quay vòng theo cơ chế đổi lõi: giá rẻ hơn, kèm cam kết trả con cũ trong một hạn nhất định. Quá hạn là bị tính thêm tiền."
+msgstr "Many manufacturers sell rotable spares on a core-exchange basis: a lower price, with an undertaking to return the old one within a set period. Return it late and you are charged."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_mfr_code
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_mfr_code
+msgid "Nhiều phụ tùng do bên thứ ba sản xuất cho hãng. Mã này in trên chính con hàng, thường khác mã OEM."
+msgstr "Many spares are made for the manufacturer by a third party. This code is stamped on the part itself, and usually differs from the OEM code."
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_part_demand
+msgid "Nhu cầu phụ tùng"
+msgstr "Spare part demand"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_part_demand
+msgid "Nhu cầu phụ tùng từ lịch bảo trì"
+msgstr "Spare part demand from the maintenance schedule"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__plant_id
@@ -219,14 +2400,371 @@ msgid "Nháp"
 msgstr "Draft"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__group_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Nhóm duyệt"
+msgstr "Approval group"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__group_id
+msgid "Nhóm được duyệt"
+msgstr "Approving group"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Nhận THIẾU: %s. Phần thiếu vẫn nằm ở vị trí trung chuyển — phải tìm ra, không tự xoá."
+msgstr "SHORT receipt: %s. The missing part stays at the transit location — it has to be found; it does not clear itself."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Nhận lại"
+msgstr "Receive back"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Nhận thiếu"
+msgstr "Short delivery"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_store_io
+msgid "Nhập – xuất"
+msgstr "Receipts – issues"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__recharge
+msgid "Nạp lại ắc-quy"
+msgstr "Battery recharge"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_months_idle
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_months_idle
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Nằm im (tháng)"
+msgstr "Dormant (months)"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
+msgid "Nền tảng 6,24 MW · rô-to 171 m"
+msgstr "6.24 MW platform · 171 m rotor"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_category_id
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_category_id
+msgid "Nối sản phẩm kho với cây cấu phần. Nhờ đó tra được \"phụ tùng này lắp cho cụm nào\" và ngược lại."
+msgstr "Links the stock product to the component tree. That is what makes it possible to ask \"which assembly does this spare fit\" and the other way round."
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_material_request_no_hs
+#: model:ir.ui.menu,name:eam_stock.menu_eam_material_no_hs
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+msgid "Nợ hồ sơ xuất khẩn cấp"
+msgstr "Outstanding emergency-issue paperwork"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__disposal_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__adjustment_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__transfer_id
+msgid "Phiếu"
+msgstr "Note"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Phiếu \"%s\" chưa có bằng chứng nào. Thanh lý không bằng chứng thì trên sổ không khác gì mất hàng — và người duyệt cũng không có gì để xem mà quyết."
+msgstr "Note \"%s\" has no evidence attached. A disposal without evidence is indistinguishable from a loss on the books — and the approver has nothing to look at before deciding."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Phiếu \"%s\" chưa có dòng nào."
+msgstr "Note \"%s\" has no lines."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_rotable.py:0
+msgid "Phiếu \"%s\" chưa có hạn. Phiếu không hạn là phiếu nằm quên — trả lõi quá hạn bị tính thêm tiền, đòi bảo hành quá hạn thì mất quyền."
+msgstr "Note \"%s\" has no deadline. A note with no deadline is a note that gets forgotten — a core returned late is charged for, a warranty claim made late is lost."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Phiếu \"%s\" chưa trình duyệt."
+msgstr "Note \"%s\" has not been submitted for approval."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Phiếu \"%s\" chưa ở trạng thái đang đi."
+msgstr "Note \"%s\" is not in transit."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Phiếu \"%s\" không ở trạng thái chờ duyệt."
+msgstr "Note \"%s\" is not awaiting approval."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Phiếu \"%s\" không ở trạng thái đang mượn."
+msgstr "Note \"%s\" is not on loan."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Phiếu \"%s\" đã gửi rồi."
+msgstr "Note \"%s\" has already been sent."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+msgid "Phiếu \"%s\" đã kiểm rồi."
+msgstr "Note \"%s\" has already been checked."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+msgid "Phiếu \"%s\" đã kiểm xong và đã sinh phiếu kho — không huỷ được. Nếu kiểm sai thì lập phiếu điều chỉnh tồn kèm lý do."
+msgstr "Note \"%s\" has been checked and has produced its stock movements — it cannot be cancelled. If the check was wrong, raise a stock adjustment with a reason."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid "Phiếu \"%s\" đã áp vào tồn. Muốn sửa thì lập phiếu điều chỉnh ngược, không xoá vết cũ."
+msgstr "Note \"%s\" has already been applied to stock. To correct it, raise a reversing adjustment rather than erasing the old trail."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Phiếu RMA"
+msgstr "RMA note"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__msds
+msgid "Phiếu an toàn hoá chất (MSDS)"
+msgstr "Safety data sheet (MSDS)"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__move_tra_ids
+msgid "Phiếu hoàn trả"
+msgstr "Return note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__check_id
+msgid "Phiếu kiểm"
+msgstr "Check note"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_inbound_check
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Phiếu kiểm tra đầu vào"
+msgstr "Incoming inspection note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__scrap_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid "Phiếu loại bỏ"
+msgstr "Scrap note"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_tool_loan
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_form
+msgid "Phiếu mượn dụng cụ"
+msgstr "Tool loan note"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+msgid "Phiếu nhập"
+msgstr "Goods receipt note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__picking_id
+msgid "Phiếu nhập kho"
+msgstr "Goods receipt note"
+
+#. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_inbound_check
+msgid ""
+"Phiếu nhập kho ghi <b>đã nhận bao nhiêu</b>. Phiếu này ghi\n"
+"               <b>nhận rồi thấy sao</b> — đủ hay thiếu, đúng mã hay sai mã,\n"
+"               còn nguyên hay móp vỡ, có chứng chỉ hay không."
+msgstr ""
+"A goods receipt note records <b>how much arrived</b>. This note\n"
+"               records <b>what it was like on arrival</b> — complete or short,\n"
+"               the right code or the wrong one, intact or dented, with a\n"
+"               certificate or without."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid "Phiếu thanh lý"
+msgstr "Disposal note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__move_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Phiếu xuất"
+msgstr "Issue note"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_stock_adjustment
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid "Phiếu điều chỉnh tồn"
+msgstr "Stock adjustment note"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_disposal
+msgid "Phiếu đề nghị thanh lý"
+msgstr "Disposal request note"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__source
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Phát sinh từ"
+msgstr "Arising from"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__work_order_id
+msgid "Phát sinh từ lệnh"
+msgstr "Arising from an order"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Phát sinh từ lệnh công việc thì phải chỉ rõ lệnh nào — nếu không thì chi phí vật tư không về được lệnh."
+msgstr "If it arises from a work order, that order has to be named — otherwise the material cost never finds its way back to the order."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Phát sinh từ đâu"
+msgstr "Where it arose"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
 msgid "Phân loại"
 msgstr "Classification"
 
 #. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_store_ana
+msgid "Phân tích kho"
+msgstr "Stock analysis"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Phải khai tình trạng khi trả. Nhận lại mà không nhìn thì lần sau người khác mượn phải một cái hỏng."
+msgstr "The condition on return has to be recorded. Take it back without looking and the next person to borrow it gets a broken one."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__product_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Phụ tùng gốc"
+msgstr "Original spare"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__product_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
+msgid "Phụ tùng lắp được"
+msgstr "Spares that fit"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__part_kind__spare
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__spare
+msgid "Phụ tùng thay thế"
+msgstr "Replacement spare"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Phụ tùng trọng yếu"
+msgstr "Critical spare"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_equivalent
+#: model:ir.model,name:eam_stock.model_eam_part_equivalent
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_equivalent_ids
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_equivalent_ids
+#: model:ir.ui.menu,name:eam_stock.menu_eam_equivalent
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Phụ tùng tương đương"
+msgstr "Equivalent spare"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Quan trọng"
+msgstr "Important"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
 msgid "Quay vòng"
 msgstr "Rotable"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Quyết định"
+msgstr "Decision"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__qua_han
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__qua_han
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+msgid "Quá hạn"
+msgstr "Overdue"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__qua_han
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_search
+msgid "Quá hạn trả"
+msgstr "Return overdue"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Quãng lắp đặt của \"%(ts)s\" ghi ngày lắp %(ngay)s — ở tương lai, nên không tháo hôm nay được.\n"
+"\n"
+"Bản ghi đó đang là KẾ HOẠCH chứ chưa phải việc đã xảy ra. Sửa ngày lắp cho đúng thực tế rồi xuất lại."
+msgstr ""
+"The installation period of \"%(ts)s\" records an installation date of %(ngay)s — in the future, so it cannot be removed today.\n"
+"\n"
+"That record is a PLAN rather than something that has happened. Correct the installation date to match reality, then issue again."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_equivalent__condition
+msgid "Rất ít cặp thay thế được vô điều kiện. Ghi rõ: chỉ cho model nào, chỉ khi nào, phải làm gì thêm."
+msgstr "Very few pairs are interchangeable unconditionally. Say plainly: for which models only, under what conditions only, and what else has to be done."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__qty_sent
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "SL gửi"
+msgstr "Qty sent"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__qty_accepted
+msgid "SL nghiệm thu"
+msgstr "Qty accepted"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__qty_received
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__qty_received
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "SL nhận"
+msgstr "Qty received"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__qty_rejected
+msgid "SL từ chối"
+msgstr "Qty rejected"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__qty_ordered
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "SL đặt"
+msgstr "Qty ordered"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__sai_ma
+msgid "Sai mã / sai chủng loại"
+msgstr "Wrong code / wrong type"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__unit
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__unit
+msgid "Sai đơn vị tính khi nhập"
+msgstr "Wrong unit of measure on receipt"
 
 #. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
@@ -237,14 +2775,225 @@ msgid "Sê-ri"
 msgstr "Serial"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__lot_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__lot_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "Sê-ri / lô"
+msgstr "Serial / batch"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/product_template.py:0
+msgid ""
+"Sản phẩm \"%(sp)s\" thuộc loại cấu phần quay vòng \"%(loai)s\" nên BẮT BUỘC theo dõi theo sê-ri.\n"
+"\n"
+"Vật tư quay vòng tháo ra rồi lắp lại. Không có sê-ri thì sau lần đại tu thứ hai không ai biết con nào đang ở đâu — mà hãng chỉ bảo hành con mang đúng số sê-ri đó, không bảo hành \"một cái %(loai)s\"."
+msgstr ""
+"Product \"%(sp)s\" belongs to rotable component category \"%(loai)s\", so tracking by serial number is MANDATORY.\n"
+"\n"
+"A rotable material is removed and refitted. Without a serial number, after the second overhaul nobody knows which one is where — and the manufacturer warrants the one carrying that serial number, not \"a %(loai)s\"."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__ref_supplier
+msgid "Số RMA của nhà cung cấp"
+msgstr "The supplier's RMA number"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Số chứng nhận"
+msgstr "Certificate number"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__so_dong_sai
+msgid "Số dòng sai lệch"
+msgstr "Discrepancy lines"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__cert_no
+msgid "Số giấy chứng nhận"
+msgstr "Certificate number"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_oem_code
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_oem_code
+msgid "Số hiệu hãng chế tạo thiết bị dùng. Đây là mã dùng để đặt hàng và để đòi bảo hành."
+msgstr "The reference used by the equipment manufacturer. This is the code for ordering and for warranty claims."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_mfg_batch
+msgid "Số lô của nhà sản xuất"
+msgstr "Manufacturer's batch number"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__qty
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__qty
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__qty
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__qty
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__qty
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Số lượng"
+msgstr "Quantity"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__qty_tra_moi
+msgid "Số lượng mang về kho lần này. Bấm \"Ghi nhận hoàn trả\" trên lệnh để xử lý."
+msgstr "The quantity brought back to store this time. Press \"Record the return\" on the order to process it."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__qty
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+msgid "Số lượng mỗi lần"
+msgstr "Quantity each time"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__name
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__name
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__name
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__name
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__name
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Số phiếu"
+msgstr "Note number"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__product_count
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+msgid "Số phụ tùng"
+msgstr "Spare parts"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_equivalent_ok
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_equivalent_ok
+msgid "Số tương đương đã duyệt"
+msgstr "Approved equivalents"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Số yêu cầu"
+msgstr "Request number"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid "Sổ ghi"
+msgstr "Book figure"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__qty_system
+msgid "Sổ ghi (lúc đếm)"
+msgstr "Book figure (at the count)"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__source__outage
+msgid "Sự cố / dừng máy"
+msgstr "Incident / stoppage"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_disposal
+#: model:ir.ui.menu,name:eam_stock.menu_eam_disposal
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+msgid "Thanh lý vật tư"
+msgstr "Dispose of material"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__desiccant
+msgid "Thay hạt hút ẩm"
+msgstr "Replace the desiccant"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__equivalent_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Thay được bằng"
+msgstr "Can be replaced by"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__two_way
+msgid "Thay được cả hai chiều"
+msgstr "Interchangeable both ways"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__rule_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Theo luật"
+msgstr "By rule"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__plan_id
 msgid "Theo lịch"
 msgstr "On schedule"
 
 #. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Theo yêu cầu vật tư %s"
+msgstr "Per material request %s"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__thieu_hs
+msgid "Thiếu chứng chỉ / hồ sơ"
+msgstr "Certificate or paperwork missing"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_shortage_impact
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_shortage_impact
+msgid "Thiếu thì sao"
+msgstr "What if it is missing"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__amount
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Thành tiền"
+msgstr "Amount"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__tinh_trang_tra
+msgid "Tháo khỏi máy KHÔNG có nghĩa là dùng lại được. Hàng cần kiểm tra hoặc đã hỏng đi vào vị trí riêng, không cộng vào tồn khả dụng cho tới khi có người xác nhận."
+msgstr "Being removed from a machine does NOT mean it is usable again. Goods needing inspection or already damaged go to a separate location and are not added to available stock until someone confirms it."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_part_spec
+msgid "Thông số kỹ thuật phụ tùng"
+msgstr "Spare part specifications"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_spec__is_key
+msgid "Thông số mà sai là lắp không vừa hoặc hỏng máy. Hiện ngay trên danh sách để người xuất kho nhìn thấy trước khi đưa hàng ra."
+msgstr "A specification that, if wrong, means the part does not fit or damages the machine. Shown on the list itself so the storekeeper sees it before the goods go out."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_spec__is_key
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_spec_key
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_spec_key
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_eam
+msgid "Thông số quyết định"
+msgstr "Critical specification"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__low
 msgid "Thấp"
 msgstr "Low"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__lost
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__lost
+msgid "Thất lạc / mất"
+msgstr "Mislaid / lost"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_lead_days
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_lead_days
+msgid "Thời gian cung ứng (ngày)"
+msgstr "Lead time (days)"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__currency_id
@@ -255,6 +3004,23 @@ msgstr "Currency"
 #: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__medium
 msgid "Trung bình"
 msgstr "Average"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_is_long_lead
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_is_long_lead
+msgid "Trên 90 ngày. Loại này hết hàng thì không mua kịp, phải dự trữ trước — khác hẳn hàng mua được trong tuần."
+msgstr "Over 90 days. If this kind runs out there is no buying it in time, so it has to be stocked in advance — quite unlike something available within a week."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Trình duyệt"
+msgstr "Submit for approval"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid "Trình duyệt / Áp dụng"
+msgstr "Submit / Apply"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__state
@@ -282,10 +3048,80 @@ msgid "Trạng thái"
 msgstr "State"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__trang_thai_kho
+msgid "Trạng thái kho"
+msgstr "Stock state"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_rma
+msgid "Trả hàng / bảo hành"
+msgstr "Returns / warranty"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_rma
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+msgid "Trả hàng / bảo hành / hoàn lõi"
+msgstr "Returns / warranty / core return"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__rma_type__return
+msgid "Trả hàng sai / hỏng khi nhận"
+msgstr "Wrong or damaged goods returned"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__rma_type__core
+msgid "Trả lõi cũ theo cam kết"
+msgstr "Old core returned as agreed"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_rma__date_due
+msgid "Trả lõi quá hạn thì bị tính thêm tiền; đòi bảo hành quá hạn thì mất quyền. Hạn này là thứ duy nhất ngăn phiếu nằm quên."
+msgstr "A core returned late is charged for; a warranty claim made late is lost. This deadline is the only thing that stops a note being forgotten."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__qty_tra_moi
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Trả lại"
+msgstr "Return"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Trả về trong tình trạng HƯ HỎNG — dụng cụ đã bị khoá, không cho mượn tiếp."
+msgstr "Returned DAMAGED — the tool is now locked and cannot be lent out again."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Trả về với yêu cầu hiệu chuẩn lại — dụng cụ đã bị khoá, không cho mượn tiếp cho tới khi có kết quả hiệu chuẩn mới."
+msgstr "Returned with a request for recalibration — the tool is locked and cannot be lent out until a new calibration result arrives."
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__criticality__critical
 #: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__critical
 msgid "Trọng yếu"
 msgstr "Critical"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_quant__eam_plant_id
+msgid "Trống nghĩa là hàng đang nằm ở kho dùng chung, mọi nhà máy đều với tới được — không phải là thiếu dữ liệu."
+msgstr "Empty means the goods sit in a shared store that every plant can draw on — it is not missing data."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_doc_ids
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_doc_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Tài liệu & bản vẽ"
+msgstr "Documents & drawings"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_part_doc
+msgid "Tài liệu phụ tùng"
+msgstr "Spare part documents"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__asset_id
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_asset_id
+msgid "Tài sản tương ứng"
+msgstr "Corresponding asset"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__name
@@ -294,10 +3130,307 @@ msgid "Tên luật"
 msgstr "Rule name"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+msgid "Tên model"
+msgstr "Model name"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Tên tài liệu"
+msgstr "Document title"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+msgid "Tìm phiếu RMA"
+msgstr "Search RMA notes"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_search
+msgid "Tìm phiếu kiểm"
+msgstr "Search check notes"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_search
+msgid "Tìm phiếu mượn"
+msgstr "Search loan notes"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__found
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__found
+msgid "Tìm thấy hàng chưa ghi sổ"
+msgstr "Goods found that are not on the books"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+msgid "Tìm việc bảo quản"
+msgstr "Search storage care jobs"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+msgid "Tìm yêu cầu vật tư"
+msgstr "Search material requests"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__tinh_trang_tra
+msgid "Tình trạng hàng trả"
+msgstr "Condition of the returned goods"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__tinh_trang_tra
+msgid "Tình trạng khi trả"
+msgstr "Condition on return"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Tình trạng trả"
+msgstr "Condition on return"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_demand__gom_tuy_chon
+msgid "Tính cả vật tư \"chỉ thay khi cần\""
+msgstr "Include materials marked \"replace only when needed\""
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__eam_warranty_end
+msgid "Tính từ ngày NHẬN HÀNG, không phải ngày lắp. Hàng nằm kho hai năm thì hết bảo hành trước khi kịp dùng."
+msgstr "Counted from the date the goods were RECEIVED, not the date they were fitted. Sit in store for two years and the warranty expires before it is ever used."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__attachment_id
+msgid "Tệp đính kèm"
+msgstr "Attachment"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_stock_toiuu
+#: model:ir.ui.menu,name:eam_stock.menu_eam_stock_toiuu
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Tối ưu tồn kho"
+msgstr "Stock optimisation"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Tồn"
+msgstr "Stock"
+
+#. module: eam_stock
+#: model:ir.ui.menu,name:eam_stock.menu_eam_store_on
+msgid "Tồn & kiểm kê"
+msgstr "Stock & counting"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+msgid ""
+"Tồn hệ thống đã ĐỔI kể từ lúc đếm:\n"
+"\n"
+"%s\n"
+"\n"
+"Áp số cũ vào là xoá mất những phát sinh hợp lệ trong khoảng đó. Đếm lại rồi lập phiếu mới."
+msgstr ""
+"System stock has CHANGED since the count:\n"
+"\n"
+"%s\n"
+"\n"
+"Applying the old figures would erase legitimate movements in between. Count again and raise a new note."
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_quant
+#: model:ir.ui.menu,name:eam_stock.menu_eam_quant
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+msgid "Tồn kho phụ tùng"
+msgstr "Spare parts stock"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__ton_thuc_te
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Tồn thực tế"
+msgstr "Actual stock"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_excess_qty
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_excess_qty
+msgid "Tồn trừ đi mức tối đa đã khai. Đây mới là tiền chết."
+msgstr "Stock less the declared maximum level. This is the part that is dead money."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__amount_total
+msgid "Tổng giá trị"
+msgstr "Total value"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_approval_rule__amount_from
+msgid "Tổng giá trị yêu cầu từ mức này trở lên thì luật áp dụng."
+msgstr "The rule applies when the total requested value reaches this level."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_demand_form
+msgid "Tổng hợp"
+msgstr "Summary"
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_part_demand
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_demand_form
+msgid "Tổng hợp nhu cầu phụ tùng"
+msgstr "Consolidated spare part demand"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_demand__date_to
+msgid "Tổng hợp tới ngày"
+msgstr "Summary to date"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__rejected
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__rejected
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request_approval__state__rejected
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__state__rejected
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Từ chối"
+msgstr "Reject"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Từ kho"
+msgstr "From store"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+msgid "Việc"
+msgstr "Job"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+msgid "Việc cần làm"
+msgstr "To do"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Vì sao cần vật tư này…"
+msgstr "Why this material is needed…"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_part_spec__name
+msgid "Ví dụ: Đường kính trong, Độ nhớt, Dải đo"
+msgstr "For example: Inside diameter, Viscosity, Measuring range"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_excess_qty
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_excess_qty
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Vượt mức tối đa"
+msgstr "Above the maximum level"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_shortage_impact__risk
+msgid "Vẫn chạy nhưng tăng rủi ro"
+msgstr "Still runs but with higher risk"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__line_ids
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__product_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__product_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Vật tư"
+msgstr "Material"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Vật tư \"%s\" không phải loại lưu kho nên không có tồn để giữ chỗ. Nếu đây là dịch vụ hoặc hàng mua thẳng, đánh dấu \"Không qua kho\"."
+msgstr "Material \"%s\" is not a stockable type, so there is no stock to reserve. If this is a service or a direct purchase, tick \"Not through the store\"."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Vật tư \"%s\" theo dõi theo sê-ri. Phải chọn đúng con sẽ lắp vào máy.\n"
+"\n"
+"Hãng chỉ bảo hành con mang đúng số sê-ri đó — để hệ thống tự chọn một con bất kỳ là vứt đi quyền đòi bảo hành."
+msgstr ""
+"Material \"%s\" is tracked by serial number. The exact one to be fitted has to be chosen.\n"
+"\n"
+"The manufacturer only warrants the one carrying that serial number — letting the system pick any one throws the warranty claim away."
+
+#. module: eam_stock
+#: model:ir.model,name:eam_stock.model_eam_pm_plan_material
+msgid "Vật tư cho một lần bảo trì"
+msgstr "Materials for one service"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__khong_qua_kho
+msgid "Vật tư mua thẳng cho chính việc này, hoặc hãng cấp theo bảo hành — chưa từng nằm trong kho nên không có gì để xuất."
+msgstr "Material bought directly for this job, or supplied by the manufacturer under warranty — it was never in store, so there is nothing to issue."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan__material_ids
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+msgid "Vật tư mỗi lần"
+msgstr "Material each time"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/product_template.py:0
+msgid "Vật tư này đang không theo lô nên không cảnh báo hạn dùng được. Cân nhắc đặt \"Theo dõi theo lô\" và khai hạn sử dụng ở tab Tồn kho."
+msgstr "This material is not tracked by batch, so no shelf-life warning is possible. Consider setting \"Track by batch\" and declaring a shelf life on the Stock tab."
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_is_rotable
 #: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_is_rotable
 msgid "Vật tư quay vòng"
 msgstr "Rotable spare"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_stock_lot__eam_asset_id
+msgid "Vật tư quay vòng: mỗi sê-ri là một tài sản có lịch sử lắp đặt và bảo hành riêng. Cùng một vật, hai sổ ghi hai mặt."
+msgstr "Rotable materials: each serial number is an asset with its own installation and warranty history. The same object, two books recording two sides of it."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__line_ids
+msgid "Vật tư thanh lý"
+msgstr "Material for disposal"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__part_kind__consumable
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__consumable
+msgid "Vật tư tiêu hao"
+msgstr "Consumable"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__line_ids
+msgid "Vật tư xin"
+msgstr "Material requested"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__dest_location_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Về ô chứa"
+msgstr "Back to the bin"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__location_id
@@ -308,6 +3441,17 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid ""
+"Vị trí \"%(vt)s\" đang lắp \"%(cu)s\". Lắp con mới thì phải khai con tháo ra: điền ô \"Thiết bị tháo ra\" trên dòng vật tư.\n"
+"\n"
+"Không khai thì mất dấu một tài sản mang sê-ri — và đó đúng là thứ cần để đòi bảo hành vài năm sau."
+msgstr ""
+"Location \"%(vt)s\" currently holds \"%(cu)s\". To fit the new one, the one removed has to be declared: fill in \"Equipment removed\" on the material line.\n"
+"\n"
+"Without it a serialised asset is lost track of — and that is exactly what is needed for a warranty claim years later."
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__location_id
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
@@ -315,9 +3459,355 @@ msgid "Vị trí thiết bị"
 msgstr "Equipment location"
 
 #. module: eam_stock
+#: model_terms:ir.actions.act_window,help:eam_stock.action_eam_material_request
+msgid ""
+"Xin <b>vật tư đã có trong kho</b> — khác với <i>yêu cầu công\n"
+"               việc</i> (báo có việc cần làm) và <i>yêu cầu mua</i> (xin tiền\n"
+"               mua thứ chưa có)."
+msgstr ""
+"Requesting <b>material that is already in store</b> — unlike a\n"
+"               <i>work request</i> (reporting that there is a job to do) and a\n"
+"               <i>purchase request</i> (asking for money to buy what we do not have)."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__warehouse_id
+msgid "Xin ở kho"
+msgstr "Requested at store"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__rotate
+msgid "Xoay trục / đảo chiều"
+msgstr "Shaft rotation / reversal"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__is_emergency
+msgid "Xuất khẩn cấp"
+msgstr "Emergency issue"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_material_request__ho_so_du
+msgid "Xuất khẩn cấp cho đi trước, hồ sơ theo sau. Chừng nào ô này chưa tích thì yêu cầu còn nằm trong danh sách nợ hồ sơ."
+msgstr "An emergency issue goes first and the paperwork follows. Until this box is ticked, the request stays on the outstanding list."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid ""
+"Xuất khẩn cấp vẫn phải khai: %s.\n"
+"\n"
+"Đây là ba thứ duy nhất còn lại để truy ngược khi hàng đã rời kho mà chưa ai duyệt."
+msgstr ""
+"An emergency issue still has to declare: %s.\n"
+"\n"
+"These are the only three things left to trace it back by, once the goods have left the store with nobody's approval."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Xuất vật tư"
+msgstr "Issue materials"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+msgid "Xác nhận kiểm tra"
+msgstr "Confirm the check"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "Xác nhận đã nhận"
+msgstr "Confirm receipt"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__request_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__request_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Yêu cầu"
+msgstr "Request"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Yêu cầu \"%s\" chưa có dòng vật tư nào."
+msgstr "Request \"%s\" has no material lines."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Yêu cầu \"%s\" chưa được duyệt."
+msgstr "Request \"%s\" has not been approved."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Yêu cầu \"%s\" đã cấp phát — hàng đã rời kho, không về nháp được. Muốn thu lại thì làm hoàn trả trên lệnh công việc."
+msgstr "Request \"%s\" has been issued — the goods have left the store and it cannot go back to draft. To recover them, record a return on the work order."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Yêu cầu khẩn cấp không đi đường trình duyệt — bấm \"Cấp phát khẩn cấp\"."
+msgstr "An emergency request does not go through approval — press \"Emergency issue\"."
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_material_request
+#: model:ir.model,name:eam_stock.model_eam_material_request
+#: model:ir.ui.menu,name:eam_stock.menu_eam_material_request
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+msgid "Yêu cầu vật tư"
+msgstr "Material request"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/res_users.py:0
+msgid "bỏ: %s"
+msgstr "dropped: %s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "còn %(c)g / tối thiểu %(m)g · cung ứng %(l)d ngày"
+msgstr "%(c)g left / minimum %(m)g · lead time %(l)d days"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "hiệu chuẩn lần gần nhất KHÔNG ĐẠT"
+msgstr "the last calibration FAILED"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "hạn %s"
+msgstr "due %s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "hẹn %(d)s, trễ %(n)d ngày"
+msgstr "due %(d)s, %(n)d days late"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "lý do"
+msgstr "reason"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "người nhận hàng"
+msgstr "goods received by"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "quá hạn hiệu chuẩn từ %s"
+msgstr "calibration overdue since %s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/res_users.py:0
+msgid "thêm: %s"
+msgstr "added: %s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "vị trí / thiết bị"
+msgstr "location / equipment"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__product_tmpl_id
+msgid "Áp cho vật tư"
+msgstr "Applies to the material"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_pm_plan_form_material
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+msgid "ĐVT"
+msgstr "UoM"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Đang giữ"
+msgstr "On loan"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__ton_giu_cho
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+msgid "Đang giữ chỗ"
+msgstr "Being reserved"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__state__out
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_search
+msgid "Đang mượn"
+msgstr "On loan"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_asset__eam_in_stock
+msgid "Đang trong kho"
+msgstr "In the store"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_transfer__state__in_transit
+msgid "Đang đi"
+msgstr "In transit"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__location_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__location_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Đang ở"
+msgstr "Currently at"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "Đang ở \"%s\" — chưa dùng được"
+msgstr "At \"%s\" — not usable yet"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_transfer
+#: model:ir.model,name:eam_stock.model_eam_stock_transfer
+#: model:ir.ui.menu,name:eam_stock.menu_eam_transfer
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Điều chuyển giữa kho"
+msgstr "Transfer between stores"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__source__transfer
+msgid "Điều chuyển từ kho khác"
+msgstr "Transfer from another store"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+msgid "Điều chỉnh tồn"
+msgstr "Stock adjustment"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_adjustment
+#: model:ir.ui.menu,name:eam_stock.menu_eam_adjustment
+msgid "Điều chỉnh tồn (có duyệt)"
+msgstr "Stock adjustment (with approval)"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_note
 msgid "Điều kiện bảo hành"
 msgstr "Warranty terms"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__condition
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Điều kiện áp dụng"
+msgstr "Conditions of application"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_qr.py:0
+msgid "ĐÃ HẾT HẠN từ %s"
+msgstr "EXPIRED since %s"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid ""
+"Đánh dấu <b>Quyết định</b> cho thông số mà sai là\n"
+"                        lắp không vừa hoặc hỏng máy — nó sẽ hiện ngay trên\n"
+"                        danh sách phụ tùng, trước khi hàng ra khỏi kho."
+msgstr ""
+"Mark as <b>Critical</b> any specification that, if wrong,\n"
+"                        means the part does not fit or damages the machine — it\n"
+"                        then appears on the spare parts list itself, before the\n"
+"                        goods leave the store."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__issued
+msgid "Đã cấp phát"
+msgstr "Issued"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Đã cấp phát %(n)d dòng vật tư qua lệnh %(wo)s."
+msgstr "Issued %(n)d material lines through order %(wo)s."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Đã cấp phát rồi thì không huỷ được."
+msgstr "Once issued it cannot be cancelled."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__approved
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request_approval__state__approved
+msgid "Đã duyệt"
+msgstr "Approved"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Đã duyệt NHƯNG có ảnh hưởng bảo hành — kiểm tra máy còn bảo hành hay không trước khi lắp."
+msgstr "Approved BUT it affects the warranty — check whether the machine is still under warranty before fitting it."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_equivalent__state__approved
+msgid "Đã duyệt — dùng được"
+msgstr "Approved — usable"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__qty_dung
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Đã dùng"
+msgstr "Used"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã ghi nhận hoàn trả %d dòng."
+msgstr "Recorded the return of %d lines."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__trang_thai_kho__giu
+msgid "Đã giữ chỗ"
+msgstr "Reserved"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã giữ chỗ %(n)d dòng vật tư tại \"%(kho)s\"."
+msgstr "Reserved %(n)d material lines at \"%(kho)s\"."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã giữ chỗ xong."
+msgstr "Reservation completed."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã giữ chỗ, nhưng KHÔNG ĐỦ: %s"
+msgstr "Reserved, but NOT ENOUGH: %s"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Đã gửi %(n)d dòng từ \"%(a)s\". Hàng đang ở vị trí trung chuyển cho tới khi \"%(b)s\" xác nhận nhận."
+msgstr "Sent %(n)d lines from \"%(a)s\". The goods sit at the transit location until \"%(b)s\" confirms receipt."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+msgid "Đã gửi rồi thì không huỷ — hàng đang trên đường. Ghi nhận nhận thiếu rồi xử lý phần thiếu."
+msgstr "Once sent it cannot be cancelled — the goods are on their way. Record a short receipt and deal with the missing part."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__sent
+msgid "Đã gửi đi"
+msgstr "Sent out"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Đã hoàn thiện hồ sơ"
+msgstr "The file has been completed"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_material_request.py:0
+msgid "Đã hoàn thiện hồ sơ xuất khẩn cấp."
+msgstr "The emergency-issue paperwork has been completed."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__cancelled
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__state__cancelled
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__cancelled
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__state__cancelled
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_transfer__state__cancelled
+msgid "Đã huỷ"
+msgstr "Cancelled"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__state__done
+msgid "Đã kiểm"
+msgstr "Checked"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care__state__done
@@ -326,14 +3816,105 @@ msgid "Đã làm"
 msgstr "Done"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__date_done
+msgid "Đã làm ngày"
+msgstr "Done on"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Đã làm xong"
+msgstr "Completed"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
 msgid "Đã nghỉ"
 msgstr "Retired"
 
 #. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_transfer__state__done
+msgid "Đã nhận"
+msgstr "Received"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__returned
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+msgid "Đã nhận lại"
+msgstr "Received back"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_rotable.py:0
+msgid "Đã nhận lại. Hàng vào \"Chờ kiểm tra\" — lập phiếu kiểm tra đầu vào trước khi đưa về tồn khả dụng."
+msgstr "Received back. The goods go to \"Awaiting inspection\" — raise an incoming inspection note before returning them to available stock."
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__done
 msgid "Đã thanh lý"
 msgstr "Disposed"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__qty_tra
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_loan__state__returned
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Đã trả"
+msgstr "Returned"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__qty_xuat
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Đã xuất"
+msgstr "Issued"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã xuất \"%(sp)s\" nhưng CHƯA mở được quãng lắp đặt: dưới \"%(vt)s\" không có vị trí chức năng nào thuộc loại \"%(loai)s\". Khai thêm vị trí đó rồi ghi lắp đặt bằng tay."
+msgstr "\"%(sp)s\" was issued but NO installation period could be opened: under \"%(vt)s\" there is no functional location of category \"%(loai)s\". Declare that location, then record the installation by hand."
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã xuất %d dòng vật tư."
+msgstr "Issued %d material lines."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_work_order_part__trang_thai_kho__xuat
+msgid "Đã xuất kho"
+msgstr "Issued from store"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_work_order.py:0
+msgid "Đã xuất kho %(n)d dòng vật tư từ \"%(kho)s\"."
+msgstr "Issued %(n)d material lines from \"%(kho)s\"."
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_work_order_part__qty_dung
+msgid "Đã xuất trừ đã trả. Đây là số tính tiền."
+msgstr "Issued less returned. This is the figure that is charged."
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__state__done
+msgid "Đã áp dụng"
+msgstr "Applied"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__closed
+msgid "Đã đóng"
+msgstr "Closed"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__rma_type__warranty
+msgid "Đòi bảo hành"
+msgstr "Warranty claim"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__unit_cost
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Đơn giá"
+msgstr "Unit price"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__source__po
+msgid "Đơn mua hàng"
+msgstr "Purchase order"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__uom_id
@@ -345,4 +3926,86 @@ msgstr "Disposed"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
 msgid "Đơn vị"
 msgstr "Unit"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__body
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Đơn vị hiệu chuẩn"
+msgstr "Calibration body"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_calibration__result__adjusted
+msgid "Đạt sau hiệu chỉnh"
+msgstr "Passes after adjustment"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Đặt mua ngay — thiếu thì %s"
+msgstr "Order now — if missing, %s"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__qty_counted
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid "Đếm thực tế"
+msgstr "Counted"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_storage_care_plan__interval_months
+msgid "Đếm từ lần làm xong GẦN NHẤT, không phải từ ngày nhập kho."
+msgstr "Counted from the LAST completion, not from the date it was received into store."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__date_due
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_search
+msgid "Đến hạn"
+msgstr "Due"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Đến kho"
+msgstr "To store"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_warehouse_eam_plant
+msgid "Để trống = kho dùng chung"
+msgstr "Empty = a shared store"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Định mức tối thiểu KHÔNG phân biệt chủ sở hữu — trừ ra khi tính mua"
+msgstr "The minimum level does NOT distinguish owners — deduct that when calculating purchases"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "Ưu tiên dùng lô này trước"
+msgstr "Use this batch first"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_eam_disposal__attachment_ids
+msgid "Ảnh hiện trạng, biên bản giám định, kết quả kiểm tra. Thanh lý không bằng chứng thì không khác gì mất hàng."
+msgstr "Photographs of the condition, the survey report, the test results. A disposal without evidence is indistinguishable from a loss."
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+msgid "Ảnh hưởng"
+msgstr "Impact"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__affects_warranty
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+msgid "Ảnh hưởng bảo hành"
+msgstr "Affects the warranty"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__amount_impact
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__amount_impact
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+msgid "Ảnh hưởng giá trị"
+msgstr "Affects the value"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_alerts.py:0
+msgid "ảnh hưởng vận hành"
+msgstr "affects operation"
 

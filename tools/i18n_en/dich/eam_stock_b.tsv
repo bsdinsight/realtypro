@@ -1,0 +1,292 @@
+2951	Affects the warranty
+2952	affects operation
+2953	(no store declared)
+2954	Who checked it, and where
+2955	No request yet
+2956	No model declared yet
+2957	Comes with a certificate
+2958	Material request line
+2959	Stock adjustment line
+2960	Tools overdue for return
+2961	Discontinued by the manufacturer
+2962	The file is complete
+2963	Visual inspection
+2964	Field scan code
+2965	Critical specification
+2966	Returns / warranty
+2967	Condition of the returned goods
+2968	The file has been completed
+2969	Who borrowed it, when it is due back
+2970	Chase supplier %s
+2971	Deadline to complete the file
+2972	Stock adjustment note
+2973	Equivalent spare
+2974	Transfer between stores
+2975	Approved — usable
+2976	\n\nThe goods are currently at: %s
+2977	Storage care of stored goods
+2978	For a location / equipment
+2979	Incoming inspection line
+2980	Calibration of measuring tools
+2981	Damaged in storage
+2982	This one has already been handled.
+2983	Storage care schedule
+2984	Submit / Apply
+2985	Shaft rotation / reversal
+2986	No check note yet
+2987	Certificates
+2988	Still good — straight back to stock
+2989	Damaged beyond repair
+2990	No outstanding paperwork
+2991	Reason / description of the failure
+2992	Outstanding emergency-issue paperwork
+2993	Note "%s" has already been sent.
+2994	Incoming inspection note
+2995	Disposal request note
+2996	Manufacturer's batch number
+2997	Interchangeable both ways
+2998	Per material request %s
+2999	Why this material is needed…
+3000	OEM instructions / requirements
+3001	The physical count differs from the book
+3002	Note "%s" has already been checked.
+3003	Wrong code / wrong type
+3004	The supplier's RMA number
+3005	Approved equivalents
+3006	Certificate or paperwork missing
+3007	Old core returned as agreed
+3008	Transfer from another store
+3009	Issued %d material lines.
+3010	Certificates & accompanying records
+3011	Approval level for material requests
+3012	Goods sitting outside for a long time
+3013	Due back / due to be finished
+3014	Does not affect operation
+3015	The spare manufacturer's code
+3016	Wrong unit of measure on receipt
+3017	calibration overdue since %s
+3018	The stoppage has not been identified.
+3019	No transfer note yet
+3020	Only applies at criticality
+3021	Oils and greases usually have a shelf life
+3022	Recalibrate before
+3023	Material request approval rule
+3024	Storage care job
+3025	Measuring tool calibration
+3026	Equipment model / platform
+3027	Lead time (days)
+3028	Goods found that are not on the books
+3029	Consolidated spare part demand
+3030	due %(d)s, %(n)d days late
+3031	Stock adjustment (with approval)
+3032	Empty = a shared store
+3033	Use this batch first
+3034	Preservative grease / rust protection
+3035	Required on an emergency issue
+3036	Order more stock or move the schedule
+3037	No calibration yet
+3038	Failed — cannot be reused
+3039	No note is overdue
+3040	Emergency — incident, machine down
+3041	Storage care schedule for stored goods
+3042	Spare part specifications
+3043	Still runs but with higher risk
+3044	Materials for one service
+3045	Spare part cost by dimension
+3046	Only applies to rotable materials
+3047	Not usable for maintenance
+3048	Does not meet the specification
+3049	Preventive maintenance plan
+3050	Last calibration passed
+3051	Fits the equipment model
+3052	Order now — if missing, %s
+3053	Leave it empty to apply to every type.
+3054	Only applies to emergency requests.
+3055	Stores — only the assigned ones are visible
+3056	Check the seals and the packaging
+3057	Note "%s" has no lines.
+3058	Note "%s" has not been submitted for approval.
+3059	Wrong or damaged goods returned
+3060	At "%s" — not usable yet
+3061	Derated / restricted operation
+3062	Installation / servicing instructions
+3063	Safety data sheet (MSDS)
+3064	Request "%s" has not been approved.
+3065	Recorded the return of %d lines.
+3066	Goods sitting for a long time at a contractor or the manufacturer
+3067	OEM code (equipment manufacturer)
+3068	6.24 MW platform · 171 m rotor
+3069	Returns / warranty / core return
+3070	Reserved, but NOT ENOUGH: %s
+3071	Needs checking before it is used again
+3072	No longer used on any equipment
+3073	Failed after inspection / overhaul
+3074	Tool reported LOST. Borrower: %s.
+3075	The bin scan code must be unique.
+3076	Spare part demand from the maintenance schedule
+3077	No bin carries the code "%s".
+3078	Include materials marked "replace only when needed"
+3079	the last calibration FAILED
+3080	%(sp)s: reserved %(g)g / needed %(c)g
+3081	The batch/serial scan code must be unique.
+3082	The emergency-issue paperwork has been completed.
+3083	No "Issuing store" has been chosen for order "%s".
+3084	The sending and receiving stores have to be different.
+3085	No batch/serial carries the code "%s".
+3086	Once issued it cannot be cancelled.
+3087	Material line "%s" has a quantity of 0.
+3088	Leave it empty to ignore criticality.
+3089	This cross-reference is already declared for a spare part.
+3090	Note "%s" is not in transit.
+3091	Request "%s" has no material lines.
+3092	You are not in any approval level that is waiting.
+3093	%(n)g units at %(vt)s, owned by %(ch)s
+3094	Note "%s" is not awaiting approval.
+3095	Note "%s" is not on loan.
+3096	For example: Inside diameter, Viscosity, Measuring range
+3097	Issued less returned. This is the figure that is charged.
+3098	Anyone in this group can approve at this level.
+3099	NOT usable — the calibration has expired
+3100	No maintenance schedule falls due before %s.
+3101	Reserved %(n)d material lines at "%(kho)s".
+3102	Issued %(n)d material lines from "%(kho)s".
+3103	Leave it empty and it goes back to the store's default stock location.
+3104	The proposer and the approver have to be two different people.
+3105	<b>Changed the assigned stores</b> for %(ng)s — %(pt)s.
+3106	Returned %(q)g %(sp)s to "%(dich)s" — %(tt)s.
+3107	Line "%(sp)s": received %(n)g, more than the %(g)g sent.
+3108	Issued %(n)d material lines through order %(wo)s.
+3109	Overall conclusion, the sender's undertaking to put it right…
+3110	Order "%s" has no material line left to reserve.
+3111	A spare part cannot be equivalent to itself.
+3112	Order "%s" has no material line left awaiting issue.
+3113	%(c)g left / minimum %(m)g · lead time %(l)d days
+3114	Order "%s" has no line with a return quantity declared.
+3115	The value affected is below the approval threshold — applied at once.
+3116	Stock less the declared maximum level. This is the part that is dead money.
+3117	The rule applies when the total requested value reaches this level.
+3118	Shares a scale with assets (eam.asset) so that the two can be filtered together.
+3119	Counted from the LAST completion, not from the date it was received into store.
+3120	Store "%(kho)s" has only %(con)g of "%(sp)s" available; %(can)g need to be sent.
+3121	Order "%s" is a draft or cancelled — nothing can be issued against it yet.
+3122	The minimum level does NOT distinguish owners — deduct that when calculating purchases
+3123	Which component category this model belongs to — turbine, transformer, converter…
+3124	An emergency request does not go through approval — press "Emergency issue".
+3125	No approval rule applies (the value is below every threshold) — approved automatically.
+3126	Order "%s" is a draft or cancelled — no material can be reserved against it yet.
+3127	Whose code it is — which manufacturer or distributor. Leave it empty for an industry-standard code.
+3128	Gearbox, generator, blades, converter — the things removed for overhaul and refitted.
+3129	The quantity brought back to store this time. Press "Record the return" on the order to process it.
+3130	Returned DAMAGED — the tool is now locked and cannot be lent out again.
+3131	This kind works the OPPOSITE way to excess: buy more before it runs out, do not cut back.
+3132	Store "%(kho)s" does not have enough "%(sp)s": reserved %(giu)g / needed %(can)g.%(goiy)s
+3133	Only "Emergency" requests take this route. An ordinary request has to go through approval.
+3134	You are not in any approval level currently waiting on request "%(ten)s".\n\nWaiting on: %(ds)s
+3135	Line "%(sp)s": accepted %(dat)g + rejected %(tu)g exceeds the %(nhan)g received.
+3136	EMERGENCY issue, bypassing approval. Recipient: %(ng)s. Paperwork due: %(h)s.
+3137	The reference used by the equipment manufacturer. This is the code for ordering and for warranty claims.
+3138	Note "%s" has already been applied to stock. To correct it, raise a reversing adjustment rather than erasing the old trail.
+3139	SHORT receipt: %s. The missing part stays at the transit location — it has to be found; it does not clear itself.
+3140	Different sources come with different paperwork, and with different people answerable when something is wrong.
+3141	Approved BUT it affects the warranty — check whether the machine is still under warranty before fitting it.
+3142	Once sent it cannot be cancelled — the goods are on their way. Record a short receipt and deal with the missing part.
+3143	On, the figure is safe but over-buys; off, it is closer to reality but sometimes means buying in a hurry.
+3144	You are not assigned to store "%(kho)s", so you cannot take goods from "%(vt)s".\n\nStores assigned to you: %(ds)s
+3145	Line "%(sp)s" returns %(tra)g but only %(con)g is still outstanding (issued %(xuat)g, returned %(dtra)g).
+3146	Positive increases the asset, negative decreases it. This is the figure that decides whether the note needs approval.
+3147	Not every pair is symmetrical: a newer one may replace an older one while the reverse does not hold.
+3148	Taken from the fastest supplier declared. Combine it with "what if it is missing" to arrive at a sensible stock level.
+3149	Links the stock product to the component tree. That is what makes it possible to ask "which assembly does this spare fit" and the other way round.
+3150	Fitting a non-genuine part to a machine still under warranty usually voids the warranty on the WHOLE assembly, not just that part.
+3151	Very few pairs are interchangeable unconditionally. Say plainly: for which models only, under what conditions only, and what else has to be done.
+3152	Sent %(n)d lines from "%(a)s". The goods sit at the transit location until "%(b)s" confirms receipt.
+3153	Received back. The goods go to "Awaiting inspection" — raise an incoming inspection note before returning them to available stock.
+3154	A drawing with no revision number cannot be used for ordering — the manufacturer will come straight back and ask.
+3155	Many spares are made for the manufacturer by a third party. This code is stamped on the part itself, and usually differs from the OEM code.
+3156	The condition on return has to be recorded. Take it back without looking and the next person to borrow it gets a broken one.
+3157	Nothing has moved in 12 months. NOT necessarily excess — a spare for a rare failure is supposed to sit still.
+3158	Counted from the date the goods were RECEIVED, not the date they were fitted. Sit in store for two years and the warranty expires before it is ever used.
+3159	If it arises from a work order, that order has to be named — otherwise the material cost never finds its way back to the order.
+3160	Over 90 days. If this kind runs out there is no buying it in time, so it has to be stocked in advance — quite unlike something available within a week.
+3161	The consequence of needing it and not having it. This, not the price of the part, is what decides how much to stock.
+3162	The person counting and the person approving have to be two different people. Count and approve yourself and the approval step means nothing at all.
+3163	Empty means the goods sit in a shared store that every plant can draw on — it is not missing data.
+3164	Captured when the note is raised. At approval it is compared against current stock — a difference means the store has moved since.
+3165	Gathers the specifications marked "critical" so they are visible on the list itself, before the goods leave the store.
+3166	Photographs of the condition, the survey report, the test results. A disposal without evidence is indistinguishable from a loss.
+3167	<b>Overdue for return.</b> Without a loan book, tools\n                        disappear gradually and nobody knows when.
+3168	Works certificates, test reports, CO/CQ. Missing paperwork is a discrepancy too — mark it on the matching line.
+3169	<b>Overdue.</b> A core returned late is charged for;\n                        a warranty claim made late is lost.
+3170	The planning horizon. Set it at least as long as the longest lead time, or the shortage is discovered when it is already too late to buy.
+3171	Returned with a request for recalibration — the tool is locked and cannot be lent out until a new calibration result arrives.
+3172	Rotable materials: each serial number is an asset with its own installation and warranty history. The same object, two books recording two sides of it.
+3173	Request "%s" has been issued — the goods have left the store and it cannot go back to draft. To recover them, record a return on the work order.
+3174	<b>Short receipt.</b> The missing part stays at the\n                        transit location — it has to be found; it does not clear itself.
+3175	Note "%s" has been checked and has produced its stock movements — it cannot be cancelled. If the check was wrong, raise a stock adjustment with a reason.
+3176	Material bought directly for this job, or supplied by the manufacturer under warranty — it was never in store, so there is nothing to issue.
+3177	An emergency issue goes first and the paperwork follows. Until this box is ticked, the request stays on the outstanding list.
+3178	Some things are replaced every time (filters, oil); some only when an inspection finds them worn. Put both into the forecast and you over-buy steadily.
+3179	An emergency issue still has to declare: %s.\n\nThese are the only three things left to trace it back by, once the goods have left the store with nobody's approval.
+3180	A core returned late is charged for; a warranty claim made late is lost. This deadline is the only thing that stops a note being forgotten.
+3181	The code has to start with "L" (functional location), "A" (equipment), "K" (bin in a store) or "S" (batch / serial). Received: %s
+3182	A specification that, if wrong, means the part does not fit or damages the machine. Shown on the list itself so the storekeeper sees it before the goods go out.
+3183	People look for a spare by holding the old one and reading\n                        the number stamped on its casing. That number is rarely\n                        an internal code of ours.
+3184	This copy is issued through a work order. A request arising from an incident or a maintenance plan should open a work order first and attach to it.
+3185	Line "%s" has rejected goods but no reason. Without one, six months later nobody can answer what exactly this supplier got wrong.
+3186	Note "%s" has no deadline. A note with no deadline is a note that gets forgotten — a core returned late is charged for, a warranty claim made late is lost.
+3187	System stock has CHANGED since the count:\n\n%s\n\nApplying the old figures would erase legitimate movements in between. Count again and raise a new note.
+3188	Material "%s" is not a stockable type, so there is no stock to reserve. If this is a service or a direct purchase, tick "Not through the store".
+3189	This material is not tracked by batch, so no shelf-life warning is possible. Consider setting "Track by batch" and declaring a shelf life on the Stock tab.
+3190	The cycle has to be more than 0 months — a cycle of 0 means it is always overdue, and an overdue list that is always full stops being read.
+3191	Lines with a discrepancy have to state a reason: %s.\n\nA difference caused by miscounting and a difference caused by a loss look exactly alike unless someone writes down why.
+3192	The order that drew this material. It is a real foreign key rather than a note in text, so it can be filtered, counted, and does not break when the order is renumbered.
+3193	Goods here are not yet fit to be fitted to a machine: awaiting inspection, quarantined, damaged, or away for repair. This location cannot be chosen as an issuing store.
+3194	Many manufacturers sell rotable spares on a core-exchange basis: a lower price, with an undertaking to return the old one within a set period. Return it late and you are charged.
+3195	Whether there is any stock at an internal location. Different from "currently installed" — one just removed and not yet back in store is nowhere at all, and that is exactly when it is easiest to lose.
+3196	A measuring tool past its calibration date still turns, still clicks, still gives a number — and that number LOOKS right. So an expired calibration bars the loan rather than prompting a reminder.
+3197	Note "%s" has no evidence attached. A disposal without evidence is indistinguishable from a loss on the books — and the approver has nothing to look at before deciding.
+3198	<b>A discrepancy on %(n)d lines.</b> The rejected goods have gone to <i>Quarantine</i> — they have not been returned to the supplier. Raise a case with the sender before moving them.
+3199	Required for rotable materials. The manufacturer only warrants the one carrying that exact serial number — letting the system pick any one in store throws the warranty claim away.
+3200	Order "%(lenh)s" still has %(n)d material lines not issued: %(ten)s.\n\nIssue them, or tick "Not through the store" for direct purchases and for goods supplied by the manufacturer under warranty.
+3201	Goods away for repair, under warranty claim, or on core return, past the\n               deadline — a core returned late is charged for, a warranty claim\n               made late is lost.
+3202	Being removed from a machine does NOT mean it is usable again. Goods needing inspection or already damaged go to a separate location and are not added to available stock until someone confirms it.
+3203	%(n)d maintenance schedules fall due but NO plan declares any material.\n\nDeclare materials on the maintenance plans first — without the source data there is no demand to consolidate.
+3204	Different from the "component category" (which assembly this spare belongs to). This is whether it is a replacement spare, a consumable, a lubricant or a tool — three things that follow three different stock rules.
+3205	The shelf life of a lubricant runs from the date of manufacture, not the date it was received. Sit at the supplier for a year before arriving and the remaining life is far shorter than it appears.
+3206	"%(sp)s" was issued but NO installation period could be opened: under "%(vt)s" there is no functional location of category "%(loai)s". Declare that location, then record the installation by hand.
+3207	Tool "%(dc)s" %(ly_do)s — it cannot be lent out.\n\nA measuring tool past its validity still gives a number, and that number looks right. A bolt tightened under torque only snaps months later.
+3208	Which store the material comes from. If the crew takes it from the container out on site, choose that store — choose the wrong one and the book is right in total but wrong by place, and nobody finds the goods next time.
+3209	Order "%(lenh)s" still declares a return quantity that has not been recorded: %(ten)s.\n\nPress "Record the return" before closing, otherwise those goods are counted as consumed for good.
+3210	Requesting <b>material that is already in store</b> — unlike a\n               <i>work request</i> (reporting that there is a job to do) and a\n               <i>purchase request</i> (asking for money to buy what we do not have).
+3211	Goods that left the store before anyone approved it. Each row here is\n               a paperwork debt — the sooner it is closed the better, because\n               whoever remembers the event forgets it too.
+3212	Some lines declare a <b>return</b> that has not been recorded. Press\n                    <b>Record the return</b> — otherwise those goods are counted\n                    as consumed for good.
+3213	<b>Long lead-time order.</b> Run out and there is no\n                        buying it in time — the stock level has to follow the\n                        lead time, not the rate of use.
+3214	"These two are interchangeable" is an <b>engineering\n               conclusion</b>, not a note. Once declared it waits for approval —\n               only once engineering has approved it may one be used for the other.
+3215	Material "%s" is tracked by serial number. The exact one to be fitted has to be chosen.\n\nThe manufacturer only warrants the one carrying that serial number — letting the system pick any one throws the warranty claim away.
+3216	Moved in two steps through a transit location. Between them the goods are\n               <b>in transit</b> — countable, traceable, and the sender's\n               responsibility until the receiver signs.
+3217	OEM code "%(ma)s" already points to "%(sp)s". An OEM code may point to only one spare part — if the two really are interchangeable, declare that under Equivalent spares rather than duplicating the code.
+3218	Rejected goods make a <b>reason mandatory</b>.\n                        Without one, six months later nobody can answer the\n                        question "what exactly did this supplier get wrong".
+3219	A measuring tool past its calibration date still turns, still clicks,\n               still gives a number — and that number <b>looks right</b>. So an\n               expired calibration <b>bars the loan</b> rather than prompting a\n               reminder.
+3220	No rule applying means <b>automatic approval</b> — the value is\n               below every threshold. Leaving a request hanging for an approver\n               who does not exist is a sure way to jam the store.
+3221	<b>In transit.</b> It has left the sending store and\n                        not yet arrived at the receiving one — it sits at the\n                        transit location and remains the sender's\n                        responsibility until the receiver signs.
+3222	Approval takes the goods <b>off the books for real</b>, with no\n                        way back. Evidence has to be attached — a disposal\n                        without evidence is indistinguishable from a loss on\n                        the books.
+3223	The installation period of "%(ts)s" records an installation date of %(ngay)s — in the future, so it cannot be removed today.\n\nThat record is a PLAN rather than something that has happened. Correct the installation date to match reality, then issue again.
+3224	A goods receipt note records <b>how much arrived</b>. This note\n               records <b>what it was like on arrival</b> — complete or short,\n               the right code or the wrong one, intact or dented, with a\n               certificate or without.
+3225	Mark as <b>Critical</b> any specification that, if wrong,\n                        means the part does not fit or damages the machine — it\n                        then appears on the spare parts list itself, before the\n                        goods leave the store.
+3226	At approval the system <b>reads stock again</b> and compares\n                        it with the figure captured at the count. A difference\n                        stops it — applying the old figures would erase\n                        legitimate movements in between.
+3227	It only takes effect for users in the "Stores — only the assigned ones are visible" group. Leave it empty while in that group and NO store is visible — deliberately, so that forgetting to fill it in shows up at once rather than quietly granting a view of everything.
+3228	For a site store, choose the plant. LEAVE IT EMPTY for a store shared by every plant — which is the case for the central store holding large spares that move between plants. Empty is not an omission.
+3229	Location "%(vt)s" currently holds "%(cu)s". To fit the new one, the one removed has to be declared: fill in "Equipment removed" on the material line.\n\nWithout it a serialised asset is lost track of — and that is exactly what is needed for a warranty claim years later.
+3230	<b>Emergency issue — PAPERWORK OUTSTANDING.</b> The goods\n                        left the store before anyone approved it. This request\n                        stays on the outstanding list until <i>The file has been\n                        completed</i> is pressed. Due:
+3231	Some material lines have <b>not been taken off stock</b>. Closing the\n                    order's file will be blocked until they are issued, or marked\n                    <i>Not through the store</i> for direct purchases and for goods\n                    supplied by the manufacturer under warranty.
+3232	This catalogue answers the question the storekeeper asks before issuing:\n               <b>does this spare fit that machine</b>. Leave the model as free\n               text and "V150-4.2MW" and "V150 4,2 MW" are two different things\n               to a computer.
+3233	Users in this group see, and can act on, only the\n                stores declared in the "Assigned stores" field.\n                Anyone outside the group is unaffected — administration,\n                accounting and management still see everything.
+3234	Gathers four things of the same shape: a <b>warranty claim</b>, a\n               <b>repair or overhaul</b>, an <b>old core return</b> under a\n               core-exchange agreement, and a <b>wrong-goods return</b>. Every\n               one has a deadline — and the deadline is the only thing that stops\n               a note being forgotten.
+3235	Declaring it here is what makes it possible to consolidate\n                        <b>spare part demand from the maintenance schedule</b>.\n                        Tick <i>replace only when needed</i> for things not\n                        changed every time — put them all into the forecast and\n                        you over-buy steadily.
+3236	Unlike preventive maintenance, which counts <b>running hours</b>.\n               Goods sitting in a store run 0 hours for ever, so they never fall\n               due; while in reality shafts still have to be turned, desiccant\n               replaced, batteries recharged.
+3237	Unlike Odoo's own stock adjustment: here a <b>reason is\n               mandatory</b>, <b>approval is required above a value</b>, and\n               <b>both the before and after figures are kept</b>. A difference\n               caused by miscounting and one caused by a loss look exactly alike\n               unless someone writes down why.
+3238	<b>Three different things; do not merge them.</b> <i>Slow\n               moving</i> may still be right — a spare for a rare failure is\n               supposed to sit still. <i>Excess</i> is the dead money.\n               <i>Discontinued</i> works the other way round: buy more before it\n               runs out.
+3239	Product "%(sp)s" belongs to rotable component category "%(loai)s", so tracking by serial number is MANDATORY.\n\nA rotable material is removed and refitted. Without a serial number, after the second overhaul nobody knows which one is where — and the manufacturer warrants the one carrying that serial number, not "a %(loai)s".
+3240	It only takes effect for users in the\n                        <b>Stores — only the assigned ones are visible</b> group.\n                        Leave it empty while in that group and <b>no store is\n                        visible</b> — deliberately, so that forgetting to fill it\n                        in shows up at once rather than quietly granting a view\n                        of everything.
+3241	The goods are sitting in <b>Awaiting inspection</b> and are\n                        <b>not counted in available stock</b>. Once confirmed,\n                        what is accepted goes to its bin and what is rejected\n                        goes to <b>Quarantine</b> — not straight back to the\n                        supplier, because a return is a document of its own.
+3242	<b>Three different figures.</b> <i>Requested</i> is what was\n                    asked for and what gets reserved; <i>Issued</i> is what the\n                    store handed out; <i>Returned</i> is what came back.\n                    <b>Used = Issued − Returned, and that is the figure that is\n                    charged.</b><br/>\n                    Returned goods do <b>not</b> go straight into available stock\n                    unless "Still good" is chosen. Being removed from a machine\n                    does not mean it is usable again.

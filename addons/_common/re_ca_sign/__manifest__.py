@@ -26,9 +26,22 @@ Ba đường ký, chọn bằng tham số ``re_ca_sign.provider``:
    chứng thực cấp, nên Adobe báo "chữ ký hợp lệ nhưng chưa tin cậy được
    người ký". Dùng để chạy thử và demo.
 2. ``smartca`` — **ký số từ xa**: chứng thư nằm trong HSM của nhà cung
-   cấp (VNPT SmartCA, Viettel, FPT.eSign…). Hệ thống gửi MÃ BĂM của
-   tài liệu, người ký xác nhận trên điện thoại, nhà cung cấp trả chữ ký
-   về. Khoá riêng KHÔNG bao giờ rời HSM.
+   cấp. Hệ thống gửi MÃ BĂM của tài liệu, người ký xác nhận trên điện
+   thoại, nhà cung cấp trả chữ ký về. Khoá riêng KHÔNG bao giờ rời HSM.
+
+   Đã nối **Viettel MySign** theo tài liệu tích hợp ký bất đồng bộ của
+   Viettel-CA (chuẩn Cloud Signature Consortium): login →
+   credentials/list → signHash → requests/status. Khai kết nối ở
+   **Cài đặt ▸ Ký số CA ▸ Kết nối nhà cung cấp**.
+
+   Bản khai chỉ dùng được sau khi bấm *Kiểm tra kết nối* và lấy được
+   chứng thư thật về — khai đủ ô mà chưa kiểm thì hệ thống từ chối ký,
+   có chủ ý: một màn cấu hình trông như đã nối là thứ nguy hiểm nhất
+   lúc demo.
+
+   Các nhà cung cấp khác (VNPT SmartCA, FPT.eSign) cùng chuẩn CSC nên
+   khác chủ yếu ở đường dẫn và tên trường — thêm một giá trị vào ô
+   *Nhà cung cấp* là nối được.
 3. ``token`` — token USB cắm ở máy người ký. **Máy chủ không với tới
    được**: phải có phần mềm ký chạy trên chính máy đó. Để đây cho đủ
    bản đồ, chưa làm.
@@ -41,6 +54,7 @@ Ba đường ký, chọn bằng tham số ``re_ca_sign.provider``:
     'data': [
         'security/ir.model.access.csv',
         'views/re_ca_config_views.xml',
+        'views/re_ca_provider_views.xml',
         'views/re_ca_signature_views.xml',
     ],
     'installable': True,

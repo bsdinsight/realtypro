@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_re_ca_signature_user,re.ca.signature.user,model_re_ca_signature,re_base.group_re_user,1,1,1,0
 access_re_ca_signature_manager,re.ca.signature.manager,model_re_ca_signature,re_base.group_re_manager,1,1,1,1
+access_re_ca_provider_manager,re.ca.provider.manager,model_re_ca_provider,re_base.group_re_manager,1,1,1,1

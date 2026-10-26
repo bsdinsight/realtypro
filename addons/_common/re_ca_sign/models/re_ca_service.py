@@ -172,7 +172,7 @@ class ReCaService(models.AbstractModel):
     # ------------------------------------------------------------------
     @api.model
     def sign_pdf(self, pdf_bytes, signer_name, reason=None, location=None,
-                 field_name='ChuKySo'):
+                 field_name='ChuKySo', doc_name=None):
         """Ký PDF, trả về bytes PDF đã ký.
 
         Ký kiểu *incremental update*: nội dung cũ giữ nguyên từng byte,
@@ -192,7 +192,10 @@ class ReCaService(models.AbstractModel):
                 "được — phải có phần mềm ký chạy trên chính máy đó. Chọn "
                 "'Ký số từ xa' hoặc 'Chứng thư thử' trong cấu hình."))
         if nha_cc == 'smartca':
-            signer = self._signer_smartca(signer_name)
+            # Tên tài liệu đi theo yêu cầu ký và hiện trên app MySign —
+            # người ký nhìn vào đó để biết mình đang ký cái gì, nên để
+            # tên chứng từ chứ không để tên người ký.
+            signer = self._signer_smartca(signer_name, doc_name)
         else:
             signer = self._signer_test()
 
@@ -214,33 +217,36 @@ class ReCaService(models.AbstractModel):
     # Ký số từ xa — khoá nằm trong HSM nhà cung cấp
     # ------------------------------------------------------------------
     @api.model
-    def _signer_smartca(self, signer_name):
-        """CHƯA CHẠY THẬT — cần hợp đồng và tài khoản của nhà cung cấp CA.
+    def _signer_smartca(self, signer_name, doc_name=None):
+        """Ký số từ xa — khoá nằm trong HSM của nhà cung cấp.
 
-        Hình dạng chung của mọi nhà cung cấp ký số từ xa ở Việt Nam
-        (VNPT SmartCA, Viettel, FPT.eSign) giống nhau, khác ở đường dẫn
-        và tên trường:
-
-        1. Lấy vé truy cập bằng client_id/client_secret.
-        2. Hỏi danh sách chứng thư của người ký → lấy chuỗi chứng thư.
-        3. Gửi MÃ BĂM của dải byte cần ký, kèm định danh người ký.
-        4. Người ký bấm xác nhận trên ứng dụng điện thoại.
-        5. Hỏi lại tới khi có kết quả → nhận chữ ký thô.
-        6. Nhét chữ ký vào đúng chỗ trống đã chừa trong PDF.
-
-        pyhanko làm được bước 6 bằng ``ExternalSigner`` + ký hai pha
-        (``PdfTBSDocument``). Phần còn lại là gọi REST, viết khi có tài
-        khoản — viết mò bây giờ thì không cách nào biết đúng hay sai, mà
-        một lớp ký "trông như chạy" còn nguy hơn là chưa có.
+        Bản khai kết nối nằm ở ``re.ca.provider`` (Cài đặt ▸ Ký số CA).
+        Hàm này KHÔNG tự xoay xở khi bản khai chưa được kiểm: thà dừng
+        với một câu nói rõ thiếu gì, còn hơn gửi một yêu cầu ký mà không
+        biết nó đi tới đâu — người ký sẽ nhận một thông báo lạ trên điện
+        thoại và không ai lần ra được vì sao.
         """
-        raise UserError(_(
-            "Ký số từ xa chưa nối được: cần tài khoản của nhà cung cấp "
-            "chứng thực (VNPT SmartCA / Viettel-CA / FPT.eSign) gồm "
-            "client_id, client_secret và định danh người ký.\n\n"
-            "Hiện đang để chế độ 'Chứng thư thử' — cơ chế ký và kiểm tra "
-            "là thật, chỉ thiếu việc chứng thư do tổ chức chứng thực cấp, "
-            "nên Adobe sẽ báo chữ ký hợp lệ nhưng chưa tin cậy được người "
-            "ký."))
+        from .re_ca_provider import MySignSigner
+
+        prov = self.env['re.ca.provider']._tim_cho()
+        if not prov:
+            raise UserError(_(
+                "Chưa khai kết nối ký số từ xa. Vào Cài đặt ▸ Ký số CA ▸ "
+                "Kết nối nhà cung cấp, khai thông tin Viettel-CA cấp "
+                "(địa chỉ máy chủ, client_id, client_secret, ID người "
+                "ký) rồi bấm Kiểm tra kết nối."))
+        if prov.trang_thai != 'ok':
+            raise UserError(_(
+                "Kết nối %(n)s chưa kiểm được nên chưa ký số từ xa "
+                "được.\n\n%(g)s\n\nMở bản khai, bấm Kiểm tra kết nối; "
+                "chỉ khi lấy được chứng thư về thì mới ký thật được.",
+                n=prov.display_name,
+                g=prov.ghi_chu or _('(chưa chạy lần kiểm tra nào)')))
+        if not prov.cert_chain or not prov.credential_id:
+            raise UserError(_(
+                "Kết nối %s thiếu chứng thư hoặc credential_id — chạy "
+                "lại Kiểm tra kết nối.") % prov.display_name)
+        return MySignSigner(prov, doc_name or signer_name).signer
 
     # ------------------------------------------------------------------
     @api.model
@@ -254,8 +260,20 @@ class ReCaService(models.AbstractModel):
         from pyhanko.sign.validation import validate_pdf_signature
 
         kq = []
-        r = PdfFileReader(io.BytesIO(pdf_bytes))
-        for sig in r.embedded_signatures:
+        # Mở tệp phải nằm trong tay bắt lỗi RIÊNG: một tệp hỏng nặng thì
+        # chết ngay ở bước đọc cấu trúc PDF, trước khi tới được vòng lặp
+        # bên dưới. Không bọc thì người dùng bấm "Kiểm tra" trên một tệp
+        # hỏng sẽ lĩnh nguyên màn traceback — mà "tệp hỏng" chính là
+        # điều ta cần nói cho họ biết, không phải điều cần giấu đi.
+        try:
+            r = PdfFileReader(io.BytesIO(pdf_bytes))
+            ds = list(r.embedded_signatures)
+        except Exception as e:  # noqa: BLE001
+            return [{'name': '?', 'error': _(
+                'Không đọc được tệp PDF (%s). Tệp hỏng hoặc đã bị sửa '
+                'bằng công cụ làm vỡ cấu trúc — chữ ký không còn kiểm '
+                'được.') % str(e)[:200]}]
+        for sig in ds:
             try:
                 st = validate_pdf_signature(sig)
                 kq.append({

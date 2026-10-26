@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_re_ca_provider_list" model="ir.ui.view">
+        <field name="name">re.ca.provider.list</field>
+        <field name="model">re.ca.provider</field>
+        <field name="arch" type="xml">
+            <!-- KHÔNG đưa client_secret ra danh sách. Danh sách là thứ
+                 hay bị chiếu lên máy chiếu lúc demo. -->
+            <list string="Kết nối ký số từ xa"
+                  decoration-muted="trang_thai == 'chua'"
+                  decoration-danger="trang_thai == 'loi'">
+                <field name="name" width="220px"/>
+                <field name="kieu" width="170px"/>
+                <field name="nguoi_ky_id" width="220px"/>
+                <field name="user_id" string="ID người ký" width="160px"/>
+                <field name="trang_thai" widget="badge"
+                       decoration-success="trang_thai == 'ok'"
+                       decoration-danger="trang_thai == 'loi'"
+                       width="150px"/>
+                <field name="kiem_luc" width="170px"/>
+                <field name="cert_valid_to" string="Chứng thư đến"
+                       width="180px"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       width="200px"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_re_ca_provider_form" model="ir.ui.view">
+        <field name="name">re.ca.provider.form</field>
+        <field name="model">re.ca.provider</field>
+        <field name="arch" type="xml">
+            <form string="Kết nối ký số từ xa">
+                <header>
+                    <button name="action_kiem_tra" type="object"
+                            string="Kiểm tra kết nối" class="btn-primary"
+                            icon="fa-plug"/>
+                    <field name="trang_thai" widget="statusbar"
+                           statusbar_visible="chua,ok"/>
+                </header>
+                <sheet>
+                    <!-- Lời cảnh báo này ở ngay đầu màn, không giấu vào
+                         help của trường: người khai cần biết TRƯỚC khi
+                         gõ rằng khai xong chưa phải là ký được. -->
+                    <div class="alert alert-info" role="alert"
+                         invisible="trang_thai == 'ok'">
+                        Khai xong <b>chưa</b> ký được. Phải bấm
+                        <b>Kiểm tra kết nối</b> và lấy được chứng thư về
+                        từ máy chủ Viettel thì hệ thống mới cho ký số từ
+                        xa. Mọi thông tin dưới đây do Viettel-CA cấp khi
+                        ký hợp đồng tích hợp MySign.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="trang_thai != 'loi'">
+                        <field name="ghi_chu" readonly="1" nolabel="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Viettel MySign"/></h1>
+                    </div>
+                    <group>
+                        <group string="Nhà cung cấp">
+                            <field name="kieu"/>
+                            <field name="base_url"
+                                   placeholder="https://remotesigning.viettel.vn"/>
+                            <field name="active"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Tài khoản ký">
+                            <field name="client_id"/>
+                            <field name="client_secret" password="True"/>
+                            <field name="user_id"/>
+                            <field name="profile_id"/>
+                            <field name="nguoi_ky_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Cách ký">
+                            <field name="thuat_toan_bam"/>
+                            <field name="cho_toi_da_giay"/>
+                            <field name="nhip_hoi_giay"/>
+                        </group>
+                        <group string="Chứng thư lấy từ máy chủ"
+                               invisible="trang_thai != 'ok'">
+                            <field name="cert_subject"/>
+                            <field name="cert_issuer"/>
+                            <field name="cert_valid_from"/>
+                            <field name="cert_valid_to"/>
+                            <field name="key_algo"/>
+                            <field name="key_len"/>
+                            <field name="credential_id"/>
+                            <field name="kiem_luc"/>
+                        </group>
+                    </group>
+                    <group invisible="trang_thai != 'ok'">
+                        <field name="ghi_chu" readonly="1"/>
+                    </group>
+                    <field name="cert_chain" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_re_ca_provider_search" model="ir.ui.view">
+        <field name="name">re.ca.provider.search</field>
+        <field name="model">re.ca.provider</field>
+        <field name="arch" type="xml">
+            <search string="Kết nối ký số từ xa">
+                <field name="name"/>
+                <field name="user_id" string="ID người ký"/>
+                <field name="nguoi_ky_id"/>
+                <filter name="f_d_kiem_luc" string="Kiểm lúc" date="kiem_luc"/>
+                <separator/>
+                <filter name="f_ok" string="Kết nối được"
+                        domain="[('trang_thai', '=', 'ok')]"/>
+                <filter name="f_chua" string="Chưa kiểm"
+                        domain="[('trang_thai', '=', 'chua')]"/>
+                <filter name="f_loi" string="Lỗi"
+                        domain="[('trang_thai', '=', 'loi')]"/>
+                <separator/>
+                <filter name="g_tt" string="Tình trạng"
+                        context="{'group_by': 'trang_thai'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_re_ca_provider" model="ir.actions.act_window">
+        <field name="name">Kết nối nhà cung cấp</field>
+        <field name="res_model">re.ca.provider</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_re_ca_provider_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa khai kết nối nào</p>
+            <p>Ký số từ xa nghĩa là <b>khoá riêng nằm trong HSM của nhà
+               cung cấp</b>, không nằm ở đây. Hệ thống gửi đi mã băm của
+               tài liệu, người ký bấm xác nhận trên điện thoại, nhà cung
+               cấp trả chữ ký về. Kể cả máy chủ này bị chiếm quyền cũng
+               không ai ký thay người khác được.</p>
+            <p>Cần bốn thứ Viettel-CA cấp khi ký hợp đồng tích hợp
+               MySign: địa chỉ máy chủ, <i>client_id</i>,
+               <i>client_secret</i> và <i>ID người ký</i>. Chưa có hợp
+               đồng thì để nguyên chế độ <b>Chứng thư thử</b> — cơ chế ký
+               và kiểm tra vẫn là thật, chỉ thiếu việc chứng thư do tổ
+               chức chứng thực cấp.</p>
+        </field>
+    </record>
+
+    <!-- Treo vào Cài đặt chứ không vào EPCOne/EAMOne: re_ca_sign là
+         module nền dùng chung, không được biết tới menu của sản phẩm
+         nào cụ thể. -->
+    <menuitem id="menu_re_ca_root" name="Ký số CA"
+              parent="base.menu_administration" sequence="90"
+              groups="re_base.group_re_manager"/>
+    <menuitem id="menu_re_ca_provider" name="Kết nối nhà cung cấp"
+              parent="menu_re_ca_root" action="action_re_ca_provider"
+              sequence="10"/>
+
+</odoo>

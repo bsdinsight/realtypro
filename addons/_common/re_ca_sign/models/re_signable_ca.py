@@ -54,7 +54,8 @@ class ReSignableCa(models.AbstractModel):
 
         ten_nguoi_ky = self.env.user.name
         da_ky = S.sign_pdf(
-            pdf, signer_name=ten_nguoi_ky, reason=self._ca_reason())
+            pdf, signer_name=ten_nguoi_ky, reason=self._ca_reason(),
+            doc_name=self.display_name)
 
         ban = self.env['re.ca.signature'].create({
             'res_model': self._name,

@@ -354,9 +354,18 @@ class EamLocation(models.Model):
         cap = []
         for i, a in enumerate(diem):
             for b in diem[i + 1:]:
-                d = max(a['rotor_d'] or 0.0, b['rotor_d'] or 0.0)
-                if not d:
+                # CẢ HAI phải là tua-bin. Giãn cách là luật về dòng khí
+                # sau cánh quạt, nên chỉ có nghĩa giữa hai cỗ máy cùng
+                # quấy động không khí. Trước đây lấy `max` hai đường
+                # kính: điểm nào không có rotor — trạm biến áp, cột khí
+                # tượng, điểm đo — liền MƯỢN đường kính của tua-bin bên
+                # cạnh rồi bị chấm là quá gần.
+                # Đã báo nhầm thật: trạm nâng áp DG123 cách T12 356 m,
+                # màn hình đòi 750 m. Trạm biến áp đứng cách trụ ba trăm
+                # mét là chuyện bình thường ở mọi nhà máy điện gió.
+                if not (a['rotor_d'] and b['rotor_d']):
                     continue
+                d = max(a['rotor_d'], b['rotor_d'])
                 kc = self._khoang_cach_m(a['lat'], a['lon'],
                                          b['lat'], b['lon'])
                 if kc < boi * d:

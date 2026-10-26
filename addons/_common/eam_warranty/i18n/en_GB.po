@@ -38,6 +38,16 @@ msgid "Còn hạn"
 msgstr "In warranty"
 
 #. module: eam_warranty
+#: model:ir.model.fields.selection,name:eam_warranty.selection__eam_asset__nguon_goc__khac
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Nhà sản xuất"
 msgstr "Manufacturer"

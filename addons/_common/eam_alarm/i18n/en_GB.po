@@ -1,0 +1,1566 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_alarm
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__auto_wo
+msgid ""
+"\"Tạo lệnh ngay\" chỉ nên dùng cho mức nghiêm trọng. Một đầu đo bị nhiễu nổ 500 cảnh báo một đêm sẽ thành 500 lệnh rác, và sau đó không ai đọc danh sách lệnh nữa.\n"
+"\n"
+"\"Mở YÊU CẦU\" là lựa chọn đúng cho cảnh báo mức thấp: nó vào sổ yêu cầu để người điều độ xem có đáng mở lệnh không, thay vì vào thẳng danh sách việc phải làm."
+msgstr ""
+"\"Create order now\" should be reserved for critical severity. One noisy sensor raising 500 alarms in a night becomes 500 junk orders, after which nobody reads the order list any more.\n"
+"\n"
+"\"Open a REQUEST\" is the right choice for low-level alarms: it goes into the request log for the dispatcher to judge whether an order is warranted, instead of straight onto the list of work to be done."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "%(nhan)s đang %(tri).2f %(dv)s, %(huong)s ngưỡng %(ng).2f."
+msgstr "%(nhan)s is at %(tri).2f %(dv)s, %(huong)s the %(ng).2f threshold."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "%(ten)s ngừng gửi số đã %(gio).1f giờ (mốc cuối %(c)s). Trong lúc nó im, mọi luật ngưỡng canh trên chính điểm đo này cũng im theo — kiểm ĐƯỜNG TRUYỀN trước khi cử người ra trụ."
+msgstr "%(ten)s has not sent a reading for %(gio).1f hours (last at %(c)s). While it is silent, every threshold rule watching this same tag is silent too — check the LINK before sending anyone up the tower."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "%(ten)s đang %(v).3f %(dv)s — %(nhan)s %(dai)s, liên tục %(p)d phút (%(n)d số đo, không có mốc nào ngược lại)."
+msgstr "%(ten)s is at %(v).3f %(dv)s — %(nhan)s %(dai)s, sustained for %(p)d minutes (%(n)d readings, none of them to the contrary)."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "%(ten)s đứng im ở %(v).3f suốt %(n)d phút — số vẫn về đều nên KHÔNG phải mất tín hiệu, mà là giá trị không đổi. Hai chuyện ấy sửa ở hai nơi khác nhau."
+msgstr "%(ten)s has been frozen at %(v).3f for %(n)d minutes — readings keep arriving, so this is NOT a lost signal but a value that will not move. The two are fixed in different places."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "%s chưa có số đo nào."
+msgstr "%s has no readings yet."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid ""
+").\n"
+"                    Tới hạn hệ <b>tự bật lại</b> và ghi vào trao đổi —\n"
+"                    người hoãn không phải nhớ."
+msgstr ""
+").\n"
+"                    At the deadline the system <b>reopens it</b> and writes a note —\n"
+"                    whoever snoozed it does not have to remember."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid ". Xử lý ở cảnh báo gốc."
+msgstr ". Handle it on the root alarm."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid ""
+"<b>Mất số đọc</b> là đường truyền chết, không\n"
+"                                phải máy chết. Việc phải làm là kiểm tra kết\n"
+"                                nối — đừng cử người leo trụ."
+msgstr ""
+"<b>No readings</b> means the link is dead, not the\n"
+"                                machine. The thing to do is check the\n"
+"                                connection — do not send anyone up the tower."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid ""
+"<b>Tạo ngay</b> chỉ nên dùng cho mức nghiêm\n"
+"                            trọng. Một đầu đo bị nhiễu nổ 500 cảnh báo một\n"
+"                            đêm sẽ thành 500 lệnh rác, và sau đó không ai\n"
+"                            đọc danh sách lệnh nữa — kể cả lệnh thật."
+msgstr ""
+"<b>Create at once</b> should be reserved for critical\n"
+"                            severity. One noisy sensor raising 500 alarms in a\n"
+"                            night becomes 500 junk orders, after which nobody\n"
+"                            reads the order list any more — real ones included."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid ""
+"<b>Đồng hồ đứng im</b> là số đọc vẫn về đều\n"
+"                                mà giờ chạy không tăng: máy dừng thật. Khác\n"
+"                                hẳn mất số đọc — lẫn hai cái là chạy nhầm\n"
+"                                hướng."
+msgstr ""
+"<b>Meter stalled</b> means readings keep arriving\n"
+"                                while the running hours do not increase: the\n"
+"                                machine really is down. Quite different from\n"
+"                                no readings — confusing the two sends you the\n"
+"                                wrong way."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "<span class=\"o_stat_text\">Lệnh công việc</span>"
+msgstr "<span class=\"o_stat_text\">Work orders</span>"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_snooze_wizard__ly_do
+msgid "Ba tháng sau, đây là thứ duy nhất giải thích vì sao một cảnh báo nghiêm trọng từng bị tắt tiếng."
+msgstr "Three months on, this is the only thing that explains why a critical alarm was once silenced."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_detection__scada
+msgid "Báo động từ hệ giám sát"
+msgstr "Alarm from the monitoring system"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_ack_wizard__binh_luan
+msgid "Bình luận"
+msgstr "Comment"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_priority__1
+msgid "Bình thường"
+msgstr "Normal"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_work_type__predictive
+msgid "Bảo trì theo trạng thái"
+msgstr "Condition-based maintenance"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Bất thường gì, ở đâu"
+msgstr "What is abnormal, and where"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "Bỏ hoãn"
+msgstr "Unsnooze"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Bỏ hoãn, cảnh báo bật lại."
+msgstr "Unsnoozed, the alarm is back on."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
+msgid "Bỏ qua"
+msgstr "Dismiss"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+#: model:ir.model,name:eam_alarm.model_eam_alarm_ignore_wizard
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
+msgid "Bỏ qua cảnh báo"
+msgstr "Dismiss alarm"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Bỏ qua cảnh báo \"%s\" thì phải ghi lý do. Không ghi thì sau sáu tháng sổ cảnh báo đầy dòng \"đã bỏ qua\" mà không ai nhớ vì sao, kể cả người bỏ qua."
+msgstr "Dismissing alarm \"%s\" requires a reason. Without one, six months later the alarm log is full of \"dismissed\" rows and nobody remembers why — not even the person who dismissed them."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
+msgid ""
+"Bỏ qua là một quyết định có hậu quả. Ghi rõ vì sao, để\n"
+"                   sáu tháng sau còn đọc lại được."
+msgstr ""
+"Dismissing is a decision with consequences. Write down why, so that\n"
+"                   it can still be read six months later."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Bỏ qua. Lý do: %s"
+msgstr "Dismissed. Reason: %s"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__clear_on_wo_done
+msgid "Bỏ tích khi cảnh báo phải tự tắt bằng số đo trở lại bình thường — sửa xong mà độ rung vẫn cao thì chưa sửa được."
+msgstr "Untick when the alarm must clear itself through readings returning to normal — if vibration is still high after the repair, it was not repaired."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Cao và nghiêm trọng"
+msgstr "High and critical"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__pm_plan_id
+msgid "Chép bước công việc của kế hoạch này sang lệnh. Để trống thì lệnh chỉ có mô tả — người ra hiện trường phải tự nghĩ làm gì."
+msgstr "Copy this plan's work steps onto the order. Leave it empty and the order carries only a description — the person on site has to work out what to do."
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm
+msgid "Chưa có cảnh báo nào"
+msgstr "No alarms yet"
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm_tai_phat
+msgid ""
+"Chưa có cảnh báo nào\n"
+"               tái phát"
+msgstr ""
+"No alarm has\n"
+"               recurred yet"
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm_rule
+msgid ""
+"Chưa khai luật cảnh báo\n"
+"               nào"
+msgstr ""
+"No alarm rule has been\n"
+"               defined yet"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Chưa xác nhận"
+msgstr "Unacknowledged"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__chi_khi_phat
+msgid "Chỉ báo khi nhà máy đang phát"
+msgstr "Only alert while the plant is generating"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__gio_tu
+msgid "Chỉ báo từ giờ"
+msgstr "Only alert from hour"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__tag_code_2
+msgid "Chỉ dùng cho luật LỆCH CẢM BIẾN: hai cảm biến đo cùng một đại lượng mà chênh nhau quá ngưỡng thì một trong hai đã trôi — và không ai biết cái nào nếu chỉ nhìn một cái."
+msgstr "Only for SENSOR-DEVIATION rules: two sensors measuring the same quantity that disagree beyond the threshold mean one of them has drifted — and looking at one alone tells you nothing about which."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Chọn từ hai cảnh báo trở lên để gom."
+msgstr "Pick two or more alarms to group them."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
+msgid "Chờ phụ tùng về · chờ cửa sổ dừng máy tháng sau…"
+msgstr "Waiting for a spare · waiting for next month's outage window…"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__repeat_window_days
+msgid "Coi là TÁI PHÁT nếu quay lại trong … ngày"
+msgstr "Count as a RECURRENCE if it returns within … days"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_detection__other
+msgid "Cách khác"
+msgstr "Other"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__company_id
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_ignore_wizard__alarm_ids
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__alarm_ids
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Cảnh báo"
+msgstr "Alarm"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo \"%s\" không còn ở trạng thái mới."
+msgstr "Alarm \"%s\" is no longer in the new state."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo \"%s\" đã có lệnh hoặc đã khép."
+msgstr "Alarm \"%s\" already has an order, or is closed."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo \"%s\" đã khép."
+msgstr "Alarm \"%s\" is already closed."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo \"%s\" đã được xử lý rồi."
+msgstr "Alarm \"%s\" has already been handled."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "Cảnh báo GỐC của"
+msgstr "ROOT alarm of"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__child_alarm_ids
+msgid "Cảnh báo cùng gốc"
+msgstr "Alarms under the same root"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo không có nội dung"
+msgstr "The alarm has no message"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo này chưa có lệnh công việc."
+msgstr "This alarm has no work order."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "Cảnh báo này thuộc một sự cố lớn hơn:"
+msgstr "This alarm belongs to a larger incident:"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Cảnh báo này đã"
+msgstr "This alarm has"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Cảnh báo này đã TÁI PHÁT lần thứ %(n)d sau khi đóng lệnh %(l)s ngày %(d)s. Lần sửa đó không giữ được — xem lại nguyên nhân gốc thay vì sửa lại y như cũ."
+msgstr "This alarm has RECURRED for the %(n)d time since order %(l)s was closed on %(d)s. That repair did not hold — look again at the root cause instead of repeating it."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__repeat_window_days
+msgid "Cảnh báo quay lại ngay sau khi vừa đóng lệnh nghĩa là lần sửa đó không giữ được. Đây là con số đáng xem nhất của cả sổ cảnh báo."
+msgstr "An alarm coming straight back after an order is closed means that repair did not hold. This is the most worthwhile number in the whole alarm log."
+
+#. module: eam_alarm
+#: model:ir.model,name:eam_alarm.model_eam_alarm
+msgid "Cảnh báo thiết bị"
+msgstr "Equipment alarm"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Cảnh báo trong lệnh này đã"
+msgstr "Alarms in this order have"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_work_order__alarm_repeat_max
+msgid "Cảnh báo trong lệnh này đã tái phát bao nhiêu lần sau sửa. Lớn hơn 0 nghĩa là lần sửa trước không giữ được — làm lại y như cũ thì kết quả sẽ y như cũ."
+msgstr "How many times the alarms in this order have recurred after repair. Above 0 means the previous repair did not hold — repeat the same fix and the result will be the same."
+
+#. module: eam_alarm
+#: model:ir.ui.menu,name:eam_alarm.menu_eam_alarm_repeat
+msgid "Cảnh báo tái phát"
+msgstr "Recurring alarms"
+
+#. module: eam_alarm
+#: model:ir.actions.act_window,name:eam_alarm.action_eam_alarm_tai_phat
+msgid "Cảnh báo tái phát sau sửa"
+msgstr "Alarm recurring after repair"
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm
+msgid ""
+"Cảnh báo tới từ luật tự quét đồng hồ, từ hệ ngoài đẩy vào,\n"
+"               hoặc do người trực tự báo. Mỗi dòng là một <b>đợt</b> —\n"
+"               nổ lại trong đợt chỉ cộng số lần, không sinh dòng mới."
+msgstr ""
+"Alarms arrive from rules scanning meters, from outside systems pushing\n"
+"               them in, or from an operator reporting one. Each row is an <b>episode</b> —\n"
+"               being raised again within the episode only adds to the count, it does not\n"
+"               create a new row."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_work_order__alarm_ids
+msgid "Cảnh báo đã gộp"
+msgstr "Alarms grouped"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+#: code:addons/eam_alarm/models/eam_work_order.py:0
+msgid "Cảnh báo — %s"
+msgstr "Alarm — %s"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__note
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__window_days
+msgid "Dùng cho \"đồng hồ đứng im\" và \"mất số đọc\". Đặt ngắn hơn nhịp gửi số đọc thì luật nổ liên tục — nhịp ngày thì đừng đặt 1."
+msgstr "For \"meter stalled\" and \"no readings\". Set it shorter than the reading interval and the rule fires constantly — with a daily interval, do not set 1."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__request_id
+msgid "Dùng cho cảnh báo mức thấp: vào sổ yêu cầu để người điều độ phân loại, thay vì vào thẳng danh sách việc phải làm."
+msgstr "For low-level alarms: send it to the request log for the dispatcher to triage, instead of straight onto the list of work to be done."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__lech_pct
+msgid "Dùng cho luật lệch cảm biến. Tính theo phần trăm của trị LỚN HƠN, để một cảm biến chết về 0 vẫn lộ ra thay vì chia cho 0."
+msgstr "For sensor-deviation rules. Computed as a percentage of the LARGER value, so that a sensor dying to 0 still shows up instead of dividing by zero."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__threshold_2
+msgid "Dùng cho điều kiện DẢI: ngưỡng dưới ở ô Ngưỡng, ngưỡng trên ở đây."
+msgstr "For BAND conditions: the lower bound goes in Threshold, the upper bound here."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__operator
+msgid "Dải dùng cả Ngưỡng (dưới) và Ngưỡng trên. \"Ngoài dải\" là thứ hay cần nhất: nhiệt độ hộp số quá cao HOẶC quá thấp đều là chuyện, mà khai hai luật thì hai lần phải sửa."
+msgstr "A band uses both Threshold (lower) and Upper threshold. \"Outside the band\" is what is needed most often: gearbox temperature too high OR too low both matter, and two separate rules mean fixing things twice."
+
+#. module: eam_alarm
+#: model:ir.actions.server,name:eam_alarm.cron_het_hoan_ir_actions_server
+msgid "EAMOne: bật lại cảnh báo đã hết hạn hoãn"
+msgstr "EAMOne: reopen alarms whose snooze has expired"
+
+#. module: eam_alarm
+#: model:ir.actions.server,name:eam_alarm.cron_eam_alarm_quet_ir_actions_server
+msgid "EAMOne: quét luật cảnh báo thiết bị"
+msgstr "EAMOne: scan equipment alarm rules"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_detection
+msgid "Ghi \"phát hiện bằng\""
+msgstr "Record \"detected by\""
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Ghi vào đây thứ người ra hiện trường cần biết: xem cái gì, so với cái gì."
+msgstr "Write here what the person going on site needs to know: what to look at, and what to compare it with."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_detection__condition
+msgid "Giám sát trạng thái, đo rung"
+msgstr "Condition monitoring, vibration"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__plant_id
+msgid "Giới hạn trong nhà máy"
+msgstr "Limited to the plant"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__meter_type__operating_hours
+msgid "Giờ máy chạy"
+msgstr "Running hours"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__gio_tu
+msgid "Giờ địa phương của nhà máy. Để trống cùng với ô kia là báo cả ngày."
+msgstr "Plant local time. Leave it empty together with the other box to alert around the clock."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__value_seen
+msgid "Giữ lại số ĐO ĐƯỢC, không chỉ giữ câu chữ. Không có nó thì sau này không đối chiếu lại được là cảnh báo nổ vì vượt bao nhiêu."
+msgstr "Keep the MEASURED value, not just the words. Without it there is no way to check afterwards by how much the alarm was over threshold."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Gom %(n)d cảnh báo về đây làm một sự cố: %(ds)s"
+msgstr "Grouped %(n)d alarms here as one incident: %(ds)s"
+
+#. module: eam_alarm
+#: model:ir.actions.server,name:eam_alarm.action_gom_goc
+msgid "Gom về một sự cố"
+msgstr "Group into one incident"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__tag_code
+msgid "Gọi theo MÃ, không theo bản ghi: một luật phải chạy được cho mọi nhà máy cùng nếp đặt mã. Kết thúc bằng \"*\" để khớp nhiều điểm — \"T*_TGB\" là nhiệt độ hộp số mọi tua-bin."
+msgstr "Addressed by CODE, not by record: one rule has to work across every plant that follows the same code convention. End with \"*\" to match several points — \"T*_TGB\" is gearbox temperature on every turbine."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Gộp thêm cảnh báo: %s"
+msgstr "Also grouped in: %s"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "Gỡ khỏi cảnh báo gốc"
+msgstr "Detach from root alarm"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "Hai cảm biến lệch %(l).1f%%: %(a)s đang %(va).3f, %(b)s đang %(vb).3f. Một trong hai đã trôi — và nhìn riêng từng cái thì cả hai đều nằm trong dải hợp lý, nên chỉ phép so này mới thấy."
+msgstr "Two sensors disagree by %(l).1f%%: %(a)s is at %(va).3f, %(b)s is at %(vb).3f. One of them has drifted — and taken separately both sit in a plausible range, so only this comparison reveals it."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__tag_deviation
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__tag_deviation
+msgid "Hai cảm biến lệch nhau"
+msgstr "Two sensors disagree"
+
+#. module: eam_alarm
+#: model:ir.actions.server,name:eam_alarm.action_hoan_lo
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
+msgid "Hoãn"
+msgstr "Snooze"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
+msgid ""
+"Hoãn <b>luôn có hạn</b>. Tới hạn hệ tự bật lại và ghi\n"
+"                    vào trao đổi của cảnh báo — tắt vĩnh viễn là cách một\n"
+"                    nhà máy mất hẳn một lớp canh gác mà không ai nhớ đã\n"
+"                    tắt gì."
+msgstr ""
+"A snooze <b>always has a deadline</b>. At the deadline the system\n"
+"                    reopens it and writes a note on the alarm — silencing something\n"
+"                    for good is how a plant loses a whole layer of watchfulness\n"
+"                    with nobody remembering what was turned off."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_snooze_wizard__so_gio
+msgid "Hoãn bao nhiêu giờ"
+msgstr "Snooze for how many hours"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+#: model:ir.model,name:eam_alarm.model_eam_alarm_snooze_wizard
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
+msgid "Hoãn cảnh báo"
+msgstr "Snooze alarm"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__snooze_den
+msgid "Hoãn tới"
+msgstr "Snooze until"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Hoãn tới %(d)s. Lý do: %(l)s"
+msgstr "Snoozed until %(d)s. Reason: %(l)s"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Hết hạn hoãn (%(d)s). Cảnh báo bật lại. Lý do hoãn trước đó: %(l)s"
+msgstr "Snooze expired (%(d)s). The alarm is back on. Earlier snooze reason: %(l)s"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__date_cleared
+msgid "Hết lúc"
+msgstr "Cleared at"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__external
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__external
+msgid "Hệ ngoài đẩy vào"
+msgstr "Pushed in by an outside system"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_search_a12
+msgid "KHÔNG hoãn"
+msgstr "Do NOT snooze"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__auto_wo
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Khi nổ thì làm gì"
+msgstr "What to do when it is raised"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_rule_form_a12
+msgid "Khung giờ được báo"
+msgstr "Alerting window"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__meter_type__other
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_work_type__other
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_work_order.py:0
+msgid "Khép theo lệnh %(l)s. Nếu cảnh báo này nổ lại trong %(n)d ngày tới, nó sẽ được đếm là TÁI PHÁT."
+msgstr "Closed by order %(l)s. If this alarm is raised again within the next %(n)d days, it will count as a RECURRENCE."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Không có số đọc mới %(n)d ngày (lần cuối %(d)s). Nhiều khả năng ĐƯỜNG TRUYỀN chết, không phải máy dừng — kiểm tra kết nối trước khi cử người ra trụ."
+msgstr "No new reading for %(n)d days (last one %(d)s). Most likely the LINK is dead rather than the machine — check the connection before sending anyone up the tower."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__auto_wo__off
+msgid "Không tạo gì"
+msgstr "Create nothing"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_priority__3
+msgid "Khẩn cấp"
+msgstr "Emergency"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_work_type__inspection
+msgid "Kiểm tra, xem xét"
+msgstr "Inspect, examine"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_work_type
+msgid "Loại lệnh sẽ tạo"
+msgstr "Order type to create"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__meter_type
+msgid "Loại đồng hồ"
+msgstr "Meter type"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__rule_id
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Luật"
+msgstr "Rule"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Luật \"%s\" phải có cửa sổ ít nhất 1 ngày."
+msgstr "Rule \"%s\" needs a window of at least 1 day."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Luật \"%s\" so ngưỡng nhưng ngưỡng để trống — nó sẽ nổ cho mọi số đọc, hoặc không nổ bao giờ."
+msgstr "Rule \"%s\" compares a threshold but the threshold is empty — it will fire on every reading, or never fire at all."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Luật \"%s\" so ngưỡng thì phải chọn loại đồng hồ."
+msgstr "Rule \"%s\" compares a threshold, so it needs a meter type."
+
+#. module: eam_alarm
+#: model:ir.actions.act_window,name:eam_alarm.action_eam_alarm_rule
+#: model:ir.ui.menu,name:eam_alarm.menu_eam_alarm_rule
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Luật cảnh báo"
+msgstr "Alarm rule"
+
+#. module: eam_alarm
+#: model:ir.model,name:eam_alarm.model_eam_alarm_rule
+msgid "Luật cảnh báo thiết bị"
+msgstr "Equipment alarm rule"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__chi_khi_phat
+msgid "Luật hiệu suất chỉ có nghĩa khi máy đang chạy. Ban đêm một tấm quang điện phát 0 kW là chuyện bình thường, báo động cho nó là dạy người dùng bỏ qua cảnh báo."
+msgstr "A performance rule only means something while the machine is running. A PV panel producing 0 kW at night is normal, and alarming on it teaches users to ignore alarms."
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm_rule
+msgid ""
+"Luật quyết định cái gì là bất thường và khi nổ thì làm gì.\n"
+"               Sổ cảnh báo <b>bất khả tri về nguồn</b>: hôm nay chạy bằng\n"
+"               đồng hồ và người trực, khi có SCADA thì nó chỉ là thêm một\n"
+"               nguồn nữa."
+msgstr ""
+"The rule decides what counts as abnormal and what to do when it fires.\n"
+"               The alarm log is <b>source-agnostic</b>: today it runs on meters and\n"
+"               operators; when SCADA arrives it is simply one more source."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__la_goc
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_search_a12
+msgid "Là cảnh báo gốc"
+msgstr "Is the root alarm"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__is_repeat
+msgid "Là tái phát"
+msgstr "Is a recurrence"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_snooze_wizard__ly_do
+msgid "Lý do"
+msgstr "Reason"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__ignore_reason
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_ignore_wizard__reason
+msgid "Lý do bỏ qua"
+msgstr "Dismissal reason"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__snooze_ly_do
+msgid "Lý do hoãn"
+msgstr "Snooze reason"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__pm_plan_id
+msgid "Lấy các bước từ kế hoạch"
+msgstr "Take the steps from the plan"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__lech_pct
+msgid "Lệch quá (%)"
+msgstr "Deviation (%)"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+msgid "Lệnh"
+msgstr "Order"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_work_order.py:0
+msgid "Lệnh %s đã huỷ. Cảnh báo quay về cần xử lý."
+msgstr "Order %s was cancelled. The alarm is back to be handled."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_work_order.py:0
+msgid "Lệnh %s đã xong, nhưng luật cảnh báo đặt là phải tự hết bằng số đo. Cảnh báo giữ nguyên tới khi trị số về trong ngưỡng."
+msgstr "Order %s is done, but the alarm rule says it must clear through readings. The alarm stays until the value is back within threshold."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__wo_id
+msgid "Lệnh công việc"
+msgstr "Work order"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_requires_permit
+msgid "Lệnh cần phiếu công tác"
+msgstr "Order requires a work permit"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_work_at_height
+msgid "Lệnh làm trên cao"
+msgstr "Work at height"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Lệnh này do cảnh báo %(m)s sinh ra."
+msgstr "This order was raised by alarm %(m)s."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_requires_isolation
+msgid "Lệnh phải cắt điện"
+msgstr "Order requires isolation"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__clear_on_wo_done
+msgid "Lệnh xong thì xoá cảnh báo"
+msgstr "Clear the alarm when the order is done"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__code
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_alarm
+#: model:ir.model.constraint,message:eam_alarm.constraint_eam_alarm_rule_uniq_code
+msgid "Mã luật cảnh báo không được trùng."
+msgstr "The alarm rule code must be unique."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__tag_code
+msgid "Mã điểm đo"
+msgstr "Tag code"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__tag_code_2
+msgid "Mã điểm đo đối chứng"
+msgstr "Reference tag code"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__feed_silent
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__feed_silent
+msgid "Mất số đọc"
+msgstr "No readings"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__wo_work_type
+msgid "Mặc định là KIỂM TRA, không phải sửa chữa: cảnh báo nói có dấu hiệu bất thường, chưa nói hỏng cái gì. Mở thẳng lệnh sửa chữa là đã kết luận trước khi ra xem."
+msgstr "The default is INSPECT, not repair: the alarm says there is a sign of something wrong, not what is broken. Opening a repair order straight away is concluding before looking."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_ack_wizard__binh_luan
+msgid "Một câu cho cả lô — nhưng mỗi cảnh báo vẫn ghi riêng ai xác nhận và lúc nào, để sau còn truy được từng cái."
+msgstr "One sentence for the whole batch — but each alarm still records who acknowledged it and when, so each one can be traced later."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_ack_wizard
+msgid ""
+"Một câu cho cả lô, nhưng <b>mỗi cảnh báo vẫn ghi riêng\n"
+"                    ai xác nhận và lúc nào</b> — ba tháng sau còn truy được\n"
+"                    từng cái."
+msgstr ""
+"One sentence for the whole batch, but <b>each alarm still records\n"
+"                    who acknowledged it and when</b> — three months later each one\n"
+"                    can still be traced."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__parent_alarm_id
+msgid "Một sự cố đẻ ra cả chục cảnh báo. Gom lại để đếm đúng SỰ CỐ, chứ không đếm số dòng."
+msgstr "One incident breeds a dozen alarms. Group them so that INCIDENTS are counted, not rows."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid ""
+"Một sự cố đẻ ra nhiều dòng — gom lại\n"
+"                    để sau còn đếm đúng <i>sự cố</i>, chứ không đếm <i>số\n"
+"                    dòng cảnh báo</i>."
+msgstr ""
+"One incident breeds several rows — group them\n"
+"                    so that <i>incidents</i> can be counted afterwards, not\n"
+"                    <i>alarm rows</i>."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__state__new
+msgid "Mới"
+msgstr "New"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__auto_wo__request
+msgid "Mở YÊU CẦU để người điều độ phân loại"
+msgstr "Open a REQUEST for the dispatcher to triage"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Mở lại"
+msgstr "Reopen"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Mở lệnh công việc"
+msgstr "Open work order"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Mở từ cảnh báo %(m)s (đã nổ %(n)d lần)."
+msgstr "Opened from alarm %(m)s (raised %(n)d times)."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Mở từ cảnh báo: %s"
+msgstr "Opened from alarm: %s"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Mức"
+msgstr "Level"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__severity
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__severity
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Mức nghiêm trọng"
+msgstr "Severity"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__severity__critical
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__severity__critical
+msgid "Nghiêm trọng"
+msgstr "Critical"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__source
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__source
+msgid "Nguồn cảnh báo"
+msgstr "Alarm source"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+msgid "Nguồn tự động"
+msgstr "Automatic source"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Nguồn và dòng thời gian"
+msgstr "Source and timeline"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__snooze_user_id
+msgid "Người hoãn"
+msgstr "Snoozed by"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__manual
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__manual
+msgid "Người trực báo"
+msgstr "Reported by operator"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_detection__operator
+msgid "Người vận hành phát hiện"
+msgstr "Spotted by the operator"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__ack_user_id
+msgid "Người xác nhận"
+msgstr "Acknowledged by"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__threshold
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Ngưỡng"
+msgstr "Threshold"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__meter_type
+msgid "Ngưỡng nên đặt trên đồng hồ TRẠNG THÁI (độ rung, nhiệt độ dầu). Đặt lên giờ máy chạy là trùng việc với kế hoạch bảo trì phòng ngừa, và rồi hai cơ chế cùng sinh lệnh cho một việc."
+msgstr "Thresholds belong on CONDITION meters (vibration, oil temperature). Putting one on running hours duplicates the preventive maintenance plan, and then two mechanisms raise orders for the same job."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__threshold_2
+msgid "Ngưỡng trên"
+msgstr "Upper threshold"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__tag_threshold
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__tag_threshold
+msgid "Ngưỡng điểm đo (kho chuỗi thời gian)"
+msgstr "Tag threshold (time-series store)"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__meter_threshold
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__meter_threshold
+msgid "Ngưỡng đồng hồ"
+msgstr "Meter threshold"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
+msgid "Nhiễu đầu đo, đã hẹn hãng hiệu chuẩn ngày…"
+msgstr "Sensor noise, calibration booked with the vendor on…"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Nhận dạng"
+msgstr "Identification"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__operator__outside
+msgid "Nằm NGOÀI dải"
+msgstr "OUTSIDE the band"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__operator__between
+msgid "Nằm TRONG dải"
+msgstr "INSIDE the band"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__occurrence_count
+msgid "Nổ lại khi đợt còn mở chỉ cộng vào đây, không sinh dòng mới. Nổ 47 lần khác hẳn vừa nổ, dù hai dòng trông giống nhau."
+msgstr "Being raised again while the episode is open only adds to this count; it does not create a new row. Raised 47 times is nothing like just raised, however alike the two rows look."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Nổ trên 10 lần"
+msgstr "Raised more than 10 times"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__message
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Nội dung"
+msgstr "Message"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_detection__production
+msgid "Phát hiện qua sụt sản lượng"
+msgstr "Spotted through an energy shortfall"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Quét ngay"
+msgstr "Scan now"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__operator
+msgid "So sánh"
+msgstr "Comparison"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__asset_id
+msgid "Suy từ vị trí: thiết bị đang lắp ở đó. Sửa được khi cảnh báo chỉ đích danh một cấu phần bên trong."
+msgstr "Derived from the location: the equipment installed there. Editable when the alarm names a specific component inside."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__meter_type__production_mwh
+msgid "Sản lượng luỹ kế (MWh)"
+msgstr "Cumulative energy (MWh)"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_work_order__alarm_count
+msgid "Số cảnh báo"
+msgstr "Alarms"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_list_a12
+msgid "Số cảnh báo con"
+msgstr "Child alarms"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Số giờ hoãn phải lớn hơn 0."
+msgstr "The snooze must be longer than 0 hours."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__meter_type__starts
+msgid "Số lần khởi động"
+msgstr "Starts"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__occurrence_count
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Số lần nổ"
+msgstr "Times raised"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__repeat_after_fix
+msgid "Số lần tái phát sau sửa"
+msgstr "Recurrences after repair"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Số đọc vẫn về đều nhưng %(nhan)s KHÔNG tăng trong %(n)d ngày. Máy đứng im thật — khác với mất tín hiệu."
+msgstr "Readings keep arriving but %(nhan)s has NOT increased for %(n)d days. The machine really is idle — which is not the same as a lost signal."
+
+#. module: eam_alarm
+#: model:ir.actions.act_window,name:eam_alarm.action_eam_alarm
+#: model:ir.ui.menu,name:eam_alarm.menu_eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+msgid "Sổ cảnh báo"
+msgstr "Alarm log"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_work_type__corrective
+msgid "Sửa chữa khắc phục"
+msgstr "Corrective repair"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__asset_id
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__parent_alarm_id
+msgid "Thuộc cảnh báo gốc"
+msgstr "Under root alarm"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_list_a12
+msgid "Thuộc gốc"
+msgstr "Under root"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_search_a12
+msgid "Thuộc một gốc"
+msgstr "Belongs to a root"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Tháng nổ"
+msgstr "Month raised"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_ack_wizard
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
+msgid "Thôi"
+msgstr "Cancel"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__severity__low
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__severity__low
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__wo_priority__0
+msgid "Thấp"
+msgstr "Low"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__operator__lt
+msgid "Thấp hơn"
+msgstr "below"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__date_last_seen
+msgid "Thấy lần cuối"
+msgstr "Last seen"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__date_raised
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_search_a12
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Thời điểm"
+msgstr "Raised at"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__date_raised
+msgid "Thời điểm hệ GHI NHẬN điều kiện lần đầu — không phải lúc người trực mở màn hình ra xem, và không phải lúc cảnh báo nổ lại ở lần sau: lần sau cộng vào \"số lần nổ\" và cập nhật \"thấy lần cuối\", mốc này giữ nguyên."
+msgstr "The moment the system FIRST RECORDED the condition — not the moment an operator opened the screen to look, and not the moment the alarm was raised again later: a later occurrence adds to \"times raised\" and updates \"last seen\", while this stamp stays put."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Trong số đã chọn có cảnh báo đang thuộc một gốc KHÁC. Gỡ nó ra trước — một cảnh báo chỉ thuộc một sự cố."
+msgstr "Some of the selected alarms already belong to a DIFFERENT root. Detach them first — an alarm belongs to one incident only."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__window_days
+msgid "Trong vòng … ngày"
+msgstr "Within … days"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__severity__medium
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__severity__medium
+msgid "Trung bình"
+msgstr "Average"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__state
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__wo_state
+msgid "Trạng thái lệnh"
+msgstr "Order state"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__value_seen
+msgid "Trị số lúc nổ"
+msgstr "Value when raised"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "TÁI PHÁT lần thứ %d sau sửa — đừng sửa lại y như lần trước, hãy xem lại nguyên nhân gốc."
+msgstr "RECURRENCE number %d after repair — do not repeat the same fix; look again at the root cause."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "TÁI PHÁT sau sửa"
+msgstr "RECURRED after repair"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__repeat_count
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Tái phát"
+msgstr "Recurrence"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_work_order__alarm_repeat_max
+msgid "Tái phát nhiều nhất"
+msgstr "Most recurrent"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "Tái phát sau sửa"
+msgstr "Recurred after repair"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__name
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Tên luật"
+msgstr "Rule name"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Tìm cảnh báo"
+msgstr "Search alarms"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+msgid "Tìm luật"
+msgstr "Search rules"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__auto_wo__immediate
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+msgid "Tạo lệnh ngay"
+msgstr "Create order now"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__auto_wo__on_ack
+msgid "Tạo lệnh sau khi người trực xác nhận"
+msgstr "Create the order once the operator acknowledges"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__alarm_count
+msgid "Tổng cảnh báo"
+msgstr "Total alarms"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_snooze_wizard__so_gio
+msgid "Tới hạn hệ tự bật lại và ghi vào trao đổi của cảnh báo."
+msgstr "At the deadline the system reopens it and writes a note on the alarm."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__snooze_den
+msgid "Tới mốc này hệ TỰ BẬT LẠI. Hoãn không hạn là cách một nhà máy mất hẳn một lớp canh gác mà không ai nhớ đã tắt gì."
+msgstr "At this moment the system REOPENS it automatically. An open-ended snooze is how a plant loses a whole layer of watchfulness with nobody remembering what was turned off."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Tự tạo lệnh"
+msgstr "Create order automatically"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__phut_lien_tuc
+msgid "Vượt liên tục (phút)"
+msgstr "Sustained for (minutes)"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__operator__gt
+msgid "Vượt quá"
+msgstr "above"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__location_id
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__location_ids
+msgid "Vị trí khai đích danh"
+msgstr "Explicitly named location"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_ack_wizard
+msgid "Xác nhận"
+msgstr "Acknowledge"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Xác nhận %d cảnh báo"
+msgstr "Acknowledge %d alarms"
+
+#. module: eam_alarm
+#: model:ir.model,name:eam_alarm.model_eam_alarm_ack_wizard
+msgid "Xác nhận cảnh báo hàng loạt"
+msgstr "Acknowledge alarms in bulk"
+
+#. module: eam_alarm
+#: model:ir.actions.server,name:eam_alarm.action_ack_lo
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_ack_wizard
+msgid "Xác nhận hàng loạt"
+msgstr "Acknowledge in bulk"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Xác nhận là thật"
+msgstr "Confirm it is real"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__ack_date
+msgid "Xác nhận lúc"
+msgstr "Acknowledged at"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Xác nhận: %s"
+msgstr "Acknowledged: %s"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Xử lý"
+msgstr "Handle"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__request_id
+msgid "Yêu cầu công việc"
+msgstr "Work request"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "cảnh báo khác."
+msgstr "other alarms."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "lần"
+msgstr "times"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid ""
+"lần mà chưa khép.\n"
+"                        Nếu đây là nhiễu đầu đo thì sửa ngưỡng ở luật; nếu\n"
+"                        là thật thì nó đã bị để lâu."
+msgstr ""
+"times without being closed.\n"
+"                        If this is sensor noise, fix the threshold on the rule; if it\n"
+"                        is real, it has been left too long."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
+msgid "ngưỡng %.2f"
+msgstr "threshold %.2f"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid ""
+"sau khi đã đóng\n"
+"                        lệnh sửa. Lần sửa trước không giữ được — xem lại\n"
+"                        nguyên nhân gốc thay vì sửa lại y như cũ."
+msgstr ""
+"after the repair order\n"
+"                        was closed. The previous repair did not hold — look again\n"
+"                        at the root cause instead of repeating it."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid ""
+"sau sửa. Lần\n"
+"                        trước không giữ được — làm lại y như cũ thì kết quả\n"
+"                        sẽ y như cũ."
+msgstr ""
+"after repair. The last\n"
+"                        one did not hold — repeat the same fix and the result\n"
+"                        will be the same."
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "thấp hơn"
+msgstr "below"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_work_order_form_alarm
+msgid "tái phát"
+msgstr "recurrence"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "vượt"
+msgstr "above"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__category_id
+msgid "Áp cho loại cấu phần"
+msgstr "Applies to component category"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Áp cho đâu"
+msgstr "Where it applies"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__dang_hoan
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_list_a12
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_search_a12
+msgid "Đang hoãn"
+msgstr "Snoozed"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "Đang hoãn tới"
+msgstr "Snoozed until"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__open_count
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Đang mở"
+msgstr "Open"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Điều kiện"
+msgstr "Condition"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__phut_lien_tuc
+msgid ""
+"Điều kiện phải đúng suốt bấy nhiêu phút mới nổ cảnh báo. Để 0 là nổ ngay.\n"
+"\n"
+"Đây là thứ phân biệt một bộ cảnh báo dùng được với một bộ bị tắt sau tuần đầu: nhiễu đo một nhịp cũng vượt ngưỡng, và người ta chỉ chịu được chừng chục báo giả trước khi lờ hết."
+msgstr ""
+"The condition has to hold for this many minutes before an alarm is raised. Set 0 to raise it at once.\n"
+"\n"
+"This is what separates a usable set of alarms from one that gets switched off in the first week: a single noisy sample also crosses the threshold, and people put up with about a dozen false alarms before ignoring the lot."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__tag_silent
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__tag_silent
+msgid "Điểm đo ngừng gửi số"
+msgstr "Tag stopped sending readings"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__tag_stall
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__tag_stall
+msgid "Điểm đo đứng im"
+msgstr "Tag stalled"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Đánh dấu đã hết"
+msgstr "Mark as cleared"
+
+#. module: eam_alarm
+#: model_terms:ir.actions.act_window,help:eam_alarm.action_eam_alarm_tai_phat
+msgid ""
+"Đây là danh sách những lần sửa <b>không giữ được</b>: cảnh\n"
+"               báo đã được đóng bằng một lệnh công việc rồi quay lại. Đó là\n"
+"               cách duy nhất phân biệt \"đã sửa\" với \"đã đóng lệnh\"."
+msgstr ""
+"This is the list of repairs that <b>did not hold</b>: alarms that\n"
+"               were closed by a work order and then came back. It is the only way to\n"
+"               tell \"repaired\" from \"order closed\"."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__state__ignored
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Đã bỏ qua"
+msgstr "Dismissed"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__state__wo
+msgid "Đã có lệnh"
+msgstr "Order exists"
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__state__cleared
+msgid "Đã hết"
+msgstr "Cleared"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_ack_wizard
+msgid "Đã kiểm tra tại chỗ, do mất lưới ngoài…"
+msgstr "Checked on site, caused by an external grid loss…"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_search
+msgid "Đã nghỉ"
+msgstr "Retired"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Đã nổ"
+msgstr "Raised"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm.py:0
+msgid "Đã nổ %d lần."
+msgstr "Raised %d times."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__state__ack
+msgid "Đã xác nhận"
+msgstr "Acknowledged"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
+msgid "Đã xác nhận %(a)d cảnh báo. BỎ QUA %(b)d cái vì chúng không còn ở trạng thái \"Mới\" hoặc đã có người xác nhận trước."
+msgstr "Acknowledged %(a)d alarms. SKIPPED %(b)d because they are no longer \"New\" or someone had already acknowledged them."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_search
+msgid "Đã xác nhận, chưa có lệnh"
+msgstr "Acknowledged, no order yet"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__wo_detection
+msgid "Đóng vào lệnh để chỉ số \"bao nhiêu phần trăm hỏng hóc được bắt trước khi mất sản lượng\" có số liệu. Không đóng thì cột đó mãi trống và giám sát trạng thái không chứng minh được là đáng tiền."
+msgstr "Close it against the order so that the indicator \"what share of failures was caught before energy was lost\" has data. Leave it open and that column stays empty for good, and condition monitoring cannot prove it pays for itself."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_form
+msgid "Đưa vào sổ yêu cầu"
+msgstr "Put into the request log"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid ""
+"Đặt ngưỡng trên <b>giờ máy chạy</b> là trùng\n"
+"                                việc với kế hoạch bảo trì phòng ngừa — rồi\n"
+"                                hai cơ chế cùng sinh lệnh cho một việc."
+msgstr ""
+"Putting a threshold on <b>running hours</b> duplicates\n"
+"                                the preventive maintenance plan — and then two\n"
+"                                mechanisms raise orders for the same job."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__repeat_after_fix
+msgid "Đếm số lần cảnh báo QUAY LẠI sau khi đã đóng lệnh sửa. Lớn hơn 0 là lần sửa trước không giữ được — đây là cách duy nhất phân biệt \"đã sửa\" với \"đã đóng lệnh\"."
+msgstr "Counts how many times an alarm COMES BACK after a repair order was closed. Above 0 means the previous repair did not hold — this is the only way to tell \"repaired\" from \"order closed\"."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__gio_den
+msgid "Đến giờ"
+msgstr "To hour"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__rule_id
+msgid "Để trống khi người trực tự báo — không phải cảnh báo nào cũng từ máy."
+msgstr "Leave empty when the operator reports it — not every alarm comes from a machine."
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm_rule__plant_id
+msgid "Để trống thì áp cho mọi nhà máy. Ngưỡng độ rung của tua-bin 2 MW không dùng được cho tua-bin 4 MW, nên gần như luôn phải khoanh lại."
+msgstr "Leave it empty to apply to every plant. The vibration threshold of a 2 MW turbine does not work for a 4 MW one, so a scope is almost always needed."
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_list
+msgid "Đồng hồ"
+msgstr "Meter"
+
+#. module: eam_alarm
+#: code:addons/eam_alarm/models/eam_alarm_rule.py:0
+msgid "Đồng hồ chưa có số đọc nào."
+msgstr "The meter has no readings yet."
+
+#. module: eam_alarm
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm__source__meter_stall
+#: model:ir.model.fields.selection,name:eam_alarm.selection__eam_alarm_rule__source__meter_stall
+msgid "Đồng hồ đứng im"
+msgstr "Meter stalled"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_rule_form
+msgid "Độ rung hộp số vượt ngưỡng"
+msgstr "Gearbox vibration above threshold"
+
+#. module: eam_alarm
+#: model:ir.model.fields,help:eam_alarm.field_eam_alarm__prev_id
+msgid "Đợt cảnh báo cùng luật, cùng vị trí ngay trước đợt này."
+msgstr "The run of alarms on the same rule and location immediately before this one."
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm__prev_id
+msgid "Đợt trước"
+msgstr "Previous episode"
+
+#. module: eam_alarm
+#: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__wo_priority
+msgid "Ưu tiên lệnh"
+msgstr "Order priority"
+
+#. module: eam_alarm
+#: model_terms:ir.ui.view,arch_db:eam_alarm.view_alarm_form_a12
+msgid "— lý do:"
+msgstr "— reason:"
+

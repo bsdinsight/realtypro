@@ -17,6 +17,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_commitment__company_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__company_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_plant__company_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period__company_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__company_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__period_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__period_id
+msgid "Kỳ"
+msgstr "Period"
+
+#. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_type__code
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_om_contract
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_period_form
+msgid "Mở lại"
+msgstr "Reopen"
+
+#. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract_plant__plant_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_line__plant_id
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_search
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_period_plant_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_om_contract
 #: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract__state__nhap
 msgid "Nháp"
 msgstr "Draft"
@@ -30,4 +65,30 @@ msgstr "Draft"
 #: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__currency_id
 msgid "Tiền tệ"
 msgstr "Currency"
+
+#. module: eam_om_contract
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_contract__state
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period__state
+#: model:ir.model.fields,field_description:eam_om_contract.field_eam_om_period_plant__state
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_search
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_period_search
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract_type__ap_dung__gio
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_type_search
+msgid "Điện gió"
+msgstr "Wind"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_contract_type__ap_dung__mat_troi
+#: model_terms:ir.ui.view,arch_db:eam_om_contract.view_eam_om_contract_type_search
+msgid "Điện mặt trời"
+msgstr "Solar PV"
+
+#. module: eam_om_contract
+#: model:ir.model.fields.selection,name:eam_om_contract.selection__eam_om_period__state__chot
+msgid "Đã chốt"
+msgstr "Closed"
 

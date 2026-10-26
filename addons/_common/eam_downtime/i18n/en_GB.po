@@ -22,3 +22,8 @@ msgstr ""
 msgid "Loại thời gian"
 msgstr "Time category"
 
+#. module: eam_downtime
+#: model:ir.model.fields,field_description:eam_downtime.field_eam_time_group__code
+msgid "Mã"
+msgstr "Code"
+

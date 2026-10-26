@@ -17,12 +17,70 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__company_id
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__company_id
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__tien
 msgid "Doanh thu mất"
 msgstr "Revenue lost"
 
 #. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__dung_may
+msgid "Dừng máy"
+msgstr "Downtime"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__khac
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__cach_do
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__cach_do
+msgid "Lấy số từ đâu"
+msgstr "Where the figure comes from"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__nguon
+msgid "Lấy từ đâu"
+msgstr "Taken from"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__code
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__node_code
+msgid "Mã bậc đo"
+msgstr "Metering stage code"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__plant_id
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__plant_id
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_expect_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__group_id
+msgid "Nhóm giờ dừng"
+msgstr "Downtime group"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__name
 msgid "Tên loại"
 msgstr "Category name"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "chưa khai mục tiêu"
+msgstr "no target declared"
 

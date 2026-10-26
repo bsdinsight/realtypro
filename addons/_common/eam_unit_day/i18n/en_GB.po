@@ -17,6 +17,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_unit_day
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_form
+msgid "Hệ số công suất"
+msgstr "Capacity factor"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__location_code
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__san_luong
+msgid "Sản lượng ngày (kWh)"
+msgstr "Daily energy (kWh)"
+
+#. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__location_id
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_list
+#: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_search
+msgid "Tổ máy"
+msgstr "Unit"
+
+#. module: eam_unit_day
 #: model:ir.model,name:eam_unit_day.model_eam_location
 msgid "Vị trí chức năng"
 msgstr "Functional location"

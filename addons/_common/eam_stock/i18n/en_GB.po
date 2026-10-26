@@ -17,9 +17,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__urgency__normal
+msgid "Bình thường"
+msgstr "Normal"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_end
 msgid "Bảo hành đến ngày"
 msgstr "Warranty to"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care__state__skipped
+msgid "Bỏ qua"
+msgstr "Dismiss"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_alert__ket_qua
+msgid "Cảnh báo"
+msgstr "Alarm"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__sequence
@@ -32,6 +47,47 @@ msgstr "Level"
 #: model:ir.model.fields,help:eam_stock.field_product_template__eam_is_rotable
 msgid "Cấu phần tháo ra đem đi đại tu rồi lắp lại, giữ nguyên lịch sử theo sê-ri. Giá trị gợi ý khi tạo tài sản mới."
 msgstr "Components removed for overhaul and refitted afterwards, keeping their serial-number history. Suggested value when creating a new asset."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__note
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__note
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__amount
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__amount
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_spec__value
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Giá trị"
+msgstr "Value"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__other
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__khac
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__other
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__reason__other
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment_line__reason__other
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care_plan__care_type__other
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_part_kind__other
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__ton_kha_dung
+#: model:ir.model.fields,field_description:eam_stock.field_eam_work_order_part__ton_kha_dung
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Khả dụng"
+msgstr "Availability"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__doc_type
@@ -52,6 +108,47 @@ msgid "Loại cấu phần"
 msgstr "Component category"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__reason
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__reason
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__reason
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Lý do"
+msgstr "Reason"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__work_order_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__work_order_id
+#: model:ir.model.fields,field_description:eam_stock.field_stock_move__eam_work_order_id
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__source__wo
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Lệnh công việc"
+msgstr "Work order"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__code
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_xref__code
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_list_toiuu
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_stock
+#: code:addons/eam_stock/models/eam_adjustment.py:0
+#: code:addons/eam_stock/models/eam_inbound_check.py:0
+#: code:addons/eam_stock/models/eam_material_request.py:0
+#: code:addons/eam_stock/models/eam_rotable.py:0
+#: code:addons/eam_stock/models/eam_stock_transfer.py:0
+#: code:addons/eam_stock/models/eam_tool_care.py:0
+msgid "Mới"
+msgstr "New"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_criticality
 #: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_criticality
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
@@ -61,9 +158,27 @@ msgid "Mức quan trọng"
 msgstr "Criticality level"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_mfg_date
 msgid "Ngày sản xuất"
 msgstr "Manufacturing date"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__plant_id
+#: model:ir.model.fields,field_description:eam_stock.field_stock_location__eam_plant_id
+#: model:ir.model.fields,field_description:eam_stock.field_stock_quant__eam_plant_id
+#: model:ir.model.fields,field_description:eam_stock.field_stock_warehouse__eam_plant_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_quant_eam_plant
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_quant_search_eam_plant
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_warehouse_tree_eam_plant
+msgid "Nhà máy"
+msgstr "Plant"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__draft
@@ -89,9 +204,44 @@ msgid "Sê-ri"
 msgstr "Serial"
 
 #. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__low
+msgid "Thấp"
+msgstr "Low"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__currency_id
 msgid "Tiền tệ"
 msgstr "Currency"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__medium
+msgid "Trung bình"
+msgstr "Average"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__state
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_loan__state
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_disposal_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equivalent_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_transfer_list
+msgid "Trạng thái"
+msgstr "State"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__criticality__critical
@@ -100,10 +250,24 @@ msgid "Trọng yếu"
 msgstr "Critical"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_approval_rule__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+msgid "Tên luật"
+msgstr "Rule name"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_is_rotable
 #: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_is_rotable
 msgid "Vật tư quay vòng"
 msgstr "Rotable spare"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_adjustment_line__location_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_quant_search
+msgid "Vị trí"
+msgstr "Location"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__location_id
@@ -118,7 +282,23 @@ msgid "Điều kiện bảo hành"
 msgstr "Warranty terms"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form
+msgid "Đã nghỉ"
+msgstr "Retired"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__done
 msgid "Đã thanh lý"
 msgstr "Disposed"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_disposal_line__uom_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__uom_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__uom_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_spec__uom_label
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__uom_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_stock_transfer_line__uom_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Đơn vị"
+msgstr "Unit"
 

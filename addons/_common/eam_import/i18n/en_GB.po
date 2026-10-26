@@ -22,9 +22,48 @@ msgid "Bắt buộc"
 msgstr "Mandatory"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_bo_qua
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__bo_qua
+msgid "Bỏ qua"
+msgstr "Dismiss"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_canh_bao
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__canh_bao
+msgid "Cảnh báo"
+msgstr "Alarm"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__note
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Kho chuỗi thời gian"
+msgstr "Time-series store"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ly_do
+msgid "Lý do"
+msgstr "Reason"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__node_code
+msgid "Mã bậc đo"
+msgstr "Metering stage code"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__template_id
 msgid "Mẫu"
 msgstr "Template"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+msgid "Nhà máy"
+msgstr "Plant"
 
 #. module: eam_import
 #: model:ir.model.fields.selection,name:eam_import.selection__eam_import_run__state__nhap
@@ -32,7 +71,18 @@ msgid "Nháp"
 msgstr "Draft"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__state
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_template__name
 msgid "Tên mẫu"
 msgstr "Template name"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "hiệu suất"
+msgstr "performance"
 

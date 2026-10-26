@@ -17,6 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__scada
+msgid "Báo động từ hệ giám sát"
+msgstr "Alarm from the monitoring system"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__priority__1
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__urgency__normal
+msgid "Bình thường"
+msgstr "Normal"
+
+#. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
 msgid "Bảo hành"
 msgstr "Warranty"
@@ -25,6 +36,11 @@ msgstr "Warranty"
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__warranty
 msgid "Bảo hành thiết bị"
 msgstr "Equipment warranty"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__predictive
+msgid "Bảo trì theo trạng thái"
+msgstr "Condition-based maintenance"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__undetermined
@@ -37,6 +53,30 @@ msgid "Chủ đầu tư tự chịu"
 msgstr "Owner's own account"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__text
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template_line__field_type__text
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_pm_task__field_type__text
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__field_type__text
+msgid "Chữ"
+msgstr "Text"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__other
+msgid "Cách khác"
+msgstr "Other"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__company_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__asset_level
 msgid "Cấp tài sản"
 msgstr "Asset level"
@@ -47,9 +87,39 @@ msgid "Cấu phần nằm BÊN TRONG một tài sản khác và đi theo nó khi
 msgstr "A component sits INSIDE another asset and travels with it when removed. Unlike a functional location — the place stays put."
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__description
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__condition
+msgid "Giám sát trạng thái, đo rung"
+msgstr "Condition monitoring, vibration"
+
+#. module: eam_work_order
 #: model:ir.model,name:eam_work_order.model_eam_outage
 msgid "Khoảng dừng máy"
 msgstr "Outage period"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__other
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__other
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__other
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__other
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__priority__3
+msgid "Khẩn cấp"
+msgstr "Emergency"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__inspection
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__inspection
+msgid "Kiểm tra, xem xét"
+msgstr "Inspect, examine"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__category_id
@@ -69,9 +139,84 @@ msgid "Lắp trong tài sản"
 msgstr "Installed in asset"
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_apply_wizard__wo_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Lệnh"
+msgstr "Order"
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_outage__work_order_ids
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__order_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__order_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__wo_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__wo_id
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Lệnh công việc"
+msgstr "Work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__code
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__code
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_list
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Mới"
+msgstr "New"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Mở lại"
+msgstr "Reopen"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Mở lệnh công việc"
+msgstr "Open work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__source
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__operator
+msgid "Người vận hành phát hiện"
+msgstr "Spotted by the operator"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__draft
 msgid "Nháp"
 msgstr "Draft"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Nội dung"
+msgstr "Message"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__production
+msgid "Phát hiện qua sụt sản lượng"
+msgstr "Spotted through an energy shortfall"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
@@ -92,11 +237,50 @@ msgid "Số hiệu"
 msgstr "Reference"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__corrective
+msgid "Sửa chữa khắc phục"
+msgstr "Corrective repair"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__asset_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__asset_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_apply_wizard_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_merge_wizard_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_reject_wizard_form
+msgid "Thôi"
+msgstr "Cancel"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__priority__0
+msgid "Thấp"
+msgstr "Low"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__currency_id
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__currency_id
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__currency_id
 msgid "Tiền tệ"
 msgstr "Currency"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__state
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__state
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__wo_state
+msgid "Trạng thái lệnh"
+msgstr "Order state"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__name
@@ -113,4 +297,37 @@ msgstr "Standard clause"
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__is_rotable
 msgid "Vật tư quay vòng"
 msgstr "Rotable spare"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__location_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__location_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_work_request
+#: model:ir.model,name:eam_work_order.model_eam_work_request
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Yêu cầu công việc"
+msgstr "Work request"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Đã nghỉ"
+msgstr "Retired"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__uom_label
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__uom_label
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__uom_id
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__uom_label
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Đơn vị"
+msgstr "Unit"
 

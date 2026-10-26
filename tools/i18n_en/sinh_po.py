@@ -35,7 +35,11 @@ def thu_muc_module(mod):
         if os.path.isfile(os.path.join(d, '__manifest__.py')):
             return d
     return None
-CHO_THAY = re.compile(r'%(?:\([a-zA-Z_0-9]+\))?[sdfr]|%%|\{[a-zA-Z_0-9]*\}')
+# Bắt CẢ dạng có định dạng: %.2f, %(n).1f, %(t)02d. Bản đầu tôi mượn
+# biểu thức của tools/port17 vốn chỉ bắt %s / %(ten)s — nó bỏ sót đúng
+# những chỗ hay sai nhất, vì số có định dạng toàn nằm trong câu báo lỗi
+# dài, chỗ người dịch dễ gõ lệch.
+CHO_THAY = re.compile(r'%\(?[a-zA-Z_0-9]*\)?[0-9.]*[sdfr]|%%|\{[a-zA-Z_0-9]*\}')
 
 RE_XMLID = re.compile(r'#:\s*\S+:([a-z0-9_]+)\.')
 RE_CODE = re.compile(r'#:\s*code:addons/([a-z0-9_]+)/')

@@ -321,6 +321,14 @@ msgid "Công suất định mức của tổ máy đặt tại vị trí này. D
 msgstr "Rated capacity of the unit installed at this location. Used to compute the capacity factor — while it is not declared the system does NOT guess, because dividing by a guessed number gives a plausible-looking ratio that is wrong."
 
 #. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__company_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__company_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__company_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
 msgid ""
 "Cùng một cụm mang tên khác nhau tuỳ nguồn. Không\n"
@@ -401,6 +409,12 @@ msgstr "Components removed for overhaul and refitted afterwards, keeping their s
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
 msgid "Cấu phần trong"
 msgstr "Component inside"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__description
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Diễn giải"
+msgstr "Explanation"
 
 #. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
@@ -528,6 +542,11 @@ msgstr "This period was closed at %s."
 #: model:ir.model.fields,help:eam_core.field_eam_outage__duration_hours
 msgid "Khoảng đang mở tính tới thời điểm này."
 msgstr "Open period, measured up to this moment."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__other
+msgid "Khác"
+msgstr "Other"
 
 #. module: eam_core
 #: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
@@ -757,6 +776,14 @@ msgid "Máy kéo theo"
 msgstr "Knock-on units"
 
 #. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__code
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__code
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__code
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_core
 #: model:ir.model.fields,help:eam_core.field_eam_outage__source_ref
 msgid "Mã alarm hoặc mã bản ghi ở hệ nguồn. Dùng để nhập lại không tạo trùng."
 msgstr "Alarm code or record id in the source system. Used so that re-importing creates no duplicates."
@@ -919,6 +946,11 @@ msgstr ""
 "               The system does not infer it."
 
 #. module: eam_core
+#: code:addons/eam_core/models/eam_outage.py:0
+msgid "Mới"
+msgstr "New"
+
+#. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
 msgid "Mức QT"
 msgstr "Criticality"
@@ -933,6 +965,12 @@ msgstr "Criticality level"
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__om_contract
 msgid "Nghĩa vụ hợp đồng O&M"
 msgstr "O&M contract obligation"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__source
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Nguồn"
+msgstr "Source"
 
 #. module: eam_core
 #: model:ir.model.fields,field_description:eam_core.field_eam_asset__origin
@@ -979,6 +1017,15 @@ msgstr "Commissioning date"
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
 msgid "Nhiều tài sản"
 msgstr "Multiple assets"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__plant_id
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_location__location_type__plant
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Nhà máy"
+msgstr "Plant"
 
 #. module: eam_core
 #: model:ir.model.fields,field_description:eam_core.field_eam_asset__manufacturer_id
@@ -1178,6 +1225,11 @@ msgid "Theo mô hình ĐÃ DUYỆT — điều kiện gió và đường cong c�
 msgstr "Per an APPROVED model — wind conditions and power curve, or a reference turbine. Do NOT take rated power times downtime hours: that is the commonest mis-statement in wind reports."
 
 #. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: eam_core
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__asset_level__main
 msgid "Thiết bị chính"
 msgstr "Main equipment"
@@ -1226,6 +1278,11 @@ msgid "Thường quy cho"
 msgstr "Usually attributed to"
 
 #. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__criticality__low
+msgid "Thấp"
+msgstr "Low"
+
+#. module: eam_core
 #: model:ir.model.constraint,message:eam_core.constraint_eam_outage_ck_ngay
 msgid "Thời điểm kết thúc không được trước thời điểm bắt đầu."
 msgstr "The end time cannot precede the start time."
@@ -1241,9 +1298,20 @@ msgid "Tiền tệ"
 msgstr "Currency"
 
 #. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__criticality__medium
+msgid "Trung bình"
+msgstr "Average"
+
+#. module: eam_core
 #: model:ir.model.fields,help:eam_core.field_eam_outage__parent_id
 msgid "Trạm nâng áp hỏng làm cả đội máy dừng: ghi một khoảng ở trạm rồi trỏ các khoảng của từng tua-bin về nó. Báo cáo cộng khoảng CON, không cộng cha — cộng cả hai là đếm đúp."
 msgstr "A step-up substation fault stops the whole fleet: record one outage at the substation, then point each turbine's outage at it. Reports add up the CHILD periods, not the parent — adding both is double counting."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__state
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Trạng thái"
+msgstr "State"
 
 #. module: eam_core
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__criticality__critical
@@ -1384,6 +1452,18 @@ msgstr "Rotable spare"
 
 #. module: eam_core
 #: code:addons/eam_core/models/eam_installation.py:0
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__location_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__location_id
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_installation.py:0
 msgid "Vị trí \"%(vt)s\" nhận loại \"%(mong)s\", nhưng tài sản \"%(ts)s\" thuộc loại \"%(co)s\"."
 msgstr "Location \"%(vt)s\" accepts category \"%(mong)s\", but asset \"%(ts)s\" belongs to category \"%(co)s\"."
 
@@ -1475,6 +1555,11 @@ msgid "Xem cây vị trí"
 msgstr "View location tree"
 
 #. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Xác nhận"
+msgstr "Acknowledge"
+
+#. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_hierarchy
 msgid "cấu phần bên trong"
 msgstr "internal components"
@@ -1534,6 +1619,11 @@ msgid "Đang lắp tại"
 msgstr "Installed at"
 
 #. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__is_open
+msgid "Đang mở"
+msgstr "Open"
+
+#. module: eam_core
 #: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__state__repair
 msgid "Đang sửa chữa"
 msgstr "Under repair"
@@ -1572,6 +1662,11 @@ msgstr "Disposed"
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
 msgid "Đã tháo"
 msgstr "Removed"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__state__confirmed
+msgid "Đã xác nhận"
+msgstr "Acknowledged"
 
 #. module: eam_core
 #: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form

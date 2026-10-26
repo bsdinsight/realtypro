@@ -17,9 +17,832 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid " (CHƯA kết thúc)"
+msgstr " (NOT finished)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid " · THIẾU %d ngày"
+msgstr " · MISSING %d days"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid " · nhận thêm %d dòng mới từ hồ sơ"
+msgstr " · picked up %d new lines from the profile"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid " — chưa dòng nào trên tờ mang mã đó"
+msgstr " — no line on the sheet carries that code"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(a)s → %(b)s giờ %(m)s"
+msgstr "%(a)s → %(b)s at %(m)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(b)d bậc sản lượng · %(n)d dòng ngày · %(t)s–%(d)s"
+msgstr "%(b)d energy stages · %(n)d daily rows · %(t)s–%(d)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(d)d điểm đo · %(n)d số đo · %(q)d nghi ngờ"
+msgstr "%(d)d tags · %(n)d readings · %(q)d suspect"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(g)d nhóm có giờ dừng · quy về cấp nhà máy: chia cho %(n)d tổ máy"
+msgstr "%(g)d groups with downtime · brought to plant level: divided by %(n)d units"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(h)s · %(t)s→%(d)s · %(n)d ngày có số%(x)s"
+msgstr "%(h)s · %(t)s→%(d)s · %(n)d days with figures%(x)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(k).2f h khung phát trừ %(d).2f h giờ dừng · %(w)s"
+msgstr "%(k).2f h generating window less %(d).2f h downtime · %(w)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(k)s · THIẾU %(n)d/%(t)d ngày"
+msgstr "%(k)s · MISSING %(n)d/%(t)d days"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(l)s vượt %(n).1f lúc %(g)s giờ %(m)s"
+msgstr "%(l)s exceeded %(n).1f at %(g)s %(m)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(n)d khoảng dừng · %(g)d nhóm"
+msgstr "%(n)d outages · %(g)d groups"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(n)d khoảng dừng đã có sản lượng mất nhưng CHƯA quy ra tiền — khai giá điện trên nhà máy hoặc hợp đồng mua bán điện, rồi bấm tính tiền trên sổ dừng máy"
+msgstr "%(n)d outages have an energy loss that has NOT been valued — declare a tariff on the plant or on the power purchase agreement, then press the valuation button on the outage log"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(n)d ngày có số, %(t)s–%(d)s%(x)s"
+msgstr "%(n)d days with figures, %(t)s–%(d)s%(x)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(n)d điểm đo khớp mã \"%(m)s\" nhưng không có số đo nào trong ngày"
+msgstr "%(n)d tags match code \"%(m)s\" but none of them has a reading during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "%(t)s (bản %(n)d)"
+msgstr "%(t)s (rev. %(n)d)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "%(v)s · quy về cấp nhà máy: chia cho %(n)d tổ máy"
+msgstr "%(v)s · brought to plant level: divided by %(n)d units"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "%(vt)s — %(ly)s, mất %(k)s kWh"
+msgstr "%(vt)s — %(ly)s, %(k)s kWh lost"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "%(vt)s — %(ly)s, từ %(a)s%(b)s"
+msgstr "%(vt)s — %(ly)s, from %(a)s%(b)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "%d mốc đo · xem biểu đồ trên bản PDF"
+msgstr "%d samples · see the chart in the PDF"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "%d điểm · xem biểu đồ trên bản PDF"
+msgstr "%d points · see the chart in the PDF"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "(chưa chốt)"
+msgstr "(not closed)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "(khối: %s)"
+msgstr "(block: %s)"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid ""
+".\n"
+"                            Lý do:"
+msgstr ""
+".\n"
+"                            Reason:"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid ""
+".\n"
+"                        Lý do:"
+msgstr ""
+".\n"
+"                        Reason:"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid ""
+".\n"
+"            Phần trăm lấy mẫu số là sản lượng LẼ RA phát được (thật +\n"
+"            phần bị cắt) — chia cho sản lượng thật thôi thì một ngày bị\n"
+"            cắt một nửa ra \"100% cắt giảm\"."
+msgstr ""
+".\n"
+"            The percentage uses as its denominator the energy that WOULD have been\n"
+"            generated (actual + curtailed) — divide by actual alone and a day cut in\n"
+"            half comes out as \"100% curtailment\"."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid ""
+":\n"
+"                thiếu"
+msgstr ""
+":\n"
+"                missing"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>Bản này ĐÃ BỊ THAY THẾ.</b> Dùng bản"
+msgstr "<b>This revision HAS BEEN SUPERSEDED.</b> Use revision"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid ""
+"<b>Bản này đã bị thay thế.</b> Nó được giữ lại để\n"
+"                        còn biết hôm đó đã báo thế nào — số liệu dùng\n"
+"                        tiếp nằm ở"
+msgstr ""
+"<b>This revision has been superseded.</b> It is kept so that\n"
+"                        what was reported that day is still known — the figures\n"
+"                        to work from are in"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>GHI CHÚ</b>"
+msgstr "<b>NOTES</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_san_luong_gio
+msgid "<b>Giờ</b>"
+msgstr "<b>Hours</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_hoa_gio
+msgid "<b>Hướng trội:</b>"
+msgstr "<b>Prevailing direction:</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>KẾ HOẠCH NGÀY MAI</b>"
+msgstr "<b>PLAN FOR TOMORROW</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>NGƯỜI CHỐT</b><br/>"
+msgstr "<b>CLOSED BY</b><br/>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>NGƯỜI LẬP</b><br/>"
+msgstr "<b>PREPARED BY</b><br/>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>NHÁP — chưa chốt.</b> Số liệu còn có thể đổi."
+msgstr "<b>DRAFT — not closed.</b> The figures may still change."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay_luoi
+msgid "<b>NHÁP — chưa chốt</b>"
+msgstr "<b>DRAFT — not closed</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid ""
+"<b>Quá mười lăm ô người trực phải điền.</b> Tới\n"
+"                        mức này tờ báo cáo quay về thành việc chép tay,\n"
+"                        và người ta sẽ điền cho xong chứ không điền cho\n"
+"                        đúng. Soi lại xem ô nào máy đã có số."
+msgstr ""
+"<b>More than fifteen fields for the operator to fill in.</b> At\n"
+"                        this point the report turns back into copying by hand,\n"
+"                        and people fill it in to be done rather than to be\n"
+"                        right. Look again at which fields the system already has."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>SỰ CỐ</b>"
+msgstr "<b>INCIDENTS</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_san_luong_gio
+msgid "<b>Tổng</b>"
+msgstr "<b>Total</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "<b>ĐÃ LÀM TRONG NGÀY</b>"
+msgstr "<b>DONE DURING THE DAY</b>"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do
+msgid ""
+"<span style=\"color:#0E8C99\">━</span> Công suất toàn trại\n"
+"                (đỉnh"
+msgstr ""
+"<span style=\"color:#0E8C99\">━</span> Plant-wide power\n"
+"                (peak"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_to_may
+msgid ""
+"<span style=\"color:#C0392B\">▮</span> Sản lượng hôm nay ·\n"
+"                <span style=\"color:#1F3864\">━</span> Luỹ kế tháng ·"
+msgstr ""
+"<span style=\"color:#C0392B\">▮</span> Energy today ·\n"
+"                <span style=\"color:#1F3864\">━</span> Month to date ·"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_thang
+msgid ""
+"<span style=\"color:#C0392B\">▮</span> Sản lượng ngày ·\n"
+"                <span style=\"color:#1F3864\">━</span> Luỹ kế ·\n"
+"                <span style=\"color:#1a9850\">╌</span> P50 ·\n"
+"                <span style=\"color:#fd8d3c\">╌</span> P75 ·\n"
+"                <span style=\"color:#999\">╌</span> P90.\n"
+"                Mục tiêu vẽ thành đường luỹ kế CHIA ĐỀU theo ngày — so\n"
+"                luỹ kế tới hôm nay với mục tiêu cả tháng thì tháng nào\n"
+"                cũng trông như sắp trượt."
+msgstr ""
+"<span style=\"color:#C0392B\">▮</span> Daily energy ·\n"
+"                <span style=\"color:#1F3864\">━</span> Cumulative ·\n"
+"                <span style=\"color:#1a9850\">╌</span> P50 ·\n"
+"                <span style=\"color:#fd8d3c\">╌</span> P75 ·\n"
+"                <span style=\"color:#999\">╌</span> P90.\n"
+"                The target is drawn as a cumulative line spread EVENLY across the days —\n"
+"                compare the cumulative so far with the whole month's target and every\n"
+"                month looks about to fall short."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "= %(b)s, với %(v)s"
+msgstr "= %(b)s, with %(v)s"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__tinh_trang_so
+msgid "Ba ô đếm ở trên là số nguyên và cờ luận lý — pane lọc bên trái không nhận hai kiểu đó. Ô này quy chúng về một bậc thang để lọc được, và lấy bậc NẶNG NHẤT khi một bản thiếu nhiều thứ cùng lúc."
+msgstr "The three counters above are integers and a boolean — the left-hand filter panel accepts neither. This field reduces them to a single ladder so they can be filtered, and takes the WORST rung when a report is missing several things at once."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bieu_do_ngay
+msgid "Biểu đồ công suất trong ngày"
+msgstr "Power curve for the day"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bieu_do_to_may
+msgid "Biểu đồ so các tổ máy"
+msgstr "Unit comparison chart"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bieu_do_thang
+msgid "Biểu đồ sản lượng trong tháng"
+msgstr "Energy chart for the month"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Báo cáo ngày chưa chốt"
+msgstr "Daily report not closed"
+
+#. module: eam_daily_report
+#: model:ir.actions.act_window,name:eam_daily_report.action_report
+#: model:ir.actions.report,name:eam_daily_report.action_in_bao_cao_ngay
+#: model:ir.ui.menu,name:eam_daily_report.menu_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_list
+msgid "Báo cáo vận hành ngày"
+msgstr "Daily operations report"
+
+#. module: eam_daily_report
+#: model:ir.actions.report,name:eam_daily_report.action_in_bao_cao_ngang
+msgid "Báo cáo vận hành ngày (khổ ngang)"
+msgstr "Daily operations report (landscape)"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid "Báo cáo vận hành ngày — điện gió"
+msgstr "Daily operations report — wind"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "Bản"
+msgstr "Revision"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Bản %(n)d — thay cho bản %(c)d. Lý do: %(l)s"
+msgstr "Revision %(n)d — in place of revision %(c)d. Reason: %(l)s"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
+msgid ""
+"Bản cũ <b>không mất đi</b> — nó chuyển sang \"đã thay\n"
+"                    thế\" và vẫn mở xem được. Sửa đè lên tờ đã gửi đi là\n"
+"                    xoá mất chuyện hôm đó ta đã báo thế nào."
+msgstr ""
+"The old revision is <b>not lost</b> — it becomes \"superseded\"\n"
+"                    and can still be opened. Overwriting a sheet that has been\n"
+"                    sent erases what was reported that day."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ban_so
+msgid "Bản số"
+msgstr "Revision no."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Bản đang dùng"
+msgstr "Current revision"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bang_cat_giam
+msgid "Bảng cắt giảm theo lệnh điều độ"
+msgstr "Curtailment table by dispatch order"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Bảng tổ máy"
+msgstr "Unit table"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bang_inverter
+msgid "Bảng tổ máy xoay ngang (chỉ tiêu làm hàng)"
+msgstr "Unit table transposed (indicators as rows)"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__bang_to_may
+msgid "Bảng từng tổ máy"
+msgstr "Per-unit table"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__chain
+msgid "Bậc đo trong chuỗi"
+msgstr "Metering stage in the chain"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__gop_nhieu
+msgid "Bắt buộc khi mã khớp nhiều hơn một điểm đo. Cộng công suất các tua-bin ra công suất nhà máy thì đúng; cộng nhiệt độ thì vô nghĩa — nên hệ KHÔNG đoán, mã khớp nhiều mà chưa khai thì dòng đó báo thiếu khai báo."
+msgstr "Required when the code matches more than one tag. Summing turbine power into plant power is right; summing temperature is meaningless — so the system does NOT guess, and a code that matches several tags without this declared is reported as a missing declaration."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__bat_buoc
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__bat_buoc
+msgid "Bắt buộc điền"
+msgstr "Must be filled in"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__in_khi_trong
+msgid "Bỏ cờ này thì dòng không có số sẽ biến mất khỏi bản in. Cân nhắc: dòng biến mất là người đọc không biết nó từng tồn tại."
+msgstr "Clear this flag and a line without a figure disappears from the printout. Think about it: a line that disappears leaves the reader unaware it ever existed."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__do_duoc
+msgid "Bỏ trống KHÔNG phải là bằng không. Dòng không đo được vẫn ra trên bản in, kèm lý do, chứ không biến thành số 0."
+msgstr "Empty is NOT zero. A line that could not be measured still appears on the printout, with its reason, rather than turning into a 0."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__bo_cuc
+msgid "Bố cục bản in"
+msgstr "Print layout"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "CHƯA KHAI loại thời gian nào là sự cố, nên mục này luôn trống. Mở Cấu hình → Loại thời gian và tích ô \"Là sự cố\" cho các loại tương ứng."
+msgstr "NO time category is declared as an incident, so this section is always empty. Open Configuration → Time categories and tick \"Is an incident\" on the relevant ones."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__mui_gio
+msgid "CHỤP LẠI lúc tạo tờ. Biên ngày thuộc về nhà máy, không thuộc người đang mở màn hình — không chụp thì cùng một tờ rót lại từ máy khác sẽ ra số khác mà không gì báo."
+msgstr "CAPTURED when the sheet is created. The day boundary belongs to the plant, not to whoever has the screen open — without capturing it, the same sheet refilled from another machine gives different figures and nothing says so."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid ""
+"Chúng in ra là \"—\" kèm\n"
+"                        lý do, <b>không</b> thành số 0 — ô trống và số\n"
+"                        không là hai chuyện khác hẳn nhau."
+msgstr ""
+"They print as \"—\" with\n"
+"                        a reason, <b>not</b> as 0 — an empty field and a\n"
+"                        zero are two quite different things."
+
+#. module: eam_daily_report
+#: model_terms:ir.actions.act_window,help:eam_daily_report.action_profile
+msgid "Chưa có hồ sơ nào"
+msgstr "No profile yet"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Chưa có lệnh công việc nào lên lịch cho ngày mai."
+msgstr "No work order is scheduled for tomorrow."
+
+#. module: eam_daily_report
+#: model_terms:ir.actions.act_window,help:eam_daily_report.action_report
+msgid "Chưa có tờ nào"
+msgstr "No report yet"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_to_may
+msgid ""
+"Chưa dựng bảng tổ máy cho ngày này. Mở <b>Vận hành → Hiệu\n"
+"            suất tổ máy</b> và dựng, hoặc chờ cron chạy lúc 0h10."
+msgstr ""
+"The unit table has not been built for this day. Open <b>Operations → Unit\n"
+"            performance</b> and build it, or wait for the cron at 00:10."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Chỉ bản ĐÃ CHỐT mới cần sinh bản mới. Bản còn nháp thì sửa thẳng."
+msgstr "Only a CLOSED report needs a new revision. A draft can simply be edited."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__node_code
+msgid "Chỉ dùng khi lấy từ chuỗi bậc đo: INV, MCB, GNT, EVN…"
+msgstr "Only used when taking from the metering chain: INV, MCB, GNT, EVN…"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__khoi_dac_biet
+msgid "Chỉ dùng khi nguồn là \"Khối dựng sẵn\". Dòng này không mang một con số — nó đánh dấu chỗ bản in chèn cả một mảng."
+msgstr "Only used when the source is \"Built-in block\". This line carries no figure — it marks the place where the printout inserts a whole section."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__muc
+msgid "Chỉ dùng khi nguồn là \"Mục tiêu sản lượng\"."
+msgstr "Only used when the source is \"Energy target\"."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__cong_thuc
+msgid "Chỉ dùng khi nguồn là \"Tính từ các dòng khác\". Viết bằng MÃ DÒNG, ví dụ \"100 * e_td / e_inv\". Dòng đầu vào chưa đo được thì dòng này cũng ghi CHƯA ĐO ĐƯỢC kèm tên mã còn thiếu — không thay bằng 0, vì một tỷ lệ tính trên số 0 giả vẫn ra con số trông hợp lý."
+msgstr "Only used when the source is \"Computed from other lines\". Write it with LINE CODES, for example \"100 * e_td / e_inv\". If an input line could not be measured, this line also reads NOT MEASURED together with the missing code — it is not replaced by 0, because a ratio computed over a fake zero still produces a plausible-looking number."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__ma_cong_to
+msgid "Chỉ dùng khi nguồn là \"một công-tơ\". Khai MÃ VỊ TRÍ nơi đặt công-tơ, không phải mã công-tơ — một vị trí chỉ mang một công-tơ mỗi loại, nên vị trí là thứ người vận hành gọi tên và là thứ in trên tờ báo cáo."
+msgstr "Only used when the source is \"a single meter\". Declare the LOCATION CODE where the meter sits, not the meter code — a location carries only one meter of each kind, so the location is what operators name and what gets printed on the report."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Chốt bản ngày"
+msgstr "Close the day's report"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khung_gon
+msgid "Chốt bởi"
+msgstr "Closed by"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ngay_chot
+msgid "Chốt lúc"
+msgstr "Closed at"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__kieu__chu
+msgid "Chữ"
+msgstr "Text"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile__so_o_nguoi
+msgid "Con số này là lời hứa với người trực. Quá mười lăm ô thì tờ báo cáo quay về thành việc chép tay, và người ta sẽ điền cho xong chứ không điền cho đúng."
+msgstr "This number is a promise to the duty operator. Past fifteen fields the report turns back into copying by hand, and people fill it in to be done rather than to be right."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__cach_lay
+msgid "Cách rút số ngày"
+msgstr "How the daily figure is taken"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid ""
+"Còn %(n)d ô bắt buộc để trống: %(ds)s.\n"
+"\n"
+"Để trống những ô này thì tờ báo cáo mất nghĩa — chúng được đánh dấu bắt buộc chính vì thế."
+msgstr ""
+"%(n)d mandatory fields are still empty: %(ds)s.\n"
+"\n"
+"Leaving these empty makes the report meaningless — that is exactly why they are marked mandatory."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Còn nháp"
+msgstr "Still draft"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid ""
+"Còn ô <b>bắt buộc</b> để trống — chốt sẽ bị chặn\n"
+"                        và nói rõ ô nào. Những ô ấy được đánh dấu bắt\n"
+"                        buộc vì để trống thì tờ báo cáo mất nghĩa."
+msgstr ""
+"A <b>mandatory</b> field is still empty — closing will be\n"
+"                        blocked, and will say which one. Those fields are marked\n"
+"                        mandatory because leaving them empty makes the report\n"
+"                        meaningless."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__thieu_bat_buoc
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Còn ô bắt buộc để trống"
+msgstr "A mandatory field is still empty"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__tinh_trang_so__con_trong
+msgid "Còn ô trống (không bắt buộc)"
+msgstr "Fields still empty (not mandatory)"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__tinh_trang_so__chua_do
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Có dòng chưa đo được"
+msgstr "Some lines could not be measured"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__do_duoc
+msgid "Có số đo"
+msgstr "Has readings"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Công suất đỉnh trong ngày"
+msgstr "Peak power for the day"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__cong_thuc
+msgid "Công thức"
+msgstr "Formula"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Công việc bảo trì"
+msgstr "Maintenance work"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__cong_to
+msgid "Công-tơ giao nhận"
+msgstr "Settlement meter"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__cong_to
+msgid "Công-tơ: số đọc hôm qua / hôm nay / chênh"
+msgstr "Meter: yesterday's reading / today's / difference"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__gop_nhieu__tong
+msgid "Cộng lại"
+msgstr "Total"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_inverter
+msgid ""
+"Cột <b>Avg</b> tính trên những bộ CÓ SỐ của chính chỉ tiêu\n"
+"                đó, không trên tổng số bộ."
+msgstr ""
+"The <b>Avg</b> column is computed over the units that HAVE a figure for that\n"
+"                indicator, not over all of them."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__bo_cuc__doc
+msgid "Danh sách dọc theo khối"
+msgstr "Vertical list by block"
+
+#. module: eam_daily_report
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
 msgid "Doanh thu mất"
 msgstr "Revenue lost"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__line_ids
+msgid "Dòng"
+msgstr "Line"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" khai nguồn công thức thì phải viết công thức."
+msgstr "Line \"%s\" declares a formula source, so a formula has to be written."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" là khối dựng sẵn thì phải chọn khối nào."
+msgstr "Line \"%s\" is a built-in block, so a block has to be chosen."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy hằng số nhà máy thì phải khai tên trường trên hồ sơ nhà máy."
+msgstr "Line \"%s\" takes a plant constant, so a field name on the plant record is required."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy mục tiêu thì phải chọn mức P50, P75 hay P90 — \"mục tiêu\" không kèm mức là câu nói dở."
+msgstr "Line \"%s\" takes a target, so P50, P75 or P90 has to be chosen — \"target\" without a level is only half a sentence."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy số từ một bảng có sẵn thì phải khai tên trường."
+msgstr "Line \"%s\" takes its figure from an existing table, so a field name is required."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy theo kỳ thì phải khai CẢ kỳ lẫn tên trường — \"doanh thu\" không kèm kỳ là câu nói dở."
+msgstr "Line \"%s\" takes a figure by period, so BOTH the period and the field name are required — \"revenue\" without a period is only half a sentence."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy từ bảng tổ máy thì phải khai lấy ô nào của dòng TỔNG."
+msgstr "Line \"%s\" takes from the unit table, so it has to say which field of the TOTAL row to use."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy từ chuỗi bậc đo thì phải khai tên trường. Mã bậc để trống nghĩa là cộng mọi bậc sản lượng."
+msgstr "Line \"%s\" takes from the metering chain, so a field name is required. An empty stage code means summing every energy stage."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy từ kho chuỗi thời gian thì phải khai mã điểm đo."
+msgstr "Line \"%s\" takes from the time-series store, so a tag code is required."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_profile.py:0
+msgid "Dòng \"%s\" lấy từ một công-tơ thì phải khai mã vị trí đặt công-tơ ấy."
+msgstr "Line \"%s\" takes from a single meter, so the code of the location holding that meter is required."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_to_may
+msgid ""
+"Dòng TỔNG cộng tử số và mẫu số rồi mới chia, không phải trung\n"
+"            bình các phần trăm — <b>trừ cột của hãng</b>: đó là số hãng\n"
+"            gửi sang, không kèm tử/mẫu để cộng, nên TỔNG của nó là trung\n"
+"            bình các phần trăm và KHÔNG so trực tiếp được với hai cột\n"
+"            bên trái."
+msgstr ""
+"The TOTAL row sums numerators and denominators before dividing, rather than\n"
+"            averaging percentages — <b>except the vendor column</b>: that figure comes\n"
+"            from the vendor with no numerator or denominator to sum, so its TOTAL is an\n"
+"            average of percentages and is NOT directly comparable with the two columns\n"
+"            to its left."
+
+#. module: eam_daily_report
+#: model:ir.model,name:eam_daily_report.model_eam_daily_report_line
+msgid "Dòng báo cáo ngày"
+msgstr "Daily report line"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__so_chua_do
+msgid "Dòng chưa có số đo"
+msgstr "Lines with no reading"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__profile_line_id
+msgid "Dòng cấu hình"
+msgstr "Configuration line"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile__tieu_de
+msgid "Dòng tiêu đề trên bản in. Giữ đúng chữ của khách để đặt cạnh tờ cũ là so được."
+msgstr "The heading line on the printout. Keep the customer's exact wording, so the sheet can be set beside the old one and compared."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__line_ids
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid "Dòng trên tờ"
+msgstr "Lines on the sheet"
+
+#. module: eam_daily_report
+#: model:ir.model,name:eam_daily_report.model_eam_daily_profile_line
+msgid "Dòng trên tờ báo cáo ngày"
+msgstr "Line on the daily report sheet"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__nguong
+msgid "Dùng cho \"số giờ trên ngưỡng\": giờ hoà lưới là số giờ công suất lớn hơn 0."
+msgstr "Used for \"hours above threshold\": grid-connected hours are the hours with power above 0."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__loai_ky
+msgid "Dùng cho nguồn \"theo kỳ\", và cho nguồn \"bậc đo\" khi muốn LUỸ KẾ tới ngày này thay vì số của riêng ngày — tờ báo cáo in cả tổn thất hôm nay lẫn tổn thất luỹ kế năm, cùng một trường, khác mỗi phạm vi cộng."
+msgstr "Used for the \"by period\" source, and for the \"metering stage\" source when the CUMULATIVE figure to date is wanted rather than the day's own — the report prints both today's loss and the year-to-date loss, from the same field, differing only in the range summed."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__dung_may
+msgid "Dừng máy"
+msgstr "Downtime"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Dựng lại khối hoạt động"
+msgstr "Rebuild the activity block"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__hoat_dong_da_sua
+msgid "Dựng lại sẽ ĐÈ mất phần đã sửa, nên hệ hỏi trước."
+msgstr "Rebuilding would OVERWRITE those edits, so the system asks first."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_hoa_gio
+msgid "Dựng từ"
+msgstr "Built from"
+
+#. module: eam_daily_report
+#: model:ir.actions.server,name:eam_daily_report.cron_dung_bao_cao_ir_actions_server
+msgid "EAMOne: dựng sẵn báo cáo vận hành ngày"
+msgstr "EAMOne: pre-build the daily operations report"
+
+#. module: eam_daily_report
+#: model:ir.actions.server,name:eam_daily_report.cron_nhac_chua_chot_ir_actions_server
+msgid "EAMOne: nhắc báo cáo ngày chưa chốt"
+msgstr "EAMOne: remind about unclosed daily reports"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Ghi chú — chỉ người trực biết"
+msgstr "Notes — only the duty operator knows"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_revise_wizard__ly_do
+msgid "Ghi rõ vì sao số đổi: nạp lại SCADA, khai lại nhóm dừng… Ba tháng sau đây là thứ duy nhất giải thích vì sao cùng một ngày có hai tờ."
+msgstr "Say plainly why the figures changed: SCADA reloaded, downtime regrouped… Three months later this is the only thing that explains why one day has two sheets."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__gia_tri
+msgid "Giá trị"
+msgstr "Value"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__gia_tri_chu
+msgid "Giá trị (chữ)"
+msgstr "Value (text)"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+msgid "Giờ"
+msgstr "Hour"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__downtime
+msgid "Giờ dừng theo nhóm"
+msgstr "Downtime hours by group"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__gio_nguyen_nhan
+msgid "Giờ dừng tách theo nguyên nhân"
+msgstr "Downtime hours split by cause"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__gio_vh
+msgid "Giờ vận hành trong ngày"
+msgstr "Operating hours for the day"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__tag_code
+msgid "Gọi điểm đo theo MÃ, không theo bản ghi: hồ sơ cấu hình phải dùng được cho mọi nhà máy cùng loại, mà mỗi nhà máy có bộ điểm đo riêng. Kết thúc bằng \"*\" để khớp nhiều điểm — \"T*_P\" là công suất mọi tua-bin."
+msgstr "Address tags by CODE, not by record: a configuration profile has to work for every plant of the same kind, and each plant has its own set of tags. End with \"*\" to match several — \"T*_P\" is the power of every turbine."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__gop
+msgid "Gộp theo cách của chính điểm đo"
+msgstr "Aggregate the way the tag itself does"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__goi_y
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__goi_y
+msgid "Gợi ý nhập"
+msgstr "Entry hint"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "HOẠT ĐỘNG"
+msgstr "ACTIVITY"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__hien_thi
+msgid "Hiển thị"
+msgstr "Display"
 
 #. module: eam_daily_report
 #: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__hieu_suat
@@ -27,7 +850,1451 @@ msgid "Hiệu suất"
 msgstr "Performance"
 
 #. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__kpi
+msgid "Hiệu suất điện mặt trời"
+msgstr "Solar PV performance"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__hoa_gio
+msgid "Hoa gió"
+msgstr "Wind rose"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Hoa gió — hướng trội"
+msgstr "Wind rose — prevailing direction"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "Hoạt động"
+msgstr "Activity"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__hoat_dong
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Hoạt động trong ngày"
+msgstr "Activity during the day"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_hoa_gio
+msgid ""
+"Hướng gió lấy trung bình <b>vectơ</b> — trung bình số\n"
+"                    học của 350° và 10° ra 180°, tức ngược hẳn hướng thật."
+msgstr ""
+"Wind direction uses a <b>vector</b> average — the arithmetic mean\n"
+"                    of 350° and 10° is 180°, the exact opposite of the true direction."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__nha_may
+msgid "Hằng số khai trên hồ sơ nhà máy"
+msgstr "Constant declared on the plant record"
+
+#. module: eam_daily_report
+#: model_terms:ir.actions.act_window,help:eam_daily_report.action_report
+msgid ""
+"Hệ <b>dựng</b> chứ không tự chốt và không tự gửi — một tờ\n"
+"            chưa ai đọc mà đã gửi đi thì ba ngày sau không ai mở nữa."
+msgstr ""
+"The system <b>builds</b> the sheet; it does not close it and does not send it — a\n"
+"            report sent before anyone has read it is one nobody opens three days later."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Hệ số công suất"
+msgstr "Capacity factor"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__he_so
+msgid "Hệ số nhân"
+msgstr "Multiplier"
+
+#. module: eam_daily_report
+#: model:ir.actions.act_window,name:eam_daily_report.action_profile
+#: model:ir.ui.menu,name:eam_daily_report.menu_daily_profile
+msgid "Hồ sơ báo cáo ngày"
+msgstr "Daily report profile"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__profile_id
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_list
+msgid "Hồ sơ cấu hình"
+msgstr "Configuration profile"
+
+#. module: eam_daily_report
+#: model:ir.model,name:eam_daily_report.model_eam_daily_profile
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid "Hồ sơ cấu hình báo cáo ngày"
+msgstr "Daily report configuration profile"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__in_khi_trong
+msgid "In cả khi trống"
+msgstr "Print even when empty"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__historian
+msgid "Kho chuỗi thời gian"
+msgstr "Time-series store"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__su_co
+msgid "Khoảng dừng KHÔNG kế hoạch trong ngày. Tách khỏi khối hoạt động vì người đọc tìm nó riêng — gộp chung thì sự cố nằm lẫn giữa việc bảo trì thường ngày."
+msgstr "Unplanned outages during the day. Kept apart from the activity block because readers look for it separately — merged in, an incident hides among routine maintenance."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__loai__khac
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__khi_tuong
+msgid "Khí tượng"
+msgstr "Weather"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__weather
+msgid "Khí tượng trong ngày"
+msgstr "Weather during the day"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+msgid "Không có khoảng dừng nào trong ngày."
+msgstr "There was no outage during the day."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Không có khoảng dừng thuộc loại sự cố nào được GHI NHẬN trong ngày."
+msgstr "No outage of an incident category was RECORDED during the day."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_thang
+msgid "Không vẽ được mục tiêu:"
+msgstr "The target cannot be plotted:"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Không xoá được tờ đã chốt. Tờ đã chốt là bản ghi của những gì đã báo hôm đó — sửa thì sinh bản mới, xoá thì mất luôn chuyện đã từng báo."
+msgstr "A closed report cannot be deleted. It is the record of what was reported that day — to change it, create a new revision; to delete it is to lose the fact that anything was reported at all."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__kha_dung
+msgid "Khả dụng"
+msgstr "Availability"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Khả dụng theo hãng"
+msgstr "Vendor availability"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__avail
+msgid "Khả dụng trong ngày"
+msgstr "Availability for the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Khả dụng — mọi nguyên nhân"
+msgstr "Availability — all causes"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Khả dụng — phạm vi hợp đồng"
+msgstr "Availability — contract scope"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__khoi
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__khoi
+msgid "Khối"
+msgstr "Block"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__khoi_dac_biet
+msgid "Khối dựng sẵn"
+msgstr "Built-in block"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__khoi
+msgid "Khối dựng sẵn (bảng, biểu đồ)"
+msgstr "Built-in block (table, chart)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Khối hoạt động của tờ ngày %s đã được sửa tay. Dựng lại sẽ ĐÈ mất phần đã sửa. Xoá nội dung trong ô rồi bấm lại nếu đúng là muốn dựng từ đầu."
+msgstr "The activity block of the %s report has been edited by hand. Rebuilding would OVERWRITE those edits. Clear the field and press again if rebuilding from scratch is really what you want."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__kieu
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__kieu
+msgid "Kiểu giá trị"
+msgstr "Value type"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ke_hoach_mai
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Kế hoạch ngày mai"
+msgstr "Plan for tomorrow"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__loai_ky
+msgid "Kỳ"
+msgstr "Period"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__loai_ky__hop_dong
+msgid "Kỳ hợp đồng O&M"
+msgstr "O&M contract period"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__loai
+msgid "Loại nhà máy"
+msgstr "Plant type"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ly_do_sua
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_revise_wizard__ly_do
+msgid "Lý do sửa"
+msgstr "Reason for the revision"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__bo_cuc__luoi
+msgid "Lưới ngang — ba khung cạnh nhau"
+msgstr "Landscape grid — three panels side by side"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__bo_cuc__luoi_gio
+msgid "Lưới ngang — bảy mục đánh số (điện gió)"
+msgstr "Landscape grid — seven numbered sections (wind)"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__nguon
+msgid "Lấy số từ đâu"
+msgstr "Where the figure comes from"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__sl_ban
+msgid "Lấy từ dòng gắn với bậc đo bán điện. Chép ra đây để lọc và cộng được — dòng trong bảng con thì không."
+msgstr "Taken from the line bound to the sales metering stage. Copied out here so it can be filtered and summed — a line in a sub-table cannot."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__nguon_ghi
+msgid "Lấy từ đâu"
+msgstr "Taken from"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__gop_nhieu__max
+msgid "Lớn nhất"
+msgstr "Maximum"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid ""
+"Máy dựng sẵn từ <b>lệnh công việc</b> và\n"
+"                                <b>sổ dừng máy</b> trong ngày. Sửa câu\n"
+"                                chữ ở đây; muốn dựng lại từ đầu thì xoá\n"
+"                                hết rồi bấm nút trên đầu — hệ không đè\n"
+"                                lên phần đã sửa."
+msgstr ""
+"Pre-built by the system from the day's <b>work orders</b>\n"
+"                                and <b>outage log</b>. Edit the wording\n"
+"                                here; to rebuild from scratch, clear it\n"
+"                                all and press the button at the top —\n"
+"                                the system does not overwrite edits."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__hoat_dong
+msgid "Máy dựng sẵn từ lệnh công việc và sổ dừng máy trong ngày. Người trực sửa câu chữ, không phải gõ lại từ đầu."
+msgstr "Pre-built by the system from the day's work orders and outage log. The duty operator edits the wording rather than typing it all again."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__ke_hoach_mai
+msgid "Máy dựng từ lệnh công việc đã lên lịch cho ngày mai. Phần này của tờ báo cáo hay bị bỏ trống nhất, mà nó lại là thứ ca sau đọc đầu tiên."
+msgstr "Built by the system from the work orders scheduled for tomorrow. This is the part of the report most often left blank, and the first thing the next shift reads."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__code
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__node_code
+msgid "Mã bậc đo"
+msgstr "Metering stage code"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__ma
+msgid "Mã dòng"
+msgstr "Line code"
+
+#. module: eam_daily_report
+#: model:ir.model.constraint,message:eam_daily_report.constraint_eam_daily_profile_code_uniq
+msgid "Mã hồ sơ đã có rồi."
+msgstr "That profile code already exists."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__ma_cong_to
+msgid "Mã vị trí đo"
+msgstr "Metering location code"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__tag_code
+msgid "Mã điểm đo"
+msgstr "Tag code"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Múi giờ dùng cho biên ngày"
+msgstr "Time zone for the day boundary"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__mui_gio
+msgid "Múi giờ đã dùng"
+msgstr "Time zone used"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Mẫu báo cáo"
+msgstr "Report layout"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__moc_cuoi
+msgid "Mốc cuối cùng vượt ngưỡng"
+msgstr "Last sample above threshold"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__moc_dau
+msgid "Mốc đầu tiên vượt ngưỡng"
+msgstr "First sample above threshold"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_profile_form
+msgid ""
+"Mỗi dòng dưới đây là một dòng trên tờ in ra. Dòng\n"
+"                        nào <b>máy lấy được</b> thì khai nó lấy ở đâu;\n"
+"                        dòng nào chỉ người trực biết thì để\n"
+"                        <b>\"Người trực tự điền\"</b>.\n"
+"                        Hệ <b>đếm</b> số ô người trực phải chạm vào —\n"
+"                        con số đó là lời hứa với họ."
+msgstr ""
+"Each line below is a line on the printed sheet. Where the\n"
+"                        <b>system can fetch</b> the figure, declare where from;\n"
+"                        where only the operator knows it, leave\n"
+"                        <b>“The duty operator fills it in”</b>.\n"
+"                        The system <b>counts</b> the fields the operator has to\n"
+"                        touch — that number is a promise to them."
+
+#. module: eam_daily_report
+#: model_terms:ir.actions.act_window,help:eam_daily_report.action_report
+msgid ""
+"Mỗi sáng hệ dựng sẵn tờ của hôm qua từ <b>số đã có</b>:\n"
+"            khí tượng, sản lượng từng bậc, hiệu suất, khả dụng, giờ\n"
+"            dừng. Người trực sửa chừng mười ô chỉ mình họ biết rồi chốt."
+msgstr ""
+"Every morning the system pre-builds yesterday's sheet from the <b>figures it\n"
+"            already holds</b>: weather, energy by stage, performance, availability,\n"
+"            downtime hours. The duty operator edits the dozen or so fields only they know, then closes it."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__cong_to
+msgid "Một công-tơ: chênh hai lần đọc"
+msgstr "One meter: difference between two readings"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Mở lại"
+msgstr "Reopen"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Mở lại bản %d để sửa."
+msgstr "Reopened revision %d for editing."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Mở lại một tờ đã chốt chỉ nên làm khi tờ CHƯA gửi đi. Đã gửi rồi thì dùng 'Sửa ra bản mới' để giữ vết."
+msgstr "Reopening a closed report should only be done while it has NOT been sent. Once sent, use \"Revise into a new version\" to keep the trail."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__target
+msgid "Mục tiêu sản lượng"
+msgstr "Energy target"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__muc
+msgid "Mức xác suất"
+msgstr "Probability level"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khung_gon
+msgid "NHÁP — chưa chốt"
+msgstr "DRAFT — not closed"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "NHÁP — chưa chốt. Số liệu còn có thể đổi."
+msgstr "DRAFT — not closed. The figures may still change."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+msgid "Nguyên nhân"
+msgstr "Cause"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__nguon
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__he_so
+msgid "Nguồn ghi bằng MWh mà tờ in bằng kWh thì để 1000. Đây là chỗ sai thầm lặng nhất của mọi tờ báo cáo."
+msgstr "If the source records MWh while the sheet prints kWh, set 1000. This is the quietest mistake in any report."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__nguoi_chot_id
+msgid "Người chốt"
+msgstr "Closed by"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Người lập"
+msgstr "Prepared by"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__co_the_sua
+msgid "Người sửa được"
+msgstr "The operator may edit it"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__nguoi
+msgid "Người trực tự điền"
+msgstr "The duty operator fills it in"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__ghi_nguoc
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__ghi_nguoc
+msgid "Người trực điền, ghi ngược về bảng nguồn"
+msgstr "Operator entry, written back to the source table"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__hoat_dong_da_sua
+msgid "Người đã sửa khối hoạt động"
+msgstr "Activity block edited by a person"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__nguong
+msgid "Ngưỡng"
+msgstr "Threshold"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__gop_nhieu
+msgid "Nhiều điểm đo thì gộp kiểu gì"
+msgstr "How several tags are aggregated"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_daily_report
+#: model:ir.model.constraint,message:eam_daily_report.constraint_eam_daily_report_ngay_uniq
+msgid "Nhà máy này đã có bản báo cáo cùng số cho ngày đó rồi."
+msgstr "This plant already has a report with the same number for that day."
+
+#. module: eam_daily_report
 #: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__state__nhap
 msgid "Nháp"
 msgstr "Draft"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__nhan_su
+msgid "Nhân sự & an toàn"
+msgstr "People & safety"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__name
+msgid "Nhãn"
+msgstr "Label"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__name
+msgid "Nhãn in ra"
+msgstr "Printed label"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__group_id
+msgid "Nhóm giờ dừng"
+msgstr "Downtime group"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid "Nhóm tính là cắt giảm:"
+msgstr "Groups counted as curtailment:"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__ghi_chu
+msgid "Nhận xét"
+msgstr "Remarks"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__loai_ky__nam
+msgid "Năm"
+msgstr "Year"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
+msgid "Nạp lại SCADA ngày 19/10 · khoảng dừng T07 khai nhầm nhóm…"
+msgstr "SCADA reloaded for 19/10 · T07 outage filed under the wrong group…"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__ghi_chu_bc
+msgid "Phần chỉ người trực biết. Máy không dựng được, và cũng không nên dựng."
+msgstr "The part only the duty operator knows. The system cannot build it, and should not."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__ghi_nguoc
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__ghi_nguoc
+msgid "Quan trắc bằng mắt (trời 6–9h, 9–12h…) là DỮ LIỆU KHÍ TƯỢNG — nhà của nó là sổ quan trắc, không phải tờ báo cáo. Nhưng bắt người trực mở hai màn hình mỗi sáng thì họ sẽ bỏ một màn. Cờ này cho ô mở ngay trên tờ, và hệ ghi thẳng vào sổ quan trắc — một nhà, một màn hình."
+msgstr "Visual observation (sky 06–09, 09–12…) is WEATHER DATA — its home is the observation log, not the report sheet. But making the operator open two screens every morning means one of them gets skipped. This flag puts the field right on the sheet, and the system writes it straight into the observation log — one home, one screen."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report__profile_id
+msgid "Quyết định tờ này có những dòng nào và mỗi dòng lấy số từ đâu. Đổi hồ sơ sau khi đã rót số thì phải rót lại."
+msgstr "Decides which lines this sheet has and where each one takes its figure from. Change the profile after the figures are filled in and they have to be filled again."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Rót lại số"
+msgstr "Refill the figures"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Sinh từ"
+msgstr "Created from"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Sinh từ bản %(n)d. Lý do: %(l)s"
+msgstr "Created from revision %(n)d. Reason: %(l)s"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__ky
+msgid "Sản lượng / doanh thu theo kỳ"
+msgstr "Energy / revenue by period"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__sl_ban
+msgid "Sản lượng bán (kWh)"
+msgstr "Energy sold (kWh)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Sản lượng ngày (kWh)"
+msgstr "Daily energy (kWh)"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__kieu__so
+msgid "Số"
+msgstr "Number"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__gio_tren_nguong
+msgid "Số giờ trên ngưỡng"
+msgstr "Hours above threshold"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Số liệu ngày"
+msgstr "Daily figures"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_gio_nguyen_nhan
+msgid "Số lần"
+msgstr "Count"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__so_le
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__so_le
+msgid "Số lẻ"
+msgstr "Decimals"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do
+msgid "Số tổ máy đang phát (đỉnh"
+msgstr "Units generating (peak"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__so_o_nguoi
+msgid "Số ô người trực phải điền"
+msgstr "Fields the operator must fill in"
+
+#. module: eam_daily_report
+#: model:ir.model,name:eam_daily_report.model_eam_daily_revise_wizard
+msgid "Sửa báo cáo ngày ra bản mới"
+msgstr "Revise the daily report into a new version"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
+msgid "Sửa ra bản mới"
+msgstr "Revise into a new version"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__nguon_id
+msgid "Sửa từ bản"
+msgstr "Revised from"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__su_co
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Sự cố"
+msgstr "Incident"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Thay bằng bản %(n)d. Lý do: %(l)s"
+msgstr "Superseded by revision %(n)d. Reason: %(l)s"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__tinh_trang_so__thieu_bb
+msgid "Thiếu ô BẮT BUỘC"
+msgstr "MANDATORY field missing"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
+msgid "Thôi"
+msgstr "Cancel"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__dinh_luc
+msgid "Thời điểm đạt đỉnh"
+msgstr "Time of the peak"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__tieu_de
+msgid "Tiêu đề in ra"
+msgstr "Printed title"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__gop_nhieu__tb
+msgid "Trung bình"
+msgstr "Average"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__gop_nhieu__vector
+msgid "Trung bình VECTƠ (hướng)"
+msgstr "VECTOR average (direction)"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__state
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__state
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__loai_ky__tuan
+msgid "Tuần"
+msgstr "Week"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__name
+msgid "Tên hồ sơ"
+msgstr "Profile name"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__truong
+msgid "Tên kỹ thuật của trường trên bảng nguồn, ví dụ \"irradiation\" hay \"kd_thoi_gian\". Khai sai thì nhật ký nói rõ bảng đó có những trường nào."
+msgstr "The technical field name on the source table, for example \"irradiation\" or \"kd_thoi_gian\". Get it wrong and the log says exactly which fields that table has."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__ma
+msgid "Tên ngắn để dòng KHÁC trỏ tới trong công thức, ví dụ \"e_inv\". Chỉ cần khai cho dòng nào được dùng làm đầu vào."
+msgstr "A short name for OTHER lines to reference in a formula, for example \"e_inv\". Only needed on lines used as inputs."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__truong
+msgid "Tên trường"
+msgstr "Field name"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Tìm báo cáo ngày"
+msgstr "Search daily reports"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__tinh_trang_so
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Tình trạng số liệu"
+msgstr "Data completeness"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__cong_thuc
+msgid "Tính từ các dòng khác trên cùng tờ"
+msgstr "Computed from other lines on the same sheet"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
+msgid "Tạo bản mới"
+msgstr "Create a new revision"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_to_may
+msgid "Tốc độ gió"
+msgstr "Wind speed"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do
+msgid "Tốc độ gió (đỉnh"
+msgstr "Wind speed (peak"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Tổ máy"
+msgstr "Unit"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__ton_that
+msgid "Tổn thất qua các bậc"
+msgstr "Loss across the metering stages"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__nguon__unit
+msgid "Tổng bảng tổ máy"
+msgstr "Unit table total"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_list
+msgid "Tổng sản lượng bán"
+msgstr "Total energy sold"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ %(t)s còn ở nháp. Còn %(a)d ô phải điền."
+msgstr "The report for %(t)s is still a draft. %(a)d fields still to fill in."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile__bo_cuc
+msgid "Tờ báo cáo của nhà máy điện mặt trời không phải danh sách dọc: ba khung năng lượng / giờ / khí tượng nằm cạnh nhau, rồi hằng số và KPI, rồi dải điện năng theo giờ. Người trực đọc theo CHỖ — ô nào ở đâu là một phần của việc đọc nhanh, nên đổi bố cục là đổi tốc độ đọc chứ không chỉ đổi hình."
+msgstr "A solar plant's sheet is not a vertical list: three panels — energy / hours / weather — sit side by side, then the constants and the KPIs, then the hourly energy band. The operator reads by PLACE — where a field sits is part of reading it quickly, so changing the layout changes reading speed, not just appearance."
+
+#. module: eam_daily_report
+#: model_terms:ir.actions.act_window,help:eam_daily_report.action_profile
+msgid ""
+"Tờ của điện gió và của điện mặt trời khác nhau ở\n"
+"            <b>nội dung từng dòng</b>, không khác ở cách làm việc. Nên\n"
+"            dòng trên tờ là <b>dữ liệu</b> — thêm loại nhà máy thứ ba là\n"
+"            thêm một hồ sơ, không phải viết thêm một báo cáo."
+msgstr ""
+"A wind sheet and a solar sheet differ in <b>what each line says</b>,\n"
+"            not in how the work is done. So the lines on the sheet are\n"
+"            <b>data</b> — adding a third plant type means adding a profile, not\n"
+"            writing another report."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ ngày %s không còn ở nháp."
+msgstr "The report for %s is no longer a draft."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ ngày %s đã chốt. Số đã chốt là bản ghi của hôm đó, không rót đè lên được — muốn đổi thì bấm \"Sửa ra bản mới\"."
+msgstr "The report for %s is closed. A closed figure is the record of that day and cannot be overwritten — to change it, press \"Revise into a new version\"."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ này không ở trạng thái đã chốt."
+msgstr "This report is not in the closed state."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ đã chốt thì không dựng lại dòng được."
+msgstr "The lines of a closed report cannot be rebuilt."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Tờ đã chốt thì không dựng lại được."
+msgstr "A closed report cannot be rebuilt."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__to_may
+msgid "Từng tổ máy"
+msgstr "Per unit"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__ly_do_chua_do
+msgid "Vì sao chưa có số"
+msgstr "Why there is no figure"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__nguon_ghi
+msgid "Vết: bản ghi nào đã cho con số này."
+msgstr "Trace: which record produced this figure."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "Xuất Excel"
+msgstr "Export to Excel"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "bảng %(b)s không có trường \"%(t)s\"; các trường số đang có: %(c)s…"
+msgstr "table %(b)s has no field \"%(t)s\"; its numeric fields are: %(c)s…"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "bảng bậc đo không có trường \"%s\""
+msgstr "the metering-stage table has no field \"%s\""
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "bậc đo \"%(m)s\" chưa có dòng ngày nào trong kỳ %(t)s–%(d)s"
+msgstr "metering stage \"%(m)s\" has no daily row in period %(t)s–%(d)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "bậc đo %s"
+msgstr "metering stage %s"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_inverter
+msgid "bộ chưa có số phía một chiều"
+msgstr "no DC-side figure for this set"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chuỗi đo chưa có dòng ngày nào trong %(t)s–%(d)s"
+msgstr "the metering chain has no daily row between %(t)s and %(d)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa có ngày khả dụng nào trong kỳ hợp đồng %(t)s–%(d)s"
+msgstr "there is no availability day in contract period %(t)s–%(d)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "chưa có số đọc hôm nay"
+msgstr "no reading today"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "chưa có số đọc hôm qua — không tính chênh được"
+msgstr "no reading yesterday — the difference cannot be computed"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "chưa dựng bảng tổ máy cho ngày này"
+msgstr "the unit table has not been built for this day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa dựng bảng tổ máy cho ngày này — mở \"Hiệu suất tổ máy\" và dựng, hoặc chờ cron chạy lúc 0h10"
+msgstr "the unit table has not been built for this day — open \"Unit performance\" and build it, or wait for the cron at 00:10"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa dựng dòng kỳ %(l)s bắt đầu %(t)s cho nhà máy này — mở Hiệu suất → Sản lượng theo kỳ và dựng"
+msgstr "the %(l)s period row starting %(t)s has not been built for this plant — open Performance → Energy by period and build it"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "chưa dựng sổ ngày tổ máy cho ngày này"
+msgstr "the unit-day log has not been built for this day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "chưa giao ai"
+msgstr "not assigned"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa khai bậc nào"
+msgstr "no metering stage declared"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa khai mục tiêu"
+msgstr "no target declared"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa khai mục tiêu cho tháng %(t)02d/%(n)d của nhà máy này"
+msgstr "no target declared for %(t)02d/%(n)d at this plant"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "chưa khai mục tiêu tháng"
+msgstr "no monthly target declared"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "chưa khai nhóm giờ dừng nào là CẮT GIẢM — không tách được phần bị điều độ cắt khỏi phần hỏng máy"
+msgstr "no downtime group is declared as CURTAILMENT — what the dispatcher cut cannot be separated from machine faults"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "chưa phân loại"
+msgstr "not classified"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid ""
+"chưa quy ra tiền\n"
+"                            ("
+msgstr ""
+"not yet valued\n"
+"                            ("
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "chưa đo được"
+msgstr "not measured"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "cách gộp của điểm đo không cho ra số cho ngày này — thường là đồng hồ luỹ kế bị thay hoặc quay vòng"
+msgstr "the tag's aggregation yields no figure for this day — usually a cumulative counter that was replaced or rolled over"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "công thức cần %(c)s nhưng %(t)s chưa có số%(v)s"
+msgstr "the formula needs %(c)s but %(t)s has no figure%(v)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "công thức hỏng: %s"
+msgstr "formula error: %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "công-tơ \"%s\" chưa có số đọc hôm nay"
+msgstr "meter \"%s\" has no reading today"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "công-tơ \"%s\" chưa có số đọc hôm qua — không tính chênh được"
+msgstr "meter \"%s\" has no reading yesterday — the difference cannot be computed"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "công-tơ \"%s\" đã được thay hoặc quay vòng trong ngày"
+msgstr "meter \"%s\" was replaced or rotated during the day"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_cong_to
+msgid "công-tơ chưa tính được chênh"
+msgstr "the meter difference could not be computed"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "dòng TỔNG của %d tổ máy"
+msgstr "TOTAL row of %d units"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "dòng TỔNG của bảng tổ máy không có ô \"%(t)s\"; đang có: %(c)s"
+msgstr "the TOTAL row of the unit table has no field \"%(t)s\"; it has: %(c)s"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid ""
+"dòng chưa\n"
+"                            có số đo"
+msgstr ""
+"lines have\n"
+"                            no reading"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
+msgid "dòng chưa có số đo."
+msgstr "lines have no reading."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "dòng khai nguồn \"công thức\" nhưng chưa viết công thức"
+msgstr "the line declares source \"formula\" but no formula is written"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "giờ dừng (%(d).2f h) vượt khung phát (%(k).2f h) — có khoảng dừng nằm ngoài giờ phát"
+msgstr "downtime (%(d).2f h) exceeds the generating window (%(k).2f h) — some outage lies outside generating hours"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_san_luong_gio
+msgid ""
+"giờ ngoài khung\n"
+"                    không in, nên tổng ở đây nhỏ hơn sản lượng cả ngày."
+msgstr ""
+"hours outside the window\n"
+"                    are not printed, so this total is lower than the whole day's energy."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_san_luong_gio
+msgid ""
+"giờ tại nhà máy.\n"
+"                Mỗi cột là TRUNG BÌNH công suất trong giờ nhân một giờ —\n"
+"                cộng dồn số đo thì ra con số gấp mấy lần mà vẫn mang đơn\n"
+"                vị kWh."
+msgstr ""
+"plant local time.\n"
+"                Each bar is the MEAN power during the hour times one hour —\n"
+"                summing the raw samples gives a figure several times larger that\n"
+"                still carries the unit kWh."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "hiệu suất"
+msgstr "performance"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "hằng số \"%(t)s\" chưa khai trên hồ sơ nhà máy %(n)s"
+msgstr "constant \"%(t)s\" is not declared on plant record %(n)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "hồ sơ nhà máy"
+msgstr "the plant record"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "hồ sơ nhà máy %s"
+msgstr "plant record %s"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid "khoảng)"
+msgstr "outages)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không có bản ghi %(b)s cho ngày này"
+msgstr "there is no %(b)s record for this day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không có khoảng dừng nhóm này"
+msgstr "no outage in this group"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không có khoảng dừng nào trong ngày"
+msgstr "there was no outage during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "không có số đo công suất nào trong ngày"
+msgstr "no power reading during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "không có số đo hướng và tốc độ gió cùng mốc trong ngày"
+msgstr "there is no matching wind direction and speed sample during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "không có số đo nào trong khung %(a)02d–%(b)02d giờ"
+msgstr "no reading in the %(a)02d–%(b)02d window"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không có số đo nào vượt ngưỡng trong ngày"
+msgstr "no reading exceeded the threshold during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không mốc đo nào vượt ngưỡng %.1f trong ngày"
+msgstr "no sample exceeded the %.1f threshold during the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không tra được điểm đo"
+msgstr "the tag could not be found"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "không xác định được thời điểm đỉnh"
+msgstr "the time of the peak cannot be determined"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "khả dụng"
+msgstr "availability"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "khối chưa dựng"
+msgstr "block not built"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "khối dựng sẵn: %s"
+msgstr "built-in block: %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "kỳ %(k)s mới có %(a)d/%(b)d ngày có số — một TỶ LỆ tính trên nửa kỳ còn thiếu thì sai chứ không phải nhỏ hơn thật, vì mẫu số là cả kỳ"
+msgstr "period %(k)s has figures for only %(a)d/%(b)d days — a RATIO computed over half a period is wrong rather than merely smaller, because the denominator is the whole period"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "kỳ hợp đồng chưa có sản lượng nào"
+msgstr "the contract period has no energy yet"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "lần cuối"
+msgstr "last"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "lần đầu"
+msgstr "first time"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "lỗi khi lấy số: %s"
+msgstr "error fetching the figure: %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "mẫu số PR còn lệch %.2f%% so với tờ của nhà máy — chưa chốt thì chưa đưa lên báo cáo"
+msgstr "the PR denominator still differs by %.2f%% from the plant's own sheet — until that is settled it does not belong in the report"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "mẫu số bằng không trong công thức \"%s\""
+msgstr "division by zero in formula \"%s\""
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_hoa_gio
+msgid ""
+"mốc\n"
+"                    đo. Chiều dài cánh là <b>tần suất</b>; độ đậm là\n"
+"                    <b>tốc độ trung bình</b> của hướng đó."
+msgstr ""
+"samples.\n"
+"                    Petal length is <b>frequency</b>; shading is the\n"
+"                    <b>mean speed</b> for that direction."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "mục tiêu CẢ THÁNG %(t)02d/%(n)d · nguồn: %(g)s"
+msgstr "WHOLE-MONTH target %(t)02d/%(n)d · source: %(g)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "mục tiêu cả tháng · nguồn: %s"
+msgstr "whole-month target · source: %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "mục tiêu tháng chia đều %(a)d/%(b)d ngày · nguồn: %(n)s"
+msgstr "monthly target spread evenly, %(a)d/%(b)d days · source: %(n)s"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_thang
+msgid ""
+"ngày\n"
+"                chưa có số"
+msgstr ""
+"days\n"
+"                have no figures"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_cat_giam
+msgid "ngày chưa có số."
+msgstr "days have no figures."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "người trực điền, ghi vào %s"
+msgstr "operator entry, written to %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa có bậc đo mã \"%(m)s\"; đang có: %(c)s"
+msgstr "the plant has no metering stage with code \"%(m)s\"; it has: %(c)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa có hợp đồng O&M nào phủ ngày %s"
+msgstr "the plant has no O&M contract covering %s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa có vị trí đo mã \"%s\""
+msgstr "the plant has no metering location with code \"%s\""
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "nhà máy chưa có điểm đo hướng gió (*_WD) hoặc tốc độ gió (*_WS)"
+msgstr "the plant has no wind-direction (*_WD) or wind-speed (*_WS) tag"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa có điểm đo nào khớp mã \"%s\""
+msgstr "the plant has no tag matching code \"%s\""
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa khai bậc sản lượng nào"
+msgstr "the plant has no energy metering stage declared"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "nhà máy chưa khai công-tơ điện năng nào — mười hai đồng hồ giờ máy chạy không thuộc bảng giao nhận"
+msgstr "the plant declares no energy meter — twelve running-hour counters do not belong on a settlement sheet"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "nhà máy chưa khai số tổ máy, nên không quy được giờ-máy về giờ cấp nhà máy"
+msgstr "the plant does not declare a unit count, so unit-hours cannot be brought to plant level"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "nhà máy chưa khai điểm đo nào loại \"công suất\""
+msgstr "the plant has no tag of type \"power\" declared"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_inverter
+msgid ""
+"nên hai hàng DC và\n"
+"                    hiệu suất để \"—\""
+msgstr ""
+"so the DC and\n"
+"                    performance rows are left as \"—\""
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "quan trắc"
+msgstr "observation"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "sản lượng theo kỳ"
+msgstr "energy by period"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "số đọc hôm nay (%(b)s) NHỎ HƠN hôm qua (%(a)s)"
+msgstr "today's reading (%(b)s) is LOWER than yesterday's (%(a)s)"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "số đọc hôm nay NHỎ HƠN hôm qua"
+msgstr "today's reading is LOWER than yesterday's"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid "thay cho nó."
+msgstr "in its place."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "tháng này chưa có ngày nào có sản lượng"
+msgstr "no day this month has any energy yet"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_to_may
+msgid ""
+"tổ máy chưa\n"
+"                có số sản lượng"
+msgstr ""
+"units have\n"
+"                no energy figure"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_thang
+msgid "và vẽ bằng không."
+msgstr "and plotted as zero."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bang_to_may
+msgid "và được in là \"—\"."
+msgstr "and printed as \"—\"."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid ""
+"và được in là \"—\". Ô trống KHÔNG\n"
+"                            phải là số không — lý do ghi ngay cạnh từng\n"
+"                            dòng."
+msgstr ""
+"and printed as \"—\". An empty field is NOT\n"
+"                            a zero — the reason is written beside each\n"
+"                            line."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_cong_to
+msgid ""
+"và để trống. Lấy số đọc gần nhất thay cho số đọc hôm qua là\n"
+"            âm thầm cộng sản lượng nhiều ngày vào một ngày."
+msgstr ""
+"and left empty. Using the most recent reading in place of yesterday's\n"
+"            quietly adds several days' energy into one day."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "vị trí \"%s\" chưa gắn công-tơ nào"
+msgstr "location \"%s\" has no meter attached"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay_luoi
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khung_gon
+msgid "· bản"
+msgstr "· rev."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__so_o_trong
+msgid "Ô người trực còn trống"
+msgstr "Operator fields still empty"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__bat_buoc
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__bat_buoc
+msgid "Ô người trực phải điền thì mới chốt được tờ. Dùng cho những ô mà để trống là tờ báo cáo mất nghĩa."
+msgstr "A field the operator has to fill in before the report can be closed. Use it for fields whose emptiness makes the report meaningless."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__co_the_sua
+msgid "Ô người trực, hoặc ô ghi ngược về bảng nguồn. Còn lại là máy rót và khoá — chép tay con số hệ đã có là mời sai số vào."
+msgstr "Operator fields, or fields written back to the source table. The rest the system fills and locks — copying by hand a figure the system already holds is an invitation to error."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "ô \"%s\" của dòng TỔNG chưa tính được — xem lý do trên chính bảng tổ máy"
+msgstr "field \"%s\" of the TOTAL row could not be computed — see the reason on the unit table itself"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay_luoi
+msgid "ô chưa đo được"
+msgstr "fields not measured"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "ô này chỉ nhận: %s"
+msgstr "this field only accepts: %s"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__loai__wind
+msgid "Điện gió"
+msgstr "Wind"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile__loai__pv
+msgid "Điện mặt trời"
+msgstr "Solar PV"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi_dac_biet__san_luong_gio
+msgid "Điện năng từng giờ trong ngày"
+msgstr "Hourly energy for the day"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__state__chot
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Đã chốt"
+msgstr "Closed"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Đã chốt bản %(n)d. %(a)d dòng chưa có số đo, %(b)d ô người trực để trống."
+msgstr "Closed revision %(n)d. %(a)d lines have no reading, %(b)d operator fields left empty."
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/xuat_excel.py:0
+msgid "Đã làm trong ngày"
+msgstr "Done during the day"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_search
+msgid "Đã phải sửa ra bản mới"
+msgstr "Had to be revised into a new version"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report.py:0
+msgid "Đã rót lại số cho %(n)d tờ%(t)s."
+msgstr "Refilled the figures on %(n)d reports%(t)s."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ban_sau_id
+msgid "Đã thay bằng bản"
+msgstr "Superseded by revision"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__state__thay_the
+msgid "Đã thay thế"
+msgstr "Superseded"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__name
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_report_line__name
+msgid "Đúng chữ trên tờ của khách, kể cả khi hệ gọi tên khác."
+msgstr "Exactly as worded on the customer's sheet, even when the system calls it something else."
+
+#. module: eam_daily_report
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__don_vi
+#: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report_line__don_vi
+msgid "Đơn vị"
+msgstr "Unit"
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_report__tinh_trang_so__du
+msgid "Đầy đủ"
+msgstr "Complete"
+
+#. module: eam_daily_report
+#: model:ir.model.fields,help:eam_daily_report.field_eam_daily_profile_line__group_id
+msgid "Để trống thì lấy TỔNG mọi nhóm."
+msgstr "Leave it empty to take the TOTAL of all groups."
+
+#. module: eam_daily_report
+#: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__cach_lay__dinh
+msgid "Đỉnh trong ngày"
+msgstr "Peak for the day"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
+msgid "đỉnh %(d).1f lúc %(g)s giờ %(m)s"
+msgstr "peak %(d).1f at %(g)s %(m)s"
+
+#. module: eam_daily_report
+#: code:addons/eam_daily_report/models/khoi_dung_san.py:0
+msgid "đồng hồ đã được thay / quay vòng trong ngày"
+msgstr "the meter was replaced or rotated during the day"
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do_to_may
+msgid ""
+"— ba đơn vị khác nhau, mỗi đường chuẩn hoá theo đỉnh của\n"
+"                CHÍNH NÓ. Đọc được HÌNH DÁNG (trụ nào thấp hơn đàn),\n"
+"                không đọc được giá trị."
+msgstr ""
+"— three different units, each curve normalised to ITS OWN\n"
+"                peak. The SHAPE can be read (which tower lags the flock),\n"
+"                the values cannot."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.khoi_bieu_do
+msgid ""
+"— mỗi điểm là <b>trung bình các tổng theo mốc</b>, không\n"
+"                phải tổng cộng dồn."
+msgstr ""
+"— each point is the <b>average of the per-sample totals</b>, not\n"
+"                a running sum."
+
+#. module: eam_daily_report
+#: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
+msgid ""
+"— thay\n"
+"                            cho bản"
+msgstr ""
+"— in place\n"
+"                            of revision"
 

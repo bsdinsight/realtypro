@@ -22,9 +22,41 @@ msgid "Bất khả kháng"
 msgstr "Force majeure"
 
 #. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__formula
+msgid "Công thức"
+msgstr "Formula"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__company_id
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__company_id
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_point__company_id
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__name
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__note
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__external
+msgid "Hệ ngoài đẩy vào"
+msgstr "Pushed in by an outside system"
+
+#. module: eam_historian
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
 msgid "Khi nào"
 msgstr "When"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__other
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__other
+msgid "Khác"
+msgstr "Other"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__curve_type
@@ -33,8 +65,78 @@ msgid "Loại"
 msgstr "Category"
 
 #. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__reason
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Lý do"
+msgstr "Reason"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__max
+msgid "Lớn nhất"
+msgstr "Maximum"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__source
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__plant_id
+#: model:ir.model.fields,field_description:eam_historian.field_eam_quality_wizard__plant_id
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__gio
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
 msgid "Số giờ"
 msgstr "Hours"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__asset_id
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__avg
+msgid "Trung bình"
+msgstr "Average"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__location_ids
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__location_id
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__category_id
+msgid "Áp cho loại cấu phần"
+msgstr "Applies to component category"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Áp cho đâu"
+msgstr "Where it applies"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Đã nghỉ"
+msgstr "Retired"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__uom_label
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Đơn vị"
+msgstr "Unit"
 

@@ -22,6 +22,19 @@ msgid "Bắt đầu"
 msgstr "Start"
 
 #. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__company_id
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__company_id
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__company_id
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__mo_ta
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__date_end
 msgid "Kết thúc"
 msgstr "End"
@@ -35,6 +48,36 @@ msgstr "Category"
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__ghi_chu
 msgid "Loại thời gian"
 msgstr "Time category"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__work_order_id
+msgid "Lệnh công việc"
+msgstr "Work order"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__code
+msgid "Mã"
+msgstr "Code"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__plant_id
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__plant_id
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__state
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__location_id
+msgid "Vị trí"
+msgstr "Location"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__dang_dung

@@ -18,6 +18,41 @@ msgstr ""
 
 #. module: eam_map
 #: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Hệ số công suất"
+msgstr "Capacity factor"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Khả dụng"
+msgstr "Availability"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Khả dụng — mọi nguyên nhân"
+msgstr "Availability — all causes"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Khả dụng — phạm vi hợp đồng"
+msgstr "Availability — contract scope"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Lệnh công việc"
+msgstr "Work order"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
 msgid "Số vị trí"
 msgstr "Locations"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Trạng thái"
+msgstr "State"
+
+#. module: eam_map
+#: code:addons/eam_map/static/src/xml/eam_map.xml:0
+msgid "Vị trí"
+msgstr "Location"
 

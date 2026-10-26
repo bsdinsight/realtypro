@@ -22,14 +22,89 @@ msgid "Báo cáo nhà thầu"
 msgstr "Contractor report"
 
 #. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__1
+msgid "Bình thường"
+msgstr "Normal"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__work_type__predictive
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__work_type__predictive
+msgid "Bảo trì theo trạng thái"
+msgstr "Condition-based maintenance"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__ok
 msgid "Còn hạn"
 msgstr "In warranty"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__company_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__company_id
+msgid "Công ty"
+msgstr "Company"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__note
+msgid "Diễn giải"
+msgstr "Explanation"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__plant_id
+msgid "Giới hạn trong nhà máy"
+msgstr "Limited to the plant"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__operating_hours
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__meter_type__operating_hours
+msgid "Giờ máy chạy"
+msgstr "Running hours"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter_reading__source__scada
 msgid "Hệ giám sát"
 msgstr "Monitoring system"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__other
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__other
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__other
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__other
+msgid "Khác"
+msgstr "Other"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__3
+msgid "Khẩn cấp"
+msgstr "Emergency"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__work_type__inspection
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__work_type__inspection
+msgid "Kiểm tra, xem xét"
+msgstr "Inspect, examine"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__meter_type
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__meter_type
+msgid "Loại đồng hồ"
+msgstr "Meter type"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__reason
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Lý do"
+msgstr "Reason"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__code
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Mã"
+msgstr "Code"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__location_code
@@ -38,9 +113,96 @@ msgid "Mã vị trí"
 msgstr "Location code"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__source
+msgid "Nguồn"
+msgstr "Source"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__plant_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__plant_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__production_mwh
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__meter_type__production_mwh
+msgid "Sản lượng luỹ kế (MWh)"
+msgstr "Cumulative energy (MWh)"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__starts
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__meter_type__starts
+msgid "Số lần khởi động"
+msgstr "Starts"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__0
+msgid "Thấp"
+msgstr "Low"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__asset_id
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
 msgid "Tài sản"
 msgstr "Asset"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__location_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__location_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__location_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__location_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__location_ids
+msgid "Vị trí khai đích danh"
+msgstr "Explicitly named location"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__category_id
+msgid "Áp cho loại cấu phần"
+msgstr "Applies to component category"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Áp cho đâu"
+msgstr "Where it applies"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__wo_open
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Đã có lệnh"
+msgstr "Order exists"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Đã nghỉ"
+msgstr "Retired"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__uom_label
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__uom_label
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Đơn vị"
+msgstr "Unit"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_location__meter_ids
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__meter_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Đồng hồ"
+msgstr "Meter"
 

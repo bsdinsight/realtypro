@@ -17,6 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_energy
+#: model_terms:ir.ui.view,arch_db:eam_energy.view_eam_outage_list_energy
+msgid "Kỳ"
+msgstr "Period"
+
+#. module: eam_energy
 #: model:ir.model,name:eam_energy.model_eam_time_category
 msgid "Loại thời gian"
 msgstr "Time category"

@@ -24,6 +24,11 @@ msgid "Loại cấu phần"
 msgstr "Component category"
 
 #. module: eam_procurement
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: eam_procurement
 #: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_location_id
 msgid "Vị trí đang lắp"
 msgstr "Current location"

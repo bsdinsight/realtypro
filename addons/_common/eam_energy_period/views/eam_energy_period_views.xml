@@ -5,26 +5,22 @@
         <field name="name">eam.energy.period.list</field>
         <field name="model">eam.energy.period</field>
         <field name="arch" type="xml">
-            <list string="Sản lượng theo kỳ" create="false"
-                  decoration-danger="dat_muc == 'duoi'"
-                  decoration-warning="not du_lieu_day"
-                  decoration-success="dat_muc == 'p50'">
-                <field name="nhan_ky" string="Kỳ"/>
-                <field name="loai_ky"/>
-                <field name="plant_id"/>
+            <!-- CHỈ bày thước đo CỘNG ĐƯỢC. Màn này ghim ở bậc NGÀY và
+                 người dùng sẽ gom nhóm theo tuần / tháng / năm ngay trên
+                 lưới, nên mọi cột phải chịu được phép cộng.
+
+                 Hệ số công suất, Khả dụng %, Đạt so với P50 ĐÃ BỊ GỠ
+                 khỏi đây: chúng là TỶ SỐ CỦA TỔNG, gom 30 ngày rồi lấy
+                 trung bình ra số khác sự thật. Chúng vẫn còn trên bản
+                 ghi và còn ở các màn tính sẵn theo kỳ — đừng kéo lại
+                 vào đây chỉ vì "cho tiện xem". -->
+            <list string="Sản lượng" create="false"
+                  decoration-warning="not du_lieu_day">
+                <field name="tu_ngay" string="Ngày" width="130px"/>
+                <field name="plant_id" string="Nhà máy" width="240px"/>
                 <field name="san_luong" sum="Tổng sản lượng"/>
-                <field name="so_ngay_thieu" string="Ngày thiếu"/>
-                <field name="he_so_cong_suat" string="CF (%)"/>
-                <field name="kd_san_luong" string="Khả dụng (%)"/>
                 <field name="sl_mat" string="Mất (kWh)" sum="Tổng mất"/>
                 <field name="p50" optional="show" sum="Tổng P50"/>
-                <field name="ty_le_p50" string="Đạt P50 (%)"/>
-                <field name="dat_muc" widget="badge"
-                       decoration-success="dat_muc == 'p50'"
-                       decoration-warning="dat_muc in ('p75', 'p90')"
-                       decoration-danger="dat_muc == 'duoi'"/>
-                <field name="ly_do_khong_so" string="Vì sao chưa so được"
-                       optional="show" width="260px"/>
                 <field name="doanh_thu" optional="hide" sum="Tổng doanh thu"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="du_lieu_day" column_invisible="1"/>
@@ -106,26 +102,18 @@
         <field name="arch" type="xml">
             <search string="Tìm">
                 <field name="plant_id"/>
-                <field name="nhan_ky"/>
-                <filter name="f_ngay" string="Theo ngày"
-                        domain="[('loai_ky', '=', 'ngay')]"/>
-                <filter name="f_tuan" string="Theo tuần"
-                        domain="[('loai_ky', '=', 'tuan')]"/>
-                <filter name="f_thang" string="Theo tháng"
-                        domain="[('loai_ky', '=', 'thang')]"/>
-                <filter name="f_nam" string="Theo năm"
-                        domain="[('loai_ky', '=', 'nam')]"/>
-                <separator/>
+                <!-- KHÔNG còn bộ lọc "Theo ngày / tuần / tháng / năm".
+                     Độ mịn thời gian nay là chuyện của phép GOM NHÓM —
+                     bấm lên đầu cột trong pivot — chứ không phải chuyện
+                     chọn dòng. Action đã ghim `loai_ky = ngay` bằng
+                     DOMAIN, nên bốn bậc không thể cộng chồng nữa: đó là
+                     ràng buộc cấu trúc, không phải lời nhắc người dùng
+                     phải nhớ. -->
                 <!-- YTD — luỹ kế từ 01/01 tới HÔM NAY.
                      Pivot không làm được vế này: cột "Năm" của pivot là
                      TRỌN NĂM, nên tháng 10 mà xem cột 2026 là đang so
                      mười tháng đã chạy với mười hai tháng của năm trước.
                      Lệch hai tháng mà không có gì trên màn hình nói ra.
-
-                     Ghép với một bộ lọc bậc kỳ (Theo tháng chẳng hạn)
-                     thì ra đúng các tháng đã trôi qua của năm nay; bật
-                     thêm "Cùng kỳ năm trước" là hai khoảng đặt cạnh
-                     nhau, so được ngay trong pivot.
 
                      Chặn theo `tu_ngay` cả hai đầu, KHÔNG chặn bằng
                      `den_ngay`. Chặn `den_ngay <= hôm nay` nghe hợp lý
@@ -147,46 +135,48 @@
                         domain="[('tu_ngay', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01')),
                                  ('tu_ngay', '&lt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
-                <filter name="f_duoi" string="DƯỚI P90"
-                        domain="[('dat_muc', '=', 'duoi')]"/>
-                <filter name="f_thieu" string="Thiếu ngày dữ liệu"
-                        domain="[('so_ngay_thieu', '&gt;', 0)]"/>
-                <filter name="f_chua_mt" string="Chưa khai mục tiêu"
-                        domain="[('co_muc_tieu', '=', False)]"/>
-                <separator/>
+                <!-- Bỏ "DƯỚI P90", "Thiếu ngày dữ liệu", "Chưa khai mục
+                     tiêu": ba thứ ấy đi với các cột TỶ LỆ vừa gỡ khỏi
+                     màn này, và chúng chỉ có nghĩa ở kỳ tính sẵn —
+                     "dưới P90 trong một NGÀY" gần như vô nghĩa với điện
+                     gió. Chúng ở lại các màn Khả dụng theo ngày, Chất
+                     lượng dữ liệu và Mục tiêu sản lượng. -->
                 <filter name="g_nm" string="Nhà máy"
                         context="{'group_by': 'plant_id'}"/>
-                <filter name="g_loai" string="Loại kỳ"
-                        context="{'group_by': 'loai_ky'}"/>
+                <filter name="g_ngay" string="Ngày"
+                        context="{'group_by': 'tu_ngay:day'}"/>
+                <filter name="g_tuan" string="Tuần"
+                        context="{'group_by': 'tu_ngay:week'}"/>
+                <filter name="g_thang" string="Tháng"
+                        context="{'group_by': 'tu_ngay:month'}"/>
+                <filter name="g_nam" string="Năm"
+                        context="{'group_by': 'tu_ngay:year'}"/>
             </search>
         </field>
     </record>
 
     <!-- Cộng gộp hay để cạnh nhau: pivot cho cả hai. Bỏ nhà máy khỏi
-         hàng là cộng gộp; để lại là đặt cạnh nhau.
+         hàng là cộng gộp nhiều nhà máy; để lại là đặt cạnh nhau. Đó
+         chính là vế "tùy chọn theo 1 hoặc nhiều nhà máy".
 
-         LOẠI KỲ PHẢI LÀ HÀNG NGOÀI CÙNG, và đây là lý do thật sự:
-         bảng này lưu CÙNG MỘT lượng điện thành bốn bộ dòng — ngày,
-         tuần, tháng, năm. Đo trên DG123 ngày 26/10/2026: mỗi bậc đều
-         cộng ra đúng 12.293.127 kWh, nên cộng cả bốn ra 49.172.508 kWh,
-         gấp bốn lần sự thật.
+         Trước đây pivot phải để LOẠI KỲ làm hàng ngoài cùng, như một
+         cái chặn: bảng lưu cùng một lượng điện thành bốn bộ dòng, nên
+         gỡ bộ lọc bậc ra là cộng gấp bốn (đo trên DG123: 12.322.992 →
+         49.172.508 kWh). Nay action GHIM `loai_ky = ngay` bằng domain
+         nên chuyện ấy không xảy ra được nữa, và cái chặn đã gỡ —
+         ràng buộc cấu trúc bao giờ cũng hơn lời nhắc. -->
 
-         Danh sách được cứu bằng bộ lọc "Theo tháng" bật sẵn, nhưng
-         PIVOT lại chính là nơi người ta gỡ bộ lọc ra để xoay. Gỡ xong
-         là ra con số gấp bốn mà trông vẫn hoàn toàn bình thường — không
-         ai nghi ngờ một con số sản lượng.
-
-         Để loại kỳ làm hàng ngoài cùng thì bốn bậc nằm trên bốn dòng
-         riêng, nhìn phát thấy ngay là đang trộn bậc. Nó không ngăn
-         được dòng tổng, nhưng làm cho việc trộn bậc KHÔNG CÒN VÔ HÌNH. -->
     <record id="view_period_pivot" model="ir.ui.view">
         <field name="name">eam.energy.period.pivot</field>
         <field name="model">eam.energy.period</field>
         <field name="arch" type="xml">
-            <pivot string="Sản lượng đa kỳ, đa nhà máy">
-                <field name="loai_ky" type="row"/>
+            <pivot string="Sản lượng">
                 <field name="plant_id" type="row"/>
-                <field name="nhan_ky" type="col"/>
+                <!-- Cột là NGÀY, và người dùng bấm lên đầu cột để đổi
+                     sang Tuần / Tháng / Quý / Năm. Đó mới là thao tác
+                     ai cũng biết; trước đây phải mở menu xổ đi tìm một
+                     bộ lọc tên "Theo tháng". -->
+                <field name="tu_ngay" interval="month" type="col"/>
                 <field name="san_luong" type="measure"/>
                 <field name="sl_mat" type="measure"/>
             </pivot>
@@ -197,11 +187,8 @@
         <field name="name">eam.energy.period.graph</field>
         <field name="model">eam.energy.period</field>
         <field name="arch" type="xml">
-            <!-- Cùng lý do như pivot: loại kỳ đứng đầu để bốn bậc không
-                 chồng lên nhau thành một cột cao gấp bốn. -->
-            <graph string="Sản lượng theo kỳ" type="bar" stacked="0">
-                <field name="loai_ky"/>
-                <field name="nhan_ky"/>
+            <graph string="Sản lượng" type="bar" stacked="0">
+                <field name="tu_ngay" interval="month"/>
                 <field name="plant_id"/>
                 <field name="san_luong" type="measure"/>
             </graph>
@@ -209,29 +196,41 @@
     </record>
 
     <record id="action_period" model="ir.actions.act_window">
-        <field name="name">Sản lượng đa kỳ</field>
+        <field name="name">Sản lượng nhà máy</field>
         <field name="res_model">eam.energy.period</field>
-        <field name="view_mode">list,graph,pivot,form</field>
+        <!-- PIVOT đứng trước: đây là màn để XOAY, không phải để đọc
+             từng dòng. Danh sách vẫn còn, cho ai muốn soi ngày cụ thể. -->
+        <field name="view_mode">pivot,graph,list,form</field>
+        <field name="view_id" ref="view_period_pivot"/>
         <field name="search_view_id" ref="view_period_search"/>
-        <field name="context">{'search_default_f_thang': 1}</field>
+        <!-- GHIM bậc NGÀY bằng DOMAIN chứ không bằng bộ lọc mặc định.
+             Khác nhau một trời: bộ lọc thì người dùng tắt được, và tắt
+             là cộng cùng một lượng điện bốn lần; domain thì không tắt
+             được, nên lỗi ấy hết đường xảy ra.
+
+             Bậc ngày cũng là bậc DUY NHẤT gom nhóm lại được mà vẫn
+             đúng: cộng các ngày ra tuần, ra tháng, ra năm đều đúng, còn
+             cộng các tháng với các năm thì không có nghĩa gì. -->
+        <field name="domain">[('loai_ky', '=', 'ngay')]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Chưa có kỳ nào</p>
-            <p>Sản lượng theo <b>ngày / tuần / tháng / năm</b>, một hay
-            nhiều nhà máy. Bỏ nhà máy khỏi hàng trong <b>pivot</b> là
-            cộng gộp; để lại là đặt cạnh nhau. Muốn luỹ kế từ đầu năm
-            thì bật <b>Từ đầu năm tới nay</b>, và bật thêm <b>Cùng kỳ
-            năm trước</b> để so.</p>
-            <p><b>Luôn giữ một bộ lọc bậc kỳ.</b> Bảng này lưu cùng một
-            lượng điện thành bốn bộ dòng — ngày, tuần, tháng, năm — nên
-            bỏ hết bộ lọc ra là cộng cùng số điện bốn lần. Màn mở sẵn ở
-            <i>Theo tháng</i>; đổi bậc thì bấm bậc khác, đừng tắt hẳn.</p>
-            <p>Mỗi dòng in kèm <b>số ngày thiếu dữ liệu</b> — một kỳ
-            thiếu ba ngày vẫn ra con số dương trông bình thường, chỉ nhỏ
-            hơn thật.</p>
+            <p class="o_view_nocontent_smiling_face">Chưa có ngày nào có
+            số</p>
+            <p>Màn này mở sẵn ở dạng <b>bảng xoay</b>. Đổi độ mịn thời
+            gian bằng cách bấm lên <b>đầu cột</b> rồi chọn Ngày / Tuần /
+            Tháng / Quý / Năm — không phải đi tìm bộ lọc.</p>
+            <p>Bỏ <b>Nhà máy</b> khỏi hàng là <b>cộng gộp</b> nhiều nhà
+            máy; để lại là <b>đặt cạnh nhau</b>. Muốn luỹ kế từ đầu năm
+            thì bật <b>Từ đầu năm tới nay</b>, thêm <b>Cùng kỳ năm
+            trước</b> để so hai năm.</p>
+            <p>Ở đây chỉ có những con số <b>cộng được</b> — sản lượng,
+            sản lượng mất, doanh thu. Hệ số công suất, khả dụng % và
+            mức đạt so với P50 là <b>tỷ số</b>, cộng hay lấy trung bình
+            đều sai, nên chúng ở màn <i>Khả dụng theo ngày</i> và
+            <i>Mục tiêu sản lượng</i>.</p>
         </field>
     </record>
 
-    <menuitem id="menu_period" name="Sản lượng đa kỳ"
+    <menuitem id="menu_period" name="Sản lượng nhà máy"
               parent="eam_core.menu_eam_perf"
               action="action_period" sequence="20"/>
 

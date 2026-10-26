@@ -116,6 +116,27 @@
                 <filter name="f_nam" string="Theo năm"
                         domain="[('loai_ky', '=', 'nam')]"/>
                 <separator/>
+                <!-- YTD — luỹ kế từ 01/01 tới HÔM NAY.
+                     Pivot không làm được vế này: cột "Năm" của pivot là
+                     TRỌN NĂM, nên tháng 10 mà xem cột 2026 là đang so
+                     mười tháng đã chạy với mười hai tháng của năm trước.
+                     Lệch hai tháng mà không có gì trên màn hình nói ra.
+
+                     Ghép với một bộ lọc bậc kỳ (Theo tháng chẳng hạn)
+                     thì ra đúng các tháng đã trôi qua của năm nay; bật
+                     thêm "Cùng kỳ năm trước" là hai khoảng đặt cạnh
+                     nhau, so được ngay trong pivot.
+
+                     Chặn hai đầu bằng CẢ `tu_ngay` lẫn `den_ngay`: kỳ
+                     năm nằm vắt qua ranh giới năm, chỉ chặn một đầu là
+                     nó lọt vào rồi cộng thêm cả năm vào luỹ kế. -->
+                <filter name="f_ytd" string="Từ đầu năm tới nay"
+                        domain="[('tu_ngay', '&gt;=', context_today().strftime('%Y-01-01')),
+                                 ('den_ngay', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="f_ytd_truoc" string="Cùng kỳ năm trước"
+                        domain="[('tu_ngay', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01')),
+                                 ('den_ngay', '&lt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
                 <filter name="f_duoi" string="DƯỚI P90"
                         domain="[('dat_muc', '=', 'duoi')]"/>
                 <filter name="f_thieu" string="Thiếu ngày dữ liệu"
@@ -132,12 +153,28 @@
     </record>
 
     <!-- Cộng gộp hay để cạnh nhau: pivot cho cả hai. Bỏ nhà máy khỏi
-         hàng là cộng gộp; để lại là đặt cạnh nhau. -->
+         hàng là cộng gộp; để lại là đặt cạnh nhau.
+
+         LOẠI KỲ PHẢI LÀ HÀNG NGOÀI CÙNG, và đây là lý do thật sự:
+         bảng này lưu CÙNG MỘT lượng điện thành bốn bộ dòng — ngày,
+         tuần, tháng, năm. Đo trên DG123 ngày 26/10/2026: mỗi bậc đều
+         cộng ra đúng 12.293.127 kWh, nên cộng cả bốn ra 49.172.508 kWh,
+         gấp bốn lần sự thật.
+
+         Danh sách được cứu bằng bộ lọc "Theo tháng" bật sẵn, nhưng
+         PIVOT lại chính là nơi người ta gỡ bộ lọc ra để xoay. Gỡ xong
+         là ra con số gấp bốn mà trông vẫn hoàn toàn bình thường — không
+         ai nghi ngờ một con số sản lượng.
+
+         Để loại kỳ làm hàng ngoài cùng thì bốn bậc nằm trên bốn dòng
+         riêng, nhìn phát thấy ngay là đang trộn bậc. Nó không ngăn
+         được dòng tổng, nhưng làm cho việc trộn bậc KHÔNG CÒN VÔ HÌNH. -->
     <record id="view_period_pivot" model="ir.ui.view">
         <field name="name">eam.energy.period.pivot</field>
         <field name="model">eam.energy.period</field>
         <field name="arch" type="xml">
             <pivot string="Sản lượng đa kỳ, đa nhà máy">
+                <field name="loai_ky" type="row"/>
                 <field name="plant_id" type="row"/>
                 <field name="nhan_ky" type="col"/>
                 <field name="san_luong" type="measure"/>
@@ -150,7 +187,10 @@
         <field name="name">eam.energy.period.graph</field>
         <field name="model">eam.energy.period</field>
         <field name="arch" type="xml">
+            <!-- Cùng lý do như pivot: loại kỳ đứng đầu để bốn bậc không
+                 chồng lên nhau thành một cột cao gấp bốn. -->
             <graph string="Sản lượng theo kỳ" type="bar" stacked="0">
+                <field name="loai_ky"/>
                 <field name="nhan_ky"/>
                 <field name="plant_id"/>
                 <field name="san_luong" type="measure"/>
@@ -168,7 +208,13 @@
             <p class="o_view_nocontent_smiling_face">Chưa có kỳ nào</p>
             <p>Sản lượng theo <b>ngày / tuần / tháng / năm</b>, một hay
             nhiều nhà máy. Bỏ nhà máy khỏi hàng trong <b>pivot</b> là
-            cộng gộp; để lại là đặt cạnh nhau.</p>
+            cộng gộp; để lại là đặt cạnh nhau. Muốn luỹ kế từ đầu năm
+            thì bật <b>Từ đầu năm tới nay</b>, và bật thêm <b>Cùng kỳ
+            năm trước</b> để so.</p>
+            <p><b>Luôn giữ một bộ lọc bậc kỳ.</b> Bảng này lưu cùng một
+            lượng điện thành bốn bộ dòng — ngày, tuần, tháng, năm — nên
+            bỏ hết bộ lọc ra là cộng cùng số điện bốn lần. Màn mở sẵn ở
+            <i>Theo tháng</i>; đổi bậc thì bấm bậc khác, đừng tắt hẳn.</p>
             <p>Mỗi dòng in kèm <b>số ngày thiếu dữ liệu</b> — một kỳ
             thiếu ba ngày vẫn ra con số dương trông bình thường, chỉ nhỏ
             hơn thật.</p>

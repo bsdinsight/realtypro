@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="eam_fleet.Dashboard">
+    <div class="eam-dash">
+
+        <div class="eam-dash-header">
+            <div class="eam-dash-title">
+                <div class="eam-dash-eyebrow">EAMOne</div>
+                <h2>Toàn danh mục nhà máy</h2>
+            </div>
+            <div class="eam-dash-tools">
+                <span class="eam-dash-today">Số liệu ngày</span>
+                <input type="date" class="form-control form-control-sm"
+                       style="width: 160px"
+                       t-att-value="state.ngay"
+                       t-on-change="doiNgay"/>
+            </div>
+        </div>
+
+        <div t-if="state.dang_tai" class="eam-dash-loading">
+            <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+            <div>Đang lấy số…</div>
+        </div>
+
+        <t t-else="">
+        <t t-set="d" t-value="state.d"/>
+
+        <!-- ===== Đội máy ===== -->
+        <div class="eam-kpis">
+            <div class="eam-card eam-hero">
+                <div class="eam-card-label">Sản lượng trong ngày</div>
+                <div class="eam-card-value">
+                    <t t-esc="mwh(d.tong.sl_ngay)"/> <span class="u">MWh</span>
+                </div>
+                <div class="eam-card-sub">
+                    <t t-esc="d.tong.so_nha_may"/> nhà máy ·
+                    <t t-esc="d.tong.so_to_may"/> tổ máy
+                </div>
+            </div>
+
+            <div class="eam-card" t-att-class="bacKd(d.tong.kd_thang)">
+                <div class="eam-card-label">Khả dụng tháng này</div>
+                <div class="eam-card-value"><t t-esc="pct(d.tong.kd_thang)"/></div>
+                <div class="eam-card-sub">
+                    trọng số theo sản lượng ·
+                    <t t-esc="d.tong.kd_mau_so"/>/<t t-esc="d.tong.so_nha_may"/>
+                    nhà máy có số
+                </div>
+            </div>
+
+            <div class="eam-card">
+                <div class="eam-card-label">Sản lượng luỹ kế tháng</div>
+                <div class="eam-card-value">
+                    <t t-esc="mwh(d.tong.sl_thang)"/> <span class="u">MWh</span>
+                </div>
+                <div class="eam-card-sub">từ <t t-esc="d.dau_thang"/></div>
+            </div>
+
+            <div class="eam-card">
+                <div class="eam-card-label">Doanh thu luỹ kế tháng</div>
+                <div class="eam-card-value" style="font-size: 20px">
+                    <t t-esc="tien(d.tong.doanh_thu_thang)"/>
+                </div>
+                <div class="eam-card-sub">
+                    tổn thất đã quy ra tiền:
+                    <t t-esc="tien(d.tong.tien_mat_thang)"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Bảng từng nhà máy ===== -->
+        <div class="eam-panel">
+            <div class="eam-panel-head">
+                <h3>Từng nhà máy</h3>
+                <span class="eam-panel-note">
+                    Ô để dấu <b>—</b> là CHƯA ĐO ĐƯỢC, không phải bằng không.
+                </span>
+            </div>
+            <table class="eam-table">
+                <thead>
+                    <tr>
+                        <th>Nhà máy</th>
+                        <th class="c">Tổ máy</th>
+                        <th class="num">SL ngày (MWh)</th>
+                        <th class="num">So hôm trước</th>
+                        <th class="num">Khả dụng ngày</th>
+                        <th class="num">PR ngày</th>
+                        <th class="num">SL tháng (MWh)</th>
+                        <th class="num">Khả dụng tháng</th>
+                        <th class="num">Hệ số CS tháng</th>
+                        <th class="num">So P50</th>
+                        <th class="num">Tổn thất (tiền)</th>
+                        <th>Mẫu số</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="d.nha_may" t-as="p" t-key="p.id"
+                        t-att-class="p.kd_thang !== null and p.kd_thang &lt; 93 ? 'is-warn' : ''">
+                        <td>
+                            <b t-esc="p.code"/>
+                            <span class="muted"> · <t t-esc="p.ten"/></span>
+                        </td>
+                        <td class="c"><t t-esc="p.so_to_may"/></td>
+
+                        <td t-att-class="p.sl_ngay === null ? 'unknown' : 'num'">
+                            <t t-esc="mwh(p.sl_ngay)"/>
+                        </td>
+                        <td t-att-class="p.xu_huong === null ? 'unknown' : 'num muted'">
+                            <t t-esc="p.xu_huong === null ? '—' : xuHuong(p.xu_huong)"/>
+                        </td>
+                        <td t-att-class="p.kd_ngay === null ? 'unknown' : 'num'">
+                            <t t-esc="pct(p.kd_ngay)"/>
+                        </td>
+
+                        <td t-att-class="p.pr === null ? 'unknown' : 'num'">
+                            <t t-if="p.pr === null">—</t>
+                            <t t-else="">
+                                <span t-att-class="'eam-chip ' + bacPr(p.pr, p.pr_cam_ket)"
+                                      t-esc="pct(p.pr, 2)"/>
+                            </t>
+                        </td>
+
+                        <td t-att-class="p.sl_thang === null ? 'unknown' : 'num'">
+                            <t t-esc="mwh(p.sl_thang)"/>
+                        </td>
+                        <td t-att-class="p.kd_thang === null ? 'unknown' : 'num'">
+                            <t t-esc="pct(p.kd_thang)"/>
+                        </td>
+                        <td t-att-class="p.hscs_thang === null ? 'unknown' : 'num'">
+                            <t t-esc="pct(p.hscs_thang)"/>
+                        </td>
+
+                        <!-- Chưa khai mục tiêu thì KHÔNG phải "đạt 0%",
+                             mà là chưa có kế hoạch để so. -->
+                        <td t-att-class="!p.co_muc_tieu ? 'unknown' : 'num'">
+                            <t t-if="!p.co_muc_tieu">chưa khai mục tiêu</t>
+                            <t t-else=""><t t-esc="pct(p.ty_le_p50)"/></t>
+                        </td>
+
+                        <td class="num"><t t-esc="tien(p.tien_mat_thang)"/></td>
+                        <td class="muted" style="font-size:11.5px"
+                            t-esc="mauSo(p)"/>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="eam-row">
+            <!-- ===== Việc phải làm ===== -->
+            <div class="eam-panel">
+                <div class="eam-panel-head">
+                    <h3>Việc phải làm</h3>
+                    <span class="eam-panel-note">bấm vào để mở danh sách</span>
+                </div>
+                <div t-foreach="d.viec" t-as="v" t-key="v.ma"
+                     class="eam-todo"
+                     t-att-class="v.so ? 'is-' + v.muc : 'is-zero'"
+                     style="cursor: pointer"
+                     t-on-click="() => this.moCanhBao(v.ma)">
+                    <div class="eam-todo-count" t-esc="v.so"/>
+                    <div class="eam-todo-text">
+                        <div t-esc="v.nhan"/>
+                        <div class="eam-todo-sub" t-esc="v.phu"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Số có tin được không ===== -->
+            <div class="eam-panel">
+                <div class="eam-panel-head">
+                    <h3>Số có tin được không</h3>
+                </div>
+                <div class="eam-panel-note" style="margin-bottom:10px">
+                    Ba con số dưới đây đều làm cho số phía trên
+                    <b>đẹp hơn thực tế</b>. Trên
+                    <t t-esc="so(d.tin_cay.tong_dong)"/> dòng sổ ngày tổ máy
+                    của tháng này.
+                </div>
+                <div class="eam-todo"
+                     t-att-class="d.tin_cay.chua_do_sl ? 'is-warn' : 'is-zero'">
+                    <div class="eam-todo-count" t-esc="d.tin_cay.chua_do_sl"/>
+                    <div class="eam-todo-text">
+                        <div>Dòng chưa đo được sản lượng</div>
+                        <div class="eam-todo-sub">
+                            sản lượng đang thiếu, nhưng tổng vẫn ra số
+                        </div>
+                    </div>
+                </div>
+                <div class="eam-todo"
+                     t-att-class="d.tin_cay.chua_quy ? 'is-bad' : 'is-zero'">
+                    <div class="eam-todo-count" t-esc="d.tin_cay.chua_quy"/>
+                    <div class="eam-todo-text">
+                        <div>Dòng có giờ dừng chưa quy trách nhiệm</div>
+                        <div class="eam-todo-sub">
+                            khả dụng ở trên đang CAO HƠN thật
+                        </div>
+                    </div>
+                </div>
+                <div class="eam-todo"
+                     t-att-class="d.tin_cay.chua_do_kd ? 'is-warn' : 'is-zero'">
+                    <div class="eam-todo-count" t-esc="d.tin_cay.chua_do_kd"/>
+                    <div class="eam-todo-text">
+                        <div>Dòng chưa đo được khả dụng</div>
+                        <div class="eam-todo-sub">
+                            mẫu số của mọi tỷ lệ khả dụng bị hụt đúng bấy nhiêu
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </t>
+    </div>
+</t>
+
+</templates>

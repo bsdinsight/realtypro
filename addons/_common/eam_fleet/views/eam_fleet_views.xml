@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_eam_fleet" model="ir.actions.client">
+        <field name="name">Toàn danh mục nhà máy</field>
+        <field name="tag">eam_fleet.dashboard</field>
+    </record>
+
+    <!-- Đặt TRƯỚC mọi nhánh khác (sequence 5 < Dự án 10): dashboard là
+         thứ người ta mở đầu tiên mỗi sáng, chôn nó xuống dưới thì nó
+         thành một màn không ai vào. -->
+    <menuitem id="menu_eam_fleet" name="Tổng quan"
+              parent="eam_core.menu_eam_root"
+              action="action_eam_fleet" sequence="5"/>
+
+</odoo>

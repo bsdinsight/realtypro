@@ -41,8 +41,3 @@ msgstr "Year"
 msgid "Tuần"
 msgstr "Week"
 
-#. module: eam_energy_period
-#: model:ir.ui.menu,name:eam_energy_period.menu_period
-msgid "Sản lượng nhà máy"
-msgstr "Plant energy"
-

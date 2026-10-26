@@ -796,23 +796,3 @@ msgstr "Attributed"
 msgid "Đường cong công suất nhân tốc độ gió ĐO ĐƯỢC tại từng tổ máy. Đây mới là mốc vận hành chịu trách nhiệm."
 msgstr "The power curve applied to the wind speed MEASURED at each unit. This is the operational baseline that carries responsibility."
 
-#. module: eam_loss
-#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_day
-msgid "Hạch toán tổn thất"
-msgstr "Loss accounting"
-
-#. module: eam_loss
-#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_expect
-msgid "Tổn thất kỳ vọng"
-msgstr "Expected loss"
-
-#. module: eam_loss
-#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_line
-msgid "Phân rã tổn thất"
-msgstr "Loss breakdown"
-
-#. module: eam_loss
-#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_type
-msgid "Loại tổn thất"
-msgstr "Loss types"
-

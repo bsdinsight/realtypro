@@ -964,13 +964,3 @@ msgstr "the target is numeric but the cell holds \"%s\""
 msgid "để trống = đọc mọi sheet"
 msgstr "empty = read every sheet"
 
-#. module: eam_import
-#: model:ir.ui.menu,name:eam_import.menu_eam_import_run
-msgid "Nạp dữ liệu vận hành"
-msgstr "Operational data import"
-
-#. module: eam_import
-#: model:ir.ui.menu,name:eam_import.menu_eam_import_template
-msgid "Mẫu nạp dữ liệu"
-msgstr "Import templates"
-

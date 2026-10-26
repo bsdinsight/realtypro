@@ -1327,23 +1327,3 @@ msgstr "Vibration"
 msgid "đo áp suất trực tiếp"
 msgstr "measured pressure directly"
 
-#. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
-msgid "Khoảng loại trừ KPI"
-msgstr "KPI exclusion periods"
-
-#. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_power_curve_run
-msgid "Đường cong công suất"
-msgstr "Power curve"
-
-#. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_quality
-msgid "Chất lượng dữ liệu"
-msgstr "Data quality"
-
-#. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_tag
-msgid "Điểm đo (tag)"
-msgstr "Measurement points (tags)"
-

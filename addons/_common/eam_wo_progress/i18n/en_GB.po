@@ -21,13 +21,3 @@ msgstr ""
 msgid "Lịch bảo trì"
 msgstr "Maintenance schedule"
 
-#. module: eam_wo_progress
-#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_ke_hoach
-msgid "Kế hoạch vs thực tế"
-msgstr "Plan vs actual"
-
-#. module: eam_wo_progress
-#: model:ir.ui.menu,name:eam_wo_progress.menu_eam_wo_tre_han
-msgid "Lệnh trễ hạn"
-msgstr "Overdue orders"
-

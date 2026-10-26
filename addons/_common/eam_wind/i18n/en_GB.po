@@ -17,13 +17,432 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_ele_pro
+msgid "Bảo vệ và đóng cắt"
+msgstr "Protection and switchgear"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_cnv
+msgid "Bộ biến tần công suất"
+msgstr "Power converter"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_ele_cnv
+msgid "Bộ biến tần tua-bin"
+msgstr "Turbine converter"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_planned_corr
+msgid "Can thiệp sửa chữa có kế hoạch"
+msgstr "Planned repair intervention"
+
+#. module: eam_wind
+#: model:ir.model.fields.selection,name:eam_wind.selection__eam_asset_category__platform_scope__geared
+msgid "Chỉ máy có hộp số"
+msgstr "Geared machines only"
+
+#. module: eam_wind
+#: model:ir.model.fields.selection,name:eam_wind.selection__eam_asset_category__platform_scope__direct
+msgid "Chỉ máy truyền động trực tiếp"
+msgstr "Direct-drive machines only"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_tech_standby
+msgid "Chờ kỹ thuật"
+msgstr "Awaiting engineering"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_rot_bld
+msgid "Cánh"
+msgstr "Blade"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_bld1
+msgid "Cánh số 1"
+msgstr "Blade 1"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_bld2
+msgid "Cánh số 2"
+msgstr "Blade 2"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_bld3
+msgid "Cánh số 3"
+msgstr "Blade 3"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop_mvc
+msgid "Cáp ngầm trung thế"
+msgstr "MV underground cable"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_sns
+msgid "Cảm biến"
+msgstr "Sensors"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_curtail_grid
+msgid "Cắt giảm do ràng buộc lưới"
+msgstr "Curtailment due to grid constraints"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_sns
+msgid "Cụm cảm biến & đo gió"
+msgstr "Sensor and wind measurement assembly"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_str
+msgid "Cụm kết cấu"
+msgstr "Structural assembly"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_rot
+msgid "Cụm rotor"
+msgstr "Rotor assembly"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_drv
+msgid "Cụm truyền động"
+msgstr "Drive train assembly"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_ele
+msgid "Cụm điện"
+msgstr "Electrical assembly"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_forced_outage
+msgid "Dừng sự cố"
+msgstr "Forced outage"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_fo_diagnostic
+msgid "Dừng sự cố — chẩn đoán"
+msgstr "Forced outage — diagnosis"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_fo_response
+msgid "Dừng sự cố — chờ phản hồi"
+msgstr "Forced outage — awaiting a response"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_fo_logistic
+msgid "Dừng sự cố — chờ vật tư, thiết bị"
+msgstr "Forced outage — awaiting materials or equipment"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_fo_repair
+msgid "Dừng sự cố — đang sửa"
+msgstr "Forced outage — under repair"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_req_shutdown
+msgid "Dừng theo yêu cầu"
+msgstr "Requested shutdown"
+
+#. module: eam_wind
+#: model:ir.model.fields,field_description:eam_wind.field_eam_asset_category__reference_note
+msgid "Ghi chú tham chiếu"
+msgstr "Reference note"
+
+#. module: eam_wind
+#: model:ir.model.fields,help:eam_wind.field_eam_asset_category__rank_failure
+msgid "Giá trị THAM CHIẾU từ tổng hợp 18 cơ sở dữ liệu công khai (>18.000 tua-bin). Chỉ để gợi ý mức quan trọng ban đầu."
+msgstr "A REFERENCE figure aggregated from 18 public databases (over 18,000 turbines). It only suggests an initial criticality."
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_form_wind
+msgid ""
+"Hai trục xếp hạng <b>khác nhau</b>: cụm hỏng\n"
+"                            nhiều nhất không phải cụm gây dừng lâu nhất.\n"
+"                            Đây là <b>giá trị tham chiếu</b> — mức quan\n"
+"                            trọng thật phải suy ra từ lịch sử của chính\n"
+"                            đội máy này."
+msgstr ""
+"Two <b>different</b> rankings: the assembly that\n"
+"                            fails most often is not the assembly that causes\n"
+"                            the longest downtime. These are <b>reference\n"
+"                            figures</b> — the real criticality has to be\n"
+"                            derived from the history of this fleet itself."
+
+#. module: eam_wind
+#: model:ir.model.fields,help:eam_wind.field_eam_asset_category__rank_downtime
+msgid "Hai trục xếp hạng KHÁC NHAU: cụm hỏng nhiều nhất không phải cụm gây dừng lâu nhất. Nguyên nhân là độ phức tạp của việc sửa, không phải tần suất hỏng."
+msgstr "Two DIFFERENT rankings: the assembly that fails most often is not the assembly that causes the longest downtime. The reason is how complex the repair is, not how often it fails."
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop_civ
+msgid "Hạ tầng dân dụng"
+msgstr "Civil infrastructure"
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_list_wind
+msgid "Hạng dừng"
+msgstr "Downtime rank"
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_list_wind
+msgid "Hạng hỏng"
+msgstr "Failure rank"
+
+#. module: eam_wind
+#: model:ir.model.fields,field_description:eam_wind.field_eam_asset_category__rank_failure
+msgid "Hạng theo SỐ LẦN hỏng"
+msgstr "Rank by NUMBER of failures"
+
+#. module: eam_wind
+#: model:ir.model.fields,field_description:eam_wind.field_eam_asset_category__rank_downtime
+msgid "Hạng theo THỜI GIAN dừng"
+msgstr "Rank by DOWNTIME"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_rot_pch
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_pch
+msgid "Hệ pitch"
+msgstr "Pitch system"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_hyd
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_hyd
+msgid "Hệ thuỷ lực"
+msgstr "Hydraulic system"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop
+msgid "Hệ thống phụ trợ nhà máy"
+msgstr "Balance-of-plant systems"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_drv
+msgid "Hệ truyền động"
+msgstr "Drive train"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_yaw
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_yaw
+msgid "Hệ yaw"
+msgstr "Yaw system"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_ctl
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_ctl
+msgid "Hệ điều khiển"
+msgstr "Control system"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_ele
+msgid "Hệ điện"
+msgstr "Electrical system"
+
+#. module: eam_wind
 #: model:eam.asset.category,name:eam_wind.cat_wtg_gbx
 #: model:eam.structure.template.line,name:eam_wind.tpl_l_gbx
 msgid "Hộp số"
 msgstr "Gearbox"
 
 #. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop_oth
+msgid "Khác (phụ trợ)"
+msgstr "Other (balance of plant)"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_oth
+msgid "Khác (tua-bin)"
+msgstr "Other (turbine)"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_out_service
+msgid "Không cung cấp dịch vụ"
+msgstr "Not available"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_non_operative
+msgid "Không hoạt động"
+msgstr "Not operating"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_str
+msgid "Kết cấu"
+msgstr "Structure"
+
+#. module: eam_wind
 #: model:ir.model,name:eam_wind.model_eam_asset_category
 msgid "Loại cấu phần"
 msgstr "Component category"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_rot_hub
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_hub
+msgid "Moay-ơ"
+msgstr "Hub"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_ele_trf
+msgid "Máy biến áp"
+msgstr "Transformer"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_trf
+msgid "Máy biến áp máy"
+msgstr "Turbine transformer"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_gen
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_gen
+msgid "Máy phát"
+msgstr "Generator"
+
+#. module: eam_wind
+#: model:ir.model.fields,help:eam_wind.field_eam_asset_category__platform_scope
+msgid "Máy truyền động trực tiếp KHÔNG có hộp số. Cứng hoá hộp số vào mọi tua-bin là sai ngay từ dòng đầu."
+msgstr "A direct-drive machine has NO gearbox. Hard-coding a gearbox into every turbine is wrong from the very first line."
+
+#. module: eam_wind
+#: model:ir.model.fields,field_description:eam_wind.field_eam_asset_category__rdspp_code
+msgid "Mã RDS-PP"
+msgstr "RDS-PP code"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_str_fnd
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_fnd
+msgid "Móng"
+msgstr "Foundation"
+
+#. module: eam_wind
+#: model:ir.model.fields.selection,name:eam_wind.selection__eam_asset_category__platform_scope__all
+msgid "Mọi nền tảng"
+msgstr "Every platform"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_out_env
+msgid "Ngoài dải môi trường"
+msgstr "Out of environmental specification"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_out_elec
+msgid "Ngoài dải điện"
+msgstr "Out of electrical specification"
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_list_wind
+msgid "Nền tảng"
+msgstr "Platform"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_drv_mbr
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_mbr
+msgid "Phanh cơ"
+msgstr "Mechanical brake"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_rot_abr
+msgid "Phanh khí động"
+msgstr "Aerodynamic brake"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_partial_perf
+msgid "Phát một phần"
+msgstr "Partial performance"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_full_perf
+msgid "Phát đầy đủ"
+msgstr "Full performance"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop_sca
+msgid "SCADA và truyền thông"
+msgstr "SCADA and communications"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_ready_standby
+msgid "Sẵn sàng chờ"
+msgstr "Technical standby"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_str_twr
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_twr
+msgid "Tháp"
+msgstr "Tower"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_info_unavail
+msgid "Thông tin không khả dụng"
+msgstr "Information unavailable"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_info_avail
+msgid "Thông tin khả dụng"
+msgstr "Information available"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_force_majeure
+msgid "Trường hợp bất khả kháng"
+msgstr "Force majeure"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_shf
+msgid "Trục chính & ổ trục"
+msgstr "Main shaft & bearings"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg_drv_shf
+msgid "Trục và ổ trục"
+msgstr "Shaft and bearings"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_wtg
+msgid "Tua-bin gió"
+msgstr "Wind turbine"
+
+#. module: eam_wind
+#: model:eam.structure.template,name:eam_wind.tpl_wtg
+msgid "Tua-bin gió trên bờ — cấu trúc chuẩn"
+msgstr "Onshore wind turbine — standard structure"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_suspended
+msgid "Tạm ngừng"
+msgstr "Suspended"
+
+#. module: eam_wind
+#: model:eam.structure.template.line,name:eam_wind.tpl_l_nac
+msgid "Vỏ nacelle & thiết bị nâng"
+msgstr "Nacelle cover & lifting equipment"
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_form_wind
+msgid "Xếp hạng tham chiếu"
+msgstr "Reference ranking"
+
+#. module: eam_wind
+#: model_terms:ir.ui.view,arch_db:eam_wind.view_eam_category_form_wind
+msgid "khách tự điền nếu có giấy phép VGB"
+msgstr "the customer fills it in themselves if they hold a VGB licence"
+
+#. module: eam_wind
+#: model:ir.model.fields,field_description:eam_wind.field_eam_asset_category__platform_scope
+msgid "Áp dụng cho nền tảng"
+msgstr "Applies to the platform"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_in_service
+msgid "Đang cung cấp dịch vụ"
+msgstr "Available"
+
+#. module: eam_wind
+#: model:eam.time.category,name:eam_wind.tc_operative
+msgid "Đang hoạt động"
+msgstr "Operating"
+
+#. module: eam_wind
+#: model:eam.asset.category,name:eam_wind.cat_bop_trl
+msgid "Đường dây truyền tải"
+msgstr "Transmission line"
+
+#. module: eam_wind
+#: model:ir.model.fields,help:eam_wind.field_eam_asset_category__rdspp_code
+msgid "Để trống. RDS-PP là tài sản có bản quyền của VGB nên không ship theo sản phẩm; khách có giấy phép thì tự điền. Ánh xạ một chiều: ReliaWind quy về RDS-PP được, ngược lại không."
+msgstr "Left empty. RDS-PP is VGB's copyrighted property, so it does not ship with the product; a customer holding a licence fills it in themselves. The mapping is one-way: ReliaWind can be reduced to RDS-PP, but not the reverse."
 

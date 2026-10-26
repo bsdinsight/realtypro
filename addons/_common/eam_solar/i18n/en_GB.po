@@ -747,8 +747,3 @@ msgstr "Leave it empty and the module area above is used. Declare it separately 
 msgid "để trống = bằng diện tích mô-đun"
 msgstr "empty = equal to the module area"
 
-#. module: eam_solar
-#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_weather
-msgid "Khí tượng ngày"
-msgstr "Daily weather"
-

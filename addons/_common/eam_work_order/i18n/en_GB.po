@@ -2417,6 +2417,12 @@ msgid "Đang chờ phân loại"
 msgstr "Waiting to be triaged"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__in_progress
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Đang làm"
+msgstr "In progress"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__in_review
 msgid "Đang phân loại"
 msgstr "Being triaged"
@@ -2582,9 +2588,4 @@ msgstr "Photo"
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__attachment_ids
 msgid "Ảnh / chứng cứ"
 msgstr "Photo / evidence"
-
-#. module: eam_work_order
-#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_order_hold
-msgid "Lệnh đang chờ"
-msgstr "Orders on hold"
 

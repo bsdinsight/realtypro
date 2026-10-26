@@ -18,13 +18,154 @@ msgstr ""
 
 #. module: eam_shift
 #: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        <b>Bàn giao một chiều</b> — đã giao nhưng chưa ai ký\n"
+"                        nhận. Không chặn vận hành, nhưng đây đúng là cái cớ\n"
+"                        kinh điển khi tranh chấp: <i>\"tôi không được bàn\n"
+"                        giao việc đó\"</i>."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        <b>One-way handover</b> — handed over but nobody has\n"
+"                        signed for it. It does not block operations, but this is\n"
+"                        precisely the classic excuse in a dispute: <i>\"that was\n"
+"                        never handed over to me\"</i>."
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid ""
+"<i class=\"fa fa-repeat me-1\"/>\n"
+"                        Có"
+msgstr ""
+"<i class=\"fa fa-repeat me-1\"/>\n"
+"                        Yes"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
 msgid "Biên bản"
 msgstr "Certificate"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__ban_giao_mot_chieu
+msgid "Bàn giao MỘT CHIỀU"
+msgstr "ONE-WAY handover"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__chat_luong_ban_giao__mot_chieu
+msgid "Bàn giao MỘT CHIỀU — chưa ai ký nhận"
+msgstr "ONE-WAY handover — nobody has signed for it"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Bàn giao một chiều"
+msgstr "One-way handover"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__chat_luong_ban_giao__sach
+msgid "Bàn giao sạch"
+msgstr "Clean handover"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__date_start
 msgid "Bắt đầu"
 msgstr "Start"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__gio_bat_dau
+msgid "Bắt đầu (giờ)"
+msgstr "Start (hour)"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_list
+msgid "Bị đùn"
+msgstr "Passed along"
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Ca \"%s\" dài %s giờ — phải nằm trong khoảng 0–24."
+msgstr "Shift \"%s\" is %s hours long — it has to lie between 0 and 24."
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Ca %s chưa mở nên chưa giao được."
+msgstr "Shift %s is not open, so it cannot be handed over."
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Ca %s chưa được giao."
+msgstr "Shift %s has not been handed over."
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Ca %s đã mở rồi."
+msgstr "Shift %s is already open."
+
+#. module: eam_shift
+#: model:ir.model,name:eam_shift.model_eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_list
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Ca trực"
+msgstr "Shift"
+
+#. module: eam_shift
+#: model:ir.actions.act_window,name:eam_shift.action_eam_shift
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift
+msgid "Ca trực & giao ca"
+msgstr "Shifts & handover"
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift_pattern__qua_dem
+msgid "Ca đêm bắt đầu 22h và kết thúc 6h hôm sau. Quên chuyện này thì ca đêm dài âm mười sáu tiếng."
+msgstr "A night shift starts at 22:00 and ends at 06:00 the next day. Forget that and the night shift comes out minus sixteen hours long."
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__loai__chuyen_ca
+msgid "Chuyển từ ca trước"
+msgstr "Carried over from the previous shift"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__nguon_id
+msgid "Chuyển từ việc"
+msgstr "Carried over from"
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift
+msgid "Chưa có ca nào"
+msgstr "No shift yet"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__chat_luong_ban_giao
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Chất lượng bàn giao"
+msgstr "Handover quality"
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Còn %d việc chưa xong mà CHƯA CÓ ca kế tiếp để chuyển sang. Sinh ca kế tiếp rồi mở ca đó, nếu không số việc này không ai nhận."
+msgstr "%d items are unfinished with NO next shift to carry them into. Create the next shift and open it, otherwise nobody takes these on."
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__state__mo
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+msgid "Còn mở"
+msgstr "Still open"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__chat_luong_ban_giao__con_mo
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Còn việc mở"
+msgstr "Work still open"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
+msgid "Có việc bị đùn"
+msgstr "Work is being passed along"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__chat_luong_ban_giao__lan_lau
+msgid "Có việc lăn nhiều ca"
+msgstr "Work is rolling across several shifts"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__company_id
@@ -35,9 +176,82 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__muc_do__cao
+msgid "Cần chú ý"
+msgstr "Needs attention"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__mo_ta
 msgid "Diễn giải"
 msgstr "Explanation"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__so_gio
+msgid "Dài (giờ)"
+msgstr "Length (hours)"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid ""
+"Ghi cả thứ <b>chưa thành lệnh công việc</b>:\n"
+"                                lời dặn, cái vừa phát hiện cuối ca, cái đang\n"
+"                                chờ nhà thầu trả lời. Ép phải có lệnh trước\n"
+"                                khi được ghi là đúng cách làm chúng biến mất."
+msgstr ""
+"Record even the things that are <b>not yet work\n"
+"                                orders</b>: a word of advice, something spotted at\n"
+"                                the end of the shift, something waiting on a\n"
+"                                contractor's answer. Insisting on an order before\n"
+"                                anything may be recorded is exactly how they\n"
+"                                disappear."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__gio_giao
+msgid "Giao lúc"
+msgstr "Handed over at"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Giao nhận"
+msgstr "Handover"
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift_pattern__gio_bat_dau
+msgid "Giờ trong ngày, ví dụ 6.0 là 6h00, 14.5 là 14h30."
+msgstr "The hour of the day: 6.0 is 06:00, 14.5 is 14:30."
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift
+msgid ""
+"Khai <b>mẫu ca</b> trước, rồi sinh ca cho một dải ngày. Mở\n"
+"            ca là hệ chụp trạng thái nhà máy và kéo việc dở của ca trước\n"
+"            sang — <b>không có gì rơi giữa hai ca</b>."
+msgstr ""
+"Declare the <b>shift pattern</b> first, then generate shifts for a range\n"
+"            of days. Opening a shift makes the system capture the plant's state and\n"
+"            pull the previous shift's unfinished work across — <b>nothing falls\n"
+"            between two shifts</b>."
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift_pattern
+msgid "Khai mẫu ca"
+msgstr "Declare a shift pattern"
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift_note_dun
+msgid "Không có việc nào bị đùn"
+msgstr "Nothing is being passed along"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__muc_do__khan
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+msgid "Khẩn"
+msgstr "Urgent"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Ký nhận ca"
+msgstr "Sign for the shift"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__date_end
@@ -60,9 +274,57 @@ msgid "Lệnh công việc"
 msgstr "Work order"
 
 #. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Lịch sử công việc — %s"
+msgstr "Work history — %s"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Lịch sử sửa chữa"
+msgstr "Repair history"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__code
 msgid "Mã"
 msgstr "Code"
+
+#. module: eam_shift
+#: model:ir.model.constraint,message:eam_shift.constraint_eam_shift_pattern_uniq
+msgid "Mã ca không được trùng trong cùng một nhà máy."
+msgstr "The shift code must be unique within one plant."
+
+#. module: eam_shift
+#: model:ir.actions.act_window,name:eam_shift.action_eam_shift_pattern
+#: model:ir.model,name:eam_shift.model_eam_shift_pattern
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_pattern
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_pattern_list
+msgid "Mẫu ca trực"
+msgstr "Shift pattern"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Mở ca"
+msgstr "Open the shift"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__muc_do
+msgid "Mức độ"
+msgstr "Severity"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__nguoi_giao_id
+msgid "Người giao ca"
+msgstr "Handed over by"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__nguoi_nhan_id
+msgid "Người nhận ca"
+msgstr "Taken over by"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__user_ids
+msgid "Người trực"
+msgstr "Duty operator"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__plant_id
@@ -74,10 +336,166 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift.py:0
+msgid "Nhà máy \"%s\" chưa khai mẫu ca nào."
+msgstr "Plant \"%s\" has no shift pattern declared."
+
+#. module: eam_shift
+#: model:ir.model.constraint,message:eam_shift.constraint_eam_shift_uniq_ca
+msgid "Nhà máy đã có ca này trong ngày đó."
+msgstr "The plant already has this shift on that day."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__gio_nhan
+msgid "Nhận lúc"
+msgstr "Taken over at"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__bien_ban
+msgid "Nội dung bàn giao"
+msgstr "What is being handed over"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Nội dung bàn giao bằng lời."
+msgstr "The handover in words."
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__loai__trong_ca
+msgid "Phát sinh trong ca"
+msgstr "Arose during the shift"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__state__ke_hoach
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__loai__ke_hoach
+msgid "Theo kế hoạch"
+msgstr "Per the plan"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__muc_do__thap
+msgid "Thường"
+msgstr "Normal"
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift__chat_luong_ban_giao
+msgid "Thứ tự nặng: chưa ai ký nhận là nặng nhất, vì khi tranh chấp thì không có ai đứng ra nhận ca. Việc lăn nhiều ca nặng hơn việc còn mở: còn mở là bình thường ở cuối ca, lăn qua ba ca là đang bị đùn."
+msgstr "Ordered by severity: nobody having signed for it is the worst, because in a dispute there is no one who took the shift on. Work rolling across several shifts outranks work still open: still open is normal at the end of a shift, rolling three shifts means it is being passed along."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__truong_ca_id
+msgid "Trưởng ca"
+msgstr "Shift supervisor"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__state
 #: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_search
 msgid "Trạng thái"
 msgstr "State"
+
+#. module: eam_shift
+#: model:ir.model,name:eam_shift.model_eam_shift_snapshot
+msgid "Trạng thái thiết bị lúc mở ca"
+msgstr "Equipment state when the shift opened"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__snapshot_ids
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Trạng thái đầu ca"
+msgstr "State at the start of the shift"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__name
+msgid "Tên ca"
+msgstr "Shift name"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__so_may_dung
+msgid "Tổ máy đang dừng"
+msgstr "Units currently down"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__note_ids
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Việc & ghi chú"
+msgstr "Work & notes"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__name
+msgid "Việc / ghi chú"
+msgstr "Work / note"
+
+#. module: eam_shift
+#: model:ir.model,name:eam_shift.model_eam_shift_note
+msgid "Việc / ghi chú trong ca"
+msgstr "Work / notes during the shift"
+
+#. module: eam_shift
+#: model:ir.actions.act_window,name:eam_shift.action_eam_shift_note_dun
+#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_note_dun
+msgid "Việc bị đùn qua nhiều ca"
+msgstr "Work passed along across several shifts"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_list
+msgid "Việc chuyển ca"
+msgstr "Work carried over"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__so_viec_mo
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_list
+msgid "Việc còn mở"
+msgstr "Work still open"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Việc còn mở sẽ được chuyển sang ca kế tiếp kèm dấu vết. Chưa có ca kế tiếp thì hệ ghi cảnh báo vào nhật ký."
+msgstr "Work still open is carried into the next shift with a trail. Where there is no next shift yet, the system writes a warning into the log."
+
+#. module: eam_shift
+#: code:addons/eam_shift/models/eam_shift_note.py:0
+msgid "Việc gốc — ca %s"
+msgstr "Original entry — shift %s"
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift__so_viec_lan_lau
+msgid "Việc lăn nhiều ca"
+msgstr "Work rolling across several shifts"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+msgid "Việc trong ca"
+msgstr "Work during the shift"
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift_note_dun
+msgid ""
+"Việc đã chuyển qua <b>từ ba ca trở lên</b> mà chưa xong.\n"
+"            Lăn năm ca thì không phải việc khó — là việc không ai nhận."
+msgstr ""
+"Work carried over <b>three shifts or more</b> and still unfinished.\n"
+"            Rolling five shifts does not mean it is hard — it means nobody is taking it on."
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift__so_viec_lan_lau
+msgid "Việc đã chuyển qua từ ba ca trở lên. Việc lăn năm ca là việc đang bị đùn, không phải việc khó."
+msgstr "Work carried over three shifts or more. Work that has rolled five shifts is being passed along, not hard."
+
+#. module: eam_shift
+#: model_terms:ir.actions.act_window,help:eam_shift.action_eam_shift_pattern
+msgid ""
+"Ví dụ ba ca tám tiếng: 6h, 14h, 22h. Ca bắt đầu 22h sẽ kết\n"
+"            thúc 6h hôm sau — cột <b>Vắt qua ngày hôm sau</b> tự bật để\n"
+"            không ai tính ra ca đêm dài âm mười sáu tiếng."
+msgstr ""
+"Three eight-hour shifts, for example: 06:00, 14:00, 22:00. A shift\n"
+"            starting at 22:00 ends at 06:00 the next day — the <b>Crosses\n"
+"            midnight</b> column turns itself on so that nobody computes a night\n"
+"            shift as minus sixteen hours long."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_pattern__qua_dem
+msgid "Vắt qua ngày hôm sau"
+msgstr "Crosses midnight"
 
 #. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__location_id
@@ -85,22 +503,95 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__location_id
+msgid "Vị trí / thiết bị"
+msgstr "Location / equipment"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid ""
+"việc đã lăn qua <b>từ ba ca trở\n"
+"                        lên</b>. Việc lăn năm ca không phải việc khó — nó là\n"
+"                        việc đang bị đùn."
+msgstr ""
+"items have rolled over <b>three shifts or\n"
+"                        more</b>. Work that rolls five shifts is not hard — it is\n"
+"                        being passed along."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__bi_dun
+msgid "Đang bị đùn"
+msgstr "Being passed along"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_search
+msgid "Đang bị đùn (≥3 ca)"
+msgstr "Being passed along (≥3 shifts)"
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__state__cho
+msgid "Đang chờ bên ngoài"
+msgstr "Waiting on someone outside"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift_snapshot__dang_dung
 msgid "Đang dừng"
 msgstr "Down"
 
 #. module: eam_shift
-#: model:ir.ui.menu,name:eam_shift.menu_eam_shift
-msgid "Ca trực & giao ca"
-msgstr "Shifts & handover"
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift_note__state__dang_lam
+msgid "Đang làm"
+msgstr "In progress"
 
 #. module: eam_shift
-#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_note_dun
-msgid "Việc bị đùn qua nhiều ca"
-msgstr "Work pushed across shifts"
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__state__dang_truc
+msgid "Đang trực"
+msgstr "On duty"
 
 #. module: eam_shift
-#: model:ir.ui.menu,name:eam_shift.menu_eam_shift_pattern
-msgid "Mẫu ca trực"
-msgstr "Shift patterns"
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_note_list
+msgid "Đi ngược tới việc gốc"
+msgstr "Go back to the original entry"
+
+#. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid ""
+"Đây là <b>ảnh chụp lúc mở ca</b>, không tính\n"
+"                                lại khi mở xem. Mục đích là ghi lại\n"
+"                                <i>người vào ca đã nhìn thấy gì</i> — tính\n"
+"                                lại thì sáu tháng sau nó hiện trạng thái hôm\n"
+"                                nay và biên bản mất sạch giá trị."
+msgstr ""
+"This is a <b>snapshot taken when the shift\n"
+"                                opened</b>; it is not recomputed when it is\n"
+"                                opened again later. The point is to record\n"
+"                                <i>what the person coming on shift saw</i> —\n"
+"                                recompute it and six months later it shows today's\n"
+"                                state, and the record loses all its value."
+
+#. module: eam_shift
+#: model:ir.model.fields.selection,name:eam_shift.selection__eam_shift__state__da_ban_giao
+msgid "Đã bàn giao"
+msgstr "Handed over"
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift__ban_giao_mot_chieu
+msgid "Đã giao nhưng chưa ai ký nhận. Không chặn vận hành — chặn thì người ta ký hộ nhau và chữ ký mất ý nghĩa — nhưng phải nhìn thấy được, vì đây là cái cớ kinh điển khi tranh chấp."
+msgstr "Handed over but nobody has signed for it. It does not block operations — blocking it makes people sign for each other and the signature stops meaning anything — but it has to be visible, because this is the classic excuse when there is a dispute."
+
+#. module: eam_shift
+#: model:ir.model.fields,field_description:eam_shift.field_eam_shift_note__so_ca_da_lan
+msgid "Đã lăn qua (ca)"
+msgstr "Rolled over (shifts)"
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift_note__so_ca_da_lan
+msgid "Đếm ngược theo sợi dây chuyển ca. Từ ba ca trở lên là việc đang bị đùn, không phải việc khó."
+msgstr "Counted back along the chain of handovers. Three shifts or more means work being passed along, not work that is hard."
+
+#. module: eam_shift
+#: model:ir.model.fields,help:eam_shift.field_eam_shift_note__work_order_id
+msgid "Để trống cũng được. Nhiều thứ cần bàn giao chưa kịp thành lệnh công việc — ép phải có lệnh trước khi ghi là đúng cách làm chúng biến mất."
+msgstr "It may be left empty. Plenty of things need handing over before they become work orders — insisting on an order first is exactly how they disappear."
 

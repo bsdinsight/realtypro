@@ -532,8 +532,3 @@ msgstr "the DC-side tag has no reading for the day"
 msgid "đường cong công suất \"%s\""
 msgstr "power curve \"%s\""
 
-#. module: eam_unit_day
-#: model:ir.ui.menu,name:eam_unit_day.menu_unit_day
-msgid "Hiệu suất tổ máy"
-msgstr "Unit performance"
-

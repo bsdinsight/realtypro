@@ -56,8 +56,3 @@ msgstr "State"
 msgid "Vị trí"
 msgstr "Location"
 
-#. module: eam_map
-#: model:ir.ui.menu,name:eam_map.menu_eam_plant_map
-msgid "Bản đồ hiện trường"
-msgstr "Field map"
-

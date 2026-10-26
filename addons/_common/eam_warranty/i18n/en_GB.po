@@ -82,13 +82,3 @@ msgstr "Name"
 msgid "Đang lắp tại"
 msgstr "Installed at"
 
-#. module: eam_warranty
-#: model:ir.ui.menu,name:eam_warranty.menu_eam_asset_warranty
-msgid "Bảo hành theo sê-ri"
-msgstr "Warranty by serial number"
-
-#. module: eam_warranty
-#: model:ir.ui.menu,name:eam_warranty.menu_eam_wo_con_bao_hanh
-msgid "Còn bảo hành mà chưa đòi"
-msgstr "In warranty but not claimed"
-

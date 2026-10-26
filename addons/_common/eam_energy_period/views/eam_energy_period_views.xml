@@ -127,15 +127,25 @@
                      thêm "Cùng kỳ năm trước" là hai khoảng đặt cạnh
                      nhau, so được ngay trong pivot.
 
-                     Chặn hai đầu bằng CẢ `tu_ngay` lẫn `den_ngay`: kỳ
-                     năm nằm vắt qua ranh giới năm, chỉ chặn một đầu là
-                     nó lọt vào rồi cộng thêm cả năm vào luỹ kế. -->
+                     Chặn theo `tu_ngay` cả hai đầu, KHÔNG chặn bằng
+                     `den_ngay`. Chặn `den_ngay <= hôm nay` nghe hợp lý
+                     mà sai nghĩa: nó chỉ lấy kỳ ĐÃ KẾT THÚC, nên đang
+                     ngày 24 tháng 10 thì cả tháng 10 bị loại — luỹ kế
+                     hụt mất tới một tháng mà màn hình không nói gì. YTD
+                     là "tất cả tới hôm nay", phải gồm cả kỳ đang dở;
+                     con số của kỳ dở vốn đã chỉ gồm những ngày đã trôi
+                     qua, vì nó cộng từ bảng tổ máy.
+
+                     CÒN MỘT CHỖ LỆCH KHÔNG CHỮA ĐƯỢC BẰNG BỘ LỌC: ở bậc
+                     tháng, tháng đang chạy của năm nay là tháng DỞ còn
+                     tháng ấy của năm trước là tháng ĐỦ. So ở bậc NGÀY
+                     thì hai bên cùng số ngày, mới là phép so chặt. -->
                 <filter name="f_ytd" string="Từ đầu năm tới nay"
                         domain="[('tu_ngay', '&gt;=', context_today().strftime('%Y-01-01')),
-                                 ('den_ngay', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                                 ('tu_ngay', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter name="f_ytd_truoc" string="Cùng kỳ năm trước"
                         domain="[('tu_ngay', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01')),
-                                 ('den_ngay', '&lt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+                                 ('tu_ngay', '&lt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
                 <filter name="f_duoi" string="DƯỚI P90"
                         domain="[('dat_muc', '=', 'duoi')]"/>

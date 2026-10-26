@@ -1,0 +1,124 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_stock
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_end
+msgid "Bảo hành đến ngày"
+msgstr "Warranty to"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__sequence
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Cấp"
+msgstr "Level"
+
+#. module: eam_stock
+#: model:ir.model.fields,help:eam_stock.field_product_product__eam_is_rotable
+#: model:ir.model.fields,help:eam_stock.field_product_template__eam_is_rotable
+msgid "Cấu phần tháo ra đem đi đại tu rồi lắp lại, giữ nguyên lịch sử theo sê-ri. Giá trị gợi ý khi tạo tài sản mới."
+msgstr "Components removed for overhaul and refitted afterwards, keeping their serial-number history. Suggested value when creating a new asset."
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__doc_type
+#: model:ir.model.fields,field_description:eam_stock.field_eam_rma__rma_type
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_search
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Loại"
+msgstr "Category"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__category_id
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__category_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Loại cấu phần"
+msgstr "Component category"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_criticality
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_criticality
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_search_eam
+msgid "Mức quan trọng"
+msgstr "Criticality level"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_mfg_date
+msgid "Ngày sản xuất"
+msgstr "Manufacturing date"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__draft
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check__state__draft
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__state__draft
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_rma__state__draft
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_adjustment__state__draft
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_stock_transfer__state__draft
+msgid "Nháp"
+msgstr "Draft"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
+msgid "Quay vòng"
+msgstr "Rotable"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_tool_loan_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
+msgid "Sê-ri"
+msgstr "Serial"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__currency_id
+msgid "Tiền tệ"
+msgstr "Currency"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_approval_rule__criticality__critical
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__critical
+msgid "Trọng yếu"
+msgstr "Critical"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_product_product__eam_is_rotable
+#: model:ir.model.fields,field_description:eam_stock.field_product_template__eam_is_rotable
+msgid "Vật tư quay vòng"
+msgstr "Rotable spare"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__location_id
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
+msgid "Vị trí thiết bị"
+msgstr "Equipment location"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_note
+msgid "Điều kiện bảo hành"
+msgstr "Warranty terms"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__state__done
+msgid "Đã thanh lý"
+msgstr "Disposed"
+

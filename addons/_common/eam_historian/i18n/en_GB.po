@@ -1,0 +1,40 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_historian
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__force_majeure
+msgid "Bất khả kháng"
+msgstr "Force majeure"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Khi nào"
+msgstr "When"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__curve_type
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Loại"
+msgstr "Category"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__gio
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+msgid "Số giờ"
+msgstr "Hours"
+

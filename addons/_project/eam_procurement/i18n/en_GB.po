@@ -1,0 +1,30 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_procurement
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_procurement
+#: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_category_id
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_list_eam
+#: model_terms:ir.ui.view,arch_db:eam_procurement.view_rp_purchase_request_search_eam
+msgid "Loại cấu phần"
+msgstr "Component category"
+
+#. module: eam_procurement
+#: model:ir.model.fields,field_description:eam_procurement.field_rp_purchase_request__eam_location_id
+msgid "Vị trí đang lắp"
+msgstr "Current location"
+

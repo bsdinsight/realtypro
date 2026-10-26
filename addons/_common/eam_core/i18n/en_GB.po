@@ -1,0 +1,1635 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_core
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_installation.py:0
+msgid ""
+"%(nhan)s \"%(ten)s\" đã có một quãng lắp đặt chồng thời gian: %(tu)s → %(den)s.\n"
+"\n"
+"Hai quãng không được giao nhau. Thay thiết bị thì phải ĐÓNG quãng cũ (điền ngày tháo) trước khi mở quãng mới — nếu không, lịch sử sẽ sai mà không ai phát hiện."
+msgstr ""
+"%(nhan)s \"%(ten)s\" already has an installation period overlapping this one: %(tu)s → %(den)s.\n"
+"\n"
+"Two periods must not overlap. To replace equipment you have to CLOSE the old period (fill in the removal date) before opening the new one — otherwise the history becomes wrong and nobody notices."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid ""
+".\n"
+"                        Muốn đổi chỗ thì ghi một lần lắp mới — không sửa\n"
+"                        tay, vì sửa tay là mất lịch sử."
+msgstr ""
+".\n"
+"                        To move it, record a new installation — do not edit\n"
+"                        by hand, because editing by hand loses the history."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
+msgid ""
+"<b>Bấm dấu × trên chip “Chỉ thiết bị chính”</b> ở thanh tìm\n"
+"               kiếm là thấy đủ. Sau đó vẫn trống thì mới là chưa có dữ liệu —\n"
+"               hãy xem lại các ô đã chọn ở khung bên trái."
+msgstr ""
+"<b>Click the × on the “Main equipment only” chip</b> in the search\n"
+"               bar and you see everything. If it is still empty after that, there really\n"
+"               is no data — check the selections in the left-hand panel."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid ""
+"<b>Cây lắp ráp đi THEO VẬT</b>, khác cây vị\n"
+"                                trí chức năng vốn ở lại CHỖ. Tháo hộp số\n"
+"                                đem đại tu thì ổ trục bên trong đi theo\n"
+"                                nó. Hai cây trả lời hai câu khác nhau:\n"
+"                                <i>\"vị trí này hỏng hộp số mấy lần\"</i>\n"
+"                                (lỗi nền móng, dòng gió, lắp đặt) và\n"
+"                                <i>\"con hộp số này hỏng ở mấy vị trí\"</i>\n"
+"                                (lỗi lô hàng)."
+msgstr ""
+"<b>The assembly tree follows the THING</b>, unlike the\n"
+"                                functional location tree, which stays with the\n"
+"                                PLACE. Remove a gearbox for overhaul and the\n"
+"                                bearings inside travel with it. The two trees\n"
+"                                answer two different questions:\n"
+"                                <i>\"how many times has this location lost a gearbox\"</i>\n"
+"                                (foundation, wind flow, installation faults) and\n"
+"                                <i>\"in how many locations has this gearbox failed\"</i>\n"
+"                                (batch faults)."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "<span class=\"o_stat_text\">Khoảng chồng</span>"
+msgstr "<span class=\"o_stat_text\">Overlaps</span>"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid "<span class=\"o_stat_text\">Lịch sử lắp đặt</span>"
+msgstr "<span class=\"o_stat_text\">Installation history</span>"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "BH còn (ngày)"
+msgstr "Warranty left (days)"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "BH đến"
+msgstr "Warranty to"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_location__tz
+msgid "Biên ngày của mọi báo cáo ngày lấy theo múi giờ này. Để trống thì dùng múi giờ của công ty, rồi tới Asia/Ho_Chi_Minh — nhưng khai rõ vẫn hơn, nhất là khi có nhà máy ngoài Việt Nam."
+msgstr "The day boundary of every daily report follows this time zone. Leave it empty and the company time zone is used, then Asia/Ho_Chi_Minh — but stating it explicitly is better, especially with plants outside Vietnam."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__source__contractor
+msgid "Báo cáo nhà thầu"
+msgstr "Contractor report"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__operator
+msgid "Bên vận hành"
+msgstr "Operator"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_outage_uniq_source
+msgid "Bản ghi nguồn này đã nhập rồi — nhập lại không được tạo trùng."
+msgstr "This source record has already been imported — re-importing must not create a duplicate."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Bảo hành"
+msgstr "Warranty"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__warranty_days_left
+msgid "Bảo hành còn (ngày)"
+msgstr "Warranty left (days)"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Bảo hành sắp hết (90 ngày)"
+msgstr "Warranty expiring (90 days)"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__warranty
+msgid "Bảo hành thiết bị"
+msgstr "Equipment warranty"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Bảo hành đã hết"
+msgstr "Warranty expired"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__warranty_end
+msgid "Bảo hành đến ngày"
+msgstr "Warranty to"
+
+#. module: eam_core
+#: model:ir.ui.menu,name:eam_core.menu_eam_maint
+msgid "Bảo trì"
+msgstr "Maintenance"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__force_majeure
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__force_majeure
+msgid "Bất khả kháng"
+msgstr "Force majeure"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset_category__is_equipment
+msgid ""
+"Bật khi loại này là một THIẾT BỊ — thứ có lý lịch riêng, có lệnh công việc, có phụ tùng, và đáng đứng một dòng trong sổ thiết bị. Tắt khi nó là CẤU PHẦN nằm bên trong một thiết bị khác.\n"
+"\n"
+"Cờ này quyết định cột \"Cấp tài sản\" của mọi tài sản thuộc loại, và quyết định tài sản ấy có hiện khi mở sổ Tài sản hay không. Đây là quyết định NGHIỆP VỤ nên để ở đây cho người dùng tự đổi, không suy từ dữ liệu.\n"
+"\n"
+"Trước đây máy tự suy: tài sản nào không lắp trong tài sản nào thì là thiết bị. Suy vậy là sai — hộp gom chuỗi lắp trong dàn pin, bộ biến tần tua-bin lắp trong cụm điện, cả hai đều là thiết bị thật mà bị xem là cấu phần rồi biến mất khỏi sổ."
+msgstr ""
+"Turn this on when the category is a piece of EQUIPMENT — something with a record of its own, its own work orders, its own spare parts, and worth a line of its own in the asset register. Turn it off when it is a COMPONENT sitting inside another piece of equipment.\n"
+"\n"
+"This flag decides the \"Asset level\" column of every asset in the category, and decides whether that asset shows up when the Asset register is opened. It is a BUSINESS decision, so it lives here for users to change rather than being inferred from the data.\n"
+"\n"
+"The system used to infer it: any asset not installed inside another asset was equipment. That inference was wrong — string combiner boxes sit inside PV arrays and turbine inverters sit inside the electrical assembly; both are real equipment, and both vanished from the register."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Bắt buộc"
+msgstr "Mandatory"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__date_start
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Bắt đầu"
+msgstr "Start"
+
+#. module: eam_core
+#: model:eam.asset.category,name:eam_core.cat_inverter
+msgid "Bộ biến tần"
+msgstr "Inverter"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__allow_multiple
+msgid "Cho phép nhiều tài sản cùng lúc"
+msgstr "Allow several assets at once"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_install__relocation
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__relocation
+msgid "Chuyển vị trí"
+msgstr "Move location"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__is_mandatory
+msgid "Chuẩn phân loại bắt buộc và tuỳ chọn. Con số khả dụng phụ thuộc việc có thu thập các loại TUỲ CHỌN hay không — nên không thể tuyên bố tuân thủ chuẩn chỉ bằng cách đặt tên một chỉ số."
+msgstr "Mandatory and optional classification under the standard. The availability figure depends on whether the OPTIONAL categories are collected — so compliance with the standard cannot be claimed merely by naming an indicator."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_location
+msgid "Chưa có vị trí nào"
+msgstr "No locations yet"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_hierarchy
+msgid "Chưa lắp gì"
+msgstr "Nothing installed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_hierarchy
+msgid "Chưa lắp trên máy"
+msgstr "Not installed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_search
+msgid "Chưa lắp tài sản nào"
+msgstr "No asset installed"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__undetermined
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Chưa quy trách nhiệm"
+msgstr "Responsibility not attributed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Chỉ cấu phần"
+msgstr "Components only"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Chỉ khoảng con (không đếm đúp)"
+msgstr "Child periods only (no double counting)"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Chỉ thiết bị chính"
+msgstr "Main equipment only"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Chồng"
+msgstr "Overlap"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__has_overlap
+msgid "Chồng khoảng khác"
+msgstr "Overlaps another period"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Chồng khoảng, cần phân xử"
+msgstr "Overlapping periods, needs arbitration"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_structure_template_line__is_rotable_slot
+msgid "Chỗ chứa thứ tháo ra đem đại tu rồi lắp lại — hộp số, máy phát, cánh, bộ biến đổi. Đây là những vị trí mà lịch sử theo sê-ri đáng tiền nhất."
+msgstr "Holds the things removed for overhaul and refitted afterwards — gearbox, generator, blades, converter. These are the locations where serial-number history is worth the most."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__owner
+msgid "Chủ đầu tư tự chịu"
+msgstr "Owner's own account"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
+msgid "Converter, Frequency converter, Bộ biến đổi"
+msgstr "Converter, Frequency converter, Power converter"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset_category__alias_names
+msgid "Các tên khác của cùng loại này, ngăn bằng dấu phẩy. Dùng khi nhập dữ liệu từ nguồn của OEM hay nhà thầu dùng từ khác — tránh đẻ ra hai loại trùng nghĩa."
+msgstr "Other names for this same category, comma separated. Use it when importing from an OEM or contractor source that uses different words — it stops two categories meaning the same thing being created."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Cây lắp ráp"
+msgstr "Assembly tree"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_asset.py:0
+msgid "Cây lắp ráp — %s"
+msgstr "Assembly tree — %s"
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset_category
+msgid "Cây phân loại còn trống"
+msgstr "The category tree is empty"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_location.py:0
+msgid "Cây vị trí — %s"
+msgstr "Location tree — %s"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__warranty_state__valid
+msgid "Còn hạn"
+msgstr "In warranty"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__is_root_cause
+msgid "Có khoảng con trỏ về. Báo cáo giờ-máy phải LOẠI dòng này ra để khỏi đếm đúp."
+msgstr "Child periods point back to this one. Unit-hour reports must EXCLUDE this row to avoid double counting."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Có kế hoạch"
+msgstr "Planned"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__rated_power_mw
+msgid "Công suất đặt (MW)"
+msgstr "Installed capacity (MW)"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_location__rated_power_mw
+msgid "Công suất định mức của tổ máy đặt tại vị trí này. Dùng để tính hệ số công suất — chưa khai thì hệ KHÔNG đoán, vì chia cho một con số đoán bừa ra tỷ lệ trông hợp lý và sai."
+msgstr "Rated capacity of the unit installed at this location. Used to compute the capacity factor — while it is not declared the system does NOT guess, because dividing by a guessed number gives a plausible-looking ratio that is wrong."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
+msgid ""
+"Cùng một cụm mang tên khác nhau tuỳ nguồn. Không\n"
+"                            khai thì nhập dữ liệu từ hai OEM sẽ đẻ ra hai\n"
+"                            loại trùng nghĩa, và thống kê cộng nhầm."
+msgstr ""
+"The same assembly carries different names depending on the source.\n"
+"                            Without aliases, importing from two OEMs creates two\n"
+"                            categories meaning the same thing, and the statistics add up wrongly."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid ""
+"Cùng vị trí, cùng lúc, có khoảng dừng loại khác.\n"
+"                        <b>Không phải lỗi</b> — một máy có thể vừa hỏng vừa\n"
+"                        bị cắt giảm. Nhưng phải có người phân xử giờ đó\n"
+"                        tính vào loại nào, không để máy tự chọn."
+msgstr ""
+"Same location, same moment, an outage of another category.\n"
+"                        <b>Not an error</b> — a machine can be faulty and curtailed\n"
+"                        at once. But a person has to arbitrate which category those\n"
+"                        hours count against; do not let the machine choose."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__has_overlap
+msgid "Cùng vị trí, cùng lúc, hai loại thời gian khác nhau. KHÔNG phải lỗi — chuẩn có cơ chế ưu tiên loại. Nhưng phải có người phân xử, không để máy tự chọn."
+msgstr "Same location, same moment, two different time categories. NOT an error — the standard provides a category priority mechanism. But a person has to arbitrate; do not let the machine choose."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__level
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__level
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__level
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__level
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid "Cấp"
+msgstr "Level"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__asset_level
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Cấp tài sản"
+msgstr "Asset level"
+
+#. module: eam_core
+#: model:ir.ui.menu,name:eam_core.menu_eam_config
+msgid "Cấu hình"
+msgstr "Configuration"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__asset_level__component
+msgid "Cấu phần"
+msgstr "Component"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__child_ids
+msgid "Cấu phần bên trong"
+msgstr "Internal components"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_asset.py:0
+msgid "Cấu phần không được lắp lồng vòng vào chính nó."
+msgstr "A component cannot be installed inside itself."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__parent_id
+msgid "Cấu phần nằm BÊN TRONG một tài sản khác và đi theo nó khi tháo ra. Khác với vị trí chức năng — chỗ thì ở lại."
+msgstr "A component sits INSIDE another asset and travels with it when removed. Unlike a functional location — the place stays put."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset_category__is_rotable_default
+msgid "Cấu phần tháo ra đem đi đại tu rồi lắp lại, giữ nguyên lịch sử theo sê-ri. Giá trị gợi ý khi tạo tài sản mới."
+msgstr "Components removed for overhaul and refitted afterwards, keeping their serial-number history. Suggested value when creating a new asset."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Cấu phần trong"
+msgstr "Component inside"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Doanh thu mất"
+msgstr "Revenue lost"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__is_planned
+msgid ""
+"Dừng biết trước và xếp lịch được: bảo trì theo kế hoạch, can thiệp sửa chữa có kế hoạch. Phân biệt với dừng sự cố — cùng là giờ dừng, nhưng một bên nằm trong kế hoạch còn một bên thì không, và bản đồ hiện trường tô hai màu khác nhau.\n"
+"\n"
+"KHÔNG suy ra được từ tên. Trước đây bản đồ dò chữ \"kế hoạch\" trong tên loại: tên là trường DỊCH ĐƯỢC, nên người đọc màn hình bằng tiếng Anh thấy \"Planned maintenance\" — không khớp chuỗi — và một máy đang bảo trì hiện màu ĐỎ như đang hỏng. Loại đặt tên \"Bảo trì định kỳ\" cũng rơi vào đó."
+msgstr ""
+"Downtime known in advance and schedulable: planned maintenance, planned repair work. Distinct from fault downtime — both are downtime hours, but one is inside the plan and the other is not, and the field map colours them differently.\n"
+"\n"
+"CANNOT be derived from the name. The map used to look for the word \"planned\" in the category name: the name is a TRANSLATABLE field, so anyone reading the screen in English saw \"Planned maintenance\" — no string match — and a machine under maintenance showed RED as though it were faulty. A category named \"Periodic maintenance\" fell into the same hole."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__is_planned
+msgid "Dừng có kế hoạch"
+msgstr "Planned downtime"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__location_id
+msgid "Dừng máy xảy ra ở một CHỖ. Thiết bị đang nằm ở đó suy ra từ lịch sử lắp đặt."
+msgstr "An outage happens at a PLACE. Which equipment was there is derived from the installation history."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Ghi lần lắp mới"
+msgstr "Record new installation"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_form
+msgid "Ghi tháo hôm nay"
+msgstr "Record removal today"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__attributable_to
+msgid "Gợi ý ban đầu. Trách nhiệm THẬT do điều khoản hợp đồng quyết định, và từng hợp đồng một khác nhau."
+msgstr "An opening suggestion. REAL responsibility is decided by the contract terms, and every contract differs."
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_structure_template_line_uniq
+msgid "Hai vị trí cùng một cha không được trùng mã."
+msgstr "Two locations under the same parent cannot share a code."
+
+#. module: eam_core
+#: model:ir.ui.menu,name:eam_core.menu_eam_perf
+msgid "Hiệu suất"
+msgstr "Performance"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__is_refurbished
+msgid "Hàng đã tân trang"
+msgstr "Refurbished part"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__source__scada
+msgid "Hệ giám sát"
+msgstr "Monitoring system"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_location__location_type__system
+msgid "Hệ thống"
+msgstr "System"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__failure
+msgid "Hỏng"
+msgstr "Failed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Hộp số"
+msgstr "Gearbox"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__counts_as_downtime
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__counts_as_downtime
+msgid "KHÔNG suy ra được từ tên. Cắt giảm do ràng buộc lưới được xếp là ĐANG HOẠT ĐỘNG (phát một phần, giảm tải) — không phải dừng máy. Khai sai ô này là sai toàn bộ khả dụng."
+msgstr "CANNOT be derived from the name. Curtailment under grid constraints is classified as OPERATING (partial output, derated) — not downtime. Get this field wrong and the whole availability figure is wrong."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_structure_template_line__category_id
+msgid "Khai vào thì hệ thống cảnh báo khi lắp nhầm loại thiết bị vào vị trí này."
+msgstr "Set it and the system warns when equipment of the wrong category is installed at this location."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Khi nào"
+msgstr "When"
+
+#. module: eam_core
+#: model:ir.ui.menu,name:eam_core.menu_eam_store
+msgid "Kho phụ tùng"
+msgstr "Spare parts store"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_outage.py:0
+msgid "Khoảng chồng — %s"
+msgstr "Overlapping periods — %s"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_outage.py:0
+msgid "Khoảng dừng \"%s\" chưa quy trách nhiệm. Xác nhận mà bỏ trống ô này thì nó sẽ nằm mãi ở đó — và đây đúng là ô làm ra tiền."
+msgstr "Outage \"%s\" has no responsibility attributed. Confirm it with this field empty and it stays that way for good — and this is precisely the field that earns money."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__child_ids
+msgid "Khoảng dừng kéo theo"
+msgstr "Knock-on outages"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Khoảng dừng máy"
+msgstr "Outage period"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_outage.py:0
+msgid "Khoảng này đã đóng lúc %s."
+msgstr "This period was closed at %s."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__duration_hours
+msgid "Khoảng đang mở tính tới thời điểm này."
+msgstr "Open period, measured up to this moment."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
+msgid ""
+"Không có tài sản nào\n"
+"               <b>khớp điều kiện đang lọc</b>"
+msgstr ""
+"No asset\n"
+"               <b>matches the current filter</b>"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__warranty_state__none
+msgid "Không khai"
+msgstr "Not declared"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Không lắp trên máy"
+msgstr "Not installed in a machine"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__none
+msgid "Không quy trách nhiệm"
+msgstr "No responsibility attributed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Không tính là dừng (cắt giảm, gió lặng…)"
+msgstr "Not counted as downtime (curtailment, low wind…)"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__date_end
+msgid "Kết thúc"
+msgstr "End"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Loại"
+msgstr "Category"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__is_mandatory
+msgid "Loại bắt buộc"
+msgstr "Mandatory category"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__child_ids
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__child_ids
+msgid "Loại con"
+msgstr "Child category"
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_asset_category
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__category_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__category_id
+#: model:ir.ui.menu,name:eam_core.menu_eam_asset_category
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+msgid "Loại cấu phần"
+msgstr "Component category"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__category_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__category_id
+msgid "Loại cấu phần chấp nhận"
+msgstr "Accepted component category"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Loại gì"
+msgstr "Which category"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_form
+msgid ""
+"Loại này <b>không</b> tính là thời gian dừng. Ví dụ\n"
+"                        điển hình: cắt giảm do ràng buộc lưới — máy vẫn\n"
+"                        đang hoạt động, chỉ phát một phần."
+msgstr ""
+"This category does <b>not</b> count as downtime. The textbook\n"
+"                        example is curtailment under grid constraints — the machine is\n"
+"                        still operating, just at partial output."
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_time_category
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__category_id
+#: model:ir.ui.menu,name:eam_core.menu_eam_time_category
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Loại thời gian"
+msgstr "Time category"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__location_type
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_search
+msgid "Loại vị trí"
+msgstr "Location type"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__is_data_gap
+msgid "Là khoảng mất dữ liệu"
+msgstr "Is a data-loss period"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__is_root_cause
+msgid "Là sự cố gốc"
+msgstr "Is root outage"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__is_equipment
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+msgid "Là thiết bị"
+msgstr "Is equipment"
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset_category
+msgid ""
+"Lõi chỉ dựng cây rỗng. Nội dung chuyên ngành — ví dụ 11 phân\n"
+"               hệ và 19 cụm của một tua-bin gió — do gói ngành nạp vào."
+msgstr ""
+"The core only builds an empty tree. The domain content — for example the 11\n"
+"               subsystems and 19 assemblies of a wind turbine — is loaded by the industry package."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__reason_install
+msgid "Lý do lắp"
+msgstr "Installation reason"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__reason_remove
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+msgid "Lý do tháo"
+msgstr "Removal reason"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__grid
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__grid
+msgid "Lưới điện"
+msgstr "Grid"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Lần lắp"
+msgstr "Installation"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__current_installation_id
+msgid "Lần lắp hiện tại"
+msgstr "Current installation"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_form
+msgid "Lần lắp đặt"
+msgstr "Installation"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_install__reinstall
+msgid "Lắp lại sau đại tu"
+msgstr "Refitted after overhaul"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_install__new
+msgid "Lắp mới"
+msgstr "New installation"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Lắp trong"
+msgstr "Installed in"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__parent_id
+msgid "Lắp trong tài sản"
+msgstr "Installed in asset"
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_installation
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__installation_ids
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__installation_ids
+#: model:ir.ui.menu,name:eam_core.menu_eam_installation
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid "Lịch sử lắp đặt"
+msgstr "Installation history"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "MWh mất"
+msgstr "MWh lost"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__model_ref
+msgid "Model / nền tảng"
+msgstr "Model / platform"
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
+msgid ""
+"Màn này mở sẵn bộ lọc <b>“Chỉ thiết bị chính”</b> — hiện\n"
+"               thiết bị, ẩn cấu phần nằm bên trong chúng (cánh quạt, khung\n"
+"               giá đỡ, sứ xuyên, rơ-le…). Loại anh vừa chọn có thể toàn là\n"
+"               cấu phần, nên danh sách trống."
+msgstr ""
+"This screen opens with the <b>“Main equipment only”</b> filter on — it shows\n"
+"               equipment and hides the components inside them (blades, support frames,\n"
+"               bushings, relays…). The category you just picked may contain nothing but\n"
+"               components, which is why the list is empty."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Máy dừng theo"
+msgstr "Knock-on units"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Máy kéo theo"
+msgstr "Knock-on units"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__source_ref
+msgid "Mã alarm hoặc mã bản ghi ở hệ nguồn. Dùng để nhập lại không tạo trùng."
+msgstr "Alarm code or record id in the source system. Used so that re-importing creates no duplicates."
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_asset_category_uniq_code
+msgid "Mã loại cấu phần không được trùng."
+msgstr "Component category code must be unique."
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_time_category_uniq_code
+msgid "Mã loại thời gian không được trùng."
+msgstr "Time category code must be unique."
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_structure_template_uniq_code
+msgid "Mã mẫu cấu trúc không được trùng."
+msgstr "Structure template code must be unique."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__source_ref
+msgid "Mã tham chiếu nguồn"
+msgstr "Source reference"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__code
+msgid "Mã tài sản"
+msgstr "Asset code"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_asset_uniq_code
+msgid "Mã tài sản không được trùng trong cùng một công ty."
+msgstr "The asset code must be unique within one company."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__code
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__code
+msgid "Mã vị trí"
+msgstr "Location code"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__complete_code
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+msgid "Mã đầy đủ"
+msgstr "Full code"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__environment
+msgid "Môi trường"
+msgstr "Environment"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__tz
+msgid "Múi giờ nhà máy"
+msgstr "Plant time zone"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Mất bao nhiêu, đòi ai"
+msgstr "How much was lost, and from whom"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Mất dữ liệu"
+msgstr "Data loss"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__is_data_gap
+msgid "Mất kết nối giám sát. Phải hạch toán thành một loại thời gian, không được bỏ qua và không được coi là máy chạy tốt."
+msgstr "Loss of the monitoring link. It has to be accounted for as a time category — neither skipped nor treated as a healthy machine."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__template_id
+msgid "Mẫu"
+msgstr "Template"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_structure_template.py:0
+msgid "Mẫu \"%s\" chưa khai áp cho loại thiết bị nào — không biết sinh cho vị trí nào."
+msgstr "Template \"%s\" does not say which equipment category it applies to — there is no way to know which locations to generate."
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_structure_template.py:0
+msgid "Mẫu cấu trúc chỉ áp cho VỊ TRÍ THIẾT BỊ. \"%s\" là %s."
+msgstr "Structure templates apply to EQUIPMENT LOCATIONS only. \"%s\" is %s."
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_structure_template
+#: model:ir.model,name:eam_core.model_eam_structure_template
+#: model:ir.ui.menu,name:eam_core.menu_eam_structure_template
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_list
+msgid "Mẫu cấu trúc cấu phần"
+msgstr "Component structure template"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_structure_template__category_id
+msgid "Mẫu này mô tả cấu trúc bên trong một thiết bị thuộc loại nào. Thường là loại gốc — ví dụ \"Tua-bin gió\"."
+msgstr "Which equipment category this template describes the internals of. Usually a root category — for example \"Wind turbine\"."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid ""
+"Mẫu sinh ra <b>cây VỊ TRÍ chức năng</b> — tức CHỖ,\n"
+"                        tồn tại suốt đời nhà máy. Hộp số thay mấy lần thì\n"
+"                        chỗ đó vẫn thế. Lịch sử bám vào đây trả lời câu\n"
+"                        <i>\"vị trí này hỏng hộp số mấy lần\"</i> — câu chỉ\n"
+"                        ra lỗi nền móng, dòng gió hay lắp đặt.<br/>\n"
+"                        Khác với <b>cây lắp ráp tài sản</b> (ô \"Lắp trong\n"
+"                        tài sản\") vốn trả lời câu ngược lại: <i>\"con hộp\n"
+"                        số này đã hỏng ở mấy vị trí\"</i> — câu chỉ ra lỗi\n"
+"                        lô hàng."
+msgstr ""
+"The template generates the <b>functional LOCATION tree</b> — the PLACE,\n"
+"                        which exists for the life of the plant. However many times the\n"
+"                        gearbox is replaced, the place stays the same. History anchored\n"
+"                        here answers <i>\"how many times has this location lost a\n"
+"                        gearbox\"</i> — the question that points to foundation, wind-flow\n"
+"                        or installation faults.<br/>\n"
+"                        Different from the <b>asset assembly tree</b> (the \"Installed in\n"
+"                        asset\" field), which answers the opposite question: <i>\"in how\n"
+"                        many locations has this gearbox failed\"</i> — the question that\n"
+"                        points to batch faults."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__is_rotable_default
+msgid "Mặc định là vật tư quay vòng"
+msgstr "Rotable spare by default"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Mốc thời gian"
+msgstr "Timestamp"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset_category__is_catch_all
+msgid "Mỗi cây phân loại phải có một rổ Khác. Không có thì người nhập sẽ nhét bừa vào loại gần nhất và làm hỏng thống kê."
+msgstr "Every category tree needs an \"Other\" bucket. Without one, whoever enters data forces records into the nearest category and ruins the statistics."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_outage
+msgid ""
+"Mỗi khoảng dừng là một quãng thời gian một vị trí ở một\n"
+"               trạng thái. Ô <b>Quy trách nhiệm</b> là ô làm ra tiền:\n"
+"               không có nó thì mỗi lần dừng chỉ là một dòng nhật ký."
+msgstr ""
+"Each outage is a span of time during which one location is in one\n"
+"               state. The <b>Responsibility</b> field is the one that earns money:\n"
+"               without it, an outage is only a log entry."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
+msgid ""
+"Một loại là thiết bị hay cấu phần do <b>chính anh quyết</b>:\n"
+"               mở <i>Cấu hình ▸ Loại cấu phần</i>, tick ô <b>“Là thiết bị”</b>.\n"
+"               Máy không tự suy điều đó."
+msgstr ""
+"Whether a category is equipment or a component is <b>your own decision</b>:\n"
+"               open <i>Configuration ▸ Component categories</i> and tick <b>“Is equipment”</b>.\n"
+"               The system does not infer it."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Mức QT"
+msgstr "Criticality"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__criticality
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Mức quan trọng"
+msgstr "Criticality level"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__liability__om_contract
+msgid "Nghĩa vụ hợp đồng O&M"
+msgstr "O&M contract obligation"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__origin
+msgid "Nguồn gốc"
+msgstr "Origin"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Nguồn gốc & ghi chú"
+msgstr "Origin & notes"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__date_install
+msgid "Ngày lắp"
+msgstr "Installed on"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+msgid "Ngày lắp đặt"
+msgstr "Installation date"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__date_manufacture
+msgid "Ngày sản xuất"
+msgstr "Manufacturing date"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__date_remove
+msgid "Ngày tháo"
+msgstr "Removed on"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_installation_ck_ngay
+msgid "Ngày tháo không được trước ngày lắp."
+msgstr "The removal date cannot precede the installation date."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__date_commissioned
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Ngày đưa vào vận hành"
+msgstr "Commissioning date"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+msgid "Nhiều tài sản"
+msgstr "Multiple assets"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__manufacturer_id
+msgid "Nhà sản xuất"
+msgstr "Manufacturer"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_time_category__attributable_to__oem
+msgid "Nhà sản xuất / bảo hành"
+msgstr "Manufacturer / warranty"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__is_refurbished
+msgid "Nhà thầu OEM thường đòi quyền lắp phụ tùng đã tân trang. Không ghi lại thì vài năm sau không ai biết trong máy đang có những gì."
+msgstr "OEM contractors usually claim the right to fit refurbished parts. Without recording it, in a few years nobody knows what is actually inside the machine."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__state__draft
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__state__draft
+msgid "Nháp"
+msgstr "Draft"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+msgid "Nhận loại"
+msgstr "Accepts category"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_install__migration
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_outage__source__migration
+msgid "Nhập dữ liệu lịch sử"
+msgstr "Historical data import"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__upgrade
+msgid "Nâng cấp"
+msgstr "Upgrade"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__parent_line_id
+msgid "Nằm trong"
+msgstr "Inside"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid "Quay vòng"
+msgstr "Rotable"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__liability
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Quy trách nhiệm"
+msgstr "Responsibility"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_installation.py:0
+msgid "Quãng này đã đóng ngày %s."
+msgstr "This period was closed on %s."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__is_catch_all
+msgid "Rổ \"Khác\""
+msgstr "\"Other\" bucket"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+msgid "Rổ Khác"
+msgstr "\"Other\" bucket"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid "Sinh vị trí cho toàn bộ thiết bị"
+msgstr "Generate locations for all equipment"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__criticality
+msgid "Suy ra từ lịch sử hỏng hóc của CHÍNH đội máy này, không lấy bảng xếp hạng chung. Dữ liệu nhiều nguồn cho thấy thứ tự này khác nhau rất xa giữa các đội máy."
+msgstr "Derived from the failure history of THIS fleet, not from a generic ranking. Data from several sources shows this order differs widely from fleet to fleet."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Sê-ri"
+msgstr "Serial"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__lost_mwh
+msgid "Sản lượng mất (MWh)"
+msgstr "Energy lost (MWh)"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__warranty_state__expiring
+msgid "Sắp hết"
+msgstr "Expiring soon"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__priority
+msgid "Số NHỎ thắng. Khi hai loại xảy ra đồng thời trên cùng một thiết bị, giờ đó tính vào loại có số nhỏ hơn."
+msgstr "The LOWER number wins. When two categories occur at the same time on the same equipment, those hours count against the lower-numbered one."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__child_count
+msgid "Số cấu phần bên trong"
+msgstr "Internal components"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__duration_hours
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Số giờ"
+msgstr "Hours"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__name
+msgid "Số hiệu"
+msgstr "Reference"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__install_count
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Số lần lắp"
+msgstr "Installations"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__child_count
+msgid "Số máy bị kéo theo"
+msgstr "Knock-on units"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__duration_days
+msgid "Số ngày tại vị trí"
+msgstr "Days at location"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__serial_no
+msgid "Số sê-ri"
+msgstr "Serial number"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_asset_uniq_serial
+msgid "Số sê-ri đã tồn tại cho loại cấu phần này."
+msgstr "That serial number already exists for this component category."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__asset_count
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+msgid "Số tài sản"
+msgstr "Assets"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__asset_count
+msgid "Số tài sản đang lắp"
+msgstr "Installed assets"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__line_count
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_list
+msgid "Số vị trí"
+msgstr "Locations"
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_outage
+msgid "Sổ còn trống"
+msgstr "The log is empty"
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_outage
+#: model:ir.ui.menu,name:eam_core.menu_eam_outage
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Sổ dừng máy"
+msgstr "Outage log"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__origin
+msgid "Tham chiếu tự do tới nguồn bàn giao. Cầu bàn giao thay trường này bằng liên kết thật tới hợp đồng và dòng BOQ."
+msgstr "Free-text reference to the handover source. The handover bridge replaces this field with a real link to the contract and the BOQ line."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__scrap
+msgid "Thanh lý"
+msgstr "Disposal"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_remove__preventive
+msgid "Thay theo kế hoạch"
+msgstr "Planned replacement"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_installation__reason_install__replacement
+msgid "Thay thế"
+msgstr "Replacement"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__lost_mwh
+msgid "Theo mô hình ĐÃ DUYỆT — điều kiện gió và đường cong công suất, hoặc máy đối chứng. KHÔNG lấy công suất định mức nhân số giờ dừng: đó là cách nói sai phổ biến nhất trong báo cáo điện gió."
+msgstr "Per an APPROVED model — wind conditions and power curve, or a reference turbine. Do NOT take rated power times downtime hours: that is the commonest mis-statement in wind reports."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__asset_level__main
+msgid "Thiết bị chính"
+msgstr "Main equipment"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__asset_id
+msgid "Thiết bị liên quan"
+msgstr "Related equipment"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__parent_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__parent_id
+msgid "Thuộc loại"
+msgstr "Of category"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__plant_id
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__plant_id
+msgid "Thuộc nhà máy"
+msgstr "Plant"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__owner_partner_id
+msgid "Thuộc sở hữu của"
+msgstr "Owned by"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__parent_id
+msgid "Thuộc sự cố"
+msgstr "Part of outage"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Tháng bắt đầu"
+msgstr "Start month"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__is_rotable
+msgid "Tháo ra, đem đi đại tu, rồi lắp lại — giữ nguyên lịch sử theo sê-ri. Hộp số, máy phát, cánh, bộ biến đổi thuộc loại này. Khác hẳn vật tư tiêu hao."
+msgstr "Removed, overhauled, then refitted — keeping the serial-number history intact. Gearbox, generator, blades and converter are of this kind. Quite different from consumables."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__attributable_to
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Thường quy cho"
+msgstr "Usually attributed to"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_outage_ck_ngay
+msgid "Thời điểm kết thúc không được trước thời điểm bắt đầu."
+msgstr "The end time cannot precede the start time."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__priority
+msgid "Thứ tự ưu tiên"
+msgstr "Priority order"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__currency_id
+msgid "Tiền tệ"
+msgstr "Currency"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__parent_id
+msgid "Trạm nâng áp hỏng làm cả đội máy dừng: ghi một khoảng ở trạm rồi trỏ các khoảng của từng tua-bin về nó. Báo cáo cộng khoảng CON, không cộng cha — cộng cả hai là đếm đúp."
+msgstr "A step-up substation fault stops the whole fleet: record one outage at the substation, then point each turbine's outage at it. Reports add up the CHILD periods, not the parent — adding both is double counting."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__criticality__critical
+msgid "Trọng yếu"
+msgstr "Critical"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_installation.py:0
+#: model:ir.actions.act_window,name:eam_core.action_eam_asset
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__asset_id
+#: model:ir.ui.menu,name:eam_core.menu_eam_asset
+#: model:ir.ui.menu,name:eam_core.menu_eam_asset_group
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Tài sản"
+msgstr "Asset"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_asset.py:0
+msgid ""
+"Tài sản \"%(con)s\" lắp tại %(vtc)s thì cụm chứa nó phải là \"%(dung)s\" (ở %(vtd)s), không phải \"%(cha)s\".\n"
+"\n"
+"Gán vượt cấp là để con đứng NGANG HÀNG với chính cụm chứa nó — cây vị trí nói một đằng, cây lắp ráp nói một nẻo, và người xem thấy ngay."
+msgstr ""
+"Asset \"%(con)s\" installed at %(vtc)s must sit inside assembly \"%(dung)s\" (at %(vtd)s), not \"%(cha)s\".\n"
+"\n"
+"Skipping a level puts the child at the SAME level as the assembly that contains it — the location tree says one thing, the assembly tree another, and anyone looking sees it at once."
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_asset
+msgid ""
+"Tài sản là <b>vật</b>, mang theo lịch sử của chính nó qua mọi\n"
+"               lần tháo ra và lắp lại. Vị trí nó đang nằm là thuộc tính tạm\n"
+"               thời, suy ra từ lịch sử lắp đặt."
+msgstr ""
+"An asset is a <b>thing</b>, carrying its own history through every\n"
+"               removal and refit. The location it currently sits in is a temporary\n"
+"               attribute, derived from the installation history."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__asset_ids
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+msgid "Tài sản đang lắp"
+msgstr "Installed asset"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__alias_names
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_category_list
+msgid "Tên gọi khác"
+msgstr "Aliases"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__name
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__name
+msgid "Tên loại"
+msgstr "Category name"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__name
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_structure_template_form
+msgid "Tên mẫu"
+msgstr "Template name"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__name
+msgid "Tên tài sản"
+msgstr "Asset name"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__name
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__name
+msgid "Tên vị trí"
+msgstr "Location name"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset_category__complete_name
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__complete_name
+msgid "Tên đầy đủ"
+msgstr "Full name"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Tính chất"
+msgstr "Nature"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_outage__counts_as_downtime
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Tính là dừng"
+msgstr "Counts as downtime"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__counts_as_downtime
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Tính là thời gian dừng"
+msgstr "Counts as downtime"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Tổng giờ"
+msgstr "Total hours"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__asset_id
+msgid "Tự suy từ vị trí và thời điểm bắt đầu. Sửa được khi cần chỉ đích danh một cấu phần khác."
+msgstr "Derived from the location and the start time. Editable when a different component has to be named explicitly."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Viện dẫn"
+msgstr "Standard clause"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_time_category__standard_ref
+msgid "Viện dẫn chuẩn"
+msgstr "Standard clause"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__state
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Vòng đời"
+msgstr "Lifecycle"
+
+#. module: eam_core
+#: model:ir.ui.menu,name:eam_core.menu_eam_ops
+msgid "Vận hành"
+msgstr "Operating"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__is_rotable
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Vật tư quay vòng"
+msgstr "Rotable spare"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_installation.py:0
+msgid "Vị trí \"%(vt)s\" nhận loại \"%(mong)s\", nhưng tài sản \"%(ts)s\" thuộc loại \"%(co)s\"."
+msgstr "Location \"%(vt)s\" accepts category \"%(mong)s\", but asset \"%(ts)s\" belongs to category \"%(co)s\"."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__parent_id
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_search
+msgid "Vị trí cha"
+msgstr "Parent location"
+
+#. module: eam_core
+#: model:ir.actions.act_window,name:eam_core.action_eam_location
+#: model:ir.ui.menu,name:eam_core.menu_eam_location
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_list
+msgid "Vị trí chức năng"
+msgstr "Functional location"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__child_ids
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__line_ids
+msgid "Vị trí con"
+msgstr "Child locations"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_location__location_type__component
+msgid "Vị trí cấu phần"
+msgstr "Component location"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template_line__is_rotable_slot
+msgid "Vị trí cấu phần quay vòng"
+msgstr "Rotable component location"
+
+#. module: eam_core
+#: model_terms:ir.actions.act_window,help:eam_core.action_eam_location
+msgid ""
+"Vị trí là <b>chỗ</b>, không phải <b>vật</b>. Mã vị trí không\n"
+"               bao giờ đổi khi thay thiết bị — đó là lý do bảng này tách\n"
+"               khỏi bảng tài sản."
+msgstr ""
+"A location is a <b>place</b>, not a <b>thing</b>. A location code never\n"
+"               changes when the equipment is replaced — that is why this table is\n"
+"               separate from the asset table."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid ""
+"Vị trí này chỉ chứa <b>một</b> tài sản tại một thời\n"
+"                        điểm. Thay thiết bị thì phải đóng quãng cũ trước khi\n"
+"                        mở quãng mới."
+msgstr ""
+"This location holds <b>one</b> asset at a time.\n"
+"                        To replace the equipment you have to close the old period before\n"
+"                        opening a new one."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_location__location_type__position
+msgid "Vị trí thiết bị"
+msgstr "Equipment location"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_location__allow_multiple
+msgid "Vị trí thiết bị và vị trí cấu phần chỉ được chứa MỘT tài sản tại một thời điểm. Nhà máy và hệ thống thì chứa nhiều."
+msgstr "Equipment locations and component locations hold exactly ONE asset at a time. Plants and systems hold several."
+
+#. module: eam_core
+#: model:ir.model,name:eam_core.model_eam_structure_template_line
+msgid "Vị trí trong mẫu cấu trúc"
+msgstr "Location in structure template"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid "Vị trí tua-bin 07"
+msgstr "Turbine location 07"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Vị trí đang lắp"
+msgstr "Current location"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Xem cây lắp ráp"
+msgstr "View assembly tree"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_form
+msgid "Xem cây vị trí"
+msgstr "View location tree"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_hierarchy
+msgid "cấu phần bên trong"
+msgstr "internal components"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid ""
+"máy dừng theo. Báo cáo\n"
+"                        giờ-máy phải loại dòng này ra để khỏi đếm đúp."
+msgstr ""
+"knock-on units. Unit-hour reports\n"
+"                        must exclude this row to avoid double counting."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_location_hierarchy
+msgid "tài sản đang lắp"
+msgstr "installed asset"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_structure_template__category_id
+msgid "Áp cho loại thiết bị"
+msgstr "Applies to equipment category"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__liability
+msgid "Ô làm ra tiền. Không có nó thì mỗi lần dừng chỉ là một dòng nhật ký; có nó thì là một khoản đòi được."
+msgstr "This is the field that earns money. Without it an outage is only a log entry; with it, it is a claim you can make."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__state__active
+msgid "Đang dùng"
+msgstr "Active"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_search
+msgid "Đang dừng"
+msgstr "Down"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_installation__is_current
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_list
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+msgid "Đang lắp"
+msgstr "Installed"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__is_installed
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_search
+msgid "Đang lắp trên máy"
+msgstr "Currently installed"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__current_location_id
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_list
+msgid "Đang lắp tại"
+msgstr "Installed at"
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__state__repair
+msgid "Đang sửa chữa"
+msgstr "Under repair"
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_time_category__standard_ref
+msgid "Điều khoản của chuẩn mà loại này lấy ra."
+msgstr "The clause of the standard this category derives from."
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_asset__warranty_note
+msgid "Điều kiện bảo hành"
+msgstr "Warranty terms"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Điều kiện, phạm vi, hạn gửi thông báo theo hợp đồng…"
+msgstr "Terms, scope, notice deadline under the contract…"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Đây là <b>sự cố gốc</b>, có"
+msgstr "This is a <b>root outage</b>, with"
+
+#. module: eam_core
+#: code:addons/eam_core/models/eam_structure_template.py:0
+msgid "Đã sinh %(n)d vị trí mới cho %(v)d thiết bị."
+msgstr "Created %(n)d new locations for %(v)d pieces of equipment."
+
+#. module: eam_core
+#: model:ir.model.fields.selection,name:eam_core.selection__eam_asset__state__scrapped
+msgid "Đã thanh lý"
+msgstr "Disposed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_installation_search
+msgid "Đã tháo"
+msgstr "Removed"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Đóng khoảng"
+msgstr "Close period"
+
+#. module: eam_core
+#: model:ir.model.fields,field_description:eam_core.field_eam_location__complete_name
+msgid "Đường dẫn"
+msgstr "Path"
+
+#. module: eam_core
+#: model:ir.model.constraint,message:eam_core.constraint_eam_location_uniq_path
+msgid "Đường dẫn vị trí này đã tồn tại — hai vị trí con cùng một cha không được trùng mã."
+msgstr "This location path already exists — two child locations under the same parent cannot share a code."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_asset__owner_partner_id
+msgid "Để trống nghĩa là của chính mình. Khai khi cấu phần đã tháo ra thuộc về nhà thầu theo hợp đồng dịch vụ — đây là điều khoản phải thương lượng, và không ghi thì mất dấu tài sản."
+msgstr "Empty means it is your own. Set it when a removed component belongs to the contractor under a service agreement — this is a clause that has to be negotiated, and without recording it the asset is lost track of."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_location__category_id
+msgid "Để trống nghĩa là nhận mọi loại. Khai vào thì hệ thống cảnh báo khi lắp nhầm loại thiết bị vào vị trí này."
+msgstr "Empty means any category is accepted. Set it and the system warns when equipment of the wrong category is installed here."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_outage__date_end
+msgid "Để trống nghĩa là ĐANG DỪNG. Không bịa ngày kết thúc cho sự cố chưa xử lý xong."
+msgstr "Empty means STILL DOWN. Do not invent an end date for an outage that has not been resolved."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_installation__date_remove
+msgid "Để trống nghĩa là đang lắp. Không bịa ngày tháo cho thiết bị còn trên máy."
+msgstr "Empty means still installed. Do not invent a removal date for equipment that is still in the machine."
+
+#. module: eam_core
+#: model:ir.model.fields,help:eam_core.field_eam_structure_template_line__parent_line_id
+msgid "Để trống thì nằm thẳng dưới thiết bị. Khai vào thì sinh cây nhiều cấp — ví dụ ba cánh nằm trong rotor."
+msgstr "Leave empty and it sits directly under the equipment. Set it and a multi-level tree is generated — for example three blades inside the rotor."
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_asset_form
+msgid "Định danh"
+msgstr "Identifier"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_time_category_list
+msgid "Ưu tiên"
+msgstr "Priority"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_list
+msgid "Σ tổn thất"
+msgstr "Σ loss"
+
+#. module: eam_core
+#: model_terms:ir.ui.view,arch_db:eam_core.view_eam_outage_form
+msgid "Ở đâu"
+msgstr "Where"
+

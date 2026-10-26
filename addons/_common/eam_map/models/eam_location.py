@@ -203,6 +203,53 @@ class EamLocation(models.Model):
                 dict(W._fields['hold_reason'].selection).get(w.hold_reason)
                 for w in dcho if w.hold_reason})
 
+        # ----- VIỆC PHẢI LÀM, nhìn tới trước ------------------------------
+        # Popup trước nay toàn số của QUÁ KHỨ: khả dụng 12 tháng, giờ
+        # dừng, sản lượng mất. Người đứng ca mở bản đồ ra không hỏi "trụ
+        # này năm qua thế nào", họ hỏi "hôm nay tôi phải làm gì ở đây".
+        #
+        # TÁCH HAI NGHĨA CỦA "QUÁ HẠN", đừng cộng làm một:
+        #   · lịch bảo trì quá hạn = tới hạn mà CHƯA AI MỞ LỆNH
+        #   · lệnh công việc trễ   = đã có người nhận mà CHƯA XONG
+        # Gộp lại là mất đúng thông tin cần: việc chưa ai nhận khác hẳn
+        # việc có người nhận mà chậm — hai việc ấy gọi hai người khác
+        # nhau.
+        #
+        # Đo theo MỐC XEM `den`, không theo hôm nay — cùng lý do như số
+        # ngày bảo hành ngay dưới đây.
+        ngay_xem = den.date()
+        pm_qh, pm_soon, viec_tre, viec_dang = [], [], [], []
+        S = self.env.get('eam.pm.schedule')
+        if S is not None:
+            for s in S.search([('location_id', 'child_of', self.id),
+                               ('state', 'in', ('overdue', 'due_soon'))],
+                              order='date_next'):
+                # `days` luôn là số DƯƠNG, nhưng đếm hai thứ khác nhau
+                # tuỳ trạng thái: quá hạn thì đếm ĐÃ TRỄ bao nhiêu, sắp
+                # tới thì đếm CÒN bao nhiêu. Dùng chung một phép trừ cho
+                # cả hai là một vế ra số âm, và màn hình in ra "trễ −5
+                # ngày" — câu không có nghĩa gì.
+                qh = s.state == 'overdue'
+                so = None
+                if s.date_next:
+                    so = ((ngay_xem - s.date_next).days if qh
+                          else (s.date_next - ngay_xem).days)
+                mo = {'name': s.plan_id.display_name or '',
+                      'date': s.date_next and fields.Date.to_string(s.date_next),
+                      'days': so}
+                (pm_qh if qh else pm_soon).append(mo)
+        if W is not None:
+            for w in ls:
+                mo = {'name': w.display_name or '',
+                      'date': w.date_planned_end and fields.Datetime.to_string(
+                          w.date_planned_end)}
+                if w.state == 'in_progress':
+                    viec_dang.append(mo)
+                elif (w.date_planned_end
+                      and w.date_planned_end.date() < ngay_xem):
+                    mo['days'] = (ngay_xem - w.date_planned_end.date()).days
+                    viec_tre.append(mo)
+
         ts = self._map_lap_tai(den).mapped('asset_id')
 
         # Số ngày bảo hành đếm từ MỐC XEM, không đếm từ hôm nay. Trường
@@ -248,6 +295,16 @@ class EamLocation(models.Model):
             'wo_open': lenh_mo,
             'wo_hold': cho,
             'wo_hold_why': ly_do_cho,
+            # Chỉ gửi vài mục đầu: popup là chỗ ra quyết định trong ba
+            # giây, không phải chỗ đọc hết danh sách. Số tổng vẫn gửi
+            # đủ để không ai tưởng chỉ có bấy nhiêu.
+            'pm_overdue': len(pm_qh), 'pm_overdue_top': pm_qh[:3],
+            'pm_soon': len(pm_soon), 'pm_soon_top': pm_soon[:3],
+            'wo_late': len(viec_tre), 'wo_late_top': viec_tre[:3],
+            'wo_doing': len(viec_dang), 'wo_doing_top': viec_dang[:3],
+            # Một cờ duy nhất để VẼ trên điểm: bản đồ ba mươi trụ thì
+            # không ai bấm hết từng cái, phải thấy chỗ có vấn đề ngay.
+            'co_viec_gap': bool(pm_qh or viec_tre),
             'asset_count': len(ts),
             'assets': [{'code': a.code, 'name': a.name,
                         'serial': a.serial_no or '',

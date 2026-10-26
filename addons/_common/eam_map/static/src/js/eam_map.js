@@ -203,6 +203,17 @@ export class EamPlantMap extends Component {
         }
 
         for (const p of hien) {
+            // Vòng ngoài báo CÓ VIỆC GẤP. Màu tô của điểm đã dùng hết
+            // cho trạng thái phát điện, nên việc quá hạn phải đi bằng
+            // một kênh khác: viền. Bản đồ ba mươi trụ thì không ai bấm
+            // hết từng cái — phải thấy chỗ có vấn đề từ xa.
+            if (p.co_viec_gap) {
+                L.circleMarker([p.lat, p.lon], {
+                    radius: this.banKinh(p) + 5, color: "#d73027",
+                    weight: 2, opacity: 0.85, fill: false,
+                    dashArray: "3 2", interactive: false,
+                }).addTo(this._lopDiem);
+            }
             const mk = L.circleMarker([p.lat, p.lon], {
                 radius: this.banKinh(p), color: "#ffffff", weight: 2,
                 fillColor: this.mauDiem(p), fillOpacity: 0.95,
@@ -280,6 +291,47 @@ export class EamPlantMap extends Component {
                 L.push(`<div${x.warn ? ' class="eam-canh"' : ''}>`
                     + `${this._esc(x.label)}: <b>${this._esc(x.value)}</b>`
                     + `</div>`);
+            }
+        }
+        // VIỆC PHẢI LÀM đứng TRƯỚC khối lịch sử. Thứ tự ở đây là thứ
+        // tự ưu tiên của người đọc: việc trễ, việc đang làm, việc sắp
+        // tới — rồi mới tới chuyện năm qua thế nào.
+        if (p.pm_overdue || p.wo_late || p.wo_doing || p.pm_soon) {
+            L.push(`<hr/>`);
+            L.push(`<div class="eam-pop-t">Việc phải làm</div>`);
+            const d3 = (x) => x.date ? ` — hạn ${this._esc(String(x.date).slice(0, 10))}` : "";
+            const tre = (x) => x.days ? ` <b>(trễ ${x.days} ngày)</b>` : "";
+            if (p.pm_overdue) {
+                L.push(`<div class="eam-canh">⚠ <b>${p.pm_overdue}</b> việc bảo trì `
+                    + `QUÁ HẠN — chưa mở lệnh</div>`);
+                for (const x of (p.pm_overdue_top || [])) {
+                    L.push(`<div class="eam-canh">· ${this._esc(x.name)}`
+                        + d3(x) + tre(x) + `</div>`);
+                }
+            }
+            if (p.wo_late) {
+                L.push(`<div class="eam-canh">⚠ <b>${p.wo_late}</b> lệnh đã mở `
+                    + `nhưng TRỄ HẠN</div>`);
+                for (const x of (p.wo_late_top || [])) {
+                    L.push(`<div class="eam-canh">· ${this._esc(x.name)}`
+                        + d3(x) + tre(x) + `</div>`);
+                }
+            }
+            if (p.wo_doing) {
+                L.push(`<div>▶ <b>${p.wo_doing}</b> việc đang làm</div>`);
+                for (const x of (p.wo_doing_top || [])) {
+                    L.push(`<div>· ${this._esc(x.name)}${d3(x)}</div>`);
+                }
+            }
+            if (p.pm_soon) {
+                L.push(`<div class="text-muted">◷ <b>${p.pm_soon}</b> việc sắp tới hạn</div>`);
+                for (const x of (p.pm_soon_top || [])) {
+                    L.push(`<div class="text-muted">· ${this._esc(x.name)}`
+                        + d3(x)
+                        + (x.days !== null && x.days !== undefined
+                            ? ` (còn ${x.days} ngày)` : "")
+                        + `</div>`);
+                }
             }
         }
         L.push(`<hr/>`);

@@ -17,15 +17,278 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid " CÓ NGUY CƠ MẤT AN TOÀN."
+msgstr " THERE IS A SAFETY RISK."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__work_type
+msgid "\"Kiểm định bắt buộc\" tách riêng vì nó có thời hạn do pháp luật đặt, không phải do mình chọn — quá hạn là phải dừng thiết bị, không phải chỉ số xấu đi."
+msgstr "\"Mandatory inspection\" is kept apart because its deadline is set by law rather than chosen: overrun it and the equipment has to be stopped, not merely a worse indicator."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_progress
+msgid "% bước đã làm"
+msgstr "% of steps done"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+".\n"
+"                                Lệnh chưa đóng được."
+msgstr ""
+".\n"
+"                                The order cannot be closed."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"<b>Bên làm khác bên trả tiền.</b> Hãng chế\n"
+"                                tạo tự cử người tới sửa mà chủ đầu tư vẫn\n"
+"                                trả nếu đã hết bảo hành; tổ của mình làm mà\n"
+"                                chi phí đòi lại được nhà thầu."
+msgstr ""
+"<b>Whoever does the work is not whoever pays.</b>\n"
+"                                The manufacturer may send its own people while\n"
+"                                the owner still pays, once the warranty has run\n"
+"                                out; your own crew may do the work while the\n"
+"                                cost is recoverable from the contractor."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_form
+msgid ""
+"<b>Dạng hỏng</b> là biểu hiện quan sát được (rò dầu,\n"
+"                        quá nhiệt, rung vượt ngưỡng). <b>Cơ chế hỏng</b> là\n"
+"                        quá trình vật lý dẫn tới (mỏi, mài mòn, ăn mòn).\n"
+"                        <b>Nguyên nhân gốc</b> là vì sao cơ chế đó xảy ra —\n"
+"                        khai trên từng lệnh công việc, không khai ở đây."
+msgstr ""
+"A <b>failure mode</b> is what can be observed (oil leak,\n"
+"                        overheating, vibration above threshold). A <b>failure\n"
+"                        mechanism</b> is the physical process behind it (fatigue,\n"
+"                        wear, corrosion). The <b>root cause</b> is why that\n"
+"                        mechanism occurred — declared on each work order, not here."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"<b>Lệnh công việc này KHÔNG phải phiếu công\n"
+"                                tác.</b> Phiếu công tác và lệnh công tác là\n"
+"                                hai chứng từ an toàn điện do quy chuẩn định\n"
+"                                nghĩa (mục 3.8 QCVN 25:2025/BCT), do người\n"
+"                                có thẩm quyền cấp. Ô dưới chỉ ghi số hiệu\n"
+"                                để tra ngược hai hồ sơ với nhau."
+msgstr ""
+"<b>This work order is NOT a work permit.</b>\n"
+"                                A work permit and a work instruction are two\n"
+"                                electrical safety documents defined by\n"
+"                                regulation (clause 3.8, QCVN 25:2025/BCT) and\n"
+"                                issued by an authorised person. The field below\n"
+"                                records only the number, to cross-reference the\n"
+"                                two files."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid ""
+"<b>Quá hạn phản hồi.</b> Đồng hồ ở đây đo thời gian\n"
+"                        tới lúc <b>phân loại</b>, không phải tới lúc làm\n"
+"                        xong — để sổ yêu cầu không mục rữa trong im lặng."
+msgstr ""
+"<b>Response overdue.</b> The clock here measures the time\n"
+"                        to <b>triage</b>, not the time to finish — so that\n"
+"                        the request log does not rot in silence."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"<b>Tổng chi phí thật = can thiệp + sản\n"
+"                                lượng mất.</b> Vật tư và giờ công là phần\n"
+"                                nhìn thấy; với nhà máy điện thì phần lớn\n"
+"                                tiền nằm ở sản lượng không phát được trong\n"
+"                                lúc máy dừng. Chỉ nhìn chi phí can thiệp thì\n"
+"                                bảo trì phòng ngừa luôn trông như một khoản\n"
+"                                chi vô ích.<br/>\n"
+"                                <b>Chi phí đòi lại được không gồm sản lượng\n"
+"                                mất</b> — phần đó đi theo chế tài khả dụng\n"
+"                                của hợp đồng, có công thức và trần riêng."
+msgstr ""
+"<b>Total real cost = intervention + energy\n"
+"                                lost.</b> Materials and labour are the visible\n"
+"                                part; at a power plant most of the money sits in\n"
+"                                the energy that could not be generated while the\n"
+"                                machine was down. Look at intervention cost alone\n"
+"                                and preventive maintenance always looks like money\n"
+"                                wasted.<br/>\n"
+"                                <b>Recoverable cost does not include energy\n"
+"                                lost</b> — that follows the contract's\n"
+"                                availability regime, with its own formula and cap."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Ai làm, ai trả tiền"
+msgstr "Who does it, who pays for it"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Ai nêu, lúc nào"
+msgstr "Who raised it, and when"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "An toàn"
+msgstr "Safety"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__safety
+msgid "An toàn, cô lập nguồn"
+msgstr "Safety, isolation of sources"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Biện pháp khác"
+msgstr "Other measure"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__scada
 msgid "Báo động từ hệ giám sát"
 msgstr "Alarm from the monitoring system"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_bearer
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Bên chịu chi phí"
+msgstr "Cost borne by"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Bên làm"
+msgstr "Carried out by"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__executor
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Bên thực hiện"
+msgstr "Performed by"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Bên trả"
+msgstr "Paid by"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__priority__1
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__urgency__normal
 msgid "Bình thường"
 msgstr "Normal"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__lubrication
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__lubrication
+msgid "Bôi trơn không đủ"
+msgstr "Insufficient lubrication"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Bước"
+msgstr "Step"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order_step.py:0
+msgid "Bước \"%(ten)s\": \"%(gt)s\" không nằm trong các lựa chọn đã khai (%(ds)s)."
+msgstr "Step \"%(ten)s\": \"%(gt)s\" is not among the declared choices (%(ds)s)."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order_step.py:0
+msgid ""
+"Bước \"%(ten)s\": đo được %(do)s%(dv)s nhưng tiêu chuẩn là %(tc)s — không ghi ĐẠT được.\n"
+"\n"
+"Nếu số đo đúng thì ghi KHÔNG ĐẠT rồi mở lệnh khắc phục. Nếu tiêu chuẩn sai thì sửa ở kế hoạch hoặc mẫu biểu, đừng sửa ở đây."
+msgstr ""
+"Step \"%(ten)s\": measured %(do)s%(dv)s against criteria %(tc)s — it cannot be recorded as PASS.\n"
+"\n"
+"If the reading is right, record FAIL and open a corrective order. If the criteria are wrong, fix them on the plan or the form template, not here."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order_step.py:0
+msgid "Bước \"%s\" bắt buộc có ảnh. Bước này được khai là thứ mà lời nói không đủ — đính ảnh vào rồi mới ghi kết quả."
+msgstr "Step \"%s\" requires a photo. It is declared as one where words are not enough — attach the photo, then record the result."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order_step.py:0
+msgid "Bước \"%s\" ghi KHÔNG ĐẠT thì phải nói rõ sai ở đâu — điền trị số đo được hoặc ghi chú. Một chữ \"không đạt\" trống trơn thì người sửa sau không biết bắt đầu từ đâu."
+msgstr "Step \"%s\" recorded as FAIL has to say what was wrong — enter the measured value or a note. A bare \"fail\" leaves whoever repairs it later with no idea where to start."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_form.py:0
+msgid "Bước \"%s\" là ô chọn một nhưng chưa khai lựa chọn nào."
+msgstr "Step \"%s\" is a single-choice field but no choice is declared."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_form.py:0
+msgid "Bước \"%s\": cận dưới lớn hơn cận trên, nên không số đo nào đạt được."
+msgstr "Step \"%s\": the lower bound is above the upper bound, so no reading can ever pass."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__is_critical
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__is_critical
+msgid "Bước chịu lực"
+msgstr "Hold point"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__step_blocking
+msgid "Bước chịu lực chưa làm hoặc không đạt — lệnh không đóng được khi còn."
+msgstr "A hold point not done or not passed — the order cannot be closed while one remains."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_blocking
+msgid "Bước chịu lực còn dở"
+msgstr "A hold point is still open"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__name
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__name
+msgid "Bước công việc"
+msgstr "Work step"
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_work_order_step
+msgid "Bước công việc trong lệnh"
+msgstr "Work steps in the order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_auto_fail
+msgid "Bước máy xét KHÔNG ĐẠT"
+msgstr "System-judged FAIL steps"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_auto_mismatch
+msgid "Bước người chấm lệch máy xét"
+msgstr "Steps where the person disagrees with the system"
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_form_template_line
+msgid "Bước trong mẫu biểu"
+msgstr "Step in the form template"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_done_count
+msgid "Bước đã làm"
+msgstr "Steps done"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__maintenance
+msgid "Bảo dưỡng"
+msgstr "Servicing"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__insurance
+msgid "Bảo hiểm"
+msgstr "Insurance"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
@@ -38,9 +301,127 @@ msgid "Bảo hành thiết bị"
 msgstr "Equipment warranty"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__preventive
+msgid "Bảo trì phòng ngừa"
+msgstr "Preventive maintenance"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__predictive
 msgid "Bảo trì theo trạng thái"
 msgstr "Condition-based maintenance"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_field_mixin__has_range
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__has_range
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__has_range
+msgid "Bật khi ô là Số đo và có ít nhất một cận. Chỉ khi đó hệ thống mới tự kết luận được."
+msgstr "On when the field is a Reading and at least one bound is set. Only then can the system conclude by itself."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__requires_photo
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__requires_photo
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__requires_photo
+msgid "Bắt buộc có ảnh"
+msgstr "A photo is required"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Bắt buộc ảnh"
+msgstr "Photo required"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Bắt đầu làm"
+msgstr "Start work"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__is_critical
+msgid "Bỏ hoặc làm hỏng bước này là hỏng cả lần bảo trì. Lệnh KHÔNG đóng được khi bước chịu lực còn dở."
+msgstr "Skipping or botching this step ruins the whole service. The order CANNOT be closed while a hold point is open."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__is_critical
+msgid "Bỏ hoặc làm hỏng bước này là hỏng cả lần làm. Lệnh KHÔNG đóng được khi bước chịu lực còn dở."
+msgstr "Skipping or botching this step ruins the whole job. The order CANNOT be closed while a hold point is open."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__cost_full
+msgid "Can thiệp + sản lượng mất. Đây là con số dùng để biện minh đầu tư bảo trì phòng ngừa — chỉ nhìn chi phí can thiệp thì phòng ngừa luôn trông như một khoản chi vô ích."
+msgstr "Intervention + energy lost. This is the figure used to justify investing in preventive maintenance — look at intervention cost alone and prevention always looks like money wasted."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Chi phí"
+msgstr "Cost"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_outage__wo_cost_total
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_total
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_list_wo
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Chi phí can thiệp"
+msgstr "Intervention cost"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_labour
+msgid "Chi phí giờ công"
+msgstr "Labour cost"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_service
+msgid "Chi phí thuê ngoài"
+msgstr "Subcontracting cost"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_parts
+msgid "Chi phí vật tư"
+msgstr "Material cost"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__amount_chargeable
+msgid "Chi phí đòi lại được"
+msgstr "Recoverable cost"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Chiến dịch"
+msgstr "Campaign"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Chiến dịch không được lồng vòng vào chính nó."
+msgstr "A campaign cannot be nested inside itself."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Chuyển sang chờ"
+msgstr "Put on hold"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__spec
+msgid "Chép từ kế hoạch. Người làm khỏi tra sổ tay, người kiểm tra biết lấy gì để đối chiếu."
+msgstr "Copied from the plan. The person doing the work need not look it up, and the checker knows what to compare against."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Chưa ai tiếp nhận"
+msgstr "Nobody has taken it on"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_form_template
+msgid "Chưa có mẫu biểu nào"
+msgstr "No form template yet"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__result__pending
+msgid "Chưa làm"
+msgstr "Not done"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Chưa quy bên chịu chi phí"
+msgstr "Who bears the cost is not decided"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__undetermined
@@ -48,9 +429,145 @@ msgid "Chưa quy trách nhiệm"
 msgstr "Responsibility not attributed"
 
 #. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_request_rejected
+msgid ""
+"Chưa từ chối yêu cầu\n"
+"               nào"
+msgstr ""
+"No request has been\n"
+"               rejected yet"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__unknown
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__unknown
+msgid "Chưa xác định"
+msgstr "Not determined"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__auto_result__unknown
+msgid "Chưa xét được"
+msgstr "Not yet judged"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Chỉ lệnh đang làm mới chuyển sang chờ được."
+msgstr "Only an order in progress can be put on hold."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Chỉ mở lại được yêu cầu đã từ chối hoặc đã gộp."
+msgstr "Only a rejected or merged request can be reopened."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__hold_hours
+msgid "Chỉ tính lần chờ ĐANG MỞ. Tổng thời gian chờ qua nhiều lần cần một sổ ghi từng lần — chưa làm."
+msgstr "Counts only the hold that is OPEN. Total waiting time across several holds needs a per-hold log — not built yet."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Chịu lực"
+msgstr "Hold point"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Chọn"
+msgstr "Choice"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_field_mixin__field_type
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__field_type
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__field_type
+msgid "Chọn \"Số đo\" thì khai thêm cận dưới/cận trên — khi đó hệ thống tự kết luận đạt hay không, thay vì để người làm tự tick."
+msgstr "Choose \"Reading\" and also give a lower and upper bound — the system then concludes pass or fail itself, instead of leaving people to mark their own work."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__selection
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template_line__field_type__selection
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_pm_task__field_type__selection
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__field_type__selection
+msgid "Chọn một"
+msgstr "Single choice"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"Chờ cẩu và chờ thời tiết là lý do THẬT của\n"
+"                                điện gió: thay cánh cần cẩu bánh xích huy\n"
+"                                động cả tuần, và gió phải dưới ngưỡng cho\n"
+"                                phép."
+msgstr ""
+"Waiting for a crane and waiting for weather are REAL\n"
+"                                reasons in wind: a blade change needs a crawler\n"
+"                                crane mobilised for a week, and the wind has to\n"
+"                                be below the permitted limit."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__hold_reason
+msgid "Chờ cẩu và chờ thời tiết là lý do THẬT của điện gió, không phải cái cớ: thay cánh cần cẩu bánh xích huy động cả tuần và gió phải dưới ngưỡng cho phép."
+msgstr "Waiting for a crane and waiting for weather are REAL reasons in wind, not excuses: a blade change needs a crawler crane mobilised for a week, and the wind has to be below the permitted limit."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__grid
+msgid "Chờ lưới cho cắt điện"
+msgstr "Waiting for the grid to allow an outage"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__contractor
+msgid "Chờ nhà thầu"
+msgstr "Waiting for the contractor"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__permit
+msgid "Chờ phiếu công tác, cho phép an toàn"
+msgstr "Waiting for a work permit or safety clearance"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__decision
+msgid "Chờ quyết định, phê duyệt"
+msgstr "Waiting for a decision or approval"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__crane
+msgid "Chờ thiết bị nâng hạ"
+msgstr "Waiting for lifting equipment"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__date_hold_start
+msgid "Chờ từ"
+msgstr "Waiting since"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__hold_reason
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Chờ vì"
+msgstr "Waiting for"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__parts
+msgid "Chờ vật tư, phụ tùng"
+msgstr "Waiting for materials and spares"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__weather
+msgid "Chờ điều kiện thời tiết"
+msgstr "Waiting for the weather"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__access
+msgid "Chờ đường vào, mặt bằng"
+msgstr "Waiting for access or a laydown area"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__owner
 msgid "Chủ đầu tư tự chịu"
 msgstr "Owner's own account"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Chứng từ an toàn điện"
+msgstr "Electrical safety document"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__text
@@ -61,9 +578,103 @@ msgid "Chữ"
 msgstr "Text"
 
 #. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_part__asset_out_id
+msgid "Con cũ tháo khỏi máy. Ghi vào đây rồi đóng quãng lắp đặt của nó — không ghi thì mất dấu một tài sản mang sê-ri."
+msgstr "The old one removed from the machine. Record it here, then close its installation period — without that, a serialised asset is lost track of."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_part__asset_in_id
+msgid "Con mới lắp lên máy. Ghi vào đây rồi mở quãng lắp đặt mới."
+msgstr "The new one fitted to the machine. Record it here, then open a new installation period."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__line_ids
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_ids
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Các bước"
+msgstr "Steps"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__selection_values
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__selection_values
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__selection_values
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Các lựa chọn"
+msgstr "Choices"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__other
 msgid "Cách khác"
 msgstr "Other"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__blade
+msgid "Cánh quạt, composite"
+msgstr "Blade, composite"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Còn bước <b>chịu lực</b> chưa đạt:"
+msgstr "A <b>hold point</b> has not passed yet:"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Có"
+msgstr "Yes"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_bool
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__bool
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template_line__field_type__bool
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_pm_task__field_type__bool
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__field_type__bool
+msgid "Có / Không"
+msgstr "Yes / No"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Có hỏng"
+msgstr "A failure occurred"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__is_failure
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Có hỏng hóc"
+msgstr "A failure occurred"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_outage__has_work_order
+msgid "Có lệnh công việc"
+msgstr "Has a work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__safety_concern
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Có nguy cơ mất an toàn"
+msgstr "There is a safety risk"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__urgency__low
+msgid "Có thể đợi"
+msgstr "Can wait"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__has_range
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__has_range
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__has_range
+msgid "Có tiêu chuẩn máy đọc được"
+msgstr "Has machine-readable criteria"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Có vết dầu dưới chân trụ T07"
+msgstr "Oil traces at the foot of tower T07"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Có/Không"
+msgstr "Yes/No"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__company_id
@@ -77,6 +688,46 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__location_id
+msgid "Công việc làm ở một CHỖ. Thiết bị đang nằm ở đó suy ra từ lịch sử lắp đặt."
+msgstr "Work happens at a PLACE. Which equipment was there is derived from the installation history."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__parent_id
+msgid "Công việc lặp trên nhiều máy (thay cả đội hộp số, hiệu chỉnh góc cánh toàn nhà máy): mỗi máy một lệnh riêng, gom về một lệnh cha. Mỗi máy có lịch, chi phí và lịch sử hỏng riêng nên không được gộp."
+msgstr "Repeated work across many machines (changing a whole fleet of gearboxes, re-pitching every blade on a site): one order per machine, gathered under a parent order. Each machine has its own schedule, cost and failure history, so they must not be merged."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Cùng vị trí"
+msgstr "Same location"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__failure_mechanism
+msgid "Cơ chế THẬT của lần này. Dạng hỏng có gợi ý cơ chế thường gặp, nhưng cùng một dạng hỏng có thể do nhiều cơ chế."
+msgstr "The REAL mechanism this time. A failure mode suggests a common mechanism, but the same mode can come from several."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__failure_mechanism
+msgid "Cơ chế hỏng"
+msgstr "Failure mechanism"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__mechanism
+msgid "Cơ chế hỏng thường gặp"
+msgstr "Common failure mechanism"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__mechanical
+msgid "Cơ khí"
+msgstr "Mechanical"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__modification
+msgid "Cải tạo, nâng cấp"
+msgstr "Refurbishment, upgrade"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__asset_level
 msgid "Cấp tài sản"
 msgstr "Asset level"
@@ -87,15 +738,323 @@ msgid "Cấu phần nằm BÊN TRONG một tài sản khác và đi theo nó khi
 msgstr "A component sits INSIDE another asset and travels with it when removed. Unlike a functional location — the place stays put."
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Cần phiếu công tác"
+msgstr "A work permit is required"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Cần phiếu mà chưa có số"
+msgstr "A permit is required but no number is recorded"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__requires_permit
+msgid "Cần phiếu, lệnh công tác"
+msgstr "A permit or work instruction is required"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__urgency__high
+msgid "Cần sớm"
+msgstr "Needed soon"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__value_min
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__value_min
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_min
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Cận dưới"
+msgstr "Lower bound"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__value_max
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__value_max
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_max
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Cận trên"
+msgstr "Upper bound"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__requires_isolation
+msgid "Cắt điện, treo thẻ, khoá và thử không điện trước khi vào."
+msgstr "Isolate, tag, lock and prove dead before entering."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__detection_method
+msgid "Cột này trả lời câu đắt tiền nhất: bao nhiêu phần trăm hỏng hóc được bắt TRƯỚC khi mất sản lượng. Giám sát trạng thái chỉ đáng tiền khi tỷ lệ đó cao hơn hẳn."
+msgstr "This column answers the most expensive question of all: what share of failures is caught BEFORE energy is lost. Condition monitoring only pays for itself when that share is clearly higher."
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__description
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
 msgid "Diễn giải"
 msgstr "Explanation"
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_service_note
+msgid "Diễn giải thuê ngoài"
+msgstr "Subcontracting description"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_request__client_key
+msgid "Do app hiện trường sinh ra, duy nhất cho mỗi lần nêu. Gửi lại cùng khoá thì máy chủ trả về bản ghi cũ chứ không tạo thêm."
+msgstr "Generated by the field app, unique to each submission. Send the same key again and the server returns the existing record instead of creating another."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__value_num
+msgid "Dùng cho ô kiểu \"Số đo\". Có cận dưới/cận trên thì hệ thống TỰ kết luận đạt hay không — người làm khỏi phải tự chấm."
+msgstr "For \"Reading\" fields. Give a lower and upper bound and the system concludes pass or fail ITSELF — nobody has to mark their own work."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_labour__worker_name
+msgid "Dùng khi người làm không có tài khoản trong hệ thống — nhân sự nhà thầu phần lớn là như vậy."
+msgstr "Used when the person doing the work has no account in the system — most contractor staff do not."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__note
+msgid "Dùng khi nào"
+msgstr "When to use it"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Dùng khi nào, ai ký xác nhận."
+msgstr "When it is used, and who signs it off."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_part__part_name
+msgid "Dùng khi vật tư chưa có trong danh mục. Mua gấp một lần thì thường là như vậy."
+msgstr "Used when the material is not in the catalogue. A one-off urgent purchase usually is."
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_failure_mode
+#: model:ir.model,name:eam_work_order.model_eam_failure_mode
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__name
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__failure_mode_id
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_failure_mode
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Dạng hỏng"
+msgstr "Failure mode"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_search_wo
+msgid "Dừng dài mà không có lệnh công việc"
+msgstr "A long outage with no work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__safety_note
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Ghi chú an toàn"
+msgstr "Safety note"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Ghi khoảng dừng"
+msgstr "Record an outage"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__value
+msgid "Ghi số ĐO ĐƯỢC cạnh tiêu chuẩn. Không có nó thì \"đạt\" chỉ là lời nói, không đối chiếu lại được."
+msgstr "Record the MEASURED value beside the criteria. Without it, \"pass\" is only a word and cannot be checked afterwards."
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__condition
 msgid "Giám sát trạng thái, đo rung"
 msgstr "Condition monitoring, vibration"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__labour_line_ids
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Giờ công"
+msgstr "Labour hours"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__cost_total
+msgid "Giờ công + vật tư + thuê ngoài. CHƯA tính sản lượng mất."
+msgstr "Labour + materials + subcontracting. Energy lost is NOT included."
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_work_order_labour
+msgid "Giờ công trên lệnh công việc"
+msgstr "Labour hours on the work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_outage__wo_cost_total
+msgid "Giờ công, vật tư và thuê ngoài của các lệnh gắn vào khoảng dừng này. Cộng với doanh thu tổn thất mới ra tiền thật."
+msgstr "Labour, materials and subcontracting on the orders attached to this outage. Add the lost revenue to get the real cost."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__response_hours
+msgid "Giờ tới khi phân loại"
+msgstr "Hours until triage"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Giờ tới phân loại"
+msgstr "Hours to triage"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_request_rejected
+msgid ""
+"Gom nhóm theo <b>vị trí</b> ở đây để thấy chỗ nào hiện\n"
+"               trường báo đi báo lại mà lần nào cũng bị gạt. Đó thường là\n"
+"               chỗ sắp hỏng thật."
+msgstr ""
+"Group by <b>location</b> here to see where the field reports\n"
+"               the same thing over and over and is brushed off every time.\n"
+"               That is usually where something really is about to fail."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_apply_wizard_form
+msgid "Gắn"
+msgstr "Attach"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_apply_wizard_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Gắn mẫu biểu"
+msgstr "Attach a form template"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_form.py:0
+msgid "Gắn mẫu biểu %(t)s (%(n)d bước)."
+msgstr "Attached form template %(t)s (%(n)d steps)."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_form_wo.py:0
+msgid "Gắn mẫu biểu vào %s"
+msgstr "Attach form template to %s"
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_form_apply_wizard
+msgid "Gắn mẫu biểu vào lệnh"
+msgstr "Attach a form template to the order"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_merge_wizard_form
+msgid "Gộp"
+msgstr "Merge"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Gộp thêm yêu cầu %(s)s: %(t)s%(n)s"
+msgstr "Also merged request %(s)s: %(t)s%(n)s"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__spec_display
+msgid "Gộp tiêu chuẩn khai bằng chữ và tiêu chuẩn máy đọc được."
+msgstr "Both the criteria written in words and the machine-readable ones."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request_merge_wizard__wo_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_merge_wizard_form
+msgid "Gộp vào lệnh"
+msgstr "Merge into an order"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Gộp vào lệnh khác"
+msgstr "Merge into another order"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Gộp vào lệnh đang mở"
+msgstr "Merge into an open order"
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_work_request_merge_wizard
+msgid "Gộp yêu cầu vào lệnh"
+msgstr "Merge the request into an order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_failure_mode__mechanism
+msgid "GỢI Ý, không phải kết luận. Cơ chế thật của từng lần hỏng khai trên chính lệnh công việc."
+msgstr "A SUGGESTION, not a conclusion. The real mechanism of each failure is declared on the work order itself."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_part__is_warranty_part
+msgid "Hãng cấp không thu tiền. Vẫn phải ghi số lượng và sê-ri, vì đó là bằng chứng cho lần đòi bảo hành tiếp theo."
+msgstr "The vendor supplies it free of charge. The quantity and serial number still have to be recorded, because they are the evidence for the next warranty claim."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Hỏng hóc"
+msgstr "Failure"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__is_failure
+msgid "KHAI TAY, không suy từ việc có lệnh công việc. Nhiều lần dừng chỉ cần khởi động lại từ xa: có dừng, không có hỏng. Bảo trì theo kế hoạch thì ngược lại. Suy sai ô này là MTBF sai hoàn toàn, và sai theo hướng đẹp hơn thực tế."
+msgstr "ENTERED BY HAND, not inferred from whether a work order exists. Many stoppages need only a remote restart: a stoppage, no failure. Planned maintenance is the other way round. Infer this field wrongly and MTBF is wholly wrong — wrong in the flattering direction."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__cost_bearer
+msgid "KHÁC bên thực hiện. Hãng chế tạo tự cử người tới sửa mà chủ đầu tư vẫn trả nếu đã hết bảo hành; tổ của mình làm mà chi phí đòi lại được nhà thầu. Suy sẵn từ khoảng dừng nếu có, và sửa được."
+msgstr "DIFFERENT from who carries it out. The manufacturer may send its own people while the owner still pays, once the warranty has run out; your own crew may do the work while the cost is recoverable from the contractor. Pre-filled from the outage if there is one, and editable."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid ""
+"Khai <b>cận dưới / cận trên</b> cho ô số đo\n"
+"                                thì hệ thống <b>tự kết luận</b> đạt hay\n"
+"                                không, và <b>không cho tick Đạt</b> khi số\n"
+"                                đo nằm ngoài tiêu chuẩn. Không khai thì\n"
+"                                checklist chỉ là tờ giấy đã ký, chuyển từ\n"
+"                                giấy sang màn hình."
+msgstr ""
+"Declare a <b>lower and upper bound</b> for a reading\n"
+"                                field and the system <b>concludes itself</b>\n"
+"                                whether it passes, and <b>will not allow a Pass\n"
+"                                tick</b> when the reading is outside the\n"
+"                                criteria. Without them the checklist is just a\n"
+"                                signed sheet of paper moved onto a screen."
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_form_field_mixin
+msgid "Khai báo ô nhập biểu mẫu"
+msgstr "Declare a form field"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Khai có hỏng mà thiếu dạng hỏng"
+msgstr "A failure is declared but the failure mode is missing"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__contractor_id
+msgid "Khai khi bên thực hiện không phải tổ của mình."
+msgstr "Fill it in when the work is not done by your own crew."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__client_key
+msgid "Khoá chống trùng"
+msgstr "Idempotency key"
+
+#. module: eam_work_order
+#: model:ir.model.constraint,message:eam_work_order.constraint_eam_work_request_uniq_client_key
+msgid "Khoá chống trùng đã được dùng."
+msgstr "That idempotency key has already been used."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
+msgid ""
+"Khoảng dừng không có lệnh công việc <b>không phải\n"
+"                        lỗi</b> — khởi động lại từ xa là một lần dừng thật\n"
+"                        mà không có hành động bảo trì nào. Nhưng một khoảng\n"
+"                        dừng DÀI mà không có lệnh thì nên hỏi."
+msgstr ""
+"An outage with no work order is <b>not an\n"
+"                        error</b> — a remote restart is a real stoppage with no\n"
+"                        maintenance action at all. But a LONG outage with no\n"
+"                        order is worth asking about."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_outage__has_work_order
+msgid "Khoảng dừng không có lệnh nào KHÔNG phải lỗi — khởi động lại từ xa là một lần dừng thật mà không có hành động bảo trì. Nhưng khoảng dừng DÀI mà không có lệnh thì nên hỏi."
+msgstr "An outage with no order is NOT an error — a remote restart is a real stoppage with no maintenance action. But a LONG outage with no order is worth asking about."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__outage_id
+msgid "Khoảng dừng mà công việc này xử lý. Để trống khi làm được mà không phải dừng máy — và nhiều việc đúng là như vậy."
+msgstr "The outage this work deals with. Leave it empty when the job can be done without stopping the machine — and many jobs can."
 
 #. module: eam_work_order
 #: model:ir.model,name:eam_work_order.model_eam_outage
@@ -111,9 +1070,36 @@ msgid "Khác"
 msgstr "Other"
 
 #. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_field_mixin__requires_photo
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__requires_photo
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__requires_photo
+msgid "Không cho ghi kết quả khi chưa đính ảnh. Dùng cho bước mà lời nói không đủ: tình trạng mối hàn, vết nứt, mức dầu."
+msgstr "The result cannot be recorded until a photo is attached. Use it for steps where words are not enough: the state of a weld, a crack, an oil level."
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_order_hold
+msgid "Không có lệnh nào đang chờ"
+msgstr "No order is waiting"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__result__na
+msgid "Không áp dụng"
+msgstr "Not applicable"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__priority__3
 msgid "Khẩn cấp"
 msgstr "Emergency"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__storm
+msgid "Kiểm tra sau bão, sự kiện bất thường"
+msgstr "Inspection after a storm or an unusual event"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__inspection
+msgid "Kiểm tra định kỳ"
+msgstr "Periodic inspection"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__inspection
@@ -122,11 +1108,93 @@ msgid "Kiểm tra, xem xét"
 msgstr "Inspect, examine"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__statutory
+msgid "Kiểm định bắt buộc"
+msgstr "Mandatory statutory inspection"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__field_type
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__field_type
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__field_type
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Kiểu ô"
+msgstr "Field type"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__auto_result
+msgid "Kết luận rút ra từ số đo và tiêu chuẩn, không phải từ người làm tự chấm."
+msgstr "A conclusion drawn from the reading and the criteria, not from the person marking their own work."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Kết quả xử lý"
+msgstr "Outcome"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__permit_kind
+msgid "Loại chứng từ an toàn"
+msgstr "Type of safety document"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__work_type
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Loại công việc"
+msgstr "Type of work"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__category_id
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__category_id
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
 msgid "Loại cấu phần"
 msgstr "Component category"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__date_done
+msgid "Làm lúc"
+msgstr "Done at"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Làm tiếp"
+msgstr "Resume"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__work_at_height
+msgid "Làm việc trên cao"
+msgstr "Work at height"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__requires_permit
+msgid "Làm việc trên thiết bị điện phải có phiếu công tác hoặc lệnh công tác theo quy chuẩn an toàn điện. Đây là chứng từ KHÁC lệnh công việc này; ô dưới chỉ ghi số hiệu để tra ngược."
+msgstr "Work on electrical equipment requires a work permit or a work instruction under the electrical safety regulation. That is a DIFFERENT document from this work order; the field below records only its number, for cross-reference."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__insulation
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__insulation
+msgid "Lão hoá cách điện"
+msgstr "Insulation ageing"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Lên lịch"
+msgstr "Schedule"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__other
+msgid "Lý do khác"
+msgstr "Other reason"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__reject_reason
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request_reject_wizard__reason
+msgid "Lý do từ chối"
+msgstr "Reason for rejection"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__cost_downtime
+msgid "Lấy từ khoảng dừng gắn vào lệnh này. Với nhà máy điện, phần này thường lớn hơn hẳn chi phí can thiệp."
+msgstr "Taken from the outage attached to this order. At a power plant this is usually far larger than the intervention cost."
 
 #. module: eam_work_order
 #: model:ir.model,name:eam_work_order.model_eam_installation
@@ -145,6 +1213,99 @@ msgid "Lệnh"
 msgstr "Order"
 
 #. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid ""
+"Lệnh \"%(ten)s\" còn bước CHỊU LỰC chưa đạt: %(buoc)s.\n"
+"\n"
+"Làm xong rồi tick, hoặc ghi KHÔNG ĐẠT kèm lý do rồi mở lệnh khắc phục — đừng đóng lệnh để đó."
+msgstr ""
+"Order \"%(ten)s\" still has a HOLD POINT that has not passed: %(buoc)s.\n"
+"\n"
+"Finish it and tick it, or record FAIL with a reason and open a corrective order — do not simply close the order and leave it."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid ""
+"Lệnh \"%(ten)s\" khai là có hỏng hóc nhưng chưa chọn dạng hỏng.\n"
+"\n"
+"Đóng lệnh mà bỏ trống ô này thì lần hỏng đó không bao giờ vào được thống kê độ tin cậy — và không có cách nào lấy lại, vì người biết đã đi làm việc khác."
+msgstr ""
+"Order \"%(ten)s\" says a failure occurred but no failure mode is chosen.\n"
+"\n"
+"Close the order with this empty and that failure never enters the reliability statistics — and there is no recovering it, because whoever knew has moved on to other work."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid ""
+"Lệnh \"%(ten)s\" khai là cần phiếu, lệnh công tác nhưng chưa có số hiệu.\n"
+"\n"
+"Theo quy chuẩn an toàn điện, làm việc trên thiết bị điện phải có phiếu công tác hoặc lệnh công tác do người có thẩm quyền cấp. Lệnh công việc này KHÔNG thay thế chứng từ đó — hãy ghi số hiệu phiếu vào, hoặc bỏ dấu ô \"cần phiếu, lệnh công tác\" nếu công việc không chạm vào thiết bị điện."
+msgstr ""
+"Order \"%(ten)s\" says a permit or work instruction is required but no number is recorded.\n"
+"\n"
+"Under the electrical safety regulation, work on electrical equipment requires a work permit or a work instruction issued by an authorised person. This work order does NOT replace that document — enter the permit number, or untick \"a permit or work instruction is required\" if the work does not touch electrical equipment."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" chưa có ngày dự kiến bắt đầu."
+msgstr "Order \"%s\" has no planned start date."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" chưa quy bên chịu chi phí. Đóng lệnh mà bỏ trống thì khoản này không vào được hồ sơ đòi bảo hành hay đòi nhà thầu."
+msgstr "Order \"%s\" does not say who bears the cost. Close it empty and the amount cannot enter a warranty claim or a claim against the contractor."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" chưa xong."
+msgstr "Order \"%s\" is not finished."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" chưa ở trạng thái đang làm."
+msgstr "Order \"%s\" is not in progress."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" không còn ở trạng thái nháp."
+msgstr "Order \"%s\" is no longer a draft."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" phải được duyệt trước khi bắt đầu."
+msgstr "Order \"%s\" has to be approved before it can start."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" đang chờ mà không ghi chờ vì gì. Ô này là chỗ duy nhất phân biệt được sửa chậm với chờ một nguồn lực bên ngoài — bỏ trống thì mọi lệnh quá hạn trông giống nhau."
+msgstr "Order \"%s\" is on hold with no reason recorded. This field is the only thing that tells a slow repair from waiting on an outside resource — leave it empty and every overdue order looks alike."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_form.py:0
+msgid "Lệnh \"%s\" đã khép — gắn thêm bước vào lúc này thì bước mới sẽ không bao giờ có ai làm."
+msgstr "Order \"%s\" is already closed — attaching a step now means a step nobody will ever carry out."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\" đã đóng, không huỷ được."
+msgstr "Order \"%s\" is closed and cannot be cancelled."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_order.py:0
+msgid "Lệnh \"%s\": ngày dự kiến xong trước ngày dự kiến bắt đầu."
+msgstr "Order \"%s\": the planned finish is before the planned start."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Lệnh %s đã đóng. Yêu cầu này đã được xử lý."
+msgstr "Order %s is closed. This request has been handled."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__permit_kind__lenh_cong_tac
+msgid "Lệnh công tác"
+msgstr "Work instruction"
+
+#. module: eam_work_order
 #: model:ir.actions.act_window,name:eam_work_order.action_eam_work_order
 #: model:ir.model,name:eam_work_order.model_eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_outage__work_order_ids
@@ -161,6 +1322,95 @@ msgid "Lệnh công việc"
 msgstr "Work order"
 
 #. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_order
+msgid ""
+"Lệnh công việc là chứng từ <b>cho phép tiêu</b> giờ công,\n"
+"            vật tư và thời gian. Nó không thay thế phiếu công tác —\n"
+"            chứng từ an toàn điện vẫn do người có thẩm quyền cấp riêng."
+msgstr ""
+"A work order is the document that <b>authorises spending</b> labour,\n"
+"            materials and time. It does not replace a work permit — the electrical\n"
+"            safety document is still issued separately by an authorised person."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_outage.py:0
+msgid "Lệnh công việc mới"
+msgstr "New work order"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Lệnh này mở từ yêu cầu %(s)s — mức khẩn người nêu: %(m)s.%(at)s"
+msgstr "This order was opened from request %(s)s — urgency as raised: %(m)s.%(at)s"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"Lệnh này đang khai là <b>không có hỏng\n"
+"                                hóc</b>. Phần lớn lần dừng chỉ cần khởi\n"
+"                                động lại từ xa, và đúng là không có hỏng.\n"
+"                                Nhưng ô này phải khai tay — suy từ việc có\n"
+"                                lệnh công việc hay không sẽ làm thống kê độ\n"
+"                                tin cậy sai theo hướng đẹp hơn thực tế."
+msgstr ""
+"This order currently says <b>no failure\n"
+"                                occurred</b>. Most stoppages need only a remote\n"
+"                                restart, and there really was no failure. But\n"
+"                                this field has to be entered by hand — inferring\n"
+"                                it from whether a work order exists makes the\n"
+"                                reliability statistics wrong in the flattering\n"
+"                                direction."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__child_ids
+msgid "Lệnh trong chiến dịch"
+msgstr "Orders in the campaign"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Lịch"
+msgstr "Schedule"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__loosening
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__loosening
+msgid "Lỏng liên kết"
+msgstr "Loose connection"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__software
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__software
+msgid "Lỗi điều khiển, phần mềm"
+msgstr "Control or software fault"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_sel
+msgid "Lựa chọn"
+msgstr "Choices"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__wear
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__wear
+msgid "Mài mòn"
+msgstr "Wear"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_order_hold
+msgid ""
+"Màn hình này trả lời câu <b>tiền và thời gian đang mắc ở\n"
+"            đâu</b>. Một lệnh mở 14 ngày hiếm khi có người làm suốt 14\n"
+"            ngày — phần lớn là chờ vật tư, chờ cẩu hoặc chờ thời tiết."
+msgstr ""
+"This screen answers the question <b>where the money and the time\n"
+"            are stuck</b>. An order open 14 days rarely has someone working all 14\n"
+"            — most of it is waiting for materials, for a crane, or for weather."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__auto_result
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Máy xét"
+msgstr "System verdict"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__code
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__code
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_failure_mode_form
@@ -169,10 +1419,68 @@ msgid "Mã"
 msgstr "Code"
 
 #. module: eam_work_order
+#: model:ir.model.constraint,message:eam_work_order.constraint_eam_failure_mode_uniq_code
+msgid "Mã dạng hỏng không được trùng."
+msgstr "The failure mode code must be unique."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_failure_mode__standard_ref
+msgid "Mã hoặc điều khoản của bộ chuẩn mà dạng hỏng này lấy ra."
+msgstr "The code or clause of the standard this failure mode derives from."
+
+#. module: eam_work_order
+#: model:ir.model.constraint,message:eam_work_order.constraint_eam_form_template_uniq_code
+msgid "Mã mẫu biểu không được trùng."
+msgstr "The form template code must be unique."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__description
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Mô tả"
+msgstr "Description"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_apply_wizard__template_ids
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__template_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Mẫu biểu"
+msgstr "Form template"
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_form_template
+#: model:ir.model,name:eam_work_order.model_eam_form_template
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_form_template
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_list
+msgid "Mẫu biểu công việc"
+msgstr "Work form template"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_form_template
+msgid ""
+"Mẫu gắn được vào <b>bất kỳ lệnh nào</b>, kể cả lệnh sửa chữa\n"
+"               đột xuất — khác với bước của kế hoạch bảo trì vốn gắn chặt\n"
+"               với một chu kỳ."
+msgstr ""
+"A template can be attached to <b>any order</b>, including an\n"
+"               unplanned repair — unlike the steps of a maintenance plan, which\n"
+"               are tied to a cycle."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__fatigue
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__fatigue
+msgid "Mỏi"
+msgstr "Fatigue"
+
+#. module: eam_work_order
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Mới"
 msgstr "New"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__new
+msgid "Mới nêu"
+msgstr "Newly raised"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
@@ -180,9 +1488,51 @@ msgid "Mở lại"
 msgstr "Reopen"
 
 #. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Mở lại yêu cầu. Lý do từ chối trước đó: %s"
+msgstr "Request reopened. Earlier rejection reason: %s"
+
+#. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
 msgid "Mở lệnh công việc"
 msgstr "Open work order"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Mở từ yêu cầu %(s)s do %(n)s nêu ngày %(d)s."
+msgstr "Opened from request %(s)s raised by %(n)s on %(d)s."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__urgency
+msgid "Mức khẩn (người nêu)"
+msgstr "Urgency (as raised)"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_request
+msgid ""
+"Mức khẩn ở đây là mức khẩn <b>người nêu cảm thấy</b> — mức\n"
+"               ưu tiên trên lệnh do người điều độ đặt sau khi so với phần\n"
+"               việc còn lại."
+msgstr ""
+"Urgency here is the urgency <b>the person raising it feels</b> —\n"
+"               the priority on the order is set by the dispatcher afterwards,\n"
+"               weighed against the rest of the work."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__priority
+msgid "Mức ưu tiên"
+msgstr "Priority"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__trade
+msgid "Nghề"
+msgstr "Trade"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__root_cause
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Nguyên nhân gốc"
+msgstr "Root cause"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__source
@@ -192,9 +1542,73 @@ msgid "Nguồn"
 msgstr "Source"
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__permit_date
+msgid "Ngày cấp"
+msgstr "Issued on"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__date_work
+msgid "Ngày làm"
+msgstr "Done on"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_field_mixin__selection_values
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__selection_values
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__selection_values
+msgid "Ngăn bằng dấu phẩy, ví dụ: Khô, Ẩm nhẹ, Ướt rõ."
+msgstr "Comma separated, for example: Dry, Slightly damp, Clearly wet."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__permit_issuer_id
+msgid "Người cấp phiếu"
+msgstr "Permit issued by"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__step_auto_mismatch
+msgid "Người làm tick ĐẠT (hoặc chưa làm) trong khi số đo nói KHÔNG ĐẠT, hoặc ngược lại."
+msgstr "The person ticked PASS (or not done) while the reading says FAIL, or the other way round."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__requester_id
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Người nêu"
+msgstr "Raised by"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid ""
+"Người nêu đánh dấu đây là <b>nguy cơ mất an toàn</b>.\n"
+"                        Việc này phải nổi lên bất kể đang xếp hàng thế nào."
+msgstr ""
+"The person raising it marked this a <b>safety risk</b>.\n"
+"                        It has to surface whatever the queue looks like."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__triage_user_id
+msgid "Người phân loại"
+msgstr "Triaged by"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__user_id
+msgid "Người phụ trách"
+msgstr "Responsible person"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__user_id
+msgid "Người thực hiện"
+msgstr "Carried out by"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__operator
 msgid "Người vận hành phát hiện"
 msgstr "Spotted by the operator"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__contamination
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__contamination
+msgid "Nhiễm bẩn, lẫn tạp"
+msgstr "Contamination"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__plant_id
@@ -203,9 +1617,33 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__contractor
+msgid "Nhà thầu báo"
+msgstr "Reported by the contractor"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__draft
 msgid "Nháp"
 msgstr "Draft"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__category
+msgid "Nhóm mẫu"
+msgstr "Template group"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_field_mixin__uom_label
+#: model:ir.model.fields,help:eam_work_order.field_eam_form_template_line__uom_label
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__uom_label
+msgid "Nm, bar, °C, mm, V… Ghi ra để người đo khỏi phải đoán đang đo bằng đơn vị gì."
+msgstr "Nm, bar, °C, mm, V… Write it down so the person measuring need not guess the unit."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__date_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Nêu lúc"
+msgstr "Raised at"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
@@ -214,9 +1652,86 @@ msgid "Nội dung"
 msgstr "Message"
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__title
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Nội dung công việc"
+msgstr "What the work is"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__title
+msgid "Nội dung yêu cầu"
+msgstr "What is being requested"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
+msgid "Phiếu cô lập nguồn trước khi vào nacelle"
+msgstr "Source isolation permit before entering the nacelle"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__permit_kind__phieu_cong_tac
+msgid "Phiếu công tác"
+msgstr "Work permit"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__detection_method
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Phát hiện bằng"
+msgstr "Detected by"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__production
 msgid "Phát hiện qua sụt sản lượng"
 msgstr "Spotted through an energy shortfall"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__field
+msgid "Phát hiện tại hiện trường"
+msgstr "Found on site"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Phân loại"
+msgstr "Classification"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__date_triage
+msgid "Phân loại lúc"
+msgstr "Triaged at"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__requires_isolation
+msgid "Phải cắt điện, cô lập"
+msgstr "Requires isolation"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_step__value_sel
+msgid "Phải là một trong các lựa chọn đã khai. Trên web đây là ô chữ có kiểm; danh sách thả xuống nằm ở app hiện trường, nơi người làm thực sự nhập."
+msgstr "It has to be one of the declared choices. On the web this is a checked text field; the drop-down lives in the field app, where the work is actually entered."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__urgency__immediate
+msgid "Phải xử lý ngay"
+msgstr "Must be handled at once"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__amount_chargeable
+msgid "Phần chi phí can thiệp quy cho bảo hành hoặc đòi lại nhà thầu O&M. KHÔNG gồm sản lượng mất — phần đó đi theo chế tài khả dụng của hợp đồng, có công thức và trần riêng."
+msgstr "The share of intervention cost attributed to warranty or recoverable from the O&M contractor. It does NOT include energy lost — that follows the contract's availability regime, with its own formula and cap."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__is_warranty_part
+msgid "Phụ tùng bảo hành"
+msgstr "Spare under warranty"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "QUÁ HẠN phản hồi"
+msgstr "RESPONSE OVERDUE"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__inspection
+msgid "Qua kiểm tra, xem xét"
+msgstr "Through inspection or examination"
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
@@ -224,9 +1739,57 @@ msgid "Quay vòng"
 msgstr "Rotable"
 
 #. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__permit_issuer_id
+msgid "Quy chuẩn yêu cầu người cấp phải nắm rõ nội dung công việc và các điều kiện bảo đảm an toàn điện."
+msgstr "The regulation requires the issuer to know the work in detail and the conditions for electrical safety."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__is_overdue
+msgid "Quá hạn phản hồi"
+msgstr "Response overdue"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__overload
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__overload
+msgid "Quá tải"
+msgstr "Overload"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_request__asset_id
+msgid "Suy từ vị trí: thiết bị đang lắp ở đó. Sửa được khi yêu cầu chỉ đích danh một cấu phần bên trong."
+msgstr "Derived from the location: the equipment installed there. Editable when the request names a component inside."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_downtime
+msgid "Sản lượng mất quy tiền"
+msgstr "Energy lost, valued"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__line_count
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__step_count
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_list
+msgid "Số bước"
+msgstr "Steps"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__step_auto_fail
+msgid "Số bước mà SỐ ĐO nằm ngoài tiêu chuẩn. Khác với số bước người làm tự tick không đạt — chỗ lệch giữa hai con số là chỗ đáng xem."
+msgstr "The number of steps whose READING falls outside the criteria. Different from the steps a person ticked as failed — the gap between the two numbers is what is worth looking at."
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__hours
 msgid "Số giờ"
 msgstr "Hours"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__duration_hours
+msgid "Số giờ thực tế"
+msgstr "Actual hours"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__hold_hours
+msgid "Số giờ đang chờ"
+msgstr "Hours waiting"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__name
@@ -237,9 +1800,80 @@ msgid "Số hiệu"
 msgstr "Reference"
 
 #. module: eam_work_order
+#: model:ir.model.constraint,message:eam_work_order.constraint_eam_work_order_uniq_name
+msgid "Số hiệu lệnh công việc không được trùng."
+msgstr "The work order number must be unique."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_list_wo
+msgid "Số lệnh"
+msgstr "Orders"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__child_count
+msgid "Số lệnh con"
+msgstr "Child orders"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_outage__work_order_count
+msgid "Số lệnh công việc"
+msgstr "Work orders"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__permit_ref
+msgid "Số phiếu, lệnh công tác"
+msgstr "Permit or work instruction number"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__number
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template_line__field_type__number
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_pm_task__field_type__number
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__field_type__number
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Số đo"
+msgstr "Reading"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__auto_result__not_ok
+msgid "Số đo KHÔNG ĐẠT"
+msgstr "Reading FAILS"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__auto_result__ok
+msgid "Số đo ĐẠT"
+msgstr "Reading PASSES"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_num
+msgid "Số đo được"
+msgstr "Measured value"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
+msgid "Sổ yêu cầu công việc"
+msgstr "Work request log"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__corrective
 msgid "Sửa chữa khắc phục"
 msgstr "Corrective repair"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid ""
+"Thay một cấu phần quay vòng là <b>tháo con\n"
+"                                cũ ra và lắp con mới vào</b>, cả hai mang\n"
+"                                sê-ri riêng. Ghi mỗi số lượng thì vài năm\n"
+"                                sau không biết trong máy đang có con nào —\n"
+"                                mà đó đúng là câu cần trả lời khi đi đòi\n"
+"                                bảo hành."
+msgstr ""
+"Replacing a rotable component means <b>taking the\n"
+"                                old one out and fitting a new one</b>, both\n"
+"                                carrying their own serial numbers. Record only\n"
+"                                a quantity and in a few years nobody knows which\n"
+"                                one is in the machine — which is exactly the\n"
+"                                question a warranty claim turns on."
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__asset_id
@@ -248,6 +1882,36 @@ msgstr "Corrective repair"
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_list
 msgid "Thiết bị"
 msgstr "Equipment"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__asset_in_id
+msgid "Thiết bị lắp vào"
+msgstr "Equipment fitted"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__asset_out_id
+msgid "Thiết bị tháo ra"
+msgstr "Equipment removed"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__cost_service
+msgid "Thuê cẩu, thuê chuyên gia, vận chuyển. Khai gộp vì các khoản này thường về theo một hoá đơn."
+msgstr "Crane hire, specialists, transport. Grouped together because these usually arrive on a single invoice."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__parent_id
+msgid "Thuộc chiến dịch"
+msgstr "Part of campaign"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Tháng nêu"
+msgstr "Month raised"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order_part__is_rotable
+msgid "Tháo ra đem đại tu rồi lắp lại, giữ nguyên lịch sử theo sê-ri. Hộp số, máy phát, cánh, bộ biến đổi thuộc loại này."
+msgstr "Removed for overhaul and refitted, keeping its serial-number history. Gearbox, generator, blades and converter are of this kind."
 
 #. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_apply_wizard_form
@@ -262,11 +1926,68 @@ msgid "Thấp"
 msgstr "Low"
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Thấy gì, ở đâu"
+msgstr "What was seen, and where"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_request__description
+msgid "Thấy gì, ở đâu, lúc nào. Càng cụ thể thì người phân loại càng ít phải đi hỏi lại — và đi hỏi lại là chỗ sổ yêu cầu hay tắc nhất."
+msgstr "What was seen, where, and when. The more specific it is, the less the triager has to go back and ask — and going back to ask is where the request log jams most often."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Thấy gì, ở đâu, lúc nào. Càng cụ thể thì người phân loại càng ít phải đi hỏi lại."
+msgstr "What was seen, where, and when. The more specific it is, the less the triager has to go back and ask."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__spec_display
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid "Tiêu chuẩn"
+msgstr "Acceptance criteria"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template_line__spec
+msgid "Tiêu chuẩn / ghi chú"
+msgstr "Acceptance criteria / notes"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__spec
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Tiêu chuẩn / trị số"
+msgstr "Criteria / target value"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__rope
+msgid "Tiếp cận bằng dây"
+msgstr "Rope access"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid "Tiếp nhận"
+msgstr "Take on"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Tiền thật"
+msgstr "Real cost"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__currency_id
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__currency_id
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__currency_id
 msgid "Tiền tệ"
 msgstr "Currency"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__om_contract
+msgid "Trong giá hợp đồng O&M"
+msgstr "Within the O&M contract price"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__work_at_height
+msgid "Trong nacelle và trên tháp. Có hồ sơ riêng về huấn luyện, dây đai và cứu hộ treo cao."
+msgstr "Inside the nacelle and up the tower. It has its own file on training, harnesses and rescue at height."
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__state
@@ -283,10 +2004,135 @@ msgid "Trạng thái lệnh"
 msgstr "Order state"
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Trễ (ngày)"
+msgstr "Late (days)"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Trễ quá 7 ngày"
+msgstr "More than 7 days late"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__delay_days
+msgid "Trễ so kế hoạch (ngày)"
+msgstr "Late against plan (days)"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value
+msgid "Trị số đo được"
+msgstr "Measured value"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__external
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__external
+msgid "Tác động bên ngoài"
+msgstr "External impact"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_request__safety_concern
+msgid "Tách riêng khỏi mức khẩn: một việc có thể không gấp về sản lượng nhưng vẫn là nguy cơ an toàn, và nó phải nổi lên bất kể xếp hàng thế nào."
+msgstr "Kept apart from urgency: a job may not be urgent in energy terms and still be a safety risk, and it has to surface whatever the queue looks like."
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_template__name
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_list
 msgid "Tên mẫu"
 msgstr "Template name"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__worker_name
+msgid "Tên người thực hiện"
+msgstr "Name of the person doing it"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__part_name
+msgid "Tên vật tư"
+msgstr "Material name"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Tìm yêu cầu"
+msgstr "Search requests"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__detection_method__casual
+msgid "Tình cờ phát hiện"
+msgstr "Found by chance"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__delay_days
+msgid "Tính từ ngày dự kiến xong. Lệnh chưa xong thì tính tới hôm nay — để nó không đứng im và trông như vẫn còn hạn."
+msgstr "Counted from the planned finish date. While the order is unfinished it counts up to today — so it does not stand still and look as if it were still in time."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Tôi nêu"
+msgstr "Raised by me"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Tôi phụ trách"
+msgstr "I am responsible"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_outage_form_wo
+msgid "Tạo lệnh công việc"
+msgstr "Create a work order"
+
+#. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_order
+msgid "Tạo lệnh công việc đầu tiên"
+msgstr "Create the first work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__executor__own_team
+msgid "Tổ của chủ đầu tư"
+msgstr "Owner's own crew"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__cost_full
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+msgid "Tổng chi phí thật"
+msgstr "Total real cost"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+#: model:ir.model,name:eam_work_order.model_eam_work_request_reject_wizard
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_reject_wizard_form
+msgid "Từ chối yêu cầu"
+msgstr "Reject the request"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Từ chối yêu cầu \"%s\" thì phải ghi lý do. Yêu cầu bị từ chối vẫn nằm lại trong sổ chính là để sau này trả lời được câu \"hiện trường đã báo chuyện này mấy lần và vì sao lần nào cũng bị gạt\" — không có lý do thì câu đó vô nghĩa."
+msgstr "Rejecting request \"%s\" requires a reason. A rejected request stays in the log precisely so that the question \"how many times has the field reported this, and why was it brushed off every time\" can be answered later — without a reason that question is meaningless."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Từ chối. Lý do: %s"
+msgstr "Rejected. Reason: %s"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__alarm
+msgid "Từ cảnh báo thiết bị"
+msgstr "From an equipment alarm"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_request__response_hours
+msgid "Từ lúc nêu tới lúc có người phân loại. Chưa phân loại thì tính TỚI HÔM NAY — để nó không đứng im và trông như vẫn còn trong hạn."
+msgstr "From being raised until someone triages it. While untriaged it counts UP TO TODAY — so it does not stand still and look as if it were still in time."
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__asset_id
+msgid "Tự suy từ vị trí và ngày dự kiến. Sửa được khi cần chỉ đích danh một cấu phần khác."
+msgstr "Derived from the location and the planned date. Editable when a different component has to be named."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__corrective_action
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Việc đã làm"
+msgstr "Work done"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_failure_mode__standard_ref
@@ -294,9 +2140,40 @@ msgid "Viện dẫn chuẩn"
 msgstr "Standard clause"
 
 #. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__root_cause
+msgid "Vì sao cơ chế đó xảy ra: lắp sai lực siết, bôi trơn thiếu, lỗi thiết kế, lỗi lô hàng. Khác dạng hỏng và cơ chế hỏng."
+msgstr "Why that mechanism occurred: wrong tightening torque, too little lubrication, a design fault, a batch fault. Different from the failure mode and the mechanism."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Vì sao cơ chế đó xảy ra: lắp sai lực siết, bôi trơn thiếu, lỗi thiết kế, lỗi lô hàng…"
+msgstr "Why that mechanism occurred: wrong tightening torque, too little lubrication, a design fault, a batch fault…"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_work_order__is_on_hold
+msgid "Vẫn ở trạng thái \"đang làm\" nhưng thực tế không ai làm. Tách ra mới đo được: một lệnh mở 14 ngày hiếm khi có người làm suốt 14 ngày."
+msgstr "Still \"in progress\" while in fact nobody is working on it. Only by separating the two can it be measured: an order open 14 days rarely has someone working all 14."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__operation
+msgid "Vận hành báo"
+msgstr "Reported by operations"
+
+#. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_part__is_rotable
 msgid "Vật tư quay vòng"
 msgstr "Rotable spare"
+
+#. module: eam_work_order
+#: model:ir.model,name:eam_work_order.model_eam_work_order_part
+msgid "Vật tư trên lệnh công việc"
+msgstr "Materials on the work order"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__part_line_ids
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Vật tư, phụ tùng"
+msgstr "Materials and spares"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__location_id
@@ -309,6 +2186,53 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Vị trí này còn %d yêu cầu khác chưa phân loại."
+msgstr "This location has %d other requests still untriaged."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Vị trí này đang có %d yêu cầu khác chưa phân loại. Nhiều người cùng báo thường nghĩa là việc đã rõ — cân nhắc gộp khi phân loại."
+msgstr "This location has %d other untriaged requests. Several people reporting the same thing usually means it is real — consider merging them while triaging."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__civil
+msgid "Xây dựng, nền móng"
+msgstr "Civil works, foundation"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Yêu cầu \"%s\" không còn ở trạng thái mới."
+msgstr "Request \"%s\" is no longer in the new state."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Yêu cầu \"%s\" đã được xử lý rồi."
+msgstr "Request \"%s\" has already been handled."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
+msgid ""
+"Yêu cầu bị từ chối <b>vẫn nằm lại trong sổ</b>. Đó\n"
+"                        là cách duy nhất sau này trả lời được câu \"hiện\n"
+"                        trường đã báo chuyện này mấy lần và vì sao lần nào\n"
+"                        cũng bị gạt\"."
+msgstr ""
+"A rejected request <b>stays in the log</b>. That is the\n"
+"                        only way to answer later the question \"how many times\n"
+"                        has the field reported this, and why was it brushed\n"
+"                        off every time\"."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_reject_wizard_form
+msgid ""
+"Yêu cầu bị từ chối vẫn nằm lại trong sổ. Ghi rõ vì sao,\n"
+"                   để sau này còn trả lời được người đã nêu."
+msgstr ""
+"A rejected request stays in the log. Say plainly why,\n"
+"                   so that the person who raised it can still be answered later."
+
+#. module: eam_work_order
 #: model:ir.actions.act_window,name:eam_work_order.action_eam_work_request
 #: model:ir.model,name:eam_work_order.model_eam_work_request
 #: model:ir.ui.menu,name:eam_work_order.menu_eam_work_request
@@ -317,9 +2241,163 @@ msgid "Yêu cầu công việc"
 msgstr "Work request"
 
 #. module: eam_work_order
+#: model_terms:ir.actions.act_window,help:eam_work_order.action_eam_work_request
+msgid ""
+"Yêu cầu là <b>cửa vào</b>, khác lệnh công việc: chưa biết\n"
+"               làm gì, chưa biết ai làm, chưa biết có đáng làm không. Người\n"
+"               điều độ phân loại rồi mới thành lệnh."
+msgstr ""
+"A request is the <b>front door</b>, unlike a work order: what to do\n"
+"               is not yet known, nor who does it, nor whether it is worth doing.\n"
+"               The dispatcher triages it, and only then does it become an order."
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__dup_count
+msgid "Yêu cầu đang chờ cùng vị trí"
+msgstr "Requests waiting at the same location"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__request_ids
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+msgid "Yêu cầu đã gộp"
+msgstr "Requests merged"
+
+#. module: eam_work_order
+#: model:ir.actions.act_window,name:eam_work_order.action_eam_work_request_rejected
+#: model:ir.ui.menu,name:eam_work_order.menu_eam_work_request_rejected
+msgid "Yêu cầu đã từ chối"
+msgstr "Requests rejected"
+
+#. module: eam_work_order
+#: code:addons/eam_work_order/models/eam_work_request.py:0
+msgid "Yêu cầu — %s"
+msgstr "Request — %s"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
+msgid ""
+"bước mà\n"
+"                    <b>người chấm lệch với số đo</b>: số nói một đằng, ô\n"
+"                    kết quả ghi một nẻo. Đây là chỗ đáng xem trước khi\n"
+"                    đóng lệnh."
+msgstr ""
+"steps where the\n"
+"                    <b>person disagrees with the reading</b>: the number says\n"
+"                    one thing and the result field another. This is worth\n"
+"                    looking at before closing the order."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_failure_mode__mechanism__corrosion
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__failure_mechanism__corrosion
+msgid "Ăn mòn"
+msgstr "Corrosion"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__is_on_hold
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Đang chờ"
+msgstr "Waiting"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Đang chờ phân loại"
+msgstr "Waiting to be triaged"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__in_review
+msgid "Đang phân loại"
+msgstr "Being triaged"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__control
+msgid "Điều khiển, tự động"
+msgstr "Control, automation"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__electrical
+msgid "Điện"
+msgstr "Electrical"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_labour__trade__hv
+msgid "Điện cao áp"
+msgstr "High voltage"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__merged
+msgid "Đã gộp vào lệnh khác"
+msgstr "Merged into another order"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__planned
+msgid "Đã lên lịch"
+msgstr "Scheduled"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__converted
+msgid "Đã mở lệnh"
+msgstr "Order opened"
+
+#. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_form_template_form
 msgid "Đã nghỉ"
 msgstr "Retired"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__value_num_set
+msgid "Đã nhập số đo"
+msgstr "Readings entered"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__state__rejected
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_search
+msgid "Đã từ chối"
+msgstr "Rejected"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__done
+msgid "Đã xong"
+msgstr "Done"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_reject_wizard_form
+msgid "Đã xử lý trong lần bảo dưỡng tuần trước; vết dầu là dầu bảo quản chưa lau."
+msgstr "Dealt with during last week's service; the oil trace is preservative oil not yet wiped off."
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__cost_bearer__om_chargeable
+msgid "Đòi lại nhà thầu O&M"
+msgstr "Recover from the O&M contractor"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_list
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
+msgid "Đòi lại được"
+msgstr "Recoverable"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Đóng hồ sơ"
+msgstr "Close the file"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_request
+msgid ""
+"Đóng lệnh sẽ <b>báo lại</b> cho từng người đã nêu.\n"
+"                        Không báo lại thì lần sau họ không nêu nữa — và mất\n"
+"                        hẳn một kênh phát hiện."
+msgstr ""
+"Closing the order <b>reports back</b> to each person who\n"
+"                        raised it. Without that, they stop raising things —\n"
+"                        and a whole detection channel is lost."
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_labour__rate
+msgid "Đơn giá giờ"
+msgstr "Hourly rate"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_form_field_mixin__uom_label
@@ -330,4 +2408,38 @@ msgstr "Retired"
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form_typed_step
 msgid "Đơn vị"
 msgstr "Unit"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__executor__third_party
+msgid "Đơn vị bên ngoài khác"
+msgstr "Another outside organisation"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__contractor_id
+msgid "Đơn vị thực hiện"
+msgstr "Performing organisation"
+
+#. module: eam_work_order
+#: model:ir.model.fields,help:eam_work_order.field_eam_failure_mode__category_id
+msgid "Để trống nghĩa là dùng cho mọi loại. Khai vào thì chỉ hiện khi lệnh công việc đúng loại cấu phần đó — danh mục dạng hỏng của cánh quạt không dùng được cho bộ biến đổi."
+msgstr "Empty means it is used for every category. Fill it in and it only appears on work orders of that component category — a blade's failure-mode list is of no use for a converter."
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Σ giờ"
+msgstr "Σ hours"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_field_mixin__field_type__photo
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template_line__field_type__photo
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_pm_task__field_type__photo
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__field_type__photo
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Ảnh"
+msgstr "Photo"
+
+#. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__attachment_ids
+msgid "Ảnh / chứng cứ"
+msgstr "Photo / evidence"
 

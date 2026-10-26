@@ -17,14 +17,182 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid " Lưu ý đây là ĐẨY LÙI: không tìm được ngày sớm hơn nào ra khỏi mùa, nên thiết bị sẽ chạy thêm %d ngày quá chu kỳ thiết kế."
+msgstr " Note that this is a PUSH BACK: no earlier date outside the season could be found, so the equipment will run %d days beyond its design cycle."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__anchor
+msgid "\"Từ lần làm xong\" là mặc định đúng cho bảo dưỡng: trễ thì lần sau dời theo. \"Mốc cố định\" dành cho kiểm định bắt buộc — hạn do pháp luật đặt, làm sớm hay muộn thì hạn sau vẫn là ngày đó."
+msgstr "\"From the last completion\" is the right default for servicing: run late once and the next one moves with it. \"Fixed anchor\" is for mandatory statutory inspections — the deadline is set by law, so doing it early or late leaves the next date unchanged."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "% bắt sớm"
+msgstr "% caught early"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__detect_early_pct
+msgid "% bắt được sớm"
+msgstr "% caught early"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "% nằm là chờ"
+msgstr "% of downtime spent waiting"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__pm_ratio
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "% phòng ngừa"
+msgstr "% preventive"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__wait_share
+msgid "% thời gian nằm là CHỜ"
+msgstr "% of downtime spent WAITING"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_schedule.py:0
+msgid "%s đã có lệnh đang mở (%s). Sinh thêm là có hai lệnh cùng một việc, và lần nào làm xong cũng không biết nên đóng cái nào."
+msgstr "%s already has an open order (%s). Raising another means two orders for the same job, and whichever is finished, nobody knows which one to close."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+msgid ""
+".\n"
+"                        Để trống là <b>chưa đủ căn cứ</b>, không phải bằng 0."
+msgstr ""
+".\n"
+"                        Empty means <b>not enough evidence</b>, not zero."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_maint_kpi
+msgid ""
+"<b>KPI bảo trì</b> là câu hỏi về <b>bộ phận bảo trì</b>:\n"
+"            sửa nhanh không (<b>MTTR</b>), máy nằm bao lâu\n"
+"            (<b>MDT</b>), bao nhiêu phần của giờ nằm là <b>ngồi chờ</b>,\n"
+"            và công việc là chủ động hay chạy theo sự cố\n"
+"            (<b>% phòng ngừa</b>, <b>% bắt sớm</b>)."
+msgstr ""
+"<b>Maintenance KPIs</b> are a question about <b>the maintenance\n"
+"            department</b>: is the repair quick (<b>MTTR</b>), how long is the\n"
+"            machine down (<b>MDT</b>), what share of the downtime is\n"
+"            <b>sitting waiting</b>, and is the work proactive or reactive\n"
+"            (<b>% preventive</b>, <b>% caught early</b>)."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid ""
+"<b>Kiểm định bắt buộc</b> được báo xung đột\n"
+"                                nhưng <b>không bao giờ bị dời</b>: hạn do\n"
+"                                pháp luật đặt, quá hạn là phải dừng thiết\n"
+"                                bị. Việc phải làm là chuẩn bị khác, không\n"
+"                                phải hoãn.<br/>\n"
+"                                <b>\"Nên làm trong mùa này\"</b> không gây dời\n"
+"                                ngày — nếu cho nó quyền đó thì hệ thống sẽ\n"
+"                                sẵn sàng đẩy việc lùi ba tuần để rơi vào mùa\n"
+"                                đẹp, tức đúng hướng nguy hiểm."
+msgstr ""
+"A <b>mandatory statutory inspection</b> is reported as a\n"
+"                                clash but is <b>never shifted</b>: its deadline\n"
+"                                is set by law, and overrunning it means stopping\n"
+"                                the equipment. The answer is different\n"
+"                                preparation, not postponement.<br/>\n"
+"                                <b>\"Best done in this season\"</b> never causes a\n"
+"                                shift — give it that power and the system would\n"
+"                                happily push work back three weeks to land in a\n"
+"                                nicer season, which is exactly the dangerous\n"
+"                                direction."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+msgid ""
+"<b>MTBF</b> chia cho <b>giờ máy chạy</b>, không phải\n"
+"                        giờ theo lịch — tua-bin đứng yên phần lớn thời gian,\n"
+"                        lấy giờ lịch thì máy ít chạy trông lại bền hơn.<br/>\n"
+"                        <b>MTTR</b> KHÔNG gồm giờ chờ cẩu, chờ vật tư, chờ\n"
+"                        lặng gió; phần đó nằm ở <b>MDT</b>. Khoảng cách giữa\n"
+"                        hai số là chi phí hậu cần, không phải tay nghề thợ."
+msgstr ""
+"<b>MTBF</b> divides by <b>running hours</b>, not calendar\n"
+"                        hours — a turbine stands still most of the time, and on\n"
+"                        calendar hours the one that runs least looks the most\n"
+"                        reliable.<br/>\n"
+"                        <b>MTTR</b> does NOT include hours waiting for a crane,\n"
+"                        for materials, for the wind to drop; that part sits in\n"
+"                        <b>MDT</b>. The gap between the two is the cost of\n"
+"                        logistics, not of the fitters' skill."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_reliability
+msgid ""
+"<b>Độ tin cậy</b> là câu hỏi về <b>cái máy</b>: trong kỳ\n"
+"            này nó chạy bao nhiêu giờ, hỏng mấy lần, và trung bình chạy\n"
+"            được bao lâu thì hỏng một lần (<b>MTBF</b>)."
+msgstr ""
+"<b>Reliability</b> is a question about <b>the machine</b>: how many\n"
+"            hours it ran in the period, how many times it failed, and how long on\n"
+"            average it runs between failures (<b>MTBF</b>)."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "<span>ngày</span>"
+msgstr "<span>days</span>"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "<span>tháng</span>"
+msgstr "<span>months</span>"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "An toàn"
+msgstr "Safety"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter_reading__source__contractor
 msgid "Báo cáo nhà thầu"
 msgstr "Contractor report"
 
 #. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+msgid "Báo trước"
+msgstr "Lead time"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__1
 msgid "Bình thường"
 msgstr "Normal"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__is_critical
+msgid "Bước chịu lực"
+msgstr "Hold point"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__name
+msgid "Bước công việc"
+msgstr "Work step"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_pm_task
+msgid "Bước công việc trong kế hoạch bảo trì"
+msgstr "Work step in the maintenance plan"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_work_order_step__pm_task_id
+msgid "Bước trong kế hoạch"
+msgstr "Step in the plan"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__work_type__preventive
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__work_type__preventive
+#: model:ir.ui.menu,name:eam_pm.menu_eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_location_form_pm
+msgid "Bảo trì phòng ngừa"
+msgstr "Preventive maintenance"
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__work_type__predictive
@@ -33,9 +201,247 @@ msgid "Bảo trì theo trạng thái"
 msgstr "Condition-based maintenance"
 
 #. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid ""
+"Bật cả hai thì <b>cái nào đến trước thắng</b> — ví\n"
+"                        dụ <i>12 tháng hoặc 8.000 giờ chạy, tuỳ cái nào tới\n"
+"                        trước</i>. Cột <i>Tới hạn vì</i> trên màn lịch nói\n"
+"                        rõ cái nào đang quyết định."
+msgstr ""
+"Turn both on and <b>whichever comes first wins</b> — for\n"
+"                        example <i>every 12 months or 8,000 running hours,\n"
+"                        whichever comes first</i>. The <i>Due because of</i>\n"
+"                        column on the schedule says which one is deciding."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__has_range
+msgid "Bật khi ô là Số đo và có ít nhất một cận. Chỉ khi đó hệ thống mới tự kết luận được."
+msgstr "On when the field is a Reading and at least one bound is set. Only then can the system conclude by itself."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__requires_photo
+msgid "Bắt buộc có ảnh"
+msgstr "A photo is required"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season_rule__reason
+msgid "Bắt buộc khi chính sách là \"không làm được\". Một chữ \"cấm\" không kèm lý do thì người ở hiện trường sẽ lách, vì họ không biết đang lách cái gì."
+msgstr "Required when the policy is \"cannot be done\". A bare \"forbidden\" with no reason will be worked around on site, because nobody knows what they are working around."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Bắt buộc ảnh"
+msgstr "Photo required"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__detect_early_count
+msgid "Bắt được sớm"
+msgstr "Caught early"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__is_critical
+msgid "Bỏ bước này là hỏng cả lần bảo trì. Dùng để siết khâu kiểm."
+msgstr "Skipping this step ruins the whole service. Use it to tighten the checking."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Chi phí"
+msgstr "Cost"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__cost_total
+msgid "Chi phí bảo trì"
+msgstr "Maintenance cost"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_schedule.py:0
+msgid "Chiến dịch: %s"
+msgstr "Campaign: %s"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__max_shift_days
+msgid "Cho phép dời tối đa (ngày)"
+msgstr "Maximum shift allowed (days)"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Chu kỳ theo lịch"
+msgstr "Calendar cycle"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Chu kỳ theo đồng hồ"
+msgstr "Meter cycle"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__operating_hours
+msgid "Chênh lệch đồng hồ giờ máy chạy. Đây là TỬ SỐ của MTBF."
+msgstr "The difference in running-hour meters. This is the NUMERATOR of MTBF."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__policy
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Chính sách"
+msgstr "Policy"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_season
+msgid "Chưa khai mùa nào"
+msgstr "No season declared yet"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_maint_kpi
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_reliability
+msgid "Chưa tính kỳ nào"
+msgstr "No period computed yet"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Chưa từng bảo trì"
+msgstr "Never maintained"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__due_by__none
+msgid "Chưa đủ dữ liệu"
+msgstr "Not enough data yet"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid ""
+"Chỉ khai <b>ngày-tháng</b>, không khai năm — cửa sổ tự\n"
+"                        lặp. Mùa <b>vắt qua năm mới</b> khai bình thường:\n"
+"                        tháng 11 đến tháng 3 là MỘT mùa."
+msgstr ""
+"Declare only <b>day and month</b>, not the year — the window\n"
+"                        repeats itself. A season <b>spanning the new year</b> is\n"
+"                        declared normally: November to March is ONE season."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+msgid "Chỉ số"
+msgstr "Indicator"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__work_type
+msgid "Chỉ áp cho loại việc"
+msgstr "Only for the type of work"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__trade
+msgid "Chỉ áp cho nghề"
+msgstr "Only for the trade"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__field_type
+msgid "Chọn \"Số đo\" thì khai thêm cận dưới/cận trên — khi đó hệ thống tự kết luận đạt hay không, thay vì để người làm tự tick."
+msgstr "Choose \"Reading\" and also give a lower and upper bound — the system then concludes pass or fail itself, instead of leaving people to mark their own work."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__hold_hours
+msgid "Chờ cẩu, chờ vật tư, chờ thời tiết."
+msgstr "Waiting for a crane, for materials, for weather."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__task_ids
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Các bước công việc"
+msgstr "Work steps"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid ""
+"Các bước được chép sang phần diễn giải của\n"
+"                                lệnh công việc khi sinh lệnh. Ô <b>tiêu\n"
+"                                chuẩn / trị số</b> (lực siết, khe hở, ngưỡng\n"
+"                                rung) để người làm khỏi phải tra sổ tay và\n"
+"                                người kiểm biết lấy gì đối chiếu."
+msgstr ""
+"The steps are copied into the description of the work\n"
+"                                order when it is raised. The <b>criteria /\n"
+"                                target value</b> field (tightening torque,\n"
+"                                clearance, vibration threshold) saves the\n"
+"                                person doing the work from looking them up and\n"
+"                                tells the checker what to compare against."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__selection_values
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Các lựa chọn"
+msgstr "Choices"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__blade
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__blade
+msgid "Cánh quạt"
+msgstr "Blade"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__detect_early_pct
+msgid "Câu đắt nhất của bảo trì: giám sát trạng thái chỉ đáng tiền khi tỷ lệ này cao."
+msgstr "The most expensive question in maintenance: condition monitoring only pays when this share is high."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__meter_to_due
+msgid "Còn (đơn vị đồng hồ)"
+msgstr "Remaining (meter units)"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Còn (đồng hồ)"
+msgstr "Remaining (meter)"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__ok
 msgid "Còn hạn"
 msgstr "In warranty"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form_season
+msgid "Có"
+msgstr "Yes"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+msgid "Có chỉ số để trống:"
+msgstr "Indicators left empty:"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Có hỏng trong kỳ"
+msgstr "A failure occurred in the period"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
+msgid ""
+"Có số đọc <b>thấp hơn lần trước</b> mà chưa ai xác\n"
+"                        nhận là thay đồng hồ. Hệ thống <b>không cộng bù</b>\n"
+"                        cho những dòng đó, vì nhiều khả năng là gõ nhầm —\n"
+"                        cộng bù một lần gõ nhầm sẽ làm mọi kế hoạch theo\n"
+"                        giờ tự lùi hạn, im lặng."
+msgstr ""
+"There are readings <b>lower than the previous one</b> that\n"
+"                        nobody has confirmed as a meter replacement. The system\n"
+"                        <b>applies no compensation</b> to those rows, because a\n"
+"                        typing error is the likelier explanation — compensating\n"
+"                        for a typo would silently push back the due date of every\n"
+"                        hour-based plan."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__has_range
+msgid "Có tiêu chuẩn máy đọc được"
+msgstr "Has machine-readable criteria"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__season_blocked
+msgid "Có xung đột mùa mà không dời đi đâu được trong giới hạn — hoặc là kiểm định bắt buộc, vốn không được dời. Đây là danh sách phải bố trí làm trong mùa, tức phải chuẩn bị khác."
+msgstr "There is a season clash with nowhere to shift to within the limit — or it is a mandatory statutory inspection, which is never shifted. This is the list that has to be done during the season, which means preparing differently."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__has_meter
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Có đồng hồ giờ chạy"
+msgstr "Has a running-hour meter"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__company_id
@@ -49,14 +455,176 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_maint_kpi
+msgid ""
+"Cùng một bảng số với <i>Tài sản ▸ Độ tin cậy thiết bị</i>,\n"
+"            chỉ khác nhóm cột mặc định."
+msgstr ""
+"The same figures as <i>Assets ▸ Equipment reliability</i>,\n"
+"            differing only in the default column grouping."
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__mechanical
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__mechanical
+msgid "Cơ khí"
+msgstr "Mechanical"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__requires_permit
+msgid "Cần phiếu, lệnh công tác"
+msgstr "A permit or work instruction is required"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Cần xử lý"
+msgstr "Needs attention"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__value_min
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Cận dưới"
+msgstr "Lower bound"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__value_max
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Cận trên"
+msgstr "Upper bound"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__window_label
+msgid "Cửa sổ"
+msgstr "Window"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Cửa sổ (lặp hằng năm)"
+msgstr "Window (repeats every year)"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Cửa sổ — lặp hằng năm"
+msgstr "Window — repeats every year"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_pm_season_conflict
+msgid ""
+"Danh sách việc có hạn rơi vào mùa nên tránh hoặc không làm\n"
+"               được. Những dòng <b>không tránh được</b> là nơi phải chuẩn\n"
+"               bị điều kiện thi công khác."
+msgstr ""
+"Work whose due date falls in a season best avoided or one in which it\n"
+"               cannot be done. The <b>cannot be avoided</b> rows are where\n"
+"               different working conditions have to be arranged."
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_season__note
 msgid "Diễn giải"
 msgstr "Explanation"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__grace_days
+msgid "Dung sai quá hạn (ngày)"
+msgstr "Overdue tolerance (days)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_work_order__pm_schedule_id
+msgid "Dòng lịch bảo trì"
+msgstr "Maintenance schedule line"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__calendar_days
+msgid "Dùng cho chu kỳ không tròn tháng, ví dụ 90 ngày."
+msgstr "For cycles that are not whole months, for example 90 days."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__date_start
+msgid "Dùng khi chưa từng bảo trì lần nào — thường là ngày đưa vào vận hành. Để trống thì lấy ngày lắp đặt thiết bị."
+msgstr "Used when it has never been serviced — usually the commissioning date. Leave it empty and the equipment's installation date is used."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_reliability
+msgid ""
+"Dùng để quyết <b>thay máy hay sửa tiếp</b>, <b>đòi bảo\n"
+"            hành</b> khi một lô hỏng bất thường, và <b>dự trữ phụ\n"
+"            tùng</b> cho thứ hay hỏng. Đây KHÔNG phải điểm chấm cho đội\n"
+"            bảo trì — cái đó ở <i>Bảo trì ▸ KPI bảo trì</i>, đọc từ cùng\n"
+"            một bảng số."
+msgstr ""
+"Used to decide <b>whether to replace or keep repairing</b>, whether to\n"
+"            <b>claim under warranty</b> when one batch fails abnormally, and what\n"
+"            <b>spares to stock</b> for the things that fail often. This is NOT a\n"
+"            scorecard for the maintenance crew — that lives in <i>Maintenance ▸\n"
+"            Maintenance KPIs</i>, read from the same figures."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__season_shift_days
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list_season
+msgid "Dời (ngày)"
+msgstr "Shift (days)"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Dời tối đa (ngày)"
+msgstr "Maximum shift (days)"
+
+#. module: eam_pm
+#: model:ir.actions.server,name:eam_pm.cron_eam_pm_sinh_lenh_ir_actions_server
+msgid "EAMOne: sinh lệnh bảo trì phòng ngừa"
+msgstr "EAMOne: raise preventive maintenance orders"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Ghi nhận đã bảo trì xong hôm nay mà không qua lệnh công việc? Chu kỳ tiếp theo sẽ đếm từ hôm nay."
+msgstr "Record the service as done today without going through a work order? The next cycle will count from today."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Ghi nhận đã làm"
+msgstr "Record it as done"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season__note
+msgid "Ghi điều kiện thật: gió trung bình bao nhiêu, đường vào có đi được không, cẩu có dựng được không."
+msgstr "Record the actual conditions: what the mean wind was, whether the access road was passable, whether a crane could be rigged."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__current_value
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__effective_value
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_list
+msgid "Giá trị liên tục"
+msgstr "Continuous value"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Gió trung bình bao nhiêu, đường vào có đi được không, cẩu có dựng được không."
+msgstr "What the mean wind is, whether the access road is passable, whether a crane can be rigged."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season_rule__max_shift_days
+msgid "Giới hạn dời để tránh mùa. Vượt giới hạn thì hệ thống BÁO là không tránh được chứ không dời tiếp — dời ba tháng để tránh mưa là đã phá chu kỳ bảo trì."
+msgstr "The limit on shifting to avoid a season. Beyond the limit the system REPORTS that the season cannot be avoided rather than shifting further — shifting three months to dodge the rain has already broken the maintenance cycle."
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__plant_id
 msgid "Giới hạn trong nhà máy"
 msgstr "Limited to the plant"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Giờ chạy"
+msgstr "Running hours"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__hold_hours
+msgid "Giờ chờ"
+msgstr "Waiting hours"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__est_hours
+msgid "Giờ công dự kiến"
+msgstr "Planned labour hours"
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__operating_hours
@@ -65,9 +633,113 @@ msgid "Giờ máy chạy"
 msgstr "Running hours"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__operating_hours
+msgid "Giờ máy chạy trong kỳ"
+msgstr "Running hours in the period"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__downtime_hours
+msgid "Giờ máy nằm"
+msgstr "Machine down hours"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__repair_hours
+msgid "Giờ sửa thực"
+msgstr "Actual repair hours"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_schedule.py:0
+msgid "Gom %d vị trí cùng tới kỳ."
+msgstr "Grouped %d locations falling due together."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Gom theo tài sản"
+msgstr "Group by asset"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Gom theo vị trí"
+msgstr "Group by location"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__due_by
+msgid "Hai điều kiện thì cái nào ĐẾN TRƯỚC thắng. Cột này nói rõ cái nào đang quyết định, để khỏi phải đoán."
+msgstr "With two conditions, whichever comes FIRST wins. This column says which one is deciding, so nobody has to guess."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Hạn"
+msgstr "Due"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Hạn %(h)s rơi vào %(m)s. Đề xuất %(hg)s %(n)d ngày, làm ngày %(ng)s.%(c)s"
+msgstr "Due %(h)s falls in %(m)s. Suggested %(hg)s by %(n)d days, to be done on %(ng)s.%(c)s"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__date_seasonal
+msgid "Hạn gốc giữ nguyên ở cột \"Hạn theo lịch\". Cột này là ngày đề xuất sau khi xét mùa — chênh lệch giữa hai cột chính là thứ cần nhìn."
+msgstr "The original due date stays in the \"Calendar due date\" column. This column is the date suggested after the seasons are weighed — the gap between the two is what to look at."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Hạn kiểm định rơi vào %(m)s. KHÔNG dời được — hạn do pháp luật đặt, quá hạn là phải dừng thiết bị. Việc phải làm là chuẩn bị khác, không phải hoãn."
+msgstr "The inspection falls due in %(m)s. It CANNOT be shifted — the deadline is set by law and overrunning it means stopping the equipment. The answer is different preparation, not postponement."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Hạn rơi vào %(m)s nhưng luật không cho dời ngày nào."
+msgstr "The due date falls in %(m)s but the rule allows no shift at all."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Hạn rơi vào %(m)s và KHÔNG tránh được trong giới hạn %(c)d ngày. Phải bố trí làm trong mùa — xem lý do ở luật mùa để chuẩn bị."
+msgstr "The due date falls in %(m)s and CANNOT be avoided within the %(c)d-day limit. It has to be done during the season — read the reason on the seasonal rule and prepare accordingly."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__season_conflict
+msgid "Hạn rơi vào mùa nên tránh hoặc không làm được."
+msgstr "The due date falls in a season best avoided, or one in which it cannot be done."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__date_next
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Hạn theo lịch"
+msgstr "Calendar due date"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__meter_next
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Hạn theo đồng hồ"
+msgstr "Meter due date"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Hạn đang nằm trong %s — đúng mùa nên làm."
+msgstr "The due date falls in %s — the right season for it."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Hạn đồng hồ"
+msgstr "Meter due"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter_reading__source__scada
 msgid "Hệ giám sát"
 msgstr "Monitoring system"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__detect_early_count
+msgid "Hỏng phát hiện qua giám sát trạng thái, đo rung hoặc kiểm tra định kỳ — tức TRƯỚC khi mất sản lượng."
+msgstr "Failures found through condition monitoring, vibration measurement or periodic inspection — that is, BEFORE energy was lost."
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_maint_kpi
+#: model:ir.ui.menu,name:eam_pm.menu_eam_maint_kpi
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "KPI bảo trì"
+msgstr "Maintenance KPI"
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__other
@@ -76,6 +748,45 @@ msgstr "Monitoring system"
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__other
 msgid "Khác"
 msgstr "Other"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__requires_photo
+msgid "Không cho ghi kết quả khi chưa đính ảnh. Dùng cho bước mà lời nói không đủ: tình trạng mối hàn, vết nứt, mức dầu."
+msgstr "The result cannot be recorded until a photo is attached. Use it for steps where words are not enough: the state of a weld, a crack, an oil level."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_pm_due
+msgid ""
+"Không có kế hoạch nào\n"
+"            tới hạn"
+msgstr ""
+"No plan is\n"
+"            due"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__has_meter
+msgid "Không có thì MTBF để trống — không thay bằng giờ lịch."
+msgstr "Without one, MTBF is left empty — it is not replaced by calendar hours."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_pm_season_conflict
+msgid ""
+"Không có việc nào\n"
+"               vướng mùa"
+msgstr ""
+"Nothing clashes\n"
+"               with a season"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__policy__forbid
+msgid "Không làm được"
+msgstr "Cannot be done"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__season_blocked
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search_season
+msgid "Không tránh được mùa"
+msgstr "The season cannot be avoided"
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__3
@@ -89,10 +800,120 @@ msgid "Kiểm tra, xem xét"
 msgstr "Inspect, examine"
 
 #. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__work_type__statutory
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__work_type__statutory
+msgid "Kiểm định bắt buộc"
+msgstr "Mandatory statutory inspection"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__field_type
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Kiểu ô"
+msgstr "Field type"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__plan_id
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__plan_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_work_order_list_pm
+msgid "Kế hoạch"
+msgstr "Plan"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_plan.py:0
+msgid "Kế hoạch \"%s\" bật chu kỳ theo lịch nhưng để trống số tháng và số ngày."
+msgstr "Plan \"%s\" has the calendar cycle on but both the month and day counts are empty."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_plan.py:0
+msgid "Kế hoạch \"%s\" bật chu kỳ theo đồng hồ nhưng khoảng cách không dương."
+msgstr "Plan \"%s\" has the meter cycle on but the interval is not positive."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_plan.py:0
+msgid "Kế hoạch \"%s\" không có điều kiện tới hạn nào — nó sẽ không bao giờ sinh ra lệnh công việc."
+msgstr "Plan \"%s\" has no due condition at all — it will never raise a work order."
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_pm_plan
+#: model:ir.ui.menu,name:eam_pm.menu_eam_pm_plan
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+msgid "Kế hoạch bảo trì"
+msgstr "Maintenance plan"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid ""
+"Kế hoạch này <b>chỉ chạy theo đồng hồ</b> nhưng vị\n"
+"                        trí chưa có số đọc nào. Nó sẽ <b>im lặng không bao\n"
+"                        giờ tới hạn</b> — không phải \"còn hạn\", mà là không\n"
+"                        đo được. Nhập số đọc đồng hồ cho vị trí này."
+msgstr ""
+"This plan <b>runs on the meter only</b> but the location\n"
+"                        has no reading at all. It will <b>fall silently due,\n"
+"                        never</b> — not \"still in time\" but unmeasurable.\n"
+"                        Enter meter readings for this location."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
+msgid "Liên tục"
+msgstr "Continuous"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__work_type
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__work_type
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Loại công việc"
+msgstr "Type of work"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__season_kind
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Loại mùa"
+msgstr "Season type"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Loại việc"
+msgstr "Work type"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__meter_type
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__meter_type
 msgid "Loại đồng hồ"
 msgstr "Meter type"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Luật \"không làm được\" trong mùa \"%s\" phải ghi lý do. Một chữ \"cấm\" không kèm lý do thì người ở hiện trường sẽ lách, vì họ không biết đang lách cái gì."
+msgstr "A \"cannot be done\" rule in season \"%s\" requires a reason. A bare \"forbidden\" with no reason will be worked around on site, because nobody knows what they are working around."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__rule_ids
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Luật trong mùa"
+msgstr "Rules within the season"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_season_rule
+msgid "Luật ưu tiên theo mùa"
+msgstr "Seasonal priority rule"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Làm gần nhất"
+msgstr "Last done"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__work_at_height
+msgid "Làm việc trên cao"
+msgstr "Work at height"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__date_last_done
+msgid "Làm xong lần gần nhất"
+msgstr "Last completed"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__reason
@@ -101,10 +922,130 @@ msgid "Lý do"
 msgstr "Reason"
 
 #. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Lần gần nhất"
+msgstr "Last time"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__wo_cm_count
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "Lệnh khắc phục"
+msgstr "Corrective order"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__wo_pm_count
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "Lệnh phòng ngừa"
+msgstr "Preventive order"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+msgid "Lịch"
+msgstr "Schedule"
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_pm_schedule
+#: model:ir.model.fields,field_description:eam_pm.field_eam_location__pm_schedule_ids
+#: model:ir.ui.menu,name:eam_pm.menu_eam_pm_schedule
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Lịch bảo trì"
+msgstr "Maintenance schedule"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_pm_schedule
+msgid "Lịch bảo trì theo vị trí"
+msgstr "Maintenance schedule by location"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_location.py:0
+#: code:addons/eam_pm/models/eam_pm_plan.py:0
+msgid "Lịch bảo trì — %s"
+msgstr "Maintenance schedule — %s"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__wo_ids
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Lịch sử lệnh"
+msgstr "Order history"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form_season
+msgid "Lịch theo mùa"
+msgstr "Seasonal schedule"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_schedule_season.py:0
+msgid "Lịch theo mùa: %s"
+msgstr "Seasonal schedule: %s"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__schedule_ids
+msgid "Lịch theo vị trí"
+msgstr "Schedule by location"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__spec
+msgid "Lực siết, khe hở, ngưỡng rung… Ghi ra thì người làm không phải tra sổ tay, và người kiểm tra biết lấy gì để đối chiếu."
+msgstr "Tightening torque, clearance, vibration threshold… Write them down and the person doing the work need not look them up, and the checker knows what to compare against."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__mdt_hours
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+msgid "MDT (giờ nằm)"
+msgstr "MDT (down hours)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__mtbf_hours
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "MTBF (giờ chạy)"
+msgstr "MTBF (running hours)"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_reliability
+msgid ""
+"MTBF chia cho <b>giờ máy chạy</b>, không phải giờ theo\n"
+"            lịch: máy ít chạy mà hay hỏng thì lấy giờ lịch sẽ trông bền\n"
+"            hơn máy chạy khoẻ. Không có đồng hồ giờ chạy thì để\n"
+"            <b>trống</b>, không thay bằng giờ lịch."
+msgstr ""
+"MTBF divides by <b>running hours</b>, not calendar hours: a machine\n"
+"            that runs little and fails often looks more reliable on calendar hours\n"
+"            than one working hard. Without a running-hour meter, leave it\n"
+"            <b>empty</b> rather than substituting calendar hours."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__mttr_hours
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "MTTR (giờ sửa)"
+msgstr "MTTR (repair hours)"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_maint_kpi
+msgid ""
+"MTTR <b>không</b> tính giờ chờ cẩu, chờ vật tư, chờ lặng\n"
+"            gió — phần đó nằm ở MDT. Khoảng cách giữa hai số là\n"
+"            <b>chi phí hậu cần</b>, không phải tay nghề thợ; gộp vào là\n"
+"            đổ lỗi nhầm người."
+msgstr ""
+"MTTR does <b>not</b> count hours waiting for a crane, for materials,\n"
+"            for the wind to drop — that part sits in MDT. The gap between the two is\n"
+"            the <b>cost of logistics</b>, not of the fitters' skill; merging them\n"
+"            blames the wrong people."
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__code
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
 msgid "Mã"
 msgstr "Code"
+
+#. module: eam_pm
+#: model:ir.model.constraint,message:eam_pm.constraint_eam_pm_plan_uniq_code
+msgid "Mã kế hoạch không được trùng."
+msgstr "The plan code must be unique."
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__location_code
@@ -113,9 +1054,195 @@ msgid "Mã vị trí"
 msgstr "Location code"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__note
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Mô tả"
+msgstr "Description"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season_rule__season_id
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Mùa"
+msgstr "Season"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Mùa \"%s\": ngày phải trong khoảng 1–31."
+msgstr "Season \"%s\": the day has to be between 1 and 31."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "Mùa \"%s\": tháng phải trong khoảng 1–12."
+msgstr "Season \"%s\": the month has to be between 1 and 12."
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_season
+#: model:ir.ui.menu,name:eam_pm.menu_eam_season
+msgid "Mùa & luật theo mùa"
+msgstr "Seasons & seasonal rules"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__typhoon
+msgid "Mùa bão"
+msgstr "Storm season"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__high_wind
+msgid "Mùa gió mạnh"
+msgstr "High-wind season"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__dry
+msgid "Mùa khô"
+msgstr "Dry season"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_season
+msgid ""
+"Mùa là cửa sổ <b>lặp hằng năm</b>, khai một lần dùng mãi.\n"
+"               Luật trong mùa nói loại việc nào nên làm, nên tránh, hay\n"
+"               không làm được — và lịch bảo trì sẽ đề xuất\n"
+"               <b>kéo việc lên sớm</b> để ra khỏi mùa xấu, chứ không đẩy\n"
+"               lùi."
+msgstr ""
+"A season is a window that <b>repeats every year</b>, declared once and\n"
+"               used for good. The rules within a season say which type of work is\n"
+"               best done, best avoided, or cannot be done — and the maintenance\n"
+"               schedule will suggest <b>bringing work forward</b> to escape a bad\n"
+"               season, not pushing it back."
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__low_wind
+msgid "Mùa lặng gió"
+msgstr "Low-wind season"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__rain
+msgid "Mùa mưa"
+msgstr "Wet season"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Mùa mưa Savannakhet"
+msgstr "Savannakhet wet season"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Mùa nào, ở đâu"
+msgstr "Which season, and where"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season__season_kind__high_output
+msgid "Mùa phát cao"
+msgstr "High-output season"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_season
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Mùa trong năm"
+msgstr "Season of the year"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__form_template_ids
+msgid "Mẫu biểu kèm theo"
+msgstr "Attached form templates"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form_typed
+msgid "Mẫu biểu kèm theo mọi lệnh"
+msgstr "Form templates attached to every order"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__form_template_ids
+msgid "Mẫu gắn thêm vào mọi lệnh sinh từ kế hoạch này — ví dụ phiếu cô lập nguồn. Khác với các bước ở trên: mẫu dùng chung cho nhiều kế hoạch, sửa một chỗ là đổi tất cả."
+msgstr "Templates attached to every order raised from this plan — a source isolation permit, for instance. Unlike the steps above: a template is shared across plans, so editing it in one place changes them all."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__date_start
+msgid "Mốc bắt đầu tính"
+msgstr "Counting starts from"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_list
+msgid "Mỗi"
+msgstr "Every"
+
+#. module: eam_pm
+#: model:ir.model.constraint,message:eam_pm.constraint_eam_pm_schedule_uniq
+msgid "Mỗi kế hoạch chỉ có một lịch cho mỗi vị trí."
+msgstr "A plan has only one schedule per location."
+
+#. module: eam_pm
+#: model:ir.model.constraint,message:eam_pm.constraint_eam_meter_uniq
+msgid "Mỗi vị trí chỉ có một đồng hồ cho mỗi loại."
+msgstr "A location has only one meter of each kind."
+
+#. module: eam_pm
+#: model:ir.model.constraint,message:eam_pm.constraint_eam_meter_reading_uniq
+msgid "Mỗi đồng hồ chỉ có một số đọc cho mỗi ngày."
+msgstr "A meter has only one reading per day."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__meter_interval
+msgid "Mỗi … (đơn vị đồng hồ)"
+msgstr "Every … (meter units)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__calendar_months
+msgid "Mỗi … tháng"
+msgstr "Every … months"
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_pm_due
+msgid ""
+"Một kế hoạch tới hạn vì <b>lịch</b> hoặc vì <b>đồng hồ</b> —\n"
+"            cái nào đến trước thắng. Cột <i>Tới hạn vì</i> nói rõ cái nào\n"
+"            đang quyết định, để khỏi phải đoán."
+msgstr ""
+"A plan falls due on <b>the calendar</b> or on <b>the meter</b> —\n"
+"            whichever comes first. The <i>Due because of</i> column says which\n"
+"            one is deciding, so nobody has to guess."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__priority
+msgid "Mức ưu tiên"
+msgstr "Priority"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__anchor
+msgid "Neo chu kỳ"
+msgstr "Cycle anchor"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Nghề"
+msgstr "Trade"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__trade
+msgid "Nghề chính"
+msgstr "Main trade"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__source
 msgid "Nguồn"
 msgstr "Source"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__date_seasonal
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search_season
+msgid "Ngày nên làm (xét mùa)"
+msgstr "Suggested date (season-aware)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__date
+msgid "Ngày đọc"
+msgstr "Reading date"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__selection_values
+msgid "Ngăn bằng dấu phẩy, ví dụ: Khô, Ẩm nhẹ, Ướt rõ."
+msgstr "Comma separated, for example: Dry, Slightly damp, Clearly wet."
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__plant_id
@@ -127,10 +1254,127 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter_reading__source__migration
+msgid "Nhập lịch sử"
+msgstr "Import history"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_task__uom_label
+msgid "Nm, bar, °C, mm, V… Ghi ra để người đo khỏi phải đoán đang đo bằng đơn vị gì."
+msgstr "Nm, bar, °C, mm, V… Write it down so the person measuring need not guess the unit."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list_season
+msgid "Nên làm (xét mùa)"
+msgstr "Suggested date (season-aware)"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__policy__prefer
+msgid "Nên làm trong mùa này"
+msgstr "Best done in this season"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__policy__avoid
+msgid "Nên tránh"
+msgstr "Best avoided"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Nằm chờ quá nửa thời gian"
+msgstr "Down and waiting more than half the time"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Phân loại"
+msgstr "Classification"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__pm_ratio
+msgid "Phòng ngừa trên tổng phòng ngừa + khắc phục. Thấp nghĩa là đang chạy theo sự cố."
+msgstr "Preventive over preventive + corrective. Low means the work is running reactively."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__requires_isolation
+msgid "Phải cắt điện, cô lập"
+msgstr "Requires isolation"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__wait_share
+msgid "Phần máy nằm mà không ai đang sửa. Cao thì vấn đề ở hậu cần chứ không ở tay nghề."
+msgstr "The part of downtime during which nobody is repairing. High means the problem is logistics, not skill."
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__overdue
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "QUÁ HẠN"
+msgstr "OVERDUE"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__grace_days
+msgid "Quá hạn bao nhiêu ngày thì còn coi là chấp nhận được. Chỉ đổi màu cảnh báo, không dời hạn."
+msgstr "How many days overdue is still acceptable. It only changes the warning colour; it does not move the due date."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Sinh lệnh ngay"
+msgstr "Raise the order at once"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__lead_days
+msgid "Sinh lệnh trước hạn (ngày)"
+msgstr "Raise the order ahead of the due date (days)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_work_order__is_pm
+msgid "Sinh từ kế hoạch"
+msgstr "Raised from the plan"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__lead_days
+msgid "Sinh đúng ngày đến hạn là quá muộn: chưa kịp đặt phụ tùng, chưa xếp được người, chưa thuê được cẩu."
+msgstr "Raising it on the due date itself is too late: no time to order the spare, to roster the people, or to hire the crane."
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__production_mwh
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__meter_type__production_mwh
 msgid "Sản lượng luỹ kế (MWh)"
 msgstr "Cumulative energy (MWh)"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__due_soon
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Sắp tới hạn"
+msgstr "Due soon"
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_pm_due
+#: model:ir.ui.menu,name:eam_pm.menu_eam_pm_due
+msgid "Sắp tới hạn & quá hạn"
+msgstr "Due soon & overdue"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__due_count
+msgid "Sắp tới hạn / quá hạn"
+msgstr "Due soon / overdue"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_meter_reading__value
+msgid "Số LUỸ KẾ hiện trên máy, không phải số gia kể từ lần trước."
+msgstr "The CUMULATIVE figure on the machine, not the increment since last time."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__rule_count
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Số luật"
+msgstr "Rules"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__failure_count
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Số lần hỏng"
+msgstr "Failures"
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_meter__meter_type__starts
@@ -139,9 +1383,134 @@ msgid "Số lần khởi động"
 msgstr "Starts"
 
 #. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__wo_count
+msgid "Số lần đã làm"
+msgstr "Times done"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__season_same_day
+msgid "Số việc của cùng nhà máy cũng rơi vào ngày đề xuất này. Luật mùa tối ưu TỪNG lịch riêng lẻ và không biết tổ có bao nhiêu người — nên nhiều việc hay bị dồn về cùng một ngày (thường là ngày trước khi mùa xấu mở). Cột này để nhìn thấy chỗ dồn, chứ hệ thống KHÔNG tự giãn ra: giãn thì phải có số năng lực tổ, mà số đó chưa khai ở đâu cả."
+msgstr "How many pieces of work at the same plant also fall on this suggested date. The seasonal rules optimise EACH schedule on its own and know nothing about how many people the crew has — so work tends to pile up on one date (usually the day before a bad season opens). This column makes the pile-up visible; the system does NOT spread it out, because spreading needs a figure for crew capacity, and that figure is declared nowhere."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__schedule_count
+msgid "Số vị trí áp dụng"
+msgstr "Locations it applies to"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_schedule__season_shift_days
+msgid "Số âm là KÉO LÊN SỚM, số dương là đẩy lùi. Với bảo trì phòng ngừa, kéo lên sớm là an toàn còn đẩy lùi là để thiết bị chạy quá chu kỳ thiết kế — nên hai hướng không ngang nhau, và số dương luôn kèm cảnh báo."
+msgstr "A negative number BRINGS IT FORWARD, a positive one pushes it back. For preventive maintenance, bringing it forward is safe while pushing it back lets equipment run beyond its design cycle — so the two directions are not equivalent, and a positive number always carries a warning."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__meter_gap_count
+msgid "Số đoạn đọc bị loại vì đi lùi hoặc vượt thời gian thực trôi. Lớn hơn 0 nghĩa là giờ máy chạy ĐANG THIẾU, và MTBF theo đó thấp hơn thực tế."
+msgstr "The number of reading stretches discarded for going backwards or outrunning real time. Above 0 means running hours are UNDERSTATED, and MTBF with them is lower than reality."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__reading_ids
+msgid "Số đọc"
+msgstr "Reading"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__value
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
+msgid "Số đọc (thô)"
+msgstr "Reading (raw)"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_meter__suspect_count
+msgid "Số đọc THẤP HƠN lần trước mà chưa ai xác nhận là thay đồng hồ. Nhiều khả năng gõ nhầm — chưa xác nhận thì không cộng bù."
+msgstr "A reading LOWER than the previous one that nobody has confirmed as a meter replacement. Most likely a typing error — until it is confirmed, no compensation is applied."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__raw_value
+msgid "Số đọc mới nhất (thô)"
+msgstr "Latest reading (raw)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__suspect_count
+msgid "Số đọc nghi sai"
+msgstr "Readings suspected wrong"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter__date_last_reading
+msgid "Số đọc ngày"
+msgstr "Daily meter reading"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_list
+msgid "Số đọc thô"
+msgstr "Raw reading"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_meter_reading
+msgid "Số đọc đồng hồ"
+msgstr "Meter reading"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__meter_at_last
+msgid "Số đồng hồ lần gần nhất"
+msgstr "Meter value at the last service"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_work_order__pm_plan_id
+msgid "Theo kế hoạch bảo trì"
+msgstr "Per the maintenance plan"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__use_calendar
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__due_by__calendar
+msgid "Theo lịch"
+msgstr "On schedule"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__anchor__fixed_calendar
+msgid "Theo mốc cố định (không trôi)"
+msgstr "From a fixed anchor (no drift)"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__use_meter
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__due_by__meter
+msgid "Theo đồng hồ"
+msgstr "By meter"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__no_data
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Thiếu số đọc đồng hồ"
+msgstr "Meter readings missing"
+
+#. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__priority__0
 msgid "Thấp"
 msgstr "Low"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__repair_hours
+msgid "Thời lượng lệnh TRỪ giờ chờ."
+msgstr "Order duration LESS waiting hours."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Thời điểm sinh lệnh"
+msgstr "When the order is raised"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_task__spec
+msgid "Tiêu chuẩn / trị số"
+msgstr "Criteria / target value"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__rope
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__rope
+msgid "Tiếp cận bằng dây"
+msgstr "Rope access"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_work_order_step__pm_task_id
+msgid "Truy ngược về kế hoạch đã sinh ra bước này — để biết tiêu chuẩn lấy từ đâu khi có tranh cãi."
+msgstr "Traces back to the plan that produced this step — so that, in a dispute, it is clear where the criteria came from."
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__asset_id
@@ -149,6 +1518,96 @@ msgstr "Low"
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
 msgid "Tài sản"
 msgstr "Asset"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__name
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Tên kế hoạch"
+msgstr "Plan name"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__name
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_list
+msgid "Tên mùa"
+msgstr "Season name"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__due_by
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+msgid "Tới hạn vì"
+msgstr "Due because of"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_work_order_list_pm
+msgid "Từ kế hoạch"
+msgstr "From the plan"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__anchor__from_last_done
+msgid "Từ lần làm xong gần nhất"
+msgstr "From the last completion"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__downtime_hours
+msgid "Từ sổ dừng máy, chỉ các khoảng tính là dừng."
+msgstr "From the outage log, counting only outages that count as downtime."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__month_from
+msgid "Từ tháng"
+msgstr "From month"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+msgid "Tử số / mẫu số"
+msgstr "Numerator / denominator"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__season_same_day
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list_season
+msgid "Việc khác cùng ngày"
+msgstr "Other work the same day"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form_season
+msgid ""
+"Việc này <b>không tránh được mùa</b>. Phải chuẩn bị\n"
+"                        điều kiện thi công khác — hoãn không phải là một\n"
+"                        lựa chọn ở đây."
+msgstr ""
+"This work <b>cannot avoid the season</b>. Different working\n"
+"                        conditions have to be arranged — postponing is not an\n"
+"                        option here."
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_pm_schedule_season.py:0
+msgid "Việc này KHÔNG tránh được mùa: %s. Phải chuẩn bị điều kiện thi công khác, không phải hoãn."
+msgstr "This work CANNOT avoid the season: %s. Different working conditions have to be arranged — postponing is not the answer."
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_pm_season_conflict
+#: model:ir.ui.menu,name:eam_pm.menu_eam_pm_season_conflict
+msgid "Việc vướng mùa"
+msgstr "Work clashing with a season"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__season_note
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list_season
+msgid "Vì sao dời"
+msgstr "Why it was shifted"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__kpi_note
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Vì sao để trống"
+msgstr "Why it is empty"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search_season
+msgid "Vướng mùa"
+msgstr "Clashes with a season"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__location_id
@@ -170,14 +1629,127 @@ msgid "Vị trí khai đích danh"
 msgstr "Explicitly named location"
 
 #. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__location_id
+msgid "Vị trí ĐANG lắp. Cấu phần quay vòng có thể đã chuyển máy trong kỳ — khi đó giờ máy chạy lấy theo vị trí hiện tại là xấp xỉ, không phải chính xác."
+msgstr "The location CURRENTLY holding it. A rotable component may have moved machines during the period — running hours taken from the current location are then an approximation, not an exact figure."
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__season_conflict
+msgid "Xung đột mùa"
+msgstr "Season clash"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_reliability.py:0
+msgid "chưa ghi giờ sửa nên chưa có MTTR"
+msgstr "no repair hours recorded, so there is no MTTR"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_reliability.py:0
+msgid "chưa hỏng lần nào nên chưa có MTBF"
+msgstr "no failure yet, so there is no MTBF"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_reliability.py:0
+msgid "không có đồng hồ giờ máy chạy"
+msgstr "no running-hour meter"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "kéo lên sớm"
+msgstr "brought forward"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form_season
+msgid ""
+"việc của nhà máy này\n"
+"                        cùng rơi vào ngày đề xuất. Luật mùa tối ưu\n"
+"                        <b>từng lịch riêng lẻ</b> và không biết tổ có bao\n"
+"                        nhiêu người — chỗ dồn này phải người xếp lịch giãn\n"
+"                        ra, hệ thống không tự giãn."
+msgstr ""
+"pieces of work at this plant\n"
+"                        fall on the same suggested date. The seasonal rules\n"
+"                        optimise <b>each schedule on its own</b> and know nothing\n"
+"                        about how many people the crew has — a pile-up like this\n"
+"                        has to be spread out by the planner; the system does not\n"
+"                        spread it."
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__category_id
 msgid "Áp cho loại cấu phần"
 msgstr "Applies to component category"
 
 #. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__category_id
+msgid "Áp cho mọi vị trí đang lắp tài sản thuộc loại này (và loại con của nó). Để trống thì chỉ áp cho các vị trí khai đích danh bên dưới."
+msgstr "Applies to every location holding an asset of this category (and of its child categories). Leave it empty and it applies only to the locations named explicitly below."
+
+#. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
 msgid "Áp cho đâu"
 msgstr "Where it applies"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_form
+msgid "Áp dụng"
+msgstr "Applies"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_plan_form
+msgid "Áp dụng cho các vị trí"
+msgstr "Applies to the locations"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_list
+msgid "ĐV"
+msgstr "Unit"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Đang chạy theo sự cố"
+msgstr "Running reactively"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__control
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__control
+msgid "Điều khiển, tự động"
+msgstr "Control, automation"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Điều kiện thật"
+msgstr "Actual conditions"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__electrical
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__electrical
+msgid "Điện"
+msgstr "Electrical"
+
+#. module: eam_pm
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_plan__trade__hv
+#: model:ir.model.fields.selection,name:eam_pm.selection__eam_season_rule__trade__hv
+msgid "Điện cao áp"
+msgstr "High voltage"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_reliability__meter_gap_count
+msgid "Đoạn đồng hồ bỏ qua"
+msgstr "Meter stretch skipped"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_meter_reading__is_reset
+msgid "Đánh dấu khi bộ đếm về 0 vì thay bộ điều khiển. Chỉ khi có dấu này hệ thống mới cộng bù — không thì một lần gõ nhầm sẽ làm mọi kế hoạch theo giờ tự lùi hạn."
+msgstr "Tick it when the counter went back to 0 because the controller was replaced. Only then does the system compensate — otherwise a single typing error pushes back the due date of every hour-based plan."
+
+#. module: eam_pm
+#: model_terms:ir.actions.act_window,help:eam_pm.action_eam_pm_due
+msgid ""
+"Đây là màn hình đội vận hành mở <b>mỗi sáng</b>: hôm nay\n"
+"            phải bảo trì máy nào."
+msgstr ""
+"This is the screen the operations crew opens <b>every morning</b>: which\n"
+"            machine has to be serviced today."
 
 #. module: eam_pm
 #: model:ir.model.fields.selection,name:eam_pm.selection__eam_pm_schedule__state__wo_open
@@ -186,9 +1758,25 @@ msgid "Đã có lệnh"
 msgstr "Order exists"
 
 #. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_meter__current_value
+msgid "Đã cộng bù các lần thay đồng hồ. Đây là con số dùng để tính hạn bảo trì — KHÁC số đọc thô trên máy."
+msgstr "Already compensated for meter replacements. This is the figure used for maintenance due dates — DIFFERENT from the raw reading on the machine."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
+msgid "Đã làm"
+msgstr "Done"
+
+#. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
 msgid "Đã nghỉ"
 msgstr "Retired"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__is_reset
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
+msgid "Đã thay đồng hồ"
+msgstr "The meter was replaced"
 
 #. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter__uom_label
@@ -198,6 +1786,47 @@ msgid "Đơn vị"
 msgstr "Unit"
 
 #. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_reliability__failure_count
+msgid "Đếm lệnh khai is_failure. MẪU SỐ của MTBF và MTTR."
+msgstr "Counts the orders flagged is_failure. The DENOMINATOR of both MTBF and MTTR."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search_season
+msgid "Đến hạn lần tới"
+msgstr "Next due"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_season__month_to
+msgid "Đến tháng"
+msgstr "To month"
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_pm_plan__plant_id
+msgid "Để trống thì áp cho MỌI nhà máy. Khoanh lại vì mỗi nhà máy một chế độ dịch vụ của hãng, một tuổi máy, một hợp đồng O&M — dùng chung một kế hoạch là vơ cả nhà máy đang xây vào lịch bảo trì của nhà máy đang chạy."
+msgstr "Empty means it applies to EVERY plant. Narrow it down, because each plant has its own vendor service regime, its own machine age, its own O&M contract — one shared plan sweeps a plant still under construction into the maintenance schedule of one already running."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season_rule__work_type
+msgid "Để trống thì áp cho mọi loại. Lưu ý KIỂM ĐỊNH BẮT BUỘC luôn được báo xung đột nhưng KHÔNG bao giờ bị dời — hạn do pháp luật đặt."
+msgstr "Empty means it applies to every type. Note that a MANDATORY STATUTORY INSPECTION is always reported as a clash but is NEVER shifted — its deadline is set by law."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season_rule__trade
+msgid "Để trống thì áp cho mọi nghề. Đây là chỗ luật mùa đáng tiền nhất: mùa mưa thì \"tiếp cận bằng dây\" không làm được, nhưng việc trong tháp vẫn làm bình thường."
+msgstr "Empty means it applies to every trade. This is where seasonal rules earn their keep: in the wet season \"rope access\" cannot be done, while work inside the tower carries on as usual."
+
+#. module: eam_pm
+#: model:ir.model.fields,help:eam_pm.field_eam_season__plant_id
+msgid "Để trống thì áp cho mọi nhà máy. Mùa là chuyện địa phương — mùa mưa Savannakhet không trùng mùa mưa Đắk Lắk, nên gần như luôn phải khai theo nhà máy."
+msgstr "Empty means it applies to every plant. Seasons are local — the Savannakhet wet season is not the Đắk Lắk wet season, so a plant almost always has to be named."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_list
+msgid "Đọc ngày"
+msgstr "Read on"
+
+#. module: eam_pm
 #: model:ir.model.fields,field_description:eam_pm.field_eam_location__meter_ids
 #: model:ir.model.fields,field_description:eam_pm.field_eam_meter_reading__meter_id
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_form
@@ -205,4 +1834,45 @@ msgstr "Unit"
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_list
 msgid "Đồng hồ"
 msgstr "Meter"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_schedule__meter_now
+msgid "Đồng hồ hiện tại"
+msgstr "Current meter"
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_meter
+#: model:ir.model,name:eam_pm.model_eam_meter
+#: model:ir.ui.menu,name:eam_pm.menu_eam_meter
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_meter_list
+msgid "Đồng hồ thiết bị"
+msgstr "Equipment meter"
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_form
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_search
+msgid "Độ tin cậy"
+msgstr "Reliability"
+
+#. module: eam_pm
+#: model:ir.model,name:eam_pm.model_eam_reliability
+msgid "Độ tin cậy & KPI bảo trì theo kỳ"
+msgstr "Reliability & maintenance KPIs by period"
+
+#. module: eam_pm
+#: model:ir.actions.act_window,name:eam_pm.action_eam_reliability
+#: model:ir.ui.menu,name:eam_pm.menu_eam_reliability
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+msgid "Độ tin cậy thiết bị"
+msgstr "Equipment reliability"
+
+#. module: eam_pm
+#: code:addons/eam_pm/models/eam_season.py:0
+msgid "đẩy lùi"
+msgstr "pushed back"
+
+#. module: eam_pm
+#: model:ir.model.fields,field_description:eam_pm.field_eam_pm_plan__calendar_days
+msgid "… cộng thêm … ngày"
+msgstr "… plus … days"
 

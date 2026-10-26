@@ -70,6 +70,11 @@ msgid "Giá trị"
 msgstr "Value"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
+msgid "Hạn"
+msgstr "Due"
+
+#. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_disposal__reason__other
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_inbound_check_line__ly_do_sai_lech__khac
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_part_doc__doc_type__other
@@ -90,6 +95,12 @@ msgid "Khả dụng"
 msgstr "Availability"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_pm_plan_material__plan_id
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_material_request__source__pm
+msgid "Kế hoạch bảo trì"
+msgstr "Maintenance plan"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__doc_type
 #: model:ir.model.fields,field_description:eam_stock.field_eam_rma__rma_type
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_list
@@ -99,6 +110,11 @@ msgid "Loại"
 msgstr "Category"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__work_type
+msgid "Loại công việc"
+msgstr "Type of work"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__category_id
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_cost_report__category_id
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
@@ -106,6 +122,13 @@ msgstr "Category"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
 msgid "Loại cấu phần"
 msgstr "Component category"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care_plan__care_type
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_list
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_plan_list
+msgid "Loại việc"
+msgstr "Work type"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_disposal__reason
@@ -128,6 +151,11 @@ msgstr "Reason"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_cost_search
 msgid "Lệnh công việc"
 msgstr "Work order"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__pm_schedule_id
+msgid "Lịch bảo trì"
+msgstr "Maintenance schedule"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__code
@@ -191,6 +219,11 @@ msgid "Nháp"
 msgstr "Draft"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Phân loại"
+msgstr "Classification"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_approval_rule_list
 msgid "Quay vòng"
 msgstr "Rotable"
@@ -202,6 +235,11 @@ msgstr "Rotable"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_work_order_form_stock
 msgid "Sê-ri"
 msgstr "Serial"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_storage_care__plan_id
+msgid "Theo lịch"
+msgstr "On schedule"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__low
@@ -280,6 +318,12 @@ msgstr "Equipment location"
 #: model:ir.model.fields,field_description:eam_stock.field_stock_lot__eam_warranty_note
 msgid "Điều kiện bảo hành"
 msgstr "Warranty terms"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_storage_care__state__done
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_storage_care_list
+msgid "Đã làm"
+msgstr "Done"
 
 #. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_form

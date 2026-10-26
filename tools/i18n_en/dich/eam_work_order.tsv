@@ -1,0 +1,323 @@
+3597	Attach
+3598	Merge
+3599	Fatigue
+3600	Photo
+3601	Step
+3602	Choice
+3603	Reading
+3604	Σ hours
+3605	Waiting since
+3606	Waiting for
+3607	Corrosion
+3608	Carried out by
+3609	Paid by
+3610	A failure occurred
+3611	Needed soon
+3612	Done at
+3613	Wear
+3614	System verdict
+3615	Newly raised
+3616	Raised at
+3617	Overload
+3618	Steps
+3619	Orders
+3620	Raised by me
+3621	Done
+3622	Insurance
+3623	Not done
+3624	Hold point
+3625	Single choice
+3626	Steps
+3627	Yes/No
+3628	Labour hours
+3629	Failure
+3630	Resume
+3631	Schedule
+3632	Choices
+3633	Form template
+3634	Issued on
+3635	Done on
+3636	Template group
+3637	Waiting
+3638	Servicing
+3639	Failure mode
+3640	Raised by
+3641	Reading PASSES
+3642	Month raised
+3643	Take on
+3644	Real cost
+3645	Campaign
+3646	Yes / No
+3647	Can wait
+3648	Other reason
+3649	Measured value
+3650	Acceptance criteria
+3651	Late (days)
+3652	Material name
+3653	Order opened
+3654	Rejected
+3655	Close the file
+3656	Steps done
+3657	Start work
+3658	A failure occurred
+3659	Same location
+3660	Failure mechanism
+3661	Child orders
+3662	Search requests
+3663	Work done
+3664	Scheduled
+3665	Hourly rate
+3666	Waiting for the contractor
+3667	When to use it
+3668	Attach a form template
+3669	Merge into an order
+3670	Reported by the contractor
+3671	Reported by operations
+3672	Request — %s
+3673	Recoverable
+3674	% of steps done
+3675	Performed by
+3676	Not determined
+3677	Not yet judged
+3678	Not applicable
+3679	Outcome
+3680	Reason for rejection
+3681	Work instruction
+3682	Loose connection
+3683	Triaged at
+3684	I am responsible
+3685	Readings entered
+3686	Other measure
+3687	Material cost
+3688	Work permit
+3689	Detected by
+3690	Actual hours
+3691	What was seen, and where
+3692	More than 7 days late
+3693	Measured value
+3694	Requests merged
+3695	Being triaged
+3696	Photo / evidence
+3697	Who raised it, and when
+3698	Put on hold
+3699	Safety note
+3700	Record an outage
+3701	Root cause
+3702	Permit issued by
+3703	Triaged by
+3704	Responsible person
+3705	Carried out by
+3706	Must be handled at once
+3707	Hours waiting
+3708	Reading FAILS
+3709	Reject the request
+3710	Cost borne by
+3711	Labour cost
+3712	Idempotency key
+3713	Periodic inspection
+3714	What is being requested
+3715	RESPONSE OVERDUE
+3716	Response overdue
+3717	Equipment fitted
+3718	Equipment removed
+3719	Part of campaign
+3720	Materials and spares
+3721	Performing organisation
+3722	Insufficient lubrication
+3723	Intervention cost
+3724	Nobody has taken it on
+3725	Has a work order
+3726	Refurbishment, upgrade
+3727	Hours to triage
+3728	Merge into another order
+3729	Insulation ageing
+3730	Spare under warranty
+3731	Work orders
+3732	Found by chance
+3733	Owner's own crew
+3734	Total real cost
+3735	Subcontracting cost
+3736	A work permit is required
+3737	New work order
+3738	Work form template
+3739	Contamination
+3740	What the work is
+3741	External impact
+3742	Create a work order
+3743	Rejected. Reason: %s
+3744	Civil works, foundation
+3745	Requests rejected
+3746	Waiting to be triaged
+3747	Who does it, who pays for it
+3748	Step in the form template
+3749	Attach form template to %s
+3750	Name of the person doing it
+3751	A hold point is still open
+3752	Recoverable cost
+3753	No form template yet
+3754	Waiting for lifting equipment
+3755	Waiting for materials and spares
+3756	Blade, composite
+3757	Subcontracting description
+3758	Merge into an open order
+3759	Merge the request into an order
+3760	Order "%s" is not finished.
+3761	Urgency (as raised)
+3762	Work request log
+3763	Acceptance criteria / notes
+3764	From an equipment alarm
+3765	Merged into another order
+3766	Recover from the O&M contractor
+3767	Safety, isolation of sources
+3768	Waiting for the grid to allow an outage
+3769	Electrical safety document
+3770	Hours until triage
+3771	Attach a form template to the order
+3772	Type of safety document
+3773	Orders in the campaign
+3774	Through inspection or examination
+3775	Another outside organisation
+3776	System-judged FAIL steps
+3777	There is a safety risk
+3778	Common failure mechanism
+3779	Energy lost, valued
+3780	Within the O&M contract price
+3781	Late against plan (days)
+3782	Waiting for the weather
+3783	Waiting for access or a laydown area
+3784	A permit is required but no number is recorded
+3785	Permit or work instruction number
+3786	 THERE IS A SAFETY RISK.
+3787	Declare a form field
+3788	Control or software fault
+3789	Work steps in the order
+3790	Who bears the cost is not decided
+3791	Waiting for a decision or approval
+3792	Found on site
+3793	No order is waiting
+3794	Materials on the work order
+3795	Create the first work order
+3796	Steps where the person disagrees with the system
+3797	Oil traces at the foot of tower T07
+3798	Labour hours on the work order
+3799	Requests waiting at the same location
+3800	When it is used, and who signs it off.
+3801	The form template code must be unique.
+3802	That idempotency key has already been used.
+3803	The failure mode code must be unique.
+3804	A failure is declared but the failure mode is missing
+3805	Request "%s" has already been handled.
+3806	Attached form template %(t)s (%(n)d steps).
+3807	A <b>hold point</b> has not passed yet:
+3808	Also merged request %(s)s: %(t)s%(n)s
+3809	Order "%s" is closed and cannot be cancelled.
+3810	A long outage with no work order
+3811	Waiting for a work permit or safety clearance
+3812	Inspection after a storm or an unusual event
+3813	Order "%s" is not in progress.
+3814	Order "%s" is no longer a draft.
+3815	No request has been\n               rejected yet
+3816	Order "%s" has no planned start date.
+3817	Source isolation permit before entering the nacelle
+3818	The work order number must be unique.
+3819	Request "%s" is no longer in the new state.
+3820	Request reopened. Earlier rejection reason: %s
+3821	Only an order in progress can be put on hold.
+3822	Order %s is closed. This request has been handled.
+3823	Order "%s" has to be approved before it can start.
+3824	Opened from request %(s)s raised by %(n)s on %(d)s.
+3825	A campaign cannot be nested inside itself.
+3826	Fill it in when the work is not done by your own crew.
+3827	This location has %d other requests still untriaged.
+3828	Only a rejected or merged request can be reopened.
+3829	Step "%s" is a single-choice field but no choice is declared.
+3830	.\n                                The order cannot be closed.
+3831	Labour + materials + subcontracting. Energy lost is NOT included.
+3832	Both the criteria written in words and the machine-readable ones.
+3833	Order "%s": the planned finish is before the planned start.
+3834	The code or clause of the standard this failure mode derives from.
+3835	Isolate, tag, lock and prove dead before entering.
+3836	The new one fitted to the machine. Record it here, then open a new installation period.
+3837	This order was opened from request %(s)s — urgency as raised: %(m)s.%(at)s
+3838	Step "%s": the lower bound is above the upper bound, so no reading can ever pass.
+3839	A hold point not done or not passed — the order cannot be closed while one remains.
+3840	Step "%(ten)s": "%(gt)s" is not among the declared choices (%(ds)s).
+3841	A conclusion drawn from the reading and the criteria, not from the person marking their own work.
+3842	Work happens at a PLACE. Which equipment was there is derived from the installation history.
+3843	Dealt with during last week's service; the oil trace is preservative oil not yet wiped off.
+3844	Used when the material is not in the catalogue. A one-off urgent purchase usually is.
+3845	The person ticked PASS (or not done) while the reading says FAIL, or the other way round.
+3846	What was seen, where, and when. The more specific it is, the less the triager has to go back and ask.
+3847	Derived from the location and the planned date. Editable when a different component has to be named.
+3848	Copied from the plan. The person doing the work need not look it up, and the checker knows what to compare against.
+3849	Inside the nacelle and up the tower. It has its own file on training, harnesses and rescue at height.
+3850	Why that mechanism occurred: wrong tightening torque, too little lubrication, a design fault, a batch fault…
+3851	Order "%s" is already closed — attaching a step now means a step nobody will ever carry out.
+3852	A SUGGESTION, not a conclusion. The real mechanism of each failure is declared on the work order itself.
+3853	Skipping or botching this step ruins the whole job. The order CANNOT be closed while a hold point is open.
+3854	Used when the person doing the work has no account in the system — most contractor staff do not.
+3855	Crane hire, specialists, transport. Grouped together because these usually arrive on a single invoice.
+3856	Counts only the hold that is OPEN. Total waiting time across several holds needs a per-hold log — not built yet.
+3857	Record the MEASURED value beside the criteria. Without it, "pass" is only a word and cannot be checked afterwards.
+3858	Skipping or botching this step ruins the whole service. The order CANNOT be closed while a hold point is open.
+3859	The regulation requires the issuer to know the work in detail and the conditions for electrical safety.
+3860	Derived from the location: the equipment installed there. Editable when the request names a component inside.
+3861	Taken from the outage attached to this order. At a power plant this is usually far larger than the intervention cost.
+3862	Step "%s" requires a photo. It is declared as one where words are not enough — attach the photo, then record the result.
+3863	The vendor supplies it free of charge. The quantity and serial number still have to be recorded, because they are the evidence for the next warranty claim.
+3864	Counted from the planned finish date. While the order is unfinished it counts up to today — so it does not stand still and look as if it were still in time.
+3865	The old one removed from the machine. Record it here, then close its installation period — without that, a serialised asset is lost track of.
+3866	The REAL mechanism this time. A failure mode suggests a common mechanism, but the same mode can come from several.
+3867	The outage this work deals with. Leave it empty when the job can be done without stopping the machine — and many jobs can.
+3868	Labour, materials and subcontracting on the orders attached to this outage. Add the lost revenue to get the real cost.
+3869	Removed for overhaul and refitted, keeping its serial-number history. Gearbox, generator, blades and converter are of this kind.
+3870	For "Reading" fields. Give a lower and upper bound and the system concludes pass or fail ITSELF — nobody has to mark their own work.
+3871	Why that mechanism occurred: wrong tightening torque, too little lubrication, a design fault, a batch fault. Different from the failure mode and the mechanism.
+3872	A rejected request stays in the log. Say plainly why,\n                   so that the person who raised it can still be answered later.
+3873	Generated by the field app, unique to each submission. Send the same key again and the server returns the existing record instead of creating another.
+3874	Order "%s" does not say who bears the cost. Close it empty and the amount cannot enter a warranty claim or a claim against the contractor.
+3875	The number of steps whose READING falls outside the criteria. Different from the steps a person ticked as failed — the gap between the two numbers is what is worth looking at.
+3876	What was seen, where, and when. The more specific it is, the less the triager has to go back and ask — and going back to ask is where the request log jams most often.
+3877	From being raised until someone triages it. While untriaged it counts UP TO TODAY — so it does not stand still and look as if it were still in time.
+3878	This location has %d other untriaged requests. Several people reporting the same thing usually means it is real — consider merging them while triaging.
+3879	The person raising it marked this a <b>safety risk</b>.\n                        It has to surface whatever the queue looks like.
+3880	Still "in progress" while in fact nobody is working on it. Only by separating the two can it be measured: an order open 14 days rarely has someone working all 14.
+3881	Kept apart from urgency: a job may not be urgent in energy terms and still be a safety risk, and it has to surface whatever the queue looks like.
+3882	It has to be one of the declared choices. On the web this is a checked text field; the drop-down lives in the field app, where the work is actually entered.
+3883	Order "%(ten)s" still has a HOLD POINT that has not passed: %(buoc)s.\n\nFinish it and tick it, or record FAIL with a reason and open a corrective order — do not simply close the order and leave it.
+3884	"Mandatory inspection" is kept apart because its deadline is set by law rather than chosen: overrun it and the equipment has to be stopped, not merely a worse indicator.
+3885	Waiting for a crane and waiting for weather are REAL reasons in wind, not excuses: a blade change needs a crawler crane mobilised for a week, and the wind has to be below the permitted limit.
+3886	This column answers the most expensive question of all: what share of failures is caught BEFORE energy is lost. Condition monitoring only pays for itself when that share is clearly higher.
+3887	Step "%s" recorded as FAIL has to say what was wrong — enter the measured value or a note. A bare "fail" leaves whoever repairs it later with no idea where to start.
+3888	Urgency here is the urgency <b>the person raising it feels</b> —\n               the priority on the order is set by the dispatcher afterwards,\n               weighed against the rest of the work.
+3889	Group by <b>location</b> here to see where the field reports\n               the same thing over and over and is brushed off every time.\n               That is usually where something really is about to fail.
+3890	Intervention + energy lost. This is the figure used to justify investing in preventive maintenance — look at intervention cost alone and prevention always looks like money wasted.
+3891	A template can be attached to <b>any order</b>, including an\n               unplanned repair — unlike the steps of a maintenance plan, which\n               are tied to a cycle.
+3892	The share of intervention cost attributed to warranty or recoverable from the O&M contractor. It does NOT include energy lost — that follows the contract's availability regime, with its own formula and cap.
+3893	Empty means it is used for every category. Fill it in and it only appears on work orders of that component category — a blade's failure-mode list is of no use for a converter.
+3894	An outage with no order is NOT an error — a remote restart is a real stoppage with no maintenance action. But a LONG outage with no order is worth asking about.
+3895	Order "%s" is on hold with no reason recorded. This field is the only thing that tells a slow repair from waiting on an outside resource — leave it empty and every overdue order looks alike.
+3896	Closing the order <b>reports back</b> to each person who\n                        raised it. Without that, they stop raising things —\n                        and a whole detection channel is lost.
+3897	Work on electrical equipment requires a work permit or a work instruction under the electrical safety regulation. That is a DIFFERENT document from this work order; the field below records only its number, for cross-reference.
+3898	steps where the\n                    <b>person disagrees with the reading</b>: the number says\n                    one thing and the result field another. This is worth\n                    looking at before closing the order.
+3899	A request is the <b>front door</b>, unlike a work order: what to do\n               is not yet known, nor who does it, nor whether it is worth doing.\n               The dispatcher triages it, and only then does it become an order.
+3900	DIFFERENT from who carries it out. The manufacturer may send its own people while the owner still pays, once the warranty has run out; your own crew may do the work while the cost is recoverable from the contractor. Pre-filled from the outage if there is one, and editable.
+3901	Repeated work across many machines (changing a whole fleet of gearboxes, re-pitching every blade on a site): one order per machine, gathered under a parent order. Each machine has its own schedule, cost and failure history, so they must not be merged.
+3902	A work order is the document that <b>authorises spending</b> labour,\n            materials and time. It does not replace a work permit — the electrical\n            safety document is still issued separately by an authorised person.
+3903	<b>Response overdue.</b> The clock here measures the time\n                        to <b>triage</b>, not the time to finish — so that\n                        the request log does not rot in silence.
+3904	This screen answers the question <b>where the money and the time\n            are stuck</b>. An order open 14 days rarely has someone working all 14\n            — most of it is waiting for materials, for a crane, or for weather.
+3905	Step "%(ten)s": measured %(do)s%(dv)s against criteria %(tc)s — it cannot be recorded as PASS.\n\nIf the reading is right, record FAIL and open a corrective order. If the criteria are wrong, fix them on the plan or the form template, not here.
+3906	Order "%(ten)s" says a failure occurred but no failure mode is chosen.\n\nClose the order with this empty and that failure never enters the reliability statistics — and there is no recovering it, because whoever knew has moved on to other work.
+3907	ENTERED BY HAND, not inferred from whether a work order exists. Many stoppages need only a remote restart: a stoppage, no failure. Planned maintenance is the other way round. Infer this field wrongly and MTBF is wholly wrong — wrong in the flattering direction.
+3908	Rejecting request "%s" requires a reason. A rejected request stays in the log precisely so that the question "how many times has the field reported this, and why was it brushed off every time" can be answered later — without a reason that question is meaningless.
+3909	Waiting for a crane and waiting for weather are REAL\n                                reasons in wind: a blade change needs a crawler\n                                crane mobilised for a week, and the wind has to\n                                be below the permitted limit.
+3910	A rejected request <b>stays in the log</b>. That is the\n                        only way to answer later the question "how many times\n                        has the field reported this, and why was it brushed\n                        off every time".
+3911	<b>Whoever does the work is not whoever pays.</b>\n                                The manufacturer may send its own people while\n                                the owner still pays, once the warranty has run\n                                out; your own crew may do the work while the\n                                cost is recoverable from the contractor.
+3912	An outage with no work order is <b>not an\n                        error</b> — a remote restart is a real stoppage with no\n                        maintenance action at all. But a LONG outage with no\n                        order is worth asking about.
+3913	A <b>failure mode</b> is what can be observed (oil leak,\n                        overheating, vibration above threshold). A <b>failure\n                        mechanism</b> is the physical process behind it (fatigue,\n                        wear, corrosion). The <b>root cause</b> is why that\n                        mechanism occurred — declared on each work order, not here.
+3914	Order "%(ten)s" says a permit or work instruction is required but no number is recorded.\n\nUnder the electrical safety regulation, work on electrical equipment requires a work permit or a work instruction issued by an authorised person. This work order does NOT replace that document — enter the permit number, or untick "a permit or work instruction is required" if the work does not touch electrical equipment.
+3915	Replacing a rotable component means <b>taking the\n                                old one out and fitting a new one</b>, both\n                                carrying their own serial numbers. Record only\n                                a quantity and in a few years nobody knows which\n                                one is in the machine — which is exactly the\n                                question a warranty claim turns on.
+3916	Declare a <b>lower and upper bound</b> for a reading\n                                field and the system <b>concludes itself</b>\n                                whether it passes, and <b>will not allow a Pass\n                                tick</b> when the reading is outside the\n                                criteria. Without them the checklist is just a\n                                signed sheet of paper moved onto a screen.
+3917	This order currently says <b>no failure\n                                occurred</b>. Most stoppages need only a remote\n                                restart, and there really was no failure. But\n                                this field has to be entered by hand — inferring\n                                it from whether a work order exists makes the\n                                reliability statistics wrong in the flattering\n                                direction.
+3918	<b>This work order is NOT a work permit.</b>\n                                A work permit and a work instruction are two\n                                electrical safety documents defined by\n                                regulation (clause 3.8, QCVN 25:2025/BCT) and\n                                issued by an authorised person. The field below\n                                records only the number, to cross-reference the\n                                two files.
+3919	<b>Total real cost = intervention + energy\n                                lost.</b> Materials and labour are the visible\n                                part; at a power plant most of the money sits in\n                                the energy that could not be generated while the\n                                machine was down. Look at intervention cost alone\n                                and preventive maintenance always looks like money\n                                wasted.<br/>\n                                <b>Recoverable cost does not include energy\n                                lost</b> — that follows the contract's\n                                availability regime, with its own formula and cap.

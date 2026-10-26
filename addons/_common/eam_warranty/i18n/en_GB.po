@@ -69,6 +69,11 @@ msgstr "Expiring soon"
 
 #. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "Tên"
+msgstr "Name"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Đang lắp tại"
 msgstr "Installed at"
 

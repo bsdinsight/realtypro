@@ -17,14 +17,288 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_historian
+#: code:addons/eam_historian/models/eam_historian.py:0
+msgid "\"%s\" là tag tính toán, không nhận số đo trực tiếp"
+msgstr "\"%s\" is a computed tag and takes no readings directly"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/tom_tat_ngay.py:0
+msgid "%(n)d điểm đo cùng khớp nhưng chưa khai cách gộp. Cộng công suất các tua-bin ra công suất nhà máy thì đúng, cộng nhiệt độ thì vô nghĩa — hệ không đoán hộ."
+msgstr "%(n)d tags match but no aggregation is declared. Summing turbine power into plant power is right, summing temperature is meaningless — the system does not guess for you."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__3600
+msgid "1 giờ"
+msgstr "1 hour"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__86400
+msgid "1 ngày"
+msgstr "1 day"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__60
+msgid "1 phút"
+msgstr "1 minute"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__900
+msgid "15 phút"
+msgstr "15 minutes"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__300
+msgid "5 phút"
+msgstr "5 minutes"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid ""
+"<b>Cách gộp có thể đang sai.</b> Điện năng luỹ kế\n"
+"                        gộp bằng trung bình ra một con số vô nghĩa; hướng\n"
+"                        gió gộp bằng trung bình số học ra NGƯỢC hướng thật\n"
+"                        (trung bình của 350° và 10° là 180°); trạng thái\n"
+"                        0/1 lấy trung bình thì không có nghĩa gì. Đây là\n"
+"                        chỗ sai <b>im lặng</b> nhất — biểu đồ vẫn mượt."
+msgstr ""
+"<b>The aggregation may be wrong.</b> Averaging a\n"
+"                        cumulative energy counter gives a meaningless number;\n"
+"                        averaging wind direction arithmetically points the\n"
+"                        OPPOSITE way (the mean of 350° and 10° is 180°); averaging\n"
+"                        a 0/1 state means nothing at all. This is the\n"
+"                        <b>quietest</b> mistake of all — the chart still looks\n"
+"                        smooth."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid ""
+"<b>Kiểu điều khiển quyết định hiệu chỉnh CÁI GÌ.</b>\n"
+"                        Tua-bin <i>pitch</i> thì chuẩn hoá <b>tốc độ gió</b>\n"
+"                        theo căn bậc ba của tỷ số mật độ; tua-bin\n"
+"                        <i>stall</i> thì chuẩn hoá <b>công suất</b>. Làm\n"
+"                        ngược chiều là sai cả đường cong."
+msgstr ""
+"<b>The control type decides WHAT is corrected.</b>\n"
+"                        A <i>pitch</i> turbine normalises <b>wind speed</b> by the\n"
+"                        cube root of the density ratio; a <i>stall</i> turbine\n"
+"                        normalises <b>power</b>. Do it the other way round and the\n"
+"                        whole curve is wrong."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__max_rate
+msgid "Biến thiên tối đa (đơn vị/giây)"
+msgstr "Maximum rate of change (units/second)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__bieu_do
+msgid "Biểu đồ"
+msgstr "Chart"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Bảo dưỡng định kỳ T07"
+msgstr "Scheduled servicing of T07"
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__force_majeure
 msgid "Bất khả kháng"
 msgstr "Force majeure"
 
 #. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Bất thường khác"
+msgstr "Another anomaly"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__bin_width
+msgid "Bề rộng khoảng (m/s)"
+msgstr "Bin width (m/s)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Bị đánh dấu"
+msgstr "Flagged"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__bo_loai_tru
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__bo_loai_tru
+msgid "Bỏ khoảng không tính KPI"
+msgstr "Drop periods excluded from KPIs"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__bo_nghi
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__bo_nghi
+msgid "Bỏ số đo bị đánh dấu"
+msgstr "Drop flagged readings"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__exclude_kpi
+msgid "Bỏ tích thì khoảng này chỉ được GHI NHẬN để tra cứu, không ảnh hưởng số liệu. Dùng khi còn đang tranh luận trách nhiệm — ghi lại trước, quyết sau."
+msgstr "Untick it and the period is merely RECORDED for reference without affecting the figures. Use it while responsibility is still being argued — record first, decide later."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__counter
+msgid "Bộ đếm"
+msgstr "Counter"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__irradiance
+msgid "Bức xạ (W/m²)"
+msgstr "Irradiance (W/m²)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Cam kết hợp đồng — tua-bin 4,0 MW"
+msgstr "Contract commitment — 4.0 MW turbine"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve__curve_type
+msgid "Cam kết hợp đồng, thiết kế, hay đo khi nghiệm thu — ba thứ khác nhau về giá trị pháp lý. Trộn lẫn thì lúc đòi bảo hành không ai biết đang so với cái gì."
+msgstr "Contract commitment, design, or measured at acceptance — three different things in law. Mix them up and, when a warranty claim comes, nobody knows what is being compared with what."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_power_curve__curve_type__warranted
+msgid "Cam kết trong hợp đồng"
+msgstr "Committed in the contract"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__stuck_run
+msgid "Chuỗi lặp hiện tại"
+msgstr "Current repeat run"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+msgid ""
+"Chưa chọn điểm đo <b>nhiệt độ môi trường</b> — sẽ\n"
+"                    KHÔNG hiệu chỉnh được mật độ không khí. Nhà máy không\n"
+"                    ở mực nước biển thì kết quả thiên lệch có hệ thống, và\n"
+"                    thiên theo hướng đổ lỗi cho tua-bin."
+msgstr ""
+"No <b>ambient temperature</b> tag has been chosen — air density\n"
+"                    CANNOT be corrected for. If the plant is not at sea level the\n"
+"                    result is systematically biased, and biased in the direction\n"
+"                    of blaming the turbine."
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_data_exclusion
+msgid ""
+"Chưa có khoảng loại\n"
+"               trừ nào"
+msgstr ""
+"No exclusion period\n"
+"               yet"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Chưa có số đo nào"
+msgstr "No reading yet"
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_tag
+msgid "Chưa khai điểm đo nào"
+msgstr "No tag declared yet"
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_power_curve
+msgid ""
+"Chưa khai đường cong\n"
+"               nào"
+msgstr ""
+"No curve has been\n"
+"               declared yet"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid ""
+"Chưa khoanh phạm vi nào — khoảng này sẽ áp cho\n"
+"                        <b>MỌI điểm đo của mọi nhà máy</b>. Gần như luôn là\n"
+"                        khai sót."
+msgstr ""
+"No scope has been narrowed — this period will apply to\n"
+"                        <b>EVERY tag at every plant</b>. That is almost always\n"
+"                        an omission."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__commissioning
+msgid "Chạy thử, nghiệm thu"
+msgstr "Commissioning, acceptance"
+
+#. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_quality
+#: model:ir.ui.menu,name:eam_historian.menu_eam_quality
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_quality_wizard_form
+msgid "Chất lượng dữ liệu"
+msgstr "Data quality"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Chỉ ghi nhận, chưa loại"
+msgstr "Recorded only, not yet excluded"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_tag.py:0
+msgid "Chỉ lọc được \"chưa có số đo nào\" (so sánh với 0)."
+msgstr "Only \"no reading at all\" can be filtered (a comparison with 0)."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__tag_ids
+#: model:ir.model.fields,field_description:eam_historian.field_eam_quality_wizard__tag_ids
+msgid "Chỉ riêng điểm đo"
+msgstr "This tag only"
+
+#. module: eam_historian
+#: model:ir.model,name:eam_historian.model_eam_quality_wizard
+msgid "Chỉ số chất lượng dữ liệu"
+msgstr "Data quality indicators"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__stuck_count
+msgid "Coi là KẸT sau … lần lặp y hệt"
+msgstr "Treat as STUCK after … identical repeats"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__point_ids
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Các điểm"
+msgstr "Points"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__aggregation
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Cách gộp"
+msgstr "Aggregation"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_point__power_kw
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__power
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Công suất (kW)"
+msgstr "Power (kW)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__dc_power
+msgid "Công suất một chiều (kW)"
+msgstr "DC power (kW)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Công suất tác dụng tua-bin T01"
+msgstr "Active power of turbine T01"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__rated_kw
+msgid "Công suất định mức (kW)"
+msgstr "Rated power (kW)"
+
+#. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_tag__formula
 msgid "Công thức"
 msgstr "Formula"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_tag.py:0
+msgid "Công thức của \"%(t)s\" trỏ tới mã tag không tồn tại: %(m)s."
+msgstr "The formula of \"%(t)s\" refers to a tag code that does not exist: %(m)s."
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__company_id
@@ -35,6 +309,21 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__meter
+msgid "Công-tơ, đồng hồ"
+msgstr "Meters and counters"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "Cường độ nhiễu động trung bình %(ti).1f%% — cao. Phương pháp chia khoảng THIÊN CAO một cách có hệ thống khi gió động, vì đường cong công suất là hàm lồi nên trung bình công suất lớn hơn công suất tại tốc độ gió trung bình. Con số \"vượt cam kết\" dưới đây có thể là hiệu ứng toán học chứ không phải tua-bin tốt. Muốn kết luận chắc thì cần chuẩn hoá nhiễu động theo IEC 61400-12-1 bản 2, hoặc so với một tua-bin khác cùng nhà máy trong cùng kỳ."
+msgstr "Mean turbulence intensity %(ti).1f%% — high. The binning method is SYSTEMATICALLY biased upwards in gusty wind, because the power curve is convex and so the mean power exceeds the power at the mean wind speed. The \"exceeds the commitment\" figure below may be a mathematical artefact rather than a good turbine. For a firm conclusion, normalise for turbulence per IEC 61400-12-1 edition 2, or compare against another turbine at the same plant over the same period."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__sum
+msgid "Cộng dồn"
+msgstr "Cumulative sum"
+
+#. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__name
 #: model:ir.model.fields,field_description:eam_historian.field_eam_tag__note
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
@@ -43,14 +332,159 @@ msgid "Diễn giải"
 msgstr "Explanation"
 
 #. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_run__elevation_m
+msgid "Dùng khi không có điểm đo áp suất."
+msgstr "Used when there is no pressure tag."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Dải hợp lý"
+msgstr "Plausible range"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_data_exclusion.py:0
+msgid "Dừng máy %s"
+msgstr "Outage %s"
+
+#. module: eam_historian
+#: model:ir.actions.server,name:eam_historian.cron_eam_historian_phan_manh_ir_actions_server
+msgid "EAMOne: tạo trước phân mảnh kho chuỗi thời gian"
+msgstr "EAMOne: pre-create time-series store partitions"
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_data_exclusion
+msgid ""
+"Ghi lại những kỳ mà số đo <b>đúng</b> nhưng <b>không tính\n"
+"               vào KPI</b>: bảo trì theo kế hoạch, tiết giảm theo lệnh điều\n"
+"               độ, mất kết nối thu thập."
+msgstr ""
+"Records the periods where the readings are <b>correct</b> but <b>do not\n"
+"               count towards KPIs</b>: planned maintenance, curtailment by dispatch\n"
+"               order, loss of the acquisition link."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid ""
+"Ghi sổ dừng máy mà không loại khỏi KPI thì hai\n"
+"                            sổ sống tách nhau: người ghi tưởng đã xong, còn\n"
+"                            chỉ số vẫn tính cả khoảng đó — và vì chỉ số vẫn\n"
+"                            ra số nên không ai phát hiện là đã thiếu bước."
+msgstr ""
+"Record the outage without excluding it from KPIs and the\n"
+"                            two registers drift apart: whoever recorded it\n"
+"                            thinks the job is done while the indicator still\n"
+"                            counts that period — and because the indicator still\n"
+"                            produces a number, nobody notices the missing step."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__last_value
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__last
+msgid "Giá trị cuối"
+msgstr "Last value"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__retention_years
+msgid "Giữ dữ liệu (năm)"
+msgstr "Data retention (years)"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve__air_density_ref
+msgid "Gần như luôn là 1,225 — khí quyển chuẩn ở mực nước biển, 15 °C. Đường cong không ghi mật độ quy chiếu là đường cong không dùng để so được."
+msgstr "Almost always 1.225 — the standard atmosphere at sea level, 15 °C. A curve with no reference density is a curve that cannot be compared against anything."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__buoc
+msgid "Gộp theo"
+msgstr "Aggregate by"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__counter_delta
+msgid "Hiệu đầu–cuối (đồng hồ luỹ kế)"
+msgstr "End-to-start difference (cumulative counter)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__wind_dir
+msgid "Hướng gió (độ)"
+msgstr "Wind direction (degrees)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__scada
+msgid "Hệ giám sát (SCADA/OPC)"
+msgstr "Monitoring system (SCADA/OPC)"
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__external
 msgid "Hệ ngoài đẩy vào"
 msgstr "Pushed in by an outside system"
 
 #. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_point__ct
+msgid "Hệ số lực đẩy Ct"
+msgstr "Thrust coefficient Ct"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_run__avg_seconds
+msgid "IEC yêu cầu 600 giây (10 phút). Ngắn hơn thì gió giật làm cặp (gió, công suất) lệch pha và đường cong tính được thấp hơn thực tế."
+msgstr "IEC requires 600 seconds (10 minutes). Anything shorter lets gusts put the (wind, power) pair out of phase, and the computed curve comes out lower than reality."
+
+#. module: eam_historian
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
 msgid "Khi nào"
 msgstr "When"
+
+#. module: eam_historian
+#: model:ir.model,name:eam_historian.model_eam_historian
+msgid "Kho chuỗi thời gian (historian)"
+msgstr "Time-series store (historian)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Khoảng loại trừ"
+msgstr "Exclusion period"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_data_exclusion.py:0
+msgid "Khoảng loại trừ \"%s\": \"Đến\" phải sau \"Từ\"."
+msgstr "Exclusion period \"%s\": \"To\" has to be after \"From\"."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid ""
+"Khoảng loại trừ <b>khác hẳn</b> cờ chất lượng. Cờ\n"
+"                        chất lượng nói <i>số đo này có thể SAI</i>. Khoảng\n"
+"                        loại trừ nói <i>số đo hoàn toàn ĐÚNG, nhưng kỳ này\n"
+"                        không tính vào KPI</i> — tua-bin đang bảo trì theo\n"
+"                        kế hoạch thì sản lượng bằng 0 là đúng, tính vào hệ\n"
+"                        số khả dụng là phạt nhà máy vì đã làm đúng việc\n"
+"                        phải làm.<br/>\n"
+"                        Số đo thô <b>không bị đụng tới</b>: việc loại trừ\n"
+"                        chỉ áp lúc đọc, nên sửa lý do sau này là mọi chỉ số\n"
+"                        tính lại đúng ngay."
+msgstr ""
+"An exclusion period is <b>quite different</b> from a quality\n"
+"                        flag. A quality flag says <i>this reading may be WRONG</i>.\n"
+"                        An exclusion period says <i>the reading is entirely RIGHT,\n"
+"                        but this period does not count towards KPIs</i> — a turbine\n"
+"                        under planned maintenance rightly produces zero energy, and\n"
+"                        counting that in the availability factor penalises the\n"
+"                        plant for doing exactly what it should.<br/>\n"
+"                        The raw readings are <b>untouched</b>: the exclusion is\n"
+"                        applied at read time, so correcting the reason later makes\n"
+"                        every indicator recompute correctly at once."
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_data_exclusion.py:0
+#: model:ir.model.fields,field_description:eam_historian.field_eam_outage__exclusion_ids
+#: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
+msgid "Khoảng loại trừ KPI"
+msgstr "KPI exclusion period"
+
+#. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_data_exclusion
+#: model:ir.model,name:eam_historian.model_eam_data_exclusion
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+msgid "Khoảng loại trừ khỏi KPI"
+msgstr "Period excluded from KPIs"
 
 #. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__other
@@ -59,10 +493,90 @@ msgid "Khác"
 msgstr "Other"
 
 #. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_point__ct
+msgid "Không bắt buộc. Dùng cho tính toán hiệu ứng vệt gió giữa các trụ — chưa dùng tới ở bản này."
+msgstr "Optional. Used for wake-effect calculations between towers — not used in this version."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__is_virtual
+msgid "Không có số đo riêng — tính ra từ các tag khác mỗi lần đọc."
+msgstr "It has no readings of its own — it is computed from other tags on every read."
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "Không có điểm đo nhiệt độ môi trường nên KHÔNG hiệu chỉnh mật độ không khí được. Kết quả dưới đây là so sánh THÔ — nếu nhà máy không ở mực nước biển thì nó thiên lệch một cách có hệ thống."
+msgstr "There is no ambient temperature tag, so air density CANNOT be corrected for. The comparison below is RAW — and if the plant is not at sea level it is systematically biased."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__check_range
+msgid "Kiểm dải hợp lý"
+msgstr "Plausible-range check"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__regulation
+msgid "Kiểu điều khiển"
+msgstr "Control type"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__ket_qua
+#: model:ir.model.fields,field_description:eam_historian.field_eam_quality_wizard__bao_cao
+msgid "Kết quả"
+msgstr "Result"
+
+#. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__curve_type
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
 msgid "Loại"
 msgstr "Category"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_run__bo_loai_tru
+msgid "Loại bảo trì, tiết giảm, mất kết nối. BẮT BUỘC về mặt kỹ thuật: tua-bin bị tiết giảm vẫn có gió nhưng công suất bị ghìm, trộn vào thì đường cong tụt xuống một cách giả tạo."
+msgstr "Excludes maintenance, curtailment and connection loss. Technically MANDATORY: a curtailed turbine still has wind while its power is held down, and mixing that in drags the curve artificially low."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_trend_wizard__bo_loai_tru
+msgid "Loại các khoảng bảo trì, tiết giảm, mất kết nối đã ghi ở sổ khoảng loại trừ. KHÁC với bỏ số đo bị đánh dấu: ở đây số đo vẫn ĐÚNG, chỉ là kỳ đó không tính vào chỉ số."
+msgstr "Excludes the maintenance, curtailment and connection-loss periods recorded in the exclusion register. DIFFERENT from dropping flagged readings: here the readings are CORRECT, it is simply that the period does not count towards the indicator."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Loại khoảng này khỏi KPI"
+msgstr "Exclude this period from KPIs"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__exclude_kpi
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Loại khỏi KPI"
+msgstr "Exclude from KPIs"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__tag_type
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Loại đo"
+msgstr "Measurement type"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid ""
+"Luật ở đây chỉ <b>đóng cờ chất lượng</b>,\n"
+"                                KHÔNG xoá số đo. Lọc xong xoá bản gốc thì\n"
+"                                không bao giờ chứng minh lại được — và yêu\n"
+"                                cầu lưu trữ nói rõ không xoá, không nén mất\n"
+"                                mát dữ liệu gốc."
+msgstr ""
+"The rules here only <b>raise a quality flag</b>; they do\n"
+"                                NOT delete readings. Filter and then delete the\n"
+"                                original and it can never be proved again — and\n"
+"                                the retention requirement says plainly: do not\n"
+"                                delete, do not compress the originals lossily."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Làm sạch dữ liệu"
+msgstr "Data cleaning"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__reason
@@ -73,15 +587,98 @@ msgid "Lý do"
 msgstr "Reason"
 
 #. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+msgid "Lọc"
+msgstr "Filter"
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__max
 msgid "Lớn nhất"
 msgstr "Maximum"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__value_max
+msgid "Lớn nhất hợp lý"
+msgstr "Plausible maximum"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__code
+msgid "Mã dùng trong công thức tag tính toán và trong lệnh nạp dữ liệu từ hệ giám sát. Đổi mã là làm hỏng mọi công thức đang trỏ vào nó."
+msgstr "The code used in computed-tag formulas and in the import command from the monitoring system. Change the code and every formula pointing at it breaks."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__code
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Mã tag"
+msgstr "Tag code"
+
+#. module: eam_historian
+#: model:ir.model.constraint,message:eam_historian.constraint_eam_tag_uniq_code
+msgid "Mã tag không được trùng."
+msgstr "The tag code must be unique."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__comms
+msgid "Mất kết nối thu thập dữ liệu"
+msgstr "Loss of the data acquisition link"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__min_samples
+msgid "Mẫu tối thiểu mỗi khoảng"
+msgstr "Minimum samples per bin"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Mật độ quy chiếu"
+msgstr "Reference air density"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__air_density_ref
+msgid "Mật độ quy chiếu (kg/m³)"
+msgstr "Reference air density (kg/m³)"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__retention_years
+msgid "Mặc định 10 năm theo yêu cầu \"bằng chứng vận hành thực tế\". Hệ thống KHÔNG tự xoá — con số này chỉ để báo cáo và để người quản trị biết cam kết là bao nhiêu."
+msgstr "10 years by default, per the \"evidence of actual operation\" requirement. The system does NOT delete anything — this figure is for reporting and to tell the administrator what was undertaken."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_trend_wizard__bo_nghi
+msgid "Mặc định KHÔNG bỏ. Người đọc phải thấy dữ liệu thật trước rồi mới quyết lọc — lọc sẵn thì không ai biết đã lọc mất bao nhiêu."
+msgstr "NOT dropped by default. The reader has to see the real data first and then decide to filter — filter it in advance and nobody knows how much was removed."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+msgid "Ngoài tầm"
+msgstr "Beyond our control"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__ngoai_tam
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Ngoài tầm kiểm soát"
+msgstr "Beyond our control"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_tag__source
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
 msgid "Nguồn"
 msgstr "Source"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__note
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Nguồn & ghi chú"
+msgstr "Source & notes"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__temperature
+msgid "Nhiệt độ (°C)"
+msgstr "Temperature (°C)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__tag_temp_id
+msgid "Nhiệt độ môi trường"
+msgstr "Ambient temperature"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__plant_id
@@ -94,10 +691,131 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Nhịp (giây)"
+msgstr "Interval (seconds)"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__sample_seconds
+msgid "Nhịp DỰ KIẾN. Dùng để phát hiện mất dữ liệu: thưa hơn nhịp này nhiều lần nghĩa là có khoảng trống, chứ không phải máy đứng im."
+msgstr "The EXPECTED interval. Used to detect missing data: far sparser than this means there is a gap rather than a machine standing still."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__sample_seconds
+msgid "Nhịp lấy mẫu (giây)"
+msgstr "Sampling interval (seconds)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__min
+msgid "Nhỏ nhất"
+msgstr "Minimum"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__value_min
+msgid "Nhỏ nhất hợp lý"
+msgstr "Plausible minimum"
+
+#. module: eam_historian
+#: model:ir.model,name:eam_historian.model_eam_power_curve_run
+msgid "Phân tích đường cong công suất"
+msgstr "Power curve analysis"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+msgid "Phương pháp (IEC 61400-12-1)"
+msgstr "Method (IEC 61400-12-1)"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve__regulation
+msgid "Quyết định HIỆU CHỈNH CÁI GÌ theo mật độ không khí. Pitch thì chuẩn hoá TỐC ĐỘ GIÓ; stall thì chuẩn hoá CÔNG SUẤT. Làm ngược là sai cả đường cong."
+msgstr "Decides WHAT is corrected for air density. Pitch turbines normalise the WIND SPEED; stall turbines normalise the POWER. Do it the other way round and the whole curve is wrong."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__aggregation
+msgid "Quyết định con số hiện trên biểu đồ. Gộp sai thì kết quả VẪN TRÔNG HỢP LÝ: điện năng luỹ kế lấy trung bình ra một số vô nghĩa, hướng gió lấy trung bình số học ra ngược hướng thật. Đây là chỗ sai im lặng nhất của cả historian."
+msgstr "Decides the figure shown on the chart. Aggregate it wrongly and the result STILL LOOKS PLAUSIBLE: averaging a cumulative energy counter gives a meaningless number, and the arithmetic mean of wind direction points the opposite way. This is the quietest mistake in the whole historian."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__outage_id
+msgid "Sinh từ sổ dừng máy. Sửa sổ dừng thì sửa luôn ở đây."
+msgstr "Generated from the outage log. Edit the outage and this changes with it."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__curve_id
+msgid "So với đường cong"
+msgstr "Against the curve"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__reading_count
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Số bản ghi"
+msgstr "Records"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__suspect_count
+msgid "Số bản ghi mang cờ chất lượng khác \"tốt\". Chúng VẪN NẰM nguyên trong kho — cờ chỉ để người đọc tự quyết có lọc hay không."
+msgstr "The number of records carrying a quality flag other than \"good\". They REMAIN in the store — the flag only lets the reader decide whether to filter them out."
+
+#. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__gio
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
 msgid "Số giờ"
 msgstr "Hours"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_outage__exclusion_count
+msgid "Số khoảng loại trừ"
+msgstr "Exclusion periods"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__point_count
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Số điểm"
+msgstr "Points"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__suspect_count
+msgid "Số đo bị đánh dấu"
+msgstr "Flagged readings"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__last_ts
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Số đo cuối"
+msgstr "Last reading"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__first_ts
+msgid "Số đo đầu"
+msgstr "First reading"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__repair
+msgid "Sửa chữa sự cố"
+msgstr "Fault repair"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__grid
+msgid "Sự cố lưới / mất điện lưới"
+msgstr "Grid fault / grid outage"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_tag.py:0
+msgid "Tag \"%s\": cận dưới phải nhỏ hơn cận trên, nếu không thì MỌI số đo đều bị đánh dấu ngoài dải."
+msgstr "Tag \"%s\": the lower bound has to be below the upper bound, otherwise EVERY reading is flagged out of range."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__is_virtual
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__calc
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Tag tính toán"
+msgstr "Computed tag"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_tag.py:0
+msgid "Tag tính toán \"%s\" chưa có công thức — nó sẽ không bao giờ ra giá trị nào."
+msgstr "Computed tag \"%s\" has no formula — it will never produce a value."
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_tag__asset_id
@@ -105,9 +823,185 @@ msgid "Thiết bị"
 msgstr "Equipment"
 
 #. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_power_curve__curve_type__design
+msgid "Thiết kế / catalogue"
+msgstr "Design / catalogue"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_run__tag_temp_id
+msgid "Thiếu ô này thì KHÔNG hiệu chỉnh mật độ được, và kết quả sẽ ghi rõ là chưa hiệu chỉnh."
+msgstr "Without this field air density CANNOT be corrected for, and the result will say plainly that it was not corrected."
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_trend_wizard__buoc__0
+msgid "Thô (không gộp)"
+msgstr "Raw (not aggregated)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Thông số"
+msgstr "Specification"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_power_curve__regulation__stall
+msgid "Thất tốc (stall)"
+msgstr "Stall"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__test
+msgid "Thử nghiệm, hiệu chuẩn"
+msgstr "Testing, calibration"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_data_exclusion__reason__curtailment
+msgid "Tiết giảm theo lệnh điều độ"
+msgstr "Curtailment by dispatch order"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__ngoai_tam
+msgid "Tiết giảm, sự cố lưới, bất khả kháng thì KHÔNG trừ vào cam kết khả dụng của thiết bị. Hỏng hóc thì có. Hai thứ đều là \"dừng máy\" nhưng hậu quả hợp đồng khác hẳn."
+msgstr "Curtailment, grid faults and force majeure are NOT deducted from the equipment availability commitment. Failures are. Both are \"downtime\", but their contractual consequences are quite different."
+
+#. module: eam_historian
 #: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__avg
 msgid "Trung bình"
 msgstr "Average"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__avg_seconds
+msgid "Trung bình (giây)"
+msgstr "Average (seconds)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__aggregation__vector_avg
+msgid "Trung bình VECTƠ (hướng gió)"
+msgstr "VECTOR average (wind direction)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Trích từ phụ lục kỹ thuật hợp đồng số…, ngày…"
+msgstr "Extracted from the technical annex of contract no…, dated…"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__source__weather
+msgid "Trạm khí tượng"
+msgstr "Weather station"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__status
+msgid "Trạng thái (0/1)"
+msgstr "State (0/1)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+msgid "Tua-bin & kỳ"
+msgstr "Turbine & period"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Tên"
+msgstr "Name"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_tag__name
+msgid "Tên điểm đo"
+msgstr "Tag name"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__name
+msgid "Tên đường cong"
+msgstr "Curve name"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Tìm khoảng loại trừ"
+msgstr "Search exclusion periods"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Tìm điểm đo"
+msgstr "Search tags"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Tính toán"
+msgstr "Computed"
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_data_exclusion
+msgid ""
+"Tạo nhanh từ <b>Sổ dừng máy</b> — nút \"Loại khỏi KPI\" trên\n"
+"               từng khoảng dừng."
+msgstr ""
+"Created quickly from the <b>outage log</b> — the \"Exclude from KPIs\"\n"
+"               button on each outage."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_point__wind_speed
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__wind_speed
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Tốc độ gió (m/s)"
+msgstr "Wind speed (m/s)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__rotation
+msgid "Tốc độ quay (vòng/phút)"
+msgstr "Rotational speed (rpm)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__date_from
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__date_from
+#: model:ir.model.fields,field_description:eam_historian.field_eam_quality_wizard__date_from
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__date_from
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Từ"
+msgstr "From"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+msgid "Từ sổ dừng"
+msgstr "From the outage log"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid ""
+"Viết bằng <b>mã tag</b>. Tính lúc ĐỌC chứ\n"
+"                                không lưu sẵn, nên sửa công thức là mọi\n"
+"                                biểu đồ cũ cũng đổi theo — công thức sai\n"
+"                                phải sai ở mọi chỗ, không để lại số cũ tính\n"
+"                                bằng công thức cũ mà không ai biết.<br/>\n"
+"                                Khoảng nào <b>thiếu</b> một tag nguồn thì bị\n"
+"                                BỎ, không thay bằng 0: số 0 ở mẫu ra vô cực,\n"
+"                                ở tử ra một hiệu suất bằng 0 trông như sự cố\n"
+"                                thật."
+msgstr ""
+"Written with <b>tag codes</b>. Computed at READ\n"
+"                                time rather than stored, so changing the formula\n"
+"                                changes every past chart with it — a wrong formula\n"
+"                                has to be wrong everywhere, rather than leaving\n"
+"                                old figures computed by the old formula with\n"
+"                                nobody aware of it.<br/>\n"
+"                                Any interval <b>missing</b> a source tag is\n"
+"                                DROPPED rather than replaced by 0: a 0 in the\n"
+"                                denominator gives infinity, and in the numerator a\n"
+"                                performance of 0 that looks like a real fault."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__formula
+msgid "Viết bằng MÃ TAG, ví dụ: (E_AC / (G_POA * P_NOM)) * 100. Tính lúc ĐỌC chứ không lưu sẵn, nên sửa công thức là mọi biểu đồ cũ cũng đổi theo — đó là điều mong muốn: công thức sai thì phải sai ở mọi chỗ, không để lại số cũ tính bằng công thức cũ mà không ai biết."
+msgstr "Written with TAG CODES, for example: (E_AC / (G_POA * P_NOM)) * 100. Computed at READ time rather than stored, so changing the formula changes every past chart with it — which is what is wanted: a wrong formula should be wrong everywhere, rather than leaving old figures computed by the old formula with nobody aware of it."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_form
+msgid "Vì sao"
+msgstr "Why"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__max_rate
+msgid "Vượt mức này thì đánh dấu \"nhảy quá nhanh\". Để 0 là không kiểm. Bức xạ không thể nhảy 800 W/m² trong một giây, nhưng một đầu đo hỏng thì có."
+msgstr "Above this rate the reading is flagged \"changing too fast\". 0 turns the check off. Irradiance cannot jump 800 W/m² in one second, but a failing sensor can."
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__location_ids
@@ -117,6 +1011,72 @@ msgstr "Average"
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
 msgid "Vị trí"
 msgstr "Location"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Xem xu hướng"
+msgstr "View the trend"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_trend_wizard_form
+msgid "Xu hướng"
+msgstr "Trend"
+
+#. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_trend
+#: model:ir.model,name:eam_historian.model_eam_trend_wizard
+msgid "Xu hướng nhiều điểm đo"
+msgstr "Trend across several tags"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_trend
+msgid "Xu hướng điểm đo"
+msgstr "Tag trends"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_tag.py:0
+msgid "Xu hướng — %s"
+msgstr "Trend — %s"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_historian.py:0
+msgid "dòng không đúng dạng (mã, thời điểm, giá trị)"
+msgstr "the line is malformed (code, timestamp, value)"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/tom_tat_ngay.py:0
+msgid "gió trong ngày toả đều (độ tập trung %(r).3f < %(g).2f) — không có hướng trội nào, nên \"hướng trung bình\" là con số vô nghĩa. Xem hoa gió để thấy phân bố thật."
+msgstr "the wind was spread evenly through the day (concentration %(r).3f < %(g).2f) — there is no prevailing direction, so a \"mean direction\" is a meaningless number. Look at the wind rose for the real distribution."
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_historian.py:0
+msgid "không có tag mã \"%s\""
+msgstr "there is no tag with code \"%s\""
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "không khí loãng hơn quy chiếu"
+msgstr "the air is thinner than the reference"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "không khí đặc hơn quy chiếu"
+msgstr "the air is denser than the reference"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "suy áp suất từ độ cao %d m"
+msgstr "pressure derived from an elevation of %d m"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_historian.py:0
+msgid "thiếu thời điểm"
+msgstr "timestamp missing"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_historian.py:0
+msgid "thời điểm hoặc giá trị không đọc được"
+msgstr "the timestamp or the value could not be read"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__category_id
@@ -129,10 +1089,141 @@ msgid "Áp cho đâu"
 msgstr "Where it applies"
 
 #. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__pressure
+msgid "Áp suất"
+msgstr "Pressure"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__tag_press_id
+msgid "Áp suất khí quyển"
+msgstr "Atmospheric pressure"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Đang loại"
+msgstr "Being excluded"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_search
+msgid "Đang loại khỏi KPI"
+msgstr "Excluded from KPIs"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Điều khiển"
+msgstr "Control"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_power_curve__regulation__pitch
+msgid "Điều khiển góc cánh (pitch)"
+msgstr "Pitch control"
+
+#. module: eam_historian
+#: model:ir.model,name:eam_historian.model_eam_power_curve_point
+msgid "Điểm trên đường cong công suất"
+msgstr "Point on the power curve"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__tag_ids
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_list
+msgid "Điểm đo"
+msgstr "Measurement point"
+
+#. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_tag
+#: model:ir.ui.menu,name:eam_historian.menu_eam_tag
+msgid "Điểm đo (tag)"
+msgstr "Measurement points (tags)"
+
+#. module: eam_historian
+#: model:ir.model,name:eam_historian.model_eam_tag
+msgid "Điểm đo (tag) của historian"
+msgstr "Historian measurement point (tag)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__tag_power_id
+msgid "Điểm đo công suất"
+msgstr "Power tag"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_search
+msgid "Điểm đo thật"
+msgstr "Real measurement point"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__tag_wind_id
+msgid "Điểm đo tốc độ gió"
+msgstr "Wind speed tag"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__energy
+msgid "Điện năng luỹ kế (kWh)"
+msgstr "Cumulative energy (kWh)"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Đo cái gì, ở đâu"
+msgstr "What is measured, and where"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_power_curve__curve_type__measured
+msgid "Đo được khi nghiệm thu"
+msgstr "Measured at acceptance"
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_tag
+msgid ""
+"Đây là <b>siêu dữ liệu</b> của kho chuỗi thời gian: điểm đo\n"
+"               là gì, đơn vị gì, gộp lên biểu đồ bằng cách nào, thế nào là\n"
+"               số vô lý. Bản thân số đo nằm trong bảng riêng ngoài ORM —\n"
+"               một nhà máy 12 trụ lấy mẫu từng phút sinh hơn 300 triệu\n"
+"               dòng một năm."
+msgstr ""
+"This is the <b>metadata</b> of the time-series store: what the point\n"
+"               measures, in what unit, how it aggregates onto a chart, and what\n"
+"               counts as an implausible figure. The readings themselves live in a\n"
+"               separate table outside the ORM — a 12-tower plant sampled every\n"
+"               minute produces over 300 million rows a year."
+
+#. module: eam_historian
+#: model_terms:ir.actions.act_window,help:eam_historian.action_eam_power_curve
+msgid ""
+"Đây là dữ liệu gốc mà <b>bảo lãnh sản lượng dựa vào</b>.\n"
+"               Khai rõ nó là cam kết hợp đồng, đường cong catalogue, hay\n"
+"               đường cong đo khi nghiệm thu — ba thứ khác nhau về giá trị\n"
+"               pháp lý, trộn lẫn thì lúc đòi bảo hành không ai biết đang\n"
+"               so với cái gì."
+msgstr ""
+"This is the source data that <b>energy guarantees rest on</b>.\n"
+"               State plainly whether it is a contract commitment, a catalogue\n"
+"               curve, or a curve measured at acceptance — three different things\n"
+"               in law, and mixing them means that when a warranty claim comes,\n"
+"               nobody knows what is being compared with what."
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "Đã hiệu chỉnh mật độ không khí (%(ng)s). Mật độ trung bình %(tb).4f kg/m³ so với quy chiếu %(ref).3f — %(ht)s."
+msgstr "Corrected for air density (%(ng)s). Mean density %(tb).4f kg/m³ against a reference of %(ref).3f — %(ht)s."
+
+#. module: eam_historian
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
 #: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
 msgid "Đã nghỉ"
 msgstr "Retired"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_data_exclusion.py:0
+msgid "Đã tạo khoảng loại trừ KPI cho khoảng dừng này. Số đo THÔ không bị đụng tới — việc loại trừ chỉ áp lúc đọc, nên sửa lý do sau này là mọi chỉ số tính lại đúng ngay."
+msgstr "A KPI exclusion period has been created for this outage. The RAW readings are untouched — the exclusion is applied at read time, so correcting the reason later makes every indicator recompute correctly at once."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_quality_wizard_form
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_trend_wizard_form
+msgid "Đóng"
+msgstr "Close"
 
 #. module: eam_historian
 #: model:ir.model.fields,field_description:eam_historian.field_eam_tag__uom_label
@@ -141,14 +1232,105 @@ msgid "Đơn vị"
 msgstr "Unit"
 
 #. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
-msgid "Khoảng loại trừ KPI"
-msgstr "KPI exclusion periods"
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_tag_form
+msgid "Đơn vị & cách gộp"
+msgstr "Unit & aggregation"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_point__curve_id
+msgid "Đường cong"
+msgstr "Curve"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve.py:0
+msgid "Đường cong \"%s\" có hai điểm cùng một tốc độ gió."
+msgstr "Curve \"%s\" has two points at the same wind speed."
 
 #. module: eam_historian
 #: model:ir.ui.menu,name:eam_historian.menu_eam_power_curve
 msgid "Đường cong cam kết"
 msgstr "Warranted power curve"
+
+#. module: eam_historian
+#: model:ir.actions.act_window,name:eam_historian.action_eam_power_curve_run
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_run_form
+msgid "Đường cong công suất thực tế"
+msgstr "Measured power curve"
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_form
+msgid "Đường cong này là gì"
+msgstr "What this curve is"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve__rotor_d
+msgid "Đường kính rotor (m)"
+msgstr "Rotor diameter (m)"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_tag__stuck_count
+msgid "Đầu đo chết thường trả về đúng một giá trị mãi, và giá trị đó nằm trong dải hợp lý nên kiểm dải không bắt được. Để 0 là không kiểm."
+msgstr "A dead sensor usually returns exactly one value for ever, and that value sits inside the plausible range, so the range check does not catch it. 0 turns the check off."
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_data_exclusion__date_to
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__date_to
+#: model:ir.model.fields,field_description:eam_historian.field_eam_quality_wizard__date_to
+#: model:ir.model.fields,field_description:eam_historian.field_eam_trend_wizard__date_to
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_data_exclusion_list
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_outage_form_exclusion
+msgid "Đến"
+msgstr "To"
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_quality_wizard__tag_ids
+msgid "Để trống là xét mọi điểm đo của nhà máy."
+msgstr "Leave it empty to consider every tag at the plant."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__tag_ids
+msgid "Để trống là áp cho MỌI điểm đo trong phạm vi trên. Khai đích danh khi chỉ một đầu đo hỏng chứ không phải cả trụ dừng."
+msgstr "Leave it empty to apply to EVERY tag within the scope above. Name one explicitly when a single sensor has failed rather than a whole tower being down."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__location_ids
+msgid "Để trống là áp cho cả nhà máy."
+msgstr "Leave it empty to apply to the whole plant."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_power_curve_run__tag_press_id
+msgid "Để trống thì suy áp suất từ độ cao địa hình."
+msgstr "Leave it empty and pressure is derived from the site elevation."
+
+#. module: eam_historian
+#: model:ir.model.fields,help:eam_historian.field_eam_data_exclusion__plant_id
+msgid "Để trống và cũng không khai vị trí/điểm đo thì áp cho MỌI nhà máy — hiếm khi đúng, nên có cảnh báo."
+msgstr "Leave this empty and declare no location or tag either and it applies to EVERY plant — rarely right, hence the warning."
+
+#. module: eam_historian
+#: model_terms:ir.ui.view,arch_db:eam_historian.view_eam_power_curve_list
+msgid "Định mức (kW)"
+msgstr "Rated (kW)"
+
+#. module: eam_historian
+#: model:ir.model.fields,field_description:eam_historian.field_eam_power_curve_run__elevation_m
+msgid "Độ cao địa hình (m)"
+msgstr "Site elevation (m)"
+
+#. module: eam_historian
+#: model:ir.model.fields.selection,name:eam_historian.selection__eam_tag__tag_type__vibration
+msgid "Độ rung"
+msgstr "Vibration"
+
+#. module: eam_historian
+#: code:addons/eam_historian/models/eam_power_curve_run.py:0
+msgid "đo áp suất trực tiếp"
+msgstr "measured pressure directly"
+
+#. module: eam_historian
+#: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
+msgid "Khoảng loại trừ KPI"
+msgstr "KPI exclusion periods"
 
 #. module: eam_historian
 #: model:ir.ui.menu,name:eam_historian.menu_eam_power_curve_run
@@ -164,9 +1346,4 @@ msgstr "Data quality"
 #: model:ir.ui.menu,name:eam_historian.menu_eam_tag
 msgid "Điểm đo (tag)"
 msgstr "Measurement points (tags)"
-
-#. module: eam_historian
-#: model:ir.ui.menu,name:eam_historian.menu_eam_trend
-msgid "Xu hướng điểm đo"
-msgstr "Tag trends"
 

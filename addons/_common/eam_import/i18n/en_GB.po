@@ -45,6 +45,12 @@ msgid "Kho chuỗi thời gian"
 msgstr "Time-series store"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ket_qua
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__tom_tat
+msgid "Kết quả"
+msgstr "Result"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ly_do
 msgid "Lý do"
 msgstr "Reason"
@@ -53,6 +59,11 @@ msgstr "Reason"
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__node_code
 msgid "Mã bậc đo"
 msgstr "Metering stage code"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__tag_code
+msgid "Mã tag"
+msgstr "Tag code"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__template_id

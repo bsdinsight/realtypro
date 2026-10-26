@@ -17,6 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_shift
+#: model_terms:ir.ui.view,arch_db:eam_shift.view_eam_shift_form
+msgid "Biên bản"
+msgstr "Certificate"
+
+#. module: eam_shift
 #: model:ir.model.fields,field_description:eam_shift.field_eam_shift__date_start
 msgid "Bắt đầu"
 msgstr "Start"

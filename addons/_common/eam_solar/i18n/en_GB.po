@@ -17,10 +17,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid "Cam kết"
+msgstr "Commitment"
+
+#. module: eam_solar
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__company_id
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__company_id
 msgid "Công ty"
 msgstr "Company"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid "Kết quả"
+msgstr "Result"
 
 #. module: eam_solar
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__plant_id
@@ -29,6 +39,16 @@ msgstr "Company"
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_wst
+msgid "Trạm khí tượng"
+msgstr "Weather station"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__wind_speed
+msgid "Tốc độ gió (m/s)"
+msgstr "Wind speed (m/s)"
 
 #. module: eam_solar
 #: model:ir.ui.menu,name:eam_solar.menu_eam_solar_group

@@ -17,6 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_unit_day
+#: model:ir.model.fields,field_description:eam_unit_day.field_eam_unit_day__cong_suat_kw
+msgid "Công suất định mức (kW)"
+msgstr "Rated power (kW)"
+
+#. module: eam_unit_day
 #: model_terms:ir.ui.view,arch_db:eam_unit_day.view_unit_day_form
 msgid "Hệ số công suất"
 msgstr "Capacity factor"

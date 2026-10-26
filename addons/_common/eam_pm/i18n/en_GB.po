@@ -1539,6 +1539,12 @@ msgid "Tới hạn vì"
 msgstr "Due because of"
 
 #. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Từ"
+msgstr "From"
+
+#. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_work_order_list_pm
 msgid "Từ kế hoạch"
 msgstr "From the plan"
@@ -1789,6 +1795,13 @@ msgstr "Unit"
 #: model:ir.model.fields,help:eam_pm.field_eam_reliability__failure_count
 msgid "Đếm lệnh khai is_failure. MẪU SỐ của MTBF và MTTR."
 msgstr "Counts the orders flagged is_failure. The DENOMINATOR of both MTBF and MTTR."
+
+#. module: eam_pm
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_maint_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_reliability_list
+#: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_season_form
+msgid "Đến"
+msgstr "To"
 
 #. module: eam_pm
 #: model_terms:ir.ui.view,arch_db:eam_pm.view_eam_pm_schedule_search

@@ -1,0 +1,201 @@
+1318	From
+1319	Filter
+1320	Name
+1321	To
+1322	Close
+1323	1 hour
+1324	1 day
+1325	1 minute
+1326	5 minutes
+1327	Counter
+1328	Tag code
+1329	Why
+1330	15 minutes
+1331	Chart
+1332	Result
+1333	Measurement type
+1334	Points
+1335	Pressure
+1336	Measurement point
+1337	Vibration
+1338	Points
+1339	Aggregation
+1340	Cumulative sum
+1341	Aggregate by
+1342	Minimum
+1343	Specification
+1344	Trend
+1345	Beyond our control
+1346	First reading
+1347	Computed
+1348	Being excluded
+1349	Plausible range
+1350	Records
+1351	Last reading
+1352	From the outage log
+1353	Control
+1354	Curve
+1355	Flagged
+1356	Outage %s
+1357	Interval (seconds)
+1358	Tag name
+1359	Search tags
+1360	Last value
+1361	Turbine & period
+1362	View the trend
+1363	Real measurement point
+1364	Irradiance (W/m²)
+1365	Exclude from KPIs
+1366	Temperature (°C)
+1367	Computed tag
+1368	Trend — %s
+1369	Measurement points (tags)
+1370	Rated (kW)
+1371	Power (kW)
+1372	Wind direction (degrees)
+1373	Fault repair
+1374	Weather station
+1375	Curve name
+1376	Another anomaly
+1377	Exclusion period
+1378	Plausible-range check
+1379	Control type
+1380	Plausible maximum
+1381	Source & notes
+1382	Plausible minimum
+1383	Raw (not aggregated)
+1384	timestamp missing
+1385	Meters and counters
+1386	Thrust coefficient Ct
+1387	Data cleaning
+1388	Reference air density
+1389	Stall
+1390	State (0/1)
+1391	Wind speed (m/s)
+1392	Tag trends
+1393	What is measured, and where
+1394	No reading yet
+1395	This tag only
+1396	Data retention (years)
+1397	Against the curve
+1398	Flagged readings
+1399	Average (seconds)
+1400	Atmospheric pressure
+1401	Power tag
+1402	Unit & aggregation
+1403	Current repeat run
+1404	Data quality
+1405	Exclusion periods
+1406	Excluded from KPIs
+1407	Wind speed tag
+1408	Warranted power curve
+1409	KPI exclusion period
+1410	Beyond our control
+1411	Ambient temperature
+1412	Sampling interval (seconds)
+1413	Search exclusion periods
+1414	Site elevation (m)
+1415	Bin width (m/s)
+1416	Drop flagged readings
+1417	Commissioning, acceptance
+1418	Design / catalogue
+1419	there is no tag with code "%s"
+1420	What this curve is
+1421	Rotor diameter (m)
+1422	measured pressure directly
+1423	Scheduled servicing of T07
+1424	No tag declared yet
+1425	Committed in the contract
+1426	Testing, calibration
+1427	Trend across several tags
+1428	Cumulative energy (kWh)
+1429	Measured at acceptance
+1430	Recorded only, not yet excluded
+1431	Rated power (kW)
+1432	Monitoring system (SCADA/OPC)
+1433	Rotational speed (rpm)
+1434	Drop periods excluded from KPIs
+1435	DC power (kW)
+1436	Period excluded from KPIs
+1437	Exclude this period from KPIs
+1438	The tag code must be unique.
+1439	Minimum samples per bin
+1440	Reference air density (kg/m³)
+1441	Data quality indicators
+1442	Grid fault / grid outage
+1443	pressure derived from an elevation of %d m
+1444	Curtailment by dispatch order
+1445	the air is denser than the reference
+1446	Pitch control
+1447	Historian measurement point (tag)
+1448	Loss of the data acquisition link
+1449	Method (IEC 61400-12-1)
+1450	VECTOR average (wind direction)
+1451	Measured power curve
+1452	the air is thinner than the reference
+1453	Treat as STUCK after … identical repeats
+1454	Active power of turbine T01
+1455	End-to-start difference (cumulative counter)
+1456	Power curve analysis
+1457	Point on the power curve
+1458	Leave it empty to apply to the whole plant.
+1459	Maximum rate of change (units/second)
+1460	Time-series store (historian)
+1461	Contract commitment — 4.0 MW turbine
+1462	Used when there is no pressure tag.
+1463	the timestamp or the value could not be read
+1464	No curve has been\n               declared yet
+1465	Leave it empty to consider every tag at the plant.
+1466	No exclusion period\n               yet
+1467	Exclusion period "%s": "To" has to be after "From".
+1468	Leave it empty and pressure is derived from the site elevation.
+1469	Extracted from the technical annex of contract no…, dated…
+1470	the line is malformed (code, timestamp, value)
+1471	EAMOne: pre-create time-series store partitions
+1472	Curve "%s" has two points at the same wind speed.
+1473	"%s" is a computed tag and takes no readings directly
+1474	Only "no reading at all" can be filtered (a comparison with 0).
+1475	Generated from the outage log. Edit the outage and this changes with it.
+1476	The formula of "%(t)s" refers to a tag code that does not exist: %(m)s.
+1477	It has no readings of its own — it is computed from other tags on every read.
+1478	Computed tag "%s" has no formula — it will never produce a value.
+1479	Without this field air density CANNOT be corrected for, and the result will say plainly that it was not corrected.
+1480	Optional. Used for wake-effect calculations between towers — not used in this version.
+1481	Created quickly from the <b>outage log</b> — the "Exclude from KPIs"\n               button on each outage.
+1482	Tag "%s": the lower bound has to be below the upper bound, otherwise EVERY reading is flagged out of range.
+1483	Leave this empty and declare no location or tag either and it applies to EVERY plant — rarely right, hence the warning.
+1484	Corrected for air density (%(ng)s). Mean density %(tb).4f kg/m³ against a reference of %(ref).3f — %(ht)s.
+1485	Leave it empty to apply to EVERY tag within the scope above. Name one explicitly when a single sensor has failed rather than a whole tower being down.
+1486	The number of records carrying a quality flag other than "good". They REMAIN in the store — the flag only lets the reader decide whether to filter them out.
+1487	NOT dropped by default. The reader has to see the real data first and then decide to filter — filter it in advance and nobody knows how much was removed.
+1488	The EXPECTED interval. Used to detect missing data: far sparser than this means there is a gap rather than a machine standing still.
+1489	IEC requires 600 seconds (10 minutes). Anything shorter lets gusts put the (wind, power) pair out of phase, and the computed curve comes out lower than reality.
+1490	The code used in computed-tag formulas and in the import command from the monitoring system. Change the code and every formula pointing at it breaks.
+1491	A dead sensor usually returns exactly one value for ever, and that value sits inside the plausible range, so the range check does not catch it. 0 turns the check off.
+1492	Almost always 1.225 — the standard atmosphere at sea level, 15 °C. A curve with no reference density is a curve that cannot be compared against anything.
+1493	Above this rate the reading is flagged "changing too fast". 0 turns the check off. Irradiance cannot jump 800 W/m² in one second, but a failing sensor can.
+1494	Untick it and the period is merely RECORDED for reference without affecting the figures. Use it while responsibility is still being argued — record first, decide later.
+1495	Decides WHAT is corrected for air density. Pitch turbines normalise the WIND SPEED; stall turbines normalise the POWER. Do it the other way round and the whole curve is wrong.
+1496	Contract commitment, design, or measured at acceptance — three different things in law. Mix them up and, when a warranty claim comes, nobody knows what is being compared with what.
+1497	%(n)d tags match but no aggregation is declared. Summing turbine power into plant power is right, summing temperature is meaningless — the system does not guess for you.
+1498	No scope has been narrowed — this period will apply to\n                        <b>EVERY tag at every plant</b>. That is almost always\n                        an omission.
+1499	10 years by default, per the "evidence of actual operation" requirement. The system does NOT delete anything — this figure is for reporting and to tell the administrator what was undertaken.
+1500	the wind was spread evenly through the day (concentration %(r).3f < %(g).2f) — there is no prevailing direction, so a "mean direction" is a meaningless number. Look at the wind rose for the real distribution.
+1501	Curtailment, grid faults and force majeure are NOT deducted from the equipment availability commitment. Failures are. Both are "downtime", but their contractual consequences are quite different.
+1502	A KPI exclusion period has been created for this outage. The RAW readings are untouched — the exclusion is applied at read time, so correcting the reason later makes every indicator recompute correctly at once.
+1503	Excludes the maintenance, curtailment and connection-loss periods recorded in the exclusion register. DIFFERENT from dropping flagged readings: here the readings are CORRECT, it is simply that the period does not count towards the indicator.
+1504	Excludes maintenance, curtailment and connection loss. Technically MANDATORY: a curtailed turbine still has wind while its power is held down, and mixing that in drags the curve artificially low.
+1505	Records the periods where the readings are <b>correct</b> but <b>do not\n               count towards KPIs</b>: planned maintenance, curtailment by dispatch\n               order, loss of the acquisition link.
+1506	There is no ambient temperature tag, so air density CANNOT be corrected for. The comparison below is RAW — and if the plant is not at sea level it is systematically biased.
+1507	Decides the figure shown on the chart. Aggregate it wrongly and the result STILL LOOKS PLAUSIBLE: averaging a cumulative energy counter gives a meaningless number, and the arithmetic mean of wind direction points the opposite way. This is the quietest mistake in the whole historian.
+1508	No <b>ambient temperature</b> tag has been chosen — air density\n                    CANNOT be corrected for. If the plant is not at sea level the\n                    result is systematically biased, and biased in the direction\n                    of blaming the turbine.
+1509	Written with TAG CODES, for example: (E_AC / (G_POA * P_NOM)) * 100. Computed at READ time rather than stored, so changing the formula changes every past chart with it — which is what is wanted: a wrong formula should be wrong everywhere, rather than leaving old figures computed by the old formula with nobody aware of it.
+1510	Record the outage without excluding it from KPIs and the\n                            two registers drift apart: whoever recorded it\n                            thinks the job is done while the indicator still\n                            counts that period — and because the indicator still\n                            produces a number, nobody notices the missing step.
+1511	This is the source data that <b>energy guarantees rest on</b>.\n               State plainly whether it is a contract commitment, a catalogue\n               curve, or a curve measured at acceptance — three different things\n               in law, and mixing them means that when a warranty claim comes,\n               nobody knows what is being compared with what.
+1512	This is the <b>metadata</b> of the time-series store: what the point\n               measures, in what unit, how it aggregates onto a chart, and what\n               counts as an implausible figure. The readings themselves live in a\n               separate table outside the ORM — a 12-tower plant sampled every\n               minute produces over 300 million rows a year.
+1513	The rules here only <b>raise a quality flag</b>; they do\n                                NOT delete readings. Filter and then delete the\n                                original and it can never be proved again — and\n                                the retention requirement says plainly: do not\n                                delete, do not compress the originals lossily.
+1514	<b>The control type decides WHAT is corrected.</b>\n                        A <i>pitch</i> turbine normalises <b>wind speed</b> by the\n                        cube root of the density ratio; a <i>stall</i> turbine\n                        normalises <b>power</b>. Do it the other way round and the\n                        whole curve is wrong.
+1515	<b>The aggregation may be wrong.</b> Averaging a\n                        cumulative energy counter gives a meaningless number;\n                        averaging wind direction arithmetically points the\n                        OPPOSITE way (the mean of 350° and 10° is 180°); averaging\n                        a 0/1 state means nothing at all. This is the\n                        <b>quietest</b> mistake of all — the chart still looks\n                        smooth.
+1516	Mean turbulence intensity %(ti).1f%% — high. The binning method is SYSTEMATICALLY biased upwards in gusty wind, because the power curve is convex and so the mean power exceeds the power at the mean wind speed. The "exceeds the commitment" figure below may be a mathematical artefact rather than a good turbine. For a firm conclusion, normalise for turbulence per IEC 61400-12-1 edition 2, or compare against another turbine at the same plant over the same period.
+1517	Written with <b>tag codes</b>. Computed at READ\n                                time rather than stored, so changing the formula\n                                changes every past chart with it — a wrong formula\n                                has to be wrong everywhere, rather than leaving\n                                old figures computed by the old formula with\n                                nobody aware of it.<br/>\n                                Any interval <b>missing</b> a source tag is\n                                DROPPED rather than replaced by 0: a 0 in the\n                                denominator gives infinity, and in the numerator a\n                                performance of 0 that looks like a real fault.
+1518	An exclusion period is <b>quite different</b> from a quality\n                        flag. A quality flag says <i>this reading may be WRONG</i>.\n                        An exclusion period says <i>the reading is entirely RIGHT,\n                        but this period does not count towards KPIs</i> — a turbine\n                        under planned maintenance rightly produces zero energy, and\n                        counting that in the availability factor penalises the\n                        plant for doing exactly what it should.<br/>\n                        The raw readings are <b>untouched</b>: the exclusion is\n                        applied at read time, so correcting the reason later makes\n                        every indicator recompute correctly at once.

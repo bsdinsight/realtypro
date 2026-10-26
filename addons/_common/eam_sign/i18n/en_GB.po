@@ -23,8 +23,23 @@ msgstr "Daily operations report"
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Cam kết"
+msgstr "Commitment"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Cơ sở đo"
+msgstr "Measurement basis"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "Kỳ"
 msgstr "Period"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Mức cam kết"
+msgstr "Committed level"
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
@@ -33,8 +48,28 @@ msgstr "Plant"
 
 #. module: eam_sign
 #: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Phí kỳ"
+msgstr "Period fee"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Phạt"
+msgstr "Penalty"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Phải trả"
+msgstr "Payable"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
 msgid "chưa đo được"
 msgstr "not measured"
+
+#. module: eam_sign
+#: model_terms:ir.ui.view,arch_db:eam_sign.bien_ban_kpi
+msgid "Đo được"
+msgstr "Measured"
 
 #. module: eam_sign
 #: model:ir.ui.menu,name:eam_sign.menu_eam_ca_provider

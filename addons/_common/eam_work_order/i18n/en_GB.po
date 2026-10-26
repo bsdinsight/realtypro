@@ -459,6 +459,12 @@ msgid "Chưa đóng"
 msgstr "Not closed"
 
 #. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_form_template__category__commissioning
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__work_type__commissioning
+msgid "Chạy thử, nghiệm thu"
+msgstr "Commissioning, acceptance"
+
+#. module: eam_work_order
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Chỉ lệnh đang làm mới chuyển sang chờ được."
 msgstr "Only an order in progress can be put on hold."
@@ -1157,6 +1163,12 @@ msgid "Kết luận rút ra từ số đo và tiêu chuẩn, không phải từ 
 msgstr "A conclusion drawn from the reading and the criteria, not from the person marking their own work."
 
 #. module: eam_work_order
+#: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order_step__result
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Kết quả"
+msgstr "Result"
+
+#. module: eam_work_order
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_request_form
 msgid "Kết quả xử lý"
 msgstr "Outcome"
@@ -1664,6 +1676,11 @@ msgstr "Contamination"
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_search
 msgid "Nhà máy"
 msgstr "Plant"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__executor__om_contractor
+msgid "Nhà thầu O&M"
+msgstr "O&M contractor"
 
 #. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_request__source__contractor
@@ -2410,6 +2427,11 @@ msgid "Điện cao áp"
 msgstr "High voltage"
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Đo được"
+msgstr "Measured"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__state__approved
 msgid "Đã duyệt"
 msgstr "Approved"
@@ -2521,6 +2543,11 @@ msgstr "Another outside organisation"
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__contractor_id
 msgid "Đơn vị thực hiện"
 msgstr "Performing organisation"
+
+#. module: eam_work_order
+#: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order_step__result__ok
+msgid "Đạt"
+msgstr "Pass"
 
 #. module: eam_work_order
 #: model:ir.model.fields,help:eam_work_order.field_eam_failure_mode__category_id

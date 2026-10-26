@@ -729,6 +729,11 @@ msgid "Có tồn ở vị trí nội bộ nào không. Khác với \"đang lắp
 msgstr "Whether there is any stock at an internal location. Different from \"currently installed\" — one just removed and not yet back in store is nowhere at all, and that is exactly when it is easiest to lose."
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_equipment_model__rated_kw
+msgid "Công suất định mức (kW)"
+msgstr "Rated power (kW)"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__note
 msgid "Căn cứ kỹ thuật"
 msgstr "Technical justification"
@@ -1691,6 +1696,13 @@ msgstr "Conclusion & notes"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_inbound_check_form
 msgid "Kết luận chung, cam kết khắc phục của bên giao…"
 msgstr "Overall conclusion, the sender's undertaking to put it right…"
+
+#. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_demand__ket_qua
+#: model:ir.model.fields,field_description:eam_stock.field_eam_tool_calibration__result
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
+msgid "Kết quả"
+msgstr "Result"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_equivalent__approver_id
@@ -2961,6 +2973,12 @@ msgid "Tháo khỏi máy KHÔNG có nghĩa là dùng lại được. Hàng cần
 msgstr "Being removed from a machine does NOT mean it is usable again. Goods needing inspection or already damaged go to a separate location and are not added to available stock until someone confirms it."
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_part_spec__name
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Thông số"
+msgstr "Specification"
+
+#. module: eam_stock
 #: model:ir.model,name:eam_stock.model_eam_part_spec
 msgid "Thông số kỹ thuật phụ tùng"
 msgstr "Spare part specifications"
@@ -3906,6 +3924,13 @@ msgid "Đòi bảo hành"
 msgstr "Warranty claim"
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_part_demand_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_rma_form
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_stock_alert_form
+msgid "Đóng"
+msgstr "Close"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_line__unit_cost
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
 msgid "Đơn giá"
@@ -3932,6 +3957,11 @@ msgstr "Unit"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_calib_list
 msgid "Đơn vị hiệu chuẩn"
 msgstr "Calibration body"
+
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_calibration__result__pass
+msgid "Đạt"
+msgstr "Pass"
 
 #. module: eam_stock
 #: model:ir.model.fields.selection,name:eam_stock.selection__eam_tool_calibration__result__adjusted
@@ -3970,6 +4000,11 @@ msgstr "To store"
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_warehouse_eam_plant
 msgid "Để trống = kho dùng chung"
 msgstr "Empty = a shared store"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_equipment_model_list
+msgid "Định mức (kW)"
+msgstr "Rated (kW)"
 
 #. module: eam_stock
 #: code:addons/eam_stock/models/eam_alerts.py:0

@@ -1,0 +1,178 @@
+1876	Fee
+1877	Quarter
+1878	Pass
+1879	Penalty
+1880	Direction
+1881	Periods
+1882	Measure the period
+1883	Measured
+1884	Cycle
+1885	Both
+1886	Period fee
+1887	Measured at
+1888	Commitment
+1889	Not measured
+1890	Penalty regime
+1891	Close the period
+1892	Half-year
+1893	Measured
+1894	Certificate
+1895	Measurement basis
+1896	Reference data
+1897	Contract
+1898	Penalty rate
+1899	Contractor
+1900	Payable
+1901	Total fee
+1902	Units
+1903	Total penalty
+1904	Penalty applies
+1905	Measurable by the system
+1906	No penalty
+1907	Period starts
+1908	Periods closed
+1909	Fee per period
+1910	Commitments
+1911	Plants
+1912	Assessment cycle
+1913	Has a warning
+1914	Fee-bearing period
+1915	Assessment period
+1916	Committed level
+1917	Contract number
+1918	Commitment name
+1919	Applies to
+1920	Effective from
+1921	Unattributed (%)
+1922	Hours in the period
+1923	Effective to
+1924	O&M contract
+1925	O&M contractor
+1926	Contract year
+1927	By plant
+1928	Contract title
+1929	Demo priority
+1930	Comparison direction
+1931	Contract type
+1932	Where it is managed
+1933	Total downtime hours
+1934	In force
+1935	OM-CTR-2026-001
+1936	Time zone of the period
+1937	Assessment cycle
+1938	Commitment results
+1939	O&M assessment period
+1940	Plant scope
+1941	Managed here
+1942	Assessed on cycle
+1943	Notes for the certificate
+1944	Assessment period — %s
+1945	Denominator (unit-hours)
+1946	Generate assessment periods
+1947	Shortfall (points)
+1948	Clause extract
+1949	Mark as expired
+1950	Commitments not met
+1951	Unattributed warning
+1952	O&M contract type
+1953	Base fee for the cap
+1954	Contract type name
+1955	Early termination
+1956	Only for the plant
+1957	Managed elsewhere
+1958	Must not exceed (≤)
+1959	Demo priority order
+1960	O&M contract commitment
+1961	Wind-specific
+1962	Some commitments were not met
+1963	Outages — %s, %s
+1964	Fixed one-off penalty
+1965	Commercial & assets
+1966	Penalty cap (% of the period fee)
+1967	Within the demo scope
+1968	Plants in scope
+1969	Availability units
+1970	Assessment & payment
+1971	No period has been measured yet
+1972	Contract type catalogue
+1973	What it mainly manages
+1974	Must be at least (≥)
+1975	Managed in this module
+1976	Performance ratio PR (%)
+1977	Commitment "%s" has a negative level.
+1978	Payment by plant
+1979	Measured (before rounding)
+1980	Response time (hours)
+1981	Solar-specific
+1982	Repair time (hours)
+1983	Downtime hours charged to the contractor
+1984	Penalty per percentage point of shortfall
+1985	Core operation & maintenance
+1986	Time-based availability (%)
+1987	Contract type for the O&M phase
+1988	O&M payment by plant
+1989	Decimal places when the period is closed
+1990	Declare the first O&amp;M contract
+1991	Count the child equipment locations
+1992	The result of one commitment in one period
+1993	Unattributed-hours warning threshold (%)
+1994	Include hours with no responsibility attributed
+1995	The O&M contract number must be unique.
+1996	The contract type code must be unique.
+1997	Plants within the scope of the O&M contract
+1998	Materials, inspection & supporting infrastructure
+1999	Payment by plant within one period
+2000	Penalty as a % of the period fee per point of shortfall
+2001	The total fee of the plants in scope.
+2002	Show the outages that went into this figure
+2003	Notes to carry into the period acceptance certificate.
+2004	Period %s has not been measured. Press "Measure the period" before closing it.
+2005	This contract already has a period with the same cycle and date range.
+2006	Says where to go when this type is not managed in the O&M module.
+2007	This period assesses the commitments declared on the same cycle as itself.
+2008	Reopen a closed period. The old figures will be replaced when it is measured again.
+2009	Kept so that a dispute about the rounding can be traced back.
+2010	Contract "%s": the expiry date is before the effective date.
+2011	A plant may appear only once within the scope of a contract.
+2012	Worded as in the contract, for example "Annual availability of at least 97%".
+2013	Contract "%s" has no plant in scope, so there is nothing to measure.
+2014	Contract "%s" has no expiry date, so there is no telling where to stop generating periods.
+2015	Commitment "%(n)s" is measured as a percentage, so the level has to lie between 0 and 100; it is %(m)s.
+2016	Per the "Priority scope for development and demo" section of the catalogue document. 0 means unranked.
+2017	Period %(k)s runs on cycle "%(c)s" but the contract has no commitment assessed on that cycle.
+2018	Leave it empty and the commitment applies to EVERY plant in the contract scope, with a result row of its own for each.
+2019	Some rows could not be measured, or the unattributed hours exceed the threshold. The figures for this period are not yet fit to sign.
+2020	The unattributed hours exceed this commitment's threshold. The availability figure may be flattering simply because nobody has classified them.
+2021	Rounded to the number of decimal places the contract declares. This is the figure that goes into the certificate AND the figure used to compute the penalty.
+2022	Period %s is closed. The figures have been captured as a certificate and cannot be measured again — reopen the period first if it really is necessary.
+2023	Periods run from the EFFECTIVE DATE, not the calendar year. A contract signed on 15 April has a contract year running 15 April → 14 April.
+2024	What a contract of this type has to be able to track. Used as a checklist during a survey, not as contract terms.
+2025	Whether the system can measure this basis at all. If it cannot, the period still produces a result row stating the reason, and NO penalty is charged.
+2026	Closing the period freezes the committed levels, the measured figures and the fee for this period. Editing the contract afterwards no longer changes this period's certificate.
+2027	Per point: an amount for each percentage point of shortfall. As a %% of the period fee: a percentage of the fee per point of shortfall. Fixed: an amount.
+2028	When the unattributed hours exceed this share of total downtime, the result row raises a flag. The result is still computed, but whoever signs the certificate sees it before signing.
+2029	The fee used as the base for capping the penalty. For a fee-bearing period it is the plant's period fee; for an assessment-only period it is the total fee of the fee periods it covers.
+2030	Turn it off when the contract type already has a home of its own. The type stays in the catalogue so the whole picture is visible, but it cannot be chosen when raising an O&M contract.
+2031	Type "%s" is marked as not managed here, so it has to say where it is managed. Leave it empty and a user meets a type they cannot choose, with no idea where to go instead.
+2032	Only a period on the contract's own cycle carries a fee. A period on another cycle is for assessment only — charging for both is charging twice for the same stretch of time.
+2033	Availability and performance are "at least"; response and repair time are "must not exceed". Choose the wrong direction and every period that passed now fails, and the other way round.
+2034	Capped against the plant's period fee. 0 means NO cap — use it only when the contract genuinely has none, because without a cap one bad period produces a penalty larger than the fee itself.
+2035	Commitment "%s" declares a penalty regime but the rate is 0 — every period that fails produces a penalty of 0 with nothing to say so. Set "No penalty" if the contract has no regime.
+2036	The operating phase has many kinds of contract, not just one overall O&M agreement. Any type that already has a home of its own (power purchase, EPC, lending) cannot be chosen here.
+2037	Commitment "%(n)s" points at plant "%(p)s", which is not within the contract scope. Add that plant to the scope first, otherwise the commitment will never produce a result row.
+2038	Contract "%(h)s" declares an invalid time zone "%(t)s". Measuring a period in the wrong time zone shifts downtime into the neighbouring period, so it stops here rather than producing a figure that looks ordinary.
+2039	This screen answers exactly the question the customer asks: <b>what does this\n            plant owe for this period</b> — fee less penalty, per plant, even when one\n            contract covers several plants.
+2040	Declare the plant scope, the commitments and the penalty regime once. Every\n            period after that is one press of <b>Measure the period</b>: the system takes\n            the figures from the outage log, compares them with the commitments and\n            produces the amount payable for each plant.
+2041	The number of units used as the DENOMINATOR when computing time-based availability. Thirty turbines running for one day is 720 unit-hours, not 24. 0 means the whole plant counts as ONE unit — which is right only when the commitment is set at plant level.
+2042	Type "%(l)s" is not managed here — it lives in: %(d)s. It stays in the catalogue so the whole picture is visible, but the contract has to be raised in the right place; otherwise the same contract exists in two copies and neither is the real one.
+2043	The operating phase has many kinds of contract, not just one overall\n            O&amp;M agreement. A <b>greyed-out</b> row is a type that already has a\n            home of its own — kept in the catalogue so the whole picture is\n            visible, but raise the contract where it belongs.
+2044	The O&M fee for this plant alone in one period. Declared per plant rather than as one lump: a contract covering three plants with only a single total cannot answer the question "what does this plant owe this month" — and that is exactly the question the customer asks.
+2045	Leave it empty to follow the contract's own cycle. Set it when the contract has SEVERAL tiers of commitment — wind usually has both a monthly floor and an annual availability. Assessing an annual commitment with one month's figures penalises unfairly: one bad month drags the whole year down, while the contract allows the remaining months to make up for it.
+2046	OFF by default: only downtime hours attributed to an O&M contract obligation count against the contractor. Turn it on when the contract makes the contractor liable by default until proven otherwise. On or off, the unattributed hours still appear on the result row — an availability figure that is flattering because nobody has classified them has to be visible.
+2047	<i class="fa fa-info-circle me-1"/>\n                        This is a contract table <b>of O&amp;M's own</b>, not shared\n                        with EPC contracts. An EPC contract is a one-way journey\n                        with gates; an O&amp;M contract is a repeating service, and\n                        what decides the money is <b>the figure measured in the\n                        period</b>.
+2048	<i class="fa fa-exclamation-triangle me-1"/>\n                        This period has rows that <b>could not be measured</b>, or a\n                        great many <b>downtime hours with no responsibility\n                        attributed</b>. The availability figure may be flattering\n                        because nobody has classified them rather than because the\n                        contractor did well — look at the "Unattributed (%)" column\n                        before taking this certificate to be signed.
+2049	<i class="fa fa-external-link me-1"/>\n                        This type <b>already has a home of its own</b>, so it cannot\n                        be chosen when raising an O&amp;M contract. It stays in the\n                        catalogue so the whole contract picture of the operating\n                        phase is visible — raise it in two places and the same\n                        contract has two copies, neither of them the real one.
+2050	A greyed-out row is a commitment the system <b>could not\n                                measure</b>. The period still produces a result row\n                                for it, states the reason and charges <b>no\n                                penalty</b> — rather than quietly substituting\n                                another basis. Two bases give two different figures,\n                                and taking the wrong one charges the wrong money\n                                while the certificate still looks complete.
+2051	A period is written in DATES while the outage log is written in UTC moments, so midnight of the period has to be midnight somewhere definite. Declared on the contract itself rather than taken from whoever is logged in: if the same period measured by two people in two time zones gives two figures, no certificate stands up. A user who has declared no time zone makes Odoo treat everything as UTC — seven hours out, and those seven hours shift downtime into the neighbouring period exactly at the contract-year boundary.
+2052	The measured figure is ROUNDED to here before being compared with the commitment and before the penalty is computed. The reason: if the certificate prints 97.66 against a commitment of 99.5, the contractor will work out the penalty by hand — and if the system used 97.664765 instead, the two numbers disagree and nobody can defend the certificate. The number on the paper has to be the number used in the arithmetic. Changing this field can turn a borderline period from pass to fail, so it belongs to the contract rather than being a display option.
+2053	<b>Availability units</b> is the denominator, and this is\n                                the quietest place to get it wrong: thirty turbines\n                                running for one day is <b>720 unit-hours</b>, not\n                                24. 0 means the whole plant counts as one unit —\n                                right only when the contract commits at plant level.\n                                The calculator button only <b>counts</b> child\n                                locations; not every location is a unit, so the\n                                person declaring it still has to decide.

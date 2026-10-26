@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Lối tắt vào EAMOne ▸ Cấu hình. Bản khai vẫn thuộc re_ca_sign và
+         vẫn nằm ở Cài đặt; đây chỉ là thêm một cửa vào, vì người vận
+         hành sống trong app chứ không mở Cài đặt. Treo được menu này ở
+         đây là nhờ module cầu nối phụ thuộc CẢ eam_core lẫn re_ca_sign
+         — chính re_ca_sign thì không được phép biết tới EAMOne. -->
+    <menuitem id="menu_eam_ca_provider"
+              name="Kết nối ký số"
+              parent="eam_core.menu_eam_config"
+              action="re_ca_sign.action_re_ca_provider"
+              sequence="95"/>
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eam_om_period_form_sign" model="ir.ui.view">
+        <field name="name">eam.om.period.form.sign</field>
+        <field name="model">eam.om.period</field>
+        <field name="inherit_id"
+               ref="eam_om_contract.view_eam_om_period_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_ky_so" type="object"
+                        string="Ký số biên bản" icon="fa-pencil-square-o"
+                        invisible="state != 'chot' or co_canh_bao"
+                        confirm="Ký số lên biên bản xác nhận KPI/SLA của kỳ này. Đây là chứng từ làm căn cứ thanh toán và phạt."/>
+                <button name="action_view_ca_signatures" type="object"
+                        icon="fa-certificate"
+                        invisible="ca_sign_count == 0">
+                    Bản đã ký số (<field name="ca_sign_count" nolabel="1"/>)
+                </button>
+            </header>
+            <field name="state" position="after">
+                <field name="ca_sign_count" invisible="1"/>
+                <field name="co_canh_bao" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

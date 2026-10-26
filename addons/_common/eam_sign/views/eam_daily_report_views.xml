@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_report_form_sign" model="ir.ui.view">
+        <field name="name">eam.daily.report.form.sign</field>
+        <field name="model">eam.daily.report</field>
+        <field name="inherit_id" ref="eam_daily_report.view_report_form"/>
+        <field name="arch" type="xml">
+            <!-- Nút ký nằm trong header, KHÔNG dựng hộp nút thông minh:
+                 form này chưa có oe_button_box nào, chèn thêm một hộp
+                 chỉ để treo một nút là đổi bố cục màn của module khác. -->
+            <header position="inside">
+                <button name="action_ky_so" type="object" string="Ký số"
+                        icon="fa-pencil-square-o"
+                        invisible="state != 'chot'"
+                        confirm="Ký số lên bản PDF của báo cáo này. Người ký xác nhận trên ứng dụng của nhà cung cấp chứng thực nếu đang dùng ký số từ xa."/>
+                <button name="action_view_ca_signatures" type="object"
+                        icon="fa-certificate"
+                        invisible="ca_sign_count == 0">
+                    Bản đã ký số (<field name="ca_sign_count" nolabel="1"/>)
+                </button>
+            </header>
+            <field name="state" position="after">
+                <field name="ca_sign_count" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

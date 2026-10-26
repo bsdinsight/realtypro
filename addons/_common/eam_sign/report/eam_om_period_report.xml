@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_in_bien_ban_kpi" model="ir.actions.report">
+        <field name="name">Biên bản xác nhận KPI/SLA</field>
+        <field name="model">eam.om.period</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eam_sign.bien_ban_kpi</field>
+        <field name="report_file">eam_sign.bien_ban_kpi</field>
+        <field name="binding_model_id" ref="eam_om_contract.model_eam_om_period"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">
+            'BBKPI_%s_%s' % (object.contract_id.name or '', object.date_end)
+        </field>
+    </record>
+
+    <template id="bien_ban_kpi">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <!-- PHẢI đi qua web.external_layout, như mẫu báo cáo
+                     ngày: bỏ qua nó thì tờ in vỡ dấu tiếng Việt, và
+                     chỉ lộ khi nhìn tờ giấy chứ không có gì báo. -->
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h3 class="text-center mb-0">
+                            BIÊN BẢN XÁC NHẬN KPI/SLA
+                        </h3>
+                        <h5 class="text-center text-muted mt-0">
+                            Kỳ <span t-field="o.date_start"/> →
+                            <span t-field="o.date_end"/>
+                        </h5>
+
+                        <!-- Kỳ chưa chốt mà in ra thì tờ giấy phải tự
+                             nói điều đó. Một bản nháp trông y hệt bản
+                             chốt là cách chắc chắn để nó được đem đi
+                             thanh toán. -->
+                        <div t-if="o.state != 'chot'"
+                             class="alert alert-warning py-1">
+                            <b>BẢN NHÁP — kỳ chưa chốt.</b> Mức cam kết,
+                            số đo được và phí còn đổi được. Không dùng
+                            tờ này làm căn cứ thanh toán.
+                        </div>
+                        <div t-if="o.co_canh_bao"
+                             class="alert alert-danger py-1">
+                            <b>Còn cảnh báo chất lượng số liệu.</b> Có
+                            dòng chưa đo được, hoặc giờ dừng chưa quy
+                            trách nhiệm vượt ngưỡng — con số khả dụng có
+                            thể đang đẹp vì chưa ai phân loại.
+                        </div>
+
+                        <table class="table table-sm mt-3">
+                            <tr>
+                                <td style="width:22%"><b>Hợp đồng</b></td>
+                                <td><span t-field="o.contract_id.name"/>
+                                    <span t-if="o.contract_id.title"> —
+                                        <span t-field="o.contract_id.title"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Nhà thầu O&amp;M</b></td>
+                                <td><span t-field="o.partner_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Chu kỳ</b></td>
+                                <td><span t-field="o.chu_ky"/>
+                                    <span t-if="not o.la_ky_phi"
+                                          class="text-muted">
+                                        (kỳ chấm điểm, không tính phí)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Đo lúc</b></td>
+                                <td><span t-field="o.date_measured"/></td>
+                            </tr>
+                        </table>
+
+                        <h5 class="mt-4">1. Kết quả từng cam kết</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nhà máy</th>
+                                    <th>Cam kết</th>
+                                    <th>Cơ sở đo</th>
+                                    <th class="text-end">Mức cam kết</th>
+                                    <th class="text-end">Đo được</th>
+                                    <th class="text-center">Kết luận</th>
+                                    <th class="text-end">Thiếu hụt</th>
+                                    <th class="text-end">Phạt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="l">
+                                    <td><span t-field="l.plant_id.name"/></td>
+                                    <td><span t-field="l.ten_cam_ket"/></td>
+                                    <td><span t-field="l.loai"/></td>
+                                    <td class="text-end">
+                                        <span t-field="l.huong"/>
+                                        <span t-field="l.muc_cam_ket"/>
+                                    </td>
+                                    <!-- "Chưa đo được" KHÔNG được in ra
+                                         thành một ô trống hay số 0: ô
+                                         trống đọc như "bằng không", mà
+                                         ý nghĩa thật là "không biết". -->
+                                    <td class="text-end">
+                                        <span t-if="l.do_duoc"
+                                              t-field="l.gia_tri"/>
+                                        <i t-else="" class="text-danger">
+                                            chưa đo được
+                                        </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="not l.do_duoc"
+                                              class="text-muted">—</span>
+                                        <b t-elif="l.dat"
+                                           class="text-success">ĐẠT</b>
+                                        <b t-else="" class="text-danger">
+                                            KHÔNG ĐẠT</b>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-if="l.do_duoc and not l.dat"
+                                              t-field="l.thieu_hut"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.phat"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div t-if="o.line_ids.filtered('canh_bao_chua_quy')"
+                             class="small text-muted">
+                            <b>Ghi chú giờ chưa quy trách nhiệm:</b>
+                            <t t-foreach="o.line_ids.filtered('canh_bao_chua_quy')"
+                               t-as="c">
+                                <div>
+                                    <span t-field="c.plant_id.name"/> —
+                                    <span t-field="c.ten_cam_ket"/>:
+                                    <span t-field="c.gio_chua_quy"/> giờ
+                                    (<span t-field="c.ty_le_chua_quy"/>%)
+                                    chưa quy trách nhiệm.
+                                </div>
+                            </t>
+                        </div>
+
+                        <h5 class="mt-4">2. Thanh toán theo nhà máy</h5>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nhà máy</th>
+                                    <th class="text-end">Phí kỳ</th>
+                                    <th class="text-end">Phạt</th>
+                                    <th class="text-end">Phải trả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.plant_ids" t-as="p">
+                                    <td><span t-field="p.plant_id.name"/></td>
+                                    <td class="text-end">
+                                        <span t-field="p.phi"/></td>
+                                    <td class="text-end">
+                                        <span t-field="p.phat"/></td>
+                                    <td class="text-end">
+                                        <span t-field="p.thanh_toan"/></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Cộng</th>
+                                    <th class="text-end">
+                                        <span t-field="o.tong_phi"/></th>
+                                    <th class="text-end">
+                                        <span t-field="o.tong_phat"/></th>
+                                    <th class="text-end">
+                                        <span t-field="o.tong_thanh_toan"/></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div t-if="o.note" class="mt-3">
+                            <b>Ghi chú:</b>
+                            <div t-field="o.note"/>
+                        </div>
+
+                        <!-- Hai ô ký tay giữ lại kể cả khi đã ký số:
+                             bên mua và bên bán có thể ký số lệch ngày,
+                             và nhiều nơi vẫn cần bản giấy. Ô trống thì
+                             không hại gì; thiếu ô mới phải in lại. -->
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <b>ĐẠI DIỆN CHỦ ĐẦU TƯ</b>
+                                <div class="text-muted small">
+                                    (ký, ghi rõ họ tên)
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <b>ĐẠI DIỆN NHÀ THẦU O&amp;M</b>
+                                <div class="text-muted small">
+                                    (ký, ghi rõ họ tên)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

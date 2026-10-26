@@ -49,6 +49,11 @@ msgstr "Other"
 
 #. module: eam_warranty
 #: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
+msgid "Lệch"
+msgstr "Difference"
+
+#. module: eam_warranty
+#: model_terms:ir.ui.view,arch_db:eam_warranty.view_eam_asset_list_warranty
 msgid "Mã"
 msgstr "Code"
 

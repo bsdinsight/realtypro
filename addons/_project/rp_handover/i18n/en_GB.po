@@ -26,3 +26,83 @@ msgstr "Projects"
 msgid "Bàn giao sang vận hành"
 msgstr "Handover to operations"
 
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__handover_ids
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_rp_handover_form
+msgid "Biên bản bàn giao"
+msgstr "Handover certificate"
+
+#. module: rp_handover
+#: model:ir.actions.act_window,name:rp_handover.action_rp_handover
+#: model:ir.ui.menu,name:rp_handover.menu_rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_re_project_form_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_rp_handover_list
+msgid "Bàn giao sang vận hành"
+msgstr "Handover to operations"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_re_project_form_handover
+msgid ""
+"Có vị trí <b>đã qua cổng nghiệm thu mà chưa bàn\n"
+"                        giao</b>. Mỗi trụ như vậy là một đồng hồ bảo hành\n"
+"                        chưa ai bấm bắt đầu — và bảo hành chỉ đếm từ lúc\n"
+"                        có người ghi nhận."
+msgstr ""
+"Some locations have <b>passed the acceptance gate but not been\n"
+"                        handed over</b>. Each one is a warranty clock nobody has\n"
+"                        started — and warranty only counts from the moment someone\n"
+"                        records it."
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+msgid "Công suất (MW)"
+msgstr "Capacity (MW)"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__eam_outage_count
+msgid "Khoảng dừng"
+msgstr "Outages"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Loại dự án"
+msgstr "Project type"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_re_project_form_handover
+msgid "Mở biên bản bàn giao"
+msgstr "Open the handover certificate"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__handover_count
+msgid "Số biên bản"
+msgstr "Certificate number"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__eam_asset_count
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__eam_location_count
+#: model:ir.model.fields,field_description:rp_handover.field_rp_handover_line__location_id
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_rp_handover_list
+msgid "Vị trí"
+msgstr "Location"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__handover_ready
+msgid "Vị trí sẵn sàng bàn giao"
+msgstr "Locations ready for handover"
+
+#. module: rp_handover
+#: model:ir.model.fields,field_description:rp_handover.field_re_project__handover_done
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_rp_handover_form
+msgid "Vị trí đã bàn giao"
+msgstr "Locations handed over"
+
+#. module: rp_handover
+#: model:ir.model.fields,help:rp_handover.field_re_project__handover_ready
+msgid "Đã qua cổng nghiệm thu trong sổ dựng máy mà chưa có trong biên bản bàn giao nào. Đây là việc đang tồn đọng — mỗi trụ chưa bàn giao là một đồng hồ bảo hành chưa ai bấm bắt đầu."
+msgstr "Passed the acceptance gate in the erection register but absent from any handover certificate. This is outstanding work — each tower not handed over is a warranty clock nobody has started."
+

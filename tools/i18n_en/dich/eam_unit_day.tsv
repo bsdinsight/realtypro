@@ -1,0 +1,89 @@
+3324	Disconnected at
+3325	Stoppages
+3326	Synchronised at
+3327	Days added
+3328	Energy lost (kWh)
+3329	Difference (% points)
+3330	1–5 points apart
+3331	No downtime
+3332	99% and above
+3333	Why it was not measured
+3334	Has an energy figure
+3335	Days added
+3336	A factor could be computed
+3337	95% to under 99%
+3338	No row yet
+3339	Unit performance
+3340	Vendor availability (%)
+3341	More than 5 points apart
+3342	Availability measured
+3343	No energy figure
+3344	Downtime not valued in kWh
+3345	Availability below 90%
+3346	Month-to-date total
+3347	Matching (under 1 point)
+3348	Cross-check against the vendor
+3349	Daily performance
+3350	Is a generating unit
+3351	Downtime status
+3352	Has a DC-side figure
+3353	Where the power figure comes from
+3354	Availability — AS WE measure it
+3355	Where the energy figure comes from
+3356	Why there is no factor
+3357	Why there is no DC figure
+3358	The vendor's figure has not been entered
+3359	Availability could not be measured
+3360	Energy by unit
+3361	Downtime occurred and is fully attributed
+3362	Conversion efficiency (%)
+3363	Availability, all causes (%)
+3364	Vendor availability (%)
+3365	Peak AC power (kW)
+3366	Peak DC power (kW)
+3367	Nominal operating hours
+3368	Availability, contract scope (%)
+3369	Why there is no energy figure
+3370	More than 5 points from the vendor
+3371	power curve "%s"
+3372	Daily unit performance
+3373	Capacity factor by unit
+3374	Mean wind speed (m/s)
+3375	Mark units by their tags
+3376	Availability, contract scope (%)
+3377	The capacity factor could not be computed
+3378	Some outages are not valued in kWh
+3379	the installed capacity declared on the location
+3380	Outages still not valued in kWh
+3381	Availability — AS THE VENDOR reports it
+3382	Outages with no energy loss computed
+3383	without an energy figure there is no numerator
+3384	This unit already has a row for that day.
+3385	the unit declares no DC-side tag
+3386	EAMOne: build yesterday's unit performance
+3387	Of which attributable to the contractor (kWh)
+3388	the DC-side tag has no reading for the day
+3389	not enough readings on both sides to compute the conversion efficiency
+3390	the unit has no energy tag with a reading for this day
+3391	the DC-side tag declares no sampling interval, so energy cannot be integrated from it
+3392	the unit declares no rated power — dividing by a guessed number gives a plausible-looking ratio that is wrong
+3393	An outage not valued in kWh does not enter the denominator, so availability is HIGHER than reality. This is the group to deal with first.
+3394	An outage not valued in kWh does NOT enter the denominator. Availability is therefore higher than reality — this figure is how much higher.
+3395	AS WE measure it: actual energy ÷ (actual + lost). It counts EVERY cause, because we really do lose the energy whoever is at fault.
+3396	The share of lost energy attributable to the O&M contract. Stored separately so that BOTH availability figures trace back to one set of data.
+3397	The span from the synchronisation point to the disconnection point. DIFFERENT from the hours actually generating: a unit that stops mid-day and restarts still lies within the same span.
+3398	THE VENDOR'S FIGURE, entered from their report — the system CANNOT compute it, because what is excluded is a matter agreed in the contract rather than a calculation.
+3399	The vendor deducts fewer causes than we do, so their column is usually higher. It is precisely that gap that goes to the meeting — merge the two columns and it disappears.
+3400	%(a)d units are declared, but the availability denominator is using %(b)d. The two figures describe the same thing — a difference means one of them is declared wrongly.
+3401	The running total adds only the days that HAVE a figure. With days missing it is lower than reality — which is why it is printed beside the total rather than hidden to make the sum look seamless.
+3402	A level for scanning by eye, NOT a contract threshold — every O&M contract commits to its own figure, and assessment against the commitment happens in Contracts ▸ Assessment & payment.
+3403	Marked %(a)d locations as units (they have an energy tag). Skipped %(b)d locations with no energy tag — look again if any of them is a unit whose meter has not been attached.
+3404	Takes the ABSOLUTE value of the difference. The vendor usually deducts fewer causes, so the difference is usually positive, but a NEGATIVE one is even more worth looking at — it means the vendor claims less than we do.
+3405	The plant declares no units. Open the plant record and press "Mark units by their tags", or tick them by hand — the system does NOT guess, because guessing puts the weather station into the table.
+3406	The plant-level figure answers <i>"how much did the site generate\n            yesterday"</i>. This table answers the question the operator asks every\n            morning: <b>which machine is dragging the site down</b>.
+3407	The mean at THIS unit, not at the weather station. Two towers five hundred metres apart can differ by a whole metre per second, and that is exactly what this column is for: explaining why two towers of the same model generate differently.
+3408	AC energy divided by DC energy over the day. Computed on the whole day's ENERGY rather than by averaging instantaneous efficiencies: efficiency at low load drags the average down even though almost no energy was produced during that stretch.
+3409	No rows usually means the plant <b>has not declared its units</b>.\n            Open the plant record and press <i>Mark units by their tags</i> — the\n            system does not guess, because guessing puts the weather station into\n            the table.
+3410	Turbines and inverters — the things that actually generate. A weather station or a control building does NOT, even though they are equipment locations too. This flag decides how many rows the unit performance table has, and how many units go into the availability denominator.
+3411	<b>The two availability columns are deliberately NOT\n                        merged.</b> Ours counts every cause, because we really do\n                        lose the energy; the vendor's excludes what is not their\n                        responsibility. The gap is what goes to the meeting.
+3412	Deducts only the losses attributable to the contractor — THIS is the figure that agrees with the plant availability register and with the O&M contract period. The column to its left deducts EVERY cause, because we really do lose the energy whoever is at fault. The two figures answer two different questions, so it is right that they DIFFER — having only one of them is what makes people argue at cross purposes.

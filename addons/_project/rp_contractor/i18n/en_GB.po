@@ -21,3 +21,8 @@ msgstr ""
 msgid "Nhà cung cấp"
 msgstr "Suppliers"
 
+#. module: rp_contractor
+#: model:ir.model.fields,field_description:rp_contractor.field_rp_contractor__ward_id
+msgid "Ward / Phường-Xã"
+msgstr "Ward"
+

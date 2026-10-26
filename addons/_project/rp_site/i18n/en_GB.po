@@ -46,3 +46,39 @@ msgstr "Site"
 msgid "Kiểm tra an toàn"
 msgstr "Safety inspections"
 
+#. module: rp_site
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_punch__contract_id
+#: model_terms:ir.ui.view,arch_db:rp_site.view_rp_site_punch_search
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_site
+#: model_terms:ir.ui.view,arch_db:rp_site.view_rp_site_diary_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_site
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_safety_inspection__name
+msgid "Số biên bản"
+msgstr "Certificate number"
+
+#. module: rp_site
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_diary_equipment__name
+msgid "Thiết bị"
+msgstr "Equipment"
+
+#. module: rp_site
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_diary__doc_folder_id
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_incident__doc_folder_id
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_punch__doc_folder_id
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_safety_inspection__doc_folder_id
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_toolbox__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_site
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_incident__location
+#: model:ir.model.fields,field_description:rp_site.field_rp_site_punch__location
+msgid "Vị trí"
+msgstr "Location"
+

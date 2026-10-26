@@ -36,3 +36,15 @@ msgstr "Site instructions"
 msgid "Trình duyệt (Submittal)"
 msgstr "Submittals"
 
+#. module: rp_rfi
+#: model:ir.model.fields,field_description:rp_rfi.field_rp_rfi__contract_id
+#: model:ir.model.fields,field_description:rp_rfi.field_rp_site_instruction__contract_id
+#: model:ir.model.fields,field_description:rp_rfi.field_rp_submittal__contract_id
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_rfi
+#: model:ir.model.fields,field_description:rp_rfi.field_rp_site_instruction__location
+msgid "Vị trí"
+msgstr "Location"
+

@@ -31,3 +31,23 @@ msgstr "Claims & liquidated damages"
 msgid "Biên bản phạt chậm"
 msgstr "Liquidated damages assessment"
 
+#. module: rp_claim
+#: model_terms:ir.ui.view,arch_db:rp_claim.view_rp_claim_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_claim
+#: model:ir.model.fields,field_description:rp_claim.field_rp_ld_assessment__name
+msgid "Số biên bản"
+msgstr "Certificate number"
+
+#. module: rp_claim
+#: model:ir.model.fields,field_description:rp_claim.field_rp_claim__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_claim
+#: model_terms:ir.ui.view,arch_db:rp_claim.view_rp_claim_search
+msgid "Đang mở"
+msgstr "Open"
+

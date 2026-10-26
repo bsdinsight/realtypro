@@ -26,3 +26,13 @@ msgstr "Main equipment"
 msgid "Sổ lô thiết bị"
 msgstr "Equipment lot register"
 
+#. module: rp_equipment
+#: model:ir.model.fields,field_description:rp_equipment.field_rp_equipment_lot__package_id
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_equipment
+#: model_terms:ir.ui.view,arch_db:rp_equipment.view_rp_equipment_lot_list
+msgid "Vị trí"
+msgstr "Location"
+

@@ -1,0 +1,267 @@
+P1	% of contingency used
+P2	% complete, whole project
+P3	<i class="fa fa-bell me-1" title="Alerts"/>
+P4	<i class="fa fa-exclamation-triangle me-1" title="In conflict"/>\n                            Yes
+P5	<i class="fa fa-exclamation-triangle me-1" title="The dependency network contradicts itself"/>\n                            Yes
+P6	<i class="fa fa-exclamation-triangle me-1" title="Review overdue"/>\n                            Held on our side
+P7	<i class="fa fa-exclamation-triangle me-1" title="Funding short"/>\n                        <b>The funding still available to draw does not cover the\n                        spending due.</b> The "funding" figure covers only the\n                        undrawn credit facility allocated to this project — it\n                        excludes equity, cash in hand and receipts, so read it as\n                        a <b>funding gap</b> rather than a treasury forecast.
+P8	<i class="fa fa-exclamation-triangle me-1" title="Milestone late"/>\n                            The forecast finish date is PAST the required milestone
+P9	<i class="fa fa-exclamation-triangle me-1" title="Over budget"/>\n                            The forecast final cost is OVER the approved budget
+P10	<i class="fa fa-lock me-1" title="Start blocked"/>
+P11	<span class="o_stat_text">Work item Gantt</span>
+P12	The live BAC less the original budget. Anything other than 0 means someone edited the BOQ or the estimate after the baseline was set without going through a variation — the budget is drifting silently.
+P13	Acceptance certificates
+P14	Quantity acceptance certificates for the project
+P15	Handover certificate
+P16	PERIOD REPORTING
+P17	Handover to operations
+P18	Energy sales
+P19	Alert when unfinished work has already run this many days past its original planned finish.
+P20	Alert when work has this many days of total project float left, or fewer. Negative float is always critical.
+P21	Alert when an interface point has this many days of float left, or fewer. 0 means alerting only once it is already in conflict.
+P22	Offtaker (PPA)
+P23	The reviewer has held it past the 21 days of clause 5.2 — every document here is an extension claim waiting to be written.
+P24	Whose court the ball is in
+P25	Period summary
+P26	Field map
+P27	Turn it on when the project type is wind, solar, hydro or battery storage. Used to hide the property sales section.
+P28	Curtailed, cumulative (MWh)
+P29	ONLY the undrawn credit facility allocated to this project. It excludes equity, cash in hand and receipts. This is a funding gap, not a treasury forecast.
+P30	Project CPI
+P31	Cost & cash out
+P32	Cost of owner-supplied items
+P33	Project-level costs
+P34	Actual cost (AC)
+P35	Convert overlapping links to SS
+P36	Cost variance (CV)
+P37	Variance at completion (VAC)
+P38	Variance against budget
+P39	Schedule variance (SV)
+P40	Without coordinates it cannot be placed on the map. This is the figure to clear up before taking the map to a meeting.
+P41	The disbursement table has not been built. The spending plan comes from the\n                        <b>contract payment milestones</b>, not from the budget\n                        curve — the two are out of phase, because an advance is\n                        paid before any quantity exists while retention is paid\n                        long after completion.
+P42	Not yet spread
+P43	It can be run any number of times — folders that already\n                            exist are skipped and only the missing ones added.
+P44	Set the original budget baseline
+P45	Set the original budget baseline at today's figures? The baseline currently in force (if any) becomes 'superseded' and is kept as history.
+P46	Close the period's figures
+P47	Fix the figures before the progress meeting: every department reads\n                            the same set, and each period can be compared with the last.
+P48	Owner committed (purchase orders)
+P49	Owner invoiced
+P50	Closed periods
+P51	Some locations have <b>passed the acceptance gate but not been\n                        handed over</b>. Each one is a warranty clock nobody has\n                        started — and warranty only counts from the moment someone\n                        records it.
+P52	Some equipment locations have <b>no coordinates</b> and cannot\n                        be placed on the map — the map will look complete while it\n                        is in fact incomplete.
+P53	Capacity (MW)
+P54	The installed capacity of the plant.
+P55	Tasks
+P56	Tasks (all contracts)
+P57	Work whose documents have not cleared clause 5.2. The Gantt still shows it on time, but the contract does not allow it to start.
+P58	The task carrying the committed milestone (COD, for example). Project lateness is measured at THAT milestone, not at the latest finish date — because legitimate work such as handover, as-built records and TOC continues after COD.
+P59	SCHEDULE SLIP ALERTS
+P60	Critical alerts
+P61	Funding shortfall alert
+P62	Schedule alerts
+P63	Open alerts
+P64	Level
+P65	Number the unnumbered tasks
+P66	Spending due within the horizon
+P67	Spending due less the funding available to draw. Above 0 means more money has to be found elsewhere.
+P68	Task list
+P69	Cumulative energy sales revenue
+P70	CASH OUT
+P71	Positive means the forecast spend exceeds what may be spent. This, rather than the variance against the original budget, is the figure to watch.
+P72	Estimate at completion (EAC)
+P73	Forecast final cost
+P74	The forecast final cost less the approved budget (BAC). Positive means over budget.
+P75	Forecast overrun (③−②)
+P76	Contingency remaining
+P77	Owner estimate remaining
+P78	Owner-supplied estimate
+P79	The project-level cost estimate, with the contingency fund DEDUCTED. The contingency sits in the same place but nobody goes out and buys it — kept together, the "remaining" figure always looks comfortably large when it is not.
+P80	The owner-supplied estimate less what has been committed. Negative means more has been committed than the owner's own estimate allows.
+P81	Energy project
+P82	Build the disbursement table
+P83	Create the standard folder set
+P84	Rebuild the disbursement table from the current payment terms? The existing table will be replaced.
+P85	EVM — project cost control
+P86	Construction schedule Gantt
+P87	Progress Gantt
+P88	Phase
+P89	The energy price under the power purchase agreement.
+P90	Planned value to date — PV(t)
+P91	Earned value (EV)
+P92	Energy price (/kWh)
+P93	Disbursement
+P94	Disbursement by month
+P95	Tender packages
+P96	Original plus approved variations. This is the amount that may be spent as things stand.
+P97	Forecast completion
+P98	Forecast completion less completion under the original plan. Positive means late.
+P99	Completion per the baseline
+P100	Power purchase agreement
+P101	Contractor agreements
+P102	Work items
+P103	Work items completed
+P104	Consequences for construction
+P105	The system scans every morning; this button is for scanning at once after a schedule change.
+P106	TECHNICAL DOCUMENTS (CLAUSE 5.2)
+P107	Documents still missing for handover
+P108	Project documents
+P109	Technical documents
+P110	Documents not yet submitted by the contractor
+P111	Documents overdue for review
+P112	Documents under review
+P113	Power purchase agreement
+P114	Contractor agreements
+P115	Shortfall from availability, cumulative (MWh)
+P116	Declare here the costs that <b>belong to no work item</b>:\n                        project management, site establishment, safety, insurance,\n                        capitalised interest… They <b>add to the project's total\n                        estimate (BAC)</b>, and so flow on into <b>Cost to\n                        complete (CTC)</b> and <b>Project funding need</b>.\n                        Costs belonging to a work item go into that\n                        <b>item's BOQ</b>; do not declare them again here.
+P117	The amount claimed from the CONTRACTOR under the availability commitment, not energy sales revenue.
+P118	Outages
+P119	The spending planned for the coming months, PLUS anything already overdue and unpaid — an overdue amount still has to be paid, and usually at once.
+P120	Energy periods
+P121	Project type
+P122	Currency
+P123	Project currency
+P124	The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it.
+P125	Refresh from SharePoint
+P126	Dependency network
+P127	Every predecessor-successor link joining two different contracts is a real interface point — scan to record them.
+P128	The milestone committed in the power purchase agreement. Slipping this date usually brings penalties, which makes it the milestone the whole schedule hangs on.
+P129	Anchor milestone
+P130	Budget baselines
+P131	Required milestone
+P132	Baseline in force
+P133	Open the handover certificate
+P134	Open the field map
+P135	Open the alerts
+P136	Open the document register
+P137	Open the variation register
+P138	Open the interface register
+P139	BUDGET & VARIATIONS
+P140	Funding available to draw
+P141	The date by which the project is committed to finish. The whole-project critical path takes this as its end point, so a chain of work that cannot make it produces negative float.
+P142	The date of first energisation.
+P143	The latest finish date in the current plan of EVERY contract on the project.
+P144	Commercial operation date (COD)
+P145	Energisation date
+P146	Budget by month
+P147	Budget and commitments
+P148	How much the budget has been increased since approval.
+P149	Budget — three layers
+P150	This project's threshold
+P151	Float threshold (days)
+P152	Interface point float threshold (days)
+P153	Slip against the original plan, threshold (days)
+P154	Power plant
+P155	How many months ahead to compare spending need against the funding available to draw. Three months is about enough to arrange a further drawdown in time.
+P156	The root node of the plant on the field map. Fill it in and the map opens straight from the project.
+P157	Contingency drawdown notes
+P158	Variations
+P159	Variations pending
+P160	Variations in progress
+P161	Variations approved
+P162	The contingency captured in the baseline currently in force. It sits WITHIN the original budget; it is not added on top.
+P163	The part planned for months ALREADY PAST that has not been paid out. Either the work is running late, or a payment application is stuck somewhere.
+P164	The part of the budget that could not be tied to the schedule, with the contingency fund DEDUCTED. The contingency is deliberately not spread: it is money set aside rather than planned quantity, so putting it into the planned curve inflates PV and flatters SPI.
+P165	Overlapping links (SS/FF)
+P166	Schedule links being violated
+P167	Overdue and unpaid
+P168	Scan again now
+P169	Scan the schedule for interface points
+P170	Contingency fund
+P171	PACKAGE INTERFACES
+P172	Spread the budget across the schedule
+P173	Spread across the schedule
+P174	Project SPI
+P175	Energy delivered, cumulative (MWh)
+P176	Certificate number
+P177	Tasks
+P178	Disbursement lines
+P179	Spread lines
+P180	Tender packages
+P181	Work items running late
+P182	Work items over cost
+P183	Work items completed
+P184	Documents
+P185	Contracts with a schedule
+P186	Contractor agreements
+P187	Budget baselines
+P188	House number and street
+P189	Drawdown notes
+P190	Variations
+P191	Predecessor-successor links
+P192	Folders
+P193	Turbines
+P194	Files
+P195	The number of units or turbines on a wind project.
+P196	Equipment locations
+P197	Interface points
+P198	The figure fixed at the baseline currently in force. 0 where no baseline has been set.
+P199	WHOLE-PROJECT SCHEDULE (all contracts)
+P200	A 0–100 scale. Spending most of the contingency while little quantity has been built is a sign of early trouble, even while the report still says "within budget".
+P201	Equipment
+P202	Missing
+P203	Months spread
+P204	Folders
+P205	Mandatory folders still empty
+P206	Document folders
+P207	Progress
+P208	Whole-project progress
+P209	Of which: already overdue
+P210	Slip against the baseline (days)
+P211	Project cost status
+P212	Schedule status
+P213	Late against the required milestone (days)
+P214	Weighted by estimated value: Σ(structure.progress × structure.estimate_value) / Σ(structure.estimate_value).
+P215	Budget status
+P216	Compute the whole-project critical path
+P217	Advances plus invoice payments. A CASH basis, quite different from actual cost (an accrual basis) — the two diverge widely in the early stages of a project and must not be merged.
+P218	Cash horizon (months)
+P219	Province / city
+P220	Total actual cost (AC)
+P221	Total earned value (EV)
+P222	Total planned spending
+P223	Total budget (BAC)
+P224	The total budget that could be spread across the schedule. Less than the original budget means a package has no contract, or a contract has no schedule — and that part never enters PV.
+P225	Total cash out
+P226	Total spent
+P227	Work not yet cleared to start
+P228	A successor starts (or finishes) earlier than the declared link allows. A critical path computed on a network that contradicts itself is not to be trusted — fix this first.
+P229	Work waiting on documents
+P230	Location
+P231	Locations with no coordinates
+P232	Plant location
+P233	Locations ready for handover
+P234	Locations handed over
+P235	Ward
+P236	View the project estimate by cost group
+P237	View the violated links
+P238	tasks are not cleared to start because their documents have\n                            not passed clause 5.2, even though the Gantt still shows\n                            them on time.
+P239	critical alerts are waiting to be dealt with.
+P240	documents are past the 21 days of clause 5.2 — the contractor\n                            is entitled to use exactly those days to claim an\n                            extension.
+P241	days.
+P242	links whose dates contradict the very logic declared —\n                            the schedule overlaps while still recorded as\n                            finish-to-start. Float and the critical path are only\n                            trustworthy once this is fixed.
+P243	Open
+P244	Interface points still open
+P245	Interface points between packages
+P246	Interface points with schedule conflicts
+P247	Committed under contract
+P248	Committed under contract, plus approved variations not yet in a contract, plus variations pending.
+P249	Invoiced
+P250	Passed the acceptance gate in the erection register but absent from any handover certificate. This is outstanding work — each tower not handed over is a warranty clock nobody has started.
+P251	Contingency drawn
+P252	Spread successfully
+P253	Invoices paid
+P254	Advances paid
+P255	Adjusted (②−①)
+P256	Purchase orders
+P257	Push to SharePoint
+P258	Read the file list back from SharePoint, including files dropped straight in without going through Odoo.
+P259	Budget drift
+P260	Is there enough money
+P261	interface points the receiving side needs BEFORE the giving\n                            side can finish.
+P262	Σ project-level costs
+P263	Σ of the costs belonging to no work item — they ADD to the project's total estimate (BAC).
+P264	Σ of the project's CONFIRMED purchase orders. Draft orders do not count — until confirmed they bind nobody.
+P265	① Original budget
+P266	② Current budget
+P267	③ Forecast at completion

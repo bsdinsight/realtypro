@@ -56,3 +56,51 @@ msgstr "Energy & revenue"
 msgid "Hợp đồng mua bán điện"
 msgstr "Power purchase agreements"
 
+#. module: rp_ppa
+#: model_terms:ir.ui.view,arch_db:rp_ppa.view_re_project_form_ppa
+msgid "Bán điện"
+msgstr "Energy sales"
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__energy_curtailed_total
+msgid "Bị cắt giảm luỹ kế (MWh)"
+msgstr "Curtailed, cumulative (MWh)"
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__energy_revenue_total
+msgid "Doanh thu bán điện luỹ kế"
+msgstr "Cumulative energy sales revenue"
+
+#. module: rp_ppa
+#: model_terms:ir.ui.view,arch_db:rp_ppa.view_re_project_form_ppa
+msgid "HĐ bán điện"
+msgstr "Power purchase agreement"
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__ppa_ids
+msgid "Hợp đồng bán điện"
+msgstr "Power purchase agreement"
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__energy_shortfall_total
+msgid "Hụt do khả dụng luỹ kế (MWh)"
+msgstr "Shortfall from availability, cumulative (MWh)"
+
+#. module: rp_ppa
+#: model:ir.model.fields,help:rp_ppa.field_re_project__energy_shortfall_total
+msgid "Khoản đòi NHÀ THẦU theo cam kết khả dụng, không phải doanh thu bán điện."
+msgstr "The amount claimed from the CONTRACTOR under the availability commitment, not energy sales revenue."
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_account_bank_statement_line__energy_period_ids
+#: model:ir.model.fields,field_description:rp_ppa.field_account_move__energy_period_ids
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__energy_period_ids
+#: model_terms:ir.ui.view,arch_db:rp_ppa.view_re_project_form_ppa
+msgid "Kỳ sản lượng"
+msgstr "Energy periods"
+
+#. module: rp_ppa
+#: model:ir.model.fields,field_description:rp_ppa.field_re_project__energy_net_total
+msgid "Sản lượng giao nhận luỹ kế (MWh)"
+msgstr "Energy delivered, cumulative (MWh)"
+

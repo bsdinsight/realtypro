@@ -1,0 +1,106 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rp_energy
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__ppa_partner_id
+msgid "Bên mua điện (PPA)"
+msgstr "Offtaker (PPA)"
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__is_energy
+#: model:ir.model.fields,help:rp_energy.field_re_subzone__is_energy
+#: model:ir.model.fields,help:rp_energy.field_rp_tender_package__project_is_energy
+msgid "Bật khi loại dự án là điện gió / điện mặt trời / thuỷ điện / lưu trữ pin. Dùng để ẩn phần bán bất động sản."
+msgstr "Turn it on when the project type is wind, solar, hydro or battery storage. Used to hide the property sales section."
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__capacity_mw
+msgid "Công suất (MW)"
+msgstr "Capacity (MW)"
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__capacity_mw
+msgid "Công suất lắp đặt của nhà máy."
+msgstr "The installed capacity of the plant."
+
+#. module: rp_energy
+#: model_terms:ir.ui.view,arch_db:rp_energy.view_re_project_form_energy
+msgid "Công việc"
+msgstr "Tasks"
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__is_energy
+#: model:ir.model.fields,field_description:rp_energy.field_rp_tender_package__project_is_energy
+#: model_terms:ir.ui.view,arch_db:rp_energy.res_config_settings_view_form_rp_energy
+#: model_terms:ir.ui.view,arch_db:rp_energy.view_re_project_search_energy
+msgid "Dự án năng lượng"
+msgstr "Energy project"
+
+#. module: rp_energy
+#: model_terms:ir.ui.view,arch_db:rp_energy.view_re_project_form_energy
+msgid "Gantt tiến độ"
+msgstr "Progress Gantt"
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__ppa_tariff
+msgid "Giá bán điện theo hợp đồng mua bán điện."
+msgstr "The energy price under the power purchase agreement."
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__ppa_tariff
+msgid "Giá điện (/kWh)"
+msgstr "Energy price (/kWh)"
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__date_cod
+msgid "Mốc cam kết trong hợp đồng mua bán điện. Trượt ngày này thường kéo theo phạt, nên nó là mốc chịu lực của cả tiến độ."
+msgstr "The milestone committed in the power purchase agreement. Slipping this date usually brings penalties, which makes it the milestone the whole schedule hangs on."
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__date_grid_connection
+msgid "Ngày hoà lưới lần đầu (first energisation)."
+msgstr "The date of first energisation."
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__date_cod
+#: model:ir.model.fields,field_description:rp_energy.field_re_subzone__date_cod
+msgid "Ngày vận hành thương mại (COD)"
+msgstr "Commercial operation date (COD)"
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__date_grid_connection
+#: model:ir.model.fields,field_description:rp_energy.field_re_subzone__date_grid_connection
+msgid "Ngày đóng điện"
+msgstr "Energisation date"
+
+#. module: rp_energy
+#: model_terms:ir.ui.view,arch_db:rp_energy.view_re_project_form_energy
+msgid "Nhà máy điện"
+msgstr "Power plant"
+
+#. module: rp_energy
+#: model:ir.model.fields,field_description:rp_energy.field_re_project__turbine_count
+#: model:ir.model.fields,field_description:rp_energy.field_re_subzone__turbine_count
+msgid "Số tua-bin"
+msgstr "Turbines"
+
+#. module: rp_energy
+#: model:ir.model.fields,help:rp_energy.field_re_project__turbine_count
+msgid "Số tổ máy / tua-bin của dự án điện gió."
+msgstr "The number of units or turbines on a wind project."
+

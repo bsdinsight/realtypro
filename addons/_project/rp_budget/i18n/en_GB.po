@@ -46,3 +46,418 @@ msgstr "Cost control sheet"
 msgid "Giải ngân theo tháng"
 msgstr "Disbursement by month"
 
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_used_pct
+msgid "% dự phòng đã dùng"
+msgstr "% of contingency used"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Thiếu tiền\"/>\n"
+"                        <b>Nguồn còn rút được không đủ cho phần phải chi\n"
+"                        sắp tới.</b> Con số \"nguồn\" chỉ gồm hạn mức tín\n"
+"                        dụng còn khả dụng đã phân bổ cho dự án — chưa\n"
+"                        tính vốn chủ, tiền mặt đang có hay tiền thu về,\n"
+"                        nên hãy đọc nó là <b>khoảng hở tài trợ</b> chứ\n"
+"                        không phải dự báo ngân quỹ."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Funding short\"/>\n"
+"                        <b>The funding still available to draw does not cover the\n"
+"                        spending due.</b> The \"funding\" figure covers only the\n"
+"                        undrawn credit facility allocated to this project — it\n"
+"                        excludes equity, cash in hand and receipts, so read it as\n"
+"                        a <b>funding gap</b> rather than a treasury forecast."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_drift
+msgid "BAC tính động trừ ngân sách gốc. Khác 0 nghĩa là có người sửa BOQ/dự toán sau khi đã chốt mốc mà không qua phát sinh — ngân sách đang trôi âm thầm."
+msgstr "The live BAC less the original budget. Anything other than 0 means someone edited the BOQ or the estimate after the baseline was set without going through a variation — the budget is drifting silently."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__cash_available
+msgid "CHỈ gồm hạn mức tín dụng còn khả dụng đã phân bổ cho dự án này. Không gồm vốn chủ, tiền mặt đang có, hay tiền thu về. Đây là khoảng hở tài trợ, không phải dự báo ngân quỹ."
+msgstr "ONLY the undrawn credit facility allocated to this project. It excludes equity, cash in hand and receipts. This is a funding gap, not a treasury forecast."
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Chi phí & tiền đã ra"
+msgstr "Cost & cash out"
+
+#. module: rp_budget
+#: model:ir.model.fields.selection,name:rp_budget.selection__rp_cost_baseline_line__source__project_cost
+msgid "Chi phí cấp dự án"
+msgstr "Project-level costs"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid ""
+"Chưa dựng bảng giải ngân. Kế hoạch chi lấy từ\n"
+"                        <b>đợt thanh toán của hợp đồng</b>, không phải từ\n"
+"                        đường cong ngân sách — hai thứ lệch pha nhau vì\n"
+"                        tạm ứng trả trước khi có khối lượng, còn tiền giữ\n"
+"                        lại bảo hành trả sau khi xong rất lâu."
+msgstr ""
+"The disbursement table has not been built. The spending plan comes from the\n"
+"                        <b>contract payment milestones</b>, not from the budget\n"
+"                        curve — the two are out of phase, because an advance is\n"
+"                        paid before any quantity exists while retention is paid\n"
+"                        long after completion."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_unphased_total
+msgid "Chưa rải được"
+msgstr "Not yet spread"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Chốt ngân sách gốc"
+msgstr "Set the original budget baseline"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Chốt ngân sách gốc theo số hiện tại? Mốc đang hiệu lực (nếu có) sẽ chuyển sang 'đã thay thế' và vẫn giữ lại làm lịch sử."
+msgstr "Set the original budget baseline at today's figures? The baseline currently in force (if any) becomes 'superseded' and is kept as history."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_alert
+msgid "Cảnh báo thiếu tiền"
+msgstr "Funding shortfall alert"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_need
+msgid "Cần chi trong tầm nhìn"
+msgstr "Spending due within the horizon"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__cash_gap
+msgid "Cần chi − nguồn còn rút được. Lớn hơn 0 là phải xoay thêm tiền từ nguồn khác."
+msgstr "Spending due less the funding available to draw. Above 0 means more money has to be found elsewhere."
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid "DÒNG TIỀN RA"
+msgstr "CASH OUT"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_forecast_gap
+msgid "Dương là dự báo tiêu quá số được phép tiêu. Đây mới là con số cần nhìn, không phải chênh so với ngân sách gốc."
+msgstr "Positive means the forecast spend exceeds what may be spent. This, rather than the variance against the original budget, is the figure to watch."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_forecast_gap
+msgid "Dự kiến vượt (③−②)"
+msgstr "Forecast overrun (③−②)"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_remaining
+msgid "Dự phòng còn lại"
+msgstr "Contingency remaining"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid "Dựng bảng giải ngân"
+msgstr "Build the disbursement table"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid "Dựng lại bảng giải ngân từ điều khoản thanh toán hiện tại? Bảng cũ sẽ bị thay."
+msgstr "Rebuild the disbursement table from the current payment terms? The existing table will be replaced."
+
+#. module: rp_budget
+#: code:addons/rp_budget/models/rp_disbursement.py:0
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_disbursement_search
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_tender_package_form_disbursement
+msgid "Giải ngân"
+msgstr "Disbursement"
+
+#. module: rp_budget
+#: model:ir.actions.act_window,name:rp_budget.action_rp_disbursement
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__disbursement_line_ids
+#: model:ir.model.fields,field_description:rp_budget.field_rp_tender_package__disbursement_line_ids
+#: model:ir.ui.menu,name:rp_budget.menu_rp_disbursement
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_disbursement_list
+msgid "Giải ngân theo tháng"
+msgstr "Disbursement by month"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_rp_budget_phase__package_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_cost_baseline_line__package_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_disbursement_line__package_id
+#: model:ir.model.fields.selection,name:rp_budget.selection__rp_cost_baseline_line__source__package
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_budget_phase_search
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_disbursement_list
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_disbursement_search
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_current
+msgid "Gốc + phát sinh đã duyệt. Đây là số tiền được phép tiêu tại thời điểm này."
+msgstr "Original plus approved variations. This is the amount that may be spent as things stand."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__cash_need
+msgid "Kế hoạch chi của các tháng tới, CỘNG phần đã quá hạn mà chưa chi — khoản quá hạn vẫn phải trả, và thường phải trả ngay."
+msgstr "The spending planned for the coming months, PLUS anything already overdue and unpaid — an overdue amount still has to be paid, and usually at once."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_rp_budget_phase__currency_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_contingency_drawdown__currency_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_cost_baseline__currency_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_cost_baseline_line__currency_id
+#: model:ir.model.fields,field_description:rp_budget.field_rp_disbursement_line__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_rp_budget_phase__currency_id
+#: model:ir.model.fields,help:rp_budget.field_rp_contingency_drawdown__currency_id
+#: model:ir.model.fields,help:rp_budget.field_rp_cost_baseline__currency_id
+#: model:ir.model.fields,help:rp_budget.field_rp_cost_baseline_line__currency_id
+#: model:ir.model.fields,help:rp_budget.field_rp_disbursement_line__currency_id
+msgid "Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ số EVM đều hiện theo loại tiền này. Dự án ở nước ngoài hoặc ký hợp đồng bằng ngoại tệ thì đặt đúng loại tiền của dự án; các khoản ghi bằng tiền khác sẽ được QUY ĐỔI về đây."
+msgstr "The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it."
+
+#. module: rp_budget
+#: code:addons/rp_budget/models/re_project.py:0
+#: model:ir.actions.act_window,name:rp_budget.action_rp_cost_baseline
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_baseline_ids
+#: model:ir.model.fields,field_description:rp_budget.field_rp_cost_baseline_line__baseline_id
+#: model:ir.ui.menu,name:rp_budget.menu_rp_cost_baseline
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_cost_baseline_form
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_cost_baseline_list
+msgid "Mốc ngân sách"
+msgstr "Budget baselines"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_baseline_id
+msgid "Mốc đang hiệu lực"
+msgstr "Baseline in force"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_available
+msgid "Nguồn còn rút được"
+msgstr "Funding available to draw"
+
+#. module: rp_budget
+#: model:ir.actions.act_window,name:rp_budget.action_rp_budget_phase
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_phase_ids
+#: model:ir.ui.menu,name:rp_budget.menu_rp_budget_phase
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_budget_phase_list
+msgid "Ngân sách theo tháng"
+msgstr "Budget by month"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_revision_total
+msgid "Ngân sách đã được nới thêm bao nhiêu so với lúc phê duyệt."
+msgstr "How much the budget has been increased since approval."
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Ngân sách — ba lớp"
+msgstr "Budget — three layers"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__cash_horizon_months
+msgid "Nhìn trước bao nhiêu tháng để so nhu cầu chi với nguồn còn rút được. Ba tháng là khoảng vừa đủ để kịp xoay một khoản giải ngân mới."
+msgstr "How many months ahead to compare spending need against the funding available to draw. Three months is about enough to arrange a further drawdown in time."
+
+#. module: rp_budget
+#: code:addons/rp_budget/models/rp_variation.py:0
+#: model:ir.model,name:rp_budget.model_rp_contingency_drawdown
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_drawdown_ids
+#: model:ir.model.fields,field_description:rp_budget.field_rp_variation__drawdown_ids
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_contingency_drawdown_form
+msgid "Phiếu rút dự phòng"
+msgstr "Contingency drawdown notes"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_rp_contingency_drawdown__variation_id
+#: model:ir.model.fields.selection,name:rp_budget.selection__rp_contingency_drawdown__source__variation
+msgid "Phát sinh"
+msgstr "Variations"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__contingency_budget
+msgid "Phần dự phòng đã chụp trong mốc đang hiệu lực. Nằm TRONG ngân sách gốc, không cộng thêm."
+msgstr "The contingency captured in the baseline currently in force. It sits WITHIN the original budget; it is not added on top."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__disbursement_overdue_total
+msgid "Phần kế hoạch của các tháng ĐÃ QUA mà chưa chi ra. Đây là chỗ hoặc công việc đang chậm, hoặc hồ sơ thanh toán đang tắc ở đâu đó."
+msgstr "The part planned for months ALREADY PAST that has not been paid out. Either the work is running late, or a payment application is stuck somewhere."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_unphased_total
+msgid "Phần ngân sách chưa gắn được vào lịch, ĐÃ TRỪ quỹ dự phòng. Dự phòng cố ý không rải: nó là khoản để dành, không phải khối lượng có kế hoạch, nên đưa nó vào đường cong kế hoạch sẽ làm PV cao giả và SPI đẹp giả."
+msgstr "The part of the budget that could not be tied to the schedule, with the contingency fund DEDUCTED. The contingency is deliberately not spread: it is money set aside rather than planned quantity, so putting it into the planned curve inflates PV and flatters SPI."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__disbursement_overdue_total
+msgid "Quá hạn chưa chi"
+msgstr "Overdue and unpaid"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Quỹ dự phòng"
+msgstr "Contingency fund"
+
+#. module: rp_budget
+#: code:addons/rp_budget/models/rp_budget_phase.py:0
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Rải ngân sách theo lịch"
+msgstr "Spread the budget across the schedule"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Rải theo lịch"
+msgstr "Spread across the schedule"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__disbursement_line_count
+msgid "Số dòng giải ngân"
+msgstr "Disbursement lines"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_phase_count
+msgid "Số dòng rải"
+msgstr "Spread lines"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_baseline_count
+msgid "Số mốc ngân sách"
+msgstr "Budget baselines"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_drawdown_count
+msgid "Số phiếu rút"
+msgstr "Drawdown notes"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_original
+msgid "Số đã chốt ở mốc đang hiệu lực. Chưa chốt mốc nào thì bằng 0."
+msgstr "The figure fixed at the baseline currently in force. 0 where no baseline has been set."
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__contingency_used_pct
+msgid "Thang 0–100. Tiêu hết phần lớn dự phòng khi khối lượng mới làm được ít là dấu hiệu hỏng sớm, dù báo cáo vẫn nói \"trong ngân sách\"."
+msgstr "A 0–100 scale. Spending most of the contingency while little quantity has been built is a sign of early trouble, even while the report still says \"within budget\"."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_gap
+msgid "Thiếu"
+msgstr "Missing"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
+msgid "Tháng đã rải"
+msgstr "Months spread"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_overdue
+msgid "Trong đó: đã quá hạn"
+msgstr "Of which: already overdue"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_status
+msgid "Tình trạng ngân sách"
+msgstr "Budget status"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__cash_out_total
+msgid "Tạm ứng + thanh toán hoá đơn. Cơ sở TIỀN, khác hẳn chi phí thực (cơ sở dồn tích) — hai con số này lệch nhau rất xa ở giai đoạn đầu dự án và không được gộp."
+msgstr "Advances plus invoice payments. A CASH basis, quite different from actual cost (an accrual basis) — the two diverge widely in the early stages of a project and must not be merged."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_horizon_months
+msgid "Tầm nhìn tiền (tháng)"
+msgstr "Cash horizon (months)"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__disbursement_plan_total
+msgid "Tổng kế hoạch chi"
+msgstr "Total planned spending"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_phased_total
+msgid "Tổng ngân sách đã rải được lên lịch. Nhỏ hơn ngân sách gốc nghĩa là có gói chưa có hợp đồng hoặc hợp đồng chưa có lịch — phần đó không vào PV."
+msgstr "The total budget that could be spread across the schedule. Less than the original budget means a package has no contract, or a contract has no schedule — and that part never enters PV."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cash_out_total
+msgid "Tổng tiền đã ra"
+msgstr "Total cash out"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__disbursement_actual_total
+msgid "Tổng đã chi"
+msgstr "Total spent"
+
+#. module: rp_budget
+#: model:ir.model.fields,help:rp_budget.field_re_project__budget_forecast
+msgid "Đã cam kết theo hợp đồng + phát sinh đã duyệt chưa vào hợp đồng + phát sinh đang chờ."
+msgstr "Committed under contract, plus approved variations not yet in a contract, plus variations pending."
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_invoiced_total
+#: model:ir.model.fields,field_description:rp_budget.field_rp_tender_package__cost_invoiced
+msgid "Đã có hoá đơn"
+msgstr "Invoiced"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_used
+msgid "Đã rút dự phòng"
+msgstr "Contingency drawn"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_phased_total
+msgid "Đã rải được"
+msgstr "Spread successfully"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_paid_total
+#: model:ir.model.fields,field_description:rp_budget.field_rp_tender_package__cost_paid
+msgid "Đã thanh toán hoá đơn"
+msgstr "Invoices paid"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_advance_total
+#: model:ir.model.fields,field_description:rp_budget.field_rp_tender_package__cost_advance
+msgid "Đã tạm ứng"
+msgstr "Advances paid"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_revision_total
+msgid "Đã điều chỉnh (②−①)"
+msgstr "Adjusted (②−①)"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_drift
+msgid "Độ trôi ngân sách"
+msgstr "Budget drift"
+
+#. module: rp_budget
+#: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
+msgid "Đủ tiền không"
+msgstr "Is there enough money"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_original
+msgid "① Ngân sách gốc"
+msgstr "① Original budget"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_current
+msgid "② Ngân sách hiện hành"
+msgstr "② Current budget"
+
+#. module: rp_budget
+#: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_forecast
+msgid "③ Dự báo cuối kỳ"
+msgstr "③ Forecast at completion"
+

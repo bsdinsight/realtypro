@@ -61,3 +61,13 @@ msgstr "Owner agreements"
 msgid "IPC (hồ sơ thanh toán)"
 msgstr "IPC (payment certificates)"
 
+#. module: rp_owner_contract
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_acceptance__currency_id
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_advance__currency_id
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_contract__currency_id
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_ipc__currency_id
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_payment__currency_id
+#: model:ir.model.fields,field_description:rp_owner_contract.field_rp_owner_payment_milestone__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+

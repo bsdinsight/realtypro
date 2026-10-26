@@ -91,3 +91,30 @@ msgstr "Configuration"
 msgid "Tiến độ"
 msgstr "Schedule"
 
+#. module: rp_estimate
+#: model:ir.actions.act_window,name:rp_estimate.action_rp_tender_package
+#: model:ir.model.fields,field_description:rp_estimate.field_re_project__tender_package_ids
+#: model:ir.model.fields,field_description:rp_estimate.field_rp_tender_bidder__package_id
+#: model:ir.model.fields,field_description:rp_estimate.field_rp_tender_eval_criterion__package_id
+#: model:ir.model.fields,field_description:rp_estimate.field_rp_tender_package_line__package_id
+#: model:ir.ui.menu,name:rp_estimate.menu_pm_rp_tender_package
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_re_project_form_tender
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_bidder_form
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_bidder_search
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_eval_criterion_search
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_package_form
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_package_list
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_package_search
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_estimate
+#: model:ir.model.fields,field_description:rp_estimate.field_re_project__tender_package_count
+msgid "Số gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_estimate
+#: model_terms:ir.ui.view,arch_db:rp_estimate.view_rp_tender_package_form
+msgid "ngày."
+msgstr "days."
+

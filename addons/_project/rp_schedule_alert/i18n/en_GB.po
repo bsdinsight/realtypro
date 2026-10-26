@@ -21,3 +21,97 @@ msgstr ""
 msgid "Cảnh báo tiến độ"
 msgstr "Schedule alerts"
 
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "<i class=\"fa fa-bell me-1\" title=\"Cảnh báo\"/>"
+msgstr "<i class=\"fa fa-bell me-1\" title=\"Alerts\"/>"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,help:rp_schedule_alert.field_re_project__alert_slip_days
+msgid "Báo khi công việc chưa xong mà đã kết thúc muộn hơn kế hoạch gốc từng này ngày trở lên."
+msgstr "Alert when unfinished work has already run this many days past its original planned finish."
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,help:rp_schedule_alert.field_re_project__alert_float_days
+msgid "Báo khi công việc còn dư địa toàn dự án ÍT HƠN hoặc bằng số ngày này. Dư địa âm luôn là mức nghiêm trọng."
+msgstr "Alert when work has this many days of total project float left, or fewer. Negative float is always critical."
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,help:rp_schedule_alert.field_re_project__alert_interface_days
+msgid "Báo khi điểm bàn giao còn dư địa ÍT HƠN hoặc bằng số ngày này. Để 0 nghĩa là chỉ báo khi đã mâu thuẫn."
+msgstr "Alert when an interface point has this many days of float left, or fewer. 0 means alerting only once it is already in conflict."
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_rp_schedule_alert__task_id
+msgid "Công việc"
+msgstr "Tasks"
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "CẢNH BÁO TRƯỢT TIẾN ĐỘ"
+msgstr "SCHEDULE SLIP ALERTS"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_critical_count
+msgid "Cảnh báo nghiêm trọng"
+msgstr "Critical alerts"
+
+#. module: rp_schedule_alert
+#: model:ir.actions.act_window,name:rp_schedule_alert.action_rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_ids
+#: model:ir.ui.menu,name:rp_schedule_alert.menu_rp_schedule_alert
+msgid "Cảnh báo tiến độ"
+msgstr "Schedule alerts"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_open_count
+msgid "Cảnh báo đang mở"
+msgstr "Open alerts"
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "Hệ thống tự quét mỗi sáng; nút này để quét ngay sau khi vừa đổi lịch."
+msgstr "The system scans every morning; this button is for scanning at once after a schedule change."
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "Mở cảnh báo"
+msgstr "Open the alerts"
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "Ngưỡng của dự án này"
+msgstr "This project's threshold"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_float_days
+msgid "Ngưỡng dư địa (ngày)"
+msgstr "Float threshold (days)"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_interface_days
+msgid "Ngưỡng dư địa điểm bàn giao (ngày)"
+msgstr "Interface point float threshold (days)"
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields,field_description:rp_schedule_alert.field_re_project__alert_slip_days
+msgid "Ngưỡng trượt kế hoạch gốc (ngày)"
+msgstr "Slip against the original plan, threshold (days)"
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "Quét lại ngay"
+msgstr "Scan again now"
+
+#. module: rp_schedule_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+msgid "cảnh báo mức nghiêm trọng đang chờ xử lý."
+msgstr "critical alerts are waiting to be dealt with."
+
+#. module: rp_schedule_alert
+#: model:ir.model.fields.selection,name:rp_schedule_alert.selection__rp_schedule_alert__state__open
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_re_project_form_alert
+#: model_terms:ir.ui.view,arch_db:rp_schedule_alert.view_rp_schedule_alert_search
+msgid "Đang mở"
+msgstr "Open"
+

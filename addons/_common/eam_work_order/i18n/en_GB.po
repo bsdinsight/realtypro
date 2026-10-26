@@ -1223,6 +1223,11 @@ msgid "Lên lịch"
 msgstr "Schedule"
 
 #. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Lúc"
+msgstr "At"
+
+#. module: eam_work_order
 #: model:ir.model.fields.selection,name:eam_work_order.selection__eam_work_order__hold_reason__other
 msgid "Lý do khác"
 msgstr "Other reason"
@@ -2267,6 +2272,11 @@ msgstr "Materials on the work order"
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
 msgid "Vật tư, phụ tùng"
 msgstr "Materials and spares"
+
+#. module: eam_work_order
+#: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_work_order_form
+msgid "Về nháp"
+msgstr "Back to draft"
 
 #. module: eam_work_order
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_order__location_id

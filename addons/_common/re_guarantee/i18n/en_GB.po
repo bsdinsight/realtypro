@@ -36,3 +36,13 @@ msgstr "Issue requests"
 msgid "Bảo lãnh NH"
 msgstr "Bank guarantees"
 
+#. module: re_guarantee
+#: model:ir.model.fields,field_description:re_guarantee.field_re_bank_guarantee__currency_id
+#: model:ir.model.fields,field_description:re_guarantee.field_re_bank_guarantee_amendment__currency_id
+#: model:ir.model.fields,field_description:re_guarantee.field_re_bank_guarantee_payment__currency_id
+#: model:ir.model.fields,field_description:re_guarantee.field_re_bank_guarantee_payment_schedule__currency_id
+#: model:ir.model.fields,field_description:re_guarantee.field_re_guarantee_request__currency_id
+#: model:ir.model.fields,field_description:re_guarantee.field_re_guarantee_request_payment__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+

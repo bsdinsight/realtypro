@@ -41,3 +41,10 @@ msgstr "Generate the erection register"
 msgid "Sổ dựng máy"
 msgstr "Erection register"
 
+#. module: rp_erection
+#: model:ir.model.fields,field_description:rp_erection.field_rp_erection_step__location_id
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_list
+#: model_terms:ir.ui.view,arch_db:rp_erection.view_rp_erection_step_search
+msgid "Vị trí"
+msgstr "Location"
+

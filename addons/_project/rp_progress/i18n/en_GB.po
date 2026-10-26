@@ -51,3 +51,84 @@ msgstr "Quantity acceptance"
 msgid "Đơn vị tính (Xây dựng)"
 msgstr "Units of measure (construction)"
 
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__weighted_progress_percent
+msgid "% hoàn thành tổng dự án"
+msgstr "% complete, whole project"
+
+#. module: rp_progress
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_re_project_form_inherit_progress
+msgid "<span class=\"o_stat_text\">Gantt hạng mục</span>"
+msgstr "<span class=\"o_stat_text\">Work item Gantt</span>"
+
+#. module: rp_progress
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_re_project_form_inherit_progress
+msgid "BBN Nghiệm thu"
+msgstr "Acceptance certificates"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__acceptance_ids
+msgid "BBNT nghiệm thu của dự án"
+msgstr "Quantity acceptance certificates for the project"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_rp_boq_line__package_id
+#: model:ir.model.fields,field_description:rp_progress.field_rp_package_reconcile__package_id
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_rp_package_reconcile_list
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_rp_progress_acceptance__contract_id
+#: model:ir.model.fields,field_description:rp_progress.field_rp_progress_acceptance_line__contract_id
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_rp_progress_acceptance_search
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__structure_ids
+msgid "Hạng mục công trình"
+msgstr "Work items"
+
+#. module: rp_progress
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_re_project_form_inherit_progress
+msgid "Hạng mục hoàn thành"
+msgstr "Work items completed"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_rp_progress_acceptance__currency_id
+#: model:ir.model.fields,field_description:rp_progress.field_rp_progress_acceptance_line__currency_id
+#: model:ir.model.fields,field_description:rp_progress.field_rp_structure__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__delayed_structure_count
+msgid "Số hạng mục chậm"
+msgstr "Work items running late"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__completed_structure_count
+msgid "Số hạng mục đã hoàn thành"
+msgstr "Work items completed"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_rp_progress_acceptance__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_progress
+#: model_terms:ir.ui.view,arch_db:rp_progress.view_re_project_form_inherit_progress
+msgid "Tiến độ tổng dự án"
+msgstr "Whole-project progress"
+
+#. module: rp_progress
+#: model:ir.model.fields,field_description:rp_progress.field_re_project__project_status
+msgid "Trạng thái tiến độ"
+msgstr "Schedule status"
+
+#. module: rp_progress
+#: model:ir.model.fields,help:rp_progress.field_re_project__weighted_progress_percent
+msgid "Trọng số theo giá trị dự toán: Σ(structure.progress × structure.estimate_value) / Σ(structure.estimate_value)."
+msgstr "Weighted by estimated value: Σ(structure.progress × structure.estimate_value) / Σ(structure.estimate_value)."
+

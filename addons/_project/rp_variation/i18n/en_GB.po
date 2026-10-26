@@ -21,3 +21,94 @@ msgstr ""
 msgid "Phát sinh hợp đồng"
 msgstr "Contract variations"
 
+#. module: rp_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_re_project_form_variation
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Vượt ngân sách\"/>\n"
+"                            Dự báo chi phí cuối kỳ đang VƯỢT ngân sách duyệt"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Over budget\"/>\n"
+"                            The forecast final cost is OVER the approved budget"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__budget_gap
+msgid "Chênh so ngân sách"
+msgstr "Variance against budget"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__cost_forecast_total
+msgid "Dự báo chi phí cuối kỳ"
+msgstr "Forecast final cost"
+
+#. module: rp_variation
+#: model:ir.model.fields,help:rp_variation.field_re_project__budget_gap
+msgid "Dự báo chi phí cuối kỳ trừ ngân sách duyệt (BAC). Dương là vượt ngân sách."
+msgstr "The forecast final cost less the approved budget (BAC). Positive means over budget."
+
+#. module: rp_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_rp_variation_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_variation
+#: model:ir.model,name:rp_variation.model_rp_contract
+msgid "Hợp đồng nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_re_project_form_variation
+msgid "Mở sổ phát sinh"
+msgstr "Open the variation register"
+
+#. module: rp_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_re_project_form_variation
+msgid "NGÂN SÁCH & PHÁT SINH"
+msgstr "BUDGET & VARIATIONS"
+
+#. module: rp_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_re_project_form_variation
+msgid "Ngân sách và cam kết"
+msgstr "Budget and commitments"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__variation_ids
+#: model:ir.model.fields,field_description:rp_variation.field_rp_contract__variation_ids
+#: model:ir.model.fields,field_description:rp_variation.field_rp_variation_line__variation_id
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_re_project_form_variation
+#: model_terms:ir.ui.view,arch_db:rp_variation.view_rp_contract_form_variation
+msgid "Phát sinh"
+msgstr "Variations"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__variation_pending_total
+#: model:ir.model.fields,field_description:rp_variation.field_rp_contract__variation_pending_amount
+msgid "Phát sinh đang chờ"
+msgstr "Variations pending"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__variation_open_count
+msgid "Phát sinh đang xử lý"
+msgstr "Variations in progress"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__variation_approved_total
+#: model:ir.model.fields,field_description:rp_variation.field_rp_contract__variation_approved_amount
+msgid "Phát sinh đã duyệt"
+msgstr "Variations approved"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__variation_count
+#: model:ir.model.fields,field_description:rp_variation.field_rp_contract__variation_count
+msgid "Số phát sinh"
+msgstr "Variations"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_rp_variation__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_variation
+#: model:ir.model.fields,field_description:rp_variation.field_re_project__contract_committed_total
+msgid "Đã cam kết theo hợp đồng"
+msgstr "Committed under contract"
+

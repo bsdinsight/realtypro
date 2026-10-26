@@ -46,3 +46,41 @@ msgstr "Payment milestones due"
 msgid "Pivot HĐ nhà thầu"
 msgstr "Contractor agreements pivot"
 
+#. module: rp_contract
+#: model:ir.model.fields,field_description:rp_contract.field_rp_contract__tender_package_id
+#: model:ir.model.fields,field_description:rp_contract.field_rp_contract_payment_milestone__package_id
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_contract_milestone_search
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_contract_search
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_contract
+#: model:ir.ui.menu,name:rp_contract.menu_pm_rp_contract
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_re_project_form_contract
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_contract_graph
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_contract_pivot
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_contract
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_contract_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract
+#: model:ir.model.fields,field_description:rp_contract.field_re_project__rp_contract_ids
+#: model_terms:ir.ui.view,arch_db:rp_contract.view_rp_tender_package_form_inherit_contract
+msgid "Hợp đồng nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_contract
+#: model:ir.model.fields,field_description:rp_contract.field_re_project__rp_contract_count
+msgid "Số hợp đồng nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_contract
+#: model:ir.model.fields,field_description:rp_contract.field_rp_contract__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+

@@ -166,3 +166,23 @@ msgstr "Repayment progress"
 msgid "Quản lý Vay"
 msgstr "Lending"
 
+#. module: re_loan
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_note__disbursement_ids
+#: model_terms:ir.ui.view,arch_db:re_loan.view_re_loan_note_form
+msgid "Giải ngân"
+msgstr "Disbursement"
+
+#. module: re_loan
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_collateral__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_collateral_pledge__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_collateral_revalue_facility_line__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_collateral_revalue_wizard__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_collateral_valuation__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_credit_contract__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_facility__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_facility_project_allocation__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_facility_reallocate_line__currency_id
+#: model:ir.model.fields,field_description:re_loan.field_re_loan_facility_reallocate_wizard__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+

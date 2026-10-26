@@ -21,3 +21,198 @@ msgstr ""
 msgid "Rủi ro (Risk)"
 msgstr "Risk"
 
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_cpi
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_cpi
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_evm_dashboard_form
+msgid "CPI dự án"
+msgstr "Project CPI"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_cost_line_ids
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_cost_lines
+msgid "Chi phí cấp dự án"
+msgstr "Project-level costs"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_ac
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_structure_form_evm
+msgid "Chi phí thực (AC)"
+msgstr "Actual cost (AC)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_cv
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_cv
+#: model:ir.model.fields,field_description:rp_evm.field_rp_structure__cost_variance
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Chênh chi phí (CV)"
+msgstr "Cost variance (CV)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_vac
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_vac
+#: model:ir.model.fields,field_description:rp_evm.field_rp_structure__variance_at_completion
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Chênh khi hoàn thành (VAC)"
+msgstr "Variance at completion (VAC)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_sv
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_sv
+#: model:ir.model.fields,field_description:rp_evm.field_rp_structure__schedule_variance
+msgid "Chênh tiến độ (SV)"
+msgstr "Schedule variance (SV)"
+
+#. module: rp_evm
+#: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
+msgid "Công việc"
+msgstr "Tasks"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_rp_project_cost_line__category_level
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_cost_lines
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_cost_category_estimate_list
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_project_cost_line_list
+msgid "Cấp"
+msgstr "Level"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_eac
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_eac
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Dự báo chi cuối (EAC)"
+msgstr "Estimate at completion (EAC)"
+
+#. module: rp_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "EVM — Kiểm soát chi phí dự án"
+msgstr "EVM — project cost control"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_pv_today
+#: model:ir.model.fields,field_description:rp_evm.field_rp_structure__planned_value_today
+msgid "Giá trị kế hoạch đến nay — PV(t)"
+msgstr "Planned value to date — PV(t)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_ev
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_structure_form_evm
+msgid "Giá trị làm ra (EV)"
+msgstr "Earned value (EV)"
+
+#. module: rp_evm
+#: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_cost_lines
+msgid ""
+"Khai ở đây những khoản <b>không thuộc hạng mục\n"
+"                        nào</b>: quản lý dự án, lán trại, an toàn, bảo\n"
+"                        hiểm, lãi vay vốn hoá… Chúng <b>cộng vào tổng dự\n"
+"                        toán (BAC)</b> của dự án, nên chảy tiếp vào\n"
+"                        <b>Chi phí còn phải chi (CTC)</b> và\n"
+"                        <b>Nhu cầu vốn dự án</b>.\n"
+"                        Chi phí thuộc hạng mục thì khai ở\n"
+"                        <b>BOQ của hạng mục</b>, đừng khai lại ở đây."
+msgstr ""
+"Declare here the costs that <b>belong to no work item</b>:\n"
+"                        project management, site establishment, safety, insurance,\n"
+"                        capitalised interest… They <b>add to the project's total\n"
+"                        estimate (BAC)</b>, and so flow on into <b>Cost to\n"
+"                        complete (CTC)</b> and <b>Project funding need</b>.\n"
+"                        Costs belonging to a work item go into that\n"
+"                        <b>item's BOQ</b>; do not declare them again here."
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__currency_id
+#: model:ir.model.fields,field_description:rp_evm.field_rp_cost_category__currency_id
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__currency_id
+#: model:ir.model.fields,field_description:rp_evm.field_rp_project_cost_line__currency_id
+#: model:ir.model.fields,field_description:rp_evm.field_rp_risk__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+
+#. module: rp_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Loại tiền dự án"
+msgstr "Project currency"
+
+#. module: rp_evm
+#: model:ir.model.fields,help:rp_evm.field_re_project__currency_id
+#: model:ir.model.fields,help:rp_evm.field_rp_cost_category__currency_id
+#: model:ir.model.fields,help:rp_evm.field_rp_evm_dashboard__currency_id
+#: model:ir.model.fields,help:rp_evm.field_rp_project_cost_line__currency_id
+#: model:ir.model.fields,help:rp_evm.field_rp_risk__currency_id
+msgid "Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ số EVM đều hiện theo loại tiền này. Dự án ở nước ngoài hoặc ký hợp đồng bằng ngoại tệ thì đặt đúng loại tiền của dự án; các khoản ghi bằng tiền khác sẽ được QUY ĐỔI về đây."
+msgstr "The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it."
+
+#. module: rp_evm
+#: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
+msgid "Nguồn còn rút được"
+msgstr "Funding available to draw"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_spi
+#: model:ir.model.fields,field_description:rp_evm.field_rp_evm_dashboard__kpi_spi
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_evm_dashboard_form
+msgid "SPI dự án"
+msgstr "Project SPI"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__over_budget_count
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Số hạng mục vượt chi"
+msgstr "Work items over cost"
+
+#. module: rp_evm
+#: model:ir.model.fields.selection,name:rp_evm.selection__rp_risk__category__schedule
+msgid "Tiến độ"
+msgstr "Progress"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__cost_status
+msgid "Trạng thái chi phí dự án"
+msgstr "Project cost status"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_ac
+msgid "Tổng chi phí thực (AC)"
+msgstr "Total actual cost (AC)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_ev
+msgid "Tổng giá trị làm ra (EV)"
+msgstr "Total earned value (EV)"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__total_bac
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_evm
+msgid "Tổng ngân sách (BAC)"
+msgstr "Total budget (BAC)"
+
+#. module: rp_evm
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_re_project_form_cost_lines
+msgid "Xem Dự toán dự án theo nhóm chi phí"
+msgstr "View the project estimate by cost group"
+
+#. module: rp_evm
+#: model:ir.model.fields.selection,name:rp_evm.selection__rp_risk__state__open
+#: model_terms:ir.ui.view,arch_db:rp_evm.view_rp_risk_search
+msgid "Đang mở"
+msgstr "Open"
+
+#. module: rp_evm
+#: model:ir.model.fields,field_description:rp_evm.field_re_project__project_cost_direct_total
+msgid "Σ chi phí cấp dự án"
+msgstr "Σ project-level costs"
+
+#. module: rp_evm
+#: model:ir.model.fields,help:rp_evm.field_re_project__project_cost_direct_total
+msgid "Σ các khoản không thuộc hạng mục nào — CỘNG vào tổng dự toán (BAC) của dự án."
+msgstr "Σ of the costs belonging to no work item — they ADD to the project's total estimate (BAC)."
+

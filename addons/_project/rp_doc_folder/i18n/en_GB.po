@@ -26,3 +26,77 @@ msgstr "Project document folders"
 msgid "Bộ thư mục chuẩn"
 msgstr "Standard folder sets"
 
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid ""
+"Chạy lại bao nhiêu lần cũng được — thư mục đã\n"
+"                            có thì bỏ qua, chỉ thêm cái còn thiếu."
+msgstr ""
+"It can be run any number of times — folders that already\n"
+"                            exist are skipped and only the missing ones added."
+
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid "Dựng bộ thư mục chuẩn"
+msgstr "Create the standard folder set"
+
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_concept_estimate_form_doc_filing
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_tender_bidder_form_doc_filing
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_tender_package_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_doc_folder_form
+msgid "Làm mới từ SharePoint"
+msgstr "Refresh from SharePoint"
+
+#. module: rp_doc_folder
+#: model:ir.model.fields,field_description:rp_doc_folder.field_re_project__doc_folder_count
+msgid "Số thư mục"
+msgstr "Folders"
+
+#. module: rp_doc_folder
+#: model:ir.model.fields,field_description:rp_doc_folder.field_re_project__doc_file_count
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_doc_folder__file_count
+msgid "Số tệp"
+msgstr "Files"
+
+#. module: rp_doc_folder
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_doc_file__folder_id
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_doc_folder_template__line_ids
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid "Thư mục"
+msgstr "Folders"
+
+#. module: rp_doc_folder
+#: model:ir.model.fields,field_description:rp_doc_folder.field_re_project__doc_missing_count
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid "Thư mục bắt buộc còn rỗng"
+msgstr "Mandatory folders still empty"
+
+#. module: rp_doc_folder
+#: model:ir.model.fields,field_description:rp_doc_folder.field_re_project__doc_folder_ids
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_concept_estimate__doc_folder_id
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_doc_filing__doc_folder_id
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_tender_bidder__doc_folder_id
+#: model:ir.model.fields,field_description:rp_doc_folder.field_rp_tender_package__doc_folder_id
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_doc_folder_form
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_doc_folder_list
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_rp_doc_folder_search
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid "Đẩy lên SharePoint"
+msgstr "Push to SharePoint"
+
+#. module: rp_doc_folder
+#: model_terms:ir.ui.view,arch_db:rp_doc_folder.view_re_project_form_doc_folder
+msgid "Đọc ngược danh sách tệp từ SharePoint, kể cả tệp thả thẳng vào đó không qua Odoo."
+msgstr "Read the file list back from SharePoint, including files dropped straight in without going through Odoo."
+

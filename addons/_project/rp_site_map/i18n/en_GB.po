@@ -21,3 +21,50 @@ msgstr ""
 msgid "Bản đồ hiện trường"
 msgstr "Site map"
 
+#. module: rp_site_map
+#: model:ir.ui.menu,name:rp_site_map.menu_rp_site_map
+#: model_terms:ir.ui.view,arch_db:rp_site_map.view_re_project_form_site_map
+msgid "Bản đồ hiện trường"
+msgstr "Field map"
+
+#. module: rp_site_map
+#: model:ir.model.fields,help:rp_site_map.field_re_project__site_no_coords
+msgid "Chưa có toạ độ thì không cắm lên bản đồ được. Đây là số cần dọn trước khi đem bản đồ đi họp."
+msgstr "Without coordinates it cannot be placed on the map. This is the figure to clear up before taking the map to a meeting."
+
+#. module: rp_site_map
+#: model_terms:ir.ui.view,arch_db:rp_site_map.view_re_project_form_site_map
+msgid ""
+"Có vị trí thiết bị <b>chưa khai toạ độ</b> nên không\n"
+"                        cắm lên bản đồ được — bản đồ sẽ trông đầy đủ trong\n"
+"                        khi thực tế đang thiếu."
+msgstr ""
+"Some equipment locations have <b>no coordinates</b> and cannot\n"
+"                        be placed on the map — the map will look complete while it\n"
+"                        is in fact incomplete."
+
+#. module: rp_site_map
+#: model_terms:ir.ui.view,arch_db:rp_site_map.view_re_project_form_site_map
+msgid "Mở bản đồ hiện trường"
+msgstr "Open the field map"
+
+#. module: rp_site_map
+#: model:ir.model.fields,help:rp_site_map.field_re_project__plant_location_id
+msgid "Nút gốc của nhà máy trên bản đồ hiện trường. Khai vào thì mở được bản đồ thẳng từ dự án."
+msgstr "The root node of the plant on the field map. Fill it in and the map opens straight from the project."
+
+#. module: rp_site_map
+#: model:ir.model.fields,field_description:rp_site_map.field_re_project__site_position_count
+msgid "Số vị trí thiết bị"
+msgstr "Equipment locations"
+
+#. module: rp_site_map
+#: model:ir.model.fields,field_description:rp_site_map.field_re_project__site_no_coords
+msgid "Vị trí chưa có toạ độ"
+msgstr "Locations with no coordinates"
+
+#. module: rp_site_map
+#: model:ir.model.fields,field_description:rp_site_map.field_re_project__plant_location_id
+msgid "Vị trí nhà máy"
+msgstr "Plant location"
+

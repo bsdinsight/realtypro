@@ -96,3 +96,60 @@ msgstr "Purchase orders"
 msgid "Yêu cầu mua sắm"
 msgstr "Purchase requisitions"
 
+#. module: rp_purchase
+#: model_terms:ir.ui.view,arch_db:rp_purchase.view_re_project_form_purchase
+msgid "Chi phí chủ đầu tư tự mua"
+msgstr "Cost of owner-supplied items"
+
+#. module: rp_purchase
+#: model:ir.model.fields,field_description:rp_purchase.field_re_project__owner_cost_committed
+msgid "Chủ đầu tư đã cam kết (đơn mua)"
+msgstr "Owner committed (purchase orders)"
+
+#. module: rp_purchase
+#: model:ir.model.fields,field_description:rp_purchase.field_re_project__owner_cost_invoiced
+msgid "Chủ đầu tư đã có hoá đơn"
+msgstr "Owner invoiced"
+
+#. module: rp_purchase
+#: model:ir.model.fields,field_description:rp_purchase.field_re_project__owner_cost_gap
+msgid "Dự toán CĐT còn lại"
+msgstr "Owner estimate remaining"
+
+#. module: rp_purchase
+#: model:ir.model.fields,field_description:rp_purchase.field_re_project__owner_cost_budget
+msgid "Dự toán CĐT tự mua"
+msgstr "Owner-supplied estimate"
+
+#. module: rp_purchase
+#: model:ir.model.fields,help:rp_purchase.field_re_project__owner_cost_budget
+msgid "Dự toán chi phí cấp dự án, ĐÃ TRỪ quỹ dự phòng. Dự phòng nằm cùng chỗ nhưng không ai đi mua nó — để chung thì con số \"còn lại\" lúc nào cũng dư dả giả tạo."
+msgstr "The project-level cost estimate, with the contingency fund DEDUCTED. The contingency sits in the same place but nobody goes out and buys it — kept together, the \"remaining\" figure always looks comfortably large when it is not."
+
+#. module: rp_purchase
+#: model:ir.model.fields,help:rp_purchase.field_re_project__owner_cost_gap
+msgid "Dự toán tự mua trừ phần đã cam kết. Âm là đã cam kết vượt dự toán của chính mình."
+msgstr "The owner-supplied estimate less what has been committed. Negative means more has been committed than the owner's own estimate allows."
+
+#. module: rp_purchase
+#: model:ir.model.fields,field_description:rp_purchase.field_rp_goods_receipt__name
+msgid "Số biên bản"
+msgstr "Certificate number"
+
+#. module: rp_purchase
+#: code:addons/rp_purchase/models/rp_purchase_request.py:0
+#: model:ir.model.fields,field_description:rp_purchase.field_re_project__purchase_order_ids
+#: model:ir.model.fields,field_description:rp_purchase.field_rp_goods_receipt__purchase_order_id
+#: model:ir.model.fields,field_description:rp_purchase.field_rp_payment_request__purchase_order_id
+#: model:ir.ui.menu,name:rp_purchase.menu_rp_purchase_order
+#: model_terms:ir.ui.view,arch_db:rp_purchase.view_purchase_order_list_procure
+#: model_terms:ir.ui.view,arch_db:rp_purchase.view_re_project_form_purchase
+#: model_terms:ir.ui.view,arch_db:rp_purchase.view_rp_purchase_request_form
+msgid "Đơn mua"
+msgstr "Purchase orders"
+
+#. module: rp_purchase
+#: model:ir.model.fields,help:rp_purchase.field_re_project__owner_cost_committed
+msgid "Σ đơn mua ĐÃ XÁC NHẬN của dự án. Đơn nháp không tính — chưa xác nhận thì chưa ràng buộc ai cả."
+msgstr "Σ of the project's CONFIRMED purchase orders. Draft orders do not count — until confirmed they bind nobody."
+

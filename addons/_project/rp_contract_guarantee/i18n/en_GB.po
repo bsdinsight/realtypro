@@ -26,3 +26,18 @@ msgstr "Contractor guarantees"
 msgid "Bảo lãnh sắp / đã hết hạn"
 msgstr "Guarantees expiring / expired"
 
+#. module: rp_contract_guarantee
+#: model_terms:ir.ui.view,arch_db:rp_contract_guarantee.view_rp_contract_guarantee_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_contract_guarantee
+#: model:ir.model.fields,field_description:rp_contract_guarantee.field_rp_contract_guarantee__contract_id
+msgid "Hợp đồng nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_contract_guarantee
+#: model:ir.model.fields,field_description:rp_contract_guarantee.field_rp_contract_guarantee__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+

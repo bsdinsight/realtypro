@@ -221,6 +221,11 @@ msgid "Hiệu suất ngày"
 msgstr "Daily performance"
 
 #. module: eam_solar
+#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_kpi
+msgid "Hiệu suất ngày (PR/PA)"
+msgstr "Daily performance (PR/PA)"
+
+#. module: eam_solar
 #: model:ir.model,name:eam_solar.model_eam_solar_kpi
 msgid "Hiệu suất ngày — điện mặt trời"
 msgstr "Daily performance — solar PV"
@@ -295,6 +300,16 @@ msgstr "The gap between the override denominator and the computed one. Anything 
 #: model:eam.asset.category,name:eam_solar.cat_pvm_mnt
 msgid "Khung giá đỡ"
 msgstr "Mounting structure"
+
+#. module: eam_solar
+#: model:ir.actions.act_window,name:eam_solar.action_eam_solar_weather
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__weather_id
+#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_weather
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_form
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_list
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
+msgid "Khí tượng ngày"
+msgstr "Daily weather"
 
 #. module: eam_solar
 #: model:ir.model,name:eam_solar.model_eam_solar_weather
@@ -731,11 +746,6 @@ msgstr "Leave it empty and the module area above is used. Declare it separately 
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
 msgid "để trống = bằng diện tích mô-đun"
 msgstr "empty = equal to the module area"
-
-#. module: eam_solar
-#: model:ir.ui.menu,name:eam_solar.menu_eam_solar_kpi
-msgid "Hiệu suất ngày (PR/PA)"
-msgstr "Daily performance (PR/PA)"
 
 #. module: eam_solar
 #: model:ir.ui.menu,name:eam_solar.menu_eam_solar_weather

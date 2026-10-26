@@ -111,3 +111,124 @@ msgstr "Variations — value by state"
 msgid "Phát sinh đang xử lý"
 msgstr "Variations in progress"
 
+#. module: rp_report
+#: model_terms:ir.ui.view,arch_db:rp_report.view_re_project_form_brief
+msgid "BÁO CÁO THEO KỲ"
+msgstr "PERIOD REPORTING"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_re_project__brief_ids
+msgid "Bản tổng hợp theo kỳ"
+msgstr "Period summary"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__budget_gap
+msgid "Chênh so ngân sách"
+msgstr "Variance against budget"
+
+#. module: rp_report
+#: model_terms:ir.ui.view,arch_db:rp_report.view_re_project_form_brief
+msgid "Chốt số kỳ báo cáo"
+msgstr "Close the period's figures"
+
+#. module: rp_report
+#: model_terms:ir.ui.view,arch_db:rp_report.view_re_project_form_brief
+msgid ""
+"Chốt số trước cuộc họp giao ban: mọi phòng đọc\n"
+"                            cùng một bộ số, và kỳ sau so được với kỳ trước."
+msgstr ""
+"Fix the figures before the progress meeting: every department reads\n"
+"                            the same set, and each period can be compared with the last."
+
+#. module: rp_report
+#: model_terms:ir.ui.view,arch_db:rp_report.view_re_project_form_brief
+msgid "Các kỳ đã chốt"
+msgstr "Closed periods"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_alert_critical
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__alert_critical_count
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_alert_critical
+msgid "Cảnh báo nghiêm trọng"
+msgstr "Critical alerts"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__alert_open_count
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_alert_open
+msgid "Cảnh báo đang mở"
+msgstr "Open alerts"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__cost_forecast
+msgid "Dự báo chi phí cuối kỳ"
+msgstr "Forecast final cost"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__doc_toc_outstanding_count
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_doc_toc
+msgid "Hồ sơ còn thiếu để bàn giao"
+msgstr "Documents still missing for handover"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__doc_pending_count
+msgid "Hồ sơ đang xem xét"
+msgstr "Documents under review"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__currency_id
+msgid "Loại tiền"
+msgstr "Currency"
+
+#. module: rp_report
+#: model:ir.model.fields,help:rp_report.field_rp_project_brief__currency_id
+msgid "Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ số EVM đều hiện theo loại tiền này. Dự án ở nước ngoài hoặc ký hợp đồng bằng ngoại tệ thì đặt đúng loại tiền của dự án; các khoản ghi bằng tiền khác sẽ được QUY ĐỔI về đây."
+msgstr "The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it."
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__deadline
+msgid "Mốc phải xong"
+msgstr "Required milestone"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__variation_pending
+msgid "Phát sinh đang chờ"
+msgstr "Variations pending"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_variation_open
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__variation_open_count
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_variation_open
+msgid "Phát sinh đang xử lý"
+msgstr "Variations in progress"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__variation_approved
+msgid "Phát sinh đã duyệt"
+msgstr "Variations approved"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__task_count
+msgid "Số công việc"
+msgstr "Tasks"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__contract_count
+msgid "Số hợp đồng có lịch"
+msgstr "Contracts with a schedule"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__interface_count
+msgid "Số điểm bàn giao"
+msgstr "Interface points"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__doc_blocked_task_count
+#: model:ir.ui.menu,name:rp_report.menu_rp_report_doc_blocked
+msgid "Việc chưa được phép khởi công"
+msgstr "Work not yet cleared to start"
+
+#. module: rp_report
+#: model:ir.model.fields,field_description:rp_report.field_rp_project_brief__committed
+msgid "Đã cam kết theo hợp đồng"
+msgstr "Committed under contract"
+

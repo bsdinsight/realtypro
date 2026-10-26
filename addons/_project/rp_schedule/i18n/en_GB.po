@@ -61,3 +61,216 @@ msgstr "Dependency network"
 msgid "Quan hệ lịch đang bị vi phạm"
 msgstr "Schedule links being violated"
 
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Mạng phụ thuộc tự mâu thuẫn\"/>\n"
+"                            Có"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"The dependency network contradicts itself\"/>\n"
+"                            Yes"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Trễ mốc\"/>\n"
+"                            Ngày về đích dự báo đang VƯỢT mốc phải xong"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Milestone late\"/>\n"
+"                            The forecast finish date is PAST the required milestone"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Chuyển quan hệ chồng lấn sang SS"
+msgstr "Convert overlapping links to SS"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_rp_contract__task_ids
+#: model:ir.model.fields,field_description:rp_schedule.field_rp_schedule_baseline_line__task_id
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_rp_contract_form_schedule
+msgid "Công việc"
+msgstr "Tasks"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_task_ids
+msgid "Công việc (mọi hợp đồng)"
+msgstr "Tasks (all contracts)"
+
+#. module: rp_schedule
+#: model:ir.model.fields,help:rp_schedule.field_re_project__schedule_deadline_task_id
+msgid "Công việc mang mốc cam kết (ví dụ COD). Trễ của dự án đo ở ĐÚNG mốc này, không đo ở ngày kết thúc muộn nhất — vì sau COD vẫn còn việc hợp lệ như bàn giao, hoàn công, TOC."
+msgstr "The task carrying the committed milestone (COD, for example). Project lateness is measured at THAT milestone, not at the latest finish date — because legitimate work such as handover, as-built records and TOC continues after COD."
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_project_task__wbs_level
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_rp_schedule_task_list
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_task_tree2_rp_schedule
+msgid "Cấp"
+msgstr "Level"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Cấp STT cho việc chưa có"
+msgstr "Number the unnumbered tasks"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_tasks
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Danh sách công việc"
+msgstr "Task list"
+
+#. module: rp_schedule
+#: code:addons/rp_schedule/models/project_task.py:0
+#: model:ir.actions.client,name:rp_schedule.action_rp_schedule_gantt
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_gantt
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Gantt lịch thi công"
+msgstr "Construction schedule Gantt"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_project_task__rp_package_id
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_project_task_list_project_cpm
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_project_task_search_project
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_task_search_rp_panel
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_forecast_end
+msgid "Hoàn thành dự báo"
+msgstr "Forecast completion"
+
+#. module: rp_schedule
+#: model:ir.model.fields,help:rp_schedule.field_re_project__schedule_slip_days
+msgid "Hoàn thành dự báo trừ hoàn thành theo kế hoạch gốc. Dương là trễ."
+msgstr "Forecast completion less completion under the original plan. Positive means late."
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_baseline_end
+msgid "Hoàn thành theo baseline"
+msgstr "Completion per the baseline"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_project_task__rp_contract_id
+#: model:ir.model.fields,field_description:rp_schedule.field_rp_schedule_import_wizard__contract_id
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_rp_schedule_baseline_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_schedule
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_task_link
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Mạng phụ thuộc"
+msgstr "Dependency network"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_deadline_task_id
+msgid "Mốc chịu lực"
+msgstr "Anchor milestone"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_deadline
+msgid "Mốc phải xong"
+msgstr "Required milestone"
+
+#. module: rp_schedule
+#: model:ir.model.fields,help:rp_schedule.field_re_project__schedule_deadline
+msgid "Ngày dự án buộc phải về đích theo cam kết. Đường găng toàn dự án lấy mốc này làm đích, nên chuỗi việc không kịp sẽ ra dư địa âm."
+msgstr "The date by which the project is committed to finish. The whole-project critical path takes this as its end point, so a chain of work that cannot make it produces negative float."
+
+#. module: rp_schedule
+#: model:ir.model.fields,help:rp_schedule.field_re_project__schedule_forecast_end
+msgid "Ngày kết thúc muộn nhất trong kế hoạch hiện hành của MỌI hợp đồng thuộc dự án."
+msgstr "The latest finish date in the current plan of EVERY contract on the project."
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_link_ss_count
+msgid "Quan hệ chồng lấn (SS/FF)"
+msgstr "Overlapping links (SS/FF)"
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_task_link_violated
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_link_violated_count
+#: model:ir.ui.menu,name:rp_schedule.menu_rp_task_link_violated
+msgid "Quan hệ lịch đang bị vi phạm"
+msgstr "Schedule links being violated"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_task_count
+#: model:ir.model.fields,field_description:rp_schedule.field_rp_schedule_baseline__task_count
+msgid "Số công việc"
+msgstr "Tasks"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_contract_count
+msgid "Số hợp đồng có lịch"
+msgstr "Contracts with a schedule"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_link_count
+msgid "Số quan hệ trước–sau"
+msgstr "Predecessor-successor links"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "TIẾN ĐỘ TOÀN DỰ ÁN (mọi hợp đồng)"
+msgstr "WHOLE-PROJECT SCHEDULE (all contracts)"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_rp_schedule_baseline__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_rp_contract_form_schedule
+msgid "Tiến độ"
+msgstr "Progress"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_slip_days
+msgid "Trượt so baseline (ngày)"
+msgstr "Slip against the baseline (days)"
+
+#. module: rp_schedule
+#: model:ir.model.fields,field_description:rp_schedule.field_re_project__schedule_deadline_slip
+msgid "Trễ so mốc phải xong (ngày)"
+msgstr "Late against the required milestone (days)"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Tính đường găng toàn dự án"
+msgstr "Compute the whole-project critical path"
+
+#. module: rp_schedule
+#: model:ir.model.fields,help:rp_schedule.field_re_project__schedule_link_violated_count
+msgid "Việc sau bắt đầu (hoặc kết thúc) sớm hơn mức quan hệ đã khai cho phép. Đường găng tính trên một mạng đang tự mâu thuẫn thì không đáng tin — sửa chỗ này trước."
+msgstr "A successor starts (or finishes) earlier than the declared link allows. A critical path computed on a network that contradicts itself is not to be trusted — fix this first."
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "Xem quan hệ bị vi phạm"
+msgstr "View the violated links"
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid "ngày."
+msgstr "days."
+
+#. module: rp_schedule
+#: model_terms:ir.ui.view,arch_db:rp_schedule.view_re_project_form_schedule
+msgid ""
+"quan hệ mà ngày đang lập vi phạm chính logic đã\n"
+"                            khai — lịch chồng lấn nhưng vẫn ghi là\n"
+"                            finish-to-start. Dư địa và đường găng chỉ đáng\n"
+"                            tin sau khi sửa chỗ này."
+msgstr ""
+"links whose dates contradict the very logic declared —\n"
+"                            the schedule overlaps while still recorded as\n"
+"                            finish-to-start. Float and the critical path are only\n"
+"                            trustworthy once this is fixed."
+

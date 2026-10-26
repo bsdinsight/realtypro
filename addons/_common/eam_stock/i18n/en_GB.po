@@ -1808,6 +1808,12 @@ msgid "Lô/sê-ri trong kho"
 msgstr "Batch/serial in store"
 
 #. module: eam_stock
+#: model:ir.model.fields,field_description:eam_stock.field_eam_material_request_approval__date_action
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Lúc"
+msgstr "At"
+
+#. module: eam_stock
 #: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_adjustment_form
 msgid ""
 "Lúc duyệt, hệ thống <b>đọc lại tồn</b> và so với số\n"
@@ -3216,6 +3222,11 @@ msgid "Tính từ ngày NHẬN HÀNG, không phải ngày lắp. Hàng nằm kho
 msgstr "Counted from the date the goods were RECEIVED, not the date they were fitted. Sit in store for two years and the warranty expires before it is ever used."
 
 #. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_product_template_form_eam
+msgid "Tệp"
+msgstr "File"
+
+#. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_part_doc__attachment_id
 msgid "Tệp đính kèm"
 msgstr "Attachment"
@@ -3443,6 +3454,11 @@ msgstr "Consumable"
 #: model:ir.model.fields,field_description:eam_stock.field_eam_material_request__line_ids
 msgid "Vật tư xin"
 msgstr "Material requested"
+
+#. module: eam_stock
+#: model_terms:ir.ui.view,arch_db:eam_stock.view_eam_material_request_form
+msgid "Về nháp"
+msgstr "Back to draft"
 
 #. module: eam_stock
 #: model:ir.model.fields,field_description:eam_stock.field_eam_inbound_check_line__dest_location_id

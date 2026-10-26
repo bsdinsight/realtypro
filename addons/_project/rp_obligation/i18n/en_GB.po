@@ -26,3 +26,23 @@ msgstr "Contract clauses"
 msgid "Sổ nghĩa vụ HĐ"
 msgstr "Contract obligation register"
 
+#. module: rp_obligation
+#: model:ir.model.fields,field_description:rp_obligation.field_rp_obligation__document_id
+msgid "Hồ sơ kỹ thuật"
+msgstr "Technical documents"
+
+#. module: rp_obligation
+#: model:ir.model.fields,field_description:rp_obligation.field_rp_obligation__variation_id
+msgid "Phát sinh"
+msgstr "Variations"
+
+#. module: rp_obligation
+#: model_terms:ir.ui.view,arch_db:rp_obligation.view_rp_contract_form_clause_clock
+msgid "ngày."
+msgstr "days."
+
+#. module: rp_obligation
+#: model:ir.model,name:rp_obligation.model_rp_interface
+msgid "Điểm bàn giao giữa các gói thầu"
+msgstr "Interface points between packages"
+

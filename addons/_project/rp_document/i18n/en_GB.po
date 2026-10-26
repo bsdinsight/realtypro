@@ -56,3 +56,138 @@ msgstr "Still missing for handover"
 msgid "Phiếu chuyển hồ sơ"
 msgstr "Transmittals"
 
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Quá hạn xem xét\"/>\n"
+"                            Bên mình đang giữ"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Review overdue\"/>\n"
+"                            Held on our side"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid "<i class=\"fa fa-lock me-1\" title=\"Chặn khởi công\"/>"
+msgstr "<i class=\"fa fa-lock me-1\" title=\"Start blocked\"/>"
+
+#. module: rp_document
+#: model:ir.model.fields,help:rp_document.field_re_project__doc_overdue_count
+msgid "Bên xem xét đang giữ quá hạn 21 ngày của điều 5.2 — mỗi hồ sơ ở đây là một đơn xin gia hạn đang chờ được viết."
+msgstr "The reviewer has held it past the 21 days of clause 5.2 — every document here is an extension claim waiting to be written."
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid "Bóng đang ở chân ai"
+msgstr "Whose court the ball is in"
+
+#. module: rp_document
+#: model:ir.model.fields,help:rp_document.field_re_project__doc_blocked_task_count
+msgid "Công việc có hồ sơ chưa qua điều 5.2. Gantt vẫn báo đúng hạn, nhưng hợp đồng không cho phép bắt đầu."
+msgstr "Work whose documents have not cleared clause 5.2. The Gantt still shows it on time, but the contract does not allow it to start."
+
+#. module: rp_document
+#: model:ir.model.fields,field_description:rp_document.field_rp_document__contract_id
+#: model:ir.model.fields,field_description:rp_document.field_rp_transmittal__contract_id
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid "Hệ quả lên thi công"
+msgstr "Consequences for construction"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid "HỒ SƠ KỸ THUẬT (ĐIỀU 5.2)"
+msgstr "TECHNICAL DOCUMENTS (CLAUSE 5.2)"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document_toc
+#: model:ir.model.fields,field_description:rp_document.field_re_project__doc_toc_outstanding_count
+#: model:ir.model.fields,field_description:rp_document.field_rp_contract__doc_toc_outstanding_count
+msgid "Hồ sơ còn thiếu để bàn giao"
+msgstr "Documents still missing for handover"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_rp_transmittal_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_document
+#: code:addons/rp_document/models/rp_contract.py:0
+#: model:ir.model.fields,field_description:rp_document.field_re_project__document_ids
+#: model:ir.model.fields,field_description:rp_document.field_rp_contract__document_ids
+#: model_terms:ir.ui.view,arch_db:rp_document.view_rp_contract_form_document
+msgid "Hồ sơ kỹ thuật"
+msgstr "Technical documents"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document_not_submitted
+#: model:ir.model.fields,field_description:rp_document.field_re_project__doc_not_submitted_count
+msgid "Hồ sơ nhà thầu chưa trình"
+msgstr "Documents not yet submitted by the contractor"
+
+#. module: rp_document
+#: model:ir.model.fields,field_description:rp_document.field_re_project__doc_overdue_count
+msgid "Hồ sơ quá hạn xem xét"
+msgstr "Documents overdue for review"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document_pending
+#: model:ir.model.fields,field_description:rp_document.field_re_project__doc_pending_count
+#: model:ir.model.fields,field_description:rp_document.field_rp_contract__doc_pending_count
+msgid "Hồ sơ đang xem xét"
+msgstr "Documents under review"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_rp_contract_form_document
+msgid "Mở sổ hồ sơ"
+msgstr "Open the document register"
+
+#. module: rp_document
+#: model:ir.model.fields,field_description:rp_document.field_re_project__document_count
+#: model:ir.model.fields,field_description:rp_document.field_rp_contract__document_count
+#: model:ir.model.fields,field_description:rp_document.field_rp_transmittal__document_count
+#: model_terms:ir.ui.view,arch_db:rp_document.view_rp_transmittal_list
+msgid "Số hồ sơ"
+msgstr "Documents"
+
+#. module: rp_document
+#: model:ir.model.fields,field_description:rp_document.field_rp_document_revision__doc_folder_id
+#: model:ir.model.fields,field_description:rp_document.field_rp_transmittal__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document_blocked_tasks
+#: model:ir.model.fields,field_description:rp_document.field_re_project__doc_blocked_task_count
+#: model:ir.ui.menu,name:rp_document.menu_rp_document_blocked_tasks
+msgid "Việc chưa được phép khởi công"
+msgstr "Work not yet cleared to start"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid "Việc đang chờ hồ sơ"
+msgstr "Work waiting on documents"
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid ""
+"công việc chưa được phép khởi công vì hồ sơ chưa\n"
+"                            qua điều 5.2, dù Gantt vẫn báo đúng hạn."
+msgstr ""
+"tasks are not cleared to start because their documents have\n"
+"                            not passed clause 5.2, even though the Gantt still shows\n"
+"                            them on time."
+
+#. module: rp_document
+#: model_terms:ir.ui.view,arch_db:rp_document.view_re_project_form_document
+msgid ""
+"hồ sơ quá hạn 21 ngày của điều 5.2 — nhà thầu\n"
+"                            được quyền dùng đúng số ngày đó để xin gia hạn."
+msgstr ""
+"documents are past the 21 days of clause 5.2 — the contractor\n"
+"                            is entitled to use exactly those days to claim an\n"
+"                            extension."
+

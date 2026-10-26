@@ -31,3 +31,62 @@ msgstr "Interface points in conflict"
 msgid "Ranh giới gói thầu"
 msgstr "Package interfaces"
 
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Mâu thuẫn\"/>\n"
+"                            Có"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"In conflict\"/>\n"
+"                            Yes"
+
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid "Mọi quan hệ trước-sau nối hai hợp đồng khác nhau đều là một điểm bàn giao có thật — quét để ghi vào sổ."
+msgstr "Every predecessor-successor link joining two different contracts is a real interface point — scan to record them."
+
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid "Mở sổ ranh giới"
+msgstr "Open the interface register"
+
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid "Quét điểm bàn giao từ lịch"
+msgstr "Scan the schedule for interface points"
+
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid "RANH GIỚI GÓI THẦU"
+msgstr "PACKAGE INTERFACES"
+
+#. module: rp_interface
+#: model:ir.model.fields,field_description:rp_interface.field_re_project__interface_count
+msgid "Số điểm bàn giao"
+msgstr "Interface points"
+
+#. module: rp_interface
+#: model:ir.model.fields,field_description:rp_interface.field_re_project__interface_open_count
+msgid "Điểm bàn giao chưa đóng"
+msgstr "Interface points still open"
+
+#. module: rp_interface
+#: model:ir.model.fields,field_description:rp_interface.field_re_project__interface_ids
+msgid "Điểm bàn giao giữa các gói thầu"
+msgstr "Interface points between packages"
+
+#. module: rp_interface
+#: model:ir.actions.act_window,name:rp_interface.action_rp_interface_conflict
+#: model:ir.model.fields,field_description:rp_interface.field_re_project__interface_conflict_count
+msgid "Điểm bàn giao lịch mâu thuẫn"
+msgstr "Interface points with schedule conflicts"
+
+#. module: rp_interface
+#: model_terms:ir.ui.view,arch_db:rp_interface.view_re_project_form_interface
+msgid ""
+"điểm bàn giao mà bên nhận cần TRƯỚC khi bên giao\n"
+"                            kịp xong."
+msgstr ""
+"interface points the receiving side needs BEFORE the giving\n"
+"                            side can finish."
+

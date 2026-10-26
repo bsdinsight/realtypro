@@ -21,3 +21,9 @@ msgstr ""
 msgid "Tạm ứng"
 msgstr "Advance payments"
 
+#. module: rp_advance_payment
+#: model:ir.model.fields,field_description:rp_advance_payment.field_rp_advance_payment__contract_id
+#: model_terms:ir.ui.view,arch_db:rp_advance_payment.view_rp_advance_payment_search
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+

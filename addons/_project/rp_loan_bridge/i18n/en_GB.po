@@ -46,3 +46,36 @@ msgstr "Disbursement via drawdown notes"
 msgid "Công nợ nhà thầu / NCC"
 msgstr "Contractor / supplier payables"
 
+#. module: rp_loan_bridge
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_loan_allocation__tender_package_id
+msgid "Gói thầu"
+msgstr "Tender packages"
+
+#. module: rp_loan_bridge
+#: code:addons/rp_loan_bridge/models/re_loan_facility.py:0
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_account_bank_statement_line__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_account_move__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_re_loan_facility__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_re_loan_facility_project_allocation__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_re_loan_note_disbursement__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_loan_allocation__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_loan_disbursement_dossier__contract_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_milestone_funding_line__contract_id
+#: model_terms:ir.ui.view,arch_db:rp_loan_bridge.view_account_move_contractor_invoice_list
+#: model_terms:ir.ui.view,arch_db:rp_loan_bridge.view_account_move_contractor_invoice_search
+#: model_terms:ir.ui.view,arch_db:rp_loan_bridge.view_rp_loan_allocation_search
+#: model_terms:ir.ui.view,arch_db:rp_loan_bridge.view_supplier_debt_search
+msgid "HĐ nhà thầu"
+msgstr "Contractor agreements"
+
+#. module: rp_loan_bridge
+#: model_terms:ir.ui.view,arch_db:rp_loan_bridge.view_re_loan_note_form_doc_filing
+msgid "Hồ sơ dự án"
+msgstr "Project documents"
+
+#. module: rp_loan_bridge
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_re_loan_note__doc_folder_id
+#: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_loan_disbursement_dossier__doc_folder_id
+msgid "Thư mục hồ sơ"
+msgstr "Document folders"
+

@@ -17,9 +17,140 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%(n)d mốc giờ, đọc theo múi giờ %(tz)s rồi quy về UTC"
+msgstr "%(n)d timestamps, read in time zone %(tz)s and converted to UTC"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%(n)d số đo, đọc theo múi giờ %(tz)s rồi quy về UTC%(h)s"
+msgstr "%(n)d readings, read in time zone %(tz)s and converted to UTC%(h)s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%d bậc đo"
+msgstr "%d metering stages"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%d dòng không đọc được thời điểm nên bị bỏ. Thường là dòng tổng ở cuối tệp hoặc dòng trống."
+msgstr "%d rows had no readable timestamp and were skipped. Usually the totals row at the foot of the file, or a blank row."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%d số đo vào kho kèm cờ chất lượng — xem luật làm sạch của điểm đo."
+msgstr "%d readings entered the store carrying a quality flag — see the tag's cleaning rules."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "%s (chỉ đối chiếu)"
+msgstr "%s (cross-check only)"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "; × hệ số %s"
+msgstr "; × factor %s"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid ""
+"<b>Hệ số</b> — tờ báo cáo ghi MWh, bảng của\n"
+"                                ta lưu kWh, nên hệ số là 1000. Thiếu nó thì\n"
+"                                255 MWh thành 255 kWh: một phần nghìn, mà\n"
+"                                con số vẫn dương và trông hợp lý.\n"
+"                                <br/><b>Chỉ đối chiếu</b> — dòng mang kết\n"
+"                                quả nhà máy tự tính (PR, mẫu số, hệ số\n"
+"                                nhiệt). Đọc lên, so với số hệ tính ra, ghi\n"
+"                                khoảng lệch vào nhật ký, <b>không ghi vào\n"
+"                                dữ liệu</b>. Mỗi lượt nạp là một lần công\n"
+"                                thức của ta được kiểm bằng số của chính họ."
+msgstr ""
+"<b>Factor</b> — the report is in MWh while our\n"
+"                                table stores kWh, so the factor is 1000.\n"
+"                                Without it, 255 MWh becomes 255 kWh: a\n"
+"                                thousandth, while the figure stays positive\n"
+"                                and looks plausible.\n"
+"                                <br/><b>Cross-check only</b> — a line\n"
+"                                carrying the plant's own results (PR,\n"
+"                                denominator, temperature factor). Read it,\n"
+"                                compare it with the system's figure, record\n"
+"                                the difference in the log, <b>do not write it\n"
+"                                into the data</b>. Every import is an occasion\n"
+"                                on which our formula is checked against their\n"
+"                                own figures."
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid ""
+"<i class=\"fa fa-flask me-1\"/>\n"
+"                        Đây là kết quả <b>chạy thử</b>: mọi phép ghi đã được\n"
+"                        thực hiện rồi cuộn lại, nên nhật ký bên dưới đúng\n"
+"                        bằng những gì lượt nạp thật sẽ làm — kể cả phần đối\n"
+"                        chiếu. <b>Chưa có gì vào cơ sở dữ liệu.</b>"
+msgstr ""
+"<i class=\"fa fa-flask me-1\"/>\n"
+"                        These are the results of a <b>dry run</b>: every write was\n"
+"                        performed and then rolled back, so the log below is exactly\n"
+"                        what a real import would do — the cross-check included.\n"
+"                        <b>Nothing has reached the database.</b>"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                        Trong tờ biểu, <b>cột chứa số đổi theo dòng</b> vì\n"
+"                        vùng trộn của nhãn dài ngắn khác nhau. Ở tờ báo cáo\n"
+"                        thật, khối khí tượng có giá trị ở cột <b>P</b> còn\n"
+"                        khối tổn thất ngay bên dưới lại ở cột <b>O</b>. Nên\n"
+"                        mỗi dòng phải khai <b>đúng ô</b>, đừng suy theo\n"
+"                        \"giá trị luôn ở cột bên phải\".\n"
+"                        <br/>Khai nhầm vào giữa một vùng trộn thì Excel trả\n"
+"                        về rỗng mà <b>không báo gì</b> — nhật ký nạp sẽ nói\n"
+"                        giá trị thật nằm ở ô nào."
+msgstr ""
+"<i class=\"fa fa-info-circle me-1\"/>\n"
+"                        In a form sheet, <b>the column holding the figure changes\n"
+"                        from row to row</b>, because the merged regions of long and\n"
+"                        short labels differ. In a real report the weather block has\n"
+"                        its values in column <b>P</b> while the loss block just\n"
+"                        below has them in column <b>O</b>. So every line has to\n"
+"                        declare <b>the exact cell</b>; do not assume \"the value is\n"
+"                        always in the column to the right\".\n"
+"                        <br/>Point at the middle of a merged region and Excel\n"
+"                        returns empty <b>with nothing to say so</b> — the import log\n"
+"                        will tell you which cell actually holds the value."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__kieu
+#: model:ir.model.fields,help:eam_import.field_eam_import_run__kieu
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__kieu
+msgid "Báo cáo vận hành ngày là TỜ BIỂU: không tra được theo cột vì cột chứa số đổi theo dòng. Tệp xuất từ SCADA là BẢNG."
+msgstr "A daily operations report is a FORM SHEET: it cannot be read by column, because the column holding the figure changes from row to row. A file exported from SCADA is a TABLE."
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Báo cáo vận hành ngày — ĐMT"
+msgstr "Daily operations report — solar PV"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_template__kieu__bang
+msgid "Bảng — một dòng tiêu đề, mỗi cột một điểm đo"
+msgstr "Table — one heading row, one tag per column"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Bậc %s"
+msgstr "Stage %s"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__bat_buoc
 msgid "Bắt buộc"
 msgstr "Mandatory"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__field_id
+msgid "Bắt buộc với đích Khí tượng và Hiệu suất."
+msgstr "Required for the Weather and Performance targets."
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_bo_qua
@@ -28,10 +159,98 @@ msgid "Bỏ qua"
 msgstr "Dismiss"
 
 #. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "CHẠY THỬ — không ghi gì vào dữ liệu."
+msgstr "DRY RUN — nothing is written into the data."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__ghi_de
+msgid "Cho phép ghi đè ngày đã nạp"
+msgstr "Allow a day already imported to be overwritten"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__name
+msgid "Chép nhãn như trong tệp nguồn, ví dụ \"Energy Output (Inverter)\". Không dùng để tra cứu — dùng để người đọc nhật ký đối chiếu được với tờ giấy trên tay."
+msgstr "Copy the label as it appears in the source file, for example \"Energy Output (Inverter)\". It is not used for lookup — it is there so whoever reads the log can match it against the sheet in their hand."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Chưa tải tệp lên."
+msgstr "No file has been uploaded."
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid "Chạy thử"
+msgstr "Dry run"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid "Chạy thử xong và nhật ký đã đúng? Lượt này sẽ ghi thật vào khí tượng, hiệu suất và các bậc đo."
+msgstr "Dry run done and the log looks right? This run writes for real into the weather, performance and metering stage records."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__nguon_so
+msgid "Chỉ dùng cho đích Bậc đo. Cùng một tờ báo cáo có dòng lấy từ SCADA (sản lượng bộ biến tần) và dòng lấy từ công-tơ (điện nhận tại trạm EVN). Ghi chung một nhãn thì về sau không biết con số nào có hoá đơn làm chứng."
+msgstr "Only used for the Metering stage target. The same report has rows from SCADA (inverter energy) and rows from a meter (energy received at the grid substation). Record them under one label and later nobody knows which figure has an invoice behind it."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__o2
+msgid "Chỉ dùng khi ô Ô/vùng là một DẢI thời điểm. Ví dụ D41:P41. Hai dải phải cùng số ô, nếu không thì không biết giá trị nào thuộc giờ nào."
+msgstr "Only used when Cell/range is a RANGE of timestamps. For example D41:P41. The two ranges have to hold the same number of cells, otherwise there is no telling which value belongs to which hour."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__sheet
+msgid "Chỉ đọc sheet"
+msgstr "Read this sheet only"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__chi_doi_chieu
+msgid "Chỉ đối chiếu"
+msgstr "Cross-check only"
+
+#. module: eam_import
+#: model_terms:ir.actions.act_window,help:eam_import.action_eam_import_run
+msgid ""
+"Chọn mẫu nạp, tải tệp lên, bấm <b>Chạy thử</b>. Chạy thử làm\n"
+"            đúng mọi việc của lượt nạp thật rồi cuộn lại, nên nhật ký cho\n"
+"            thấy trước kết quả mà chưa ghi gì."
+msgstr ""
+"Choose an import template, upload the file, press <b>Dry run</b>. A dry\n"
+"            run does everything a real import does and then rolls it back, so the\n"
+"            log shows the outcome in advance with nothing written."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Có dòng đối chiếu LỆCH: con số nhà máy tự tính khác con số hệ tính ra. Số của tệp vẫn được ghi nguyên; khoảng lệch nằm trong nhật ký."
+msgstr "Some cross-check lines DIFFER: the figure the plant computed is not the figure the system computes. The file's figure is still written as-is; the difference is in the log."
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_run__state__loi
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+msgid "Có lỗi"
+msgstr "Has errors"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Có lỗi — xem nhật ký. Dữ liệu của sheet bị lỗi KHÔNG được ghi."
+msgstr "There were errors — see the log. The data of a failed sheet is NOT written."
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_canh_bao
 #: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__canh_bao
 msgid "Cảnh báo"
 msgstr "Alarm"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__cot_thoi_diem
+msgid "Cột thời điểm"
+msgstr "Timestamp column"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__cot
+msgid "Cột trong bảng"
+msgstr "Column in the table"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_template__note
@@ -40,9 +259,112 @@ msgid "Diễn giải"
 msgstr "Explanation"
 
 #. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%(n)s\" ghi vào bậc đo thì luôn ghi vào ô sản lượng, nên không chọn trường được. Chọn trường chỉ có nghĩa khi bật \"chỉ đối chiếu\" — ví dụ đối chiếu tổn thất %% mà nhà máy tự tính với tổn thất hệ tính ra."
+msgstr "Line \"%(n)s\" writes into a metering stage, which always means the energy field, so no field can be chosen. Choosing a field only means something with \"cross-check only\" on — for example checking the loss %% the plant computed against the loss the system computes."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%(n)s\": %(e)s"
+msgstr "Line \"%(n)s\": %(e)s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%(n)s\": dải thời điểm có %(a)d ô, dải giá trị có %(b)d ô. Lệch số ô thì không biết giá trị nào thuộc giờ nào."
+msgstr "Line \"%(n)s\": the timestamp range has %(a)d cells, the value range has %(b)d. With different counts there is no telling which value belongs to which hour."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%(n)s\": trường \"%(f)s\" thuộc model %(m)s, không phải %(d)s."
+msgstr "Line \"%(n)s\": field \"%(f)s\" belongs to model %(m)s, not %(d)s."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" chưa khai cột trong bảng."
+msgstr "Line \"%s\" does not declare a column in the table."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" chưa khai ô nguồn."
+msgstr "Line \"%s\" does not declare a source cell."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" có hệ số bằng 0 — mọi giá trị đọc được sẽ thành 0 và không có gì báo lỗi. Để 1 nếu không cần đổi đơn vị."
+msgstr "Line \"%s\" has a factor of 0 — every value read becomes 0 with nothing to report an error. Use 1 when no unit conversion is needed."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" khai dải thời điểm %s nhưng chưa có vùng giá trị tương ứng."
+msgstr "Line \"%s\" declares a timestamp range %s but has no matching value range."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" khai một dải nhiều ô, nên đích phải là điểm đo — một trường đơn không nhận được mười ba giá trị."
+msgstr "Line \"%s\" declares a range of several cells, so the target has to be a measurement point — a single field cannot take thirteen values."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" đích là %s nhưng chưa chọn trường."
+msgstr "Line \"%s\" targets %s but no field has been chosen."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" đích là bậc đo nhưng chưa khai mã bậc."
+msgstr "Line \"%s\" targets a metering stage but declares no stage code."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Dòng \"%s\" đích là điểm đo nhưng chưa khai mã tag."
+msgstr "Line \"%s\" targets a measurement point but declares no tag code."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__map_ids
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Dòng ánh xạ"
+msgstr "Mapping line"
+
+#. module: eam_import
+#: model:ir.model,name:eam_import.model_eam_import_map
+msgid "Dòng ánh xạ của mẫu nạp"
+msgstr "Mapping line of the import template"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__dich__kpi
+msgid "Hiệu suất ngày (PR/PA)"
+msgstr "Daily performance (PR/PA)"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__kieu
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__kieu
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__kieu
+msgid "Hình dạng tệp"
+msgstr "File shape"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__he_so
+msgid "Hệ số"
+msgstr "Factor"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__tri_ta
+msgid "Hệ tính ra"
+msgstr "Computed by the system"
+
+#. module: eam_import
+#: model_terms:ir.actions.act_window,help:eam_import.action_eam_import_template
+msgid "Khai mẫu nạp đầu tiên"
+msgstr "Declare the first import template"
+
+#. module: eam_import
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Kho chuỗi thời gian"
 msgstr "Time-series store"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__dich__weather
+msgid "Khí tượng ngày"
+msgstr "Daily weather"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ket_qua
@@ -51,9 +373,70 @@ msgid "Kết quả"
 msgstr "Result"
 
 #. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_list
+msgid "Lúc"
+msgstr "At"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_log__ly_do
 msgid "Lý do"
 msgstr "Reason"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__run_id
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_list
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Lượt nạp"
+msgstr "Import run"
+
+#. module: eam_import
+#: model:ir.model,name:eam_import.model_eam_import_run
+msgid "Lượt nạp dữ liệu"
+msgstr "Data import run"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Lượt nạp — %s"
+msgstr "Import run — %s"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_list
+msgid "Lệch"
+msgstr "Difference"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__lech_pct
+msgid "Lệch (%)"
+msgstr "Difference (%)"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__sai_so
+msgid "Lệch trong khoảng này thì nhật ký ghi \"khớp\". Để 0 thì mọi khác biệt dù nhỏ đều bị nêu."
+msgstr "A difference within this band is logged as \"matching\". 0 means every difference, however small, is reported."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_loi
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__loi
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_list
+msgid "Lỗi"
+msgstr "Error"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Lỗi không lường trước"
+msgstr "Unexpected error"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__model_dich
+msgid "Model đích"
+msgstr "Target model"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__node_code
+msgid "Mã bậc trong chuỗi điểm đo, ví dụ INV, MCB, EVN. Tra theo MÃ chứ không theo khoá nội bộ, nên cùng một mẫu chạy được cho mọi nhà máy đặt mã theo cùng quy ước."
+msgstr "The stage code in the metering chain, for example INV, MCB, EVN. Looked up by CODE rather than by internal key, so the same template works for every plant that follows the same code convention."
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__node_code
@@ -66,9 +449,113 @@ msgid "Mã tag"
 msgstr "Tag code"
 
 #. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__tag_code
+msgid "Mã điểm đo trong kho chuỗi thời gian."
+msgstr "The tag code in the time-series store."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__tz
+msgid "Múi giờ của nguồn"
+msgstr "Time zone of the source"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_map__template_id
 msgid "Mẫu"
 msgstr "Template"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Mẫu \"%s\" chưa có dòng ánh xạ nào — chạy sẽ không đọc gì."
+msgstr "Template \"%s\" has no mapping line — running it would read nothing."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Mẫu bảng \"%s\" chưa khai cột thời điểm."
+msgstr "Table template \"%s\" does not declare a timestamp column."
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Mẫu này đọc tệp của nhà máy nào, do ai gửi, lấy ở đâu."
+msgstr "Whose plant this template reads files for, who sends them, and where they come from."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__note
+msgid "Mẫu này đọc tệp của nhà máy nào, do ai gửi, lấy ở đâu. Sáu tháng sau không ai nhớ nữa."
+msgstr "Whose plant this template reads files for, who sends them, and where they come from. In six months nobody remembers."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__template_id
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_list
+msgid "Mẫu nạp"
+msgstr "Import template"
+
+#. module: eam_import
+#: model:ir.actions.act_window,name:eam_import.action_eam_import_template
+#: model:ir.model,name:eam_import.model_eam_import_template
+#: model:ir.ui.menu,name:eam_import.menu_eam_import_template
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "Mẫu nạp dữ liệu"
+msgstr "Import template"
+
+#. module: eam_import
+#: model_terms:ir.actions.act_window,help:eam_import.action_eam_import_template
+msgid ""
+"Mẫu nạp nói cho hệ biết <b>ô nào trong tệp đi vào trường\n"
+"            nào</b>. Khai một lần, sau đó mỗi ngày chỉ còn tải tệp lên."
+msgstr ""
+"An import template tells the system <b>which cell in the file goes into\n"
+"            which field</b>. Declared once, after which each day is just an upload."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_template.py:0
+msgid "Mẫu tờ biểu \"%s\" chưa khai ô chứa ngày báo cáo. Không có ngày thì mọi con số đọc được đều không biết xếp vào đâu."
+msgstr "Form-sheet template \"%s\" does not declare the cell holding the report date. Without a date, none of the figures read can be placed anywhere."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_run__ghi_de
+msgid "Mặc định là từ chối: nạp lại cùng một ngày phải là chủ ý, không phải tai nạn. Bật cờ này khi nhà máy gửi lại tờ báo cáo đã sửa."
+msgstr "Refused by default: re-importing the same day has to be deliberate rather than accidental. Tick this when the plant sends a corrected report."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__anh_xa_tri
+msgid ""
+"Mỗi dòng một cặp \"trị trong tệp = trị trong hệ\", dùng cho trường lựa chọn. Ví dụ:\n"
+"Sunny = sunny\n"
+"Sunny/Cloudy = partly\n"
+"Cloudy = cloudy\n"
+"Trị không có trong bảng thì BỎ QUA kèm một dòng nhật ký, chứ không ghi bừa."
+msgstr ""
+"One line per pair, \"value in the file = value in the system\", for a selection field. For example:\n"
+"Sunny = sunny\n"
+"Sunny/Cloudy = partly\n"
+"Cloudy = cloudy\n"
+"A value missing from the table is SKIPPED with a line in the log, rather than guessed at."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__map_ids
+msgid "Một2nhiều của Odoo mặc định KHÔNG nhân bản. Để mặc định thì nhân bản một mẫu — cách tự nhiên nhất để làm mẫu cho nhà máy thứ hai — ra một mẫu rỗng, và nó rỗng trong im lặng: màn hình mở ra trông y như bình thường."
+msgstr "Odoo's one2many does NOT copy by default. Left at the default, duplicating a template — the most natural way to make one for a second plant — produces an empty template, and it is empty silently: the screen opens looking perfectly normal."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__nguon_so
+msgid "Nguồn con số"
+msgstr "Where the figure comes from"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Ngày báo cáo"
+msgstr "Report date"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Ngày đọc được: %(n)d (%(a)s → %(b)s)"
+msgstr "Days read: %(n)d (%(a)s → %(b)s)"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__kiem_ten_sheet
+msgid "Người trực nhân bản sheet hôm qua rồi quên sửa ô ngày là chuyện xảy ra thật, và hậu quả là đè lên dữ liệu của ngày cũ. Tên sheet mang ngày thì đối chiếu được; lệch thì DỪNG, vì ghi sai ngày tệ hơn không ghi."
+msgstr "An operator copying yesterday's sheet and forgetting to correct the date cell is something that really happens, and the consequence is overwriting the older day's data. A sheet name carrying the date can be cross-checked; where they disagree it STOPS, because writing the wrong day is worse than not writing."
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__plant_id
@@ -77,9 +564,92 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__plant_id
+msgid "Nhà máy mặc định"
+msgstr "Default plant"
+
+#. module: eam_import
 #: model:ir.model.fields.selection,name:eam_import.selection__eam_import_run__state__nhap
 msgid "Nháp"
 msgstr "Draft"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__he_so
+msgid "Nhân trị gốc với số này. Tờ báo cáo ghi MWh mà bảng của ta lưu kWh thì hệ số là 1000. Thiếu nó thì 255 MWh thành 255 kWh — một phần nghìn, mà con số vẫn dương và trông hợp lý."
+msgstr "Multiply the raw value by this. If the report is in MWh while our table stores kWh, the factor is 1000. Without it, 255 MWh becomes 255 kWh — a thousandth, while the figure stays positive and looks plausible."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__nhan
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__name
+msgid "Nhãn trong tệp"
+msgstr "Label in the file"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__log_ids
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid "Nhật ký"
+msgstr "Log"
+
+#. module: eam_import
+#: model:ir.model,name:eam_import.model_eam_import_log
+msgid "Nhật ký nạp dữ liệu"
+msgstr "Data import log"
+
+#. module: eam_import
+#: model:ir.actions.act_window,name:eam_import.action_eam_import_run
+#: model:ir.ui.menu,name:eam_import.menu_eam_import_run
+msgid "Nạp dữ liệu vận hành"
+msgstr "Operational data import"
+
+#. module: eam_import
+#: model_terms:ir.actions.act_window,help:eam_import.action_eam_import_run
+msgid "Nạp tệp đầu tiên"
+msgstr "Import the first file"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid "Nạp vào dữ liệu"
+msgstr "Write into the data"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__sai_so
+msgid "Sai số cho phép (%)"
+msgstr "Tolerance (%)"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__dich__node
+msgid "Sản lượng bậc đo"
+msgstr "Metering stage energy"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__map_count
+msgid "Số dòng"
+msgstr "Rows"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__run_count
+msgid "Số lượt nạp"
+msgstr "Import runs"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_ngay
+msgid "Số ngày đọc được"
+msgstr "Days read"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__bat_buoc
+msgid "Thiếu ô này thì cả sheet bị bỏ. Dùng cho ô mà không có nó thì phần còn lại vô nghĩa."
+msgstr "Without this cell the whole sheet is skipped. Use it for a cell whose absence makes the rest meaningless."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__tz
+msgid "Thời điểm trong tệp hầu như không mang múi giờ, còn Odoo lưu theo UTC. Đọc giờ địa phương như UTC là dịch cả đường cong 7 tiếng — biểu đồ vẫn mượt, đỉnh bức xạ rơi vào 5 giờ sáng."
+msgstr "Timestamps in a file almost never carry a time zone, while Odoo stores UTC. Reading local time as UTC shifts the whole curve by 7 hours — the chart still looks smooth, with the irradiance peak at 5 in the morning."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__field_id
+msgid "Trường"
+msgstr "Field"
 
 #. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_run__state
@@ -88,14 +658,311 @@ msgid "Trạng thái"
 msgstr "State"
 
 #. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__tri_text
+msgid "Trị ghi"
+msgstr "Value written"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__tri_tho
+msgid "Trị gốc trong tệp"
+msgstr "Raw value in the file"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__tri
+msgid "Trị đã đổi"
+msgstr "Converted value"
+
+#. module: eam_import
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_template__name
 msgid "Tên mẫu"
 msgstr "Template name"
 
 #. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__cot
+msgid "Tên tiêu đề cột trong tệp bảng."
+msgstr "The column heading in a table file."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__cot_thoi_diem
+msgid "Tên tiêu đề của cột chứa thời điểm. Bắt buộc với tệp bảng."
+msgstr "The heading of the column holding the timestamp. Required for a table file."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__filename
+msgid "Tên tệp"
+msgstr "File name"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__file
+msgid "Tệp"
+msgstr "File"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_template__kieu__bieu
+msgid "Tờ biểu — nhãn và số nằm ở ô cố định"
+msgstr "Form sheet — labels and figures sit in fixed cells"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__o
+msgid "Tờ biểu: địa chỉ ô, ví dụ B20. Với dải giờ thì khai vùng một dòng, ví dụ D40:P40 — và ô Vùng giá trị bên cạnh."
+msgstr "Form sheet: a cell address, for example B20. For an hourly range, declare a single-row range such as D40:P40 — with the Value range field beside it."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__o_ngay
+msgid "Ví dụ A7. Bắt buộc với tờ biểu — không có ngày thì không biết số rơi vào ngày nào."
+msgstr "For example A7. Required for a form sheet — without a date there is no telling which day the figures belong to."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__o2
+msgid "Vùng giá trị"
+msgstr "Value range"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_form
+msgid "Về nháp"
+msgstr "Back to draft"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "chuỗi \"%(c)s\" không có bậc mã \"%(m)s\". Mã đang có: %(d)s."
+msgstr "chain \"%(c)s\" has no stage with code \"%(m)s\". The codes it has: %(d)s."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "chưa có bản ghi tương ứng để đối chiếu"
+msgstr "there is no matching record to cross-check against"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "chưa có tệp"
+msgstr "no file"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "giá trị \"%(v)s\" chưa có trong bảng ánh xạ của dòng mẫu. Trị hợp lệ: %(h)s."
+msgstr "value \"%(v)s\" is not in the mapping table of this template line. Valid values: %(h)s."
+
+#. module: eam_import
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "hiệu suất"
 msgstr "performance"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "kho từ chối %(n)d số đo: %(d)s"
+msgstr "the store rejected %(n)d readings: %(d)s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "khí tượng"
+msgstr "weather"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "khớp trong sai số %s%%"
+msgstr "matches within a tolerance of %s%%"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "ngày %(a)s nằm trong tương lai (hôm nay %(b)s). Gần như luôn là lỗi ô ngày hoặc lỗi múi giờ của máy xuất tệp."
+msgstr "%(a)s lies in the future (today is %(b)s). Almost always a wrong date cell, or the time zone of the machine that produced the file."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "ngày %(a)s đã có dữ liệu (%(b)s). Bật cờ \"cho phép ghi đè\" nếu đây là bản sửa."
+msgstr "%(a)s already has data (%(b)s). Tick \"allow overwriting\" if this is a corrected version."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "nhà máy \"%s\" chưa khai chuỗi điểm đo nào — không có bậc để ghi vào."
+msgstr "plant \"%s\" has no metering chain declared — there is no stage to write into."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "nạp từ tệp \"%(f)s\" theo mẫu \"%(m)s\""
+msgstr "imported from file \"%(f)s\" using template \"%(m)s\""
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "sheet bị bỏ vì thiếu ô bắt buộc"
+msgstr "the sheet was skipped because a mandatory cell is missing"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "thiếu ô bắt buộc: %s. Bỏ qua cả sheet — không ghi gì."
+msgstr "a mandatory cell is missing: %s. The whole sheet is skipped — nothing is written."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "trị gốc × %s"
+msgstr "raw value × %s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tên sheet nói ngày %(a)s, ô %(o)s nói ngày %(b)s. Thường là sheet được nhân bản mà quên sửa ô ngày — ghi theo ô thì đè lên dữ liệu của ngày cũ. Bỏ qua cả sheet."
+msgstr "the sheet name says %(a)s while cell %(o)s says %(b)s. Usually a sheet copied without correcting the date cell — writing by the cell would overwrite the older day's data. The whole sheet is skipped."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tệp bảng là chuỗi thời gian, nên đích phải là điểm đo. Dòng này trỏ tới %s."
+msgstr "a table file is a time series, so the target has to be a measurement point. This line points at %s."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tệp không có cột \"%(a)s\". Tệp có: %(b)s."
+msgstr "the file has no column \"%(a)s\". It has: %(b)s."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tệp không có sheet tên \"%s\" — tệp có: %s"
+msgstr "the file has no sheet named \"%s\" — it has: %s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tệp nói %(a)s, hệ tính ra %(b)s — lệch %(c).3f%%. Đây là chỗ công thức của ta và của nhà máy chưa gặp nhau."
+msgstr "the file says %(a)s, the system computes %(b)s — a difference of %(c).3f%%. This is where our formula and the plant's have not yet met."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "tổn thất ÂM %(l).1f kWh: bậc này (%(a).1f) cao hơn bậc trước (%(b).1f). Điện không tăng khi đi qua một bậc — hãy soi lại hệ số đơn vị hoặc xem hai ô có bị khai đổi chỗ."
+msgstr "a NEGATIVE loss of %(l).1f kWh: this stage (%(a).1f) is higher than the one before it (%(b).1f). Energy does not increase on the way through a stage — check the unit factor, or whether two cells have been swapped."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__anh_xa_tri
+msgid "Ánh xạ giá trị"
+msgstr "Value mapping"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__dia_chi
+msgid "Ô / cột"
+msgstr "Cell / column"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__o
+msgid "Ô / vùng"
+msgstr "Cell / range"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__o_ngay
+msgid "Ô chứa ngày báo cáo"
+msgstr "Cell holding the report date"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_list
+msgid "Ô ghi"
+msgstr "Field written"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Ô ghi %(g)d · khớp %(k)d · LỆCH %(l)d · bỏ qua %(b)d · cảnh báo %(c)d · lỗi %(e)d"
+msgstr "Fields written %(g)d · matching %(k)d · DIFFERING %(l)d · skipped %(b)d · warnings %(c)d · errors %(e)d"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_ghi
+msgid "Ô đã ghi"
+msgstr "Fields written"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "ô ngày không đọc được thành ngày%s"
+msgstr "the date cell could not be read as a date%s"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "ô rỗng"
+msgstr "empty cell"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_map__dich__tag
+msgid "Điểm đo (kho chuỗi thời gian)"
+msgstr "Measurement point (time-series store)"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_run__state__thu
+msgid "Đã chạy thử"
+msgstr "Dry run done"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__ghi
+msgid "Đã ghi"
+msgstr "Written"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_run__state__xong
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+msgid "Đã nạp"
+msgstr "Imported"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Đã nạp vào dữ liệu."
+msgstr "Written into the data."
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_log__dich_text
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_map__dich
+msgid "Đích"
+msgstr "Target"
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__plant_id
+msgid "Để trống thì mỗi lượt nạp phải chọn nhà máy. Khai sẵn khi mẫu này chỉ dùng cho một nhà máy."
+msgstr "Leave it empty and every run has to choose a plant. Fill it in when the template serves only one plant."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_template__sheet
+msgid "Để trống thì đọc MỌI sheet trong tệp. Tờ báo cáo thật gửi theo tuần, mỗi ngày một sheet, nên để trống là đúng."
+msgstr "Leave it empty to read EVERY sheet in the file. Real reports arrive weekly with one sheet per day, so leaving it empty is the right thing."
+
+#. module: eam_import
+#: model:ir.model.fields,help:eam_import.field_eam_import_map__chi_doi_chieu
+msgid "Đọc lên, so với con số hệ tự tính, ghi khoảng lệch vào nhật ký — KHÔNG ghi vào dữ liệu. Tờ báo cáo chứa cả kết quả nhà máy tự tính (PR, mẫu số, hệ số nhiệt), nên mỗi lượt nạp là một lần công thức của ta được kiểm bằng số của chính họ."
+msgstr "Read it, compare it with the figure the system computes itself, and record the difference in the log — do NOT write it into the data. The report carries the plant's own results (PR, denominator, temperature factor), so every import is an occasion on which our formula is checked against their own figures."
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "Đọc tệp"
+msgstr "Read the file"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_lech
+msgid "Đối chiếu LỆCH"
+msgstr "Cross-check DIFFERS"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_run__so_khop
+msgid "Đối chiếu khớp"
+msgstr "Cross-check matches"
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_run_search
+msgid "Đối chiếu lệch"
+msgstr "Cross-check differs"
+
+#. module: eam_import
+#: model:ir.model.fields,field_description:eam_import.field_eam_import_template__kiem_ten_sheet
+msgid "Đối chiếu ngày với tên sheet"
+msgstr "Cross-check the date against the sheet name"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__lech
+msgid "Đối chiếu — LỆCH"
+msgstr "Cross-check — DIFFERS"
+
+#. module: eam_import
+#: model:ir.model.fields.selection,name:eam_import.selection__eam_import_log__ket_qua__khop
+msgid "Đối chiếu — khớp"
+msgstr "Cross-check — matches"
+
+#. module: eam_import
+#: code:addons/eam_import/models/eam_import_run.py:0
+msgid "đích là số nhưng ô chứa \"%s\""
+msgstr "the target is numeric but the cell holds \"%s\""
+
+#. module: eam_import
+#: model_terms:ir.ui.view,arch_db:eam_import.view_eam_import_template_form
+msgid "để trống = đọc mọi sheet"
+msgstr "empty = read every sheet"
 
 #. module: eam_import
 #: model:ir.ui.menu,name:eam_import.menu_eam_import_run

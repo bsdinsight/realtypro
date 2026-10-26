@@ -1,0 +1,154 @@
+1519	At
+1520	Error
+1521	File
+1522	Difference
+1523	Target
+1524	Factor
+1525	Field written
+1526	Stage %s
+1527	Has errors
+1528	Field
+1529	empty cell
+1530	Written
+1531	Imported
+1532	Import template
+1533	Log
+1534	Rows
+1535	Value written
+1536	File name
+1537	Back to draft
+1538	Cell / column
+1539	Read the file
+1540	Dry run
+1541	Import run
+1542	Difference (%)
+1543	Cell / range
+1544	Fields written
+1545	%d metering stages
+1546	weather
+1547	Computed by the system
+1548	Target model
+1549	Converted value
+1550	Mapping line
+1551	Import runs
+1552	no file
+1553	Dry run done
+1554	; × factor %s
+1555	Where the figure comes from
+1556	Report date
+1557	Value range
+1558	raw value × %s
+1559	Read this sheet only
+1560	Cross-check only
+1561	Timestamp column
+1562	File shape
+1563	Import run — %s
+1564	Column in the table
+1565	Daily weather
+1566	Label in the file
+1567	Value mapping
+1568	Cross-check DIFFERS
+1569	Cross-check matches
+1570	Cross-check differs
+1571	Import template
+1572	Write into the data
+1573	Data import run
+1574	Default plant
+1575	Import the first file
+1576	Metering stage energy
+1577	Days read
+1578	Cross-check — DIFFERS
+1579	Cross-check — matches
+1580	No file has been uploaded.
+1581	Time zone of the source
+1582	Raw value in the file
+1583	%s (cross-check only)
+1584	Line "%(n)s": %(e)s
+1585	Data import log
+1586	Tolerance (%)
+1587	Cell holding the report date
+1588	Written into the data.
+1589	Operational data import
+1590	Declare the first import template
+1591	Unexpected error
+1592	Daily performance (PR/PA)
+1593	matches within a tolerance of %s%%
+1594	Mapping line of the import template
+1595	empty = read every sheet
+1596	Daily operations report — solar PV
+1597	Allow a day already imported to be overwritten
+1598	Line "%s" does not declare a source cell.
+1599	Cross-check the date against the sheet name
+1600	the target is numeric but the cell holds "%s"
+1601	Measurement point (time-series store)
+1602	the store rejected %(n)d readings: %(d)s
+1603	The column heading in a table file.
+1604	the sheet was skipped because a mandatory cell is missing
+1605	the date cell could not be read as a date%s
+1606	Line "%s" does not declare a column in the table.
+1607	imported from file "%(f)s" using template "%(m)s"
+1608	DRY RUN — nothing is written into the data.
+1609	Days read: %(n)d (%(a)s → %(b)s)
+1610	Form sheet — labels and figures sit in fixed cells
+1611	The tag code in the time-series store.
+1612	Table template "%s" does not declare a timestamp column.
+1613	there is no matching record to cross-check against
+1614	the file has no column "%(a)s". It has: %(b)s.
+1615	the file has no sheet named "%s" — it has: %s
+1616	Required for the Weather and Performance targets.
+1617	Table — one heading row, one tag per column
+1618	Line "%s" targets %s but no field has been chosen.
+1619	Line "%s" targets a metering stage but declares no stage code.
+1620	Line "%s" targets a measurement point but declares no tag code.
+1621	%(n)d timestamps, read in time zone %(tz)s and converted to UTC
+1622	a mandatory cell is missing: %s. The whole sheet is skipped — nothing is written.
+1623	Whose plant this template reads files for, who sends them, and where they come from.
+1624	%(n)d readings, read in time zone %(tz)s and converted to UTC%(h)s
+1625	Template "%s" has no mapping line — running it would read nothing.
+1626	chain "%(c)s" has no stage with code "%(m)s". The codes it has: %(d)s.
+1627	The heading of the column holding the timestamp. Required for a table file.
+1628	There were errors — see the log. The data of a failed sheet is NOT written.
+1629	Line "%(n)s": field "%(f)s" belongs to model %(m)s, not %(d)s.
+1630	%d readings entered the store carrying a quality flag — see the tag's cleaning rules.
+1631	plant "%s" has no metering chain declared — there is no stage to write into.
+1632	Line "%s" declares a timestamp range %s but has no matching value range.
+1633	value "%(v)s" is not in the mapping table of this template line. Valid values: %(h)s.
+1634	a table file is a time series, so the target has to be a measurement point. This line points at %s.
+1635	%(a)s already has data (%(b)s). Tick "allow overwriting" if this is a corrected version.
+1636	Fields written %(g)d · matching %(k)d · DIFFERING %(l)d · skipped %(b)d · warnings %(c)d · errors %(e)d
+1637	For example A7. Required for a form sheet — without a date there is no telling which day the figures belong to.
+1638	Without this cell the whole sheet is skipped. Use it for a cell whose absence makes the rest meaningless.
+1639	Whose plant this template reads files for, who sends them, and where they come from. In six months nobody remembers.
+1640	A difference within this band is logged as "matching". 0 means every difference, however small, is reported.
+1641	%d rows had no readable timestamp and were skipped. Usually the totals row at the foot of the file, or a blank row.
+1642	Leave it empty and every run has to choose a plant. Fill it in when the template serves only one plant.
+1643	Dry run done and the log looks right? This run writes for real into the weather, performance and metering stage records.
+1644	Line "%s" declares a range of several cells, so the target has to be a measurement point — a single field cannot take thirteen values.
+1645	the file says %(a)s, the system computes %(b)s — a difference of %(c).3f%%. This is where our formula and the plant's have not yet met.
+1646	%(a)s lies in the future (today is %(b)s). Almost always a wrong date cell, or the time zone of the machine that produced the file.
+1647	Form sheet: a cell address, for example B20. For an hourly range, declare a single-row range such as D40:P40 — with the Value range field beside it.
+1648	Leave it empty to read EVERY sheet in the file. Real reports arrive weekly with one sheet per day, so leaving it empty is the right thing.
+1649	Form-sheet template "%s" does not declare the cell holding the report date. Without a date, none of the figures read can be placed anywhere.
+1650	A daily operations report is a FORM SHEET: it cannot be read by column, because the column holding the figure changes from row to row. A file exported from SCADA is a TABLE.
+1651	Line "%s" has a factor of 0 — every value read becomes 0 with nothing to report an error. Use 1 when no unit conversion is needed.
+1652	Line "%(n)s": the timestamp range has %(a)d cells, the value range has %(b)d. With different counts there is no telling which value belongs to which hour.
+1653	Refused by default: re-importing the same day has to be deliberate rather than accidental. Tick this when the plant sends a corrected report.
+1654	An import template tells the system <b>which cell in the file goes into\n            which field</b>. Declared once, after which each day is just an upload.
+1655	Some cross-check lines DIFFER: the figure the plant computed is not the figure the system computes. The file's figure is still written as-is; the difference is in the log.
+1656	Only used when Cell/range is a RANGE of timestamps. For example D41:P41. The two ranges have to hold the same number of cells, otherwise there is no telling which value belongs to which hour.
+1657	Copy the label as it appears in the source file, for example "Energy Output (Inverter)". It is not used for lookup — it is there so whoever reads the log can match it against the sheet in their hand.
+1658	The stage code in the metering chain, for example INV, MCB, EVN. Looked up by CODE rather than by internal key, so the same template works for every plant that follows the same code convention.
+1659	the sheet name says %(a)s while cell %(o)s says %(b)s. Usually a sheet copied without correcting the date cell — writing by the cell would overwrite the older day's data. The whole sheet is skipped.
+1660	a NEGATIVE loss of %(l).1f kWh: this stage (%(a).1f) is higher than the one before it (%(b).1f). Energy does not increase on the way through a stage — check the unit factor, or whether two cells have been swapped.
+1661	Multiply the raw value by this. If the report is in MWh while our table stores kWh, the factor is 1000. Without it, 255 MWh becomes 255 kWh — a thousandth, while the figure stays positive and looks plausible.
+1662	Timestamps in a file almost never carry a time zone, while Odoo stores UTC. Reading local time as UTC shifts the whole curve by 7 hours — the chart still looks smooth, with the irradiance peak at 5 in the morning.
+1663	Choose an import template, upload the file, press <b>Dry run</b>. A dry\n            run does everything a real import does and then rolls it back, so the\n            log shows the outcome in advance with nothing written.
+1664	An operator copying yesterday's sheet and forgetting to correct the date cell is something that really happens, and the consequence is overwriting the older day's data. A sheet name carrying the date can be cross-checked; where they disagree it STOPS, because writing the wrong day is worse than not writing.
+1665	Line "%(n)s" writes into a metering stage, which always means the energy field, so no field can be chosen. Choosing a field only means something with "cross-check only" on — for example checking the loss %% the plant computed against the loss the system computes.
+1666	One line per pair, "value in the file = value in the system", for a selection field. For example:\nSunny = sunny\nSunny/Cloudy = partly\nCloudy = cloudy\nA value missing from the table is SKIPPED with a line in the log, rather than guessed at.
+1667	Only used for the Metering stage target. The same report has rows from SCADA (inverter energy) and rows from a meter (energy received at the grid substation). Record them under one label and later nobody knows which figure has an invoice behind it.
+1668	Odoo's one2many does NOT copy by default. Left at the default, duplicating a template — the most natural way to make one for a second plant — produces an empty template, and it is empty silently: the screen opens looking perfectly normal.
+1669	Read it, compare it with the figure the system computes itself, and record the difference in the log — do NOT write it into the data. The report carries the plant's own results (PR, denominator, temperature factor), so every import is an occasion on which our formula is checked against their own figures.
+1670	<i class="fa fa-flask me-1"/>\n                        These are the results of a <b>dry run</b>: every write was\n                        performed and then rolled back, so the log below is exactly\n                        what a real import would do — the cross-check included.\n                        <b>Nothing has reached the database.</b>
+1671	<i class="fa fa-info-circle me-1"/>\n                        In a form sheet, <b>the column holding the figure changes\n                        from row to row</b>, because the merged regions of long and\n                        short labels differ. In a real report the weather block has\n                        its values in column <b>P</b> while the loss block just\n                        below has them in column <b>O</b>. So every line has to\n                        declare <b>the exact cell</b>; do not assume "the value is\n                        always in the column to the right".\n                        <br/>Point at the middle of a merged region and Excel\n                        returns empty <b>with nothing to say so</b> — the import log\n                        will tell you which cell actually holds the value.
+1672	<b>Factor</b> — the report is in MWh while our\n                                table stores kWh, so the factor is 1000.\n                                Without it, 255 MWh becomes 255 kWh: a\n                                thousandth, while the figure stays positive\n                                and looks plausible.\n                                <br/><b>Cross-check only</b> — a line\n                                carrying the plant's own results (PR,\n                                denominator, temperature factor). Read it,\n                                compare it with the system's figure, record\n                                the difference in the log, <b>do not write it\n                                into the data</b>. Every import is an occasion\n                                on which our formula is checked against their\n                                own figures.

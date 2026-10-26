@@ -16,7 +16,7 @@ thành mươi vòng truy vấn và màn giật mỗi lần đổi ngày.
 """
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class EamFleetDashboard(models.AbstractModel):
@@ -179,32 +179,32 @@ class EamFleetDashboard(models.AbstractModel):
         CHUA_XONG = ('draft', 'approved', 'planned', 'in_progress')
 
         ds = [
-            {'ma': 'alarm_critical', 'nhan': 'Cảnh báo nghiêm trọng',
-             'phu': 'đang mở, chưa xử lý xong',
+            {'ma': 'alarm_critical', 'nhan': _('Cảnh báo nghiêm trọng'),
+             'phu': _('đang mở, chưa xử lý xong'),
              'so': A.search_count([('state', 'in', MO),
                                    ('severity', '=', 'critical')]),
              'muc': 'bad'},
-            {'ma': 'alarm_high', 'nhan': 'Cảnh báo mức cao',
-             'phu': 'đang mở',
+            {'ma': 'alarm_high', 'nhan': _('Cảnh báo mức cao'),
+             'phu': _('đang mở'),
              'so': A.search_count([('state', 'in', MO),
                                    ('severity', '=', 'high')]),
              'muc': 'warn'},
-            {'ma': 'wo_overdue', 'nhan': 'Lệnh công việc quá hạn',
-             'phu': 'đã qua ngày dự kiến xong mà chưa đóng',
+            {'ma': 'wo_overdue', 'nhan': _('Lệnh công việc quá hạn'),
+             'phu': _('đã qua ngày dự kiến xong mà chưa đóng'),
              'so': W.search_count([('state', 'in', CHUA_XONG),
                                    ('date_planned_end', '<', hom_nay)]),
              'muc': 'bad'},
-            {'ma': 'pm_overdue', 'nhan': 'Bảo trì quá hạn',
-             'phu': 'đã qua hạn, chưa có lệnh',
+            {'ma': 'pm_overdue', 'nhan': _('Bảo trì quá hạn'),
+             'phu': _('đã qua hạn, chưa có lệnh'),
              'so': P.search_count([('state', '=', 'overdue')]),
              'muc': 'bad'},
-            {'ma': 'pm_due_soon', 'nhan': 'Bảo trì sắp tới hạn',
-             'phu': 'trong cửa sổ báo trước',
+            {'ma': 'pm_due_soon', 'nhan': _('Bảo trì sắp tới hạn'),
+             'phu': _('trong cửa sổ báo trước'),
              'so': P.search_count([('state', '=', 'due_soon')]),
              'muc': 'warn'},
-            {'ma': 'pm_no_data', 'nhan': 'Bảo trì không đo được hạn',
-             'phu': 'chạy theo đồng hồ mà vị trí chưa có số đọc — nó sẽ '
-                    'im lặng không bao giờ tới hạn',
+            {'ma': 'pm_no_data', 'nhan': _('Bảo trì không đo được hạn'),
+             'phu': _('chạy theo đồng hồ mà vị trí chưa có số đọc — nó sẽ '
+                      'im lặng không bao giờ tới hạn'),
              'so': P.search_count([('state', '=', 'no_data')]),
              'muc': 'warn'},
         ]

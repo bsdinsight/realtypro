@@ -106,6 +106,35 @@ export class EamFleetDashboard extends Component {
         return _t("%s/%s ngày có số", p.ngay_co_so, p.so_ngay) + thieu;
     }
 
+    /** Câu ghép phải nằm TRỌN trong một chuỗi dịch.
+     *
+     * Viết "X <b>nhà máy</b> · Y tổ máy" thẳng trong template thì bộ rút
+     * chuỗi của Odoo cắt ra thành ba mẩu rời ("nhà máy ·", "tổ máy"), và
+     * người dịch nhận được ba mẩu không có ngữ cảnh. Tiếng Anh lại đảo
+     * trật tự số–danh từ khác tiếng Việt, nên ghép mẩu là ra câu gãy.
+     */
+    heroSub() {
+        const t = this.state.d.tong;
+        return _t("%s plants · %s units", t.so_nha_may, t.so_to_may);
+    }
+    kdSub() {
+        const t = this.state.d.tong;
+        return _t("weighted by energy · %s of %s plants have data",
+                  t.kd_mau_so, t.so_nha_may);
+    }
+    thangSub() {
+        return _t("since %s", this.state.d.dau_thang);
+    }
+    tienSub() {
+        return _t("loss valued at: %s", this.tien(this.state.d.tong.tien_mat_thang));
+    }
+    tinCaySub() {
+        return _t(
+            "All three numbers below make the figures above look better than " +
+            "reality. Out of %s unit-day rows this month.",
+            so(this.state.d.tin_cay.tong_dong));
+    }
+
     moCanhBao(ma) {
         const T = {
             alarm_critical: ["eam_alarm.action_eam_alarm",

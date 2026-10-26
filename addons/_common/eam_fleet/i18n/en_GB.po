@@ -1,0 +1,332 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_fleet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/js/eam_fleet.js:0
+msgid " · thiếu %s ngày"
+msgstr " · %s days missing"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/js/eam_fleet.js:0
+msgid "%s/%s ngày có số"
+msgstr "%s of %s days have data"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Bảo trì không đo được hạn"
+msgstr "PM with no measurable due date"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Bảo trì quá hạn"
+msgstr "PM overdue"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Bảo trì sắp tới hạn"
+msgstr "PM due soon"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Cảnh báo mức cao"
+msgstr "High alarms"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Cảnh báo nghiêm trọng"
+msgstr "Critical alarms"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Doanh thu luỹ kế tháng"
+msgstr "Revenue month to date"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Dòng chưa đo được khả dụng"
+msgstr "Rows with availability not measured"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Dòng chưa đo được sản lượng"
+msgstr "Rows with energy not measured"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Dòng có giờ dừng chưa quy trách nhiệm"
+msgstr "Rows with downtime not attributed"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Hệ số CS tháng"
+msgstr "Capacity factor MTD"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Khả dụng ngày"
+msgstr "Availability, day"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Khả dụng tháng"
+msgstr "Availability, month"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Khả dụng tháng này"
+msgstr "Availability this month"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "Lệnh công việc quá hạn"
+msgstr "Work orders overdue"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Mẫu số"
+msgstr "Denominator"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "PR ngày"
+msgstr "PR, day"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "SL ngày (MWh)"
+msgstr "Energy, day (MWh)"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "SL tháng (MWh)"
+msgstr "Energy, month (MWh)"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "So hôm trước"
+msgstr "vs previous day"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Sản lượng luỹ kế tháng"
+msgstr "Energy month to date"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Sản lượng trong ngày"
+msgstr "Energy for the day"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Số có tin được không"
+msgstr "Can these figures be trusted"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#: model:ir.model,name:eam_fleet.model_eam_fleet_dashboard
+msgid "Số liệu bảng điều khiển toàn danh mục"
+msgstr "Fleet dashboard data"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Số liệu ngày"
+msgstr "Figures for"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+#: model:ir.actions.client,name:eam_fleet.action_eam_fleet
+msgid "Toàn danh mục nhà máy"
+msgstr "Fleet overview"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Tổ máy"
+msgstr "Units"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Tổn thất (tiền)"
+msgstr "Loss (value)"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#: model:ir.ui.menu,name:eam_fleet.menu_eam_fleet
+msgid "Tổng quan"
+msgstr "Overview"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Từng nhà máy"
+msgstr "Plant by plant"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Việc phải làm"
+msgstr "Needs attention"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "bấm vào để mở danh sách"
+msgstr "click to open the list"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "chưa khai mục tiêu"
+msgstr "no target declared"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "chạy theo đồng hồ mà vị trí chưa có số đọc — nó sẽ im lặng không bao giờ tới hạn"
+msgstr "runs on a meter but the location has no reading — it will fall silently due, never"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "khả dụng ở trên đang CAO HƠN thật"
+msgstr "availability above is HIGHER than reality"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "mẫu số của mọi tỷ lệ khả dụng bị hụt đúng bấy nhiêu"
+msgstr "the denominator of every availability ratio is short by exactly this much"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "sản lượng đang thiếu, nhưng tổng vẫn ra số"
+msgstr "energy is missing, yet the total still produces a figure"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "trong cửa sổ báo trước"
+msgstr "within the lead-time window"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-javascript
+#: code:addons/eam_fleet/static/src/xml/eam_fleet.xml:0
+msgid "Đang lấy số…"
+msgstr "Fetching figures…"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "đang mở"
+msgstr "open"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "đang mở, chưa xử lý xong"
+msgstr "open, not yet resolved"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "đã qua hạn, chưa có lệnh"
+msgstr "past due, no order raised"
+
+#. module: eam_fleet
+#. module: eam_fleet
+#. odoo-python
+#: code:addons/eam_fleet/models/eam_fleet.py:0
+msgid "đã qua ngày dự kiến xong mà chưa đóng"
+msgstr "past the planned finish and not closed"
+

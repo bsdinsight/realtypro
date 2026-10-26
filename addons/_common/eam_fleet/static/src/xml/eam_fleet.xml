@@ -33,20 +33,13 @@
                 <div class="eam-card-value">
                     <t t-esc="mwh(d.tong.sl_ngay)"/> <span class="u">MWh</span>
                 </div>
-                <div class="eam-card-sub">
-                    <t t-esc="d.tong.so_nha_may"/> nhà máy ·
-                    <t t-esc="d.tong.so_to_may"/> tổ máy
-                </div>
+                <div class="eam-card-sub" t-esc="heroSub()"/>
             </div>
 
             <div class="eam-card" t-att-class="bacKd(d.tong.kd_thang)">
                 <div class="eam-card-label">Khả dụng tháng này</div>
                 <div class="eam-card-value"><t t-esc="pct(d.tong.kd_thang)"/></div>
-                <div class="eam-card-sub">
-                    trọng số theo sản lượng ·
-                    <t t-esc="d.tong.kd_mau_so"/>/<t t-esc="d.tong.so_nha_may"/>
-                    nhà máy có số
-                </div>
+                <div class="eam-card-sub" t-esc="kdSub()"/>
             </div>
 
             <div class="eam-card">
@@ -54,7 +47,7 @@
                 <div class="eam-card-value">
                     <t t-esc="mwh(d.tong.sl_thang)"/> <span class="u">MWh</span>
                 </div>
-                <div class="eam-card-sub">từ <t t-esc="d.dau_thang"/></div>
+                <div class="eam-card-sub" t-esc="thangSub()"/>
             </div>
 
             <div class="eam-card">
@@ -62,10 +55,7 @@
                 <div class="eam-card-value" style="font-size: 20px">
                     <t t-esc="tien(d.tong.doanh_thu_thang)"/>
                 </div>
-                <div class="eam-card-sub">
-                    tổn thất đã quy ra tiền:
-                    <t t-esc="tien(d.tong.tien_mat_thang)"/>
-                </div>
+                <div class="eam-card-sub" t-esc="tienSub()"/>
             </div>
         </div>
 
@@ -73,9 +63,7 @@
         <div class="eam-panel">
             <div class="eam-panel-head">
                 <h3>Từng nhà máy</h3>
-                <span class="eam-panel-note">
-                    Ô để dấu <b>—</b> là CHƯA ĐO ĐƯỢC, không phải bằng không.
-                </span>
+                <span class="eam-panel-note">A dash means NOT MEASURED, not zero.</span>
             </div>
             <table class="eam-table">
                 <thead>
@@ -171,12 +159,8 @@
                 <div class="eam-panel-head">
                     <h3>Số có tin được không</h3>
                 </div>
-                <div class="eam-panel-note" style="margin-bottom:10px">
-                    Ba con số dưới đây đều làm cho số phía trên
-                    <b>đẹp hơn thực tế</b>. Trên
-                    <t t-esc="so(d.tin_cay.tong_dong)"/> dòng sổ ngày tổ máy
-                    của tháng này.
-                </div>
+                <div class="eam-panel-note" style="margin-bottom:10px"
+                     t-esc="tinCaySub()"/>
                 <div class="eam-todo"
                      t-att-class="d.tin_cay.chua_do_sl ? 'is-warn' : 'is-zero'">
                     <div class="eam-todo-count" t-esc="d.tin_cay.chua_do_sl"/>

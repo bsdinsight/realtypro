@@ -1,0 +1,130 @@
+1673	Total
+1674	Above
+1675	Three baselines
+1676	Basis
+1677	Soiling
+1678	Today
+1679	Expected
+1680	Breakdown
+1681	Residual
+1682	Comparable
+1683	Actual
+1684	Shading
+1685	Rebuild
+1686	Attributed
+1687	Above the level
+1688	% of the baseline
+1689	This month
+1690	External grid
+1691	How the figure is taken
+1692	Is a loss
+1693	Residual (%)
+1694	A baseline is declared
+1695	Attributed
+1696	Dead string
+1697	Not attributed
+1698	Expected (kWh)
+1699	Loss type
+1700	Actual (kWh)
+1701	Awaiting manual entry
+1702	Grid & dispatch
+1703	Resource baseline
+1704	Entered by hand
+1705	Last 7 days
+1706	Has a plan baseline
+1707	Module degradation
+1708	An expected level is declared
+1709	P50 plan baseline
+1710	Loss breakdown
+1711	Residual worth looking at
+1712	Expected loss
+1713	Waterfall chart
+1714	Has a resource baseline
+1715	Below the plan baseline
+1716	Intentional consumption
+1717	stage %(m)s · %(t)s
+1718	No target declared
+1719	Loss accounting
+1720	Above expected (kWh)
+1721	Clipping
+1722	Thermal shortfall of the modules
+1723	Engineering & degradation
+1724	Comparable with the expected level
+1725	The weather gave less than P50
+1726	Resource baseline (kWh)
+1727	Intentional consumption
+1728	Why it could not be attributed
+1729	% of the resource baseline.
+1730	Underperforming string
+1731	Loss breakdown line
+1732	Resource variance (kWh)
+1733	No resource baseline
+1734	P50 plan baseline (kWh)
+1735	Unattributed residual (kWh)
+1736	The weather gave more than P50
+1737	Total attributed (kWh)
+1738	Is intentional consumption
+1739	Variance due to the resource (kWh)
+1740	Step-up transformer losses
+1741	Expected (% of the resource baseline)
+1742	Intentional consumption (kWh)
+1743	Expected loss by type
+1744	stage "%s" has no daily row
+1745	this type is entered by hand
+1746	Residual that could not be attributed (kWh)
+1747	Why there is no plan baseline
+1748	Daily loss accounting
+1749	Inverter conversion losses
+1750	Cabling losses within the site
+1751	Why there is no resource baseline
+1752	Which PVsyst version, which clause
+1753	Resource — what the weather gave
+1754	there is no performance row for this day
+1755	Outage log — by downtime group
+1756	Losses up to the delivery point
+1757	The loss type code must be unique.
+1758	%(n)d outages · %(g).2f unit-hours
+1759	%(n)d/%(t)d units hit the limit at some point
+1760	Only used when the figure comes from the outage log.
+1761	Metering chain — the loss of one stage
+1762	Cable losses to the MV busbar
+1763	Other losses — reactive power
+1764	Only used when the figure comes from the metering chain.
+1765	the system has no solar performance table
+1766	No expected level has\n               been declared yet
+1767	Thermal shortfall — from the temperature correction factor
+1768	no unit has a wind reading for the day
+1769	%(n)d/%(t)d units have no wind reading: %(d)s
+1770	there was no outage in group "%s" during the day
+1771	One plant has one loss accounting record per day.
+1772	%d units have readings on both sides; no sample hit the limit
+1773	Clipping — DC power above the AC limit
+1774	Loss type "%s" takes its figure from the metering chain, so a stage code is required.
+1775	A plant declares only ONE expected level per loss type.
+1776	Loss type "%s" takes its figure from the outage log, so a downtime group has to be chosen.
+1777	Which document states this figure — which PVsyst version, which contract clause.
+1778	daily performance for %s has no nominal energy or module efficiency
+1779	The expected level has to lie between 0 and 100%%. It is %(gt)s%% for "%(loai)s".
+1780	no unit has a DC-side figure — there is no telling whether DC exceeded the AC limit
+1781	(1 − Ft) × the reference baseline · Ft = %(f).4f, reference %(t).1f °C, module %(m).1f °C
+1782	there is no temperature correction factor — the module temperature or the panel's temperature coefficient is missing
+1783	A positive figure means MORE was lost than the design allows — this is the part worth investigating.
+1784	The monthly target spread evenly across the days. It is a FINANCIAL commitment, not a forecast for that particular day.
+1785	Where nothing is declared, the baseline is NOT taken as 0 — the two are quite different, and confusing them breeds orphan figures.
+1786	The plan baseline less the resource baseline. Positive means the weather gave less than a P50 year — nobody did anything wrong.
+1787	The order of SUBTRACTION on the waterfall chart. Changing the order does not change the total, but it changes the story the sheet tells.
+1788	Declared here rather than written into the code, so that a plant can add a new cause without waiting for a release.
+1789	no unit has a power curve attached — there is no deriving "what should have been generated in today's wind"
+1790	It requires BOTH an expected baseline AND an actual figure that could be attributed. Without either, there is no comparison at all.
+1791	irradiance × area × module efficiency, at standard conditions — the thermal shortfall appears as a column of its own
+1792	The power curve applied to the wind speed MEASURED at each unit. This is the operational baseline that carries responsibility.
+1793	It only means something once a target HAS been declared. Without one it is not "on plan" but "there is no plan to compare against".
+1794	A type that is <b>not declared</b> still goes through the breakdown\n               normally, stating plainly that it has no baseline — not declared is\n               NOT the same as declared as 0.
+1795	The percentage of the resource baseline this loss type is allowed to consume. Taken from the design file (PVsyst, PVGIS) or from the O&M contractor's commitment.
+1796	The resource baseline less the actual less the total attributed. It is NOT spread across the columns to make the chart add up neatly — a large residual is information, not a presentation flaw.
+1797	%(n)d/%(t)d samples had wind ABOVE the curve's range — there is no telling whether the machine shut down for a storm or the curve simply stops there, so they are not added to the baseline; the resource baseline is LOWER than reality by exactly that much
+1798	Auxiliary power and overnight consumption are NOT losses — the plant uses them deliberately. They are still deducted from saleable energy, but kept apart: lumping them into losses blames operations for something operations did nothing wrong about.
+1799	The loss register answers <b>"how much was lost"</b>. Declare an\n               expected level here and it also answers the more important\n               question: <b>"is that a lot or a little"</b> — whether soiling\n               taking 2.1% is good or bad can only be known against a baseline.
+1800	A percentage of a small number is noise rather than signal: a windless day generating only 11 MWh turns a 3 MWh difference into 30%, and those 3 MWh say nothing about operations. It only counts as worth looking at when the residual exceeds 5% AND the resource baseline reaches at least 10% of the plant's whole-day capability.
+1801	Declared <b>per plant</b>, because two plants three hundred kilometres\n               apart have quite different soiling, and each project's design file\n               (PVsyst, PVGIS) already states its own figure. Record the\n               <b>basis</b> too, so there is something to argue with the\n               contractor from later.
+1802	The model cannot explain this part — it is NOT spread\n                        across the columns to make the chart add up neatly. A\n                        large residual usually comes from one of three things: the\n                        outage log is incomplete, the power curve no longer\n                        matches a degraded machine, or the wind measured at the\n                        nacelle differs from the wind reaching the blades.

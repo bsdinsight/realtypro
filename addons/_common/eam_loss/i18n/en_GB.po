@@ -17,6 +17,153 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__ty_le
+msgid "% của mốc"
+msgstr "% of the baseline"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "% của mốc tài nguyên."
+msgstr "% of the resource baseline."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "%(n)d khoảng dừng · %(g).2f giờ-máy"
+msgstr "%(n)d outages · %(g).2f unit-hours"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "%(n)d/%(t)d mốc đo có gió VƯỢT dải đường cong — không biết là máy đã cắt vì bão hay đường cong chỉ khai tới đó, nên không cộng vào mốc; mốc tài nguyên đang THẤP hơn thật đúng phần ấy"
+msgstr "%(n)d/%(t)d samples had wind ABOVE the curve's range — there is no telling whether the machine shut down for a storm or the curve simply stops there, so they are not added to the baseline; the resource baseline is LOWER than reality by exactly that much"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "%(n)d/%(t)d tổ máy có lúc chạm trần"
+msgstr "%(n)d/%(t)d units hit the limit at some point"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "%(n)d/%(t)d tổ máy thiếu số đo gió: %(d)s"
+msgstr "%(n)d/%(t)d units have no wind reading: %(d)s"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "%d tổ máy có số hai phía, không mốc nào chạm trần"
+msgstr "%d units have readings on both sides; no sample hit the limit"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "(1 − Ft) × mốc chuẩn · Ft = %(f).4f, mốc tham chiếu %(t).1f °C, mô-đun %(m).1f °C"
+msgstr "(1 − Ft) × the reference baseline · Ft = %(f).4f, reference %(t).1f °C, module %(m).1f °C"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "7 ngày gần nhất"
+msgstr "Last 7 days"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Ba mốc"
+msgstr "Three baselines"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__thac_nuoc
+msgid "Biểu đồ thác nước"
+msgstr "Waterfall chart"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_bui
+msgid "Bụi bẩn"
+msgstr "Soiling"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_bong
+msgid "Che bóng"
+msgstr "Shading"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__bac_do
+msgid "Chuỗi điểm đo — tổn thất của một bậc"
+msgstr "Metering chain — the loss of one stage"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__chenh_tai_nguyen
+msgid "Chênh do tài nguyên (kWh)"
+msgstr "Variance due to the resource (kWh)"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_list
+msgid "Chênh tài nguyên (kWh)"
+msgstr "Resource variance (kWh)"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Chưa có mốc tài nguyên"
+msgstr "No resource baseline"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Chưa khai mục tiêu"
+msgstr "No target declared"
+
+#. module: eam_loss
+#: model_terms:ir.actions.act_window,help:eam_loss.action_eam_loss_expect
+msgid ""
+"Chưa khai mức kỳ vọng\n"
+"               nào"
+msgstr ""
+"No expected level has\n"
+"               been declared yet"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__co_ky_vong
+msgid "Chưa khai thì KHÔNG coi mốc bằng 0 — hai chuyện khác hẳn nhau, và coi lẫn là đẻ ra số mồ côi."
+msgstr "Where nothing is declared, the baseline is NOT taken as 0 — the two are quite different, and confusing them breeds orphan figures."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Chưa quy được"
+msgstr "Not attributed"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__duoi_ke_hoach
+msgid "Chỉ có nghĩa khi ĐÃ khai mục tiêu. Chưa khai thì không phải \"đạt kế hoạch\", mà là chưa có kế hoạch để so."
+msgstr "It only means something once a target HAS been declared. Without one it is not \"on plan\" but \"there is no plan to compare against\"."
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_type__node_code
+msgid "Chỉ dùng khi lấy số từ chuỗi điểm đo."
+msgstr "Only used when the figure comes from the metering chain."
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_type__group_id
+msgid "Chỉ dùng khi lấy số từ sổ dừng máy."
+msgstr "Only used when the figure comes from the outage log."
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_type_search
+msgid "Chờ người nhập"
+msgstr "Awaiting manual entry"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_type_search
+msgid "Cách lấy số"
+msgstr "How the figure is taken"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__do_duoc_kh
+msgid "Có mốc kế hoạch"
+msgstr "Has a plan baseline"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__do_duoc_tn
+msgid "Có mốc tài nguyên"
+msgstr "Has a resource baseline"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__company_id
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__company_id
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__company_id
@@ -24,9 +171,50 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__nguon
+msgid "Căn cứ"
+msgstr "Basis"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_clip
+msgid "Cắt đỉnh (clipping)"
+msgstr "Clipping"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__clipping
+msgid "Cắt đỉnh — công suất một chiều vượt trần xoay chiều"
+msgstr "Clipping — DC power above the AC limit"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__tien
 msgid "Doanh thu mất"
 msgstr "Revenue lost"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_stringchet
+msgid "Dãy pin chết"
+msgstr "Dead string"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_string
+msgid "Dãy pin kém hiệu suất"
+msgstr "Underperforming string"
+
+#. module: eam_loss
+#: model:ir.model,name:eam_loss.model_eam_loss_day_line
+msgid "Dòng phân rã tổn thất"
+msgstr "Loss breakdown line"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__chenh_ky_vong
+msgid "Dương là mất NHIỀU HƠN mức thiết kế cho phép — đây mới là phần đáng đi tìm nguyên nhân."
+msgstr "A positive figure means MORE was lost than the design allows — this is the part worth investigating."
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__duoi_ke_hoach
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Dưới mốc kế hoạch"
+msgstr "Below the plan baseline"
 
 #. module: eam_loss
 #: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__dung_may
@@ -34,9 +222,135 @@ msgid "Dừng máy"
 msgstr "Downtime"
 
 #. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Dựng lại"
+msgstr "Rebuild"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Hôm nay"
+msgstr "Today"
+
+#. module: eam_loss
+#: model:ir.actions.act_window,name:eam_loss.action_eam_loss_day
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_day
+msgid "Hạch toán tổn thất"
+msgstr "Loss accounting"
+
+#. module: eam_loss
+#: model:ir.model,name:eam_loss.model_eam_loss_day
+msgid "Hạch toán tổn thất theo ngày"
+msgstr "Daily loss accounting"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_expect__nguon
+msgid "Hồ sơ nào nói con số này — PVsyst bản nào, điều khoản hợp đồng nào."
+msgstr "Which document states this figure — which PVsyst version, which contract clause."
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_nhiet
+msgid "Hụt do nhiệt mô-đun"
+msgstr "Thermal shortfall of the modules"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__nhiet
+msgid "Hụt do nhiệt — từ hệ số hiệu chỉnh nhiệt"
+msgstr "Thermal shortfall — from the temperature correction factor"
+
+#. module: eam_loss
+#: model_terms:ir.actions.act_window,help:eam_loss.action_eam_loss_expect
+msgid ""
+"Khai theo <b>từng nhà máy</b>, vì hai nhà máy cách nhau ba\n"
+"               trăm cây số có mức bụi khác hẳn nhau, và hồ sơ thiết kế\n"
+"               (PVsyst, PVGIS) của mỗi dự án đã ghi sẵn tỷ lệ riêng. Ghi\n"
+"               luôn <b>căn cứ</b> để sau này còn cãi được với nhà thầu."
+msgstr ""
+"Declared <b>per plant</b>, because two plants three hundred kilometres\n"
+"               apart have quite different soiling, and each project's design file\n"
+"               (PVsyst, PVGIS) already states its own figure. Record the\n"
+"               <b>basis</b> too, so there is something to argue with the\n"
+"               contractor from later."
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__cach_do
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_type__cach_do
+msgid "Khai ở đây thay vì viết vào mã, để nhà máy thêm nguyên nhân mới mà không phải chờ bản phát hành."
+msgstr "Declared here rather than written into the code, so that a plant can add a new cause without waiting for a release."
+
+#. module: eam_loss
 #: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__khac
 msgid "Khác"
 msgstr "Other"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Kỳ vọng"
+msgstr "Expected"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__ty_le_pct
+msgid "Kỳ vọng (% mốc tài nguyên)"
+msgstr "Expected (% of the resource baseline)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__kwh_ky_vong
+msgid "Kỳ vọng (kWh)"
+msgstr "Expected (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__ky_thuat
+msgid "Kỹ thuật & suy giảm"
+msgstr "Engineering & degradation"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_type.py:0
+msgid "Loại \"%s\" lấy số từ chuỗi điểm đo thì phải khai mã bậc."
+msgstr "Loss type \"%s\" takes its figure from the metering chain, so a stage code is required."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_type.py:0
+msgid "Loại \"%s\" lấy số từ sổ dừng máy thì phải chọn nhóm giờ dừng."
+msgstr "Loss type \"%s\" takes its figure from the outage log, so a downtime group has to be chosen."
+
+#. module: eam_loss
+#: model_terms:ir.actions.act_window,help:eam_loss.action_eam_loss_expect
+msgid ""
+"Loại nào <b>chưa khai</b> thì phần rã vẫn chạy bình thường\n"
+"               và ghi rõ là chưa có mốc — chưa khai KHÁC với khai bằng 0."
+msgstr ""
+"A type that is <b>not declared</b> still goes through the breakdown\n"
+"               normally, stating plainly that it has no baseline — not declared is\n"
+"               NOT the same as declared as 0."
+
+#. module: eam_loss
+#: model:ir.actions.act_window,name:eam_loss.action_eam_loss_type
+#: model:ir.model,name:eam_loss.model_eam_loss_type
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__loss_type_id
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__loss_type_id
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_type
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Loại tổn thất"
+msgstr "Loss type"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__la_tu_dung
+msgid "Là tiêu thụ có chủ đích"
+msgstr "Is intentional consumption"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Là tổn thất"
+msgstr "Is a loss"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__luoi
+msgid "Lưới & điều độ"
+msgstr "Grid & dispatch"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_luoi
+msgid "Lưới ngoài"
+msgstr "External grid"
 
 #. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__cach_do
@@ -60,6 +374,82 @@ msgid "Mã bậc đo"
 msgstr "Metering stage code"
 
 #. module: eam_loss
+#: model:ir.model.constraint,message:eam_loss.constraint_eam_loss_type_uniq_code
+msgid "Mã loại tổn thất phải là duy nhất."
+msgstr "The loss type code must be unique."
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid ""
+"Mô hình chưa giải thích được phần này — KHÔNG chia\n"
+"                        nó vào các cột để biểu đồ cộng khít. Dư lớn thường\n"
+"                        do một trong ba: sổ dừng máy ghi thiếu, đường cong\n"
+"                        công suất không còn đúng với máy đã xuống cấp, hoặc\n"
+"                        gió đo tại vỏ máy lệch so với gió tới cánh."
+msgstr ""
+"The model cannot explain this part — it is NOT spread\n"
+"                        across the columns to make the chart add up neatly. A\n"
+"                        large residual usually comes from one of three things: the\n"
+"                        outage log is incomplete, the power curve no longer\n"
+"                        matches a degraded machine, or the wind measured at the\n"
+"                        nacelle differs from the wind reaching the blades."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "Mốc kế hoạch P50"
+msgstr "P50 plan baseline"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__muc_ke_hoach
+msgid "Mốc kế hoạch P50 (kWh)"
+msgstr "P50 plan baseline (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__chenh_tai_nguyen
+msgid "Mốc kế hoạch trừ mốc tài nguyên. Dương nghĩa là trời cho ít hơn năm P50 — không ai làm gì sai."
+msgstr "The plan baseline less the resource baseline. Positive means the weather gave less than a P50 year — nobody did anything wrong."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "Mốc tài nguyên"
+msgstr "Resource baseline"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__muc_tai_nguyen
+msgid "Mốc tài nguyên (kWh)"
+msgstr "Resource baseline (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__du
+msgid "Mốc tài nguyên trừ thực tế trừ tổng đã quy được. KHÔNG phân bổ vào các cột để biểu đồ cộng khít — phần dư lớn là thông tin, không phải lỗi trình bày."
+msgstr "The resource baseline less the actual less the total attributed. It is NOT spread across the columns to make the chart add up neatly — a large residual is information, not a presentation flaw."
+
+#. module: eam_loss
+#: model:ir.model.constraint,message:eam_loss.constraint_eam_loss_expect_uniq
+msgid "Mỗi nhà máy chỉ khai MỘT mức kỳ vọng cho một loại tổn thất."
+msgstr "A plant declares only ONE expected level per loss type."
+
+#. module: eam_loss
+#: model:ir.model.constraint,message:eam_loss.constraint_eam_loss_day_uniq
+msgid "Mỗi nhà máy mỗi ngày chỉ một bản hạch toán."
+msgstr "One plant has one loss accounting record per day."
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__muc_ke_hoach
+msgid "Mục tiêu tháng chia đều theo ngày. Là cam kết TÀI CHÍNH, không phải dự báo của ngày hôm đó."
+msgstr "The monthly target spread evenly across the days. It is a FINANCIAL commitment, not a forecast for that particular day."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_expect.py:0
+msgid "Mức kỳ vọng phải nằm trong khoảng 0–100%%. Đang khai %(gt)s%% cho \"%(loai)s\"."
+msgstr "The expected level has to lie between 0 and 100%%. It is %(gt)s%% for \"%(loai)s\"."
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__tay
+msgid "Người nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__plant_id
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__plant_id
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_expect__plant_id
@@ -75,14 +465,336 @@ msgid "Nhóm giờ dừng"
 msgstr "Downtime group"
 
 #. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_expect_list
+msgid "PVsyst bản nào, điều khoản nào"
+msgstr "Which PVsyst version, which clause"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__line_ids
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Phân rã"
+msgstr "Breakdown"
+
+#. module: eam_loss
+#: model:ir.actions.act_window,name:eam_loss.action_eam_loss_line
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_line
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_pivot
+msgid "Phân rã tổn thất"
+msgstr "Loss breakdown"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__so_duoc
+msgid "Phải CÓ mốc kỳ vọng VÀ số thực tế phải quy được. Thiếu một trong hai thì không có phép so nào cả."
+msgstr "It requires BOTH an expected baseline AND an actual figure that could be attributed. Without either, there is no comparison at all."
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Phần dư"
+msgstr "Residual"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__du_pct
+msgid "Phần dư (%)"
+msgstr "Residual (%)"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_list
+msgid "Phần dư chưa quy (kWh)"
+msgstr "Unattributed residual (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__du
+msgid "Phần dư chưa quy được (kWh)"
+msgstr "Residual that could not be attributed (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__du_dang_ke
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+msgid "Phần dư đáng xem"
+msgstr "Residual worth looking at"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_expect__ty_le_pct
+msgid "Phần trăm của mốc tài nguyên mà loại tổn thất này được phép ăn. Lấy từ hồ sơ thiết kế (PVsyst, PVGIS) hoặc từ cam kết của nhà thầu O&M."
+msgstr "The percentage of the resource baseline this loss type is allowed to consume. Taken from the design file (PVsyst, PVGIS) or from the O&M contractor's commitment."
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__du_dang_ke
+msgid "Phần trăm của một con số bé là nhiễu, không phải tín hiệu: ngày lặng gió chỉ phát 11 MWh thì lệch 3 MWh đã ra 30%, mà 3 MWh ấy chẳng nói gì về vận hành. Chỉ coi là đáng xem khi phần dư vượt 5% VÀ mốc tài nguyên đạt ít nhất 10% khả năng phát cả ngày của nhà máy."
+msgstr "A percentage of a small number is noise rather than signal: a windless day generating only 11 MWh turns a 3 MWh difference into 30%, and those 3 MWh say nothing about operations. It only counts as worth looking at when the residual exceeds 5% AND the resource baseline reaches at least 10% of the plant's whole-day capability."
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__do_duoc
+msgid "Quy được"
+msgstr "Attributed"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "So được"
+msgstr "Comparable"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__so_duoc
+msgid "So được với kỳ vọng"
+msgstr "Comparable with the expected level"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_suygiam
+msgid "Suy giảm mô-đun"
+msgstr "Module degradation"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__cach_do__dung_may
+msgid "Sổ dừng máy — theo nhóm giờ dừng"
+msgstr "Outage log — by downtime group"
+
+#. module: eam_loss
+#: model_terms:ir.actions.act_window,help:eam_loss.action_eam_loss_expect
+msgid ""
+"Sổ tổn thất trả lời <b>\"mất bao nhiêu\"</b>. Khai mức kỳ\n"
+"               vọng ở đây thì nó trả lời thêm được câu quan trọng hơn:\n"
+"               <b>\"mất thế là nhiều hay ít\"</b> — bụi bẩn ăn 2,1% là tốt\n"
+"               hay tồi, chỉ biết khi có mốc để so."
+msgstr ""
+"The loss register answers <b>\"how much was lost\"</b>. Declare an\n"
+"               expected level here and it also answers the more important\n"
+"               question: <b>\"is that a lot or a little\"</b> — whether soiling\n"
+"               taking 2.1% is good or bad can only be known against a baseline."
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Tháng này"
+msgstr "This month"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__sequence
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_expect__sequence
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_type__sequence
+msgid "Thứ tự TRỪ trên biểu đồ thác nước. Đổi thứ tự không đổi tổng, nhưng đổi câu chuyện tờ giấy kể."
+msgstr "The order of SUBTRACTION on the waterfall chart. Changing the order does not change the total, but it changes the story the sheet tells."
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "Thực tế"
+msgstr "Actual"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__thuc_te
+msgid "Thực tế (kWh)"
+msgstr "Actual (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__la_tu_dung
+msgid "Tiêu thụ chủ đích"
+msgstr "Intentional consumption"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__tu_dung
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_type_search
+msgid "Tiêu thụ có chủ đích"
+msgstr "Intentional consumption"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__tong_tu_dung
+msgid "Tiêu thụ có chủ đích (kWh)"
+msgstr "Intentional consumption (kWh)"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "Trời cho nhiều hơn P50"
+msgstr "The weather gave more than P50"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "Trời cho ít hơn P50"
+msgstr "The weather gave less than P50"
+
+#. module: eam_loss
+#: model:ir.model.fields.selection,name:eam_loss.selection__eam_loss_type__nhom__tai_nguyen
+msgid "Tài nguyên — trời cho bao nhiêu"
+msgstr "Resource — what the weather gave"
+
+#. module: eam_loss
 #: model:ir.model.fields,field_description:eam_loss.field_eam_loss_type__name
 msgid "Tên loại"
 msgstr "Category name"
 
 #. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_inv
+msgid "Tổn hao biến đổi bộ biến tần"
+msgstr "Inverter conversion losses"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_mcb
+msgid "Tổn thất cáp tới thanh cái trung thế"
+msgstr "Cable losses to the MV busbar"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_khac
+msgid "Tổn thất khác — công suất phản kháng"
+msgstr "Other losses — reactive power"
+
+#. module: eam_loss
+#: model:ir.actions.act_window,name:eam_loss.action_eam_loss_expect
+#: model:ir.ui.menu,name:eam_loss.menu_eam_loss_expect
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_expect_list
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_expect_search
+msgid "Tổn thất kỳ vọng"
+msgstr "Expected loss"
+
+#. module: eam_loss
+#: model:ir.model,name:eam_loss.model_eam_loss_expect
+msgid "Tổn thất kỳ vọng theo loại"
+msgstr "Expected loss by type"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_mba
+msgid "Tổn thất máy biến áp nâng"
+msgstr "Step-up transformer losses"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_pv_gnt
+msgid "Tổn thất tới ranh giới giao nhận"
+msgstr "Losses up to the delivery point"
+
+#. module: eam_loss
+#: model:eam.loss.type,name:eam_loss.lt_duongday
+msgid "Tổn thất đường dây trong trại"
+msgstr "Cabling losses within the site"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_list
+msgid "Tổng"
+msgstr "Total"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__tong_mat
+msgid "Tổng đã quy được (kWh)"
+msgstr "Total attributed (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__ly_do_kh
+msgid "Vì sao chưa có mốc kế hoạch"
+msgstr "Why there is no plan baseline"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day__ly_do_tn
+msgid "Vì sao chưa có mốc tài nguyên"
+msgstr "Why there is no resource baseline"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__ly_do
+msgid "Vì sao chưa quy được"
+msgstr "Why it could not be attributed"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Vượt"
+msgstr "Above"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__chenh_ky_vong
+msgid "Vượt kỳ vọng (kWh)"
+msgstr "Above expected (kWh)"
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__vuot_ky_vong
+msgid "Vượt mức"
+msgstr "Above the level"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "bậc \"%s\" chưa có dòng ngày"
+msgstr "stage \"%s\" has no daily row"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "bậc %(m)s · %(t)s"
+msgstr "stage %(m)s · %(t)s"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "bức xạ × diện tích × hiệu suất mô-đun, ở điều kiện chuẩn — phần hụt do nhiệt hiện thành cột riêng"
+msgstr "irradiance × area × module efficiency, at standard conditions — the thermal shortfall appears as a column of its own"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "chưa có hệ số hiệu chỉnh nhiệt — thiếu nhiệt độ mô-đun hoặc hệ số nhiệt của tấm pin"
+msgstr "there is no temperature correction factor — the module temperature or the panel's temperature coefficient is missing"
+
+#. module: eam_loss
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "chưa khai mục tiêu"
 msgstr "no target declared"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "chưa tổ máy nào gắn đường cong công suất — không suy được \"lẽ ra phát bao nhiêu với gió hôm nay\""
+msgstr "no unit has a power curve attached — there is no deriving \"what should have been generated in today's wind\""
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "hiệu suất ngày %s chưa có điện năng danh định hoặc hiệu suất mô-đun"
+msgstr "daily performance for %s has no nominal energy or module efficiency"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "hệ chưa có bảng hiệu suất điện mặt trời"
+msgstr "the system has no solar performance table"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "không có khoảng dừng nhóm \"%s\" trong ngày"
+msgstr "there was no outage in group \"%s\" during the day"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "không tổ máy nào có số phía một chiều — không biết DC có vượt trần AC hay không"
+msgstr "no unit has a DC-side figure — there is no telling whether DC exceeded the AC limit"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "không tổ máy nào có số đo gió trong ngày"
+msgstr "no unit has a wind reading for the day"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "loại này do người nhập tay"
+msgstr "this type is entered by hand"
+
+#. module: eam_loss
+#: code:addons/eam_loss/models/eam_loss_day.py:0
+msgid "ngày này chưa có dòng hiệu suất"
+msgstr "there is no performance row for this day"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day_line__la_tu_dung
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_type__la_tu_dung
+msgid "Điện tự dùng và tiêu thụ ban đêm KHÔNG phải tổn thất — nhà máy cố tình dùng chúng. Vẫn trừ khỏi sản lượng bán được, nhưng xếp riêng: gộp vào tổn thất là đổ cho vận hành một khoản mà vận hành không làm gì sai."
+msgstr "Auxiliary power and overnight consumption are NOT losses — the plant uses them deliberately. They are still deducted from saleable energy, but kept apart: lumping them into losses blames operations for something operations did nothing wrong about."
+
+#. module: eam_loss
+#: model:ir.model.fields,field_description:eam_loss.field_eam_loss_day_line__co_ky_vong
+msgid "Đã khai kỳ vọng"
+msgstr "An expected level is declared"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_day_form
+msgid "Đã khai mốc"
+msgstr "A baseline is declared"
+
+#. module: eam_loss
+#: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
+msgid "Đã quy được"
+msgstr "Attributed"
+
+#. module: eam_loss
+#: model:ir.model.fields,help:eam_loss.field_eam_loss_day__muc_tai_nguyen
+msgid "Đường cong công suất nhân tốc độ gió ĐO ĐƯỢC tại từng tổ máy. Đây mới là mốc vận hành chịu trách nhiệm."
+msgstr "The power curve applied to the wind speed MEASURED at each unit. This is the operational baseline that carries responsibility."
 
 #. module: eam_loss
 #: model:ir.ui.menu,name:eam_loss.menu_eam_loss_day

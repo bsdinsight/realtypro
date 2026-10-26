@@ -1,0 +1,117 @@
+2518	Rain
+2519	Sunny
+2520	Overcast
+2521	Cooling
+2522	PV module
+2523	Input
+2524	Thunderstorm
+2525	Cloudy
+2526	Sky at midday
+2527	Sunshine hours
+2528	Sky at 06:00
+2529	Sky at 09:00
+2530	Commitment met
+2531	Wind sensor
+2532	Mounting structure
+2533	Machine-readable
+2534	Irradiance source
+2535	Sky at 12:00
+2536	Sky at 15:00
+2537	PV string
+2538	String fuse
+2539	String combiner box
+2540	Data source
+2541	Irradiation missing
+2542	Daily performance
+2543	Weather — %s
+2544	Intermittent sun
+2545	Committed PR (%)
+2546	DC side
+2547	How the irradiance is taken
+2548	Irradiance sensor
+2549	Plant constants
+2550	Denominator variance (%)
+2551	PR denominator (kWh)
+2552	AC side
+2553	Weather data missing
+2554	No day yet
+2555	Taken by the system from the readings
+2556	Denominator overridden
+2557	Irradiation (kWh/m²)
+2558	Temperature sensor
+2559	Nominal E (kWh)
+2560	Weather notes
+2561	Temperature coefficient (/°C)
+2562	Commitment not met
+2563	Weather log
+2564	PA — availability (%)
+2565	Days of weather data
+2566	Drive mechanism
+2567	PV array
+2568	Taken by the system, edited by a person
+2569	Irradiance sensors
+2570	Tracker control
+2571	AC energy (kWh)
+2572	Observed by the duty operator
+2573	Module efficiency (%)
+2574	Module temperature (°C)
+2575	Module area (m²)
+2576	Solar tracker
+2577	Solar PV plant
+2578	View the weather log
+2579	PV inverter
+2580	String current monitor
+2581	Temperature correction factor
+2582	Denominator in use (kWh)
+2583	Design temperature (°C)
+2584	Use the primary sensor only
+2585	Edited the system's figure
+2586	TKPMPP temperature coefficient (/°C)
+2587	PR denominator — override (kWh)
+2588	Ambient temperature (°C)
+2589	Reference temperature (°C)
+2590	Mean irradiance (kW/m²)
+2591	Constants captured at calculation time
+2592	Control & communications
+2593	Area used for PR (m²)
+2594	Daily performance — solar PV
+2595	Daily weather — solar PV
+2596	empty = equal to the module area
+2597	The average of every selected sensor
+2598	Mean irradiance during the hours of sunshine.
+2599	Availability has to lie between 0 and 100%%; it is %s.
+2600	The total light-collecting area of all the modules.
+2601	The nominal efficiency of the module at standard conditions.
+2602	Linked automatically to the weather record for the same plant and day.
+2603	A plant has one performance record per day.
+2604	A plant has one weather record per day.
+2605	The ambient temperature used as the baseline for the temperature correction.
+2606	The solar energy reaching the module surface: irradiation × area.
+2607	Wind cools the modules, so it affects energy output indirectly.
+2608	Turn it on for a plant-level location to reveal the constants and PV performance sections.
+2609	Only turn "Solar PV plant" on for a PLANT-level location. "%s" is %s.
+2610	An irradiance of %s kW/m² exceeds the solar constant. Check the unit: this may be W/m².
+2611	The order matters when "use the primary sensor only" is chosen: the first one is the primary.
+2612	Modules are always hotter than the air; this is the temperature used to correct the power.
+2613	Solar constants are declared only on a\n                        <b>Plant</b>-level location.
+2614	The share of time the plant was available to generate. Entered by hand until the outage log is connected.
+2615	<i class="fa fa-exclamation-triangle me-1"/>\n                        The override denominator differs
+2616	The AC energy used as the NUMERATOR. It will be filled automatically by the metering chain once that module is finished.
+2617	Module efficiency has to be declared as a PERCENTAGE (17.4, not 0.174). It is: %s.
+2618	Which sensors it came from and how many were averaged. Recorded so that the figure can be traced back later.
+2619	Leave it empty to use the computed denominator. Fill it in when the plant builds its denominator its own way under the contract.
+2620	The performance ratio the contractor commits to in the contract. Used for comparison, and as the basis for a penalty if it is not met.
+2621	The gap between the override denominator and the computed one. Anything other than 0 means there is something about the plant's formula we have not understood.
+2622	The baseline for the temperature correction. STC is 25 °C, but a contract may settle on something else — declare the contract's figure.
+2623	Once a person overrides the system's figure it switches to "taken by the system, edited by a person" — so it is still known afterwards which figure was touched.
+2624	Where a plant has 2–3 irradiance sensors, whether to average them or use only one is the customer's decision, not the software's.
+2625	The total solar energy reaching the module surface during the day. This is the DENOMINATOR of the performance ratio — get this field wrong and the whole KPI is wrong.
+2626	One record per plant per day. The fields on the left the system takes from\n               the readings; those on the right the duty operator observes by eye.
+2627	The temperature coefficient at the maximum power point — a module specification, usually negative (−0.004 means 0.4% of the power is lost per degree of extra heat).
+2628	An irradiation of %s kWh/m²/day is implausible — the highest recorded anywhere on Earth is around 9. Check the unit: this may be Wh/m² rather than kWh/m².
+2629	against the computed denominator. Anything other than 0 means\n                        there is something about the plant's formula we have not\n                        understood — worth asking about rather than ignoring.
+2630	<i class="fa fa-pencil me-1"/>\n                        This record was <b>taken by the system from the readings,\n                        then edited by a person</b>. The mark is kept so it is\n                        still known which figure was touched.
+2631	The constants are <b>captured</b> when the record is created;\n                            they are not a live reference. Editing the plant's\n                            constants today must not change a KPI already computed\n                            for last month.
+2632	Leave it empty and the module area above is used. Declare it separately when the contract uses the GROSS AREA (frames included) for the performance ratio denominator — a 2–3% difference against the light-collecting area, and that difference goes straight into the KPI.
+2633	<i class="fa fa-cloud me-1"/>\n                        There is no <b>weather</b> record for the same day, so the\n                        irradiation and module temperature are missing — the\n                        performance ratio cannot be computed.
+2634	<i class="fa fa-exclamation-triangle me-1"/>\n                            No irradiance sensor has been chosen. Irradiance is\n                            the <b>denominator of the performance ratio</b> —\n                            without it, none of the KPI figures can be computed.

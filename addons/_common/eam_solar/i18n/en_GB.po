@@ -18,8 +18,106 @@ msgstr ""
 
 #. module: eam_solar
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid ""
+"<i class=\"fa fa-cloud me-1\"/>\n"
+"                        Chưa có bản ghi <b>khí tượng</b> cùng ngày, nên thiếu\n"
+"                        tổng xạ và nhiệt độ mô-đun — không tính được tỷ số\n"
+"                        hiệu suất."
+msgstr ""
+"<i class=\"fa fa-cloud me-1\"/>\n"
+"                        There is no <b>weather</b> record for the same day, so the\n"
+"                        irradiation and module temperature are missing — the\n"
+"                        performance ratio cannot be computed."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                            Chưa chọn cảm biến bức xạ nào. Bức xạ là\n"
+"                            <b>mẫu số của tỷ số hiệu suất</b> — thiếu nó thì\n"
+"                            mọi con số KPI đều không tính được."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                            No irradiance sensor has been chosen. Irradiance is\n"
+"                            the <b>denominator of the performance ratio</b> —\n"
+"                            without it, none of the KPI figures can be computed."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        Mẫu số ghi đè lệch"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\"/>\n"
+"                        The override denominator differs"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_form
+msgid ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        Bản ghi này <b>máy lấy từ số đo, rồi người sửa</b>.\n"
+"                        Giữ dấu để sau còn biết con số nào đã bị can thiệp."
+msgstr ""
+"<i class=\"fa fa-pencil me-1\"/>\n"
+"                        This record was <b>taken by the system from the readings,\n"
+"                        then edited by a person</b>. The mark is kept so it is\n"
+"                        still known which figure was touched."
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__is_solar
+msgid "Bật cho vị trí cấp nhà máy để mở phần hằng số và hiệu suất quang điện."
+msgstr "Turn it on for a plant-level location to reveal the constants and PV performance sections."
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvs
+msgid "Bộ biến tần quang điện"
+msgstr "PV inverter"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_scb_mon
+msgid "Bộ giám sát dòng chuỗi"
+msgstr "String current monitor"
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_solar_weather.py:0
+msgid "Bức xạ %s kW/m² vượt hằng số mặt trời. Kiểm lại đơn vị: có thể đang nhập W/m²."
+msgstr "An irradiance of %s kW/m² exceeds the solar constant. Check the unit: this may be W/m²."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__irradiance_avg
+msgid "Bức xạ trung bình (kW/m²)"
+msgstr "Mean irradiance (kW/m²)"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
 msgid "Cam kết"
 msgstr "Commitment"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvm_str
+msgid "Chuỗi tấm pin"
+msgstr "PV string"
+
+#. module: eam_solar
+#: model_terms:ir.actions.act_window,help:eam_solar.action_eam_solar_weather
+msgid "Chưa có ngày nào"
+msgstr "No day yet"
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_location.py:0
+msgid "Chỉ bật \"Nhà máy điện mặt trời\" cho vị trí cấp NHÀ MÁY. \"%s\" đang là %s."
+msgstr "Only turn \"Solar PV plant\" on for a PLANT-level location. \"%s\" is %s."
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_location__pv_irr_mode__first
+msgid "Chỉ dùng cảm biến chính"
+msgstr "Use the primary sensor only"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_irr_mode
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid "Cách lấy bức xạ"
+msgstr "How the irradiance is taken"
 
 #. module: eam_solar
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__company_id
@@ -28,9 +126,353 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_trk_drv
+msgid "Cơ cấu truyền động"
+msgstr "Drive mechanism"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__irradiance_avg
+msgid "Cường độ bức xạ trung bình trong giờ có nắng."
+msgstr "Mean irradiance during the hours of sunshine."
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_wst_irr
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_irr_tag_ids
+msgid "Cảm biến bức xạ"
+msgstr "Irradiance sensor"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_wst_wnd
+msgid "Cảm biến gió"
+msgstr "Wind sensor"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_wst_tmp
+msgid "Cảm biến nhiệt độ"
+msgstr "Temperature sensor"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_scb_fus
+msgid "Cầu chì chuỗi"
+msgstr "String fuse"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_area_pr
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__area_pr
+msgid "Diện tích dùng cho PR (m²)"
+msgstr "Area used for PR (m²)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_module_area
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__module_area
+msgid "Diện tích mô-đun (m²)"
+msgstr "Module area (m²)"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvm
+msgid "Dàn pin quang điện"
+msgstr "PV array"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__e_nominal
+msgid "E danh định (kWh)"
+msgstr "Nominal E (kWh)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__obs_note
+msgid "Ghi chú thời tiết"
+msgstr "Weather notes"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__wind_speed
+msgid "Gió làm mát tấm pin nên ảnh hưởng gián tiếp tới sản lượng."
+msgstr "Wind cools the modules, so it affects energy output indirectly."
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__storm
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__storm
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__storm
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__storm
+msgid "Giông bão"
+msgstr "Thunderstorm"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_module_eff
+msgid "Hiệu suất danh định của tấm pin ở điều kiện chuẩn."
+msgstr "The nominal efficiency of the module at standard conditions."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_module_eff
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__module_eff
+msgid "Hiệu suất mô-đun (%)"
+msgstr "Module efficiency (%)"
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_location.py:0
+msgid "Hiệu suất mô-đun phải khai theo PHẦN TRĂM (ví dụ 17,4 chứ không phải 0,174). Đang nhận: %s."
+msgstr "Module efficiency has to be declared as a PERCENTAGE (17.4, not 0.174). It is: %s."
+
+#. module: eam_solar
+#: model:ir.actions.act_window,name:eam_solar.action_eam_solar_kpi
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_list
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+msgid "Hiệu suất ngày"
+msgstr "Daily performance"
+
+#. module: eam_solar
+#: model:ir.model,name:eam_solar.model_eam_solar_kpi
+msgid "Hiệu suất ngày — điện mặt trời"
+msgstr "Daily performance — solar PV"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid "Hằng số chụp lại lúc tính"
+msgstr "Constants captured at calculation time"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid "Hằng số nhà máy"
+msgstr "Plant constants"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid ""
+"Hằng số điện mặt trời chỉ khai ở vị trí cấp\n"
+"                        <b>Nhà máy</b>."
+msgstr ""
+"Solar constants are declared only on a\n"
+"                        <b>Plant</b>-level location."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid ""
+"Hằng số được <b>chụp lại</b> khi tạo bản ghi, không\n"
+"                            tham chiếu sống. Sửa hằng số của nhà máy hôm nay\n"
+"                            không được làm đổi KPI đã tính của tháng trước."
+msgstr ""
+"The constants are <b>captured</b> when the record is created;\n"
+"                            they are not a live reference. Editing the plant's\n"
+"                            constants today must not change a KPI already computed\n"
+"                            for last month."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__ft
+msgid "Hệ số hiệu chỉnh nhiệt"
+msgstr "Temperature correction factor"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__tk_pmpp
+msgid "Hệ số nhiệt (/°C)"
+msgstr "Temperature coefficient (/°C)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_tk_pmpp
+msgid "Hệ số nhiệt TKPMPP (/°C)"
+msgstr "TKPMPP temperature coefficient (/°C)"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_tk_pmpp
+msgid "Hệ số nhiệt của điểm công suất cực đại — thông số của tấm pin, thường âm (ví dụ −0,004 nghĩa là mất 0,4% công suất cho mỗi độ nóng thêm)."
+msgstr "The temperature coefficient at the maximum power point — a module specification, usually negative (−0.004 means 0.4% of the power is lost per degree of extra heat)."
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_trk
+msgid "Hệ xoay theo mặt trời"
+msgstr "Solar tracker"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_scb
+msgid "Hộp gom chuỗi"
+msgstr "String combiner box"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__lech_mau_so
+msgid "Khoảng cách giữa mẫu số ghi đè và mẫu số tính ra. Khác 0 là có chỗ ta chưa hiểu đúng công thức của nhà máy."
+msgstr "The gap between the override denominator and the computed one. Anything other than 0 means there is something about the plant's formula we have not understood."
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvm_mnt
+msgid "Khung giá đỡ"
+msgstr "Mounting structure"
+
+#. module: eam_solar
+#: model:ir.model,name:eam_solar.model_eam_solar_weather
+msgid "Khí tượng ngày — điện mặt trời"
+msgstr "Daily weather — solar PV"
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_location.py:0
+msgid "Khí tượng — %s"
+msgstr "Weather — %s"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+msgid "Không đạt cam kết"
+msgstr "Commitment not met"
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_solar_kpi.py:0
+msgid "Khả dụng phải nằm trong 0–100%%, đang nhận %s."
+msgstr "Availability has to lie between 0 and 100%%; it is %s."
+
+#. module: eam_solar
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
 msgid "Kết quả"
 msgstr "Result"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvs_cool
+msgid "Làm mát"
+msgstr "Cooling"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__irr_source
+msgid "Lấy từ cảm biến nào, trung bình mấy cái. Ghi lại để sau này còn truy được vì sao ra con số đó."
+msgstr "Which sensors it came from and how many were averaged. Recorded so that the figure can be traced back later."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__lech_mau_so
+msgid "Lệch mẫu số (%)"
+msgstr "Denominator variance (%)"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__nguon__may
+msgid "Máy lấy từ số đo"
+msgstr "Taken by the system from the readings"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__nguon__tron
+msgid "Máy lấy, người sửa"
+msgstr "Taken by the system, edited by a person"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_form
+msgid "Máy đọc được"
+msgstr "Machine-readable"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__rain
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__rain
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__rain
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__rain
+msgid "Mưa"
+msgstr "Rain"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__pr_denominator
+msgid "Mẫu số PR (kWh)"
+msgstr "PR denominator (kWh)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__pr_denominator_manual
+msgid "Mẫu số PR — ghi đè (kWh)"
+msgstr "PR denominator — override (kWh)"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+msgid "Mẫu số bị ghi đè"
+msgstr "Denominator overridden"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__pr_denominator_used
+msgid "Mẫu số đang dùng (kWh)"
+msgstr "Denominator in use (kWh)"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_temp_ref
+msgid "Mốc để hiệu chỉnh nhiệt. Chuẩn STC là 25 °C, nhưng hợp đồng có thể chốt mức khác — khai đúng mức của hợp đồng."
+msgstr "The baseline for the temperature correction. STC is 25 °C, but a contract may settle on something else — declare the contract's figure."
+
+#. module: eam_solar
+#: model_terms:ir.actions.act_window,help:eam_solar.action_eam_solar_weather
+msgid ""
+"Mỗi ngày một bản ghi cho mỗi nhà máy. Ô bên trái máy lấy từ\n"
+"               số đo, ô bên phải người trực quan sát bằng mắt."
+msgstr ""
+"One record per plant per day. The fields on the left the system takes from\n"
+"               the readings; those on the right the duty operator observes by eye."
+
+#. module: eam_solar
+#: model:ir.model.constraint,message:eam_solar.constraint_eam_solar_kpi_uniq_ngay
+msgid "Mỗi nhà máy chỉ có một bản ghi hiệu suất cho một ngày."
+msgstr "A plant has one performance record per day."
+
+#. module: eam_solar
+#: model:ir.model.constraint,message:eam_solar.constraint_eam_solar_weather_uniq_ngay
+msgid "Mỗi nhà máy chỉ có một bản ghi khí tượng cho một ngày."
+msgstr "A plant has one weather record per day."
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_pr_guaranteed
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__pr_guaranteed
+msgid "Mức tỷ số hiệu suất nhà thầu cam kết trong hợp đồng. Dùng để so sánh, và là căn cứ phạt nếu không đạt."
+msgstr "The performance ratio the contractor commits to in the contract. Used for comparison, and as the basis for a penalty if it is not met."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__irr_source
+msgid "Nguồn bức xạ"
+msgstr "Irradiance source"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__nguon
+msgid "Nguồn số liệu"
+msgstr "Data source"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__nguon__tay
+msgid "Người nhập tay"
+msgstr "Entered by hand"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__nguon
+msgid "Người sửa đè lên số máy lấy thì chuyển sang \"máy lấy, người sửa\" — để sau còn biết con số nào đã bị can thiệp."
+msgstr "Once a person overrides the system's figure it switches to \"taken by the system, edited by a person\" — so it is still known afterwards which figure was touched."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_form
+msgid "Người trực quan sát"
+msgstr "Observed by the duty operator"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
+msgid "Người đã sửa số máy lấy"
+msgstr "Edited the system's figure"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__cloudy
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__cloudy
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__cloudy
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__cloudy
+msgid "Nhiều mây"
+msgstr "Cloudy"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__temp_module
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__temp_module
+msgid "Nhiệt độ mô-đun (°C)"
+msgstr "Module temperature (°C)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__temp_ambient
+msgid "Nhiệt độ môi trường (°C)"
+msgstr "Ambient temperature (°C)"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_planned_temp
+msgid "Nhiệt độ môi trường dùng làm mốc khi hiệu chỉnh nhiệt."
+msgstr "The ambient temperature used as the baseline for the temperature correction."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_temp_ref
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__temp_ref
+msgid "Nhiệt độ tham chiếu (°C)"
+msgstr "Reference temperature (°C)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_planned_temp
+msgid "Nhiệt độ thiết kế (°C)"
+msgstr "Design temperature (°C)"
 
 #. module: eam_solar
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__plant_id
@@ -41,9 +483,142 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_irr_mode
+msgid "Nhà máy có 2–3 cảm biến bức xạ thì lấy trung bình hay chỉ dùng một cái — khách quyết, không phải phần mềm quyết."
+msgstr "Where a plant has 2–3 irradiance sensors, whether to average them or use only one is the customer's decision, not the software's."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__is_solar
+msgid "Nhà máy điện mặt trời"
+msgstr "Solar PV plant"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__weather_ids
+msgid "Nhật ký khí tượng"
+msgstr "Weather log"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__e_nominal
+msgid "Năng lượng mặt trời tới mặt mô-đun: tổng xạ × diện tích."
+msgstr "The solar energy reaching the module surface: irradiation × area."
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__sunny
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__sunny
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__sunny
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__sunny
+msgid "Nắng"
+msgstr "Sunny"
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__partly
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__partly
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__partly
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__partly
+msgid "Nắng gián đoạn"
+msgstr "Intermittent sun"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__pa
+msgid "PA — khả dụng (%)"
+msgstr "PA — availability (%)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_pr_guaranteed
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__pr_guaranteed
+msgid "PR cam kết (%)"
+msgstr "Committed PR (%)"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvs_dc
+msgid "Phía một chiều"
+msgstr "DC side"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvs_ac
+msgid "Phía xoay chiều"
+msgstr "AC side"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__energy_ac
+msgid "Sản lượng xoay chiều dùng làm TỬ SỐ. Sẽ do chuỗi điểm đo điền tự động khi module đó xong."
+msgstr "The AC energy used as the NUMERATOR. It will be filled automatically by the metering chain once that module is finished."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__pv_irr_tag_count
+msgid "Số cảm biến bức xạ"
+msgstr "Irradiance sensors"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__sunny_hours
+msgid "Số giờ nắng"
+msgstr "Sunshine hours"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_location__weather_count
+msgid "Số ngày khí tượng"
+msgstr "Days of weather data"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_search
+msgid "Thiếu khí tượng"
+msgstr "Weather data missing"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_search
+msgid "Thiếu tổng xạ"
+msgstr "Irradiation missing"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_irr_tag_ids
+msgid "Thứ tự có nghĩa khi chọn \"chỉ dùng cảm biến chính\": cái đầu tiên là cái chính."
+msgstr "The order matters when \"use the primary sensor only\" is chosen: the first one is the primary."
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_location__pv_irr_mode__avg
+msgid "Trung bình tất cả cảm biến đã chọn"
+msgstr "The average of every selected sensor"
+
+#. module: eam_solar
 #: model:eam.asset.category,name:eam_solar.cat_wst
 msgid "Trạm khí tượng"
 msgstr "Weather station"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__obs_12
+msgid "Trời lúc 12h"
+msgstr "Sky at 12:00"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__obs_15
+msgid "Trời lúc 15h"
+msgstr "Sky at 15:00"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__obs_06
+msgid "Trời lúc 6h"
+msgstr "Sky at 06:00"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__obs_09
+msgid "Trời lúc 9h"
+msgstr "Sky at 09:00"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_list
+msgid "Trời trưa"
+msgstr "Sky at midday"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvm_mod
+msgid "Tấm pin"
+msgstr "PV module"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__temp_module
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__temp_module
+msgid "Tấm pin luôn nóng hơn không khí; đây mới là nhiệt độ dùng để hiệu chỉnh công suất."
+msgstr "Modules are always hotter than the air; this is the temperature used to correct the power."
 
 #. module: eam_solar
 #: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__wind_speed
@@ -51,10 +626,111 @@ msgid "Tốc độ gió (m/s)"
 msgstr "Wind speed (m/s)"
 
 #. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_weather_list
+msgid "Tổng"
+msgstr "Total"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_module_area
+msgid "Tổng diện tích mặt hứng nắng của toàn bộ tấm pin."
+msgstr "The total light-collecting area of all the modules."
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__irradiation
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_weather__irradiation
+msgid "Tổng năng lượng mặt trời tới mặt mô-đun trong ngày. Đây là MẪU SỐ của tỷ số hiệu suất — sai ô này là sai cả phần KPI."
+msgstr "The total solar energy reaching the module surface during the day. This is the DENOMINATOR of the performance ratio — get this field wrong and the whole KPI is wrong."
+
+#. module: eam_solar
+#: code:addons/eam_solar/models/eam_solar_weather.py:0
+msgid "Tổng xạ %s kWh/m²/ngày là bất thường — mức cao nhất ghi nhận trên Trái Đất quanh 9. Kiểm lại đơn vị: có thể đang nhập Wh/m² thay vì kWh/m²."
+msgstr "An irradiation of %s kWh/m²/day is implausible — the highest recorded anywhere on Earth is around 9. Check the unit: this may be Wh/m² rather than kWh/m²."
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__irradiation
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_weather__irradiation
+msgid "Tổng xạ (kWh/m²)"
+msgstr "Irradiation (kWh/m²)"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__weather_id
+msgid "Tự nối với bản ghi khí tượng cùng nhà máy, cùng ngày."
+msgstr "Linked automatically to the weather record for the same plant and day."
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__pa
+msgid "Tỷ lệ thời gian nhà máy sẵn sàng phát. Nhập tay cho tới khi sổ giờ dừng máy nối vào."
+msgstr "The share of time the plant was available to generate. Entered by hand until the outage log is connected."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid "Xem nhật ký khí tượng"
+msgstr "View the weather log"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid ""
+"so với mẫu số tính ra. Khác 0 nghĩa là còn chỗ ta\n"
+"                        chưa hiểu đúng công thức của nhà máy — đáng hỏi lại\n"
+"                        chứ không nên bỏ qua."
+msgstr ""
+"against the computed denominator. Anything other than 0 means\n"
+"                        there is something about the plant's formula we have not\n"
+"                        understood — worth asking about rather than ignoring."
+
+#. module: eam_solar
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_06__overcast
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_09__overcast
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_12__overcast
+#: model:ir.model.fields.selection,name:eam_solar.selection__eam_solar_weather__obs_15__overcast
+msgid "Âm u"
+msgstr "Overcast"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_pvs_ctl
+msgid "Điều khiển & truyền thông"
+msgstr "Control & communications"
+
+#. module: eam_solar
+#: model:eam.asset.category,name:eam_solar.cat_trk_ctl
+msgid "Điều khiển hệ xoay"
+msgstr "Tracker control"
+
+#. module: eam_solar
 #: model:ir.ui.menu,name:eam_solar.menu_eam_solar_group
 #: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
 msgid "Điện mặt trời"
 msgstr "Solar PV"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__energy_ac
+msgid "Điện năng AC (kWh)"
+msgstr "AC energy (kWh)"
+
+#. module: eam_solar
+#: model:ir.model.fields,field_description:eam_solar.field_eam_solar_kpi__dat_cam_ket
+msgid "Đạt cam kết"
+msgstr "Commitment met"
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_solar_kpi_form
+msgid "Đầu vào"
+msgstr "Input"
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_solar_kpi__pr_denominator_manual
+msgid "Để trống thì dùng mẫu số tính ra. Khai vào khi nhà máy có cách dựng mẫu số riêng theo hợp đồng."
+msgstr "Leave it empty to use the computed denominator. Fill it in when the plant builds its denominator its own way under the contract."
+
+#. module: eam_solar
+#: model:ir.model.fields,help:eam_solar.field_eam_location__pv_area_pr
+msgid "Để trống thì lấy bằng diện tích mô-đun ở trên. Khai riêng khi hợp đồng dùng DIỆN TÍCH PHỦ BÌ (tính cả khung) cho mẫu số tỷ số hiệu suất — chênh 2–3% so với diện tích hứng nắng, và chênh đó đi thẳng vào KPI."
+msgstr "Leave it empty and the module area above is used. Declare it separately when the contract uses the GROSS AREA (frames included) for the performance ratio denominator — a 2–3% difference against the light-collecting area, and that difference goes straight into the KPI."
+
+#. module: eam_solar
+#: model_terms:ir.ui.view,arch_db:eam_solar.view_eam_location_form_solar
+msgid "để trống = bằng diện tích mô-đun"
+msgstr "empty = equal to the module area"
 
 #. module: eam_solar
 #: model:ir.ui.menu,name:eam_solar.menu_eam_solar_kpi

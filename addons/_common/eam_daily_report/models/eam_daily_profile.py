@@ -98,7 +98,7 @@ class EamDailyProfile(models.Model):
     name = fields.Char(string='Tên hồ sơ', required=True, translate=True)
     code = fields.Char(string='Mã', required=True)
     loai = fields.Selection(
-        [('pv', 'Điện mặt trời'), ('wind', 'Điện gió'), ('khac', 'Khác')],
+        [('pv', 'Solar PV'), ('wind', 'Wind'), ('khac', 'Other')],
         string='Loại nhà máy', required=True, default='khac')
     tieu_de = fields.Char(
         string='Tiêu đề in ra', required=True,

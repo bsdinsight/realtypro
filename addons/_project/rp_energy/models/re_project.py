@@ -10,11 +10,17 @@ class ReProject(models.Model):
     # Mở rộng danh sách có sẵn thay vì dựng trường riêng: mọi báo cáo,
     # bộ lọc và "nhóm theo" đang chạy trên project_type vẫn dùng được.
     project_type = fields.Selection(
+        # Nhãn để TIẾNG ANH, đồng bộ với bốn giá trị bất động sản có
+        # sẵn ('Residential', 'Commercial', 'Mixed-Use', 'Villa'…). Trước
+        # đây một trường duy nhất bày lẫn hai thứ tiếng, nên danh sách
+        # thả xuống đọc nửa Anh nửa Việt — người dùng nước ngoài tưởng
+        # bốn dòng cuối là lỗi hiển thị. Cần tiếng Việt thì thêm bản dịch
+        # vi_VN, đừng đổi ngược nhãn gốc.
         selection_add=[
-            ('wind', 'Điện gió'),
-            ('solar', 'Điện mặt trời'),
-            ('hydro', 'Thuỷ điện'),
-            ('bess', 'Lưu trữ pin (BESS)'),
+            ('wind', 'Wind'),
+            ('solar', 'Solar PV'),
+            ('hydro', 'Hydro'),
+            ('bess', 'Battery storage (BESS)'),
         ],
         ondelete={'wind': 'set null', 'solar': 'set null',
                   'hydro': 'set null', 'bess': 'set null'},

@@ -92,7 +92,17 @@ class EamFleetDashboard(models.AbstractModel):
             Đây là luật của cả bộ EAMOne, và nó phải đi hết tới tận lớp
             giao diện: một số 0 giả làm người đọc kết luận sai mà vẫn
             thấy báo cáo đầy đủ.
+
+            Nhà máy CHƯA CÓ TỔ MÁY NÀO thì mọi con số của nó là số mồ
+            côi, kể cả khi bảng kỳ đã đẻ ra một dòng 0. SAVA1 (COD 2027,
+            đang xây) là ca đó: lượt dựng lại kỳ tạo cho nó dòng 0 kWh /
+            0% khả dụng, và màn này đếm nó là "có số" — tức mẫu số của
+            cả đội máy nói dối. Chặn ngay ở đây, đừng chữa bằng cách
+            lọc nhà máy ra khỏi danh sách: nó VẪN thuộc danh mục, chỉ
+            là chưa có gì để đo.
             """
+            if not so_to_may:
+                return None
             return rec[f] if rec else None
 
         sl_ngay = so(ngay, 'san_luong')

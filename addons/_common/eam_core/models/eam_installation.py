@@ -67,6 +67,17 @@ class EamInstallation(models.Model):
 
     category_id = fields.Many2one(
         related='asset_id.category_id', store=True, string='Loại cấu phần')
+
+    # Nhà máy nơi quãng lắp này diễn ra. Lấy theo VỊ TRÍ, không theo tài
+    # sản: con thiết bị có thể đã chuyển sang nhà máy khác, nhưng quãng
+    # lắp cũ vẫn thuộc về nhà máy cũ — lấy theo tài sản là viết lại lịch
+    # sử mỗi lần điều chuyển.
+    #
+    # Phải LƯU: pane lọc và mọi báo cáo theo nhà máy đều cần lọc bằng
+    # domain, mà trường không lưu thì không đưa vào domain được.
+    plant_id = fields.Many2one(
+        related='location_id.plant_id', store=True, index=True,
+        string='Nhà máy')
     company_id = fields.Many2one(
         related='asset_id.company_id', store=True, index=True)
     note = fields.Text(string='Ghi chú')

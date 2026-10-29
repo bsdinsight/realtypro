@@ -9,6 +9,7 @@
                 <field name="asset_id" width="300px"/>
                 <field name="location_id" width="300px"/>
                 <field name="category_id" string="Loại" optional="show"/>
+                <field name="plant_id" string="Nhà máy" optional="hide"/>
                 <field name="date_install"/>
                 <field name="date_remove"/>
                 <field name="duration_days" string="Số ngày"/>
@@ -61,20 +62,59 @@
             <search string="Lịch sử lắp đặt">
                 <field name="asset_id"/>
                 <field name="location_id"/>
+                <field name="plant_id"/>
+                <field name="category_id"/>
                 <filter name="f_d_date_install" string="Ngày lắp đặt"
                         date="date_install"/>
+                <filter name="f_d_date_remove" string="Ngày tháo"
+                        date="date_remove"/>
                 <separator/>
                 <filter name="f_now" string="Đang lắp"
                         domain="[('is_current', '=', True)]"/>
                 <filter name="f_het" string="Đã tháo"
                         domain="[('is_current', '=', False)]"/>
                 <separator/>
+                <!-- Hai bộ lọc độ tin cậy. Đây là câu hỏi mà bảng này
+                     sinh ra để trả lời: vị trí nào hỏng nhiều lần. Để
+                     người dùng tự gõ domain thì không ai gõ. -->
+                <filter name="f_thao_hong" string="Tháo do hỏng"
+                        domain="[('reason_remove', '=', 'failure')]"/>
+                <filter name="f_lap_lai" string="Thay thế / lắp lại"
+                        domain="[('reason_install', 'in', ('replacement', 'reinstall'))]"/>
+                <separator/>
+                <filter name="g_plant" string="Nhà máy"
+                        context="{'group_by': 'plant_id'}"/>
                 <filter name="g_loc" string="Vị trí"
                         context="{'group_by': 'location_id'}"/>
+                <filter name="g_asset" string="Tài sản"
+                        context="{'group_by': 'asset_id'}"/>
                 <filter name="g_cat" string="Loại cấu phần"
                         context="{'group_by': 'category_id'}"/>
+                <filter name="g_ly_lap" string="Lý do lắp"
+                        context="{'group_by': 'reason_install'}"/>
                 <filter name="g_ly" string="Lý do tháo"
                         context="{'group_by': 'reason_remove'}"/>
+                <!--
+                    Pane lọc — HAI ô, cố tình không nhiều hơn.
+
+                    KHÔNG có ô "Tài sản" (1.396 bản ghi) và ô "Vị trí"
+                    (1.415): vượt 200 là lõi trả error_msg rồi vẽ ô RỖNG
+                    mà không báo gì. Hai trục ấy đã có ở ô tìm kiếm và ở
+                    nhóm-theo.
+
+                    KHÔNG có ô "Lý do tháo", dù nó là trục hay nhất về
+                    nghiệp vụ: hiện 1.386/1.387 dòng chưa tháo, nên pane
+                    sẽ hiện sáu dòng gần như trắng số đếm — người dùng
+                    đọc pane rỗng rồi kết luận dữ liệu thiếu, đúng cái
+                    đã vấp nhiều lần. Trục ấy để ở bộ lọc "Tháo do hỏng"
+                    và nhóm-theo cho tới khi có lịch sử tháo thật.
+                -->
+                <searchpanel>
+                    <field name="plant_id" string="Nhà máy"
+                           icon="fa-industry" enable_counters="1"/>
+                    <field name="category_id" string="Loại cấu phần"
+                           icon="fa-tags" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>

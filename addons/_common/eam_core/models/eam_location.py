@@ -21,7 +21,11 @@ class EamLocation(models.Model):
     _parent_store = True
     _order = 'complete_code'
 
-    name = fields.Char(string='Tên vị trí', required=True, tracking=True)
+    # Tên vị trí là CẤU TRÚC nhà máy, không phải chứng từ — "Tua-bin
+    # T12", "Trạm biến tần 16" lặp lại ở mọi dự án cùng loại, nên dịch
+    # được là đúng. Mã vị trí (`code`) thì KHÔNG dịch: nó là định danh.
+    name = fields.Char(string='Tên vị trí', required=True, tracking=True,
+                       translate=True)
     code = fields.Char(string='Mã vị trí', required=True, index=True,
                        tracking=True)
     complete_code = fields.Char(

@@ -55,8 +55,13 @@ class EamWorkOrder(models.Model):
 
     name = fields.Char(string='Số hiệu', copy=False, index=True,
                        default=lambda s: _('Mới'), tracking=True)
+    # translate=True để đội song ngữ đọc được danh sách lệnh bằng tiếng
+    # Anh. Lưu ý cái giá: sửa tiêu đề trong khi đang xem tiếng Anh thì
+    # CHỈ bản tiếng Anh đổi, đồng nghiệp xem tiếng Việt vẫn thấy tên cũ.
+    # Khách chỉ dùng một ngôn ngữ thì không gặp chuyện đó — chưa có bản
+    # dịch thì hệ rơi về bản gốc.
     title = fields.Char(string='Nội dung công việc', required=True,
-                        tracking=True)
+                        tracking=True, translate=True)
     description = fields.Text(string='Diễn giải')
 
     # ------------------------------------------------------------------

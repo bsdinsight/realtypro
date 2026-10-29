@@ -42,10 +42,16 @@ class EamPartSpec(models.Model):
         'product.template', string='Phụ tùng', required=True,
         ondelete='cascade', index=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Thông số', required=True,
+    # Cả ba mở dịch, kể cả `value`. Tên thông số và đơn vị thì rõ rồi.
+    # Riêng `value` không chỉ vì có giá trị bằng chữ ("Sợi thuỷ tinh +
+    # carbon", "Có") — mà vì DẤU PHÂN CÁCH SỐ khác nhau theo ngôn ngữ:
+    # "1.800 mm" người đọc tiếng Anh hiểu là 1,8 mm, sai một nghìn lần
+    # trên đường kính ổ trục chính. Để một bản chung thì một trong hai
+    # phía luôn đọc sai, và đọc sai êm ru chứ không báo lỗi gì.
+    name = fields.Char(string='Thông số', required=True, translate=True,
                        help='Ví dụ: Đường kính trong, Độ nhớt, Dải đo')
-    value = fields.Char(string='Giá trị', required=True)
-    uom_label = fields.Char(string='Đơn vị')
+    value = fields.Char(string='Giá trị', required=True, translate=True)
+    uom_label = fields.Char(string='Đơn vị', translate=True)
     is_key = fields.Boolean(
         string='Thông số quyết định',
         help='Thông số mà sai là lắp không vừa hoặc hỏng máy. Hiện ngay '

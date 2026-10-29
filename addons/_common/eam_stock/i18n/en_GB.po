@@ -4254,3 +4254,14 @@ msgstr "Affects the value"
 msgid "ảnh hưởng vận hành"
 msgstr "affects operation"
 
+#. module: eam_stock
+#: model:ir.model.fields.selection,name:eam_stock.selection__product_template__eam_criticality__high
+msgid "Cao"
+msgstr "High"
+
+#. module: eam_stock
+#: model:ir.actions.act_window,name:eam_stock.action_eam_part
+#: model:ir.ui.menu,name:eam_stock.menu_eam_part
+msgid "Danh mục phụ tùng"
+msgstr "Spare parts catalogue"
+

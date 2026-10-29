@@ -37,7 +37,12 @@ class EamPmPlan(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence, code'
 
-    name = fields.Char(string='Tên kế hoạch', required=True, tracking=True)
+    # Mở dịch: tên kế hoạch bảo trì là TỪ VỰNG NGÀNH ('Bảo dưỡng định
+    # kỳ 6 tháng', 'Thay dầu hộp số'), lặp lại ở mọi nhà máy cùng loại.
+    # Lượt trước tôi xếp nhầm nó vào 'dữ liệu khách tự đặt tên' nên để
+    # translate=False — xếp lại cho đúng.
+    name = fields.Char(string='Tên kế hoạch', required=True, tracking=True,
+                       translate=True)
     code = fields.Char(string='Mã', required=True, index=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True, tracking=True)
@@ -236,7 +241,10 @@ class EamPmTask(models.Model):
         'eam.pm.plan', string='Kế hoạch', required=True, ondelete='cascade',
         index=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Bước công việc', required=True)
+    # Bước công việc được CHÉP sang lệnh công việc khi sinh lệnh, nên
+    # không dịch ở đây là lệnh tiếng Anh vẫn mang bước tiếng Việt.
+    name = fields.Char(string='Bước công việc', required=True,
+                       translate=True)
     spec = fields.Char(
         string='Tiêu chuẩn / trị số',
         help='Lực siết, khe hở, ngưỡng rung… Ghi ra thì người làm không '

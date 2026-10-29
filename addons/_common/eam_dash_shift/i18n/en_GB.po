@@ -1,0 +1,397 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eam_dash_shift
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 00:00+0000\n"
+"PO-Revision-Date: 2026-10-26 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Báo cáo ngày chưa chốt"
+msgstr "Daily report not closed"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Bảo trì quá hạn"
+msgstr "Overdue maintenance"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Bảo trì sắp tới hạn"
+msgstr "Maintenance due soon"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+#: model:ir.actions.client,name:eam_dash_shift.action_eam_dash_shift
+#: model:ir.ui.menu,name:eam_dash_shift.menu_eam_dash_shift
+msgid "Ca trực sáng nay"
+msgstr "This morning's shift"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Cảnh báo chưa xác nhận"
+msgstr "Unacknowledged alarms"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Cảnh báo nghiêm trọng đang mở"
+msgstr "Open critical alarms"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Hệ số CS"
+msgstr "Cap. factor"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Hệ số công suất"
+msgstr "Capacity factor"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Khoảng dừng"
+msgstr "Outages"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Khoảng dừng chưa quy trách nhiệm"
+msgstr "Outages with no responsibility assigned"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Khoảng dừng đang mở"
+msgstr "Open outages"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Không lấy được số liệu."
+msgstr "Could not fetch the data."
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Khả dụng"
+msgstr "Availability"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Khả dụng — của ta đo"
+msgstr "Availability — as we measure it"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Lệnh công việc quá hạn"
+msgstr "Overdue work orders"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "Lệnh đang chờ"
+msgstr "Work orders on hold"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Mất (MWh)"
+msgstr "Lost (MWh)"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "PR điện mặt trời"
+msgstr "Solar PR"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Sản lượng"
+msgstr "Generation"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Sản lượng (MWh)"
+msgstr "Generation (MWh)"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Sản lượng mất"
+msgstr "Lost generation"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Sản lượng ngày"
+msgstr "Daily generation"
+
+#. module: eam_dash_shift
+#: model:ir.model,name:eam_dash_shift.model_eam_dash_shift
+msgid "Số liệu bảng điều khiển ca trực"
+msgstr "Shift dashboard data"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Số liệu ngày"
+msgstr "Daily figures"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Tất cả nhà máy"
+msgstr "All plants"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Tổ máy"
+msgstr "Unit"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Tổ máy ngày"
+msgstr "Units on"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Từ đầu tháng"
+msgstr "Month to date"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Từng tổ máy"
+msgstr "Unit by unit"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Việc phải làm hôm nay"
+msgstr "To do today"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "báo cáo ngày chưa chốt"
+msgstr "daily reports not closed"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "bảo trì quá hạn"
+msgstr "maintenance overdue"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "bảo trì sắp tới hạn"
+msgstr "maintenance due soon"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "bấm một dòng để mở danh sách"
+msgstr "click a row to open the list"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "chưa chốt thì chủ đầu tư chưa đọc được"
+msgstr "until it is closed the owner cannot read it"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "chưa có số cho ngày này"
+msgstr "no figures for this day"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "chưa quy thì không đòi được nhà thầu"
+msgstr "until it is assigned there is no one to bill"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "chưa xác nhận nghĩa là chưa ai nhìn"
+msgstr "unacknowledged means nobody has looked"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "chờ vật tư, cẩu, thời tiết hoặc phiếu"
+msgstr "waiting on parts, a crane, the weather or a permit"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "cảnh báo chưa ai xác nhận"
+msgstr "alarms nobody has acknowledged"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "cảnh báo nghiêm trọng đang mở"
+msgstr "critical alarms still open"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "cần đặt phụ tùng và xếp người"
+msgstr "order the spares and roster the people"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "hôm qua"
+msgstr "yesterday"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "khoảng dừng"
+msgstr "outages"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "khoảng dừng chưa quy trách nhiệm"
+msgstr "outages with no responsibility assigned"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid ""
+"khoảng dừng hôm qua\n"
+"                    chưa quy ra kWh — khả dụng ở trên đang CAO HƠN thật\n"
+"                    đúng phần ấy."
+msgstr ""
+"outages yesterday\n"
+"                    not yet converted to kWh — the availability above is\n"
+"                    HIGHER than the truth by exactly that much."
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "khoảng dừng đang mở"
+msgstr "outages open now"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "kém nhất xếp trước · tổ máy chưa có số xếp cuối"
+msgstr "worst first · units with no figures last"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "lệnh công việc quá hạn"
+msgstr "work orders overdue"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "lệnh đang chờ"
+msgstr "work orders on hold"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "máy đang dừng ngay lúc này"
+msgstr "machines stopped right now"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "mức cao và nghiêm trọng"
+msgstr "high and critical"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "ngày"
+msgstr "days"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "phạm vi hợp đồng"
+msgstr "contract scope"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "quá hạn theo lịch hoặc theo đồng hồ"
+msgstr "overdue by the calendar or by the hour meter"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "trên %(co_so)s/%(tong)s %(don_vi)s có số"
+msgstr "of %(co_so)s/%(tong)s %(don_vi)s with data"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/js/eam_dash_shift.js:0
+msgid "tổ máy"
+msgstr "units"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "tới ngày"
+msgstr "up to"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "· toàn bộ nhà máy"
+msgstr "· all plants"
+
+#. module: eam_dash_shift
+#. odoo-javascript
+#: code:addons/eam_dash_shift/static/src/xml/eam_dash_shift.xml:0
+msgid "Đang lấy số liệu ca trực…"
+msgstr "Fetching shift data…"
+
+#. module: eam_dash_shift
+#. odoo-python
+#: code:addons/eam_dash_shift/models/eam_dash_shift.py:0
+msgid "đã qua ngày dự kiến xong"
+msgstr "past the expected finish date"
+

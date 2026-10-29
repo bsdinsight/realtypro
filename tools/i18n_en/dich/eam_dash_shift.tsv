@@ -1,0 +1,62 @@
+D1	Daily report not closed
+D2	Overdue maintenance
+D3	Maintenance due soon
+D4	This morning's shift
+D5	Unacknowledged alarms
+D6	Open critical alarms
+D7	Cap. factor
+D8	Capacity factor
+D9	Outages
+D10	Outages with no responsibility assigned
+D11	Open outages
+D12	Could not fetch the data.
+D13	Availability
+D14	Availability — as we measure it
+D15	Overdue work orders
+D16	Work orders on hold
+D17	Lost (MWh)
+D18	Plant
+D19	Solar PR
+D20	Generation
+D21	Generation (MWh)
+D22	Lost generation
+D23	Daily generation
+D24	Shift dashboard data
+D25	Daily figures
+D26	All plants
+D27	Unit
+D28	Units on
+D29	Month to date
+D30	Unit by unit
+D31	To do today
+D32	daily reports not closed
+D33	maintenance overdue
+D34	maintenance due soon
+D35	click a row to open the list
+D36	until it is closed the owner cannot read it
+D37	no figures for this day
+D38	until it is assigned there is no one to bill
+D39	unacknowledged means nobody has looked
+D40	waiting on parts, a crane, the weather or a permit
+D41	alarms nobody has acknowledged
+D42	critical alarms still open
+D43	order the spares and roster the people
+D44	yesterday
+D45	outages
+D46	outages with no responsibility assigned
+D47	outages yesterday\n                    not yet converted to kWh — the availability above is\n                    HIGHER than the truth by exactly that much.
+D48	outages open now
+D49	worst first · units with no figures last
+D50	work orders overdue
+D51	work orders on hold
+D52	machines stopped right now
+D53	high and critical
+D54	days
+D55	contract scope
+D56	overdue by the calendar or by the hour meter
+D57	of %(co_so)s/%(tong)s %(don_vi)s with data
+D58	units
+D59	up to
+D60	· all plants
+D61	Fetching shift data…
+D62	past the expected finish date

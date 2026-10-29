@@ -24,7 +24,7 @@ không có bậc nào để quên, và hai màn chắc chắn nói cùng một c
 """
 from datetime import timedelta
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 # Trạng thái cảnh báo còn phải xử lý. Giữ ở một chỗ vì ba truy vấn
 # dưới đây đều dùng, và lệch nhau một giá trị là ba con số không khớp.
@@ -239,43 +239,47 @@ class EamDashShift(models.AbstractModel):
 
         them('alarm_new',
              dem('eam.alarm', [('state', '=', 'new')]),
-             'cảnh báo chưa ai xác nhận',
-             'chưa xác nhận nghĩa là chưa ai nhìn', 'bad')
+             _('cảnh báo chưa ai xác nhận'),
+             _('chưa xác nhận nghĩa là chưa ai nhìn'), 'bad')
         them('alarm_crit',
              dem('eam.alarm', [('state', 'in', ALARM_MO),
                                ('severity', 'in', ('high', 'critical'))]),
-             'cảnh báo nghiêm trọng đang mở',
-             'mức cao và nghiêm trọng', 'bad')
+             _('cảnh báo nghiêm trọng đang mở'),
+             _('mức cao và nghiêm trọng'), 'bad')
         them('wo_late',
              dem('eam.work.order', [('tre_han', '=', True),
                                     ('state', 'in', WO_MO)]),
-             'lệnh công việc quá hạn', 'đã qua ngày dự kiến xong', 'warn')
+             _('lệnh công việc quá hạn'),
+             _('đã qua ngày dự kiến xong'), 'warn')
         them('wo_hold',
              dem('eam.work.order', [('is_on_hold', '=', True),
                                     ('state', 'in', WO_MO)]),
-             'lệnh đang chờ',
-             'chờ vật tư, cẩu, thời tiết hoặc phiếu', 'warn')
+             _('lệnh đang chờ'),
+             _('chờ vật tư, cẩu, thời tiết hoặc phiếu'), 'warn')
         them('pm_over',
              dem('eam.pm.schedule', [('state', '=', 'overdue')]),
-             'bảo trì quá hạn', 'quá hạn theo lịch hoặc theo đồng hồ', 'bad')
+             _('bảo trì quá hạn'),
+             _('quá hạn theo lịch hoặc theo đồng hồ'), 'bad')
         them('pm_soon',
              dem('eam.pm.schedule', [('state', '=', 'due_soon')]),
-             'bảo trì sắp tới hạn', 'cần đặt phụ tùng và xếp người', 'warn')
+             _('bảo trì sắp tới hạn'),
+             _('cần đặt phụ tùng và xếp người'), 'warn')
         them('rpt_draft',
              dem('eam.daily.report', [('state', '=', 'nhap')]),
-             'báo cáo ngày chưa chốt',
-             'chưa chốt thì chủ đầu tư chưa đọc được', 'warn')
+             _('báo cáo ngày chưa chốt'),
+             _('chưa chốt thì chủ đầu tư chưa đọc được'), 'warn')
         them('outage_open',
              dem('eam.outage', [('is_open', '=', True),
                                 ('counts_as_downtime', '=', True)]),
-             'khoảng dừng đang mở', 'máy đang dừng ngay lúc này', 'bad')
+             _('khoảng dừng đang mở'),
+             _('máy đang dừng ngay lúc này'), 'bad')
         # Ô làm ra tiền: khoảng dừng đã xác nhận mà chưa quy trách nhiệm
         # thì không đòi được ai cả, và nó nằm im mãi nếu không ai nhắc.
         them('outage_liab',
              dem('eam.outage', [('state', '=', 'confirmed'),
                                 ('liability', '=', False)]),
-             'khoảng dừng chưa quy trách nhiệm',
-             'chưa quy thì không đòi được nhà thầu', 'warn')
+             _('khoảng dừng chưa quy trách nhiệm'),
+             _('chưa quy thì không đòi được nhà thầu'), 'warn')
         return ra
 
     # ------------------------------------------------------------------

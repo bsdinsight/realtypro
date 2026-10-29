@@ -1,0 +1,46 @@
+eam.pm.plan	Bảo dưỡng định kỳ 6 tháng	6-month periodic service
+eam.pm.plan	Thay dầu hộp số	Gearbox oil change
+eam.pm.plan	Kiểm định thiết bị nâng trong nacelle	Statutory inspection of the nacelle lifting equipment
+eam.pm.plan	Đo rung giám sát trạng thái	Condition monitoring vibration measurement
+eam.pm.plan	Vệ sinh tấm pin	PV module cleaning
+eam.pm.plan	Bảo dưỡng bộ biến tần 6 tháng	6-month inverter service
+eam.pm.plan	Chụp nhiệt ảnh dàn pin và tủ điện	Thermal imaging of the PV arrays and electrical cabinets
+eam.pm.plan	Đo đặc tuyến I-V của chuỗi	String I-V curve measurement
+eam.pm.plan	Hiệu chuẩn cảm biến bức xạ	Irradiance sensor calibration
+eam.pm.plan	Kiểm tra hộp gom chuỗi	String combiner box inspection
+eam.pm.plan	Bảo dưỡng hệ xoay theo mặt trời	Solar tracker service
+eam.pm.plan	SAVA1 — Thay dầu hộp số	SAVA1 — Gearbox oil change
+eam.pm.plan	SAVA1 — Kiểm định thiết bị nâng trong nacelle	SAVA1 — Statutory inspection of the nacelle lifting equipment
+eam.pm.plan	SAVA1 — Bảo dưỡng định kỳ 6 tháng	SAVA1 — 6-month periodic service
+eam.pm.task	Kiểm tra lực siết bu-lông nền tháp	Check the tower base bolt torque
+eam.pm.task	Kiểm tra & bôi trơn ổ trục chính	Inspect and lubricate the main bearing
+eam.pm.task	Kiểm tra hệ thống phanh	Inspect the brake system
+eam.pm.task	Vệ sinh bộ lọc, kiểm tra làm mát	Clean the filters, check the cooling
+eam.pm.task	Soi cánh bằng ống nhòm, ghi ảnh	Inspect the blades through binoculars and photograph them
+eam.pm.task	Lấy mẫu dầu gửi phân tích	Take an oil sample for analysis
+eam.pm.task	Xả dầu cũ, thay lọc	Drain the old oil, change the filter
+eam.pm.task	Nạp dầu mới đúng chủng loại	Fill with new oil of the correct grade
+eam.pm.task	Soi nội soi bánh răng, ghi ảnh	Borescope the gears and photograph them
+eam.pm.task	Kiểm định bởi đơn vị được chỉ định	Inspection by the designated body
+eam.pm.task	Đo rung 3 điểm, so đường nền	Measure vibration at 3 points and compare with the baseline
+eam.pm.task	Khảo sát mức bám bẩn trước khi rửa	Survey the soiling level before washing
+eam.pm.task	Rửa bằng nước khử khoáng, bàn chải mềm	Wash with demineralised water and a soft brush
+eam.pm.task	Kiểm tra rò nước vào hộp đấu dây sau khi rửa	Check for water ingress into the junction box after washing
+eam.pm.task	Cắt điện, cô lập DC và AC, treo biển	Isolate, separate DC and AC, and tag out
+eam.pm.task	Vệ sinh lọc gió, kiểm tra quạt làm mát	Clean the air filters, check the cooling fans
+eam.pm.task	Siết lại lực các mối nối công suất	Re-torque the power connections
+eam.pm.task	Đo điện trở cách điện phía DC	Measure the DC-side insulation resistance
+eam.pm.task	Chụp khi bức xạ ≥ 600 W/m²	Photograph at an irradiance of 600 W/m² or above
+eam.pm.task	Khoanh điểm nóng, đối chiếu sơ đồ chuỗi	Mark the hot spots and check them against the string diagram
+eam.pm.task	Đo I-V từng chuỗi, quy về điều kiện chuẩn	Measure the I-V curve of each string and normalise to standard conditions
+eam.pm.task	So công suất đỉnh với thông số xuất xưởng	Compare the peak power against the factory specification
+eam.pm.task	Gửi hiệu chuẩn tại đơn vị được công nhận	Send for calibration at an accredited body
+eam.pm.task	Kiểm tra cầu chì và thiết bị chống sét lan truyền	Check the fuses and the surge protection devices
+eam.pm.task	Soi dấu phóng điện, ô-xy hoá tại đầu cốt	Look for arcing marks and oxidation at the terminals
+eam.pm.task	Bôi trơn cơ cấu truyền động	Lubricate the drive mechanism
+eam.pm.task	Siết bu-lông khung giá đỡ	Torque the mounting structure bolts
+eam.pm.task	Kiểm tra góc nghiêng so với lệnh điều khiển	Check the tilt angle against the control command
+eam.pm.task	Lấy mẫu dầu TRƯỚC khi xả	Take the oil sample BEFORE draining
+eam.pm.task	Xả dầu, thay lọc, nạp dầu mới	Drain the oil, change the filter, fill with new oil
+eam.pm.task	Bôi trơn ổ trục chính, kiểm tra phanh	Lubricate the main bearing, check the brake
+eam.pm.task	Soi cánh, ghi ảnh	Inspect the blades and photograph them

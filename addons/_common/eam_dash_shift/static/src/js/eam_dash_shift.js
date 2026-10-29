@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { formatFloat } from "@web/views/fields/formatters";
 
 // Bảng điều khiển "Ca trực sáng nay".
 //
@@ -80,13 +82,18 @@ export class EamDashShift extends Component {
 
     // ---- hiển thị ----
 
-    /** Giá trị hoặc DẤU GẠCH. Không bao giờ trả 0 cho `null`. */
+    /** Giá trị hoặc DẤU GẠCH. Không bao giờ trả 0 cho `null`.
+     *
+     * Dấu thập phân lấy theo NGÔN NGỮ người đang xem, không chốt cứng
+     * `vi-VN`: người xem bản tiếng Anh đọc "3.136" là ba nghìn, còn
+     * định dạng Việt thì "3.136" lại là ba phẩy một. Cùng một con số
+     * mà hai người hiểu lệch nghìn lần.
+     */
     so(v, le = 1) {
         if (v === null || v === undefined) {
             return "—";
         }
-        return Number(v).toLocaleString("vi-VN", {
-            minimumFractionDigits: le, maximumFractionDigits: le });
+        return formatFloat(Number(v), { digits: [false, le] });
     }
 
     /** Lớp CSS của thẻ: ưu tiên "chưa đo được" trước mọi mức tốt/xấu. */
@@ -97,12 +104,22 @@ export class EamDashShift extends Component {
         return "eam-card" + (muc ? " is-" + muc : "");
     }
 
-    /** Mẫu số dạng "trên 12/16 tổ máy" — luật ② của khuôn. */
-    mauSo(cap, danh_tu = "tổ máy") {
+    /** Mẫu số dạng "trên 12/16 tổ máy" — luật ② của khuôn.
+     *
+     * Đơn vị truyền vào là MÃ ('to_may' / 'ngay') chứ không phải chữ
+     * sẵn: chuỗi viết trong `t-esc` của khuôn mẫu là biểu thức JS,
+     * không được bộ xuất .po nhìn thấy, nên để chữ ở đó là dịch không
+     * tới. Cả câu ghép trong MỘT chuỗi để thứ tự từ đổi được theo
+     * ngôn ngữ, chứ nối chuỗi thì mỗi mẩu dịch rời không ghép lại
+     * thành câu đúng ngữ pháp.
+     */
+    mauSo(cap, dv = "to_may") {
         if (!cap) {
             return "";
         }
-        return "trên " + cap[0] + "/" + cap[1] + " " + danh_tu + " có số";
+        const dt = dv === "ngay" ? _t("ngày") : _t("tổ máy");
+        return _t("trên %(co_so)s/%(tong)s %(don_vi)s có số",
+                  { co_so: cap[0], tong: cap[1], don_vi: dt });
     }
 
     mucKhaDung(v) {
@@ -116,29 +133,29 @@ export class EamDashShift extends Component {
 
     async moDanhSach(ma) {
         const BANG = {
-            alarm_new: ["eam.alarm", "Cảnh báo chưa xác nhận",
+            alarm_new: ["eam.alarm", _t("Cảnh báo chưa xác nhận"),
                         [["state", "=", "new"]]],
-            alarm_crit: ["eam.alarm", "Cảnh báo nghiêm trọng đang mở",
+            alarm_crit: ["eam.alarm", _t("Cảnh báo nghiêm trọng đang mở"),
                          [["state", "in", ["new", "ack", "wo"]],
                           ["severity", "in", ["high", "critical"]]]],
-            wo_late: ["eam.work.order", "Lệnh công việc quá hạn",
+            wo_late: ["eam.work.order", _t("Lệnh công việc quá hạn"),
                       [["tre_han", "=", true],
                        ["state", "in", ["draft", "approved", "planned",
                                         "in_progress"]]]],
-            wo_hold: ["eam.work.order", "Lệnh đang chờ",
+            wo_hold: ["eam.work.order", _t("Lệnh đang chờ"),
                       [["is_on_hold", "=", true],
                        ["state", "in", ["draft", "approved", "planned",
                                         "in_progress"]]]],
-            pm_over: ["eam.pm.schedule", "Bảo trì quá hạn",
+            pm_over: ["eam.pm.schedule", _t("Bảo trì quá hạn"),
                       [["state", "=", "overdue"]]],
-            pm_soon: ["eam.pm.schedule", "Bảo trì sắp tới hạn",
+            pm_soon: ["eam.pm.schedule", _t("Bảo trì sắp tới hạn"),
                       [["state", "=", "due_soon"]]],
-            rpt_draft: ["eam.daily.report", "Báo cáo ngày chưa chốt",
+            rpt_draft: ["eam.daily.report", _t("Báo cáo ngày chưa chốt"),
                         [["state", "=", "nhap"]]],
-            outage_open: ["eam.outage", "Khoảng dừng đang mở",
+            outage_open: ["eam.outage", _t("Khoảng dừng đang mở"),
                           [["is_open", "=", true],
                            ["counts_as_downtime", "=", true]]],
-            outage_liab: ["eam.outage", "Khoảng dừng chưa quy trách nhiệm",
+            outage_liab: ["eam.outage", _t("Khoảng dừng chưa quy trách nhiệm"),
                           [["state", "=", "confirmed"],
                            ["liability", "=", false]]],
         };

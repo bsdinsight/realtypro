@@ -135,7 +135,7 @@
                             <span class="u"> MWh</span>
                         </div>
                         <div class="eam-card-sub"
-                             t-esc="mauSo(th.mau_so, 'ngày')"/>
+                             t-esc="mauSo(th.mau_so, 'ngay')"/>
                     </div>
                     <div t-att-class="lopThe(th.do_duoc, 'warn')">
                         <div class="eam-card-label">Sản lượng mất</div>

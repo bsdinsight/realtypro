@@ -104,3 +104,8 @@ msgstr "Energy periods"
 msgid "Sản lượng giao nhận luỹ kế (MWh)"
 msgstr "Energy delivered, cumulative (MWh)"
 
+#. module: rp_ppa
+#: model:ir.ui.menu,name:rp_ppa.menu_energy_sale
+msgid "Kinh doanh"
+msgstr "Energy Sales"
+

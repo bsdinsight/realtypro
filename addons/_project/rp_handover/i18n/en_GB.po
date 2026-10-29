@@ -106,3 +106,8 @@ msgstr "Locations handed over"
 msgid "Đã qua cổng nghiệm thu trong sổ dựng máy mà chưa có trong biên bản bàn giao nào. Đây là việc đang tồn đọng — mỗi trụ chưa bàn giao là một đồng hồ bảo hành chưa ai bấm bắt đầu."
 msgstr "Passed the acceptance gate in the erection register but absent from any handover certificate. This is outstanding work — each tower not handed over is a warranty clock nobody has started."
 
+#. module: rp_handover
+#: model:ir.actions.act_window,name:rp_handover.action_eam_project
+msgid "Dự án"
+msgstr "Projects"
+

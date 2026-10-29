@@ -81,21 +81,25 @@ msgid "Bị đùn"
 msgstr "Passed along"
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Ca \"%s\" dài %s giờ — phải nằm trong khoảng 0–24."
 msgstr "Shift \"%s\" is %s hours long — it has to lie between 0 and 24."
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Ca %s chưa mở nên chưa giao được."
 msgstr "Shift %s is not open, so it cannot be handed over."
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Ca %s chưa được giao."
 msgstr "Shift %s has not been handed over."
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Ca %s đã mở rồi."
 msgstr "Shift %s is already open."
@@ -141,6 +145,7 @@ msgid "Chất lượng bàn giao"
 msgstr "Handover quality"
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Còn %d việc chưa xong mà CHƯA CÓ ca kế tiếp để chuyển sang. Sinh ca kế tiếp rồi mở ca đó, nếu không số việc này không ai nhận."
 msgstr "%d items are unfinished with NO next shift to carry them into. Create the next shift and open it, otherwise nobody takes these on."
@@ -279,6 +284,7 @@ msgid "Lệnh công việc"
 msgstr "Work order"
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Lịch sử công việc — %s"
 msgstr "Work history — %s"
@@ -349,6 +355,7 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift.py:0
 msgid "Nhà máy \"%s\" chưa khai mẫu ca nào."
 msgstr "Plant \"%s\" has no shift pattern declared."
@@ -471,6 +478,7 @@ msgid "Việc còn mở sẽ được chuyển sang ca kế tiếp kèm dấu v�
 msgstr "Work still open is carried into the next shift with a trail. Where there is no next shift yet, the system writes a warning into the log."
 
 #. module: eam_shift
+#. odoo-python
 #: code:addons/eam_shift/models/eam_shift_note.py:0
 msgid "Việc gốc — ca %s"
 msgstr "Original entry — shift %s"

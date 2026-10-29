@@ -17,16 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "%(a)d máy sắp hết bảo hành · đẩy %(b)d thông báo · %(c)d máy CHƯA AI THEO DÕI."
 msgstr "%(a)d machines with warranties expiring · %(b)d notifications sent · %(c)d machines WITH NOBODY TRACKING THEM."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "%(c)d máy là SUY từ vị trí đang lắp, không phải biên bản liệt kê đích danh — soi lại trước khi dùng để đòi bảo hành."
 msgstr "%(c)d machines are DERIVED from the location they are installed at rather than from a certificate naming them explicitly — check them before using this to claim under warranty."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "%(d)d máy chỉ có số hợp đồng — biên bản bàn giao không khai bên cấp. Khai tay vào đó, vì số hợp đồng không phải cái tên để gọi khi đòi bảo hành."
 msgstr "%(d)d machines have only a contract number — the handover certificate does not name the supplier. Enter it by hand, because a contract number is not a name to call when claiming under warranty."
@@ -113,6 +116,7 @@ msgid "Bảo hành lúc lập phiếu"
 msgstr "Warranty when the note was raised"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "Bảo hành sắp hết — còn %d ngày"
 msgstr "Warranty expiring — %d days left"
@@ -179,6 +183,7 @@ msgid "Chặn nhắc lại mỗi ngày về cùng một con máy."
 msgstr "Stops a reminder about the same machine every day."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "Chỉ so sánh bằng, khác, in hoặc not in được."
 msgstr "Only =, !=, in and not in can be compared."
@@ -291,6 +296,7 @@ msgid "Kéo nguồn gốc từ biên bản bàn giao"
 msgstr "Pull the origin from the handover certificate"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "Kéo được cho %(a)d trên %(b)d máy, %(c)d máy có tên nhà cung cấp."
 msgstr "Pulled for %(a)d of %(b)d machines; %(c)d have a supplier name."
@@ -319,6 +325,7 @@ msgstr ""
 "            This screen's job is to <b>force a look</b>, not to decide for you."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "Máy %(m)s hết bảo hành ngày %(d)s. Nhà cung cấp: %(n)s. Hồ sơ gốc: %(h)s."
 msgstr "Machine %(m)s goes out of warranty on %(d)s. Supplier: %(n)s. Source file: %(h)s."
@@ -399,11 +406,13 @@ msgstr ""
 "                    raised earlier is inventing evidence.</span>"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "Phần bàn giao dự án không có trên bản cài này, nên không có nguồn nào để kéo. Khai tay nhà cung cấp và số hợp đồng."
 msgstr "The project handover module is not on this installation, so there is no source to pull from. Enter the supplier and contract number by hand."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "SUY từ vị trí đang lắp"
 msgstr "DERIVED from the location it is installed at"
@@ -464,16 +473,19 @@ msgid "Vết của việc kéo tự động: kéo từ bản ghi nào, lúc nào
 msgstr "The trail of the automatic pull: which record it came from, and when."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "chưa khai"
 msgstr "not declared"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "kéo từ biên bản bàn giao %(bb)s, vị trí %(vt)s (%(c)s)"
 msgstr "pulled from handover certificate %(bb)s, location %(vt)s (%(c)s)"
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_asset.py:0
 msgid "liệt kê đích danh máy này"
 msgstr "names this machine explicitly"
@@ -500,6 +512,7 @@ msgstr ""
 "            left as <i>Not attributed</i> or <i>Owner's own account</i>."
 
 #. module: eam_warranty
+#. odoo-python
 #: code:addons/eam_warranty/models/eam_rma.py:0
 msgid "Đã chụp tình trạng bảo hành của HÔM NAY. Đây không phải tình trạng ở ngày lập phiếu — không có ảnh cũ nào để phục hồi."
 msgstr "The warranty status of TODAY has been captured. This is not the status on the date the note was raised — there is no older snapshot to restore."

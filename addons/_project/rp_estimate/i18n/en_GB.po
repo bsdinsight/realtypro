@@ -118,3 +118,13 @@ msgstr "Tender packages"
 msgid "ngày."
 msgstr "days."
 
+#. module: rp_estimate
+#: model:ir.actions.act_window,name:rp_estimate.action_rp_concept_estimate
+msgid "Khái toán"
+msgstr "Concept estimates"
+
+#. module: rp_estimate
+#: model:ir.actions.act_window,name:rp_estimate.action_rp_tender_bidder
+msgid "Nhà thầu nộp HSDT"
+msgstr "Tender bidders"
+

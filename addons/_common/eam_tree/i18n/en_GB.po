@@ -17,51 +17,61 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "BH sắp hết"
 msgstr "Warranty expiring"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Bung hết các nhánh"
 msgstr "Expand every branch"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Bảo hành còn dưới 90 ngày — còn kịp gửi thông báo"
 msgstr "Less than 90 days of warranty left — still time to send a notice"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Bảo hành đã hết hạn"
 msgstr "The warranty has expired"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Bỏ lọc"
 msgstr "Clear the filters"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Bỏ mọi bộ lọc và ô tìm kiếm"
 msgstr "Clear every filter and the search box"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Chưa lắp"
 msgstr "Not installed"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Chỉ tài sản ở mức trọng yếu"
 msgstr "Critical assets only"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Có lệnh, đã trễ"
 msgstr "Has an order, already late"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Hết bảo hành"
 msgstr "Out of warranty"
@@ -72,16 +82,19 @@ msgid "Lưới cây"
 msgstr "Tree grid"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Lệnh công việc chưa xong, đếm theo vị trí"
 msgstr "Unfinished work orders, counted by location"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Lệnh đang mở"
 msgstr "Open orders"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Quá hạn bảo trì"
 msgstr "Maintenance overdue"
@@ -93,51 +106,61 @@ msgid "Sổ tài sản (lưới cây)"
 msgstr "Asset register (tree grid)"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Thu hết các nhánh"
 msgstr "Collapse every branch"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Trả cột, độ rộng và bộ lọc về mặc định"
 msgstr "Reset the columns, widths and filters to their defaults"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Trọng yếu"
 msgstr "Critical"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Tài sản không nằm trên máy nào — trong kho hoặc đang đại tu"
 msgstr "An asset not in any machine — in store or away for overhaul"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Tất cả nhà máy"
 msgstr "All plants"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Vị trí có kế hoạch bảo trì đã quá hạn"
 msgstr "Locations whose maintenance plan is overdue"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "bấm đúp để mở · chuột phải để xem lịch sử"
 msgstr "double-click to open · right-click for the history"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "dòng"
 msgstr "rows"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Đang nạp…"
 msgstr "Loading…"
 
 #. module: eam_tree
+#. odoo-javascript
 #: code:addons/eam_tree/static/src/xml/eam_asset_tree.xml:0
 msgid "Đã sinh lệnh công việc nhưng vẫn chưa làm, và đã quá hạn"
 msgstr "A work order has been raised but still not carried out, and it is overdue"

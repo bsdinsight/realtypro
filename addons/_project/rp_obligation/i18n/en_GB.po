@@ -46,3 +46,13 @@ msgstr "days."
 msgid "Điểm bàn giao giữa các gói thầu"
 msgstr "Interface points between packages"
 
+#. module: rp_obligation
+#: model:ir.actions.act_window,name:rp_obligation.action_rp_obligation
+msgid "Sổ nghĩa vụ hợp đồng"
+msgstr "Obligation register"
+
+#. module: rp_obligation
+#: model:ir.actions.act_window,name:rp_obligation.action_rp_contract_clause
+msgid "Điều khoản hợp đồng"
+msgstr "Contract clauses"
+

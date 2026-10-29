@@ -48,3 +48,18 @@ msgstr "Contractor agreements"
 msgid "Vị trí"
 msgstr "Location"
 
+#. module: rp_rfi
+#: model:ir.actions.act_window,name:rp_rfi.action_rp_site_instruction
+msgid "Chỉ thị công trường"
+msgstr "Site instructions"
+
+#. module: rp_rfi
+#: model:ir.actions.act_window,name:rp_rfi.action_rp_rfi
+msgid "RFI — Yêu cầu làm rõ"
+msgstr "RFI — Requests for information"
+
+#. module: rp_rfi
+#: model:ir.actions.act_window,name:rp_rfi.action_rp_submittal
+msgid "Trình duyệt (Submittal)"
+msgstr "Submittals"
+

@@ -1,0 +1,124 @@
+rp_ai.action_rp_ai_progress_import	AI progress report reader
+rp_ai.action_rp_ai_estimate_import	AI estimate reader
+rp_ai.action_rp_report_crosscheck	AI contractor report cross-check
+rp_ai.action_rp_ai_chat	AI data Q&A
+rp_ai.action_rp_project_report_ai	AI period report writer
+rp_schedule.action_rp_schedule_baseline	Schedule baselines
+rp_budget.action_rp_cost_report	Cost control sheet
+rp_report.action_rp_project_brief	Project brief
+rp_contract.action_rp_contract_report	Contractor contract report
+rp_contract_guarantee.action_rp_contract_guarantee	Contractor contract guarantees
+rp_contract_guarantee.action_rp_contract_guarantee_expiring	Guarantees expiring or expired
+rp_progress.action_rp_progress_acceptance	Quantity acceptance certificates
+rp_doc_folder.action_rp_doc_folder_template	Standard folder sets
+re_loan.action_re_loan_config_settings	Loan & promissory note settings
+rp_contract.action_rp_contract_closure	Contract termination / closure
+re_loan.action_re_loan_bank_branch	Bank branches
+rp_rfi.action_rp_site_instruction	Site instructions
+rp_receivable.action_rp_ap_payment	Payments made
+rp_owner_contract.action_partner_owner	Project owners
+re_guarantee.action_re_bank_guarantee	Bank guarantee certificates
+rp_contractor.action_rp_contractor_specialty	Contractor specialities
+rp_erection.action_rp_erection_gate	Erection gates
+rp_loan_bridge.action_supplier_debt	Contractor & supplier payables
+rp_receivable.action_rp_ar_aging	Receivables ageing
+rp_receivable.action_rp_ap_aging	Payables ageing
+rp_schedule.action_rp_schedule_my_tasks	My tasks
+rp_report.action_report_task_late	Tasks slipping
+rp_report.action_report_task_critical	Critical path tasks — whole project
+rp_erection.action_rp_erection_blocked	Blocked & late
+rp_evm.action_rp_risk	Risk register
+rp_cost_base.action_rp_cost_category_master	Cost category master
+re_guarantee.action_re_guarantee_request	Guarantee issue requests
+rp_purchase.action_rp_payment_request	Payment requests
+rp_ppa.action_rp_energy_meter	Delivery points & meters
+re_loan.action_re_loan_rate_mass_wizard	Mass interest rate adjustment
+rp_obligation.action_rp_contract_clause	Contract clauses
+rp_purchase.action_rp_purchase_order	Purchase orders (owner)
+rp_progress.action_rp_progress_uom	Units of measure (construction)
+re_loan.action_re_loan_report_outstanding	Loan outstanding
+rp_progress.action_rp_structure_estimate	Detailed estimates
+rp_loan_bridge.action_rp_loan_disbursement_dossier	Disbursement dossiers by note
+re_bank_sync.action_re_bank_transaction	Bank transactions
+re_loan.action_re_loan_bank_advice	Bank debit advices (auto-debit)
+rp_cost_base.action_rp_structure	Project structure
+re_loan.action_re_loan_facility	Credit facilities
+rp_owner_contract.action_rp_owner_contract	Owner contracts
+rp_receivable.action_rp_ar_invoice	Sales invoices
+rp_loan_bridge.action_account_move_contractor_invoice	Contractor invoices
+rp_purchase.action_procure_vendor_bills	Vendor bills
+rp_owner_contract.action_owner_invoice	Invoices issued to owner
+rp_ppa.action_energy_invoice	Energy invoices
+rp_report.action_report_contract_value	Contracts — value & forecast
+rp_ppa.action_rp_ppa	Power purchase agreements
+re_loan.action_re_loan_credit_contract	Credit agreements
+rp_document.action_rp_document_overdue	Documents overdue with us
+re_product_profile.action_product_profile_settings	Product profile
+re_loan.action_re_loan_bank_advice_import	Import bank debit advices
+rp_owner_contract.action_rp_owner_ipc	IPC — Interim payment certificates
+rp_owner_contract.action_owner_cashflow	Cash receipt forecast
+re_loan.action_re_loan_payment_plan_report	Annual note repayment plan
+re_ca_sign.action_re_ca_provider	Provider connections
+rp_estimate.action_rp_concept_estimate	Concept estimates
+re_loan.action_re_loan_report_due	Notes falling due
+re_loan.action_re_loan_note	Promissory notes
+rp_report.action_report_claim_open	Open claims
+rp_claim.action_rp_claim	Contract claims
+rp_site.action_rp_site_safety_inspection	Safety inspections
+re_loan.action_re_loan_report_interest_overdue	Overdue interest schedule
+rp_schedule.action_rp_schedule_tasks	Construction schedule — tasks
+re_loan.action_re_loan_collateral_type	Collateral types
+rp_equipment.action_rp_equipment_lot	Main equipment lots
+rp_schedule.action_rp_milestones	Key milestones
+rp_contract.action_rp_contract_payment_due	Payment milestones due
+re_bank_sync.action_sepay_simulate	SePay transaction simulator
+re_loan.action_re_loan_purpose	Use of funds
+re_loan.action_re_loan_bank	Banks
+rp_owner_contract.action_rp_owner_acceptance	Acceptances submitted to owner
+rp_contractor.action_partner_supplier	Suppliers
+rp_purchase.action_rp_goods_receipt	Goods receipt & acceptance
+rp_contractor.action_partner_contractor	Contractors
+rp_estimate.action_rp_tender_bidder	Tender bidders
+rp_site.action_rp_site_diary	Site diary
+re_loan.action_re_loan_report_aging	Overdue debt — ageing
+re_loan.action_re_loan_facility_alloc	Credit agreement allocation — project × purpose
+re_loan.action_re_loan_alloc_by_contract	Credit agreement allocation by note
+rp_loan_bridge.action_rp_loan_allocation	Loan allocation by works
+rp_report.action_report_contract_ld	Expected liquidated damages
+rp_claim.action_rp_ld_assessment	Liquidated damages assessment
+rp_variation.action_rp_variation	Contract variations
+rp_report.action_report_variation_money	Variations — value by status
+re_sign.action_re_approval_rule	Approvals & signatures
+rp_document.action_rp_transmittal	Transmittals
+rp_contract.action_rp_contract_amendment	Contract amendments
+rp_schedule.action_rp_task_link	Task dependencies
+rp_interface.action_rp_interface	Interface register
+rp_rfi.action_rp_rfi	RFI — Requests for information
+rp_ppa.action_rp_energy_period	Energy & revenue
+rp_erection.action_rp_erection_generate	Generate erection register
+rp_document.action_rp_document	Document register
+rp_obligation.action_rp_obligation	Obligation register
+rp_budget.action_rp_contingency_drawdown	Contingency drawdown register
+rp_site.action_rp_site_incident	Incidents / near-misses
+re_loan.action_re_loan_collateral	Collateral
+rp_advance_payment.action_rp_advance_payment	Advance payments
+rp_owner_contract.action_rp_owner_advance	Owner advances
+rp_purchase.action_procure_payments	Payments
+rp_contract.action_rp_contract_change	Changes
+re_loan.action_re_loan_adjustment_note	Debit / credit notes — interest adjustment
+rp_doc_folder.action_rp_doc_folder	Project document folders
+rp_receivable.action_rp_ar_payment	Receipts
+rp_ppa.action_energy_payment	Receipts
+rp_owner_contract.action_owner_receipt	Receipts
+re_loan.action_re_loan_report_progress	Repayment progress
+re_loan.action_re_loan_appraiser	Appraisers
+re_loan.action_re_loan_credit_contract_summary	Credit agreement summary — loans & guarantees
+rp_rfi.action_rp_submittal	Submittals
+rp_purchase_stock.action_rp_stock_product	Materials & spares
+re_loan.action_re_loan_onlending	On-lending
+rp_ppa.action_rp_energy_invoice_wizard	Issue energy invoices
+rp_purchase.action_rp_purchase_request	Purchase requests
+rp_evm.action_rp_evm_board	Project dashboard (EVM)
+rp_schedule.action_rp_milestone_gantt	Key milestones
+rp_progress.action_rp_package_reconcile_open	Reconciliation — by package
+rp_progress.action_rp_cost_reconcile_open	Reconciliation — by cost group

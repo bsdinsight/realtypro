@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_installation.py:0
 msgid ""
 "%(nhan)s \"%(ten)s\" đã có một quãng lắp đặt chồng thời gian: %(tu)s → %(den)s.\n"
@@ -281,6 +282,7 @@ msgid "Cây lắp ráp"
 msgstr "Assembly tree"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_asset.py:0
 msgid "Cây lắp ráp — %s"
 msgstr "Assembly tree — %s"
@@ -291,6 +293,7 @@ msgid "Cây phân loại còn trống"
 msgstr "The category tree is empty"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_location.py:0
 msgid "Cây vị trí — %s"
 msgstr "Location tree — %s"
@@ -391,6 +394,7 @@ msgid "Cấu phần bên trong"
 msgstr "Internal components"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_asset.py:0
 msgid "Cấu phần không được lắp lồng vòng vào chính nó."
 msgstr "A component cannot be installed inside itself."
@@ -535,11 +539,13 @@ msgid "Kho phụ tùng"
 msgstr "Spare parts store"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_outage.py:0
 msgid "Khoảng chồng — %s"
 msgstr "Overlapping periods — %s"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_outage.py:0
 msgid "Khoảng dừng \"%s\" chưa quy trách nhiệm. Xác nhận mà bỏ trống ô này thì nó sẽ nằm mãi ở đó — và đây đúng là ô làm ra tiền."
 msgstr "Outage \"%s\" has no responsibility attributed. Confirm it with this field empty and it stays that way for good — and this is precisely the field that earns money."
@@ -555,6 +561,7 @@ msgid "Khoảng dừng máy"
 msgstr "Outage period"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_outage.py:0
 msgid "Khoảng này đã đóng lúc %s."
 msgstr "This period was closed at %s."
@@ -882,11 +889,13 @@ msgid "Mẫu"
 msgstr "Template"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_structure_template.py:0
 msgid "Mẫu \"%s\" chưa khai áp cho loại thiết bị nào — không biết sinh cho vị trí nào."
 msgstr "Template \"%s\" does not say which equipment category it applies to — there is no way to know which locations to generate."
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_structure_template.py:0
 msgid "Mẫu cấu trúc chỉ áp cho VỊ TRÍ THIẾT BỊ. \"%s\" là %s."
 msgstr "Structure templates apply to EQUIPMENT LOCATIONS only. \"%s\" is %s."
@@ -967,6 +976,7 @@ msgstr ""
 "               The system does not infer it."
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_outage.py:0
 msgid "Mới"
 msgstr "New"
@@ -1109,6 +1119,7 @@ msgid "Quy trách nhiệm"
 msgstr "Responsibility"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_installation.py:0
 msgid "Quãng này đã đóng ngày %s."
 msgstr "This period was closed on %s."
@@ -1352,6 +1363,7 @@ msgid "Trọng yếu"
 msgstr "Critical"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_installation.py:0
 #: model:ir.actions.act_window,name:eam_core.action_eam_asset
 #: model:ir.model.fields,field_description:eam_core.field_eam_installation__asset_id
@@ -1364,6 +1376,7 @@ msgid "Tài sản"
 msgstr "Assets"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_asset.py:0
 msgid ""
 "Tài sản \"%(con)s\" lắp tại %(vtc)s thì cụm chứa nó phải là \"%(dung)s\" (ở %(vtd)s), không phải \"%(cha)s\".\n"
@@ -1484,6 +1497,7 @@ msgid "Vật tư quay vòng"
 msgstr "Rotable spare"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_installation.py:0
 #: model:ir.model.fields,field_description:eam_core.field_eam_installation__location_id
 #: model:ir.model.fields,field_description:eam_core.field_eam_outage__location_id
@@ -1496,6 +1510,7 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_installation.py:0
 msgid "Vị trí \"%(vt)s\" nhận loại \"%(mong)s\", nhưng tài sản \"%(ts)s\" thuộc loại \"%(co)s\"."
 msgstr "Location \"%(vt)s\" accepts category \"%(mong)s\", but asset \"%(ts)s\" belongs to category \"%(co)s\"."
@@ -1682,6 +1697,7 @@ msgid "Đây là <b>sự cố gốc</b>, có"
 msgstr "This is a <b>root outage</b>, with"
 
 #. module: eam_core
+#. odoo-python
 #: code:addons/eam_core/models/eam_structure_template.py:0
 msgid "Đã sinh %(n)d vị trí mới cho %(v)d thiết bị."
 msgstr "Created %(n)d new locations for %(v)d pieces of equipment."

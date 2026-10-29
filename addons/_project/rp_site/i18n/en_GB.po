@@ -82,3 +82,18 @@ msgstr "Document folders"
 msgid "Vị trí"
 msgstr "Location"
 
+#. module: rp_site
+#: model:ir.actions.act_window,name:rp_site.action_rp_site_safety_inspection
+msgid "Kiểm tra an toàn"
+msgstr "Safety inspections"
+
+#. module: rp_site
+#: model:ir.actions.act_window,name:rp_site.action_rp_site_diary
+msgid "Nhật ký thi công"
+msgstr "Site diary"
+
+#. module: rp_site
+#: model:ir.actions.act_window,name:rp_site.action_rp_site_incident
+msgid "Sự cố / near-miss"
+msgstr "Incidents / near-misses"
+

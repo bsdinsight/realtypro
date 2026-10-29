@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid " Lưu ý đây là ĐẨY LÙI: không tìm được ngày sớm hơn nào ra khỏi mùa, nên thiết bị sẽ chạy thêm %d ngày quá chu kỳ thiết kế."
 msgstr " Note that this is a PUSH BACK: no earlier date outside the season could be found, so the equipment will run %d days beyond its design cycle."
@@ -54,6 +55,7 @@ msgid "% thời gian nằm là CHỜ"
 msgstr "% of downtime spent WAITING"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_schedule.py:0
 msgid "%s đã có lệnh đang mở (%s). Sinh thêm là có hai lệnh cùng một việc, và lần nào làm xong cũng không biết nên đóng cái nào."
 msgstr "%s already has an open order (%s). Raising another means two orders for the same job, and whichever is finished, nobody knows which one to close."
@@ -255,6 +257,7 @@ msgid "Chi phí bảo trì"
 msgstr "Maintenance cost"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_schedule.py:0
 msgid "Chiến dịch: %s"
 msgstr "Campaign: %s"
@@ -659,6 +662,7 @@ msgid "Giờ sửa thực"
 msgstr "Actual repair hours"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_schedule.py:0
 msgid "Gom %d vị trí cùng tới kỳ."
 msgstr "Grouped %d locations falling due together."
@@ -684,6 +688,7 @@ msgid "Hạn"
 msgstr "Due"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Hạn %(h)s rơi vào %(m)s. Đề xuất %(hg)s %(n)d ngày, làm ngày %(ng)s.%(c)s"
 msgstr "Due %(h)s falls in %(m)s. Suggested %(hg)s by %(n)d days, to be done on %(ng)s.%(c)s"
@@ -694,16 +699,19 @@ msgid "Hạn gốc giữ nguyên ở cột \"Hạn theo lịch\". Cột này là
 msgstr "The original due date stays in the \"Calendar due date\" column. This column is the date suggested after the seasons are weighed — the gap between the two is what to look at."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Hạn kiểm định rơi vào %(m)s. KHÔNG dời được — hạn do pháp luật đặt, quá hạn là phải dừng thiết bị. Việc phải làm là chuẩn bị khác, không phải hoãn."
 msgstr "The inspection falls due in %(m)s. It CANNOT be shifted — the deadline is set by law and overrunning it means stopping the equipment. The answer is different preparation, not postponement."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Hạn rơi vào %(m)s nhưng luật không cho dời ngày nào."
 msgstr "The due date falls in %(m)s but the rule allows no shift at all."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Hạn rơi vào %(m)s và KHÔNG tránh được trong giới hạn %(c)d ngày. Phải bố trí làm trong mùa — xem lý do ở luật mùa để chuẩn bị."
 msgstr "The due date falls in %(m)s and CANNOT be avoided within the %(c)d-day limit. It has to be done during the season — read the reason on the seasonal rule and prepare accordingly."
@@ -726,6 +734,7 @@ msgid "Hạn theo đồng hồ"
 msgstr "Meter due date"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Hạn đang nằm trong %s — đúng mùa nên làm."
 msgstr "The due date falls in %s — the right season for it."
@@ -831,16 +840,19 @@ msgid "Kế hoạch"
 msgstr "Plan"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_plan.py:0
 msgid "Kế hoạch \"%s\" bật chu kỳ theo lịch nhưng để trống số tháng và số ngày."
 msgstr "Plan \"%s\" has the calendar cycle on but both the month and day counts are empty."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_plan.py:0
 msgid "Kế hoạch \"%s\" bật chu kỳ theo đồng hồ nhưng khoảng cách không dương."
 msgstr "Plan \"%s\" has the meter cycle on but the interval is not positive."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_plan.py:0
 msgid "Kế hoạch \"%s\" không có điều kiện tới hạn nào — nó sẽ không bao giờ sinh ra lệnh công việc."
 msgstr "Plan \"%s\" has no due condition at all — it will never raise a work order."
@@ -896,6 +908,7 @@ msgid "Loại đồng hồ"
 msgstr "Meter type"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Luật \"không làm được\" trong mùa \"%s\" phải ghi lý do. Một chữ \"cấm\" không kèm lý do thì người ở hiện trường sẽ lách, vì họ không biết đang lách cái gì."
 msgstr "A \"cannot be done\" rule in season \"%s\" requires a reason. A bare \"forbidden\" with no reason will be worked around on site, because nobody knows what they are working around."
@@ -976,6 +989,7 @@ msgid "Lịch bảo trì theo vị trí"
 msgstr "Maintenance schedule by location"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_location.py:0
 #: code:addons/eam_pm/models/eam_pm_plan.py:0
 msgid "Lịch bảo trì — %s"
@@ -993,6 +1007,7 @@ msgid "Lịch theo mùa"
 msgstr "Seasonal schedule"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_schedule_season.py:0
 msgid "Lịch theo mùa: %s"
 msgstr "Seasonal schedule: %s"
@@ -1083,11 +1098,13 @@ msgid "Mùa"
 msgstr "Season"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Mùa \"%s\": ngày phải trong khoảng 1–31."
 msgstr "Season \"%s\": the day has to be between 1 and 31."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "Mùa \"%s\": tháng phải trong khoảng 1–12."
 msgstr "Season \"%s\": the month has to be between 1 and 12."
@@ -1627,6 +1644,7 @@ msgstr ""
 "                        option here."
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_pm_schedule_season.py:0
 msgid "Việc này KHÔNG tránh được mùa: %s. Phải chuẩn bị điều kiện thi công khác, không phải hoãn."
 msgstr "This work CANNOT avoid the season: %s. Different working conditions have to be arranged — postponing is not the answer."
@@ -1685,21 +1703,25 @@ msgid "Xung đột mùa"
 msgstr "Season clash"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_reliability.py:0
 msgid "chưa ghi giờ sửa nên chưa có MTTR"
 msgstr "no repair hours recorded, so there is no MTTR"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_reliability.py:0
 msgid "chưa hỏng lần nào nên chưa có MTBF"
 msgstr "no failure yet, so there is no MTBF"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_reliability.py:0
 msgid "không có đồng hồ giờ máy chạy"
 msgstr "no running-hour meter"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "kéo lên sớm"
 msgstr "brought forward"
@@ -1926,6 +1948,7 @@ msgid "Độ tin cậy thiết bị"
 msgstr "Equipment reliability"
 
 #. module: eam_pm
+#. odoo-python
 #: code:addons/eam_pm/models/eam_season.py:0
 msgid "đẩy lùi"
 msgstr "pushed back"

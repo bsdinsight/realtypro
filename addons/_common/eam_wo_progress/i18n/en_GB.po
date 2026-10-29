@@ -104,11 +104,13 @@ msgid "Lệch giờ công"
 msgstr "Labour hour variance"
 
 #. module: eam_wo_progress
+#. odoo-python
 #: code:addons/eam_wo_progress/models/eam_work_order.py:0
 msgid "Lệnh \"%(ten)s\" tại %(vt)s đã quá hạn %(g).0f giờ (dự kiến xong %(h)s)."
 msgstr "Order \"%(ten)s\" at %(vt)s is %(g).0f hours overdue (planned finish %(h)s)."
 
 #. module: eam_wo_progress
+#. odoo-python
 #: code:addons/eam_wo_progress/models/eam_work_order.py:0
 msgid "Lệnh công việc trễ hạn — %s"
 msgstr "Overdue work orders — %s"
@@ -145,6 +147,7 @@ msgid "Quá hạn nhưng lệnh đang ở trạng thái chờ. Đây là vấn �
 msgstr "Overdue, but the order is on hold. That is a supply chain problem rather than the fitter's, so NO notification is sent — reminding someone every day about something they cannot solve is the fastest way to make them ignore every notification afterwards."
 
 #. module: eam_wo_progress
+#. odoo-python
 #: code:addons/eam_wo_progress/models/eam_work_order.py:0
 msgid "Quét xong: %(t)d lệnh đang trễ, đã đẩy %(d)d thông báo mới."
 msgstr "Scan complete: %(t)d orders overdue, %(d)d new notifications sent."

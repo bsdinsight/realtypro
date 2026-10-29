@@ -132,6 +132,7 @@ msgid "Nhà máy này đã có mục tiêu cho tháng đó rồi."
 msgstr "This plant already has a target for that month."
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "Nhân bản %(a)d dòng sang năm sau. Nhớ soi lại: mục tiêu năm mới hiếm khi bằng y năm cũ."
 msgstr "Duplicated %(a)d rows into next year. Remember to review them: a new year's target is rarely identical to the old one."
@@ -148,11 +149,13 @@ msgid "Năm"
 msgstr "Year"
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "Năm phải là bốn chữ số, đang khai \"%s\"."
 msgstr "The year has to be four digits; it is \"%s\"."
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid ""
 "Phải có P50 ≥ P75 ≥ P90. Đang khai %(ds)s.\n"
@@ -184,6 +187,7 @@ msgid "Tháng"
 msgstr "Month"
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "Tháng phải từ 1 tới 12."
 msgstr "The month has to be between 1 and 12."
@@ -214,16 +218,19 @@ msgid "Tổng P90"
 msgstr "Total P90"
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "chưa khai mục tiêu cho tháng %(t)02d/%(n)d của nhà máy này"
 msgstr "no target declared for %(t)02d/%(n)d at this plant"
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "mục tiêu tháng này khai là KHÔNG rải theo ngày, nên chỉ đối chiếu vào ngày cuối tháng"
 msgstr "this month's target is declared as NOT spread across the days, so it is only compared on the last day of the month"
 
 #. module: eam_target
+#. odoo-python
 #: code:addons/eam_target/models/eam_energy_target.py:0
 msgid "nhân bản từ năm %s"
 msgstr "duplicated from %s"

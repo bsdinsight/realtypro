@@ -17,11 +17,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_historian.py:0
 msgid "\"%s\" là tag tính toán, không nhận số đo trực tiếp"
 msgstr "\"%s\" is a computed tag and takes no readings directly"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/tom_tat_ngay.py:0
 msgid "%(n)d điểm đo cùng khớp nhưng chưa khai cách gộp. Cộng công suất các tua-bin ra công suất nhà máy thì đúng, cộng nhiệt độ thì vô nghĩa — hệ không đoán hộ."
 msgstr "%(n)d tags match but no aggregation is declared. Summing turbine power into plant power is right, summing temperature is meaningless — the system does not guess for you."
@@ -241,6 +243,7 @@ msgid "Chỉ ghi nhận, chưa loại"
 msgstr "Recorded only, not yet excluded"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_tag.py:0
 msgid "Chỉ lọc được \"chưa có số đo nào\" (so sánh với 0)."
 msgstr "Only \"no reading at all\" can be filtered (a comparison with 0)."
@@ -301,6 +304,7 @@ msgid "Công thức"
 msgstr "Formula"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_tag.py:0
 msgid "Công thức của \"%(t)s\" trỏ tới mã tag không tồn tại: %(m)s."
 msgstr "The formula of \"%(t)s\" refers to a tag code that does not exist: %(m)s."
@@ -319,6 +323,7 @@ msgid "Công-tơ, đồng hồ"
 msgstr "Meters and counters"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "Cường độ nhiễu động trung bình %(ti).1f%% — cao. Phương pháp chia khoảng THIÊN CAO một cách có hệ thống khi gió động, vì đường cong công suất là hàm lồi nên trung bình công suất lớn hơn công suất tại tốc độ gió trung bình. Con số \"vượt cam kết\" dưới đây có thể là hiệu ứng toán học chứ không phải tua-bin tốt. Muốn kết luận chắc thì cần chuẩn hoá nhiễu động theo IEC 61400-12-1 bản 2, hoặc so với một tua-bin khác cùng nhà máy trong cùng kỳ."
 msgstr "Mean turbulence intensity %(ti).1f%% — high. The binning method is SYSTEMATICALLY biased upwards in gusty wind, because the power curve is convex and so the mean power exceeds the power at the mean wind speed. The \"exceeds the commitment\" figure below may be a mathematical artefact rather than a good turbine. For a firm conclusion, normalise for turbulence per IEC 61400-12-1 edition 2, or compare against another turbine at the same plant over the same period."
@@ -347,6 +352,7 @@ msgid "Dải hợp lý"
 msgstr "Plausible range"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_data_exclusion.py:0
 msgid "Dừng máy %s"
 msgstr "Outage %s"
@@ -459,6 +465,7 @@ msgid "Khoảng loại trừ"
 msgstr "Exclusion period"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_data_exclusion.py:0
 msgid "Khoảng loại trừ \"%s\": \"Đến\" phải sau \"Từ\"."
 msgstr "Exclusion period \"%s\": \"To\" has to be after \"From\"."
@@ -489,6 +496,7 @@ msgstr ""
 "                        every indicator recompute correctly at once."
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_data_exclusion.py:0
 #: model:ir.model.fields,field_description:eam_historian.field_eam_outage__exclusion_ids
 #: model:ir.ui.menu,name:eam_historian.menu_eam_data_exclusion
@@ -519,6 +527,7 @@ msgid "Không có số đo riêng — tính ra từ các tag khác mỗi lần �
 msgstr "It has no readings of its own — it is computed from other tags on every read."
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "Không có điểm đo nhiệt độ môi trường nên KHÔNG hiệu chỉnh mật độ không khí được. Kết quả dưới đây là so sánh THÔ — nếu nhà máy không ở mực nước biển thì nó thiên lệch một cách có hệ thống."
 msgstr "There is no ambient temperature tag, so air density CANNOT be corrected for. The comparison below is RAW — and if the plant is not at sea level it is systematically biased."
@@ -821,6 +830,7 @@ msgid "Sự cố lưới / mất điện lưới"
 msgstr "Grid fault / grid outage"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_tag.py:0
 msgid "Tag \"%s\": cận dưới phải nhỏ hơn cận trên, nếu không thì MỌI số đo đều bị đánh dấu ngoài dải."
 msgstr "Tag \"%s\": the lower bound has to be below the upper bound, otherwise EVERY reading is flagged out of range."
@@ -834,6 +844,7 @@ msgid "Tag tính toán"
 msgstr "Computed tag"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_tag.py:0
 msgid "Tag tính toán \"%s\" chưa có công thức — nó sẽ không bao giờ ra giá trị nào."
 msgstr "Computed tag \"%s\" has no formula — it will never produce a value."
@@ -1065,46 +1076,55 @@ msgid "Xu hướng điểm đo"
 msgstr "Tag trends"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_tag.py:0
 msgid "Xu hướng — %s"
 msgstr "Trend — %s"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_historian.py:0
 msgid "dòng không đúng dạng (mã, thời điểm, giá trị)"
 msgstr "the line is malformed (code, timestamp, value)"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/tom_tat_ngay.py:0
 msgid "gió trong ngày toả đều (độ tập trung %(r).3f < %(g).2f) — không có hướng trội nào, nên \"hướng trung bình\" là con số vô nghĩa. Xem hoa gió để thấy phân bố thật."
 msgstr "the wind was spread evenly through the day (concentration %(r).3f < %(g).2f) — there is no prevailing direction, so a \"mean direction\" is a meaningless number. Look at the wind rose for the real distribution."
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_historian.py:0
 msgid "không có tag mã \"%s\""
 msgstr "there is no tag with code \"%s\""
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "không khí loãng hơn quy chiếu"
 msgstr "the air is thinner than the reference"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "không khí đặc hơn quy chiếu"
 msgstr "the air is denser than the reference"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "suy áp suất từ độ cao %d m"
 msgstr "pressure derived from an elevation of %d m"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_historian.py:0
 msgid "thiếu thời điểm"
 msgstr "timestamp missing"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_historian.py:0
 msgid "thời điểm hoặc giá trị không đọc được"
 msgstr "the timestamp or the value could not be read"
@@ -1234,6 +1254,7 @@ msgstr ""
 "               nobody knows what is being compared with what."
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "Đã hiệu chỉnh mật độ không khí (%(ng)s). Mật độ trung bình %(tb).4f kg/m³ so với quy chiếu %(ref).3f — %(ht)s."
 msgstr "Corrected for air density (%(ng)s). Mean density %(tb).4f kg/m³ against a reference of %(ref).3f — %(ht)s."
@@ -1245,6 +1266,7 @@ msgid "Đã nghỉ"
 msgstr "Retired"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_data_exclusion.py:0
 msgid "Đã tạo khoảng loại trừ KPI cho khoảng dừng này. Số đo THÔ không bị đụng tới — việc loại trừ chỉ áp lúc đọc, nên sửa lý do sau này là mọi chỉ số tính lại đúng ngay."
 msgstr "A KPI exclusion period has been created for this outage. The RAW readings are untouched — the exclusion is applied at read time, so correcting the reason later makes every indicator recompute correctly at once."
@@ -1273,6 +1295,7 @@ msgid "Đường cong"
 msgstr "Curve"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve.py:0
 msgid "Đường cong \"%s\" có hai điểm cùng một tốc độ gió."
 msgstr "Curve \"%s\" has two points at the same wind speed."
@@ -1363,6 +1386,7 @@ msgid "Độ rung"
 msgstr "Vibration"
 
 #. module: eam_historian
+#. odoo-python
 #: code:addons/eam_historian/models/eam_power_curve_run.py:0
 msgid "đo áp suất trực tiếp"
 msgstr "measured pressure directly"

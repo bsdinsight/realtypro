@@ -242,6 +242,7 @@ msgid "Tìm"
 msgstr "Search"
 
 #. module: eam_energy_period
+#. odoo-python
 #: code:addons/eam_energy_period/models/eam_energy_period.py:0
 msgid "Tổ máy — %s"
 msgstr "Units — %s"
@@ -288,6 +289,7 @@ msgid "Xem bảng tổ máy của kỳ này"
 msgstr "View this period's unit table"
 
 #. module: eam_energy_period
+#. odoo-python
 #: code:addons/eam_energy_period/models/eam_energy_period.py:0
 msgid "chưa khai mục tiêu cho tháng %s"
 msgstr "no target declared for %s"

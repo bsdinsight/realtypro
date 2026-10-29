@@ -36,3 +36,8 @@ msgstr "Tender packages"
 msgid "Vị trí"
 msgstr "Location"
 
+#. module: rp_equipment
+#: model:ir.actions.act_window,name:rp_equipment.action_rp_equipment_lot
+msgid "Lô thiết bị chính"
+msgstr "Main equipment lots"
+

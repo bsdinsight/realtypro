@@ -46,3 +46,28 @@ msgstr "Sales invoices"
 msgid "Thu tiền"
 msgstr "Receipts"
 
+#. module: rp_receivable
+#: model:ir.actions.act_window,name:rp_receivable.action_rp_ap_payment
+msgid "Chi tiền"
+msgstr "Payments made"
+
+#. module: rp_receivable
+#: model:ir.actions.act_window,name:rp_receivable.action_rp_ar_aging
+msgid "Công nợ phải thu"
+msgstr "Receivables ageing"
+
+#. module: rp_receivable
+#: model:ir.actions.act_window,name:rp_receivable.action_rp_ap_aging
+msgid "Công nợ phải trả"
+msgstr "Payables ageing"
+
+#. module: rp_receivable
+#: model:ir.actions.act_window,name:rp_receivable.action_rp_ar_invoice
+msgid "Hoá đơn bán ra"
+msgstr "Sales invoices"
+
+#. module: rp_receivable
+#: model:ir.actions.act_window,name:rp_receivable.action_rp_ar_payment
+msgid "Thu tiền"
+msgstr "Receipts"
+

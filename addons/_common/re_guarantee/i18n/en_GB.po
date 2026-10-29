@@ -46,3 +46,13 @@ msgstr "Bank guarantees"
 msgid "Loại tiền"
 msgstr "Currency"
 
+#. module: re_guarantee
+#: model:ir.actions.act_window,name:re_guarantee.action_re_bank_guarantee
+msgid "Chứng thư Bảo lãnh"
+msgstr "Bank guarantee certificates"
+
+#. module: re_guarantee
+#: model:ir.actions.act_window,name:re_guarantee.action_re_guarantee_request
+msgid "Đề nghị phát hành Bảo lãnh"
+msgstr "Guarantee issue requests"
+

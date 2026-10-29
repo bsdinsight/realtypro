@@ -165,6 +165,7 @@ msgid "Dựng lại bảng giải ngân từ điều khoản thanh toán hiện 
 msgstr "Rebuild the disbursement table from the current payment terms? The existing table will be replaced."
 
 #. module: rp_budget
+#. odoo-python
 #: code:addons/rp_budget/models/rp_disbursement.py:0
 #: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_disbursement
 #: model_terms:ir.ui.view,arch_db:rp_budget.view_rp_disbursement_search
@@ -221,6 +222,7 @@ msgid "Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ s�
 msgstr "The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it."
 
 #. module: rp_budget
+#. odoo-python
 #: code:addons/rp_budget/models/re_project.py:0
 #: model:ir.actions.act_window,name:rp_budget.action_rp_cost_baseline
 #: model:ir.model.fields,field_description:rp_budget.field_re_project__cost_baseline_ids
@@ -266,6 +268,7 @@ msgid "Nhìn trước bao nhiêu tháng để so nhu cầu chi với nguồn cò
 msgstr "How many months ahead to compare spending need against the funding available to draw. Three months is about enough to arrange a further drawdown in time."
 
 #. module: rp_budget
+#. odoo-python
 #: code:addons/rp_budget/models/rp_variation.py:0
 #: model:ir.model,name:rp_budget.model_rp_contingency_drawdown
 #: model:ir.model.fields,field_description:rp_budget.field_re_project__contingency_drawdown_ids
@@ -308,6 +311,7 @@ msgid "Quỹ dự phòng"
 msgstr "Contingency fund"
 
 #. module: rp_budget
+#. odoo-python
 #: code:addons/rp_budget/models/rp_budget_phase.py:0
 #: model_terms:ir.ui.view,arch_db:rp_budget.view_re_project_form_budget
 msgid "Rải ngân sách theo lịch"
@@ -460,4 +464,14 @@ msgstr "② Current budget"
 #: model:ir.model.fields,field_description:rp_budget.field_re_project__budget_forecast
 msgid "③ Dự báo cuối kỳ"
 msgstr "③ Forecast at completion"
+
+#. module: rp_budget
+#: model:ir.actions.act_window,name:rp_budget.action_rp_cost_report
+msgid "Bảng kiểm soát chi phí"
+msgstr "Cost control sheet"
+
+#. module: rp_budget
+#: model:ir.actions.act_window,name:rp_budget.action_rp_contingency_drawdown
+msgid "Sổ rút dự phòng"
+msgstr "Contingency drawdown register"
 

@@ -137,6 +137,7 @@ msgid "Khoảng dừng trong kỳ"
 msgstr "Outages during the period"
 
 #. module: eam_energy
+#. odoo-python
 #: code:addons/eam_energy/models/rp_energy_period.py:0
 msgid "Khoảng dừng — %s"
 msgstr "Outages — %s"

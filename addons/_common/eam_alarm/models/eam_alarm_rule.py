@@ -81,11 +81,15 @@ class EamAlarmRule(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence, code'
 
-    name = fields.Char(string='Tên luật', required=True, tracking=True)
+    # Mở dịch: tên luật là TỪ VỰNG NGÀNH ('Nhiệt độ dầu hộp số cao'),
+    # lặp lại gần như nguyên văn ở mọi nhà máy cùng loại — khác hẳn
+    # thứ khách tự đặt tên. `code` thì KHÔNG dịch: nó là định danh.
+    name = fields.Char(string='Tên luật', required=True, tracking=True,
+                       translate=True)
     code = fields.Char(string='Mã', required=True, index=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True, tracking=True)
-    note = fields.Text(string='Diễn giải')
+    note = fields.Text(string='Diễn giải', translate=True)
 
     source = fields.Selection(
         NGUON, string='Nguồn cảnh báo', required=True,

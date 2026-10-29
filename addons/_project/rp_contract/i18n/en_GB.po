@@ -84,3 +84,28 @@ msgstr "Contractor agreements"
 msgid "Thư mục hồ sơ"
 msgstr "Document folders"
 
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract_report
+msgid "Báo cáo HĐ nhà thầu"
+msgstr "Contractor contract report"
+
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract_closure
+msgid "Chấm dứt / Thanh lý HĐ"
+msgstr "Contract termination / closure"
+
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract_payment_due
+msgid "Mốc thanh toán đến hạn"
+msgstr "Payment milestones due"
+
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract_amendment
+msgid "Phụ lục HĐ"
+msgstr "Contract amendments"
+
+#. module: rp_contract
+#: model:ir.actions.act_window,name:rp_contract.action_rp_contract_change
+msgid "Thay đổi (Change)"
+msgstr "Changes"
+

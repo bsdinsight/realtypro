@@ -18,7 +18,9 @@ class EamEquipmentModel(models.Model):
     _description = 'Model / nền tảng thiết bị'
     _order = 'manufacturer_id, name'
 
-    name = fields.Char(string='Tên model', required=True)
+    # Tên nền tảng thiết bị là TỪ VỰNG NGÀNH ('Nền tảng 4,0 MW · rô-to
+    # 150 m'), không phải tên khách tự đặt — mở dịch.
+    name = fields.Char(string='Tên model', required=True, translate=True)
     code = fields.Char(string='Mã')
     manufacturer_id = fields.Many2one(
         'res.partner', string='Hãng chế tạo', ondelete='restrict')

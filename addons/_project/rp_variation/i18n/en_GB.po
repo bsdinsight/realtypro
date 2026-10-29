@@ -112,3 +112,8 @@ msgstr "Document folders"
 msgid "Đã cam kết theo hợp đồng"
 msgstr "Committed under contract"
 
+#. module: rp_variation
+#: model:ir.actions.act_window,name:rp_variation.action_rp_variation
+msgid "Phát sinh hợp đồng"
+msgstr "Contract variations"
+

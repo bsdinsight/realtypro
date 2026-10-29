@@ -109,3 +109,33 @@ msgstr "Energy delivered, cumulative (MWh)"
 msgid "Kinh doanh"
 msgstr "Energy Sales"
 
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_energy_invoice
+msgid "Hoá đơn tiền điện"
+msgstr "Energy invoices"
+
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_rp_ppa
+msgid "Hợp đồng mua bán điện"
+msgstr "Power purchase agreements"
+
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_rp_energy_period
+msgid "Sản lượng & doanh thu"
+msgstr "Energy & revenue"
+
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_energy_payment
+msgid "Thu tiền"
+msgstr "Receipts"
+
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_rp_energy_invoice_wizard
+msgid "Xuất hoá đơn tiền điện"
+msgstr "Issue energy invoices"
+
+#. module: rp_ppa
+#: model:ir.actions.act_window,name:rp_ppa.action_rp_energy_meter
+msgid "Điểm giao nhận & công-tơ"
+msgstr "Delivery points & meters"
+

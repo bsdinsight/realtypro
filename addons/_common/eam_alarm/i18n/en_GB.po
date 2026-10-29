@@ -28,26 +28,31 @@ msgstr ""
 "\"Open a REQUEST\" is the right choice for low-level alarms: it goes into the request log for the dispatcher to judge whether an order is warranted, instead of straight onto the list of work to be done."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "%(nhan)s đang %(tri).2f %(dv)s, %(huong)s ngưỡng %(ng).2f."
 msgstr "%(nhan)s is at %(tri).2f %(dv)s, %(huong)s the %(ng).2f threshold."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "%(ten)s ngừng gửi số đã %(gio).1f giờ (mốc cuối %(c)s). Trong lúc nó im, mọi luật ngưỡng canh trên chính điểm đo này cũng im theo — kiểm ĐƯỜNG TRUYỀN trước khi cử người ra trụ."
 msgstr "%(ten)s has not sent a reading for %(gio).1f hours (last at %(c)s). While it is silent, every threshold rule watching this same tag is silent too — check the LINK before sending anyone up the tower."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "%(ten)s đang %(v).3f %(dv)s — %(nhan)s %(dai)s, liên tục %(p)d phút (%(n)d số đo, không có mốc nào ngược lại)."
 msgstr "%(ten)s is at %(v).3f %(dv)s — %(nhan)s %(dai)s, sustained for %(p)d minutes (%(n)d readings, none of them to the contrary)."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "%(ten)s đứng im ở %(v).3f suốt %(n)d phút — số vẫn về đều nên KHÔNG phải mất tín hiệu, mà là giá trị không đổi. Hai chuyện ấy sửa ở hai nơi khác nhau."
 msgstr "%(ten)s has been frozen at %(v).3f for %(n)d minutes — readings keep arriving, so this is NOT a lost signal but a value that will not move. The two are fixed in different places."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "%s chưa có số đo nào."
 msgstr "%s has no readings yet."
@@ -147,6 +152,7 @@ msgid "Bỏ hoãn"
 msgstr "Unsnooze"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Bỏ hoãn, cảnh báo bật lại."
 msgstr "Unsnoozed, the alarm is back on."
@@ -158,6 +164,7 @@ msgid "Bỏ qua"
 msgstr "Dismiss"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 #: model:ir.model,name:eam_alarm.model_eam_alarm_ignore_wizard
 #: model_terms:ir.ui.view,arch_db:eam_alarm.view_eam_alarm_ignore_wizard_form
@@ -165,6 +172,7 @@ msgid "Bỏ qua cảnh báo"
 msgstr "Dismiss alarm"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Bỏ qua cảnh báo \"%s\" thì phải ghi lý do. Không ghi thì sau sáu tháng sổ cảnh báo đầy dòng \"đã bỏ qua\" mà không ai nhớ vì sao, kể cả người bỏ qua."
 msgstr "Dismissing alarm \"%s\" requires a reason. Without one, six months later the alarm log is full of \"dismissed\" rows and nobody remembers why — not even the person who dismissed them."
@@ -179,6 +187,7 @@ msgstr ""
 "                   it can still be read six months later."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Bỏ qua. Lý do: %s"
 msgstr "Dismissed. Reason: %s"
@@ -242,6 +251,7 @@ msgid "Chỉ dùng cho luật LỆCH CẢM BIẾN: hai cảm biến đo cùng m�
 msgstr "Only for SENSOR-DEVIATION rules: two sensors measuring the same quantity that disagree beyond the threshold mean one of them has drifted — and looking at one alone tells you nothing about which."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Chọn từ hai cảnh báo trở lên để gom."
 msgstr "Pick two or more alarms to group them."
@@ -268,6 +278,7 @@ msgid "Công ty"
 msgstr "Company"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 #: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_ignore_wizard__alarm_ids
 #: model:ir.model.fields,field_description:eam_alarm.field_eam_alarm_rule__alarm_ids
@@ -277,21 +288,25 @@ msgid "Cảnh báo"
 msgstr "Alarm"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo \"%s\" không còn ở trạng thái mới."
 msgstr "Alarm \"%s\" is no longer in the new state."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo \"%s\" đã có lệnh hoặc đã khép."
 msgstr "Alarm \"%s\" already has an order, or is closed."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo \"%s\" đã khép."
 msgstr "Alarm \"%s\" is already closed."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo \"%s\" đã được xử lý rồi."
 msgstr "Alarm \"%s\" has already been handled."
@@ -307,11 +322,13 @@ msgid "Cảnh báo cùng gốc"
 msgstr "Alarms under the same root"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo không có nội dung"
 msgstr "The alarm has no message"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo này chưa có lệnh công việc."
 msgstr "This alarm has no work order."
@@ -327,6 +344,7 @@ msgid "Cảnh báo này đã"
 msgstr "This alarm has"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Cảnh báo này đã TÁI PHÁT lần thứ %(n)d sau khi đóng lệnh %(l)s ngày %(d)s. Lần sửa đó không giữ được — xem lại nguyên nhân gốc thay vì sửa lại y như cũ."
 msgstr "This alarm has RECURRED for the %(n)d time since order %(l)s was closed on %(d)s. That repair did not hold — look again at the root cause instead of repeating it."
@@ -379,6 +397,7 @@ msgid "Cảnh báo đã gộp"
 msgstr "Alarms grouped"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 #: code:addons/eam_alarm/models/eam_work_order.py:0
 msgid "Cảnh báo — %s"
@@ -461,6 +480,7 @@ msgid "Giữ lại số ĐO ĐƯỢC, không chỉ giữ câu chữ. Không có 
 msgstr "Keep the MEASURED value, not just the words. Without it there is no way to check afterwards by how much the alarm was over threshold."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Gom %(n)d cảnh báo về đây làm một sự cố: %(ds)s"
 msgstr "Grouped %(n)d alarms here as one incident: %(ds)s"
@@ -476,6 +496,7 @@ msgid "Gọi theo MÃ, không theo bản ghi: một luật phải chạy đượ
 msgstr "Addressed by CODE, not by record: one rule has to work across every plant that follows the same code convention. End with \"*\" to match several points — \"T*_TGB\" is gearbox temperature on every turbine."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Gộp thêm cảnh báo: %s"
 msgstr "Also grouped in: %s"
@@ -486,6 +507,7 @@ msgid "Gỡ khỏi cảnh báo gốc"
 msgstr "Detach from root alarm"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "Hai cảm biến lệch %(l).1f%%: %(a)s đang %(va).3f, %(b)s đang %(vb).3f. Một trong hai đã trôi — và nhìn riêng từng cái thì cả hai đều nằm trong dải hợp lý, nên chỉ phép so này mới thấy."
 msgstr "Two sensors disagree by %(l).1f%%: %(a)s is at %(va).3f, %(b)s is at %(vb).3f. One of them has drifted — and taken separately both sit in a plausible range, so only this comparison reveals it."
@@ -522,6 +544,7 @@ msgid "Hoãn bao nhiêu giờ"
 msgstr "Snooze for how many hours"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 #: model:ir.model,name:eam_alarm.model_eam_alarm_snooze_wizard
 #: model_terms:ir.ui.view,arch_db:eam_alarm.view_snooze_wizard
@@ -534,11 +557,13 @@ msgid "Hoãn tới"
 msgstr "Snooze until"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Hoãn tới %(d)s. Lý do: %(l)s"
 msgstr "Snoozed until %(d)s. Reason: %(l)s"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Hết hạn hoãn (%(d)s). Cảnh báo bật lại. Lý do hoãn trước đó: %(l)s"
 msgstr "Snooze expired (%(d)s). The alarm is back on. Earlier snooze reason: %(l)s"
@@ -577,11 +602,13 @@ msgid "Khác"
 msgstr "Other"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_work_order.py:0
 msgid "Khép theo lệnh %(l)s. Nếu cảnh báo này nổ lại trong %(n)d ngày tới, nó sẽ được đếm là TÁI PHÁT."
 msgstr "Closed by order %(l)s. If this alarm is raised again within the next %(n)d days, it will count as a RECURRENCE."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Không có số đọc mới %(n)d ngày (lần cuối %(d)s). Nhiều khả năng ĐƯỜNG TRUYỀN chết, không phải máy dừng — kiểm tra kết nối trước khi cử người ra trụ."
 msgstr "No new reading for %(n)d days (last one %(d)s). Most likely the LINK is dead rather than the machine — check the connection before sending anyone up the tower."
@@ -619,16 +646,19 @@ msgid "Luật"
 msgstr "Rule"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Luật \"%s\" phải có cửa sổ ít nhất 1 ngày."
 msgstr "Rule \"%s\" needs a window of at least 1 day."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Luật \"%s\" so ngưỡng nhưng ngưỡng để trống — nó sẽ nổ cho mọi số đọc, hoặc không nổ bao giờ."
 msgstr "Rule \"%s\" compares a threshold but the threshold is empty — it will fire on every reading, or never fire at all."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Luật \"%s\" so ngưỡng thì phải chọn loại đồng hồ."
 msgstr "Rule \"%s\" compares a threshold, so it needs a meter type."
@@ -706,11 +736,13 @@ msgid "Lệnh"
 msgstr "Order"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_work_order.py:0
 msgid "Lệnh %s đã huỷ. Cảnh báo quay về cần xử lý."
 msgstr "Order %s was cancelled. The alarm is back to be handled."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_work_order.py:0
 msgid "Lệnh %s đã xong, nhưng luật cảnh báo đặt là phải tự hết bằng số đo. Cảnh báo giữ nguyên tới khi trị số về trong ngưỡng."
 msgstr "Order %s is done, but the alarm rule says it must clear through readings. The alarm stays until the value is back within threshold."
@@ -731,6 +763,7 @@ msgid "Lệnh làm trên cao"
 msgstr "Work at height"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Lệnh này do cảnh báo %(m)s sinh ra."
 msgstr "This order was raised by alarm %(m)s."
@@ -830,11 +863,13 @@ msgid "Mở lệnh công việc"
 msgstr "Open work order"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Mở từ cảnh báo %(m)s (đã nổ %(n)d lần)."
 msgstr "Opened from alarm %(m)s (raised %(n)d times)."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Mở từ cảnh báo: %s"
 msgstr "Opened from alarm: %s"
@@ -1011,6 +1046,7 @@ msgid "Số cảnh báo con"
 msgstr "Child alarms"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Số giờ hoãn phải lớn hơn 0."
 msgstr "The snooze must be longer than 0 hours."
@@ -1033,6 +1069,7 @@ msgid "Số lần tái phát sau sửa"
 msgstr "Recurrences after repair"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Số đọc vẫn về đều nhưng %(nhan)s KHÔNG tăng trong %(n)d ngày. Máy đứng im thật — khác với mất tín hiệu."
 msgstr "Readings keep arriving but %(nhan)s has NOT increased for %(n)d days. The machine really is idle — which is not the same as a lost signal."
@@ -1114,6 +1151,7 @@ msgid "Thời điểm hệ GHI NHẬN điều kiện lần đầu — không ph�
 msgstr "The moment the system FIRST RECORDED the condition — not the moment an operator opened the screen to look, and not the moment the alarm was raised again later: a later occurrence adds to \"times raised\" and updates \"last seen\", while this stamp stays put."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Trong số đã chọn có cảnh báo đang thuộc một gốc KHÁC. Gỡ nó ra trước — một cảnh báo chỉ thuộc một sự cố."
 msgstr "Some of the selected alarms already belong to a DIFFERENT root. Detach them first — an alarm belongs to one incident only."
@@ -1148,6 +1186,7 @@ msgid "Trị số lúc nổ"
 msgstr "Value when raised"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "TÁI PHÁT lần thứ %d sau sửa — đừng sửa lại y như lần trước, hãy xem lại nguyên nhân gốc."
 msgstr "RECURRENCE number %d after repair — do not repeat the same fix; look again at the root cause."
@@ -1251,6 +1290,7 @@ msgid "Xác nhận"
 msgstr "Acknowledge"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Xác nhận %d cảnh báo"
 msgstr "Acknowledge %d alarms"
@@ -1277,6 +1317,7 @@ msgid "Xác nhận lúc"
 msgstr "Acknowledged at"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Xác nhận: %s"
 msgstr "Acknowledged: %s"
@@ -1314,6 +1355,7 @@ msgstr ""
 "                        is real, it has been left too long."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/canh_bao_diem_do.py:0
 msgid "ngưỡng %.2f"
 msgstr "threshold %.2f"
@@ -1341,6 +1383,7 @@ msgstr ""
 "                        will be the same."
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "thấp hơn"
 msgstr "below"
@@ -1352,6 +1395,7 @@ msgid "tái phát"
 msgstr "recurrence"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "vượt"
 msgstr "above"
@@ -1463,6 +1507,7 @@ msgid "Đã nổ"
 msgstr "Raised"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm.py:0
 msgid "Đã nổ %d lần."
 msgstr "Raised %d times."
@@ -1473,6 +1518,7 @@ msgid "Đã xác nhận"
 msgstr "Acknowledged"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/van_hanh_canh_bao.py:0
 msgid "Đã xác nhận %(a)d cảnh báo. BỎ QUA %(b)d cái vì chúng không còn ở trạng thái \"Mới\" hoặc đã có người xác nhận trước."
 msgstr "Acknowledged %(a)d alarms. SKIPPED %(b)d because they are no longer \"New\" or someone had already acknowledged them."
@@ -1529,6 +1575,7 @@ msgid "Đồng hồ"
 msgstr "Meter"
 
 #. module: eam_alarm
+#. odoo-python
 #: code:addons/eam_alarm/models/eam_alarm_rule.py:0
 msgid "Đồng hồ chưa có số đọc nào."
 msgstr "The meter has no readings yet."

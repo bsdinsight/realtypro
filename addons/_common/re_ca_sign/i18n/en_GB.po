@@ -26,3 +26,8 @@ msgstr "Provider connection"
 msgid "Ký số CA"
 msgstr "CA digital signing"
 
+#. module: re_ca_sign
+#: model:ir.actions.act_window,name:re_ca_sign.action_re_ca_provider
+msgid "Kết nối nhà cung cấp"
+msgstr "Provider connections"
+

@@ -232,3 +232,38 @@ msgstr "Work not yet cleared to start"
 msgid "Đã cam kết theo hợp đồng"
 msgstr "Committed under contract"
 
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_rp_project_brief
+msgid "Bản tổng hợp dự án"
+msgstr "Project brief"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_task_critical
+msgid "Công việc trên đường găng toàn dự án"
+msgstr "Critical path tasks — whole project"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_task_late
+msgid "Công việc đang trượt tiến độ"
+msgstr "Tasks slipping"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_contract_value
+msgid "Hợp đồng — giá trị & dự báo"
+msgstr "Contracts — value & forecast"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_claim_open
+msgid "Khiếu nại đang mở"
+msgstr "Open claims"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_variation_money
+msgid "Phát sinh — tiền theo trạng thái"
+msgstr "Variations — value by status"
+
+#. module: rp_report
+#: model:ir.actions.act_window,name:rp_report.action_report_contract_ld
+msgid "Phạt chậm dự kiến"
+msgstr "Expected liquidated damages"
+

@@ -71,3 +71,43 @@ msgstr "IPC (payment certificates)"
 msgid "Loại tiền"
 msgstr "Currency"
 
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_partner_owner
+msgid "Chủ đầu tư"
+msgstr "Project owners"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_owner_invoice
+msgid "Hoá đơn phát hành CĐT"
+msgstr "Invoices issued to owner"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_rp_owner_contract
+msgid "HĐ với Chủ đầu tư"
+msgstr "Owner contracts"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_rp_owner_ipc
+msgid "IPC — Chứng nhận thanh toán"
+msgstr "IPC — Interim payment certificates"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_owner_cashflow
+msgid "Kế hoạch dòng tiền thu"
+msgstr "Cash receipt forecast"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_rp_owner_acceptance
+msgid "Nghiệm thu gửi CĐT"
+msgstr "Acceptances submitted to owner"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_owner_receipt
+msgid "Thu tiền (Receipt)"
+msgstr "Receipts"
+
+#. module: rp_owner_contract
+#: model:ir.actions.act_window,name:rp_owner_contract.action_rp_owner_advance
+msgid "Tạm ứng CĐT"
+msgstr "Owner advances"
+

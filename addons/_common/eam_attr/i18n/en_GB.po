@@ -33,6 +33,7 @@ msgid "Chép thuộc tính từ nhóm cha"
 msgstr "Copy the attributes from the parent group"
 
 #. module: eam_attr
+#. odoo-python
 #: code:addons/eam_attr/models/eam_asset_category.py:0
 msgid "Chỉ thêm thuộc tính còn thiếu; phần đã khai ở nhóm này giữ nguyên."
 msgstr "Only the missing attributes are added; anything already declared on this group is left as it is."
@@ -67,11 +68,13 @@ msgstr ""
 "                        below to copy them deliberately."
 
 #. module: eam_attr
+#. odoo-python
 #: code:addons/eam_attr/models/eam_asset_category.py:0
 msgid "Nhóm \"%s\" không có nhóm cha để chép."
 msgstr "Group \"%s\" has no parent group to copy from."
 
 #. module: eam_attr
+#. odoo-python
 #: code:addons/eam_attr/models/eam_asset_category.py:0
 msgid "Nhóm cha \"%s\" chưa khai thuộc tính nào."
 msgstr "Parent group \"%s\" has no attribute declared."
@@ -98,6 +101,7 @@ msgid "Thông số kỹ thuật của nhóm"
 msgstr "The group's specifications"
 
 #. module: eam_attr
+#. odoo-python
 #: code:addons/eam_attr/models/eam_asset_category.py:0
 msgid "Đã chép %s thuộc tính"
 msgstr "Copied %s attributes"

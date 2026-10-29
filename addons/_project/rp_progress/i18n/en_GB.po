@@ -132,3 +132,28 @@ msgstr "Schedule status"
 msgid "Trọng số theo giá trị dự toán: Σ(structure.progress × structure.estimate_value) / Σ(structure.estimate_value)."
 msgstr "Weighted by estimated value: Σ(structure.progress × structure.estimate_value) / Σ(structure.estimate_value)."
 
+#. module: rp_progress
+#: model:ir.actions.act_window,name:rp_progress.action_rp_progress_acceptance
+msgid "BBN Nghiệm thu KL"
+msgstr "Quantity acceptance certificates"
+
+#. module: rp_progress
+#: model:ir.actions.act_window,name:rp_progress.action_rp_structure_estimate
+msgid "Dự toán"
+msgstr "Detailed estimates"
+
+#. module: rp_progress
+#: model:ir.actions.act_window,name:rp_progress.action_rp_progress_uom
+msgid "Đơn vị tính (Xây dựng)"
+msgstr "Units of measure (construction)"
+
+#. module: rp_progress
+#: model:ir.actions.server,name:rp_progress.action_rp_package_reconcile_open
+msgid "Đối chiếu — theo gói thầu"
+msgstr "Reconciliation — by package"
+
+#. module: rp_progress
+#: model:ir.actions.server,name:rp_progress.action_rp_cost_reconcile_open
+msgid "Đối chiếu — theo nhóm chi phí"
+msgstr "Reconciliation — by cost group"
+

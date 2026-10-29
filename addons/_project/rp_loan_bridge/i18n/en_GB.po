@@ -52,6 +52,7 @@ msgid "Gói thầu"
 msgstr "Tender packages"
 
 #. module: rp_loan_bridge
+#. odoo-python
 #: code:addons/rp_loan_bridge/models/re_loan_facility.py:0
 #: model:ir.model.fields,field_description:rp_loan_bridge.field_account_bank_statement_line__contract_id
 #: model:ir.model.fields,field_description:rp_loan_bridge.field_account_move__contract_id
@@ -78,4 +79,24 @@ msgstr "Project documents"
 #: model:ir.model.fields,field_description:rp_loan_bridge.field_rp_loan_disbursement_dossier__doc_folder_id
 msgid "Thư mục hồ sơ"
 msgstr "Document folders"
+
+#. module: rp_loan_bridge
+#: model:ir.actions.act_window,name:rp_loan_bridge.action_supplier_debt
+msgid "Công nợ nhà thầu / NCC"
+msgstr "Contractor & supplier payables"
+
+#. module: rp_loan_bridge
+#: model:ir.actions.act_window,name:rp_loan_bridge.action_rp_loan_disbursement_dossier
+msgid "Giải ngân qua khế ước"
+msgstr "Disbursement dossiers by note"
+
+#. module: rp_loan_bridge
+#: model:ir.actions.act_window,name:rp_loan_bridge.action_account_move_contractor_invoice
+msgid "Hóa đơn HĐ nhà thầu"
+msgstr "Contractor invoices"
+
+#. module: rp_loan_bridge
+#: model:ir.actions.act_window,name:rp_loan_bridge.action_rp_loan_allocation
+msgid "Phân bổ vay theo công trình"
+msgstr "Loan allocation by works"
 

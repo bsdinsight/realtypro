@@ -90,3 +90,8 @@ msgstr ""
 "interface points the receiving side needs BEFORE the giving\n"
 "                            side can finish."
 
+#. module: rp_interface
+#: model:ir.actions.act_window,name:rp_interface.action_rp_interface
+msgid "Ranh giới gói thầu"
+msgstr "Interface register"
+

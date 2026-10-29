@@ -137,6 +137,7 @@ msgid "Số biên bản"
 msgstr "Certificate number"
 
 #. module: rp_purchase
+#. odoo-python
 #: code:addons/rp_purchase/models/rp_purchase_request.py:0
 #: model:ir.model.fields,field_description:rp_purchase.field_re_project__purchase_order_ids
 #: model:ir.model.fields,field_description:rp_purchase.field_rp_goods_receipt__purchase_order_id
@@ -152,4 +153,34 @@ msgstr "Purchase orders"
 #: model:ir.model.fields,help:rp_purchase.field_re_project__owner_cost_committed
 msgid "Σ đơn mua ĐÃ XÁC NHẬN của dự án. Đơn nháp không tính — chưa xác nhận thì chưa ràng buộc ai cả."
 msgstr "Σ of the project's CONFIRMED purchase orders. Draft orders do not count — until confirmed they bind nobody."
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_procure_vendor_bills
+msgid "Hoá đơn nhà cung cấp"
+msgstr "Vendor bills"
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_rp_goods_receipt
+msgid "Nhận hàng & nghiệm thu"
+msgstr "Goods receipt & acceptance"
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_procure_payments
+msgid "Thanh toán"
+msgstr "Payments"
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_rp_purchase_request
+msgid "Yêu cầu mua sắm"
+msgstr "Purchase requests"
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_rp_purchase_order
+msgid "Đơn mua (chủ đầu tư)"
+msgstr "Purchase orders (owner)"
+
+#. module: rp_purchase
+#: model:ir.actions.act_window,name:rp_purchase.action_rp_payment_request
+msgid "Đề nghị thanh toán"
+msgstr "Payment requests"
 

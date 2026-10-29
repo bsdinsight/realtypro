@@ -371,6 +371,7 @@ msgid "Nhà máy"
 msgstr "Plant"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "Nhà máy chưa khai tổ máy nào. Mở hồ sơ nhà máy và bấm \"Đánh dấu tổ máy theo điểm đo\", hoặc tích tay — hệ KHÔNG đoán, vì đoán là đưa cả trạm khí tượng vào bảng."
 msgstr "The plant declares no units. Open the plant record and press \"Mark units by their tags\", or tick them by hand — the system does NOT guess, because guessing puts the weather station into the table."
@@ -524,31 +525,37 @@ msgid "Vị trí chức năng"
 msgstr "Functional location"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "chưa có sản lượng thì chưa có tử số"
 msgstr "without an energy figure there is no numerator"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "chưa khai công suất định mức cho tổ máy — chia cho một con số đoán bừa thì ra tỷ lệ trông hợp lý và sai"
 msgstr "the unit declares no rated power — dividing by a guessed number gives a plausible-looking ratio that is wrong"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "chưa đủ số hai phía để tính hiệu suất biến đổi"
 msgstr "not enough readings on both sides to compute the conversion efficiency"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_location.py:0
 msgid "công suất đặt khai trên vị trí"
 msgstr "the installed capacity declared on the location"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "tổ máy chưa khai điểm đo phía một chiều"
 msgstr "the unit declares no DC-side tag"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "tổ máy không có điểm đo điện năng nào có số trong ngày này"
 msgstr "the unit has no energy tag with a reading for this day"
@@ -564,6 +571,7 @@ msgid "Đo được khả dụng"
 msgstr "Availability measured"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_location.py:0
 msgid "Đánh dấu %(a)d vị trí là tổ máy (có điểm đo điện năng). Bỏ qua %(b)d vị trí không có điểm đo điện năng — soi lại nếu trong đó có tổ máy chưa gắn đồng hồ."
 msgstr "Marked %(a)d locations as units (they have an energy tag). Skipped %(b)d locations with no energy tag — look again if any of them is a unit whose meter has not been attached."
@@ -574,6 +582,7 @@ msgid "Đánh dấu tổ máy theo điểm đo"
 msgstr "Mark units by their tags"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_location.py:0
 msgid "Đã khai %(a)d tổ máy, nhưng mẫu số khả dụng đang dùng %(b)d đơn vị. Hai con số này nói cùng một chuyện — lệch nghĩa là một trong hai khai sai."
 msgstr "%(a)d units are declared, but the availability denominator is using %(b)d. The two figures describe the same thing — a difference means one of them is declared wrongly."
@@ -600,16 +609,19 @@ msgid "Đồng bộ lúc"
 msgstr "Synchronised at"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "điểm đo phía một chiều chưa khai nhịp lấy mẫu, không tích phân ra điện năng được"
 msgstr "the DC-side tag declares no sampling interval, so energy cannot be integrated from it"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_unit_day.py:0
 msgid "điểm đo phía một chiều không có số trong ngày"
 msgstr "the DC-side tag has no reading for the day"
 
 #. module: eam_unit_day
+#. odoo-python
 #: code:addons/eam_unit_day/models/eam_location.py:0
 msgid "đường cong công suất \"%s\""
 msgstr "power curve \"%s\""

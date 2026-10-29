@@ -120,6 +120,7 @@ msgid "Danh sách công việc"
 msgstr "Task list"
 
 #. module: rp_schedule
+#. odoo-python
 #: code:addons/rp_schedule/models/project_task.py:0
 #: model:ir.actions.client,name:rp_schedule.action_rp_schedule_gantt
 #: model:ir.ui.menu,name:rp_schedule.menu_rp_schedule_gantt
@@ -273,4 +274,30 @@ msgstr ""
 "                            the schedule overlaps while still recorded as\n"
 "                            finish-to-start. Float and the critical path are only\n"
 "                            trustworthy once this is fixed."
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_schedule_baseline
+msgid "Bản chụp lịch (baseline)"
+msgstr "Schedule baselines"
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_schedule_my_tasks
+msgid "Công việc của tôi"
+msgstr "My tasks"
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_schedule_tasks
+msgid "Lịch thi công (công việc)"
+msgstr "Construction schedule — tasks"
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_milestones
+#: model:ir.actions.client,name:rp_schedule.action_rp_milestone_gantt
+msgid "Mốc chính"
+msgstr "Key milestones"
+
+#. module: rp_schedule
+#: model:ir.actions.act_window,name:rp_schedule.action_rp_task_link
+msgid "Quan hệ trước–sau"
+msgstr "Task dependencies"
 

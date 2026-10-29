@@ -27,3 +27,8 @@ msgstr "Advance payments"
 msgid "HĐ nhà thầu"
 msgstr "Contractor agreements"
 
+#. module: rp_advance_payment
+#: model:ir.actions.act_window,name:rp_advance_payment.action_rp_advance_payment
+msgid "Tạm ứng"
+msgstr "Advance payments"
+

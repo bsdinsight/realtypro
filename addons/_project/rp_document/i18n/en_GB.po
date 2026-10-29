@@ -114,6 +114,7 @@ msgid "Hồ sơ dự án"
 msgstr "Project documents"
 
 #. module: rp_document
+#. odoo-python
 #: code:addons/rp_document/models/rp_contract.py:0
 #: model:ir.model.fields,field_description:rp_document.field_re_project__document_ids
 #: model:ir.model.fields,field_description:rp_document.field_rp_contract__document_ids
@@ -190,4 +191,19 @@ msgstr ""
 "documents are past the 21 days of clause 5.2 — the contractor\n"
 "                            is entitled to use exactly those days to claim an\n"
 "                            extension."
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document_overdue
+msgid "Hồ sơ bên mình giữ quá hạn"
+msgstr "Documents overdue with us"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_transmittal
+msgid "Phiếu chuyển hồ sơ"
+msgstr "Transmittals"
+
+#. module: rp_document
+#: model:ir.actions.act_window,name:rp_document.action_rp_document
+msgid "Sổ hồ sơ kỹ thuật"
+msgstr "Document register"
 

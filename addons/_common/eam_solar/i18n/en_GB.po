@@ -79,6 +79,7 @@ msgid "Bộ giám sát dòng chuỗi"
 msgstr "String current monitor"
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_solar_weather.py:0
 msgid "Bức xạ %s kW/m² vượt hằng số mặt trời. Kiểm lại đơn vị: có thể đang nhập W/m²."
 msgstr "An irradiance of %s kW/m² exceeds the solar constant. Check the unit: this may be W/m²."
@@ -104,6 +105,7 @@ msgid "Chưa có ngày nào"
 msgstr "No day yet"
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_location.py:0
 msgid "Chỉ bật \"Nhà máy điện mặt trời\" cho vị trí cấp NHÀ MÁY. \"%s\" đang là %s."
 msgstr "Only turn \"Solar PV plant\" on for a PLANT-level location. \"%s\" is %s."
@@ -208,6 +210,7 @@ msgid "Hiệu suất mô-đun (%)"
 msgstr "Module efficiency (%)"
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_location.py:0
 msgid "Hiệu suất mô-đun phải khai theo PHẦN TRĂM (ví dụ 17,4 chứ không phải 0,174). Đang nhận: %s."
 msgstr "Module efficiency has to be declared as a PERCENTAGE (17.4, not 0.174). It is: %s."
@@ -317,6 +320,7 @@ msgid "Khí tượng ngày — điện mặt trời"
 msgstr "Daily weather — solar PV"
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_location.py:0
 msgid "Khí tượng — %s"
 msgstr "Weather — %s"
@@ -327,6 +331,7 @@ msgid "Không đạt cam kết"
 msgstr "Commitment not met"
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_solar_kpi.py:0
 msgid "Khả dụng phải nằm trong 0–100%%, đang nhận %s."
 msgstr "Availability has to lie between 0 and 100%%; it is %s."
@@ -671,6 +676,7 @@ msgid "Tổng năng lượng mặt trời tới mặt mô-đun trong ngày. Đâ
 msgstr "The total solar energy reaching the module surface during the day. This is the DENOMINATOR of the performance ratio — get this field wrong and the whole KPI is wrong."
 
 #. module: eam_solar
+#. odoo-python
 #: code:addons/eam_solar/models/eam_solar_weather.py:0
 msgid "Tổng xạ %s kWh/m²/ngày là bất thường — mức cao nhất ghi nhận trên Trái Đất quanh 9. Kiểm lại đơn vị: có thể đang nhập Wh/m² thay vì kWh/m²."
 msgstr "An irradiation of %s kWh/m²/day is implausible — the highest recorded anywhere on Earth is around 9. Check the unit: this may be Wh/m² rather than kWh/m²."

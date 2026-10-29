@@ -111,3 +111,52 @@ msgstr "Passed the acceptance gate in the erection register but absent from any 
 msgid "Dự án"
 msgstr "Projects"
 
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Dự án vận hành"
+msgstr "Operating projects"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Mã dự án"
+msgstr "Project code"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Tên dự án"
+msgstr "Project name"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Nhà máy"
+msgstr "Plant"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+msgid "Loại"
+msgstr "Type"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_list
+msgid "Vận hành từ"
+msgstr "In operation since"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Chưa nối nhà máy"
+msgstr "Not linked to a plant"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Điện gió"
+msgstr "Wind"
+
+#. module: rp_handover
+#: model_terms:ir.ui.view,arch_db:rp_handover.view_eam_project_search
+msgid "Điện mặt trời"
+msgstr "Solar PV"
+

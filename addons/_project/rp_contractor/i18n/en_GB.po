@@ -26,3 +26,18 @@ msgstr "Suppliers"
 msgid "Ward / Phường-Xã"
 msgstr "Ward"
 
+#. module: rp_contractor
+#: model:ir.actions.act_window,name:rp_contractor.action_rp_contractor_specialty
+msgid "Chuyên môn nhà thầu"
+msgstr "Contractor specialities"
+
+#. module: rp_contractor
+#: model:ir.actions.act_window,name:rp_contractor.action_partner_supplier
+msgid "Nhà cung cấp"
+msgstr "Suppliers"
+
+#. module: rp_contractor
+#: model:ir.actions.act_window,name:rp_contractor.action_partner_contractor
+msgid "Nhà thầu"
+msgstr "Contractors"
+

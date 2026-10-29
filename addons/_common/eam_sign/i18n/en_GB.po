@@ -148,11 +148,13 @@ msgid "Cam kết"
 msgstr "Commitment"
 
 #. module: eam_sign
+#. odoo-python
 #: code:addons/eam_sign/models/eam_daily_report.py:0
 msgid "Chỉ ký số được bản ĐÃ CHỐT. Bản này đang ở trạng thái \"%s\" — số còn rót lại được, ký bây giờ là đóng dấu vào con số sẽ đổi."
 msgstr "Only a CLOSED revision can be digitally signed. This one is at \"%s\" — the figures can still be refilled, and signing now stamps a figure that will change."
 
 #. module: eam_sign
+#. odoo-python
 #: code:addons/eam_sign/models/eam_om_period.py:0
 msgid "Chỉ ký được kỳ ĐÃ CHỐT. Kỳ này đang ở \"%s\" — mức cam kết và phí chưa đóng băng, đo lại một lượt là số đổi."
 msgstr "Only a CLOSED period can be signed. This one is at \"%s\" — the committed levels and the fee are not frozen, and one more measurement run changes the figures."
@@ -226,6 +228,7 @@ msgid "Kỳ"
 msgstr "Period"
 
 #. module: eam_sign
+#. odoo-python
 #: code:addons/eam_sign/models/eam_om_period.py:0
 msgid "Kỳ này còn cảnh báo nên chưa nên ký: có dòng chưa đo được, hoặc giờ dừng chưa quy trách nhiệm vượt ngưỡng. Con số khả dụng có thể đang đẹp vì chưa ai phân loại — phân loại xong, đo lại, chốt lại rồi hãy ký."
 msgstr "This period still has a warning, so it should not be signed yet: some rows could not be measured, or the unattributed downtime hours exceed the threshold. The availability figure may be flattering simply because nobody has classified them — classify them, measure again, close again, and only then sign."
@@ -284,11 +287,13 @@ msgid "Tình trạng ký"
 msgstr "Signature status"
 
 #. module: eam_sign
+#. odoo-python
 #: code:addons/eam_sign/models/eam_om_period.py:0
 msgid "Xác nhận KPI/SLA kỳ %(a)s → %(b)s"
 msgstr "Confirming KPI/SLA for the period %(a)s → %(b)s"
 
 #. module: eam_sign
+#. odoo-python
 #: code:addons/eam_sign/models/eam_daily_report.py:0
 msgid "Xác nhận báo cáo vận hành ngày %s"
 msgstr "Confirming the daily operations report for %s"

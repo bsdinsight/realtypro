@@ -29,21 +29,25 @@ msgid "Cấp mã quét"
 msgstr "Issue a scan code"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Không có %(loai)s nào mang mã \"%(ma)s\". Tem có thể đã được cấp lại mã, hoặc bản ghi đã bị xoá. Đừng ghi số đo vào một hồ sơ khác — báo người quản lý tài sản để in tem mới."
 msgstr "No %(loai)s carries the code \"%(ma)s\". The label may have been reissued, or the record deleted. Do not record readings against another record — tell the asset manager to print a new label."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/models/eam_qr_mixin.py:0
 msgid "Không có thiết bị nào mang mã \"%s\"."
 msgstr "No equipment carries the code \"%s\"."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/models/eam_qr_mixin.py:0
 msgid "Không có vị trí nào mang mã \"%s\". Tem có thể đã được cấp lại mã — đừng ghi số đo vào hồ sơ khác, báo người quản lý tài sản."
 msgstr "No location carries the code \"%s\". The label may have been reissued — do not record readings against another record; tell the asset manager."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Không tìm thấy tem"
 msgstr "Label not found"
@@ -56,11 +60,13 @@ msgid "Mã in trên tem QR dán ngoài hiện trường. Ngẫu nhiên, có ti�
 msgstr "The code printed on the QR label out in the field. Random, with a prefix by type — not a sequence number, so that nobody can work out how much equipment the plant has."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Mã không đúng dạng"
 msgstr "The code is malformed"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/models/eam_qr_mixin.py:0
 msgid "Mã phải bắt đầu bằng \"L\" (tem vị trí) hoặc \"A\" (tem thiết bị). Nhận được: %s"
 msgstr "The code has to start with \"L\" (a location label) or \"A\" (an equipment label). Received: %s"
@@ -75,6 +81,7 @@ msgid "Mã quét"
 msgstr "Scan code"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Mã quét phải bắt đầu bằng \"L\" (tem vị trí) hoặc \"A\" (tem thiết bị). Mã nhận được: %s"
 msgstr "A scan code has to start with \"L\" (a location label) or \"A\" (an equipment label). Received: %s"
@@ -90,6 +97,7 @@ msgid "Mã quét vị trí không được trùng."
 msgstr "The location scan code must be unique."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Mở hồ sơ vị trí"
 msgstr "Open the location record"
@@ -150,11 +158,13 @@ msgstr ""
 "                    equipment needs no new label."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/models/eam_qr_mixin.py:0
 msgid "Tem không mang mã nào."
 msgstr "The label carries no code."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Tem này là tem của vị trí %(ma)s — %(ten)s. Hôm nay không có thiết bị nào đang lắp ở đó, nên không mở được hồ sơ thiết bị."
 msgstr "This is the label of location %(ma)s — %(ten)s. No equipment is installed there today, so no equipment record can be opened."
@@ -166,6 +176,7 @@ msgid "Tem quét hiện trường"
 msgstr "Field scan labels"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Tem trống"
 msgstr "Blank label"
@@ -176,26 +187,31 @@ msgid "Về trang chính"
 msgstr "Back to the main page"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Vị trí đang trống"
 msgstr "The location is empty"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "thiết bị"
 msgstr "equipment"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "vị trí"
 msgstr "location"
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/models/eam_qr_mixin.py:0
 msgid "Đã đổi mã quét. Tem cũ dán ngoài hiện trường không còn mở được gì — phải in và dán lại."
 msgstr "The scan code has been reissued. Old labels out in the field no longer open anything — they have to be reprinted and refitted."
 
 #. module: eam_qr
+#. odoo-python
 #: code:addons/eam_qr/controllers/main.py:0
 msgid "Đường dẫn không mang mã nào."
 msgstr "The URL carries no code."

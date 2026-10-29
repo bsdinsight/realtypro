@@ -17,16 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid " (hết hạn %s)"
 msgstr " (expired %s)"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "%(nv)s đã làm việc này nhưng chứng chỉ %(kn)s hết hạn %(d)s."
 msgstr "%(nv)s carried out this work but their %(kn)s certificate expired on %(d)s."
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "%(nv)s đã làm việc này nhưng không có %(kn)s."
 msgstr "%(nv)s carried out this work without %(kn)s."
@@ -82,6 +85,7 @@ msgid "Chứng chỉ / kỹ năng"
 msgstr "Certificate / skill"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/hr_employee_skill.py:0
 msgid "Chứng chỉ <b>%(ten)s</b> hết hạn ngày %(d)s — còn %(n)d ngày. Hết hạn là lỗi xếp lịch đào tạo, sửa được trong tuần; để quá hạn rồi mới biết thì mất cả buổi của một đội."
 msgstr "Certificate <b>%(ten)s</b> expires on %(d)s — %(n)d days left. An expiry is a training scheduling failure, fixable within the week; finding out only once it has lapsed costs a crew half a day."
@@ -92,6 +96,7 @@ msgid "Chứng chỉ của tổ"
 msgstr "The crew's certificates"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Chứng chỉ của tổ — %s"
 msgstr "The crew's certificates — %s"
@@ -130,6 +135,7 @@ msgid "Còn hiệu lực"
 msgstr "Still valid"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Có người ghi giờ công mà không nằm trong tổ được phân công: %s."
 msgstr "Someone recorded labour hours without being on the assigned crew: %s."
@@ -160,6 +166,7 @@ msgid "GWO — Làm việc trên cao"
 msgstr "GWO — Working at Height"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Ghi nhận sau khi làm (không chặn đóng lệnh):"
 msgstr "Recorded after the fact (does not block closing the order):"
@@ -195,6 +202,7 @@ msgid "Hiệu lực từ"
 msgstr "Valid from"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "HẾT HẠN (lỗi xếp lịch đào tạo — gia hạn được trong tuần):"
 msgstr "EXPIRED (a training scheduling failure — renewable within the week):"
@@ -210,6 +218,7 @@ msgid "Khai TRƯỚC khi bắt đầu. Đây là danh sách bị cổng năng l�
 msgstr "Declare it BEFORE starting. This is the list the competence gate checks — a labour-hour line recorded afterwards is only noted, it does not block."
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Không ai đủ cả %s vào ngày này"
 msgstr "Nobody holds all of %s on this date"
@@ -239,6 +248,7 @@ msgid "Làm việc trong không gian hạn chế"
 msgstr "Confined space working"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Lệnh \"%(ten)s\" yêu cầu năng lực (%(kn)s) nhưng chưa khai tổ được phân công — nên không kiểm được ai sẽ làm."
 msgstr "Order \"%(ten)s\" requires competence (%(kn)s) but has no crew assigned — so there is no checking who will do it."
@@ -253,6 +263,7 @@ msgstr ""
 "                        there is no checking who will do it."
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Lệnh này chưa khai năng lực yêu cầu, nên chưa có gì để lọc người."
 msgstr "This order declares no competence requirement, so there is nothing to filter people by."
@@ -310,6 +321,7 @@ msgstr ""
 "               anything. This list is for seeing it in advance."
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Soi hiệu lực tại ngày làm: %s."
 msgstr "Validity checked on the work date: %s."
@@ -350,6 +362,7 @@ msgid "Sửa chữa cánh quạt"
 msgstr "Blade repair"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "THIẾU HẲN (lỗi kế hoạch nhân lực — mất hàng tháng để bù, hoặc phải thuê ngoài):"
 msgstr "MISSING ALTOGETHER (a workforce planning failure — months to make up, or it has to be subcontracted):"
@@ -391,6 +404,7 @@ msgid "Tổ & năng lực"
 msgstr "Crew & competence"
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid ""
 "Tổ của lệnh \"%(ten)s\" chưa đủ năng lực:\n"
@@ -441,6 +455,7 @@ msgstr ""
 "               truth about the same piece of paper."
 
 #. module: eam_competency
+#. odoo-python
 #: code:addons/eam_competency/models/eam_work_order.py:0
 msgid "Đủ năng lực ngày %s"
 msgstr "Competent on %s"

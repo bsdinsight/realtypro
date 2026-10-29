@@ -27,6 +27,7 @@ msgid "Bất khả kháng & môi trường"
 msgstr "Force majeure & environment"
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid ""
 "Chưa tính được: %s\n"
@@ -282,21 +283,25 @@ msgid "Vì sao chưa tính được"
 msgstr "Why it could not be computed"
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid "biểu giá %s, kỳ %s → %s"
 msgstr "tariff %s, period %s → %s"
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid "chưa biết giá — nhà máy chưa có hợp đồng mua bán điện và cũng chưa khai giá; để trống còn hơn nhân với 0"
 msgstr "the price is unknown — the plant has no power purchase agreement and no price declared; leaving it empty is better than multiplying by 0"
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid "giá gốc của %s"
 msgstr "the list price of %s"
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid "giá khai trên nhà máy %s"
 msgstr "the price declared on plant %s"
@@ -317,6 +322,7 @@ msgid "Đánh dấu đúng MỘT nhóm. Giờ cắt giảm bị trừ khi tính 
 msgstr "Mark exactly ONE group. Curtailment hours are deducted when computing the operating hours used for the performance ratio — the machine was still available, the grid simply would not take it. Without the mark, the two ways of computing operating hours give the same figure, and the performance section is wrong with it."
 
 #. module: eam_downtime
+#. odoo-python
 #: code:addons/eam_downtime/models/eam_outage.py:0
 msgid "Đã XOÁ con số cũ do máy tính ở lượt trước, vì lượt này không dựng lại được: %s"
 msgstr "The old figure computed by the system on the previous run has been DELETED, because this run could not rebuild it: %s"

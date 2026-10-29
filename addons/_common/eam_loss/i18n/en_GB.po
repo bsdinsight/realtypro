@@ -27,31 +27,37 @@ msgid "% của mốc tài nguyên."
 msgstr "% of the resource baseline."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "%(n)d khoảng dừng · %(g).2f giờ-máy"
 msgstr "%(n)d outages · %(g).2f unit-hours"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "%(n)d/%(t)d mốc đo có gió VƯỢT dải đường cong — không biết là máy đã cắt vì bão hay đường cong chỉ khai tới đó, nên không cộng vào mốc; mốc tài nguyên đang THẤP hơn thật đúng phần ấy"
 msgstr "%(n)d/%(t)d samples had wind ABOVE the curve's range — there is no telling whether the machine shut down for a storm or the curve simply stops there, so they are not added to the baseline; the resource baseline is LOWER than reality by exactly that much"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "%(n)d/%(t)d tổ máy có lúc chạm trần"
 msgstr "%(n)d/%(t)d units hit the limit at some point"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "%(n)d/%(t)d tổ máy thiếu số đo gió: %(d)s"
 msgstr "%(n)d/%(t)d units have no wind reading: %(d)s"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "%d tổ máy có số hai phía, không mốc nào chạm trần"
 msgstr "%d units have readings on both sides; no sample hit the limit"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "(1 − Ft) × mốc chuẩn · Ft = %(f).4f, mốc tham chiếu %(t).1f °C, mô-đun %(m).1f °C"
 msgstr "(1 − Ft) × the reference baseline · Ft = %(f).4f, reference %(t).1f °C, module %(m).1f °C"
@@ -132,6 +138,7 @@ msgid "Chưa khai thì KHÔNG coi mốc bằng 0 — hai chuyện khác hẳn nh
 msgstr "Where nothing is declared, the baseline is NOT taken as 0 — the two are quite different, and confusing them breeds orphan figures."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 #: model_terms:ir.ui.view,arch_db:eam_loss.view_eam_loss_line_search
 msgid "Chưa quy được"
@@ -328,11 +335,13 @@ msgid "Kỹ thuật & suy giảm"
 msgstr "Engineering & degradation"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_type.py:0
 msgid "Loại \"%s\" lấy số từ chuỗi điểm đo thì phải khai mã bậc."
 msgstr "Loss type \"%s\" takes its figure from the metering chain, so a stage code is required."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_type.py:0
 msgid "Loại \"%s\" lấy số từ sổ dừng máy thì phải chọn nhóm giờ dừng."
 msgstr "Loss type \"%s\" takes its figure from the outage log, so a downtime group has to be chosen."
@@ -425,6 +434,7 @@ msgid "Mất dữ liệu giám sát"
 msgstr "Loss of monitoring data"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Mốc kế hoạch P50"
 msgstr "P50 plan baseline"
@@ -440,6 +450,7 @@ msgid "Mốc kế hoạch trừ mốc tài nguyên. Dương nghĩa là trời ch
 msgstr "The plan baseline less the resource baseline. Positive means the weather gave less than a P50 year — nobody did anything wrong."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Mốc tài nguyên"
 msgstr "Resource baseline"
@@ -470,6 +481,7 @@ msgid "Mục tiêu tháng chia đều theo ngày. Là cam kết TÀI CHÍNH, kh�
 msgstr "The monthly target spread evenly across the days. It is a FINANCIAL commitment, not a forecast for that particular day."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_expect.py:0
 msgid "Mức kỳ vọng phải nằm trong khoảng 0–100%%. Đang khai %(gt)s%% cho \"%(loai)s\"."
 msgstr "The expected level has to lie between 0 and 100%%. It is %(gt)s%% for \"%(loai)s\"."
@@ -643,6 +655,7 @@ msgid "Thứ tự TRỪ trên biểu đồ thác nước. Đổi thứ tự khô
 msgstr "The order of SUBTRACTION on the waterfall chart. Changing the order does not change the total, but it changes the story the sheet tells."
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Thực tế"
 msgstr "Actual"
@@ -675,11 +688,13 @@ msgid "Tiêu thụ có chủ đích (kWh)"
 msgstr "Intentional consumption (kWh)"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Trời cho nhiều hơn P50"
 msgstr "The weather gave more than P50"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "Trời cho ít hơn P50"
 msgstr "The weather gave less than P50"
@@ -779,66 +794,79 @@ msgid "Vượt mức"
 msgstr "Above the level"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "bậc \"%s\" chưa có dòng ngày"
 msgstr "stage \"%s\" has no daily row"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "bậc %(m)s · %(t)s"
 msgstr "stage %(m)s · %(t)s"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "bức xạ × diện tích × hiệu suất mô-đun, ở điều kiện chuẩn — phần hụt do nhiệt hiện thành cột riêng"
 msgstr "irradiance × area × module efficiency, at standard conditions — the thermal shortfall appears as a column of its own"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "chưa có hệ số hiệu chỉnh nhiệt — thiếu nhiệt độ mô-đun hoặc hệ số nhiệt của tấm pin"
 msgstr "there is no temperature correction factor — the module temperature or the panel's temperature coefficient is missing"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "chưa khai mục tiêu"
 msgstr "no target declared"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "chưa tổ máy nào gắn đường cong công suất — không suy được \"lẽ ra phát bao nhiêu với gió hôm nay\""
 msgstr "no unit has a power curve attached — there is no deriving \"what should have been generated in today's wind\""
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "hiệu suất ngày %s chưa có điện năng danh định hoặc hiệu suất mô-đun"
 msgstr "daily performance for %s has no nominal energy or module efficiency"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "hệ chưa có bảng hiệu suất điện mặt trời"
 msgstr "the system has no solar performance table"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "không có khoảng dừng nhóm \"%s\" trong ngày"
 msgstr "there was no outage in group \"%s\" during the day"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "không tổ máy nào có số phía một chiều — không biết DC có vượt trần AC hay không"
 msgstr "no unit has a DC-side figure — there is no telling whether DC exceeded the AC limit"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "không tổ máy nào có số đo gió trong ngày"
 msgstr "no unit has a wind reading for the day"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "loại này do người nhập tay"
 msgstr "this type is entered by hand"
 
 #. module: eam_loss
+#. odoo-python
 #: code:addons/eam_loss/models/eam_loss_day.py:0
 msgid "ngày này chưa có dòng hiệu suất"
 msgstr "there is no performance row for this day"

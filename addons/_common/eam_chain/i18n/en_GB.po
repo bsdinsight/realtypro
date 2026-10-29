@@ -112,6 +112,7 @@ msgid "Chuỗi"
 msgstr "Chain"
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_chain.py:0
 msgid "Chuỗi \"%(c)s\" đã có bậc khác đánh dấu là %(t)s. Chỉ được MỘT — hai mốc thì không biết lấy cái nào."
 msgstr "Chain \"%(c)s\" already has another stage marked as %(t)s. Only ONE is allowed — with two reference points there is no telling which to use."
@@ -161,6 +162,7 @@ msgid "Chỉ bậc sản lượng"
 msgstr "Energy stages only"
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_chain.py:0
 msgid "Chỉ dựng cho bậc có gắn công-tơ. Bậc lấy số từ SCADA hoặc nhập tay thì điền riêng."
 msgstr "Only built for stages with a meter attached. A stage taking its figure from SCADA or entered by hand is filled in separately."
@@ -199,6 +201,7 @@ msgid "Công-tơ và SCADA lệch quá mức này thì dòng ngày bị gắn c�
 msgstr "When the meter and SCADA differ by more than this, the daily row is flagged."
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_solar_kpi.py:0
 msgid "Dòng không lấy được là do chuỗi chưa đánh dấu bậc \"Tử số tỷ số hiệu suất\". Cố ý không tự lấy bậc bán điện thay thế — hai mốc đó lệch nhau vài phần trăm."
 msgstr "The row could not be fetched because the chain has no stage marked as \"PR numerator\". It deliberately does not fall back to the sales stage — the two reference points differ by a few per cent."
@@ -386,6 +389,7 @@ msgid "Sản lượng theo bậc đo"
 msgstr "Energy by metering stage"
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_chain_day.py:0
 msgid "Sản lượng âm (%s kWh) ở bậc \"%s\" ngày %s. Hai nguyên nhân thường gặp: công-tơ vừa được thay mà chưa đánh dấu, hoặc hai số đọc bị đảo ngày."
 msgstr "Negative energy (%s kWh) at stage \"%s\" on %s. Two common causes: the meter has just been replaced without being marked, or two readings have had their dates swapped."
@@ -483,11 +487,13 @@ msgid "Điện tự dùng"
 msgstr "Auxiliary consumption"
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_chain.py:0
 msgid "Đã dựng %s dòng ngày"
 msgstr "Built %s daily rows"
 
 #. module: eam_chain
+#. odoo-python
 #: code:addons/eam_chain/models/eam_solar_kpi.py:0
 msgid "Đã lấy %s dòng"
 msgstr "Fetched %s rows"

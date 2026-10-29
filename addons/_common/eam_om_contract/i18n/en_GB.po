@@ -103,21 +103,25 @@ msgid "Cam kết"
 msgstr "Commitment"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_commitment.py:0
 msgid "Cam kết \"%(n)s\" trỏ tới nhà máy \"%(p)s\" không nằm trong phạm vi hợp đồng. Thêm nhà máy đó vào phạm vi trước, nếu không cam kết sẽ không bao giờ sinh dòng kết quả nào."
 msgstr "Commitment \"%(n)s\" points at plant \"%(p)s\", which is not within the contract scope. Add that plant to the scope first, otherwise the commitment will never produce a result row."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_commitment.py:0
 msgid "Cam kết \"%(n)s\" đo bằng phần trăm nên mức phải nằm trong 0–100, đang nhận %(m)s."
 msgstr "Commitment \"%(n)s\" is measured as a percentage, so the level has to lie between 0 and 100; it is %(m)s."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_commitment.py:0
 msgid "Cam kết \"%s\" có mức âm."
 msgstr "Commitment \"%s\" has a negative level."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_commitment.py:0
 msgid "Cam kết \"%s\" khai có chế tài nhưng mức phạt bằng 0 — mọi kỳ không đạt sẽ ra khoản phạt bằng 0 mà không có gì báo. Để \"Không phạt\" nếu hợp đồng không có chế tài."
 msgstr "Commitment \"%s\" declares a penalty regime but the rate is 0 — every period that fails produces a penalty of 0 with nothing to say so. Set \"No penalty\" if the contract has no regime."
@@ -429,21 +433,25 @@ msgid "Hợp đồng"
 msgstr "Contract"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Hợp đồng \"%(h)s\" khai múi giờ \"%(t)s\" không hợp lệ. Đo kỳ với múi giờ sai là chuyển giờ dừng sang kỳ bên cạnh, nên dừng ở đây thay vì ra một con số trông bình thường."
 msgstr "Contract \"%(h)s\" declares an invalid time zone \"%(t)s\". Measuring a period in the wrong time zone shifts downtime into the neighbouring period, so it stops here rather than producing a figure that looks ordinary."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_contract.py:0
 msgid "Hợp đồng \"%s\" chưa có ngày hết hiệu lực nên không biết dừng sinh kỳ ở đâu."
 msgstr "Contract \"%s\" has no expiry date, so there is no telling where to stop generating periods."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Hợp đồng \"%s\" chưa khai nhà máy nào trong phạm vi nên không có gì để đo."
 msgstr "Contract \"%s\" has no plant in scope, so there is nothing to measure."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_contract.py:0
 msgid "Hợp đồng \"%s\": ngày hết hiệu lực trước ngày hiệu lực."
 msgstr "Contract \"%s\": the expiry date is before the effective date."
@@ -481,6 +489,7 @@ msgstr ""
 "            produces the amount payable for each plant."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Khoảng dừng — %s, %s"
 msgstr "Outages — %s, %s"
@@ -535,16 +544,19 @@ msgid "Kỳ"
 msgstr "Period"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Kỳ %(k)s theo chu kỳ \"%(c)s\" nhưng hợp đồng không có cam kết nào chấm theo chu kỳ đó."
 msgstr "Period %(k)s runs on cycle \"%(c)s\" but the contract has no commitment assessed on that cycle."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Kỳ %s chưa đo. Bấm \"Đo kỳ\" trước khi chốt."
 msgstr "Period %s has not been measured. Press \"Measure the period\" before closing it."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Kỳ %s đã chốt. Số liệu đã chụp lại làm biên bản nên không đo lại được — mở lại kỳ trước nếu thật sự cần."
 msgstr "Period %s is closed. The figures have been captured as a certificate and cannot be measured again — reopen the period first if it really is necessary."
@@ -591,6 +603,7 @@ msgid "Kỳ đánh giá O&M"
 msgstr "O&M assessment period"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_contract.py:0
 msgid "Kỳ đánh giá — %s"
 msgstr "Assessment period — %s"
@@ -601,11 +614,13 @@ msgid "Kỳ đã chốt"
 msgstr "Periods closed"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_contract.py:0
 msgid "Loại \"%(l)s\" không quản lý ở đây — nó nằm ở: %(d)s. Giữ nó trong danh mục để thấy bức tranh đủ, nhưng lập hợp đồng thì phải lập đúng chỗ, nếu không cùng một hợp đồng tồn tại hai bản và không bản nào là bản thật."
 msgstr "Type \"%(l)s\" is not managed here — it lives in: %(d)s. It stays in the catalogue so the whole picture is visible, but the contract has to be raised in the right place; otherwise the same contract exists in two copies and neither is the real one."
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_contract_type.py:0
 msgid "Loại \"%s\" đánh dấu không quản lý ở đây thì phải ghi rõ quản lý ở đâu. Để trống là người dùng gặp một loại không chọn được mà không biết phải đi đâu."
 msgstr "Type \"%s\" is marked as not managed here, so it has to say where it is managed. Leave it empty and a user meets a type they cannot choose, with no idea where to go instead."
@@ -678,6 +693,7 @@ msgid "Mở lại"
 msgstr "Reopen"
 
 #. module: eam_om_contract
+#. odoo-python
 #: code:addons/eam_om_contract/models/eam_om_period.py:0
 msgid "Mở lại kỳ đã chốt. Số liệu cũ sẽ bị thay khi đo lại."
 msgstr "Reopen a closed period. The old figures will be replaced when it is measured again."

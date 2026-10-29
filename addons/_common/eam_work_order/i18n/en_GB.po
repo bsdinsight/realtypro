@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid " CÓ NGUY CƠ MẤT AN TOÀN."
 msgstr " THERE IS A SAFETY RISK."
@@ -198,11 +199,13 @@ msgid "Bước"
 msgstr "Step"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order_step.py:0
 msgid "Bước \"%(ten)s\": \"%(gt)s\" không nằm trong các lựa chọn đã khai (%(ds)s)."
 msgstr "Step \"%(ten)s\": \"%(gt)s\" is not among the declared choices (%(ds)s)."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order_step.py:0
 msgid ""
 "Bước \"%(ten)s\": đo được %(do)s%(dv)s nhưng tiêu chuẩn là %(tc)s — không ghi ĐẠT được.\n"
@@ -214,21 +217,25 @@ msgstr ""
 "If the reading is right, record FAIL and open a corrective order. If the criteria are wrong, fix them on the plan or the form template, not here."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order_step.py:0
 msgid "Bước \"%s\" bắt buộc có ảnh. Bước này được khai là thứ mà lời nói không đủ — đính ảnh vào rồi mới ghi kết quả."
 msgstr "Step \"%s\" requires a photo. It is declared as one where words are not enough — attach the photo, then record the result."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order_step.py:0
 msgid "Bước \"%s\" ghi KHÔNG ĐẠT thì phải nói rõ sai ở đâu — điền trị số đo được hoặc ghi chú. Một chữ \"không đạt\" trống trơn thì người sửa sau không biết bắt đầu từ đâu."
 msgstr "Step \"%s\" recorded as FAIL has to say what was wrong — enter the measured value or a note. A bare \"fail\" leaves whoever repairs it later with no idea where to start."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_form.py:0
 msgid "Bước \"%s\" là ô chọn một nhưng chưa khai lựa chọn nào."
 msgstr "Step \"%s\" is a single-choice field but no choice is declared."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_form.py:0
 msgid "Bước \"%s\": cận dưới lớn hơn cận trên, nên không số đo nào đạt được."
 msgstr "Step \"%s\": the lower bound is above the upper bound, so no reading can ever pass."
@@ -389,6 +396,7 @@ msgid "Chiến dịch"
 msgstr "Campaign"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Chiến dịch không được lồng vòng vào chính nó."
 msgstr "A campaign cannot be nested inside itself."
@@ -465,11 +473,13 @@ msgid "Chạy thử, nghiệm thu"
 msgstr "Commissioning, acceptance"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Chỉ lệnh đang làm mới chuyển sang chờ được."
 msgstr "Only an order in progress can be put on hold."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Chỉ mở lại được yêu cầu đã từ chối hoặc đã gộp."
 msgstr "Only a rejected or merged request can be reopened."
@@ -892,6 +902,7 @@ msgid "Ghi chú an toàn"
 msgstr "Safety note"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Ghi khoảng dừng"
 msgstr "Record an outage"
@@ -960,11 +971,13 @@ msgid "Gắn mẫu biểu"
 msgstr "Attach a form template"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_form.py:0
 msgid "Gắn mẫu biểu %(t)s (%(n)d bước)."
 msgstr "Attached form template %(t)s (%(n)d steps)."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_form_wo.py:0
 msgid "Gắn mẫu biểu vào %s"
 msgstr "Attach form template to %s"
@@ -980,6 +993,7 @@ msgid "Gộp"
 msgstr "Merge"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Gộp thêm yêu cầu %(s)s: %(t)s%(n)s"
 msgstr "Also merged request %(s)s: %(t)s%(n)s"
@@ -1001,6 +1015,7 @@ msgid "Gộp vào lệnh khác"
 msgstr "Merge into another order"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Gộp vào lệnh đang mở"
 msgstr "Merge into an open order"
@@ -1289,6 +1304,7 @@ msgid "Lệnh"
 msgstr "Order"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid ""
 "Lệnh \"%(ten)s\" còn bước CHỊU LỰC chưa đạt: %(buoc)s.\n"
@@ -1300,6 +1316,7 @@ msgstr ""
 "Finish it and tick it, or record FAIL with a reason and open a corrective order — do not simply close the order and leave it."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid ""
 "Lệnh \"%(ten)s\" khai là có hỏng hóc nhưng chưa chọn dạng hỏng.\n"
@@ -1311,6 +1328,7 @@ msgstr ""
 "Close the order with this empty and that failure never enters the reliability statistics — and there is no recovering it, because whoever knew has moved on to other work."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid ""
 "Lệnh \"%(ten)s\" khai là cần phiếu, lệnh công tác nhưng chưa có số hiệu.\n"
@@ -1322,56 +1340,67 @@ msgstr ""
 "Under the electrical safety regulation, work on electrical equipment requires a work permit or a work instruction issued by an authorised person. This work order does NOT replace that document — enter the permit number, or untick \"a permit or work instruction is required\" if the work does not touch electrical equipment."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" chưa có ngày dự kiến bắt đầu."
 msgstr "Order \"%s\" has no planned start date."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" chưa quy bên chịu chi phí. Đóng lệnh mà bỏ trống thì khoản này không vào được hồ sơ đòi bảo hành hay đòi nhà thầu."
 msgstr "Order \"%s\" does not say who bears the cost. Close it empty and the amount cannot enter a warranty claim or a claim against the contractor."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" chưa xong."
 msgstr "Order \"%s\" is not finished."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" chưa ở trạng thái đang làm."
 msgstr "Order \"%s\" is not in progress."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" không còn ở trạng thái nháp."
 msgstr "Order \"%s\" is no longer a draft."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" phải được duyệt trước khi bắt đầu."
 msgstr "Order \"%s\" has to be approved before it can start."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" đang chờ mà không ghi chờ vì gì. Ô này là chỗ duy nhất phân biệt được sửa chậm với chờ một nguồn lực bên ngoài — bỏ trống thì mọi lệnh quá hạn trông giống nhau."
 msgstr "Order \"%s\" is on hold with no reason recorded. This field is the only thing that tells a slow repair from waiting on an outside resource — leave it empty and every overdue order looks alike."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_form.py:0
 msgid "Lệnh \"%s\" đã khép — gắn thêm bước vào lúc này thì bước mới sẽ không bao giờ có ai làm."
 msgstr "Order \"%s\" is already closed — attaching a step now means a step nobody will ever carry out."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" đã đóng, không huỷ được."
 msgstr "Order \"%s\" is closed and cannot be cancelled."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 msgid "Lệnh \"%s\": ngày dự kiến xong trước ngày dự kiến bắt đầu."
 msgstr "Order \"%s\": the planned finish is before the planned start."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Lệnh %s đã đóng. Yêu cầu này đã được xử lý."
 msgstr "Order %s is closed. This request has been handled."
@@ -1409,16 +1438,19 @@ msgstr ""
 "            safety document is still issued separately by an authorised person."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_outage.py:0
 msgid "Lệnh công việc mới"
 msgstr "New work order"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_outage.py:0
 msgid "Lệnh công việc — %s"
 msgstr "Work orders — %s"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Lệnh này mở từ yêu cầu %(s)s — mức khẩn người nêu: %(m)s.%(at)s"
 msgstr "This order was opened from request %(s)s — urgency as raised: %(m)s.%(at)s"
@@ -1559,6 +1591,7 @@ msgid "Mỏi"
 msgstr "Fatigue"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_order.py:0
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Mới"
@@ -1575,6 +1608,7 @@ msgid "Mở lại"
 msgstr "Reopen"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Mở lại yêu cầu. Lý do từ chối trước đó: %s"
 msgstr "Request reopened. Earlier rejection reason: %s"
@@ -1585,6 +1619,7 @@ msgid "Mở lệnh công việc"
 msgstr "Open work order"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Mở từ yêu cầu %(s)s do %(n)s nêu ngày %(d)s."
 msgstr "Opened from request %(s)s raised by %(n)s on %(d)s."
@@ -2251,6 +2286,7 @@ msgid "Từ chối"
 msgstr "Reject"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 #: model:ir.model,name:eam_work_order.model_eam_work_request_reject_wizard
 #: model_terms:ir.ui.view,arch_db:eam_work_order.view_eam_wr_reject_wizard_form
@@ -2258,11 +2294,13 @@ msgid "Từ chối yêu cầu"
 msgstr "Reject the request"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Từ chối yêu cầu \"%s\" thì phải ghi lý do. Yêu cầu bị từ chối vẫn nằm lại trong sổ chính là để sau này trả lời được câu \"hiện trường đã báo chuyện này mấy lần và vì sao lần nào cũng bị gạt\" — không có lý do thì câu đó vô nghĩa."
 msgstr "Rejecting request \"%s\" requires a reason. A rejected request stays in the log precisely so that the question \"how many times has the field reported this, and why was it brushed off every time\" can be answered later — without a reason that question is meaningless."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Từ chối. Lý do: %s"
 msgstr "Rejected. Reason: %s"
@@ -2350,11 +2388,13 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Vị trí này còn %d yêu cầu khác chưa phân loại."
 msgstr "This location has %d other requests still untriaged."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Vị trí này đang có %d yêu cầu khác chưa phân loại. Nhiều người cùng báo thường nghĩa là việc đã rõ — cân nhắc gộp khi phân loại."
 msgstr "This location has %d other untriaged requests. Several people reporting the same thing usually means it is real — consider merging them while triaging."
@@ -2372,11 +2412,13 @@ msgid "Yêu cầu"
 msgstr "Request"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Yêu cầu \"%s\" không còn ở trạng thái mới."
 msgstr "Request \"%s\" is no longer in the new state."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Yêu cầu \"%s\" đã được xử lý rồi."
 msgstr "Request \"%s\" has already been handled."
@@ -2423,6 +2465,7 @@ msgstr ""
 "               The dispatcher triages it, and only then does it become an order."
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 #: model:ir.model.fields,field_description:eam_work_order.field_eam_work_request__dup_count
 msgid "Yêu cầu đang chờ cùng vị trí"
@@ -2441,6 +2484,7 @@ msgid "Yêu cầu đã từ chối"
 msgstr "Requests rejected"
 
 #. module: eam_work_order
+#. odoo-python
 #: code:addons/eam_work_order/models/eam_work_request.py:0
 msgid "Yêu cầu — %s"
 msgstr "Request — %s"

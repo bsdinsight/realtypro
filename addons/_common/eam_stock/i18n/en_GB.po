@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "\n"
@@ -39,6 +40,7 @@ msgstr ""
 "               only once engineering has approved it may one be used for the other."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_demand.py:0
 msgid ""
 "%(n)d lịch bảo trì tới hạn nhưng KHÔNG kế hoạch nào khai vật tư.\n"
@@ -50,16 +52,19 @@ msgstr ""
 "Declare materials on the maintenance plans first — without the source data there is no demand to consolidate."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "%(n)g đơn vị ở %(vt)s, chủ sở hữu %(ch)s"
 msgstr "%(n)g units at %(vt)s, owned by %(ch)s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "%(sp)s: giữ được %(g)g / cần %(c)g"
 msgstr "%(sp)s: reserved %(g)g / needed %(c)g"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "(chưa khai kho nào)"
 msgstr "(no store declared)"
@@ -100,6 +105,7 @@ msgstr ""
 "               runs out."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 msgid "<b>Có sai lệch ở %(n)d dòng.</b> Hàng từ chối đã vào <i>Cách ly</i> — chưa trả nhà cung cấp. Lập yêu cầu xử lý với bên giao trước khi chuyển hàng đi."
 msgstr "<b>A discrepancy on %(n)d lines.</b> The rejected goods have gone to <i>Quarantine</i> — they have not been returned to the supplier. Raise a case with the sender before moving them."
@@ -168,6 +174,7 @@ msgstr ""
 "                        completed</i> is pressed. Due:"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/res_users.py:0
 msgid "<b>Đổi kho được giao</b> cho %(ng)s — %(pt)s."
 msgstr "<b>Changed the assigned stores</b> for %(ng)s — %(pt)s."
@@ -198,6 +205,7 @@ msgid "Bàn giao từ dự án"
 msgstr "Handed over from the project"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Báo MẤT dụng cụ. Người mượn: %s."
 msgstr "Tool reported LOST. Borrower: %s."
@@ -248,6 +256,7 @@ msgid "Bạn duyệt được"
 msgstr "You may approve it"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid ""
 "Bạn không thuộc cấp duyệt nào đang chờ của yêu cầu \"%(ten)s\".\n"
@@ -259,11 +268,13 @@ msgstr ""
 "Waiting on: %(ds)s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Bạn không thuộc cấp duyệt nào đang chờ."
 msgstr "You are not in any approval level that is waiting."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Bạn không được giao kho \"%(kho)s\" nên không lấy hàng từ \"%(vt)s\" được.\n"
@@ -275,6 +286,7 @@ msgstr ""
 "Stores assigned to you: %(ds)s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Bản này cấp phát qua lệnh công việc. Yêu cầu phát sinh từ sự cố hoặc kế hoạch bảo trì thì mở lệnh công việc trước rồi gắn vào."
 msgstr "This copy is issued through a work order. A request arising from an incident or a maintenance plan should open a work order first and attach to it."
@@ -359,6 +371,7 @@ msgid "Bỏ trống thì về vị trí tồn mặc định của kho."
 msgstr "Leave it empty and it goes back to the store's default stock location."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Bổ sung hàng hoặc dời lịch"
 msgstr "Order more stock or move the schedule"
@@ -393,6 +406,7 @@ msgid "Chu kỳ (tháng)"
 msgstr "Cycle (months)"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Chu kỳ phải lớn hơn 0 tháng — chu kỳ 0 nghĩa là lúc nào cũng quá hạn, và danh sách quá hạn mà lúc nào cũng đầy thì không ai đọc nữa."
 msgstr "The cycle has to be more than 0 months — a cycle of 0 means it is always overdue, and an overdue list that is always full stops being read."
@@ -422,11 +436,13 @@ msgid "Chênh lệch"
 msgstr "Discrepancy"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Chưa chỉ rõ lần dừng máy."
 msgstr "The stoppage has not been identified."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Chưa chọn \"Kho xuất\" cho lệnh \"%s\"."
 msgstr "No \"Issuing store\" has been chosen for order \"%s\"."
@@ -537,6 +553,7 @@ msgid "Chỉ thay khi cần"
 msgstr "Replace only when needed"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Chỉ yêu cầu mức \"Khẩn cấp\" mới đi đường này. Yêu cầu thường phải trình duyệt."
 msgstr "Only \"Emergency\" requests take this route. An ordinary request has to go through approval."
@@ -552,6 +569,7 @@ msgid "Chỉ áp cho vật tư quay vòng"
 msgstr "Only applies to rotable materials"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Chỉ áp cho yêu cầu khẩn cấp."
 msgstr "Only applies to emergency requests."
@@ -637,6 +655,7 @@ msgid "Cung ứng (ngày)"
 msgstr "Lead time (days)"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid ""
 "Các dòng có chênh lệch phải khai lý do: %s.\n"
@@ -773,6 +792,7 @@ msgid "Cấp phát"
 msgstr "Issue"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Cấp phát KHẨN CẤP, bỏ qua duyệt. Người nhận: %(ng)s. Hạn hoàn thiện hồ sơ: %(h)s."
 msgstr "EMERGENCY issue, bypassing approval. Recipient: %(ng)s. Paperwork due: %(h)s."
@@ -867,21 +887,25 @@ msgid "Duyệt ngày"
 msgstr "Approved on"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Dòng \"%(sp)s\" trả %(tra)g nhưng chỉ còn %(con)g chưa trả (đã xuất %(xuat)g, đã trả %(dtra)g)."
 msgstr "Line \"%(sp)s\" returns %(tra)g but only %(con)g is still outstanding (issued %(xuat)g, returned %(dtra)g)."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 msgid "Dòng \"%(sp)s\": nghiệm thu %(dat)g + từ chối %(tu)g vượt quá số đã nhận %(nhan)g."
 msgstr "Line \"%(sp)s\": accepted %(dat)g + rejected %(tu)g exceeds the %(nhan)g received."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Dòng \"%(sp)s\": nhận %(n)g nhiều hơn gửi %(g)g."
 msgstr "Line \"%(sp)s\": received %(n)g, more than the %(g)g sent."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 msgid "Dòng \"%s\" có hàng từ chối nhưng chưa khai lý do. Không khai thì sáu tháng sau không ai trả lời được nhà cung cấp này sai những gì."
 msgstr "Line \"%s\" has rejected goods but no reason. Without one, six months later nobody can answer what exactly this supplier got wrong."
@@ -922,6 +946,7 @@ msgid "Dòng thanh lý"
 msgstr "Disposal line"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Dòng vật tư \"%s\" có số lượng bằng 0."
 msgstr "Material line \"%s\" has a quantity of 0."
@@ -964,6 +989,7 @@ msgid "Dương là tăng tài sản, âm là giảm. Đây là con số quyết 
 msgstr "Positive increases the asset, negative decreases it. This is the figure that decides whether the note needs approval."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/product_template.py:0
 msgid "Dầu mỡ thường có hạn dùng"
 msgstr "Oils and greases usually have a shelf life"
@@ -985,6 +1011,7 @@ msgid "Dụng cụ"
 msgstr "Tool"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid ""
 "Dụng cụ \"%(dc)s\" %(ly_do)s — không cho mượn.\n"
@@ -1105,6 +1132,7 @@ msgid "Giá trị từ"
 msgstr "Value from"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Giá trị ảnh hưởng dưới ngưỡng duyệt — áp dụng ngay."
 msgstr "The value affected is below the approval threshold — applied at once."
@@ -1120,6 +1148,7 @@ msgid "Giấy chứng nhận"
 msgstr "Certificate"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Giục nhà cung cấp %s"
 msgstr "Chase supplier %s"
@@ -1208,6 +1237,7 @@ msgid "Hiệu chuẩn lại trước ngày"
 msgstr "Recalibrate before"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Hoàn trả %(q)g %(sp)s về \"%(dich)s\" — %(tt)s."
 msgstr "Returned %(q)g %(sp)s to \"%(dich)s\" — %(tt)s."
@@ -1443,6 +1473,7 @@ msgid "Hộp số, máy phát, cánh, bộ biến đổi — thứ tháo ra đem
 msgstr "Gearbox, generator, blades, converter — the things removed for overhaul and refitted."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "KHÔNG dùng được — hiệu chuẩn hết hiệu lực"
 msgstr "NOT usable — the calibration has expired"
@@ -1467,11 +1498,13 @@ msgid "Khi nhận lại"
 msgstr "When it comes back"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Kho \"%(kho)s\" chỉ còn %(con)g khả dụng \"%(sp)s\", cần gửi %(can)g."
 msgstr "Store \"%(kho)s\" has only %(con)g of \"%(sp)s\" available; %(can)g need to be sent."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Kho \"%(kho)s\" không đủ \"%(sp)s\": giữ chỗ được %(giu)g / cần %(can)g.%(goiy)s"
 msgstr "Store \"%(kho)s\" does not have enough \"%(sp)s\": reserved %(giu)g / needed %(can)g.%(goiy)s"
@@ -1482,6 +1515,7 @@ msgid "Kho gửi"
 msgstr "Sending store"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Kho gửi và kho nhận phải khác nhau."
 msgstr "The sending and receiving stores have to be different."
@@ -1576,11 +1610,13 @@ msgid "Không còn nợ hồ sơ nào"
 msgstr "No outstanding paperwork"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "Không có lô/sê-ri nào mang mã \"%s\"."
 msgstr "No batch/serial carries the code \"%s\"."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_demand.py:0
 msgid "Không có lịch bảo trì nào tới hạn trước %s."
 msgstr "No maintenance schedule falls due before %s."
@@ -1597,6 +1633,7 @@ msgid "Không có phát sinh nào trong 12 tháng. CHƯA chắc là thừa — p
 msgstr "Nothing has moved in 12 months. NOT necessarily excess — a spare for a rare failure is supposed to sit still."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "Không có ô chứa nào mang mã \"%s\"."
 msgstr "No bin carries the code \"%s\"."
@@ -1607,6 +1644,7 @@ msgid "Không dùng được cho bảo trì"
 msgstr "Not usable for maintenance"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Không luật duyệt nào áp dụng (giá trị dưới mọi ngưỡng) — duyệt tự động."
 msgstr "No approval rule applies (the value is below every threshold) — approved automatically."
@@ -1919,6 +1957,7 @@ msgid "Lần hiệu chuẩn gần nhất đạt"
 msgstr "Last calibration passed"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Lần này đã xử lý rồi."
 msgstr "This one has already been handled."
@@ -1930,6 +1969,7 @@ msgid "Lần động gần nhất"
 msgstr "Last movement"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Lập phiếu thanh lý"
 msgstr "Raise a disposal note"
@@ -1951,6 +1991,7 @@ msgid "Lắp đồ không chính hãng vào máy còn bảo hành thường làm
 msgstr "Fitting a non-genuine part to a machine still under warranty usually voids the warranty on the WHOLE assembly, not just that part."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Lệnh \"%(lenh)s\" còn %(n)d dòng vật tư chưa xuất kho: %(ten)s.\n"
@@ -1962,6 +2003,7 @@ msgstr ""
 "Issue them, or tick \"Not through the store\" for direct purchases and for goods supplied by the manufacturer under warranty."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Lệnh \"%(lenh)s\" còn khai số lượng trả lại nhưng chưa ghi nhận: %(ten)s.\n"
@@ -1973,26 +2015,31 @@ msgstr ""
 "Press \"Record the return\" before closing, otherwise those goods are counted as consumed for good."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" không còn dòng vật tư nào chờ xuất kho."
 msgstr "Order \"%s\" has no material line left awaiting issue."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" không còn dòng vật tư nào cần giữ chỗ."
 msgstr "Order \"%s\" has no material line left to reserve."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" không có dòng nào khai số lượng trả lại."
 msgstr "Order \"%s\" has no line with a return quantity declared."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" đang ở trạng thái nháp hoặc đã huỷ — chưa giữ chỗ vật tư được."
 msgstr "Order \"%s\" is a draft or cancelled — no material can be reserved against it yet."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Lệnh \"%s\" đang ở trạng thái nháp hoặc đã huỷ — chưa xuất kho được."
 msgstr "Order \"%s\" is a draft or cancelled — nothing can be issued against it yet."
@@ -2075,6 +2122,7 @@ msgid "Mã OEM"
 msgstr "OEM code"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_part_detail.py:0
 msgid "Mã OEM \"%(ma)s\" đang trỏ tới \"%(sp)s\". Một mã OEM chỉ được trỏ tới một phụ tùng — nếu đúng là hai thứ thay thế được cho nhau, khai ở mục Phụ tùng tương đương chứ không khai trùng mã."
 msgstr "OEM code \"%(ma)s\" already points to \"%(sp)s\". An OEM code may point to only one spare part — if the two really are interchangeable, declare that under Equivalent spares rather than duplicating the code."
@@ -2131,6 +2179,7 @@ msgid "Mã nhà sản xuất phụ tùng"
 msgstr "The spare manufacturer's code"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "Mã phải bắt đầu bằng \"L\" (vị trí chức năng), \"A\" (thiết bị), \"K\" (ô chứa trong kho) hoặc \"S\" (lô / sê-ri). Nhận được: %s"
 msgstr "The code has to start with \"L\" (functional location), \"A\" (equipment), \"K\" (bin in a store) or \"S\" (batch / serial). Received: %s"
@@ -2174,11 +2223,13 @@ msgid "Mượn gì"
 msgstr "What is borrowed"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Một phụ tùng không thể tương đương với chính nó."
 msgstr "A spare part cannot be equivalent to itself."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 #: code:addons/eam_stock/models/eam_material_request.py:0
@@ -2398,6 +2449,7 @@ msgid "Người đếm"
 msgstr "Counted by"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Người đếm và người duyệt phải là hai người khác nhau. Tự đếm tự duyệt thì bước duyệt không còn ý nghĩa gì."
 msgstr "The person counting and the person approving have to be two different people. Count and approve yourself and the approval step means nothing at all."
@@ -2409,6 +2461,7 @@ msgid "Người đề nghị"
 msgstr "Proposed by"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Người đề nghị và người duyệt phải khác nhau."
 msgstr "The proposer and the approver have to be two different people."
@@ -2475,6 +2528,7 @@ msgid "Nhóm được duyệt"
 msgstr "Approving group"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Nhận THIẾU: %s. Phần thiếu vẫn nằm ở vị trí trung chuyển — phải tìm ra, không tự xoá."
 msgstr "SHORT receipt: %s. The missing part stays at the transit location — it has to be found; it does not clear itself."
@@ -2532,11 +2586,13 @@ msgid "Phiếu"
 msgstr "Note"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Phiếu \"%s\" chưa có bằng chứng nào. Thanh lý không bằng chứng thì trên sổ không khác gì mất hàng — và người duyệt cũng không có gì để xem mà quyết."
 msgstr "Note \"%s\" has no evidence attached. A disposal without evidence is indistinguishable from a loss on the books — and the approver has nothing to look at before deciding."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
@@ -2544,46 +2600,55 @@ msgid "Phiếu \"%s\" chưa có dòng nào."
 msgstr "Note \"%s\" has no lines."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_rotable.py:0
 msgid "Phiếu \"%s\" chưa có hạn. Phiếu không hạn là phiếu nằm quên — trả lõi quá hạn bị tính thêm tiền, đòi bảo hành quá hạn thì mất quyền."
 msgstr "Note \"%s\" has no deadline. A note with no deadline is a note that gets forgotten — a core returned late is charged for, a warranty claim made late is lost."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Phiếu \"%s\" chưa trình duyệt."
 msgstr "Note \"%s\" has not been submitted for approval."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Phiếu \"%s\" chưa ở trạng thái đang đi."
 msgstr "Note \"%s\" is not in transit."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Phiếu \"%s\" không ở trạng thái chờ duyệt."
 msgstr "Note \"%s\" is not awaiting approval."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Phiếu \"%s\" không ở trạng thái đang mượn."
 msgstr "Note \"%s\" is not on loan."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Phiếu \"%s\" đã gửi rồi."
 msgstr "Note \"%s\" has already been sent."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 msgid "Phiếu \"%s\" đã kiểm rồi."
 msgstr "Note \"%s\" has already been checked."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_inbound_check.py:0
 msgid "Phiếu \"%s\" đã kiểm xong và đã sinh phiếu kho — không huỷ được. Nếu kiểm sai thì lập phiếu điều chỉnh tồn kèm lý do."
 msgstr "Note \"%s\" has been checked and has produced its stock movements — it cannot be cancelled. If the check was wrong, raise a stock adjustment with a reason."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid "Phiếu \"%s\" đã áp vào tồn. Muốn sửa thì lập phiếu điều chỉnh ngược, không xoá vết cũ."
 msgstr "Note \"%s\" has already been applied to stock. To correct it, raise a reversing adjustment rather than erasing the old trail."
@@ -2682,6 +2747,7 @@ msgid "Phát sinh từ lệnh"
 msgstr "Arising from an order"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Phát sinh từ lệnh công việc thì phải chỉ rõ lệnh nào — nếu không thì chi phí vật tư không về được lệnh."
 msgstr "If it arises from a work order, that order has to be named — otherwise the material cost never finds its way back to the order."
@@ -2702,6 +2768,7 @@ msgid "Phân tích kho"
 msgstr "Stock analysis"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Phải khai tình trạng khi trả. Nhận lại mà không nhìn thì lần sau người khác mượn phải một cái hỏng."
 msgstr "The condition on return has to be recorded. Take it back without looking and the next person to borrow it gets a broken one."
@@ -2780,6 +2847,7 @@ msgid "Quá hạn trả"
 msgstr "Return overdue"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Quãng lắp đặt của \"%(ts)s\" ghi ngày lắp %(ngay)s — ở tương lai, nên không tháo hôm nay được.\n"
@@ -2857,6 +2925,7 @@ msgid "Sê-ri / lô"
 msgstr "Serial / batch"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/product_template.py:0
 msgid ""
 "Sản phẩm \"%(sp)s\" thuộc loại cấu phần quay vòng \"%(loai)s\" nên BẮT BUỘC theo dõi theo sê-ri.\n"
@@ -3004,6 +3073,7 @@ msgid "Theo lịch"
 msgstr "On schedule"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Theo yêu cầu vật tư %s"
 msgstr "Per material request %s"
@@ -3174,11 +3244,13 @@ msgid "Trả lại"
 msgstr "Return"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Trả về trong tình trạng HƯ HỎNG — dụng cụ đã bị khoá, không cho mượn tiếp."
 msgstr "Returned DAMAGED — the tool is now locked and cannot be lent out again."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "Trả về với yêu cầu hiệu chuẩn lại — dụng cụ đã bị khoá, không cho mượn tiếp cho tới khi có kết quả hiệu chuẩn mới."
 msgstr "Returned with a request for recalibration — the tool is locked and cannot be lent out until a new calibration result arrives."
@@ -3319,6 +3391,7 @@ msgid "Tồn & kiểm kê"
 msgstr "Stock & counting"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_adjustment.py:0
 msgid ""
 "Tồn hệ thống đã ĐỔI kể từ lúc đếm:\n"
@@ -3462,11 +3535,13 @@ msgid "Vật tư"
 msgstr "Material"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Vật tư \"%s\" không phải loại lưu kho nên không có tồn để giữ chỗ. Nếu đây là dịch vụ hoặc hàng mua thẳng, đánh dấu \"Không qua kho\"."
 msgstr "Material \"%s\" is not a stockable type, so there is no stock to reserve. If this is a service or a direct purchase, tick \"Not through the store\"."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Vật tư \"%s\" theo dõi theo sê-ri. Phải chọn đúng con sẽ lắp vào máy.\n"
@@ -3494,6 +3569,7 @@ msgid "Vật tư mỗi lần"
 msgstr "Material each time"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/product_template.py:0
 msgid "Vật tư này đang không theo lô nên không cảnh báo hạn dùng được. Cân nhắc đặt \"Theo dõi theo lô\" và khai hạn sử dụng ở tab Tồn kho."
 msgstr "This material is not tracked by batch, so no shelf-life warning is possible. Consider setting \"Track by batch\" and declaring a shelf life on the Stock tab."
@@ -3545,6 +3621,7 @@ msgid "Vị trí"
 msgstr "Location"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid ""
 "Vị trí \"%(vt)s\" đang lắp \"%(cu)s\". Lắp con mới thì phải khai con tháo ra: điền ô \"Thiết bị tháo ra\" trên dòng vật tư.\n"
@@ -3594,6 +3671,7 @@ msgid "Xuất khẩn cấp cho đi trước, hồ sơ theo sau. Chừng nào ô 
 msgstr "An emergency issue goes first and the paperwork follows. Until this box is ticked, the request stays on the outstanding list."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid ""
 "Xuất khẩn cấp vẫn phải khai: %s.\n"
@@ -3627,21 +3705,25 @@ msgid "Yêu cầu"
 msgstr "Request"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Yêu cầu \"%s\" chưa có dòng vật tư nào."
 msgstr "Request \"%s\" has no material lines."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Yêu cầu \"%s\" chưa được duyệt."
 msgstr "Request \"%s\" has not been approved."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Yêu cầu \"%s\" đã cấp phát — hàng đã rời kho, không về nháp được. Muốn thu lại thì làm hoàn trả trên lệnh công việc."
 msgstr "Request \"%s\" has been issued — the goods have left the store and it cannot go back to draft. To recover them, record a return on the work order."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Yêu cầu khẩn cấp không đi đường trình duyệt — bấm \"Cấp phát khẩn cấp\"."
 msgstr "An emergency request does not go through approval — press \"Emergency issue\"."
@@ -3656,51 +3738,61 @@ msgid "Yêu cầu vật tư"
 msgstr "Material request"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/res_users.py:0
 msgid "bỏ: %s"
 msgstr "dropped: %s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "còn %(c)g / tối thiểu %(m)g · cung ứng %(l)d ngày"
 msgstr "%(c)g left / minimum %(m)g · lead time %(l)d days"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "hiệu chuẩn lần gần nhất KHÔNG ĐẠT"
 msgstr "the last calibration FAILED"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "hạn %s"
 msgstr "due %s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "hẹn %(d)s, trễ %(n)d ngày"
 msgstr "due %(d)s, %(n)d days late"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "lý do"
 msgstr "reason"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "người nhận hàng"
 msgstr "goods received by"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_tool_care.py:0
 msgid "quá hạn hiệu chuẩn từ %s"
 msgstr "calibration overdue since %s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/res_users.py:0
 msgid "thêm: %s"
 msgstr "added: %s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "vị trí / thiết bị"
 msgstr "location / equipment"
@@ -3755,6 +3847,7 @@ msgid "Đang ở"
 msgstr "Currently at"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "Đang ở \"%s\" — chưa dùng được"
 msgstr "At \"%s\" — not usable yet"
@@ -3796,6 +3889,7 @@ msgid "Điều kiện áp dụng"
 msgstr "Conditions of application"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_qr.py:0
 msgid "ĐÃ HẾT HẠN từ %s"
 msgstr "EXPIRED since %s"
@@ -3818,11 +3912,13 @@ msgid "Đã cấp phát"
 msgstr "Issued"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Đã cấp phát %(n)d dòng vật tư qua lệnh %(wo)s."
 msgstr "Issued %(n)d material lines through order %(wo)s."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Đã cấp phát rồi thì không huỷ được."
 msgstr "Once issued it cannot be cancelled."
@@ -3834,6 +3930,7 @@ msgid "Đã duyệt"
 msgstr "Approved"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Đã duyệt NHƯNG có ảnh hưởng bảo hành — kiểm tra máy còn bảo hành hay không trước khi lắp."
 msgstr "Approved BUT it affects the warranty — check whether the machine is still under warranty before fitting it."
@@ -3850,6 +3947,7 @@ msgid "Đã dùng"
 msgstr "Used"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã ghi nhận hoàn trả %d dòng."
 msgstr "Recorded the return of %d lines."
@@ -3860,26 +3958,31 @@ msgid "Đã giữ chỗ"
 msgstr "Reserved"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã giữ chỗ %(n)d dòng vật tư tại \"%(kho)s\"."
 msgstr "Reserved %(n)d material lines at \"%(kho)s\"."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã giữ chỗ xong."
 msgstr "Reservation completed."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã giữ chỗ, nhưng KHÔNG ĐỦ: %s"
 msgstr "Reserved, but NOT ENOUGH: %s"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Đã gửi %(n)d dòng từ \"%(a)s\". Hàng đang ở vị trí trung chuyển cho tới khi \"%(b)s\" xác nhận nhận."
 msgstr "Sent %(n)d lines from \"%(a)s\". The goods sit at the transit location until \"%(b)s\" confirms receipt."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_stock_transfer.py:0
 msgid "Đã gửi rồi thì không huỷ — hàng đang trên đường. Ghi nhận nhận thiếu rồi xử lý phần thiếu."
 msgstr "Once sent it cannot be cancelled — the goods are on their way. Record a short receipt and deal with the missing part."
@@ -3895,6 +3998,7 @@ msgid "Đã hoàn thiện hồ sơ"
 msgstr "The file has been completed"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_material_request.py:0
 msgid "Đã hoàn thiện hồ sơ xuất khẩn cấp."
 msgstr "The emergency-issue paperwork has been completed."
@@ -3946,6 +4050,7 @@ msgid "Đã nhận lại"
 msgstr "Received back"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_rotable.py:0
 msgid "Đã nhận lại. Hàng vào \"Chờ kiểm tra\" — lập phiếu kiểm tra đầu vào trước khi đưa về tồn khả dụng."
 msgstr "Received back. The goods go to \"Awaiting inspection\" — raise an incoming inspection note before returning them to available stock."
@@ -3970,11 +4075,13 @@ msgid "Đã xuất"
 msgstr "Issued"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã xuất \"%(sp)s\" nhưng CHƯA mở được quãng lắp đặt: dưới \"%(vt)s\" không có vị trí chức năng nào thuộc loại \"%(loai)s\". Khai thêm vị trí đó rồi ghi lắp đặt bằng tay."
 msgstr "\"%(sp)s\" was issued but NO installation period could be opened: under \"%(vt)s\" there is no functional location of category \"%(loai)s\". Declare that location, then record the installation by hand."
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã xuất %d dòng vật tư."
 msgstr "Issued %d material lines."
@@ -3985,6 +4092,7 @@ msgid "Đã xuất kho"
 msgstr "Issued from store"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_work_order.py:0
 msgid "Đã xuất kho %(n)d dòng vật tư từ \"%(kho)s\"."
 msgstr "Issued %(n)d material lines from \"%(kho)s\"."
@@ -4061,6 +4169,7 @@ msgid "Đạt sau hiệu chỉnh"
 msgstr "Passes after adjustment"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Đặt mua ngay — thiếu thì %s"
 msgstr "Order now — if missing, %s"
@@ -4099,11 +4208,13 @@ msgid "Định mức (kW)"
 msgstr "Rated (kW)"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Định mức tối thiểu KHÔNG phân biệt chủ sở hữu — trừ ra khi tính mua"
 msgstr "The minimum level does NOT distinguish owners — deduct that when calculating purchases"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "Ưu tiên dùng lô này trước"
 msgstr "Use this batch first"
@@ -4138,6 +4249,7 @@ msgid "Ảnh hưởng giá trị"
 msgstr "Affects the value"
 
 #. module: eam_stock
+#. odoo-python
 #: code:addons/eam_stock/models/eam_alerts.py:0
 msgid "ảnh hưởng vận hành"
 msgstr "affects operation"

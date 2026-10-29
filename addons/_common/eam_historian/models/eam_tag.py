@@ -99,7 +99,11 @@ class EamTag(models.Model):
     _inherit = ['mail.thread']
     _order = 'location_id, code'
 
-    name = fields.Char(string='Tên điểm đo', required=True, tracking=True)
+    # Tên điểm đo lặp lại ở mọi nhà máy cùng loại ('Công suất tác dụng
+    # — T01'), nên dịch được là đúng. `code` thì KHÔNG: nó là định danh
+    # khớp với SCADA, đổi một ký tự là đứt đường nạp số.
+    name = fields.Char(string='Tên điểm đo', required=True, tracking=True,
+                       translate=True)
     code = fields.Char(
         string='Mã tag', required=True, index=True, tracking=True,
         help='Mã dùng trong công thức tag tính toán và trong lệnh nạp dữ '
@@ -121,7 +125,7 @@ class EamTag(models.Model):
     tag_type = fields.Selection(
         LOAI_DO, string='Loại đo', required=True, default='power',
         tracking=True)
-    uom_label = fields.Char(string='Đơn vị', tracking=True)
+    uom_label = fields.Char(string='Đơn vị', tracking=True, translate=True)
     aggregation = fields.Selection(
         CACH_GOP, string='Cách gộp', required=True, default='avg',
         tracking=True,

@@ -21,3 +21,8 @@ msgstr ""
 msgid "Hồ sơ sản phẩm"
 msgstr "Product profile"
 
+#. module: re_product_profile
+#: model:ir.actions.act_window,name:re_product_profile.action_product_profile_settings
+msgid "Hồ sơ sản phẩm"
+msgstr "Product profile"
+

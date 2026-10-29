@@ -100,3 +100,13 @@ msgstr "Push to SharePoint"
 msgid "Đọc ngược danh sách tệp từ SharePoint, kể cả tệp thả thẳng vào đó không qua Odoo."
 msgstr "Read the file list back from SharePoint, including files dropped straight in without going through Odoo."
 
+#. module: rp_doc_folder
+#: model:ir.actions.act_window,name:rp_doc_folder.action_rp_doc_folder_template
+msgid "Bộ thư mục chuẩn"
+msgstr "Standard folder sets"
+
+#. module: rp_doc_folder
+#: model:ir.actions.act_window,name:rp_doc_folder.action_rp_doc_folder
+msgid "Thư mục hồ sơ dự án"
+msgstr "Project document folders"
+

@@ -66,6 +66,7 @@ msgid "Chênh tiến độ (SV)"
 msgstr "Schedule variance (SV)"
 
 #. module: rp_evm
+#. odoo-javascript
 #: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
 msgid "Công việc"
 msgstr "Tasks"
@@ -104,6 +105,7 @@ msgid "Giá trị làm ra (EV)"
 msgstr "Earned value (EV)"
 
 #. module: rp_evm
+#. odoo-javascript
 #: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
 msgid "Gói thầu"
 msgstr "Tender packages"
@@ -152,6 +154,7 @@ msgid "Loại tiền quy chiếu của dự án — BAC/EV/AC và mọi chỉ s�
 msgstr "The project's reference currency — BAC, EV, AC and every EVM indicator are shown in it. For a project abroad, or one contracted in a foreign currency, set the project's own currency; amounts recorded in other currencies are CONVERTED into it."
 
 #. module: rp_evm
+#. odoo-javascript
 #: code:addons/rp_evm/static/src/xml/rp_evm_dashboard.xml:0
 msgid "Nguồn còn rút được"
 msgstr "Funding available to draw"
@@ -215,4 +218,14 @@ msgstr "Σ project-level costs"
 #: model:ir.model.fields,help:rp_evm.field_re_project__project_cost_direct_total
 msgid "Σ các khoản không thuộc hạng mục nào — CỘNG vào tổng dự toán (BAC) của dự án."
 msgstr "Σ of the costs belonging to no work item — they ADD to the project's total estimate (BAC)."
+
+#. module: rp_evm
+#: model:ir.actions.client,name:rp_evm.action_rp_evm_board
+msgid "Bảng điều khiển dự án (EVM)"
+msgstr "Project dashboard (EVM)"
+
+#. module: rp_evm
+#: model:ir.actions.act_window,name:rp_evm.action_rp_risk
+msgid "Đăng ký rủi ro"
+msgstr "Risk register"
 

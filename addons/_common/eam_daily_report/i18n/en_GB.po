@@ -17,122 +17,146 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid " (CHƯA kết thúc)"
 msgstr " (NOT finished)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid " · THIẾU %d ngày"
 msgstr " · MISSING %d days"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid " · nhận thêm %d dòng mới từ hồ sơ"
 msgstr " · picked up %d new lines from the profile"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid " — chưa dòng nào trên tờ mang mã đó"
 msgstr " — no line on the sheet carries that code"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(a)s → %(b)s giờ %(m)s"
 msgstr "%(a)s → %(b)s at %(m)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(b)d bậc sản lượng · %(n)d dòng ngày · %(t)s–%(d)s"
 msgstr "%(b)d energy stages · %(n)d daily rows · %(t)s–%(d)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(d)d điểm đo · %(n)d số đo · %(q)d nghi ngờ"
 msgstr "%(d)d tags · %(n)d readings · %(q)d suspect"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(g)d nhóm có giờ dừng · quy về cấp nhà máy: chia cho %(n)d tổ máy"
 msgstr "%(g)d groups with downtime · brought to plant level: divided by %(n)d units"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(h)s · %(t)s→%(d)s · %(n)d ngày có số%(x)s"
 msgstr "%(h)s · %(t)s→%(d)s · %(n)d days with figures%(x)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(k).2f h khung phát trừ %(d).2f h giờ dừng · %(w)s"
 msgstr "%(k).2f h generating window less %(d).2f h downtime · %(w)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(k)s · THIẾU %(n)d/%(t)d ngày"
 msgstr "%(k)s · MISSING %(n)d/%(t)d days"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(l)s vượt %(n).1f lúc %(g)s giờ %(m)s"
 msgstr "%(l)s exceeded %(n).1f at %(g)s %(m)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(n)d khoảng dừng · %(g)d nhóm"
 msgstr "%(n)d outages · %(g)d groups"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(n)d khoảng dừng đã có sản lượng mất nhưng CHƯA quy ra tiền — khai giá điện trên nhà máy hoặc hợp đồng mua bán điện, rồi bấm tính tiền trên sổ dừng máy"
 msgstr "%(n)d outages have an energy loss that has NOT been valued — declare a tariff on the plant or on the power purchase agreement, then press the valuation button on the outage log"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(n)d ngày có số, %(t)s–%(d)s%(x)s"
 msgstr "%(n)d days with figures, %(t)s–%(d)s%(x)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(n)d điểm đo khớp mã \"%(m)s\" nhưng không có số đo nào trong ngày"
 msgstr "%(n)d tags match code \"%(m)s\" but none of them has a reading during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "%(t)s (bản %(n)d)"
 msgstr "%(t)s (rev. %(n)d)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "%(v)s · quy về cấp nhà máy: chia cho %(n)d tổ máy"
 msgstr "%(v)s · brought to plant level: divided by %(n)d units"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "%(vt)s — %(ly)s, mất %(k)s kWh"
 msgstr "%(vt)s — %(ly)s, %(k)s kWh lost"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "%(vt)s — %(ly)s, từ %(a)s%(b)s"
 msgstr "%(vt)s — %(ly)s, from %(a)s%(b)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "%d mốc đo · xem biểu đồ trên bản PDF"
 msgstr "%d samples · see the chart in the PDF"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "%d điểm · xem biểu đồ trên bản PDF"
 msgstr "%d points · see the chart in the PDF"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.bao_cao_ngay
 msgid "(chưa chốt)"
 msgstr "(not closed)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "(khối: %s)"
 msgstr "(block: %s)"
@@ -302,6 +326,7 @@ msgstr ""
 "                month looks about to fall short."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "= %(b)s, với %(v)s"
 msgstr "= %(b)s, with %(v)s"
@@ -327,6 +352,7 @@ msgid "Biểu đồ sản lượng trong tháng"
 msgstr "Energy chart for the month"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Báo cáo ngày chưa chốt"
 msgstr "Daily report not closed"
@@ -356,6 +382,7 @@ msgid "Bản"
 msgstr "Revision"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Bản %(n)d — thay cho bản %(c)d. Lý do: %(l)s"
 msgstr "Revision %(n)d — in place of revision %(c)d. Reason: %(l)s"
@@ -387,6 +414,7 @@ msgid "Bảng cắt giảm theo lệnh điều độ"
 msgstr "Curtailment table by dispatch order"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Bảng tổ máy"
 msgstr "Unit table"
@@ -433,6 +461,7 @@ msgid "Bố cục bản in"
 msgstr "Print layout"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "CHƯA KHAI loại thời gian nào là sự cố, nên mục này luôn trống. Mở Cấu hình → Loại thời gian và tích ô \"Là sự cố\" cho các loại tương ứng."
 msgstr "NO time category is declared as an incident, so this section is always empty. Open Configuration → Time categories and tick \"Is an incident\" on the relevant ones."
@@ -459,6 +488,7 @@ msgid "Chưa có hồ sơ nào"
 msgstr "No profile yet"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Chưa có lệnh công việc nào lên lịch cho ngày mai."
 msgstr "No work order is scheduled for tomorrow."
@@ -478,6 +508,7 @@ msgstr ""
 "            performance</b> and build it, or wait for the cron at 00:10."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Chỉ bản ĐÃ CHỐT mới cần sinh bản mới. Bản còn nháp thì sửa thẳng."
 msgstr "Only a CLOSED report needs a new revision. A draft can simply be edited."
@@ -538,6 +569,7 @@ msgid "Cách rút số ngày"
 msgstr "How the daily figure is taken"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid ""
 "Còn %(n)d ô bắt buộc để trống: %(ds)s.\n"
@@ -588,6 +620,7 @@ msgid "Có số đo"
 msgstr "Has readings"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Công suất đỉnh trong ngày"
 msgstr "Peak power for the day"
@@ -598,6 +631,7 @@ msgid "Công thức"
 msgstr "Formula"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Công việc bảo trì"
 msgstr "Maintenance work"
@@ -642,51 +676,61 @@ msgid "Dòng"
 msgstr "Line"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" khai nguồn công thức thì phải viết công thức."
 msgstr "Line \"%s\" declares a formula source, so a formula has to be written."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" là khối dựng sẵn thì phải chọn khối nào."
 msgstr "Line \"%s\" is a built-in block, so a block has to be chosen."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy hằng số nhà máy thì phải khai tên trường trên hồ sơ nhà máy."
 msgstr "Line \"%s\" takes a plant constant, so a field name on the plant record is required."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy mục tiêu thì phải chọn mức P50, P75 hay P90 — \"mục tiêu\" không kèm mức là câu nói dở."
 msgstr "Line \"%s\" takes a target, so P50, P75 or P90 has to be chosen — \"target\" without a level is only half a sentence."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy số từ một bảng có sẵn thì phải khai tên trường."
 msgstr "Line \"%s\" takes its figure from an existing table, so a field name is required."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy theo kỳ thì phải khai CẢ kỳ lẫn tên trường — \"doanh thu\" không kèm kỳ là câu nói dở."
 msgstr "Line \"%s\" takes a figure by period, so BOTH the period and the field name are required — \"revenue\" without a period is only half a sentence."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy từ bảng tổ máy thì phải khai lấy ô nào của dòng TỔNG."
 msgstr "Line \"%s\" takes from the unit table, so it has to say which field of the TOTAL row to use."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy từ chuỗi bậc đo thì phải khai tên trường. Mã bậc để trống nghĩa là cộng mọi bậc sản lượng."
 msgstr "Line \"%s\" takes from the metering chain, so a field name is required. An empty stage code means summing every energy stage."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy từ kho chuỗi thời gian thì phải khai mã điểm đo."
 msgstr "Line \"%s\" takes from the time-series store, so a tag code is required."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_profile.py:0
 msgid "Dòng \"%s\" lấy từ một công-tơ thì phải khai mã vị trí đặt công-tơ ấy."
 msgstr "Line \"%s\" takes from a single meter, so the code of the location holding that meter is required."
@@ -748,6 +792,7 @@ msgid "Dùng cho nguồn \"theo kỳ\", và cho nguồn \"bậc đo\" khi muốn
 msgstr "Used for the \"by period\" source, and for the \"metering stage\" source when the CUMULATIVE figure to date is wanted rather than the day's own — the report prints both today's loss and the year-to-date loss, from the same field, differing only in the range summed."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 #: model:ir.model.fields.selection,name:eam_daily_report.selection__eam_daily_profile_line__khoi__dung_may
 msgid "Dừng máy"
@@ -779,6 +824,7 @@ msgid "EAMOne: nhắc báo cáo ngày chưa chốt"
 msgstr "EAMOne: remind about unclosed daily reports"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile__note
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_profile_line__note
@@ -844,6 +890,7 @@ msgid "Gợi ý nhập"
 msgstr "Entry hint"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "HOẠT ĐỘNG"
 msgstr "ACTIVITY"
@@ -869,6 +916,7 @@ msgid "Hoa gió"
 msgstr "Wind rose"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Hoa gió — hướng trội"
 msgstr "Wind rose — prevailing direction"
@@ -908,6 +956,7 @@ msgstr ""
 "            report sent before anyone has read it is one nobody opens three days later."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Hệ số công suất"
 msgstr "Capacity factor"
@@ -971,6 +1020,7 @@ msgid "Không có khoảng dừng nào trong ngày."
 msgstr "There was no outage during the day."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Không có khoảng dừng thuộc loại sự cố nào được GHI NHẬN trong ngày."
 msgstr "No outage of an incident category was RECORDED during the day."
@@ -981,6 +1031,7 @@ msgid "Không vẽ được mục tiêu:"
 msgstr "The target cannot be plotted:"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Không xoá được tờ đã chốt. Tờ đã chốt là bản ghi của những gì đã báo hôm đó — sửa thì sinh bản mới, xoá thì mất luôn chuyện đã từng báo."
 msgstr "A closed report cannot be deleted. It is the record of what was reported that day — to change it, create a new revision; to delete it is to lose the fact that anything was reported at all."
@@ -991,6 +1042,7 @@ msgid "Khả dụng"
 msgstr "Availability"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Khả dụng theo hãng"
 msgstr "Vendor availability"
@@ -1001,11 +1053,13 @@ msgid "Khả dụng trong ngày"
 msgstr "Availability for the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Khả dụng — mọi nguyên nhân"
 msgstr "Availability — all causes"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Khả dụng — phạm vi hợp đồng"
 msgstr "Availability — contract scope"
@@ -1027,6 +1081,7 @@ msgid "Khối dựng sẵn (bảng, biểu đồ)"
 msgstr "Built-in block (table, chart)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Khối hoạt động của tờ ngày %s đã được sửa tay. Dựng lại sẽ ĐÈ mất phần đã sửa. Xoá nội dung trong ô rồi bấm lại nếu đúng là muốn dựng từ đầu."
 msgstr "The activity block of the %s report has been edited by hand. Rebuilding would OVERWRITE those edits. Clear the field and press again if rebuilding from scratch is really what you want."
@@ -1038,6 +1093,7 @@ msgid "Kiểu giá trị"
 msgstr "Value type"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__ke_hoach_mai
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
@@ -1060,6 +1116,7 @@ msgid "Loại nhà máy"
 msgstr "Plant type"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Luỹ kế tháng (kWh)"
 msgstr "Month to date (kWh)"
@@ -1156,6 +1213,7 @@ msgid "Mã điểm đo"
 msgstr "Tag code"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Múi giờ dùng cho biên ngày"
 msgstr "Time zone for the day boundary"
@@ -1219,6 +1277,7 @@ msgid "Mở lại"
 msgstr "Reopen"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Mở lại bản %d để sửa."
 msgstr "Reopened revision %d for editing."
@@ -1244,6 +1303,7 @@ msgid "NHÁP — chưa chốt"
 msgstr "DRAFT — not closed"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "NHÁP — chưa chốt. Số liệu còn có thể đổi."
 msgstr "DRAFT — not closed. The figures may still change."
@@ -1271,12 +1331,14 @@ msgid "Ngày"
 msgstr "Day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__nguoi_chot_id
 msgid "Người chốt"
 msgstr "Closed by"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Người lập"
 msgstr "Prepared by"
@@ -1395,6 +1457,7 @@ msgid "Sinh từ"
 msgstr "Created from"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Sinh từ bản %(n)d. Lý do: %(l)s"
 msgstr "Created from revision %(n)d. Reason: %(l)s"
@@ -1420,6 +1483,7 @@ msgid "Sản lượng mất (kWh)"
 msgstr "Energy lost (kWh)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Sản lượng ngày (kWh)"
 msgstr "Daily energy (kWh)"
@@ -1466,6 +1530,7 @@ msgid "Sửa báo cáo ngày ra bản mới"
 msgstr "Revise the daily report into a new version"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_revise_wizard_form
@@ -1478,6 +1543,7 @@ msgid "Sửa từ bản"
 msgstr "Revised from"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 #: model:ir.model.fields,field_description:eam_daily_report.field_eam_daily_report__su_co
 #: model_terms:ir.ui.view,arch_db:eam_daily_report.view_report_form
@@ -1485,6 +1551,7 @@ msgid "Sự cố"
 msgstr "Incident"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Thay bằng bản %(n)d. Lý do: %(l)s"
 msgstr "Superseded by revision %(n)d. Reason: %(l)s"
@@ -1588,6 +1655,7 @@ msgid "Tốc độ gió (đỉnh"
 msgstr "Wind speed (peak"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Tổ máy"
 msgstr "Unit"
@@ -1608,6 +1676,7 @@ msgid "Tổng sản lượng bán"
 msgstr "Total energy sold"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ %(t)s còn ở nháp. Còn %(a)d ô phải điền."
 msgstr "The report for %(t)s is still a draft. %(a)d fields still to fill in."
@@ -1631,26 +1700,31 @@ msgstr ""
 "            writing another report."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ ngày %s không còn ở nháp."
 msgstr "The report for %s is no longer a draft."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ ngày %s đã chốt. Số đã chốt là bản ghi của hôm đó, không rót đè lên được — muốn đổi thì bấm \"Sửa ra bản mới\"."
 msgstr "The report for %s is closed. A closed figure is the record of that day and cannot be overwritten — to change it, press \"Revise into a new version\"."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ này không ở trạng thái đã chốt."
 msgstr "This report is not in the closed state."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ đã chốt thì không dựng lại dòng được."
 msgstr "The lines of a closed report cannot be rebuilt."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Tờ đã chốt thì không dựng lại được."
 msgstr "A closed report cannot be rebuilt."
@@ -1676,21 +1750,25 @@ msgid "Xuất Excel"
 msgstr "Export to Excel"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "bảng %(b)s không có trường \"%(t)s\"; các trường số đang có: %(c)s…"
 msgstr "table %(b)s has no field \"%(t)s\"; its numeric fields are: %(c)s…"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "bảng bậc đo không có trường \"%s\""
 msgstr "the metering-stage table has no field \"%s\""
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "bậc đo \"%(m)s\" chưa có dòng ngày nào trong kỳ %(t)s–%(d)s"
 msgstr "metering stage \"%(m)s\" has no daily row in period %(t)s–%(d)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "bậc đo %s"
 msgstr "metering stage %s"
@@ -1701,76 +1779,91 @@ msgid "bộ chưa có số phía một chiều"
 msgstr "no DC-side figure for this set"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chuỗi đo chưa có dòng ngày nào trong %(t)s–%(d)s"
 msgstr "the metering chain has no daily row between %(t)s and %(d)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa có ngày khả dụng nào trong kỳ hợp đồng %(t)s–%(d)s"
 msgstr "there is no availability day in contract period %(t)s–%(d)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "chưa có số đọc hôm nay"
 msgstr "no reading today"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "chưa có số đọc hôm qua — không tính chênh được"
 msgstr "no reading yesterday — the difference cannot be computed"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "chưa dựng bảng tổ máy cho ngày này"
 msgstr "the unit table has not been built for this day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa dựng bảng tổ máy cho ngày này — mở \"Hiệu suất tổ máy\" và dựng, hoặc chờ cron chạy lúc 0h10"
 msgstr "the unit table has not been built for this day — open \"Unit performance\" and build it, or wait for the cron at 00:10"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa dựng dòng kỳ %(l)s bắt đầu %(t)s cho nhà máy này — mở Hiệu suất → Sản lượng theo kỳ và dựng"
 msgstr "the %(l)s period row starting %(t)s has not been built for this plant — open Performance → Energy by period and build it"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "chưa dựng sổ ngày tổ máy cho ngày này"
 msgstr "the unit-day log has not been built for this day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "chưa giao ai"
 msgstr "not assigned"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa khai bậc nào"
 msgstr "no metering stage declared"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa khai mục tiêu"
 msgstr "no target declared"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa khai mục tiêu cho tháng %(t)02d/%(n)d của nhà máy này"
 msgstr "no target declared for %(t)02d/%(n)d at this plant"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "chưa khai mục tiêu tháng"
 msgstr "no monthly target declared"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "chưa khai nhóm giờ dừng nào là CẮT GIẢM — không tách được phần bị điều độ cắt khỏi phần hỏng máy"
 msgstr "no downtime group is declared as CURTAILMENT — what the dispatcher cut cannot be separated from machine faults"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "chưa phân loại"
 msgstr "not classified"
@@ -1785,36 +1878,43 @@ msgstr ""
 "                            ("
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "chưa đo được"
 msgstr "not measured"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "cách gộp của điểm đo không cho ra số cho ngày này — thường là đồng hồ luỹ kế bị thay hoặc quay vòng"
 msgstr "the tag's aggregation yields no figure for this day — usually a cumulative counter that was replaced or rolled over"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "công thức cần %(c)s nhưng %(t)s chưa có số%(v)s"
 msgstr "the formula needs %(c)s but %(t)s has no figure%(v)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "công thức hỏng: %s"
 msgstr "formula error: %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "công-tơ \"%s\" chưa có số đọc hôm nay"
 msgstr "meter \"%s\" has no reading today"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "công-tơ \"%s\" chưa có số đọc hôm qua — không tính chênh được"
 msgstr "meter \"%s\" has no reading yesterday — the difference cannot be computed"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "công-tơ \"%s\" đã được thay hoặc quay vòng trong ngày"
 msgstr "meter \"%s\" was replaced or rotated during the day"
@@ -1825,11 +1925,13 @@ msgid "công-tơ chưa tính được chênh"
 msgstr "the meter difference could not be computed"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "dòng TỔNG của %d tổ máy"
 msgstr "TOTAL row of %d units"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "dòng TỔNG của bảng tổ máy không có ô \"%(t)s\"; đang có: %(c)s"
 msgstr "the TOTAL row of the unit table has no field \"%(t)s\"; it has: %(c)s"
@@ -1849,11 +1951,13 @@ msgid "dòng chưa có số đo."
 msgstr "lines have no reading."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "dòng khai nguồn \"công thức\" nhưng chưa viết công thức"
 msgstr "the line declares source \"formula\" but no formula is written"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "giờ dừng (%(d).2f h) vượt khung phát (%(k).2f h) — có khoảng dừng nằm ngoài giờ phát"
 msgstr "downtime (%(d).2f h) exceeds the generating window (%(k).2f h) — some outage lies outside generating hours"
@@ -1881,21 +1985,25 @@ msgstr ""
 "                still carries the unit kWh."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "hiệu suất"
 msgstr "performance"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "hằng số \"%(t)s\" chưa khai trên hồ sơ nhà máy %(n)s"
 msgstr "constant \"%(t)s\" is not declared on plant record %(n)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "hồ sơ nhà máy"
 msgstr "the plant record"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "hồ sơ nhà máy %s"
 msgstr "plant record %s"
@@ -1906,102 +2014,122 @@ msgid "khoảng)"
 msgstr "outages)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không có bản ghi %(b)s cho ngày này"
 msgstr "there is no %(b)s record for this day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không có khoảng dừng nhóm này"
 msgstr "no outage in this group"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không có khoảng dừng nào trong ngày"
 msgstr "there was no outage during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "không có số đo công suất nào trong ngày"
 msgstr "no power reading during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "không có số đo hướng và tốc độ gió cùng mốc trong ngày"
 msgstr "there is no matching wind direction and speed sample during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "không có số đo nào trong khung %(a)02d–%(b)02d giờ"
 msgstr "no reading in the %(a)02d–%(b)02d window"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không có số đo nào vượt ngưỡng trong ngày"
 msgstr "no reading exceeded the threshold during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không mốc đo nào vượt ngưỡng %.1f trong ngày"
 msgstr "no sample exceeded the %.1f threshold during the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không tra được điểm đo"
 msgstr "the tag could not be found"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "không xác định được thời điểm đỉnh"
 msgstr "the time of the peak cannot be determined"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "khả dụng"
 msgstr "availability"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "khối chưa dựng"
 msgstr "block not built"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "khối dựng sẵn: %s"
 msgstr "built-in block: %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "kỳ %(k)s mới có %(a)d/%(b)d ngày có số — một TỶ LỆ tính trên nửa kỳ còn thiếu thì sai chứ không phải nhỏ hơn thật, vì mẫu số là cả kỳ"
 msgstr "period %(k)s has figures for only %(a)d/%(b)d days — a RATIO computed over half a period is wrong rather than merely smaller, because the denominator is the whole period"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "kỳ hợp đồng chưa có sản lượng nào"
 msgstr "the contract period has no energy yet"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "lần cuối"
 msgstr "last"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "lần đầu"
 msgstr "first time"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "lỗi khi lấy số: %s"
 msgstr "error fetching the figure: %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "mẫu số PR còn lệch %.2f%% so với tờ của nhà máy — chưa chốt thì chưa đưa lên báo cáo"
 msgstr "the PR denominator still differs by %.2f%% from the plant's own sheet — until that is settled it does not belong in the report"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "mẫu số bằng không trong công thức \"%s\""
 msgstr "division by zero in formula \"%s\""
@@ -2018,16 +2146,19 @@ msgstr ""
 "                    <b>mean speed</b> for that direction."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "mục tiêu CẢ THÁNG %(t)02d/%(n)d · nguồn: %(g)s"
 msgstr "WHOLE-MONTH target %(t)02d/%(n)d · source: %(g)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "mục tiêu cả tháng · nguồn: %s"
 msgstr "whole-month target · source: %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "mục tiêu tháng chia đều %(a)d/%(b)d ngày · nguồn: %(n)s"
 msgstr "monthly target spread evenly, %(a)d/%(b)d days · source: %(n)s"
@@ -2047,51 +2178,61 @@ msgid "ngày chưa có số."
 msgstr "days have no figures."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "người trực điền, ghi vào %s"
 msgstr "operator entry, written to %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa có bậc đo mã \"%(m)s\"; đang có: %(c)s"
 msgstr "the plant has no metering stage with code \"%(m)s\"; it has: %(c)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa có hợp đồng O&M nào phủ ngày %s"
 msgstr "the plant has no O&M contract covering %s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa có vị trí đo mã \"%s\""
 msgstr "the plant has no metering location with code \"%s\""
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "nhà máy chưa có điểm đo hướng gió (*_WD) hoặc tốc độ gió (*_WS)"
 msgstr "the plant has no wind-direction (*_WD) or wind-speed (*_WS) tag"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa có điểm đo nào khớp mã \"%s\""
 msgstr "the plant has no tag matching code \"%s\""
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa khai bậc sản lượng nào"
 msgstr "the plant has no energy metering stage declared"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "nhà máy chưa khai công-tơ điện năng nào — mười hai đồng hồ giờ máy chạy không thuộc bảng giao nhận"
 msgstr "the plant declares no energy meter — twelve running-hour counters do not belong on a settlement sheet"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "nhà máy chưa khai số tổ máy, nên không quy được giờ-máy về giờ cấp nhà máy"
 msgstr "the plant does not declare a unit count, so unit-hours cannot be brought to plant level"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "nhà máy chưa khai điểm đo nào loại \"công suất\""
@@ -2107,21 +2248,25 @@ msgstr ""
 "                    performance rows are left as \"—\""
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "quan trắc"
 msgstr "observation"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "sản lượng theo kỳ"
 msgstr "energy by period"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "số đọc hôm nay (%(b)s) NHỎ HƠN hôm qua (%(a)s)"
 msgstr "today's reading (%(b)s) is LOWER than yesterday's (%(a)s)"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "số đọc hôm nay NHỎ HƠN hôm qua"
 msgstr "today's reading is LOWER than yesterday's"
@@ -2132,6 +2277,7 @@ msgid "thay cho nó."
 msgstr "in its place."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "tháng này chưa có ngày nào có sản lượng"
 msgstr "no day this month has any energy yet"
@@ -2176,6 +2322,7 @@ msgstr ""
 "            quietly adds several days' energy into one day."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "vị trí \"%s\" chưa gắn công-tơ nào"
 msgstr "location \"%s\" has no meter attached"
@@ -2203,6 +2350,7 @@ msgid "Ô người trực, hoặc ô ghi ngược về bảng nguồn. Còn lạ
 msgstr "Operator fields, or fields written back to the source table. The rest the system fills and locks — copying by hand a figure the system already holds is an invitation to error."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "ô \"%s\" của dòng TỔNG chưa tính được — xem lý do trên chính bảng tổ máy"
 msgstr "field \"%s\" of the TOTAL row could not be computed — see the reason on the unit table itself"
@@ -2213,6 +2361,7 @@ msgid "ô chưa đo được"
 msgstr "fields not measured"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "ô này chỉ nhận: %s"
 msgstr "this field only accepts: %s"
@@ -2239,11 +2388,13 @@ msgid "Đã chốt"
 msgstr "Closed"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Đã chốt bản %(n)d. %(a)d dòng chưa có số đo, %(b)d ô người trực để trống."
 msgstr "Closed revision %(n)d. %(a)d lines have no reading, %(b)d operator fields left empty."
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/xuat_excel.py:0
 msgid "Đã làm trong ngày"
 msgstr "Done during the day"
@@ -2254,6 +2405,7 @@ msgid "Đã phải sửa ra bản mới"
 msgstr "Had to be revised into a new version"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report.py:0
 msgid "Đã rót lại số cho %(n)d tờ%(t)s."
 msgstr "Refilled the figures on %(n)d reports%(t)s."
@@ -2296,11 +2448,13 @@ msgid "Đỉnh trong ngày"
 msgstr "Peak for the day"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/eam_daily_report_line.py:0
 msgid "đỉnh %(d).1f lúc %(g)s giờ %(m)s"
 msgstr "peak %(d).1f at %(g)s %(m)s"
 
 #. module: eam_daily_report
+#. odoo-python
 #: code:addons/eam_daily_report/models/khoi_dung_san.py:0
 msgid "đồng hồ đã được thay / quay vòng trong ngày"
 msgstr "the meter was replaced or rotated during the day"

@@ -93,3 +93,18 @@ msgstr "Stuck"
 msgid "Đang ở cổng"
 msgstr "Currently at gate"
 
+#. module: rp_erection
+#: model:ir.actions.act_window,name:rp_erection.action_rp_erection_gate
+msgid "Cổng dựng máy"
+msgstr "Erection gates"
+
+#. module: rp_erection
+#: model:ir.actions.act_window,name:rp_erection.action_rp_erection_generate
+msgid "Sinh sổ dựng máy"
+msgstr "Generate erection register"
+
+#. module: rp_erection
+#: model:ir.actions.act_window,name:rp_erection.action_rp_erection_blocked
+msgid "Đang kẹt & trễ"
+msgstr "Blocked & late"
+

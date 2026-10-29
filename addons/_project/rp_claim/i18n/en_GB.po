@@ -51,3 +51,13 @@ msgstr "Document folders"
 msgid "Đang mở"
 msgstr "Open"
 
+#. module: rp_claim
+#: model:ir.actions.act_window,name:rp_claim.action_rp_claim
+msgid "Khiếu nại hợp đồng"
+msgstr "Contract claims"
+
+#. module: rp_claim
+#: model:ir.actions.act_window,name:rp_claim.action_rp_ld_assessment
+msgid "Phạt chậm tiến độ"
+msgstr "Liquidated damages assessment"
+

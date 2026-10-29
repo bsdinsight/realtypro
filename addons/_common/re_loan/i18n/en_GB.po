@@ -186,3 +186,123 @@ msgstr "Disbursement"
 msgid "Loại tiền"
 msgstr "Currency"
 
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_bank_branch
+msgid "Chi nhánh ngân hàng"
+msgstr "Bank branches"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_config_settings
+msgid "Cấu hình Vay & Khế ước"
+msgstr "Loan & promissory note settings"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_report_outstanding
+msgid "Dư nợ vay"
+msgstr "Loan outstanding"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_bank_advice
+msgid "Giấy báo nợ (Trích thu tự động)"
+msgstr "Bank debit advices (auto-debit)"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_facility
+msgid "Hạn mức tín dụng"
+msgstr "Credit facilities"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_credit_contract
+msgid "Hợp đồng tín dụng"
+msgstr "Credit agreements"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_bank_advice_import
+msgid "Import giấy báo nợ NH"
+msgstr "Import bank debit advices"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_note
+msgid "Khế ước nhận nợ"
+msgstr "Promissory notes"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_report_due
+msgid "Khế ước đến hạn"
+msgstr "Notes falling due"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_payment_plan_report
+msgid "Kế hoạch thanh toán KW theo năm"
+msgstr "Annual note repayment plan"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_collateral_type
+msgid "Loại tài sản đảm bảo"
+msgstr "Collateral types"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_report_interest_overdue
+msgid "Lịch lãi quá hạn"
+msgstr "Overdue interest schedule"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_purpose
+msgid "Mục đích sử dụng vốn"
+msgstr "Use of funds"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_bank
+msgid "Ngân hàng"
+msgstr "Banks"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_report_aging
+msgid "Nợ quá hạn (Aging)"
+msgstr "Overdue debt — ageing"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_facility_alloc
+msgid "Phân bổ HĐTD (Dự án × Mục đích)"
+msgstr "Credit agreement allocation — project × purpose"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_alloc_by_contract
+msgid "Phân bổ HĐTD theo Khế ước"
+msgstr "Credit agreement allocation by note"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_adjustment_note
+msgid "Thông báo Nợ/Có (điều chỉnh lãi)"
+msgstr "Debit / credit notes — interest adjustment"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_report_progress
+msgid "Tiến độ thanh toán"
+msgstr "Repayment progress"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_collateral
+msgid "Tài sản đảm bảo"
+msgstr "Collateral"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_appraiser
+msgid "Tổ chức / Người định giá"
+msgstr "Appraisers"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_credit_contract_summary
+msgid "Tổng hợp HĐTD (cho vay + bảo lãnh)"
+msgstr "Credit agreement summary — loans & guarantees"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_onlending
+msgid "Vay nội bộ"
+msgstr "On-lending"
+
+#. module: re_loan
+#: model:ir.actions.act_window,name:re_loan.action_re_loan_rate_mass_wizard
+msgid "Điều chỉnh LS hàng loạt"
+msgstr "Mass interest rate adjustment"
+

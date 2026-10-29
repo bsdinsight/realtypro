@@ -31,3 +31,8 @@ msgstr "Stock"
 msgid "Phiếu nhập kho"
 msgstr "Goods receipt notes"
 
+#. module: rp_purchase_stock
+#: model:ir.actions.act_window,name:rp_purchase_stock.action_rp_stock_product
+msgid "Vật tư & phụ tùng"
+msgstr "Materials & spares"
+

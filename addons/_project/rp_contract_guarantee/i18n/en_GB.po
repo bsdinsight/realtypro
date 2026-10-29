@@ -41,3 +41,13 @@ msgstr "Contractor agreements"
 msgid "Thư mục hồ sơ"
 msgstr "Document folders"
 
+#. module: rp_contract_guarantee
+#: model:ir.actions.act_window,name:rp_contract_guarantee.action_rp_contract_guarantee
+msgid "Bảo lãnh HĐ nhà thầu"
+msgstr "Contractor contract guarantees"
+
+#. module: rp_contract_guarantee
+#: model:ir.actions.act_window,name:rp_contract_guarantee.action_rp_contract_guarantee_expiring
+msgid "Bảo lãnh sắp / đã hết hạn"
+msgstr "Guarantees expiring or expired"
+

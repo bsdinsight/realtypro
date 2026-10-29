@@ -17,36 +17,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%(n)d mốc giờ, đọc theo múi giờ %(tz)s rồi quy về UTC"
 msgstr "%(n)d timestamps, read in time zone %(tz)s and converted to UTC"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%(n)d số đo, đọc theo múi giờ %(tz)s rồi quy về UTC%(h)s"
 msgstr "%(n)d readings, read in time zone %(tz)s and converted to UTC%(h)s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%d bậc đo"
 msgstr "%d metering stages"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%d dòng không đọc được thời điểm nên bị bỏ. Thường là dòng tổng ở cuối tệp hoặc dòng trống."
 msgstr "%d rows had no readable timestamp and were skipped. Usually the totals row at the foot of the file, or a blank row."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%d số đo vào kho kèm cờ chất lượng — xem luật làm sạch của điểm đo."
 msgstr "%d readings entered the store carrying a quality flag — see the tag's cleaning rules."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "%s (chỉ đối chiếu)"
 msgstr "%s (cross-check only)"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "; × hệ số %s"
 msgstr "; × factor %s"
@@ -138,11 +145,13 @@ msgid "Bảng — một dòng tiêu đề, mỗi cột một điểm đo"
 msgstr "Table — one heading row, one tag per column"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Bậc %s"
 msgstr "Stage %s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Bậc đo"
 msgstr "Metering stage"
@@ -164,6 +173,7 @@ msgid "Bỏ qua"
 msgstr "Dismiss"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "CHẠY THỬ — không ghi gì vào dữ liệu."
 msgstr "DRY RUN — nothing is written into the data."
@@ -179,6 +189,7 @@ msgid "Chép nhãn như trong tệp nguồn, ví dụ \"Energy Output (Inverter)
 msgstr "Copy the label as it appears in the source file, for example \"Energy Output (Inverter)\". It is not used for lookup — it is there so whoever reads the log can match it against the sheet in their hand."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Chưa tải tệp lên."
 msgstr "No file has been uploaded."
@@ -225,6 +236,7 @@ msgstr ""
 "            log shows the outcome in advance with nothing written."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Có dòng đối chiếu LỆCH: con số nhà máy tự tính khác con số hệ tính ra. Số của tệp vẫn được ghi nguyên; khoảng lệch nằm trong nhật ký."
 msgstr "Some cross-check lines DIFFER: the figure the plant computed is not the figure the system computes. The file's figure is still written as-is; the difference is in the log."
@@ -236,6 +248,7 @@ msgid "Có lỗi"
 msgstr "Has errors"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Có lỗi — xem nhật ký. Dữ liệu của sheet bị lỗi KHÔNG được ghi."
 msgstr "There were errors — see the log. The data of a failed sheet is NOT written."
@@ -247,6 +260,7 @@ msgid "Cảnh báo"
 msgstr "Alarm"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 #: model:ir.model.fields,field_description:eam_import.field_eam_import_template__cot_thoi_diem
 msgid "Cột thời điểm"
@@ -264,61 +278,73 @@ msgid "Diễn giải"
 msgstr "Explanation"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%(n)s\" ghi vào bậc đo thì luôn ghi vào ô sản lượng, nên không chọn trường được. Chọn trường chỉ có nghĩa khi bật \"chỉ đối chiếu\" — ví dụ đối chiếu tổn thất %% mà nhà máy tự tính với tổn thất hệ tính ra."
 msgstr "Line \"%(n)s\" writes into a metering stage, which always means the energy field, so no field can be chosen. Choosing a field only means something with \"cross-check only\" on — for example checking the loss %% the plant computed against the loss the system computes."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%(n)s\": %(e)s"
 msgstr "Line \"%(n)s\": %(e)s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%(n)s\": dải thời điểm có %(a)d ô, dải giá trị có %(b)d ô. Lệch số ô thì không biết giá trị nào thuộc giờ nào."
 msgstr "Line \"%(n)s\": the timestamp range has %(a)d cells, the value range has %(b)d. With different counts there is no telling which value belongs to which hour."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%(n)s\": trường \"%(f)s\" thuộc model %(m)s, không phải %(d)s."
 msgstr "Line \"%(n)s\": field \"%(f)s\" belongs to model %(m)s, not %(d)s."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" chưa khai cột trong bảng."
 msgstr "Line \"%s\" does not declare a column in the table."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" chưa khai ô nguồn."
 msgstr "Line \"%s\" does not declare a source cell."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" có hệ số bằng 0 — mọi giá trị đọc được sẽ thành 0 và không có gì báo lỗi. Để 1 nếu không cần đổi đơn vị."
 msgstr "Line \"%s\" has a factor of 0 — every value read becomes 0 with nothing to report an error. Use 1 when no unit conversion is needed."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" khai dải thời điểm %s nhưng chưa có vùng giá trị tương ứng."
 msgstr "Line \"%s\" declares a timestamp range %s but has no matching value range."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" khai một dải nhiều ô, nên đích phải là điểm đo — một trường đơn không nhận được mười ba giá trị."
 msgstr "Line \"%s\" declares a range of several cells, so the target has to be a measurement point — a single field cannot take thirteen values."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" đích là %s nhưng chưa chọn trường."
 msgstr "Line \"%s\" targets %s but no field has been chosen."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" đích là bậc đo nhưng chưa khai mã bậc."
 msgstr "Line \"%s\" targets a metering stage but declares no stage code."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Dòng \"%s\" đích là điểm đo nhưng chưa khai mã tag."
 msgstr "Line \"%s\" targets a measurement point but declares no tag code."
@@ -367,6 +393,7 @@ msgid "Khai mẫu nạp đầu tiên"
 msgstr "Declare the first import template"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Kho chuỗi thời gian"
 msgstr "Time-series store"
@@ -407,6 +434,7 @@ msgid "Lượt nạp dữ liệu"
 msgstr "Data import run"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Lượt nạp — %s"
 msgstr "Import run — %s"
@@ -434,6 +462,7 @@ msgid "Lỗi"
 msgstr "Error"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Lỗi không lường trước"
 msgstr "Unexpected error"
@@ -474,11 +503,13 @@ msgid "Mẫu"
 msgstr "Template"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Mẫu \"%s\" chưa có dòng ánh xạ nào — chạy sẽ không đọc gì."
 msgstr "Template \"%s\" has no mapping line — running it would read nothing."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Mẫu bảng \"%s\" chưa khai cột thời điểm."
 msgstr "Table template \"%s\" does not declare a timestamp column."
@@ -518,6 +549,7 @@ msgstr ""
 "            which field</b>. Declared once, after which each day is just an upload."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_template.py:0
 msgid "Mẫu tờ biểu \"%s\" chưa khai ô chứa ngày báo cáo. Không có ngày thì mọi con số đọc được đều không biết xếp vào đâu."
 msgstr "Form-sheet template \"%s\" does not declare the cell holding the report date. Without a date, none of the figures read can be placed anywhere."
@@ -558,11 +590,13 @@ msgid "Ngày"
 msgstr "Day"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Ngày báo cáo"
 msgstr "Report date"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Ngày đọc được: %(n)d (%(a)s → %(b)s)"
 msgstr "Days read: %(n)d (%(a)s → %(b)s)"
@@ -753,106 +787,127 @@ msgid "Về nháp"
 msgstr "Back to draft"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "chuỗi \"%(c)s\" không có bậc mã \"%(m)s\". Mã đang có: %(d)s."
 msgstr "chain \"%(c)s\" has no stage with code \"%(m)s\". The codes it has: %(d)s."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "chưa có bản ghi tương ứng để đối chiếu"
 msgstr "there is no matching record to cross-check against"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "chưa có tệp"
 msgstr "no file"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "giá trị \"%(v)s\" chưa có trong bảng ánh xạ của dòng mẫu. Trị hợp lệ: %(h)s."
 msgstr "value \"%(v)s\" is not in the mapping table of this template line. Valid values: %(h)s."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "hiệu suất"
 msgstr "performance"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "kho từ chối %(n)d số đo: %(d)s"
 msgstr "the store rejected %(n)d readings: %(d)s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "khí tượng"
 msgstr "weather"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "khớp trong sai số %s%%"
 msgstr "matches within a tolerance of %s%%"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "ngày %(a)s nằm trong tương lai (hôm nay %(b)s). Gần như luôn là lỗi ô ngày hoặc lỗi múi giờ của máy xuất tệp."
 msgstr "%(a)s lies in the future (today is %(b)s). Almost always a wrong date cell, or the time zone of the machine that produced the file."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "ngày %(a)s đã có dữ liệu (%(b)s). Bật cờ \"cho phép ghi đè\" nếu đây là bản sửa."
 msgstr "%(a)s already has data (%(b)s). Tick \"allow overwriting\" if this is a corrected version."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "nhà máy \"%s\" chưa khai chuỗi điểm đo nào — không có bậc để ghi vào."
 msgstr "plant \"%s\" has no metering chain declared — there is no stage to write into."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "nạp từ tệp \"%(f)s\" theo mẫu \"%(m)s\""
 msgstr "imported from file \"%(f)s\" using template \"%(m)s\""
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "sheet bị bỏ vì thiếu ô bắt buộc"
 msgstr "the sheet was skipped because a mandatory cell is missing"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "thiếu ô bắt buộc: %s. Bỏ qua cả sheet — không ghi gì."
 msgstr "a mandatory cell is missing: %s. The whole sheet is skipped — nothing is written."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "trị gốc × %s"
 msgstr "raw value × %s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tên sheet nói ngày %(a)s, ô %(o)s nói ngày %(b)s. Thường là sheet được nhân bản mà quên sửa ô ngày — ghi theo ô thì đè lên dữ liệu của ngày cũ. Bỏ qua cả sheet."
 msgstr "the sheet name says %(a)s while cell %(o)s says %(b)s. Usually a sheet copied without correcting the date cell — writing by the cell would overwrite the older day's data. The whole sheet is skipped."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tệp bảng là chuỗi thời gian, nên đích phải là điểm đo. Dòng này trỏ tới %s."
 msgstr "a table file is a time series, so the target has to be a measurement point. This line points at %s."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tệp không có cột \"%(a)s\". Tệp có: %(b)s."
 msgstr "the file has no column \"%(a)s\". It has: %(b)s."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tệp không có sheet tên \"%s\" — tệp có: %s"
 msgstr "the file has no sheet named \"%s\" — it has: %s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tệp nói %(a)s, hệ tính ra %(b)s — lệch %(c).3f%%. Đây là chỗ công thức của ta và của nhà máy chưa gặp nhau."
 msgstr "the file says %(a)s, the system computes %(b)s — a difference of %(c).3f%%. This is where our formula and the plant's have not yet met."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "tổn thất ÂM %(l).1f kWh: bậc này (%(a).1f) cao hơn bậc trước (%(b).1f). Điện không tăng khi đi qua một bậc — hãy soi lại hệ số đơn vị hoặc xem hai ô có bị khai đổi chỗ."
 msgstr "a NEGATIVE loss of %(l).1f kWh: this stage (%(a).1f) is higher than the one before it (%(b).1f). Energy does not increase on the way through a stage — check the unit factor, or whether two cells have been swapped."
@@ -883,6 +938,7 @@ msgid "Ô ghi"
 msgstr "Field written"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Ô ghi %(g)d · khớp %(k)d · LỆCH %(l)d · bỏ qua %(b)d · cảnh báo %(c)d · lỗi %(e)d"
 msgstr "Fields written %(g)d · matching %(k)d · DIFFERING %(l)d · skipped %(b)d · warnings %(c)d · errors %(e)d"
@@ -893,11 +949,13 @@ msgid "Ô đã ghi"
 msgstr "Fields written"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "ô ngày không đọc được thành ngày%s"
 msgstr "the date cell could not be read as a date%s"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "ô rỗng"
 msgstr "empty cell"
@@ -924,6 +982,7 @@ msgid "Đã nạp"
 msgstr "Imported"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Đã nạp vào dữ liệu."
 msgstr "Written into the data."
@@ -955,6 +1014,7 @@ msgid "Đọc lên, so với con số hệ tự tính, ghi khoảng lệch vào 
 msgstr "Read it, compare it with the figure the system computes itself, and record the difference in the log — do NOT write it into the data. The report carries the plant's own results (PR, denominator, temperature factor), so every import is an occasion on which our formula is checked against their own figures."
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "Đọc tệp"
 msgstr "Read the file"
@@ -990,6 +1050,7 @@ msgid "Đối chiếu — khớp"
 msgstr "Cross-check — matches"
 
 #. module: eam_import
+#. odoo-python
 #: code:addons/eam_import/models/eam_import_run.py:0
 msgid "đích là số nhưng ô chứa \"%s\""
 msgstr "the target is numeric but the cell holds \"%s\""

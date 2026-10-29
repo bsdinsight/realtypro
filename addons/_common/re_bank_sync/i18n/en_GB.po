@@ -31,3 +31,13 @@ msgstr "Bank transactions"
 msgid "Mô phỏng giao dịch (demo)"
 msgstr "Simulate a transaction (demo)"
 
+#. module: re_bank_sync
+#: model:ir.actions.act_window,name:re_bank_sync.action_re_bank_transaction
+msgid "Giao dịch ngân hàng"
+msgstr "Bank transactions"
+
+#. module: re_bank_sync
+#: model:ir.actions.act_window,name:re_bank_sync.action_sepay_simulate
+msgid "Mô phỏng giao dịch SePay"
+msgstr "SePay transaction simulator"
+

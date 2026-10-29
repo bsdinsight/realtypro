@@ -119,3 +119,31 @@ Giữ nhất quán, vì ba module dùng chung một từ mà dịch ba kiểu l�
 
 `idx.json` có **3.919** chuỗi cần dịch cho 30 module EAMOne. Đếm số dòng
 trong `dich/*.tsv` là biết đã xong bao nhiêu.
+
+## Chạy trên `aip` (stack tenants) — ba chỗ vấp
+
+1. **Đúng máy chủ PG.** `aip` tồn tại trên CẢ `realtypro-db` lẫn
+   `realtypro-ent-db`; bản thật là **`realtypro-ent-db`**. Trỏ nhầm thì
+   `odoo -u` vẫn in `Registry loaded` và trả **EXIT=0** mà không làm gì,
+   còn `i18n export` báo *"No valid module has been provided"* — thông
+   báo ấy nghĩa là "module không installed trong DB vừa kết nối", không
+   phải sai đường addons.
+2. **Tệp cấu hình riêng, đặt ở chỗ ghi được.** `/etc/odoo/odoo.conf`
+   không có `db_password` (lúc chạy server entrypoint mới nạp), và
+   `/tmp` trong container thuộc root còn tiến trình chạy bằng `odoo`.
+   Dùng `/var/lib/odoo`:
+   ```
+   docker exec realtypro-tenants-odoo sh -lc 'D=/var/lib/odoo
+     cp /etc/odoo/odoo.conf $D/i18n.conf
+     printf "db_password = %s\n" "$PASSWORD" >> $D/i18n.conf
+     odoo i18n export -c $D/i18n.conf -d aip <mod> -l en_GB -o $D/x.po'
+   ```
+   Thêm `db_host` vào tệp ĐÃ có dòng `db_host` thì configparser nổ
+   `DuplicateOptionError` — sửa bằng `sed`, đừng nối thêm.
+3. **Chuỗi JS/XML cần `_t`, chuỗi Python cần `_()`.** Bộ xuất chỉ thấy
+   chuỗi nằm trong hai hàm đó. Chuỗi trần trong `.js`, và chuỗi viết
+   trong biểu thức `t-esc` của khuôn mẫu OWL, **không bao giờ** ra
+   `.po` — nhìn `.po` thấy ít chuỗi bất thường thì đọc lại nguồn trước
+   khi kết luận "màn này đã tiếng Anh". Và đừng nối chuỗi từ nhiều mẩu
+   dịch rời: gộp cả câu vào một chuỗi có chỗ thay số, để thứ tự từ đổi
+   được theo ngôn ngữ.

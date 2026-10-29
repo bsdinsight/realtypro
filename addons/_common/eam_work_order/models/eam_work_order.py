@@ -62,7 +62,11 @@ class EamWorkOrder(models.Model):
     # dịch thì hệ rơi về bản gốc.
     title = fields.Char(string='Nội dung công việc', required=True,
                         tracking=True, translate=True)
-    description = fields.Text(string='Diễn giải')
+    # Bốn trường tường thuật dưới đây mở translate=True cùng lý do với
+    # `title`: đội song ngữ đọc được hồ sơ bằng tiếng Anh. Chữ trong
+    # chúng phần lớn do máy dựng (bước công việc từ kế hoạch, lời giải
+    # thích của luật mùa) — bản đã lưu là ảnh chụp, không dựng lại.
+    description = fields.Text(string='Diễn giải', translate=True)
 
     # ------------------------------------------------------------------
     # Phân loại
@@ -317,10 +321,10 @@ class EamWorkOrder(models.Model):
              'hóc được bắt TRƯỚC khi mất sản lượng. Giám sát trạng thái '
              'chỉ đáng tiền khi tỷ lệ đó cao hơn hẳn.')
     root_cause = fields.Text(
-        string='Nguyên nhân gốc',
+        string='Nguyên nhân gốc', translate=True,
         help='Vì sao cơ chế đó xảy ra: lắp sai lực siết, bôi trơn thiếu, '
              'lỗi thiết kế, lỗi lô hàng. Khác dạng hỏng và cơ chế hỏng.')
-    corrective_action = fields.Text(string='Việc đã làm')
+    corrective_action = fields.Text(string='Việc đã làm', translate=True)
 
     # ------------------------------------------------------------------
     # Chi phí
@@ -337,7 +341,8 @@ class EamWorkOrder(models.Model):
         string='Chi phí thuê ngoài', tracking=True,
         help='Thuê cẩu, thuê chuyên gia, vận chuyển. Khai gộp vì các '
              'khoản này thường về theo một hoá đơn.')
-    cost_service_note = fields.Char(string='Diễn giải thuê ngoài')
+    cost_service_note = fields.Char(string='Diễn giải thuê ngoài',
+                                    translate=True)
     cost_total = fields.Monetary(
         string='Chi phí can thiệp', compute='_compute_cost', store=True,
         help='Giờ công + vật tư + thuê ngoài. CHƯA tính sản lượng mất.')

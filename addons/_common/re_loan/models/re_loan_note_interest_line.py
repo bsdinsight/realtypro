@@ -181,6 +181,12 @@ class ReLoanNoteInterestLine(models.Model):
              '• bị TRÍCH DƯ (xem ô "Trích dư").\n'
              'Dùng để lọc nhanh trên Lịch lãi những kỳ không khớp '
              'tròn với nghĩa vụ.')
+    amount_over_net_off = fields.Monetary(
+        string='Trích dư đã net-off', readonly=True, copy=False,
+        help='Phần THU DƯ của kỳ đã được chấp nhận là chênh lệch làm '
+             'tròn bằng nút "Net-off lẻ". KHÔNG trừ vào ô "Trích dư" — '
+             'ô đó ghi nhận đã từng thu dư bao nhiêu, ô này ghi nhận '
+             'đã xử bao nhiêu trong số đó.')
     net_off_allowed = fields.Boolean(
         string='Được net-off', compute='_compute_net_off_allowed',
         help='Kỳ còn chênh lệch trong ngưỡng cho phép. Vượt ngưỡng '
@@ -196,18 +202,89 @@ class ReLoanNoteInterestLine(models.Model):
         bấm được ở màn "Trích thu tự động" — người theo dõi khế ước
         đang đứng ở Lịch lãi phải bỏ màn hình đi tìm giấy báo, mà
         không có gì trên Lịch lãi nói cho họ biết là phải đi đâu.
+
+        Việc 1571: tiền trả THẲNG VÀO KỲ (nút "Thanh toán" trên Lịch
+        lãi, không qua giấy báo) cũng lệch được cả hai chiều, mà cả
+        hai chiều đó trước đây đều không có nút:
+        • trả THỪA: ba ô "còn lại" kẹp sàn 0 nên kỳ đọc là "Đã trả",
+          chênh lệch nằm ở ô "Trích dư" và không có đường nào đóng —
+          chiều dư chỉ bấm được khi tiền đến từ giấy báo;
+        • trả THIẾU phần PHÍ: phép so chỉ cộng gốc + lãi, thiếu phí
+          thì chênh lệch đọc ra 0 → nút ẩn, mà kỳ vẫn mắc ở "Trả một
+          phần" vì trạng thái có xét phí. Kỳ đó không có cách nào về
+          "Đã trả".
         """
         threshold = self.env['res.config.settings'].sudo(
         ).get_net_off_threshold()
         for line in self:
-            diff = ((line.amount_principal_remaining or 0.0)
-                    + (line.amount_interest_remaining or 0.0))
+            diff = line._net_off_short_amount()
             short_ok = (line.state != 'paid' and 0.01 < diff <= threshold)
             over = line._pending_advice_over()
-            over_ok = bool(over) and 0.01 < sum(
+            advice_ok = bool(over) and 0.01 < sum(
                 al.amount_unallocated for al in over) <= threshold
+            # Cùng một phép tính với lúc bấm nút: chiều nào vượt ngưỡng
+            # thì nút ẩn hẳn, không hiện ra rồi bấm vào mới báo lỗi.
+            own_over = line._net_off_over_amount(
+                extra_paid=diff if diff > 0.01 else 0.0)
+            own_ok = (
+                (short_ok or own_over > 0.01)
+                and diff <= threshold and own_over <= threshold)
             line.net_off_allowed = bool(
-                threshold > 0 and (short_ok or over_ok))
+                threshold > 0 and (advice_ok or own_ok))
+
+    def _net_off_short_amount(self):
+        """Chênh lệch THIẾU của kỳ = gốc còn + lãi còn + PHÍ còn.
+
+        Phí phải có trong phép cộng này vì trạng thái kỳ cũng xét phí:
+        bỏ phí ra thì kỳ thiếu đúng phần phí sẽ vừa không net-off được
+        (chênh lệch đọc ra 0) vừa không về được "Đã trả" (việc 1571).
+        """
+        self.ensure_one()
+        return ((self.amount_principal_remaining or 0.0)
+                + (self.amount_interest_remaining or 0.0)
+                + (self.amount_fee_remaining or 0.0))
+
+    def _net_off_over_amount(self, extra_paid=0.0):
+        """Phần THU DƯ của chính kỳ còn treo — tiền trả thẳng vào kỳ.
+
+        Chỉ tính tiền đã ghi vào kỳ (các dòng trả nợ) vượt nghĩa vụ,
+        trừ đi phần đã net-off. KHÔNG gộp phần ngân hàng trích dư còn
+        treo ở giấy báo: phần đó đóng ở chính dòng trích thu (xem
+        `_pending_advice_over`), gộp vào đây là đếm hai lần.
+
+        `extra_paid` = số sắp ghi thêm vào kỳ trong cùng một lần bấm
+        (dòng net-off chiều thiếu). Cần tham số này để kiểm ngưỡng CẢ
+        HAI chiều TRƯỚC khi ghi bất cứ thứ gì: một kỳ vừa thiếu gốc
+        vừa thừa lãi thì bù cho đủ gốc xong mới lộ ra phần thừa, mà
+        lúc đó báo lỗi là cuộn mất luôn phần đã làm đúng.
+        """
+        self.ensure_one()
+        return max(0.0, self._paid_over_due(extra_paid)
+                   - (self.amount_over_net_off or 0.0))
+
+    def _paid_over_due(self, extra_paid=0.0):
+        """Tiền đã ghi vào kỳ trừ nghĩa vụ của kỳ. Âm = kỳ còn thiếu."""
+        self.ensure_one()
+        due = max(0.0, (self.principal_due or 0.0)
+                  + (self.interest_amount or 0.0)
+                  + (self.fee_amount or 0.0))
+        paid = ((self.amount_principal_paid or 0.0)
+                + (self.amount_interest_paid or 0.0)
+                + (self.amount_fee_paid or 0.0))
+        return paid + extra_paid - due
+
+    def _clamp_over_net_off(self):
+        """Phần đã net-off không được lớn hơn phần còn dư thật.
+
+        Xoá hoặc sửa chứng từ trả dư sau khi đã net-off thì khoản dư
+        không còn nữa, nhưng ô "Trích dư đã net-off" vẫn giữ số cũ. Để
+        vậy thì lần sau trả dư thật, số cũ này trừ mất phần dư mới và
+        nút Net-off không hiện.
+        """
+        for line in self.filtered('amount_over_net_off'):
+            real_over = max(0.0, line._paid_over_due())
+            if line.amount_over_net_off > real_over:
+                line.amount_over_net_off = real_over
 
     def _pending_advice_over(self):
         """Dòng trích thu của kỳ này còn tiền treo, chưa net-off."""
@@ -607,39 +684,47 @@ class ReLoanNoteInterestLine(models.Model):
         }
 
     def action_auto_net_off_period(self):
-        """Auto net-off chênh lệch lẻ trên kỳ — tạo 1 repayment
-        write-off với amount = số còn phải trả (gốc + lãi) để
-        paid_total = due_total và state → 'paid'.
+        """Auto net-off chênh lệch lẻ trên kỳ — cả hai chiều.
 
-        Use case: NH trích đủ rồi nhưng còn lệch vài đồng/vài trăm ₫
-        do làm tròn. KTT click button trên kỳ → kỳ về 'paid' không
-        cần tạo trích thu khác cho con số bé.
+        Chiều THIẾU: tạo 1 dòng trả nợ write-off = số còn phải trả
+        (gốc + lãi + phí) để paid_total = due_total và kỳ về 'paid'.
+
+        Chiều DƯ (việc 1571): tiền đã trả vượt nghĩa vụ của kỳ thì
+        không có gì để ghi thêm — tiền đã nằm trong kỳ rồi. Chỉ ghi
+        nhận phần dư đó là chênh lệch đã xử (ô "Trích dư đã net-off")
+        để nó thôi treo. KHÔNG sửa dòng trả nợ đã lập: đó là chứng từ
+        tiền thật.
+
+        Use case: NH trích/kế toán chi đủ rồi nhưng còn lệch vài
+        đồng/vài trăm ₫ do làm tròn. KTT bấm nút trên kỳ → kỳ khớp,
+        không cần lập thêm chứng từ cho con số bé.
 
         Ngưỡng lấy từ Vay > Cấu hình > Tham số phân hệ Vay (mặc
-        định 100.000 ₫).
-        Vượt → UserError, KTT phải tạo repayment chính thức.
+        định 100.000 ₫). Vượt → UserError, KTT phải tạo repayment
+        chính thức. Kiểm ngưỡng cả hai chiều TRƯỚC khi ghi.
         """
         from odoo.exceptions import UserError
         THRESHOLD = self.env['res.config.settings'].sudo(
         ).get_net_off_threshold()
         Repayment = self.env['re.loan.note.repayment']
         for line in self:
-            # Chiều DƯ: tiền thừa không nằm ở kỳ mà nằm ở dòng trích
-            # thu (giấy báo chỉ rót tối đa bằng nghĩa vụ của kỳ). Uỷ
-            # quyền sang đúng dòng đó — CÙNG một thao tác với bấm ở
-            # màn "Trích thu tự động", chỉ là bấm được từ Lịch lãi.
+            # Tiền thừa do NGÂN HÀNG trích không nằm ở kỳ mà nằm ở
+            # dòng trích thu (giấy báo chỉ rót tối đa bằng nghĩa vụ
+            # của kỳ). Uỷ quyền sang đúng dòng đó — CÙNG một thao tác
+            # với bấm ở màn "Trích thu tự động", chỉ là bấm được từ
+            # Lịch lãi.
             over = line._pending_advice_over()
             if over:
                 over.action_auto_net_off()
                 continue
-            if line.state == 'paid':
-                raise UserError(_(
-                    "Kỳ %s đã trả đủ — không có gì net-off.",
-                    line.period_no))
             diff_p = line.amount_principal_remaining
             diff_i = line.amount_interest_remaining
-            total_diff = diff_p + diff_i
-            if total_diff <= 0.01:
+            diff_f = line.amount_fee_remaining
+            total_diff = diff_p + diff_i + diff_f
+            short = total_diff > 0.01
+            own_over = line._net_off_over_amount(
+                extra_paid=total_diff if short else 0.0)
+            if not short and own_over <= 0.01:
                 raise UserError(_(
                     "Kỳ %s không có chênh lệch — đã khớp 100%%.",
                     line.period_no))
@@ -657,25 +742,48 @@ class ReLoanNoteInterestLine(models.Model):
                     p=line.period_no,
                     d='{:,.0f}'.format(total_diff),
                     t='{:,.0f}'.format(THRESHOLD)))
-            Repayment.create({
-                'note_id': line.note_id.id,
-                'date': fields.Date.context_today(line),
-                'amount_principal': diff_p,
-                'amount_interest': diff_i,
-                'reference': _(
-                    "Net-off chênh lệch lẻ kỳ %s") % line.period_no,
-                'interest_line_id': line.id,
-                'is_net_off': True,
-                'amount_net_off': total_diff,
-            })
-            line.note_id.message_post(body=_(
-                "Auto net-off chênh lệch lẻ kỳ %(p)s: gốc %(g)s ₫, "
-                "lãi %(l)s ₫ (tổng %(t)s ₫ ≤ ngưỡng %(thr)s ₫).",
-                p=line.period_no,
-                g='{:,.0f}'.format(diff_p),
-                l='{:,.0f}'.format(diff_i),
-                t='{:,.0f}'.format(total_diff),
-                thr='{:,.0f}'.format(THRESHOLD)))
+            if own_over > THRESHOLD:
+                raise UserError(_(
+                    "Kỳ %(p)s thu dư %(o)s ₫, vượt ngưỡng net-off "
+                    "%(t)s ₫ — số này quá lớn để coi là chênh lệch "
+                    "làm tròn. Sửa lại chứng từ trả nợ, hoặc chuyển "
+                    "phần dư sang kỳ khác.",
+                    p=line.period_no,
+                    o='{:,.0f}'.format(own_over),
+                    t='{:,.0f}'.format(THRESHOLD)))
+            if short:
+                Repayment.create({
+                    'note_id': line.note_id.id,
+                    'date': fields.Date.context_today(line),
+                    'amount_principal': diff_p,
+                    'amount_interest': diff_i,
+                    'amount_fee': diff_f,
+                    'reference': _(
+                        "Net-off chênh lệch lẻ kỳ %s") % line.period_no,
+                    'interest_line_id': line.id,
+                    'is_net_off': True,
+                    'amount_net_off': total_diff,
+                })
+                line.note_id.message_post(body=_(
+                    "Auto net-off chênh lệch lẻ kỳ %(p)s: gốc %(g)s ₫, "
+                    "lãi %(l)s ₫, phí %(f)s ₫ (tổng %(t)s ₫ ≤ ngưỡng "
+                    "%(thr)s ₫).",
+                    p=line.period_no,
+                    g='{:,.0f}'.format(diff_p),
+                    l='{:,.0f}'.format(diff_i),
+                    f='{:,.0f}'.format(diff_f),
+                    t='{:,.0f}'.format(total_diff),
+                    thr='{:,.0f}'.format(THRESHOLD)))
+            if own_over > 0.01:
+                line.amount_over_net_off = (
+                    (line.amount_over_net_off or 0.0) + own_over)
+                line.note_id.message_post(body=_(
+                    "Net-off %(o)s ₫ thu dư ở kỳ %(p)s (≤ ngưỡng "
+                    "%(thr)s ₫) — phần dư không còn treo. Chứng từ "
+                    "trả nợ giữ nguyên số đã chi.",
+                    o='{:,.0f}'.format(own_over),
+                    p=line.period_no,
+                    thr='{:,.0f}'.format(THRESHOLD)))
 
     def action_view_repayments(self):
         """Mở list các repayments đã allocate vào kỳ này (manual + auto-debit)."""

@@ -137,7 +137,9 @@ class ReLoanNoteRepayment(models.Model):
         old_lines = self.mapped('interest_line_id')
         res = super().write(vals)
         self.note_id._update_payment_state()
-        (old_lines | self.mapped('interest_line_id'))._compute_paid_amounts()
+        lines = old_lines | self.mapped('interest_line_id')
+        lines._compute_paid_amounts()
+        lines._clamp_over_net_off()
         return res
 
     def unlink(self):
@@ -146,4 +148,5 @@ class ReLoanNoteRepayment(models.Model):
         res = super().unlink()
         notes._update_payment_state()
         old_lines._compute_paid_amounts()
+        old_lines._clamp_over_net_off()
         return res

@@ -12,3 +12,4 @@ from . import test_bank_advice
 from . import test_loan_purpose
 from . import test_facility_project
 from . import test_adjustment_note
+from . import test_net_off_period

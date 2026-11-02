@@ -423,6 +423,11 @@
                                     <field name="amount_overpaid" width="185px"
                                            optional="show"
                                            decoration-warning="amount_overpaid > 0"/>
+                                    <field name="amount_over_net_off"
+                                           width="185px"
+                                           string="Dư đã net-off"
+                                           sum="Σ dư đã net-off"
+                                           readonly="1" optional="show"/>
                                     <field name="amount_interest_remaining" width="185px"
                                            string="Lãi còn"
                                            sum="Σ lãi còn"

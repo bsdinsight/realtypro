@@ -129,8 +129,11 @@ def step_copy(src, dst):
         s = os.path.join(src, m)
         if not os.path.isdir(s):
             raise SystemExit('Không thấy module %s trong %s' % (m, src))
+        # KHÔNG chép .po của nguồn: chúng dịch từ chuỗi TIẾNG VIỆT, còn
+        # bản 17 có chuỗi gốc tiếng Anh nên không mục nào khớp. Bộ dịch
+        # của bản giao sinh riêng ở bước 3 trong RELEASE.md.
         shutil.copytree(s, os.path.join(dst, m),
-                        ignore=shutil.ignore_patterns('__pycache__'))
+                        ignore=shutil.ignore_patterns('__pycache__', '*.po'))
     note('  chép %s module' % len(ISLAND))
 
 

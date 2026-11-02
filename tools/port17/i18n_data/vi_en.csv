@@ -2614,3 +2614,10 @@ It tells you how much is sitting at the bank — if ""Awaiting bank approval"" i
 🔄 Tải danh sách KW theo bộ lọc,🔄 Load the notes matching the filter
 "HĐTD ""%(n)s"" đã có khế ước: không đổi được ngân hàng, tiền tệ và công ty nữa (%(f)s). Huỷ khế ước trước, hoặc lập HĐTD mới.","Credit contract ""%(n)s"" already has promissory notes: the bank, currency and company can no longer be changed (%(f)s). Cancel the notes first, or create a new credit contract."
 "Số HĐTD ""%(n)s"" đã tồn tại cho ngân hàng ""%(b)s"" trong công ty ""%(c)s"".","Credit contract number ""%(n)s"" already exists for bank ""%(b)s"" in company ""%(c)s""."
+Trích dư đã net-off,Over-collection netted off
+"Phần THU DƯ của kỳ đã được chấp nhận là chênh lệch làm tròn bằng nút ""Net-off lẻ"". KHÔNG trừ vào ô ""Trích dư"" — ô đó ghi nhận đã từng thu dư bao nhiêu, ô này ghi nhận đã xử bao nhiêu trong số đó.","The part of this period's OVER-COLLECTION accepted as a rounding difference via the ""Net off rounding"" button. It is NOT deducted from ""Over-collected"": that field records how much was ever over-collected, this one records how much of it has been dealt with."
+"Kỳ %(p)s thu dư %(o)s ₫, vượt ngưỡng net-off %(t)s ₫ — số này quá lớn để coi là chênh lệch làm tròn. Sửa lại chứng từ trả nợ, hoặc chuyển phần dư sang kỳ khác.","Period %(p)s was over-collected by %(o)s ₫, above the net-off threshold of %(t)s ₫ — too large to treat as a rounding difference. Correct the repayment document, or move the excess to another period."
+"Auto net-off chênh lệch lẻ kỳ %(p)s: gốc %(g)s ₫, lãi %(l)s ₫, phí %(f)s ₫ (tổng %(t)s ₫ ≤ ngưỡng %(thr)s ₫).","Rounding difference netted off automatically for period %(p)s: principal %(g)s ₫, interest %(l)s ₫, fee %(f)s ₫ (total %(t)s ₫ ≤ threshold %(thr)s ₫)."
+Net-off %(o)s ₫ thu dư ở kỳ %(p)s (≤ ngưỡng %(thr)s ₫) — phần dư không còn treo. Chứng từ trả nợ giữ nguyên số đã chi.,Net-off of %(o)s ₫ over-collected on period %(p)s (≤ threshold %(thr)s ₫) — the excess is no longer pending. The repayment document keeps the amount actually paid.
+Dư đã net-off,Excess netted off
+Σ dư đã net-off,Σ excess netted off

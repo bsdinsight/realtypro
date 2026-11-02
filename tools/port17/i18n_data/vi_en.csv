@@ -2627,3 +2627,5 @@ Dư đã net-off,Excess netted off
 Số tiền khế ước đã được cập nhật lại giá trị từ %(o)s sang %(v)s.,The promissory note amount has been updated from %(o)s to %(v)s.
 Đã cập nhật số tiền khế ước,Promissory note amount updated
 "Số tiền cam kết của KW. Khi user thêm/sửa/huỷ giải ngân, field này tự = Σ số tiền các dòng giải ngân chưa huỷ. User vẫn override tay được nếu cần.","Committed amount of the promissory note. When a user adds, edits or cancels a disbursement, this field becomes the Σ of the disbursement lines that are not cancelled. Users can still override it by hand if needed."
+"Số tiền cam kết của KW, tự bằng tổng các dòng giải ngân chưa huỷ. Khế ước đã kích hoạt muốn đổi số tiền thì lập phụ lục.","Committed amount of the promissory note, equal to the total of the disbursement lines that are not cancelled. Once the note is activated, change the amount through an amendment."
+Khế ước %(n)s chưa nhập thông tin giải ngân. Vào tab Giải ngân thêm ít nhất một dòng rồi thử lại.,Promissory note %(n)s has no disbursement information yet. Add at least one line on the Disbursement tab and try again.

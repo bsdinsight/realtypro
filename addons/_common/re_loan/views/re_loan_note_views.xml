@@ -172,9 +172,11 @@
                 <header>
                     <button name="action_send_to_bank" type="object"
                             string="Gửi Ngân hàng" class="btn-primary"
+                            context="{'check_disbursement_lines': True}"
                             invisible="state != 'draft'"/>
                     <button name="action_activate" type="object"
                             string="Kích hoạt" class="btn-primary"
+                            context="{'check_disbursement_lines': True}"
                             invisible="state != 'sent_to_bank'"/>
                     <button name="action_cancel" type="object" string="Huỷ"
                             invisible="state in ('fully_paid','cancelled')"/>
@@ -247,7 +249,12 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="amount"/>
+                            <!-- Chỉ đọc, tự bằng tổng các dòng giải ngân. Phải
+                                 có force_save: ô chỉ đọc không được gửi khi
+                                 lưu, mà số do onchange tính nằm ở đúng ô này.
+                                 Điều kiện giống _amount_follows_disbursements. -->
+                            <field name="amount" force_save="1"
+                                   readonly="loan_type == 'external' and facility_type not in ('guarantee_line', 'lc_line')"/>
                             <!-- Bản sao VÔ ĐIỀU KIỆN của currency_id. Trường hiển thị bên
                          dưới bị khoá theo nhóm Đa tiền tệ; người dùng không ở
                          nhóm đó thì currency_id KHÔNG có trong form, widget

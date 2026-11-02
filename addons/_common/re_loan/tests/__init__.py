@@ -14,3 +14,4 @@ from . import test_facility_project
 from . import test_adjustment_note
 from . import test_net_off_period
 from . import test_disbursement_cancel
+from . import test_note_amount_from_lines

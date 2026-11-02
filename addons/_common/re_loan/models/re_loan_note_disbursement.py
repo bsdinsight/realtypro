@@ -253,4 +253,4 @@ class ReLoanNoteDisbursement(models.Model):
                 raise UserError(_(
                     "Không thể huỷ giải ngân đã chuyển tiền."))
             rec.state = 'cancelled'
-        return self.note_id._sync_amount_from_disbursements()
+        return self.note_id._sync_amount_from_disbursements(cancelled=self)

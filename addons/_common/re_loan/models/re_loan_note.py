@@ -139,9 +139,8 @@ class ReLoanNote(models.Model):
              'khi field này thay đổi.')
     amount = fields.Monetary(
         string='Số tiền KW', required=True, tracking=True,
-        help='Số tiền cam kết của KW. Khi user thêm/sửa/huỷ giải ngân, '
-             'field này tự = Σ số tiền các dòng giải ngân chưa huỷ. '
-             'User vẫn override tay được nếu cần.')
+        help='Số tiền cam kết của KW, tự bằng tổng các dòng giải ngân chưa '
+             'huỷ. Khế ước đã kích hoạt muốn đổi số tiền thì lập phụ lục.')
     interest_rate = fields.Float(
         string='Lãi suất (%/năm)', digits=(5, 2), tracking=True,
         aggregator=None,
@@ -521,35 +520,93 @@ class ReLoanNote(models.Model):
     @api.onchange('disbursement_ids')
     def _onchange_disbursement_sum_amount(self):
         """Khi user thêm/sửa/xóa giải ngân, Số tiền KW tự = Σ giải ngân
-        chưa huỷ. User vẫn override tay được sau đó nhưng lần edit giải
-        ngân tiếp theo sẽ overwrite.
-        """
-        if self.disbursement_ids:
-            self.amount = sum(self.disbursement_ids.filtered(
-                lambda d: d.state != 'cancelled').mapped('amount'))
+        chưa huỷ (ô này chỉ đọc, xem `_amount_follows_disbursements`).
 
-    def _sync_amount_from_disbursements(self, reviving=None):
+        Khế ước đã kích hoạt mà số tiền đang không khớp các dòng thì đó là
+        số đã ký hoặc số từ phụ lục, không phải tổng các dòng: giữ nguyên.
+        Thêm một đợt 100tr vào khế ước 500tr chưa khai dòng nào không được
+        làm số nợ tụt còn 100tr, nhất là khi người dùng không gõ lại được.
+        """
+        total = sum(self.disbursement_ids.filtered(
+            lambda d: d.state != 'cancelled').mapped('amount'))
+        if not self._amount_follows_disbursements():
+            if self.disbursement_ids:
+                self.amount = total
+            return
+        origin = self._origin
+        if origin and self.state not in ('draft', 'sent_to_bank'):
+            before = sum(origin.disbursement_ids.filtered(
+                lambda d: d.state != 'cancelled').mapped('amount'))
+            rounding = self.currency_id.rounding or 0.01
+            if abs(origin.amount - before) >= rounding:
+                return
+        self.amount = total
+
+    def _amount_follows_disbursements(self):
+        """Số tiền KW lấy từ các dòng giải ngân, không nhập tay (việc 1594).
+
+        Cho vay lại và hạn mức bảo lãnh / L-C không có đợt tiền ngân hàng
+        chuyển về, nên vẫn nhập tay. View dùng cùng điều kiện này cho thuộc
+        tính readonly của ô Số tiền KW.
+        """
+        self.ensure_one()
+        return (self.loan_type == 'external'
+                and self.facility_type not in ('guarantee_line', 'lc_line'))
+
+    def _check_disbursement_lines(self):
+        """Báo khi bấm Gửi NH / Kích hoạt mà tab Giải ngân còn trống (1594).
+
+        Chỉ chạy với cờ trong context của hai nút trên form. Các luồng gọi
+        bằng mã, như module mở rộng của đối tác, có quy trình riêng nên
+        không chặn ở đây.
+        """
+        if not self.env.context.get('check_disbursement_lines'):
+            return
+        for rec in self:
+            if not rec._amount_follows_disbursements():
+                continue
+            if not rec.disbursement_ids.filtered(
+                    lambda d: d.state != 'cancelled'):
+                raise UserError(_(
+                    "Khế ước %(n)s chưa nhập thông tin giải ngân. Vào tab "
+                    "Giải ngân thêm ít nhất một dòng rồi thử lại.",
+                    n=rec.name or ''))
+
+    def _sync_amount_from_disbursements(self, cancelled=None, reviving=None):
         """Số tiền KW = Σ các dòng giải ngân chưa huỷ (việc 1595).
 
-        Gọi khi huỷ một dòng hoặc khi đưa dòng đã huỷ về Nháp. `reviving`
-        là các dòng sắp thôi trạng thái huỷ: số tiền phải tăng TRƯỚC khi
-        đổi trạng thái dòng, vì ràng buộc của dòng so tổng giải ngân với
-        số tiền KW.
+        Gọi khi huỷ một dòng (`cancelled`) hoặc khi đưa dòng đã huỷ về Nháp.
+        `reviving` là các dòng sắp thôi trạng thái huỷ: số tiền phải tăng
+        TRƯỚC khi đổi trạng thái dòng, vì ràng buộc của dòng so tổng giải
+        ngân với số tiền KW.
 
         Trả về hành động hiện thông báo rồi tải lại màn hình: dòng mở trong
         hộp thoại nên form khế ước phía sau không tự đọc lại ô số tiền.
         Không có gì đổi thì trả True.
         """
-        reviving = reviving or self.env['re.loan.note.disbursement']
+        Disbursement = self.env['re.loan.note.disbursement']
+        cancelled = cancelled or Disbursement
+        reviving = reviving or Disbursement
         messages = []
         for note in self:
-            if note.state == 'cancelled':
+            if (note.state == 'cancelled'
+                    or not note._amount_follows_disbursements()):
                 continue
             live = note.disbursement_ids.filtered(
                 lambda d: d.state != 'cancelled' or d in reviving)
             old = note.amount
             new = sum(live.mapped('amount'))
-            if abs(new - old) < (note.currency_id.rounding or 0.01):
+            rounding = note.currency_id.rounding or 0.01
+            if abs(new - old) < rounding:
+                continue
+            # Đã kích hoạt mà số tiền vốn không khớp các dòng thì đó là số
+            # đã ký hoặc số từ phụ lục: huỷ một đợt không đổi nó, cùng lý do
+            # với `_onchange_disbursement_sum_amount`.
+            before = (new
+                      + sum((cancelled & note.disbursement_ids).mapped('amount'))
+                      - sum((reviving & note.disbursement_ids).mapped('amount')))
+            if (note.state not in ('draft', 'sent_to_bank')
+                    and abs(old - before) >= rounding):
                 continue
             if new <= 0 and note.state != 'draft':
                 raise UserError(_(
@@ -745,6 +802,7 @@ class ReLoanNote(models.Model):
         hàng, để khế ước "Đã gửi NH" mà từng đợt giải ngân vẫn "Nháp"
         thì người xem tưởng còn thiếu bước nào đó chưa làm.
         """
+        self._check_disbursement_lines()
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_(
@@ -847,6 +905,7 @@ class ReLoanNote(models.Model):
         return True
 
     def action_activate(self):
+        self._check_disbursement_lines()
         for rec in self:
             # Cho phép kích hoạt từ Nháp (workflow rút gọn cũ) hoặc
             # từ Đã gửi NH (workflow chuẩn mới: NH duyệt → kích hoạt).

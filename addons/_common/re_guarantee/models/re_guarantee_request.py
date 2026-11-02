@@ -252,7 +252,7 @@ class ReGuaranteeRequest(models.Model):
          ('cancelled', 'Huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True,
         # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
-        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        # lực: bản sao phải quay về Nháp (đối tác báo, PR #7).
         copy=False)
     date_settled = fields.Date(string='Ngày tất toán', readonly=True)
     date_issued = fields.Date(string='Ngày phát hành chứng thư',

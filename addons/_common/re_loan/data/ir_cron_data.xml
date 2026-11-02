@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- noupdate: khách bật/tắt tác vụ nào thì giữ nguyên lựa chọn
-         đó qua mỗi lần nâng cấp (XBOSS báo, PR #7). -->
+         đó qua mỗi lần nâng cấp (đối tác báo, PR #7). -->
     <data noupdate="1">
         <record id="cron_loan_update_status" model="ir.cron">
             <field name="name">Loan: cập nhật quá hạn + tuổi nợ</field>

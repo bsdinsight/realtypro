@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- noupdate: khách bật/tắt tác vụ nào thì giữ nguyên lựa chọn
-         đó qua mỗi lần nâng cấp (XBOSS báo, PR #7). -->
+         đó qua mỗi lần nâng cấp (đối tác báo, PR #7). -->
     <data noupdate="1">
         <record id="cron_guarantee_check_expiry" model="ir.cron">
             <field name="name">BL: tự đặt expired + nhắc sắp hết hạn</field>

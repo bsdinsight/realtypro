@@ -20,7 +20,7 @@ phiên bản — bỏ sót là đối tác nâng cấp không thấy thay đổi
 rsync -az --delete /tmp/out17/ <vps>:/root/port17/addons/
 ```
 
-Cài cả 13, không chỉ bộ trong `test_xboss.sh`: bẫy `group_ids` của
+Cài cả 13, không chỉ bộ trong `test_17.sh`: bẫy `group_ids` của
 `re_bank_sync` từng lọt đúng vì nó nằm ngoài bộ kiểm.
 
 ### 3. Sinh khung .po bằng chính Odoo rồi điền tiếng Việt
@@ -42,7 +42,7 @@ Kiểm lại: cài trên DB mới với `--load-language=vi_VN`, rồi soi
 ### 4. Chạy bộ kiểm trên Odoo 17 thật, rồi mới đẩy
 
 ```
-bash /root/port17/test_xboss.sh     # phải 0 failed 0 error
+bash /root/port17/test_17.sh     # phải 0 failed 0 error
 ```
 
 Mỗi bản phát hành là MỘT COMMIT MỚI chồng lên trong repo bàn giao,

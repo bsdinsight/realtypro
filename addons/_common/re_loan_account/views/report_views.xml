@@ -83,7 +83,7 @@
     <!-- Ưu tiên 1000: giữ cho ba view báo cáo này KHÔNG trở thành
          view mặc định của Bút toán sổ cái (view lõi ưu tiên 99/100,
          cùng ưu tiên thì xếp theo tên). Action bên dưới gắn thẳng
-         view vào để chắc chắn (XBOSS báo, PR #7). -->
+         view vào để chắc chắn (đối tác báo, PR #7). -->
     <record id="view_account_move_line_loan_pivot" model="ir.ui.view">
         <field name="name">account.move.line.loan.pivot</field>
         <field name="priority">1000</field>

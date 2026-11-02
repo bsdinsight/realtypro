@@ -10,7 +10,7 @@
          (ngân hàng, chi nhánh, đơn vị thẩm định) đọc res.partner /
          res.bank mà ai trong công ty cũng đọc được, nên không gắn
          nhóm ở đây thì cả công ty thấy ứng dụng rồi vấp lỗi quyền
-         ngay ở bảng điều khiển (XBOSS báo, PR #7). -->
+         ngay ở bảng điều khiển (đối tác báo, PR #7). -->
     <menuitem id="menu_re_loan_root"
               name="Quản lý Vay"
               groups="group_loan_user"

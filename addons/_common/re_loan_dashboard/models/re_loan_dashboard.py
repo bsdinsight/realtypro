@@ -165,7 +165,7 @@ class ReLoanDashboard(models.TransientModel):
         # 4. Bảo lãnh
         # Người dùng phân hệ Vay không có quyền Bảo lãnh vẫn mở được
         # bảng điều khiển: chỉ tiêu bảo lãnh để trống thay vì ném lỗi
-        # quyền chặn cả trang (XBOSS báo, PR #7).
+        # quyền chặn cả trang (đối tác báo, PR #7).
         BG = self.env['re.bank.guarantee']
         active_bg = (BG.search([('state', 'in', ('issued', 'extended'))])
                      if BG.has_access('read') else BG.browse())

@@ -205,7 +205,7 @@ class ReLoanNote(models.Model):
          ('cancelled', 'Đã huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True,
         # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
-        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        # lực: bản sao phải quay về Nháp (đối tác báo, PR #7).
         copy=False)
 
     # copy=False trên toàn bộ dòng phát sinh: nhân bản một khế ước là
@@ -597,7 +597,7 @@ class ReLoanNote(models.Model):
     # 'state' CỐ Ý không nằm trong trigger: hạn mức tuần hoàn chỉ giữ
     # phần dư nợ, nên kiểm lại trọn số tiền mỗi lần đổi trạng thái
     # (ghi trả nợ, cron quá hạn) sẽ chặn chính những khoản trả nợ hợp
-    # lệ. Lúc KÍCH HOẠT, action_activate vẫn kiểm hạn mức (XBOSS báo).
+    # lệ. Lúc KÍCH HOẠT, action_activate vẫn kiểm hạn mức (đối tác báo).
     @api.constrains('amount', 'facility_id', 'loan_type')
     def _check_amount_within_facility(self):
         """KW không được nhập amount vượt 'Còn lại' của facility.

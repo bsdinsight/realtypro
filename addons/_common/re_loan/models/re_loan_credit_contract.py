@@ -56,7 +56,7 @@ class ReLoanCreditContract(models.Model):
          ('cancelled', 'Đã huỷ')],
         string='Trạng thái', default='draft', required=True, tracking=True,
         # Nhân bản là để lấy lại ĐIỀU KIỆN, không phải lấy lại hiệu
-        # lực: bản sao phải quay về Nháp (XBOSS báo, PR #7).
+        # lực: bản sao phải quay về Nháp (đối tác báo, PR #7).
         copy=False)
 
     # copy=False: nhân bản HĐTD chỉ lấy phần đầu hợp đồng. Hạn mức
@@ -229,7 +229,7 @@ class ReLoanCreditContract(models.Model):
     @api.constrains('name', 'partner_id', 'company_id', 'state')
     def _check_unique_number(self):
         """Số HĐTD do ngân hàng cấp — cùng số, cùng ngân hàng, cùng công
-        ty là nhập trùng (XBOSS báo, PR #7).
+        ty là nhập trùng (đối tác báo, PR #7).
 
         Hợp đồng ĐÃ HUỶ không tính: giữ lại để lưu vết, và số đó có thể
         được ký lại cho hợp đồng mới.
@@ -256,7 +256,7 @@ class ReLoanCreditContract(models.Model):
 
         Khế ước chép ba thứ này từ hợp đồng lúc tạo và KHÔNG chạy theo
         thay đổi sau đó: đổi ở hợp đồng khi đã có khế ước thì khế ước
-        nằm lại giá trị cũ, không ai thấy (XBOSS báo, PR #7).
+        nằm lại giá trị cũ, không ai thấy (đối tác báo, PR #7).
         """
         locked = {'partner_id', 'currency_id', 'company_id'} & set(vals)
         if locked:

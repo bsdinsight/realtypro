@@ -12,7 +12,7 @@ class ReLoanNoteDisbursement(models.Model):
         string='Hồ sơ giải ngân')
     # Một hàm tính KHÔNG được vừa nuôi trường có lưu vừa nuôi trường
     # không lưu: Odoo cảnh báo "inconsistent 'store'" và chỉ cần đọc ô
-    # đếm là nó tính lại rồi ghi đè hai ô có lưu (XBOSS báo, PR #8).
+    # đếm là nó tính lại rồi ghi đè hai ô có lưu (đối tác báo, PR #8).
     dossier_count = fields.Integer(compute='_compute_dossier_count')
     dossier_total = fields.Monetary(
         string='Σ giá trị hồ sơ',
@@ -45,7 +45,7 @@ class ReLoanNoteDisbursement(models.Model):
         super()._check_ready_to_submit()
         # Cửa thoát cho luồng duyệt riêng của khách: lần giải ngân gắn
         # với một phân bổ đã duyệt thì hồ sơ nằm ở chứng từ duyệt chứ
-        # không ở đây (XBOSS đặt cờ này từ module của họ, PR #8).
+        # không ở đây (đối tác đặt cờ này từ module của họ, PR #8).
         # Người gọi vẫn phải đi qua super() để phần còn lại của chuỗi
         # kiểm tra chạy đủ.
         if self.env.context.get('skip_disbursement_dossier_check'):

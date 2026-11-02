@@ -240,7 +240,12 @@ class ReLoanNoteDisbursement(models.Model):
             if rec.state in ('disbursed',):
                 raise UserError(_(
                     "Không thể đưa giải ngân ĐÃ GIẢI NGÂN về Nháp."))
+        revived = self.filtered(lambda d: d.state == 'cancelled')
+        result = revived.note_id._sync_amount_from_disbursements(
+            reviving=revived)
+        for rec in self:
             rec.state = 'draft'
+        return result
 
     def action_cancel(self):
         for rec in self:
@@ -248,3 +253,4 @@ class ReLoanNoteDisbursement(models.Model):
                 raise UserError(_(
                     "Không thể huỷ giải ngân đã chuyển tiền."))
             rec.state = 'cancelled'
+        return self.note_id._sync_amount_from_disbursements()

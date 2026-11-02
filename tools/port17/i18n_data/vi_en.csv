@@ -2622,3 +2622,8 @@ Net-off %(o)s ₫ thu dư ở kỳ %(p)s (≤ ngưỡng %(thr)s ₫) — phần 
 Dư đã net-off,Excess netted off
 Σ dư đã net-off,Σ excess netted off
 "Tổng các đợt giải ngân của khế ước. Bằng 0 khi khế ước còn Nháp hoặc Đã gửi NH, vì ngân hàng chưa chuyển tiền.","Total of the disbursements on this promissory note. Zero while the note is Draft or Sent to the bank, because the bank has not transferred the money yet."
+"Không huỷ được: đây là dòng giải ngân cuối cùng, số tiền của khế ước %(n)s sẽ về 0 trong khi khế ước đã gửi ngân hàng hoặc đã kích hoạt. Rút khế ước về Nháp hoặc huỷ cả khế ước.","Cannot cancel: this is the last disbursement line, so the amount of promissory note %(n)s would become 0 although the note has already been sent to the bank or activated. Reset the note to Draft or cancel the whole note."
+"Không huỷ được: khế ước %(n)s đã trả gốc %(p)s, số tiền mới %(v)s sẽ thấp hơn số đã trả.","Cannot cancel: promissory note %(n)s has %(p)s of principal repaid, and the new amount of %(v)s would be lower than that."
+Số tiền khế ước đã được cập nhật lại giá trị từ %(o)s sang %(v)s.,The promissory note amount has been updated from %(o)s to %(v)s.
+Đã cập nhật số tiền khế ước,Promissory note amount updated
+"Số tiền cam kết của KW. Khi user thêm/sửa/huỷ giải ngân, field này tự = Σ số tiền các dòng giải ngân chưa huỷ. User vẫn override tay được nếu cần.","Committed amount of the promissory note. When a user adds, edits or cancels a disbursement, this field becomes the Σ of the disbursement lines that are not cancelled. Users can still override it by hand if needed."

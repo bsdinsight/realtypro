@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import formatLang
 
 from .re_loan_facility import NOTE_STATES_NO_EXPOSURE
 
@@ -138,8 +139,8 @@ class ReLoanNote(models.Model):
              'khi field này thay đổi.')
     amount = fields.Monetary(
         string='Số tiền KW', required=True, tracking=True,
-        help='Số tiền cam kết của KW. Khi user thêm/sửa giải ngân, '
-             'field này tự = Σ số tiền các dòng giải ngân (onchange). '
+        help='Số tiền cam kết của KW. Khi user thêm/sửa/huỷ giải ngân, '
+             'field này tự = Σ số tiền các dòng giải ngân chưa huỷ. '
              'User vẫn override tay được nếu cần.')
     interest_rate = fields.Float(
         string='Lãi suất (%/năm)', digits=(5, 2), tracking=True,
@@ -377,6 +378,7 @@ class ReLoanNote(models.Model):
                     e=end))
 
     @api.depends('amount', 'state', 'disbursement_ids.amount',
+                 'disbursement_ids.state',
                  'repayment_ids.amount_principal',
                  'repayment_ids.amount_interest')
     def _compute_amounts(self):
@@ -386,7 +388,8 @@ class ReLoanNote(models.Model):
             # Kích hoạt thì các dòng này tự thành "Đã giải ngân".
             rec.amount_disbursed = (
                 0.0 if rec.state in ('draft', 'sent_to_bank')
-                else sum(rec.disbursement_ids.mapped('amount')))
+                else sum(rec.disbursement_ids.filtered(
+                    lambda d: d.state != 'cancelled').mapped('amount')))
             rec.amount_repaid_principal = sum(
                 rec.repayment_ids.mapped('amount_principal'))
             rec.amount_repaid_interest = sum(
@@ -517,12 +520,79 @@ class ReLoanNote(models.Model):
     # ------------------------------------------------------------------
     @api.onchange('disbursement_ids')
     def _onchange_disbursement_sum_amount(self):
-        """Khi user thêm/sửa/xóa giải ngân, Số tiền KW tự = Σ giải ngân.
-        User vẫn override tay được sau đó nhưng lần edit giải ngân tiếp
-        theo sẽ overwrite.
+        """Khi user thêm/sửa/xóa giải ngân, Số tiền KW tự = Σ giải ngân
+        chưa huỷ. User vẫn override tay được sau đó nhưng lần edit giải
+        ngân tiếp theo sẽ overwrite.
         """
         if self.disbursement_ids:
-            self.amount = sum(self.disbursement_ids.mapped('amount'))
+            self.amount = sum(self.disbursement_ids.filtered(
+                lambda d: d.state != 'cancelled').mapped('amount'))
+
+    def _sync_amount_from_disbursements(self, reviving=None):
+        """Số tiền KW = Σ các dòng giải ngân chưa huỷ (việc 1595).
+
+        Gọi khi huỷ một dòng hoặc khi đưa dòng đã huỷ về Nháp. `reviving`
+        là các dòng sắp thôi trạng thái huỷ: số tiền phải tăng TRƯỚC khi
+        đổi trạng thái dòng, vì ràng buộc của dòng so tổng giải ngân với
+        số tiền KW.
+
+        Trả về hành động hiện thông báo rồi tải lại màn hình: dòng mở trong
+        hộp thoại nên form khế ước phía sau không tự đọc lại ô số tiền.
+        Không có gì đổi thì trả True.
+        """
+        reviving = reviving or self.env['re.loan.note.disbursement']
+        messages = []
+        for note in self:
+            if note.state == 'cancelled':
+                continue
+            live = note.disbursement_ids.filtered(
+                lambda d: d.state != 'cancelled' or d in reviving)
+            old = note.amount
+            new = sum(live.mapped('amount'))
+            if abs(new - old) < (note.currency_id.rounding or 0.01):
+                continue
+            if new <= 0 and note.state != 'draft':
+                raise UserError(_(
+                    "Không huỷ được: đây là dòng giải ngân cuối cùng, số "
+                    "tiền của khế ước %(n)s sẽ về 0 trong khi khế ước đã "
+                    "gửi ngân hàng hoặc đã kích hoạt. Rút khế ước về Nháp "
+                    "hoặc huỷ cả khế ước.", n=note.name or ''))
+            if new < note.amount_repaid_principal:
+                raise UserError(_(
+                    "Không huỷ được: khế ước %(n)s đã trả gốc %(p)s, số "
+                    "tiền mới %(v)s sẽ thấp hơn số đã trả.",
+                    n=note.name or '',
+                    p=formatLang(self.env, note.amount_repaid_principal,
+                                 currency_obj=note.currency_id),
+                    v=formatLang(self.env, new,
+                                 currency_obj=note.currency_id)))
+            note.amount = new
+            # Lịch lãi đã dựng theo số tiền cũ. Giữ các kỳ đã ghi nhận hoặc
+            # đã trả, chỉ dựng lại các kỳ còn Dự kiến.
+            if (note.state in ('active', 'partial_paid', 'overdue')
+                    and note.interest_line_ids):
+                note.action_generate_interest_schedule()
+            note._update_payment_state()
+            message = _(
+                "Số tiền khế ước đã được cập nhật lại giá trị từ %(o)s "
+                "sang %(v)s.",
+                o=formatLang(self.env, old, currency_obj=note.currency_id),
+                v=formatLang(self.env, new, currency_obj=note.currency_id))
+            note.message_post(body=message)
+            messages.append(message)
+        if not messages:
+            return True
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Đã cập nhật số tiền khế ước'),
+                'message': '\n'.join(messages),
+                'type': 'info',
+                'sticky': True,
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
+        }
 
     # ------------------------------------------------------------------
     # Constraints

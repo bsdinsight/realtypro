@@ -130,6 +130,32 @@ class TestLoanNote(TransactionCase):
         # Dư nợ gốc = 500M − 0 = 500M (cam kết toàn bộ)
         self.assertEqual(note.principal_outstanding, 500_000_000.0)
 
+    def test_da_giai_ngan_bang_0_truoc_khi_kich_hoat(self):
+        # Việc 1584: Nháp và Đã gửi NH thì tiền chưa ra khỏi ngân hàng.
+        note = self._make_note(self.fac_rev, 500_000_000.0)
+        self.env['re.loan.note.disbursement'].create({
+            'note_id': note.id, 'date': '2026-01-05',
+            'amount': 300_000_000.0})
+        self.assertEqual(note.state, 'draft')
+        self.assertEqual(note.amount_disbursed, 0.0)
+        note.action_send_to_bank()
+        self.assertEqual(note.state, 'sent_to_bank')
+        self.assertEqual(note.amount_disbursed, 0.0)
+        note.action_activate()
+        self.assertEqual(note.amount_disbursed, 300_000_000.0,
+                         'kích hoạt thì số giải ngân phải hiện ra')
+
+    def test_rut_ve_nhap_thi_da_giai_ngan_ve_0(self):
+        note = self._make_note(self.fac_rev, 500_000_000.0)
+        self.env['re.loan.note.disbursement'].create({
+            'note_id': note.id, 'date': '2026-01-05',
+            'amount': 300_000_000.0})
+        note.action_cancel()
+        self.assertEqual(note.state, 'cancelled')
+        note.action_reset_draft()
+        self.assertEqual(note.state, 'draft')
+        self.assertEqual(note.amount_disbursed, 0.0)
+
     def test_disbursement_cannot_exceed_note(self):
         note = self._make_note(self.fac_rev, 500_000_000.0)
         note.action_activate()

@@ -257,7 +257,9 @@ class ReLoanNote(models.Model):
             rec.pledge_count = len(pledges)
 
     amount_disbursed = fields.Monetary(
-        string='Đã giải ngân', compute='_compute_amounts', store=True)
+        string='Đã giải ngân', compute='_compute_amounts', store=True,
+        help='Tổng các đợt giải ngân của khế ước. Bằng 0 khi khế ước còn '
+             'Nháp hoặc Đã gửi NH, vì ngân hàng chưa chuyển tiền.')
     amount_repaid_principal = fields.Monetary(
         string='Đã trả gốc', compute='_compute_amounts', store=True)
     amount_repaid_interest = fields.Monetary(
@@ -374,12 +376,17 @@ class ReLoanNote(models.Model):
                     c=rec.facility_id.credit_contract_id.name or '',
                     e=end))
 
-    @api.depends('amount', 'disbursement_ids.amount',
+    @api.depends('amount', 'state', 'disbursement_ids.amount',
                  'repayment_ids.amount_principal',
                  'repayment_ids.amount_interest')
     def _compute_amounts(self):
         for rec in self:
-            rec.amount_disbursed = sum(rec.disbursement_ids.mapped('amount'))
+            # Việc 1584: khế ước còn Nháp hoặc Đã gửi NH thì các dòng giải
+            # ngân mới là hồ sơ xin giải ngân, tiền chưa ra khỏi ngân hàng.
+            # Kích hoạt thì các dòng này tự thành "Đã giải ngân".
+            rec.amount_disbursed = (
+                0.0 if rec.state in ('draft', 'sent_to_bank')
+                else sum(rec.disbursement_ids.mapped('amount')))
             rec.amount_repaid_principal = sum(
                 rec.repayment_ids.mapped('amount_principal'))
             rec.amount_repaid_interest = sum(

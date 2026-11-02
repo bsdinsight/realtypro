@@ -32,6 +32,12 @@ odoo -d p17po --i18n-export=/mnt/po/<mod>.po --modules=<mod> --stop-after-init
 python3 tools/port17/fill_po.py <thư mục khung> /tmp/out17
 ```
 
+Xuất khung trên DB CHỈ cài đúng module cần xuất, không cài bộ đầy đủ: module
+mở rộng của đối tác ghi đè nhãn một số trường, khung sẽ mang nhãn của họ và
+`.po` mất luôn bản dịch của nhãn gốc. Vẫn phải mount thư mục addons của đối
+tác vì bản giao phụ thuộc module đối tác của họ. Soi `git diff` của `.po`
+trước khi đẩy: chỉ nên có chuỗi mới.
+
 Khung do Odoo xuất mới có `#. module:` và `#: model:…` — thiếu chúng
 thì bộ nhập của Odoo 17 nổ `AttributeError: 'NoneType' … groups`,
 hoặc tệ hơn là nạp êm mà chẳng dịch gì.

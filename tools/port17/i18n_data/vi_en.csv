@@ -2621,3 +2621,4 @@ Trích dư đã net-off,Over-collection netted off
 Net-off %(o)s ₫ thu dư ở kỳ %(p)s (≤ ngưỡng %(thr)s ₫) — phần dư không còn treo. Chứng từ trả nợ giữ nguyên số đã chi.,Net-off of %(o)s ₫ over-collected on period %(p)s (≤ threshold %(thr)s ₫) — the excess is no longer pending. The repayment document keeps the amount actually paid.
 Dư đã net-off,Excess netted off
 Σ dư đã net-off,Σ excess netted off
+"Tổng các đợt giải ngân của khế ước. Bằng 0 khi khế ước còn Nháp hoặc Đã gửi NH, vì ngân hàng chưa chuyển tiền.","Total of the disbursements on this promissory note. Zero while the note is Draft or Sent to the bank, because the bank has not transferred the money yet."

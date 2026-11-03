@@ -2629,3 +2629,27 @@ Số tiền khế ước đã được cập nhật lại giá trị từ %(o)s 
 "Số tiền cam kết của KW. Khi user thêm/sửa/huỷ giải ngân, field này tự = Σ số tiền các dòng giải ngân chưa huỷ. User vẫn override tay được nếu cần.","Committed amount of the promissory note. When a user adds, edits or cancels a disbursement, this field becomes the Σ of the disbursement lines that are not cancelled. Users can still override it by hand if needed."
 "Số tiền cam kết của KW, tự bằng tổng các dòng giải ngân chưa huỷ. Khế ước đã kích hoạt muốn đổi số tiền thì lập phụ lục.","Committed amount of the promissory note, equal to the total of the disbursement lines that are not cancelled. Once the note is activated, change the amount through an amendment."
 Khế ước %(n)s chưa nhập thông tin giải ngân. Vào tab Giải ngân thêm ít nhất một dòng rồi thử lại.,Promissory note %(n)s has no disbursement information yet. Add at least one line on the Disbursement tab and try again.
+Báo cáo,Reports
+Còn lại (theo HM),Remaining (by facility)
+Cấu hình,Configuration
+HĐ tín dụng,Credit contracts
+Import giấy báo nợ (Excel/CSV),Import debit advices (Excel/CSV)
+Kế hoạch thanh toán KW (năm),Note payment plan (year)
+"Loan manager — cấu hình, huỷ, xoá; bao gồm toàn bộ quyền Người dùng.","Loan manager — configure, cancel, delete; includes all User rights."
+"Loan user — quản lý HĐTD, hạn mức, khế ước, giải ngân, trả nợ, thế chấp.","Loan user — manages credit contracts, facilities, notes, disbursements, repayments and pledges."
+Mô phỏng giao dịch (demo),Simulate transactions (demo)
+Phát hành / giải tỏa / thu BL.,"Issue, release and collect guarantees."
+Quản lý Vay,Loan Management
+Tham số Bảo lãnh,Guarantee settings
+Tham số phân hệ Vay,Loan module settings
+Thuê tài sản,Asset leasing
+"Thấy menu Vay nội bộ, ô Loại khoản vay và tab Cho vay lại trên khế ước.","Sees the Intragroup loan menu, the Loan type field and the On-lending tab on promissory notes."
+"Thấy nút Post / Ghi nhận, cột Bút toán và nút đếm bút toán trên khế ước.","Sees the Post / Recognise buttons, the Journal entry column and the journal entry counter on promissory notes."
+Trích thu & Thanh toán,Collections & Payments
+Trích thu tự động (NH),Automatic collection (bank)
+Tài khoản kế toán,Accounting accounts
+Tổng hợp HĐTD (cho vay + BL),Credit contract summary (loans + guarantees)
+Đề nghị phát hành,Issuance requests
+"Đọc + tạo BL, đề xuất phát hành. Không huỷ.",Reads and creates guarantees and proposes issuance. Cannot cancel.
+Đối chiếu KW vay,Note reconciliation
+Đối soát ngân hàng,Bank reconciliation

@@ -21,6 +21,7 @@ Nguyên tắc:
     là công cụ dừng. Bản giao nửa Anh nửa Việt còn tệ hơn giữ nguyên.
 """
 import ast
+import html
 import io
 import os
 import re
@@ -44,10 +45,13 @@ TEXT_TAGS = {
 # Trường của bản ghi dữ liệu mà NỘI DUNG là chữ người đọc.
 TEXT_FIELDS = {
     'name', 'string', 'help', 'subject', 'description', 'summary',
-    'note', 'body_html', 'legend', 'message',
+    'note', 'body_html', 'legend', 'message', 'comment',
 }
 ATTRS = ('string', 'confirm', 'placeholder', 'title', 'help', 'sum',
          'avg', 'data-tooltip', 'label')
+# Tên thực đơn. `name` không nằm trong ATTRS được: ở thẻ khác nó là tên kỹ
+# thuật (tên trường, tên nút), chỉ riêng <menuitem> nó mới là chữ người đọc.
+MENU_NAME = re.compile(r'(<menuitem\b[^>]*?\bname=")([^"]*)(")', re.S)
 
 SKIP_DIRS = {'__pycache__', 'i18n', 'static', 'migrations', 'tests'}
 
@@ -154,6 +158,11 @@ def _walk_text(el, out):
         if (fname in TEXT_FIELDS and el.get('type') is None
                 and len(el) == 0 and is_user_text(el.text)):
             out.append(('text', ' '.join(el.text.split())))
+    elif tag == 'attribute':
+        # View kế thừa đổi nhãn: <attribute name="string">Nhãn mới</attribute>
+        if (el.get('name') in ATTRS and len(el) == 0
+                and is_user_text(el.text)):
+            out.append(('text', ' '.join(el.text.split())))
     elif tag in TEXT_TAGS:
         if is_user_text(el.text):
             out.append(('text', ' '.join(el.text.split())))
@@ -172,6 +181,10 @@ def xml_items(text):
             r'\b(%s)="([^"]*)"' % '|'.join(ATTRS), text):
         if is_user_text(m.group(2)):
             items.append(('attr', m.group(2)))
+    for m in MENU_NAME.finditer(text):
+        val = html.unescape(m.group(2))
+        if is_user_text(val):
+            items.append(('attr', val))
     try:
         root = etree.fromstring(text.encode('utf-8'))
     except etree.XMLSyntaxError:
@@ -195,6 +208,20 @@ def xml_apply(text, mapping, missing):
         return '%s="%s"' % (m.group(1), en.replace('"', '&quot;'))
 
     text = re.sub(r'\b(%s)="([^"]*)"' % '|'.join(ATTRS), attr_repl, text)
+
+    def menu_repl(m):
+        # Trong tệp là thực thể (&amp;), từ điển giữ bản đã giải mã.
+        val = html.unescape(m.group(2))
+        if not is_user_text(val):
+            return m.group(0)
+        en = mapping.get(val)
+        if en is None:
+            missing.add(val)
+            return m.group(0)
+        n[0] += 1
+        return m.group(1) + xml_escape(en, {'"': '&quot;'}) + m.group(3)
+
+    text = MENU_NAME.sub(menu_repl, text)
 
     # Chữ trần giữa hai thẻ. PHẢI neo vào dấu > và < của chính nút đó:
     # nhãn ngắn ("mục đích") mà thay tự do giữa tệp thì nó ăn luôn vào

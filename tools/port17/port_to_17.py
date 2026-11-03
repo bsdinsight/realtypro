@@ -859,9 +859,40 @@ def step_i18n(dst):
         raise SystemExit(
             'Từ điển dịch lệch tham số thay thế (%%s, %%(x)s) ở %s chuỗi, '
             'vd: %s' % (len(bad_ph), bad_ph[0][:70]))
+    # Từ điển riêng cho tên thực đơn. Tệp .po chỉ có MỘT bản dịch cho mỗi
+    # chuỗi tiếng Anh, mà từ điển chung cho nhiều chuỗi Việt về cùng một chuỗi
+    # Anh ("HĐTD" và "Hợp đồng tín dụng" đều là "Credit contract"). Nhãn ô
+    # trên form lệch vậy còn được, chứ thực đơn đang đọc "Hợp đồng tín dụng"
+    # mà nâng cấp xong thành "HĐTD" thì người dùng thấy ngay.
+    menu_path = os.path.join(os.path.dirname(path), 'menu_en.csv')
+    menu_mapping = {}
+    with io.open(menu_path, encoding='utf-8') as f:
+        for row in _csv.DictReader(f):
+            menu_mapping[row['vi']] = row['en']
+    en_to_vi = {}
+    with io.open(path, encoding='utf-8') as f:
+        for row in _csv.DictReader(f):
+            if row.get('en'):
+                en_to_vi.setdefault(row['en'], row['vi'])
+    for vi, en in menu_mapping.items():
+        if en in en_to_vi:
+            raise SystemExit(
+                'menu_en.csv: "%s" trùng từ điển chung (%s), phải là chuỗi '
+                'tiếng Anh riêng.' % (en, en_to_vi[en]))
+        en_to_vi[en] = vi
+    menus = _i18n.scan_menus(dst, I18N_DONE)
+    drifted = [
+        '%s -> %s -> %s (%s)' % (vi, en, en_to_vi.get(en), rel)
+        for vi, rel in sorted(menus.items())
+        for en in [menu_mapping.get(vi) or mapping.get(vi)]
+        if en and en_to_vi.get(en) != vi]
+    if drifted:
+        raise SystemExit(
+            'Tên thực đơn dịch đi rồi dịch về không ra chuỗi gốc, thêm vào '
+            'menu_en.csv: %s' % '; '.join(drifted))
     total = po_total = 0
     for mod in I18N_DONE:
-        n, missing, used = _i18n.apply_module(dst, mod, mapping)
+        n, missing, used = _i18n.apply_module(dst, mod, mapping, menu_mapping)
         if missing:
             raise SystemExit(
                 'Module %s khai là ĐÃ DỊCH nhưng thiếu %s chuỗi trong từ '

@@ -193,8 +193,16 @@ def xml_items(text):
     return items
 
 
-def xml_apply(text, mapping, missing):
+def menu_names(text):
+    """Tên thực đơn (đã giải mã) trong một tệp XML."""
+    return [v for v in (html.unescape(m.group(2))
+                        for m in MENU_NAME.finditer(text))
+            if is_user_text(v)]
+
+
+def xml_apply(text, mapping, missing, menu_mapping=None):
     n = [0]
+    menu_mapping = menu_mapping or {}
 
     def attr_repl(m):
         val = m.group(2)
@@ -214,7 +222,7 @@ def xml_apply(text, mapping, missing):
         val = html.unescape(m.group(2))
         if not is_user_text(val):
             return m.group(0)
-        en = mapping.get(val)
+        en = menu_mapping.get(val) or mapping.get(val)
         if en is None:
             missing.add(val)
             return m.group(0)
@@ -271,7 +279,22 @@ def scan(root, modules):
     return hits
 
 
-def apply_module(root, mod, mapping):
+def scan_menus(root, modules):
+    """Mọi tên thực đơn tiếng Việt của các module, kèm tệp chứa nó."""
+    hits = {}
+    for mod in modules:
+        for dp, dn, fn in os.walk(os.path.join(root, mod)):
+            dn[:] = [d for d in dn if d not in SKIP_DIRS]
+            for f in sorted(fn):
+                if not f.endswith('.xml'):
+                    continue
+                p = os.path.join(dp, f)
+                for v in menu_names(io.open(p, encoding='utf-8').read()):
+                    hits.setdefault(v, os.path.relpath(p, root))
+    return hits
+
+
+def apply_module(root, mod, mapping, menu_mapping=None):
     """Dịch một module tại chỗ. Trả về (số_chỗ_thay, thiếu, dùng)."""
     missing = set()
     used = {}
@@ -287,7 +310,7 @@ def apply_module(root, mod, mapping):
             elif f.endswith('.xml'):
                 s = io.open(p, encoding='utf-8').read()
                 before = [v for _, v in xml_items(s)]
-                s2, k = xml_apply(s, mapping, missing)
+                s2, k = xml_apply(s, mapping, missing, menu_mapping)
             else:
                 continue
             for v in before:

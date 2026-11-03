@@ -26,6 +26,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DICT = os.path.join(HERE, 'i18n_data', 'vi_en.csv')
 FILL_ONLY = os.path.join(HERE, 'i18n_data', 'en_vi_fill.csv')
+MENUS = os.path.join(HERE, 'i18n_data', 'menu_en.csv')
 
 ESCAPES = {'n': '\n', 't': '\t', '"': '"', '\\': '\\'}
 
@@ -112,6 +113,11 @@ def main():
                 # khác nhau mà ra cùng một câu tiếng Anh thì về tiếng
                 # Việt chọn bản nào cũng đúng nghĩa.
                 en_to_vi.setdefault(row['en'], row['vi'])
+    # Tên thực đơn có tiếng Anh riêng để giữ đúng nhãn tiếng Việt, xem
+    # step_i18n trong port_to_17.py.
+    with io.open(MENUS, encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+            en_to_vi[row['en']] = row['vi']
     # Tệp MỘT CHIỀU: dành cho chuỗi vốn viết tiếng Anh ngay trong nguồn
     # 19 (re_party, phần trợ giúp của re_loan_account…), nên từ điển
     # vi→en của công cụ port không có gì để tra. Để riêng tệp này vì

@@ -1,0 +1,70 @@
+---
+title: "Báo cáo, nhắc việc tự động & kiểm tra nhanh"
+description: "Danh mục báo cáo Vốn & Ngân quỹ theo bốn nhóm (dư nợ, dòng tiền, hạn mức, đối chiếu), các tác vụ tự chạy hằng ngày / hằng tuần, và một kịch bản kiểm tra nhanh từ HĐTD tới trích thu."
+order: 28
+---
+
+# 28. Báo cáo, nhắc việc tự động & kiểm tra nhanh
+
+## 28.1. Báo cáo
+
+**Vốn & Ngân quỹ → Báo cáo**, chia bốn nhóm:
+
+| Nhóm | Báo cáo | Trả lời câu hỏi |
+|---|---|---|
+| **Dư nợ & đến hạn** | Dư nợ vay | Đang nợ bao nhiêu, theo NH / HĐTD / KW |
+| | Khế ước đến hạn | KW nào sắp / đã tới ngày đáo hạn |
+| | Nợ quá hạn (Aging) | Nợ quá hạn theo nhóm tuổi nợ |
+| | Kế hoạch thanh toán KW (năm) | Lịch trả nợ tương lai theo năm |
+| | Tiến độ thanh toán | Đã trả bao nhiêu so với kế hoạch, theo KW / dự án |
+| **Dòng tiền & năng lực trả nợ** | Dòng tiền dự án & DSCR | Xem §21 |
+| | Năng lực trả nợ (§8) | Năm tín hiệu cảnh báo — §21, §24.7 |
+| | Bảng chỉ tiêu (xanh/vàng/đỏ) · Rà soát tuần (§10) | Xem §22 |
+| **Hạn mức & phân bổ** | Phân bổ HĐTD theo Dự án × Mục đích | Hạn mức chia cho dự án nào, mục đích nào |
+| | Phân bổ HĐTD theo Khế ước | KW nào đang chiếm hạn mức |
+| | Phân bổ vay theo công trình | (dùng kèm EPCOne) vốn vay vào công trình nào |
+| | Tổng hợp HĐTD (cho vay + BL) | Một HĐTD đang dùng bao nhiêu cho vay, bao nhiêu cho bảo lãnh |
+| **Đối chiếu & bảng kê** | Bảng kê chứng từ theo KW | Từng KW: gốc, lãi, ngày, chứng từ trả nợ |
+| | Tổng hợp phát sinh theo KW | Phát sinh Nợ/Có trên sổ cái theo KW |
+| | Đối chiếu KW vay | Sổ vay so với sổ cái |
+
+Ngoài ra **Lịch lãi quá hạn** liệt kê các kỳ đã qua ngày đến hạn còn nợ
+gốc hoặc lãi. Ba báo cáo nhóm Đối chiếu cần module kế toán vay (§27).
+
+Báo cáo là danh sách / bảng tổng hợp: lọc, nhóm, và xuất Excel bằng chức
+năng xuất danh sách chuẩn của hệ thống.
+
+## 28.2. Tác vụ tự chạy
+
+| Tác vụ | Tần suất | Làm gì |
+|---|---|---|
+| Cập nhật quá hạn + tuổi nợ | Hằng ngày | KW quá ngày đáo hạn còn dư nợ gốc → **Quá hạn**; hết quá hạn thì trả về trạng thái thanh toán đúng; tính lại nhóm tuổi nợ. Cờ **Quá hạn** từng kỳ lịch lãi cũng được tính lại (§12.8) |
+| Nhắc đáo hạn khế ước | Hằng ngày | KW Hiệu lực / Trả một phần đáo hạn trong **7 ngày** tới → việc cần làm *"KW sắp đáo hạn"* cho người tạo KW (không tạo trùng). Số ngày đổi được qua tham số hệ thống |
+| Nhắc TSBĐ hết hạn định giá | Hằng ngày | Tài sản đang thế chấp có định giá hết hạn → việc cần làm cho nhóm Quản lý Vay (§14.2) |
+| BL hết hạn + nhắc | Hằng ngày | Chứng thư quá hạn 7 ngày → **Hết hạn**; còn ≤ 30 ngày → việc cần làm; thư nhắc theo cấu hình (§13.4) |
+| Mở phiên rà soát tuần | Hằng tuần | Xem §22 |
+
+## 28.3. Kiểm tra nhanh toàn luồng
+
+Dùng khi nghiệm thu một môi trường mới hoặc sau khi nâng cấp:
+
+1. Tạo **HĐTD** 100 tỷ với NH A; tab **Mục đích** → **Thêm facility**
+   "Vốn lưu động" 60 tỷ. Khai **Bảo đảm khai ban đầu** 60 tỷ trên hạn mức.
+2. Tab **Khế ước** → **Khai khế ước mới**: kỳ hạn 12 tháng, 8,5%/năm,
+   Dư nợ giảm dần, Thực tế/365, Trả gốc đều; tab **Giải ngân** thêm 1 đợt
+   30 tỷ kèm hồ sơ (hoá đơn nhà thầu) → **Số tiền KW tự = 30 tỷ**.
+3. **Gửi Ngân hàng** → đợt giải ngân sang Đã gửi NH; hạn mức hiện *Đang
+   chờ NH duyệt* 30 tỷ, chưa chiếm.
+4. **Kích hoạt** →
+   - ✓ Lịch lãi sinh 12 kỳ
+   - ✓ Đợt giải ngân **Đã giải ngân**; **Đã giải ngân** của KW = 30 tỷ
+   - ✓ Hạn mức **Đã sử dụng** = 30 tỷ; Khả dụng thực tế = 30 tỷ
+5. Một tháng sau → **Import giấy báo nợ (Excel/CSV)** (tải template ngay
+   trong wizard): 1 dòng KW, 2,7 tỷ.
+6. Preview → tạo giấy báo → **Xác nhận + Allocate** →
+   - ✓ Phiếu trả nợ tự tạo, allocate Lãi → Phí → Gốc
+   - ✓ Kỳ 1 **Đã trả** hoặc **Trả một phần**; giấy báo **Đã phân bổ đủ**
+     hoặc **Phân bổ dư**
+   - ✓ KW **Trả một phần**
+7. Kế toán: **Post** dòng giải ngân, **Ghi nhận** kỳ 1, **Post** dòng trả
+   nợ → mở **Bảng kê chứng từ theo KW** thấy đủ chứng từ.

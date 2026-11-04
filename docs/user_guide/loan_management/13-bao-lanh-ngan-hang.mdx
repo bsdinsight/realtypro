@@ -1,0 +1,133 @@
+---
+title: "Bảo lãnh ngân hàng"
+description: "Hướng dẫn bảo lãnh ngân hàng — đề nghị phát hành, kích hoạt chiếm hạn mức, chứng thư BL, phí / ký quỹ / phạt, phụ lục gia hạn, tất toán và hoàn ký quỹ."
+order: 13
+---
+
+# 13. Bảo lãnh ngân hàng
+
+## 13.1. Hai chứng từ: Đề nghị và Chứng thư
+
+| Chứng từ | Là gì | Menu |
+|---|---|---|
+| **Đề nghị phát hành** | Doanh nghiệp xin NH phát hành BL — chiếm hạn mức từ lúc kích hoạt | Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → **Đề nghị phát hành** |
+| **Chứng thư BL** | Văn bản NH đã phát hành — theo dõi hiệu lực, phí, ký quỹ, tất toán | Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → **Chứng thư BL** |
+
+Sáu loại BL theo thông lệ VN: **dự thầu**, **thực hiện hợp đồng**,
+**tạm ứng**, **bảo hành**, **thanh toán**, **khác**.
+
+## 13.2. Hạn mức bảo lãnh
+
+BL đi trên một **hạn mức** (facility) có mục đích thuộc nhóm **Bảo
+lãnh** — sẵn có mục đích **"Bảo lãnh ngân hàng"** trong danh mục Mục đích
+sử dụng vốn (§8). Ô **Hạn mức bảo lãnh** trên đề nghị chỉ cho chọn các
+hạn mức đó.
+
+Hạn mức bị chiếm như sau:
+
+| Giai đoạn | Chiếm hạn mức |
+|---|---|
+| Đề nghị **Nháp** | Không |
+| Đề nghị **Đã kích hoạt** | **Có** — giữ chỗ ngay, không chờ NH phát hành |
+| Đã phát hành chứng thư | Chứng thư chiếm thay đề nghị (tổng không đổi). Chiếm cả khi Đã gia hạn / Bị thu |
+| Chứng thư **Đã tất toán / Huỷ-giải toả / Hết hạn** | Không — hạn mức trả lại |
+
+Giá trị BL **không được vượt Khả dụng thực tế** của hạn mức (khả dụng
+theo tài sản bảo đảm — §19), kiểm cả lúc kích hoạt và lúc phát hành.
+Đây là **chặn cứng**, kể cả khi khả dụng bằng 0. Khả dụng bằng 0 thường
+là do hạn mức chưa khai bảo đảm: khai **Bảo đảm khai ban đầu** trên hạn
+mức, hoặc phân bổ TSBĐ cho mục đích ở tab **Phân bổ TSBĐ** của HĐTD.
+
+## 13.3. Lập và kích hoạt đề nghị
+
+Đề nghị phát hành → **Mới**:
+
+| Trường | Mô tả |
+|---|---|
+| Loại BL | 1 trong 6 loại |
+| Hạn mức bảo lãnh | Hạn mức mục đích Bảo lãnh; HĐTD và NH phát hành tự theo |
+| Bên xin BL / Bên thụ hưởng | Doanh nghiệp / CĐT hoặc bên nhận bảo lãnh |
+| Dự án (áp dụng) | Công trình BL phục vụ |
+| Giá trị BL, Loại tiền | |
+| Ngày đề nghị, Ngày dự kiến phát hành, Ngày hết hạn | |
+| Tỷ lệ phí BL (%/năm) | → Phí BL phải trả |
+| Tỷ lệ ký quỹ (%) | → Số tiền ký quỹ phải nộp |
+| Tỷ lệ phạt trả chậm (%/năm) | → Tiền phạt theo số ngày quá hạn |
+
+Luồng trạng thái:
+
+| Trạng thái | Nút | Ghi chú |
+|---|---|---|
+| **Nháp** | **"Kích hoạt"** | Hỏi xác nhận; bắt đầu tính phí và **chiếm hạn mức** |
+| **Đã kích hoạt** | **"Phát hành"** | Tạo chứng thư BL, chép điều kiện và các khoản đã nộp (ký quỹ…) sang chứng thư |
+| **Đã phát hành** | — | Đề nghị chỉ đọc; theo dõi tiếp ở chứng thư |
+| **Huỷ** | **"Huỷ"** / **"Về Nháp"** | Huỷ đề nghị thì chứng thư sinh từ nó được giải toả, hạn mức trả lại |
+
+Nhân bản đề nghị hoặc chứng thư → bản sao về **Nháp** (lấy lại điều
+kiện, không lấy lại hiệu lực).
+
+## 13.4. Chứng thư BL
+
+| Trạng thái | Ý nghĩa |
+|---|---|
+| **Nháp** | Khai tay chứng thư (không qua đề nghị) → **"Phát hành"** |
+| **Đã phát hành** | Đang hiệu lực |
+| **Đã gia hạn** | Đã áp phụ lục gia hạn |
+| **Bị thu (NH trả thay)** | Bên thụ hưởng đòi, NH đã trả thay — bấm **"Đánh dấu Bị thu"** |
+| **Đã tất toán** | Đã thanh toán đủ — tự chuyển, hoặc **"Tất toán thủ công"** |
+| **Đã huỷ / giải toả** | **"Huỷ / Giải toả"** — hạn mức trả lại ngay |
+| **Hết hạn** | Tự chuyển khi quá Ngày hết hạn 7 ngày mà chưa giải toả |
+
+Chứng thư còn ≤ 30 ngày tới hạn → hệ thống tự tạo việc cần làm **"BL sắp
+hết hạn"** cho người phụ trách. Thư nhắc hết hạn tự gửi theo cấu hình
+**Nhắc trước (ngày)** và **Nhắc lặp lại sau (ngày)** (cấu hình Bảo lãnh),
+lặp lại chừng nào chứng thư chưa được xử lý; nút **"Gửi thư nhắc ngay"**
+gửi nhắc thủ công.
+
+## 13.5. Phí, ký quỹ, phạt và tiền gốc
+
+Bốn loại thanh toán trên chứng thư: **Phí BL**, **Ký quỹ**, **Phạt quá
+hạn**, **Tiền gốc** (hoàn trả NH số NH đã trả thay khi BL bị thu).
+
+- **"⚙ Tạo lịch phí BL"**: sinh các đợt Phí BL theo **Tần suất trả phí
+  BL** (hàng tháng / hàng quý / 6 tháng / hàng năm). Bấm lại thì các đợt
+  Phí BL **chưa thanh toán** được thay; đợt đã trả giữ nguyên.
+- Dòng đợt → **"Thanh toán"** để ghi lần trả; lần trả → **"Tạo phiếu
+  chi"** sinh phiếu chi ngân hàng. Nút **"Sinh phiếu chi còn thiếu"** sinh
+  bù cho các lần trả chưa có phiếu.
+- Chứng thư **tự tất toán** (hạn mức khôi phục) khi đã trả đủ **cả bốn
+  loại**: phí + ký quỹ + phạt + **tiền gốc bằng giá trị BL**. Tức là tự
+  tất toán chỉ xảy ra ở BL bị thu đã hoàn đủ cho NH. BL hết nghĩa vụ mà
+  không bị thu thì bấm **"Tất toán thủ công"** hoặc **"Huỷ / Giải toả"**.
+- Chứng thư đã kết thúc (giải toả / hết hạn / tất toán) mà còn ký quỹ đã
+  nộp → **"Ghi nhận thu hoàn ký quỹ"** sinh phiếu thu, tất toán số dư ký
+  quỹ (ký quỹ là tài sản, không phải chi phí).
+
+## 13.6. Phụ lục chứng thư
+
+Tab **Phụ lục** trên chứng thư (chỉ áp cho BL Đã phát hành / Đã gia
+hạn):
+
+| Loại | Tác động |
+|---|---|
+| **Gia hạn** | Ngày hết hạn mới; chứng thư sang **Đã gia hạn** |
+| **Đổi giá trị BL** | Giá trị mới — hạn mức chiếm theo giá trị mới |
+| **Đổi người thụ hưởng** | Bên thụ hưởng mới |
+| **Huỷ trước hạn** | Chứng thư sang Đã huỷ / giải toả, ghi lý do theo số phụ lục |
+| **Khác** | Ghi nhận |
+
+**"Áp dụng"** ghi Giá trị cũ → mới và một dòng vào nhật ký chứng thư.
+
+## 13.7. Ví dụ — KĐT nghỉ dưỡng Dalat
+
+1. HĐTD có hạn mức "Bảo lãnh ngân hàng" 50 tỷ, khai Bảo đảm khai ban
+   đầu 30 tỷ → Khả dụng thực tế 30 tỷ.
+2. Lập đề nghị BL thực hiện HĐ 12 tỷ cho CĐT, phí 1,2%/năm, ký quỹ 10%
+   → **Kích hoạt**: khả dụng còn 18 tỷ.
+3. NH phát hành → **Phát hành**: chứng thư sinh ra, khả dụng vẫn 18 tỷ.
+   Tạo lịch phí hàng quý; nộp ký quỹ 1,2 tỷ.
+4. Đề nghị BL tạm ứng 20 tỷ → kích hoạt **bị chặn** (vượt 18 tỷ), thông
+   báo chỉ cách bổ sung bảo đảm.
+5. Hết nghĩa vụ, CĐT trả lại chứng thư → trả nốt phí → **Huỷ / Giải
+   toả** (hoặc Tất toán thủ công): khả dụng về 30 tỷ → **Ghi nhận thu
+   hoàn ký quỹ** 1,2 tỷ.

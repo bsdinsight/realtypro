@@ -84,9 +84,9 @@ Bấm nút **"Mới"** (góc trên trái).
 
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
-| Số HĐTD | Số HĐ do NH cấp (nhập tay) | `HĐTD/2026/001-VCB` |
-| Ngân hàng | Chọn Đối tác có `is_bank=True` | `Ngân hàng TMCP Ngoại thương VN` |
-| Chi nhánh / Mã NH | Tự lọc theo Ngân hàng đã chọn | `VCB — Hội sở Hà Nội` |
+| Số HĐTD | Số HĐ do NH cấp (nhập tay). Không trùng trong cùng một NH + công ty (HĐTD đã huỷ không tính) | `HĐTD/2026/001-VCB` |
+| Ngân hàng / Bên cho vay | Chọn Đối tác có `is_bank=True` | `Ngân hàng TMCP Ngoại thương VN` |
+| Chi nhánh / Mã NH | Tự lọc theo Ngân hàng đã chọn. Khai chi nhánh ở **Cấu hình → Chi nhánh ngân hàng** (ô Ngân hàng ở đó chỉ liệt kê đối tác có cờ ngân hàng) | `VCB — Hội sở Hà Nội` |
 | Công ty (bên vay) | Mặc định = công ty hiện tại | `Cty CP BĐS Dalat` |
 | Loại tiền | Mặc định = VND | `VND` |
 | Người đại diện ký | Tên người ký HĐ | `Ông Nguyễn Văn A — TGĐ` |
@@ -96,9 +96,12 @@ Bấm nút **"Mới"** (góc trên trái).
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
 | Ngày ký | Ngày 2 bên ký HĐTD | `01/01/2026` |
-| Ngày hiệu lực | Bắt đầu được rút vốn | `01/01/2026` |
+| Ngày hiệu lực | Bắt đầu được rút vốn. Không được trước Ngày ký | `01/01/2026` |
 | Ngày hết hạn | Hết chu kỳ HĐTD | `31/12/2026` |
-| Tổng hạn mức | Số tiền NH cấp cho toàn HĐTD | `100,000,000,000 đ` |
+| Tổng hạn mức HĐTD | Số tiền NH cấp cho toàn HĐTD (tối đa 500.000 tỷ) | `100,000,000,000 đ` |
+
+> 🔒 Khi HĐTD **đã có khế ước**, ô Ngân hàng, Loại tiền và Công ty bị
+> khoá: đổi chúng lúc đó là đổi bên cho vay của các khoản nợ đã ghi.
 
 > 💡 **Mẹo nhập NH lần đầu**: Vào Liên hệ → tạo mới → tick **"Là ngân
 > hàng"** + chọn Mã ngân hàng VN từ dropdown. Sau đó mới quay lại HĐTD,
@@ -119,15 +122,21 @@ import HdtdForm from './images/07-hdtd-form.png'
 
 ## 7.4. Quản lý hạn mức cho vay (Facility)
 
-Trong form HĐTD, **tab "Hạn mức cho vay"** liệt kê các sub-limit thuộc
-HĐTD đó. Mỗi hạn mức có:
+Trong form HĐTD, **tab "Mục đích"** liệt kê các hạn mức con (sub-limit)
+thuộc HĐTD đó. Mỗi dòng có:
 
-- **Mục đích sử dụng**: Vốn lưu động / Đầu tư dự án / Thấu chi / Tài
-  trợ thương mại / L/C / Tái cấp vốn / **Bảo lãnh** / Khác
+- **Mục đích sử dụng vốn**: chọn trong danh mục (25 mục dựng sẵn + mục
+  doanh nghiệp tự khai), mỗi mục thuộc phân loại **Vay** hoặc **Bảo
+  lãnh** — xem §8
 - **Số tiền hạn mức**: Cap rút từ HĐTD vào hạn mức này
 - **Lãi suất khung** (cho vay) hoặc **Phí bảo lãnh** (BG)
 - **Phương pháp tính lãi**: Dư nợ giảm dần / Cố định
 - **Liên thông**: Tick để chia sẻ phần thừa hạn mức (xem §8.5)
+
+Dưới tab có dòng cộng tổng cột **Đã sử dụng** và **Hạn mức khả dụng**;
+dòng nào có hạn mức nhỏ hơn số đã dùng thì tô đỏ. Khi cài module cơ sở
+bảo đảm, tab có thêm cột **Tổng HM khả dụng** ngay trước "Đã sử dụng"
+(xem §19).
 
 ### Quy tắc tối quan trọng (HARD constraint)
 
@@ -146,7 +155,13 @@ facility, KHÔNG bypass total HĐTD.
 - Tạo facility 3: 30 tỷ Bảo lãnh ❌ → BLOCK (cộng = 110 > 100)
 - Fix: giảm facility 3 còn 20 tỷ ✅
 
-Click **"Thêm dòng"** trong tab Hạn mức để tạo. Chi tiết tạo hạn mức ở §8.
+Click **"Thêm facility"** trong tab Mục đích để tạo. Chi tiết tạo hạn mức ở §8.
+
+### Tab "Khế ước"
+
+Liệt kê mọi khế ước rút từ các hạn mức của HĐTD này. Nút **"Khai khế
+ước mới"** mở màn hình khế ước đầy đủ, ô Hạn mức chỉ hiện hạn mức **cho
+vay** của đúng HĐTD đó (xem §9).
 
 ---
 
@@ -179,8 +194,8 @@ mọi mục đích).
 
 | Cho vay | Bảo lãnh |
 |---|---|
-| Hạn mức cho vay = Σ limit facility (mục đích ≠ Bảo lãnh) | Hạn mức bảo lãnh = Σ limit facility (mục đích = Bảo lãnh) |
-| Tổng đã cho vay = Σ dư nợ gốc KW chưa tất toán + KW chưa kích hoạt | Tổng đã bảo lãnh = Σ giá trị BL outstanding (issued + extended, chưa settled) |
+| Hạn mức cho vay = Σ limit facility (mục đích phân loại Vay) | Hạn mức bảo lãnh = Σ limit facility (mục đích phân loại Bảo lãnh) |
+| Tổng đã cho vay = Σ dư nợ gốc KW **đã kích hoạt**, chưa tất toán. KW Nháp / Đã gửi NH không chiếm hạn mức | Tổng đã bảo lãnh = đề nghị BL đã kích hoạt + chứng thư đã phát hành / gia hạn / **bị thu**, chưa tất toán (xem trang Bảo lãnh) |
 | Hạn mức cho vay còn lại = limit − used | Hạn mức bảo lãnh còn lại = limit − used |
 
 import HdtdStats from './images/07-hdtd-stats.png'
@@ -193,9 +208,9 @@ khác nhau. Tách rõ giúp KTT báo cáo BLĐ chính xác "đang vay bao nhiêu
 
 ---
 
-## 7.6. Tài sản thế chấp ở mức HĐTD
+## 7.6. Tài sản đảm bảo ở mức HĐTD
 
-Tab **"Tài sản thế chấp"** trong form HĐTD cho phép gắn TS thế chấp cho
+Tab **"Tài sản đảm bảo"** trong form HĐTD cho phép gắn TS thế chấp cho
 **toàn HĐTD** (không phải từng KW). Thường dùng khi:
 
 - TS cố định (BĐS, tài sản hình thành tương lai...) dùng làm gốc cấp
@@ -203,7 +218,7 @@ Tab **"Tài sản thế chấp"** trong form HĐTD cho phép gắn TS thế ch�
 - HĐTD có nhiều hạn mức con dùng chung TS thế chấp
 
 Click button **"Thế chấp"** (smart-button) hoặc tab → thêm TS từ kho
-`Tài sản thế chấp` (xem §11 chi tiết về quản lý TS).
+`Tài sản đảm bảo` (xem trang Tài sản đảm bảo).
 
 > 💡 **Phân biệt mức gắn TS**: TS có thể gắn tại HĐTD (chung) **hoặc**
 > tại từng KW cụ thể. Tại HĐTD: TS bao trùm toàn chu kỳ. Tại KW: TS gắn
@@ -314,6 +329,12 @@ từ pháp lý đã ký với NH, **giữ vết** là yêu cầu audit.
 
 → Cách "xoá" đúng: **action_cancel** (chuyển trạng thái Huỷ) — vẫn giữ
 record trong DB nhưng không hiển thị mặc định.
+
+### Nhân bản HĐTD
+
+Nhân bản để lấy lại điều kiện của một HĐTD cũ: bản sao mang số **"<số
+cũ> (bản sao)"**, ở trạng thái **Nháp**, và **không** chép các hạn mức
+con — tránh chiếm hạn mức hai lần.
 
 ### Nhiều HĐTD song song với cùng 1 NH
 

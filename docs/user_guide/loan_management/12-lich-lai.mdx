@@ -41,8 +41,11 @@ import ScheduleTab from './images/12-schedule-tab.png'
 | Kế hoạch | Gốc từng kỳ |
 |---|---|
 | **Trả gốc cuối kỳ (Bullet)** | Các kỳ = 0đ gốc, kỳ cuối = toàn bộ gốc |
-| **Trả gốc đều** | Mỗi kỳ = số tiền KW / số kỳ |
+| **Trả gốc đều** | Mỗi kỳ = số tiền KW / số kỳ, làm tròn theo đơn vị tiền tệ; kỳ cuối nhận phần dư làm tròn |
 | **Tuỳ chỉnh** | KTT nhập tay gốc từng dòng |
+
+Tổng tiền gốc trên lịch không được vượt Số tiền KW — sửa tay một kỳ làm
+tổng vượt thì hệ thống chặn và báo chênh bao nhiêu.
 
 ## 12.3. Công thức lãi 1 kỳ
 
@@ -62,16 +65,21 @@ Kỳ sau dư nợ giảm (đã trả gốc) → lãi kỳ 2 nhỏ hơn.
 NH có thể tính lãi lệch vài đồng do quy ước ngày / làm tròn nội bộ.
 Trên dòng lịch lãi:
 
-1. Bật **"Sửa tay"** (toggle) → nhập **"Tiền lãi (sửa tay)"** = số
-   NH tính
-2. Dòng dùng số sửa tay thay công thức tự động
+1. Bật **"Sửa tay"** (toggle) → ô **"Tiền lãi (sửa tay)"** điền sẵn số
+   hiện có, sửa thành số NH tính
+2. **Lưu** → dòng dùng số sửa tay thay công thức tự động (Tiền lãi và
+   Tổng phải trả chỉ đổi khi lưu)
+
+Mọi lần sửa tay trên lịch lãi (ngày, gốc tính lãi, lãi suất, gốc kỳ,
+tiền lãi, phí kỳ…) được ghi lại giá trị cũ → mới vào **Nhật ký KW**, gộp
+theo kỳ.
 
 import ManualOverride from './images/12-manual-override.png'
 
 <img src={ManualOverride} alt="Bật Sửa tay — nhập tiền lãi NH tính, tổng phải trả cập nhật" />
 
-Chênh nhỏ khi trích thu → dùng **Net-off** (§11.5). Chênh do đổi lãi
-suất hồi tố → **Thông báo Nợ/Có** (§9.8c).
+Chênh nhỏ khi trả nợ / trích thu → dùng **Net-off** (§12.9, §11.5).
+Chênh do đổi lãi suất hồi tố → **Thông báo Nợ/Có** (§9.8c).
 
 ## 12.5. Phí kỳ
 
@@ -83,17 +91,21 @@ Tổng phải trả kỳ = Gốc + Lãi + Phí. Sửa tay được từng dòng.
 Khi NH phát hành Thông báo Nợ/Có (đổi lãi suất hồi tố — §9.8c), hệ
 thống chèn **dòng "Điều chỉnh"** (tô đỏ) vào kỳ chưa thanh toán, cộng
 /trừ số tiền truy thu/truy hoàn. Dòng này KHÔNG bị xoá khi "Tạo lại
-lịch lãi".
+lịch lãi", và chỉ mang tiền **lãi** — không mang tiền gốc, kể cả khi áp
+vào kỳ có trả gốc.
 
 ## 12.7. Tạo lại lịch lãi
 
 Button **"Tạo lại lịch lãi"** trên KW — regen các kỳ **chưa thanh
-toán** theo tham số hiện tại (khi đổi lãi suất qua phụ lục, đổi kế
-hoạch trả gốc...). **Giữ nguyên**: kỳ đã trả/trả một phần + dòng điều
-chỉnh.
+toán** (còn Dự kiến) theo tham số hiện tại (khi đổi lãi suất qua phụ
+lục, đổi kế hoạch trả gốc...). **Giữ nguyên**: kỳ đã ghi nhận / đã trả /
+trả một phần + dòng điều chỉnh. Lịch mới **không sinh trùng** kỳ đã giữ
+lại; Nhật ký KW ghi giữ bao nhiêu kỳ, sinh mới bao nhiêu kỳ.
 
-> ⚠ Ngày bắt đầu tính lãi = **Ngày kích hoạt** KW (NH ký hiệu lực),
-> không phải ngày lập KW. Xem trường "Ngày kích hoạt" trên KW.
+> ⚠ Ngày bắt đầu tính lãi = **Ngày kích hoạt** KW (NH ký hiệu lực);
+> để trống thì là **Ngày nhận nợ**. Đổi ngày kích hoạt sau khi KW Hiệu
+> lực dùng nút "Điều chỉnh ngày kích hoạt" (§9.8f) — lịch lãi tự dựng
+> lại.
 
 ## 12.8. Trạng thái từng kỳ
 
@@ -103,3 +115,34 @@ chỉnh.
 | **Đã ghi nhận** | Đã dồn tích lãi (ghi sổ) nhưng chưa trả |
 | **Trả một phần** | Có tiền vào chưa đủ gốc+lãi+phí |
 | **Đã trả** | Đủ cả gốc + lãi + phí |
+
+Tách khỏi trạng thái là cờ **Quá hạn** + **Ngày trễ**: kỳ đã qua ngày
+đến hạn mà còn gốc hoặc lãi chưa trả. Tác vụ hằng ngày tính lại cờ này,
+nên kỳ vừa tới hạn được đánh dấu dù không ai mở KW. Dòng quá hạn tô đỏ.
+
+## 12.9. Net-off chênh lệch trên Lịch lãi
+
+Các cột liên quan (một số cột ẩn mặc định, bật ở nút chọn cột):
+
+| Cột | Ý nghĩa |
+|---|---|
+| **Có net-off** | Kỳ có chênh lệch: đã có dòng net-off bù cho đủ, hoặc bị thu dư |
+| **Tiền net-off** | Σ các dòng trả nợ net-off đã ghi bù vào kỳ (chiều thiếu) |
+| **Trích dư** | Số đã thu vượt nghĩa vụ của kỳ — gồm dòng trả nợ nhập thừa và phần NH trích cho kỳ này còn treo ở giấy báo. Số này giữ nguyên sau khi net-off, để biết đã từng thu dư bao nhiêu |
+| **Dư đã net-off** | Phần thu dư của kỳ đã được net-off |
+
+Kỳ còn chênh trong **ngưỡng net-off** (mặc định 100,000 đ, sửa ở **Cấu
+hình → Tham số phân hệ Vay**) thì hiện nút **"Net-off lẻ"**. Bấm vào:
+
+| Tình huống | Hệ thống làm gì |
+|---|---|
+| Kỳ còn **thiếu** gốc / lãi / **phí** | Tạo 1 dòng trả nợ net-off cho đúng phần thiếu (cả phí) → kỳ về **Đã trả**; cột Tiền net-off ghi số |
+| Kỳ **thu dư** do trả thẳng vào kỳ (nút "Thanh toán", nhập thừa) | Ghi phần dư vào **Dư đã net-off**. Không sửa chứng từ trả nợ đã lập, không thêm dòng trả nợ |
+| Kỳ **thu dư** do NH trích (giấy báo chỉ định kỳ) | Net-off ngay trên dòng giấy báo (xem §11.5) — cùng thao tác với bấm ở màn Trích thu tự động |
+| Kỳ vừa thiếu vừa thừa (vd thiếu gốc, thừa lãi) | Đóng cả hai trong một lần bấm |
+
+- Một chiều vượt ngưỡng thì nút ẩn và không ghi gì; tạo trả nợ chính
+  thức hoặc phân bổ tiếp phần dư.
+- Sửa hoặc xoá chứng từ trả dư sau khi đã net-off thì **Dư đã net-off**
+  giảm theo, để số cũ không trừ mất khoản dư thật về sau.
+- Mỗi lần net-off ghi một dòng vào Nhật ký KW.

@@ -1,0 +1,115 @@
+---
+title: "Tài sản bảo đảm & thế chấp"
+description: "Hướng dẫn quản lý tài sản bảo đảm — khai tài sản, định giá và hạn hiệu lực định giá, văn bản thế chấp theo cấp HĐTD / hạn mức / khế ước, định giá lại, giải chấp, thanh lý."
+order: 14
+---
+
+# 14. Tài sản bảo đảm & thế chấp
+
+## 14.1. Ba thứ cần phân biệt
+
+| Thứ | Là gì | Ở đâu |
+|---|---|---|
+| **Tài sản** | BĐS, quyền đòi nợ, tiền gửi, máy móc… kèm các lần **định giá** | Vốn & Ngân quỹ → HĐ tín dụng → **Tài sản đảm bảo** |
+| **Văn bản thế chấp** | Một lần đem tài sản đi thế chấp cho một HĐTD, ghi **giá trị đảm bảo** | HĐTD → tab **Tài sản đảm bảo** |
+| **Phân bổ TSBĐ** | Chia phần đóng góp của văn bản thế chấp xuống từng mục đích | HĐTD → tab **Phân bổ TSBĐ** (§19) |
+
+Một tài sản thế chấp được **nhiều lần** (nhiều HĐTD, nhiều NH), miễn
+tổng giá trị đem thế chấp không vượt giá trị của tài sản. Một HĐTD được
+bảo đảm bằng **nhiều tài sản**.
+
+## 14.2. Khai tài sản và định giá
+
+Tài sản đảm bảo → **Mới**: Tên, Mã, **Loại tài sản** (danh mục ở Cấu
+hình → **Loại tài sản đảm bảo**, kèm tỷ lệ cho vay mặc định — §19), Công
+ty sở hữu hoặc **Chủ sở hữu (bên thứ ba)**, Thông tin pháp lý, Mô tả.
+
+Tab **Định giá**: mỗi dòng một lần định giá — Ngày định giá, Giá trị,
+phương pháp (So sánh thị trường / Chi phí / Thu nhập / Tổ chức thẩm định
+giá), Tổ chức thẩm định giá, **Ngày hết hạn định giá**.
+
+- **Giá trị hiện hành** = giá trị của lần định giá **mới nhất** (cùng
+  ngày thì lấy dòng nhập sau).
+- Ngày định giá không được ở tương lai; giá trị không âm; ngày hết hạn
+  không trước ngày định giá.
+- **Hạn hiệu lực định giá** cũng lấy theo lần **mới nhất** — chứng thư
+  cũ còn hạn dài không cứu được chứng thư mới đã hết hạn. Tài sản **đang
+  thế chấp** mà định giá hết hạn → mỗi ngày hệ thống tạo việc cần làm
+  nhắc nhóm Quản lý Vay định giá lại (không nhắc trùng việc đang treo).
+
+Các con số trên tài sản:
+
+| Trường | Ý nghĩa |
+|---|---|
+| Giá trị đã đem thế chấp | Σ giá trị đảm bảo của các văn bản thế chấp **đang hiệu lực** |
+| Giá trị còn lại có thể thế chấp | Giá trị hiện hành − giá trị đã đem thế chấp |
+| % đã thế chấp | Đã đem thế chấp / giá trị hiện hành |
+
+Trạng thái tài sản tự tính: **Sẵn sàng — chưa thế chấp** → **Thế chấp 1
+phần — còn dư** → **Đã thế chấp hết**; **Quá thế chấp (cảnh báo)** khi
+định giá lại làm giá trị tụt dưới số đã đem thế chấp; **Đã thanh lý**.
+
+## 14.3. Lập văn bản thế chấp
+
+HĐTD → tab **Tài sản đảm bảo** → thêm dòng:
+
+| Trường | Mô tả |
+|---|---|
+| Số văn bản thế chấp | Số hợp đồng thế chấp ký với NH |
+| Tài sản | Chỉ hiện tài sản còn dư giá trị (Sẵn sàng / Thế chấp 1 phần) |
+| Cấp bảo đảm | **HĐTD (toàn HĐ)** — chuẩn VN; **Facility (1 hạn mức)** — chỉ KW thuộc hạn mức đó; **KW (1 khế ước)** — hiếm, vay từng lần |
+| Facility / Khế ước | Bắt buộc theo cấp; phải thuộc đúng HĐTD |
+| Ngày thế chấp | |
+| Giá trị đảm bảo | Không vượt **giá trị còn lại** của tài sản sau khi trừ các văn bản đang hiệu lực khác (tính trên mọi HĐTD) — vượt thì chặn và báo mức tối đa |
+| Tỷ lệ cho vay (%) | Lấy mặc định theo Loại tài sản, sửa được từng lần (§19) |
+
+Văn bản cấp **Facility** tự phân bổ toàn bộ đóng góp vào hạn mức đó; cấp
+**HĐTD** thì chia tiếp ở tab Phân bổ TSBĐ (§19.3).
+
+## 14.4. Định giá lại
+
+Trên dòng văn bản thế chấp đang hiệu lực → **"Định giá lại"**:
+
+1. Nhập ngày, **Giá trị định giá mới**, phương pháp, tổ chức thẩm định,
+   hiệu lực đến.
+2. Sửa **Giá trị đảm bảo mới** nếu NH ký lại giá trị đảm bảo.
+3. Lưới dưới cho **phân bổ lại hạn mức các facility** cùng lúc (khi NH
+   cắt / nâng hạn mức theo định giá). Hạn mức mới của một facility không
+   được nhỏ hơn phần đã dùng; Σ hạn mức các facility không vượt tổng hạn
+   mức HĐTD.
+4. **Xác nhận** → sinh một dòng định giá trên tài sản, nhật ký HĐTD ghi
+   giá trị cũ → mới và các hạn mức đã đổi; màn hình nạp lại để thấy ngay
+   khả dụng mới.
+
+Định giá giảm → đóng góp base giảm → Khả dụng thực tế giảm (§19). Định
+giá tăng không tự nâng giá trị đảm bảo đã ký.
+
+## 14.5. Giải chấp
+
+Dòng văn bản thế chấp → **"Giải chấp"** → nhập **Ngày giải chấp** +
+**Lý do giải chấp**:
+
+- Ngày giải chấp không ở tương lai, và không sớm hơn ngày thế chấp — báo
+  ngay khi chọn ngày.
+- HĐTD còn khế ước có dư nợ gốc → màn hình cảnh báo *"giải chấp sẽ làm
+  hạn mức khả dụng giảm theo"* và nhật ký tài sản ghi lại; không chặn.
+- Văn bản đã giải chấp **không xoá được** (giữ vết với NH).
+
+## 14.6. Thanh lý tài sản
+
+Tài sản → **"Thanh lý"** → ngày + lý do thanh lý. Chỉ thanh lý được khi
+tài sản **không còn văn bản thế chấp nào hiệu lực** — giải chấp trước.
+
+Tài sản đã từng thế chấp (kể cả đã giải chấp) hoặc đã thanh lý **không
+xoá được**; chỉ xoá được tài sản chưa từng thế chấp.
+
+## 14.7. Ví dụ — KĐT nghỉ dưỡng Dalat
+
+1. Khai tài sản "QSDĐ lô B2 Đà Lạt", định giá 120 tỷ, hiệu lực định giá
+   12 tháng.
+2. Thế chấp cho HĐTD NH A, cấp HĐTD, giá trị đảm bảo 80 tỷ → tài sản
+   **Thế chấp 1 phần**, còn lại 40 tỷ.
+3. Thế chấp tiếp cho HĐTD NH B 50 tỷ → **chặn**: tối đa 40 tỷ.
+4. Năm sau định giá lại 100 tỷ → còn lại 20 tỷ; đóng góp base của văn
+   bản NH A không đổi (80 tỷ vẫn nhỏ hơn 100 tỷ).
+5. Tất toán HĐTD NH A → **Giải chấp** → tài sản về **Sẵn sàng**.

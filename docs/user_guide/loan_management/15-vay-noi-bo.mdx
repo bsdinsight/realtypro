@@ -1,0 +1,71 @@
+---
+title: "Vay nội bộ (cho vay lại)"
+description: "Hướng dẫn cho vay lại nội bộ — công ty mẹ vay ngân hàng rồi cho công ty con vay lại, gắn KW nguồn, trần theo số tiền KW nguồn, cảnh báo lãi suất thấp hơn lãi vay gốc."
+order: 15
+---
+
+# 15. Vay nội bộ (cho vay lại)
+
+## 15.1. Khi nào dùng
+
+Thực tế VN thường gặp: **công ty mẹ vay NH** rồi **cho công ty con vay
+lại** (thường cộng thêm phần chênh lãi để bù chi phí quản lý). Hệ thống
+ghi khoản cho vay lại thành một **khế ước loại "Cho vay lại (nội bộ)"**,
+gắn với **KW nguồn** là khoản vay NH tài trợ cho nó — truy được tiền nội
+bộ đi ra từ khoản vay nào.
+
+```
+KW nguồn (Vay ngân hàng)        Công ty mẹ ↔ NH A      100 tỷ, lãi 8,5%
+ └── KW cho vay lại (nội bộ)    Công ty mẹ → Công ty con  60 tỷ, lãi 9,0%
+ └── KW cho vay lại (nội bộ)    Công ty mẹ → Công ty con khác  40 tỷ, lãi 9,0%
+```
+
+## 15.2. Quyền
+
+Chức năng chỉ hiện với người dùng có quyền **"Được dùng vay nội bộ"**:
+thấy menu **Vay nội bộ**, ô **Loại khoản vay** và tab **Cho vay lại**
+trên khế ước. Người dùng khác chỉ thấy khế ước vay NH như bình thường.
+
+## 15.3. Lập khoản cho vay lại
+
+Hai cách, cùng kết quả:
+
+- **Vốn & Ngân quỹ → Rút vốn & Bảo lãnh → Vay nội bộ → Mới**, hoặc
+- Mở **KW nguồn** (vay NH) → tab **Cho vay lại** → thêm dòng (KW nguồn
+  tự điền).
+
+| Trường | Mô tả |
+|---|---|
+| Loại khoản vay | **Cho vay lại (nội bộ)** |
+| KW nguồn (vay NH) | Bắt buộc; chỉ chọn được khế ước **Vay ngân hàng** |
+| Bên vay (công ty con) | Bắt buộc; đối tác là công ty |
+| Số tiền, Lãi suất, Kỳ hạn… | Như khế ước thường (§9). Số tiền **nhập tay** — không tự theo dòng giải ngân |
+
+Khoản cho vay lại **không chọn Hạn mức**: HĐTD, công ty và loại tiền tự
+lấy theo KW nguồn; ô **Đối tác** là công ty con.
+
+Luồng trạng thái giống khế ước vay NH: **Nháp → Gửi Ngân hàng → Kích
+hoạt** (§9), lịch lãi tự sinh khi kích hoạt, trả nợ / lịch lãi / phụ lục
+dùng như thường.
+
+## 15.4. Kiểm soát
+
+| Kiểm | Hành vi |
+|---|---|
+| Σ các khoản cho vay lại (bỏ khoản đã huỷ) vượt **Số tiền KW nguồn** | **Chặn**, báo tổng và số tiền KW nguồn |
+| Lãi suất cho vay lại **thấp hơn** lãi KW nguồn | **Không chặn** — lúc kích hoạt, Nhật ký KW ghi cảnh báo (cho vay lại dưới giá vốn là lỗ tài chính cho công ty mẹ) |
+| KW nguồn không phải vay NH | Chặn |
+
+Trên KW nguồn, tab **Cho vay lại** liệt kê các khoản đã cho vay lại (Bên
+vay, Số tiền, Lãi suất, Ngày đáo hạn, Dư nợ gốc, Trạng thái) và ô **Đã
+cho vay lại** = Σ số tiền các khoản chưa huỷ.
+
+## 15.5. Ví dụ — KĐT nghỉ dưỡng Dalat
+
+1. Công ty mẹ ký KW 100 tỷ với NH A, lãi 8,5%, kích hoạt.
+2. Mở KW → tab **Cho vay lại** → cho Công ty dự án Dalat vay lại 60 tỷ,
+   lãi 9,0%, cùng kỳ hạn → Gửi Ngân hàng → Kích hoạt.
+3. Thử cho công ty con khác vay 50 tỷ → **chặn** (60 + 50 > 100 tỷ);
+   sửa còn 40 tỷ.
+4. Nếu đặt lãi 8,0% (thấp hơn 8,5%) → vẫn kích hoạt được, Nhật ký KW ghi
+   cảnh báo để kế toán trưởng soát lại.

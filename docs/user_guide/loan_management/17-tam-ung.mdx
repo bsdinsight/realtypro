@@ -54,13 +54,27 @@ import AdvanceForm from './images/17-advance-form.png'
 Tạm ứng đã duyệt được thanh toán bằng **vốn vay** qua Hồ sơ giải ngân
 của KW (xem §10):
 
-1. Mở KW → tab **Giải ngân** → tạo đợt giải ngân
-2. Trong **Hồ sơ giải ngân**: field **"Tạm ứng"** — pick đề nghị tạm
-   ứng (thay vì "Hóa đơn"; chỉ chọn 1 trong 2)
-3. Field **"Số tiền sẽ thanh toán kỳ này"** tự gợi ý = **phần chưa
-   thanh toán** của tạm ứng
-4. KW giải ngân xong (state = Đã giải ngân) → tạm ứng cập nhật trạng
-   thái theo số tiền thực nhận
+1. Mở KW → tab **Giải ngân** → tạo đợt giải ngân, chọn **Bên nhận
+   tiền** là nhà thầu/NCC của tạm ứng
+2. Trong **Hồ sơ giải ngân**: chọn ô **"Tạm ứng"** — chỉ hiện tạm ứng
+   **Đã duyệt / Thanh toán một phần** của đúng bên nhận tiền. Chọn xong,
+   **Loại hồ sơ** tự chuyển sang **Tạm ứng**, Bên nhận tạm ứng tự điền.
+   Một hồ sơ chọn **Hoá đơn hoặc Tạm ứng**, không chọn cả hai.
+3. Cột **"Thanh toán kỳ này"** tự gợi ý = **phần chưa thanh toán** của
+   tạm ứng (không vượt giá trị tạm ứng)
+4. KW **kích hoạt** (đợt chuyển Đã giải ngân) → tạm ứng cập nhật trạng
+   thái theo số tiền đã giải ngân, và mỗi hồ sơ tạm ứng sinh một **phiếu
+   chi** ngân hàng trả thẳng nhà thầu: Nợ TK trả trước người bán / Có TK
+   NH, ngày = ngày kích hoạt KW
+
+> ⚙ Phiếu chi dùng **Sổ nhật ký chi (Tạm ứng)** và **TK trả trước người
+> bán (Tạm ứng)** khai ở cấu hình Tạm ứng. Chưa khai thì hệ thống báo
+> khi cần sinh phiếu.
+>
+> KW kích hoạt lúc chưa khai cấu hình (hoặc trước khi có tính năng này)
+> → trên KW hiện nút **"Sinh phiếu chi tạm ứng còn thiếu"**: sinh bù
+> phiếu cho các hồ sơ chưa có, và nối lại phiếu có sẵn mà chưa nằm
+> trong danh sách của KW. Không sinh trùng.
 
 ### Thanh toán TỪNG PHẦN qua nhiều hồ sơ
 

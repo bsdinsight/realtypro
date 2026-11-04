@@ -13,9 +13,9 @@ NH cấp hạn mức khung không có nghĩa rút được ngay từng đó — 
 
 | Khái niệm | Công thức | Bản chất |
 |---|---|---|
-| **Hạn mức còn lại** (cam kết) | Tổng hạn mức − Dư nợ | Trần pháp lý trong HĐTD |
-| **Cơ sở bảo đảm** (Borrowing base) | Σ(giá trị TSBĐ × tỷ lệ cho vay) | Trần theo tài sản — tăng theo sản lượng + quyền đòi nợ |
-| **Khả dụng thực tế** | min(Hạn mức, Cơ sở bảo đảm) − Dư nợ | Số **rút được hôm nay** |
+| **Hạn mức còn lại** (cam kết) | Tổng hạn mức − Đã sử dụng | Trần pháp lý trong HĐTD |
+| **Cơ sở bảo đảm** (Borrowing base) | Σ(giá trị đem thế chấp × tỷ lệ cho vay) | Trần theo tài sản — tăng theo sản lượng + quyền đòi nợ |
+| **Khả dụng thực tế** | *Cấp HĐTD:* min(Tổng hạn mức, Cơ sở bảo đảm) − Đã sử dụng · *Cấp mục đích:* xem §19.2 | Số **rút được hôm nay** |
 
 Với tổng thầu, TSBĐ quan trọng nhất là **quyền đòi nợ** với CĐT
 (khoản phải thu — §18): nghiệm thu thêm sản lượng → phải thu tăng →
@@ -38,17 +38,44 @@ HĐTD (khung 500 tỷ)
        TSBĐ RIÊNG: Quyền đòi nợ DA Y ×55%
 ```
 
-**Khả dụng(facility) = min(** ① HM facility − dư nợ facility; ② base
-riêng − dư nợ facility *(khi có TSBĐ riêng)*; ③ base toàn HĐTD − dư
-nợ toàn HĐTD **)**, không âm.
+### Khả dụng thực tế của từng mục đích
 
-Không cần "chia" tài sản chung cho từng facility — chuỗi min tự xử lý.
-**Liên thông hạn mức** chỉ chia sẻ phần thừa cam kết (①) — không giúp
-vượt qua thiếu bảo đảm (② ③ vẫn siết).
+```
+Cơ sở bảo đảm của mục đích = Bảo đảm khai ban đầu + Σ TSBĐ đã phân bổ cho mục đích
+Khả dụng thực tế           = Cơ sở bảo đảm của mục đích − Đã sử dụng   (không âm)
+```
+
+Trên tab **Mục đích** của HĐTD, cột **Tổng HM khả dụng** chính là *Cơ
+sở bảo đảm của mục đích*, đặt ngay trước cột **Đã sử dụng**, nên đọc
+hàng ngang: Tổng HM khả dụng − Đã sử dụng = Khả dụng thực tế.
+
+- **TSBĐ phải được phân bổ** xuống mục đích mới làm tăng khả dụng của
+  mục đích đó. Tài sản thế chấp ở cấp HĐTD mà chưa chia xuống thì
+  không mục đích nào được tính — cố ý, để cộng ngang các mục đích không
+  bao giờ vượt tổng bảo đảm thật (một tài sản 10 tỷ không hiện "khả
+  dụng 10 tỷ" trên cả bốn mục đích). Cách phân bổ xem §19.3 bước 4.
+- **Bảo đảm khai ban đầu** (trên form hạn mức): số bảo đảm NH cấp trên
+  cả rổ tài sản mà hồ sơ không ghi tài sản nào đóng góp bao nhiêu. Khai
+  tay, hệ thống **cộng thêm** vào phần đã phân bổ. Về sau tách được tài
+  sản nào thì phân bổ cho tài sản đó rồi giảm số này xuống, tránh đếm
+  trùng.
+- **Không cắt theo hạn mức của mục đích**: bảo đảm lớn hơn hạn mức thì
+  Khả dụng thực tế lớn hơn phần hạn mức còn lại. Hai cột trả lời hai
+  câu hỏi khác nhau — "NH cấp bao nhiêu" và "đang có bao nhiêu bảo đảm
+  đỡ lưng".
+- **Liên thông hạn mức**: các mục đích liên thông tính chung một bể —
+  Σ cơ sở bảo đảm của nhóm − Σ đã sử dụng của nhóm.
+
+### Khả dụng thực tế của HĐTD
+
+`min(Tổng hạn mức − Đã sử dụng; Cơ sở bảo đảm toàn HĐTD − Đã sử dụng)`,
+không âm. Cơ sở bảo đảm toàn HĐTD = Σ đóng góp của mọi văn bản thế chấp
+đang hiệu lực đã khai tỷ lệ cho vay, phân bổ hay chưa. HĐTD chưa có TSBĐ
+nào thì chỉ còn vế hạn mức.
 
 ## 19.3. Thiết lập — 5 bước
 
-1. **Tỷ lệ cho vay**: Vốn & Ngân quỹ → Cấu hình → Loại tài sản thế chấp → nhập
+1. **Tỷ lệ cho vay**: Vốn & Ngân quỹ → Cấu hình → Loại tài sản đảm bảo → nhập
    "Tỷ lệ cho vay (%)" từng loại (BĐS ~70, quyền đòi nợ ~50–70, tiền
    gửi ~95). Sửa được từng lần thế chấp (CĐT uy tín → tỷ lệ cao hơn).
 2. **HĐ với CĐT** (§18): tạo HĐ + nhập BBNT + thanh toán của CĐT.
@@ -59,10 +86,23 @@ vượt qua thiếu bảo đảm (② ③ vẫn siết).
      định giá (audit trail như NH đánh giá lại theo kỳ).
    - *Cấp IPC*: đưa từng **chứng nhận thanh toán CĐT đã ký** vào bảo
      đảm — chi tiết hơn, đúng chứng từ NH yêu cầu.
-4. **Thế chấp đúng cấp**: quyền đòi nợ dự án X → cấp **Facility** của
-   dự án X (ring-fence); tài sản chung → cấp **HĐTD**.
+4. **Thế chấp đúng cấp rồi phân bổ**:
+   - Quyền đòi nợ dự án X → **Cấp bảo đảm = Facility** của dự án X
+     (ring-fence). Lưu văn bản thế chấp là hệ thống **tự phân bổ toàn bộ**
+     đóng góp base về mục đích đó.
+   - Tài sản chung → cấp **HĐTD**, rồi chia xuống các mục đích ở tab
+     **Phân bổ TSBĐ** của HĐTD (hoặc ngay trên form văn bản thế chấp —
+     cùng một bảng). Chọn văn bản thế chấp thì ô số tiền tự điền phần
+     **chưa phân bổ**; sửa được.
+   - Số phân bổ là số **đã nhân tỷ lệ cho vay**: tài sản đem thế chấp 100
+     tỷ, tỷ lệ 70% thì chia tối đa 70 tỷ. Σ phân bổ vượt đóng góp base →
+     **chặn** và báo vượt bao nhiêu. Mỗi cặp (văn bản thế chấp, mục đích)
+     chỉ một dòng — nhập lại cặp đã có thì ghi đè dòng cũ.
+   - Văn bản thế chấp còn phần chưa phân bổ → banner vàng: phần đó không
+     làm tăng khả dụng của mục đích nào.
 5. Xong — mở Facility / HĐTD xem nhóm **"Borrowing base — khả dụng
-   thực tế"**.
+   thực tế"**. Hồ sơ NH không tách được từng tài sản thì khai thẳng
+   **Bảo đảm khai ban đầu** trên hạn mức thay cho bước 4.
 
 ## 19.4. Quyền đòi nợ 2 cấp — hợp đồng hay IPC
 
@@ -168,17 +208,24 @@ Hai cơ chế chặn, hoạt động độc lập:
 - **Cùng một IPC**: không đem cầm cố lần hai; một tài sản cũng không
   được thế chấp vượt giá trị của chính nó qua nhiều lần.
 
-## 19.5. Cảnh báo (không chặn)
+## 19.5. Cảnh báo và chặn
 
 | Cảnh báo | Khi nào | Ở đâu |
 |---|---|---|
-| **Margin call facility** | Dư nợ facility vượt base riêng | Banner đỏ trên facility |
-| **Margin call HĐTD** | Tổng dư nợ vượt base toàn HĐTD | Banner đỏ trên HĐTD |
-| **KW vượt khả dụng** | Số tiền KW mới lớn hơn Khả dụng thực tế | Banner vàng trên KW (Nháp/Đã gửi NH) |
+| **Margin call facility** | Đã sử dụng của mục đích vượt cơ sở bảo đảm của mục đích | Cờ đỏ trên facility |
+| **Margin call HĐTD** | Tổng đã sử dụng vượt base toàn HĐTD | Banner đỏ trên HĐTD |
+| **TSBĐ chưa khai tỷ lệ** | Có văn bản thế chấp đang hiệu lực mà tỷ lệ cho vay = 0 | Banner vàng trên HĐTD |
+| **Phân bổ vượt base** | Định giá lại làm đóng góp base tụt dưới Σ đã phân bổ | Banner đỏ trên văn bản thế chấp — sửa lại các dòng phân bổ |
+| **KW vượt khả dụng** | Số tiền KW lớn hơn Khả dụng thực tế của mục đích | Banner vàng trên KW (Nháp/Đã gửi NH) |
 
-Hệ thống **chỉ cảnh báo, không chặn** — NH mới là bên quyết định cuối.
-Xử lý margin call: nghiệm thu thêm sản lượng với CĐT / bổ sung TSBĐ /
-trả bớt dư nợ.
+Với **khế ước**, hệ thống **chỉ cảnh báo, không chặn** — NH mới là bên
+quyết định cuối. Xử lý margin call: nghiệm thu thêm sản lượng với CĐT /
+bổ sung TSBĐ / trả bớt dư nợ.
+
+Với **đề nghị bảo lãnh** (§13), giá trị BL vượt Khả dụng thực tế của hạn
+mức thì **chặn cứng**, kể cả khi khả dụng bằng 0. Thông báo chặn chỉ
+đường ra: khai **Bảo đảm khai ban đầu** trên hạn mức, hoặc phân bổ TSBĐ
+cho mục đích ở tab **Phân bổ TSBĐ**.
 
 Màn **Vốn & Ngân quỹ → HĐ tín dụng → Cấu trúc tín dụng** có nhóm
 **"Borrowing base"**: tổng cơ sở bảo đảm, khả dụng thực tế, số facility
@@ -186,18 +233,23 @@ Màn **Vốn & Ngân quỹ → HĐ tín dụng → Cấu trúc tín dụng** có
 
 ## 19.6. Ví dụ — KĐT nghỉ dưỡng Dalat
 
-### Ví dụ 1 — ring-fence siết khả dụng
+### Ví dụ 1 — ring-fence siết khả dụng, phân bổ tài sản chung để mở
 
-Facility DA X: HM 150 tỷ, dư nợ 40 tỷ. Quyền đòi nợ DA X = 70 tỷ ×
-60% = **42 tỷ base riêng**. TSBĐ chung base 80 tỷ; tổng dư nợ HĐTD
-90 tỷ; base tổng 152 tỷ.
+Facility DA X: HM 150 tỷ, đã sử dụng 40 tỷ. Quyền đòi nợ DA X thế chấp
+cấp Facility = 70 tỷ × 60% = **42 tỷ**, tự phân bổ hết cho DA X. TSBĐ
+chung (cấp HĐTD) đóng góp base 80 tỷ, đã chia 50 tỷ cho DA Y, còn **30 tỷ
+chưa phân bổ**.
 
-- ① 150 − 40 = 110 tỷ ② 42 − 40 = **2 tỷ** ③ 152 − 90 = 62 tỷ
-- → **Khả dụng thực tế = 2 tỷ** (dù "còn lại theo cam kết" là 110 tỷ)
+- Còn lại theo hạn mức: 150 − 40 = 110 tỷ
+- Khả dụng thực tế DA X: 42 − 40 = **2 tỷ**
 
-Muốn rút thêm → nghiệm thu thêm sản lượng. Ngược lại, CĐT trả 40 tỷ →
-phải thu còn 30 × 60% = 18 tỷ base, thấp hơn dư nợ 40 tỷ → **margin
-call** bật trên facility.
+Phần 30 tỷ chưa phân bổ không tự cộng vào DA X. Kế toán vào tab
+**Phân bổ TSBĐ**, chia thêm 20 tỷ từ TSBĐ chung cho DA X → cơ sở bảo đảm
+DA X = 62 tỷ → **khả dụng 22 tỷ**; TSBĐ chung còn 10 tỷ chưa phân bổ.
+
+Ngược lại, CĐT trả 40 tỷ → phải thu còn 30 × 60% = 18 tỷ. Không chia
+thêm TSBĐ chung thì cơ sở bảo đảm DA X = 18 tỷ, thấp hơn đã sử dụng 40
+tỷ → **margin call** bật trên facility.
 
 ### Ví dụ 2 — IPC mở khoá hạn mức đang bị TSBĐ chặn
 
@@ -224,20 +276,34 @@ nhận **60%** với tỷ lệ cho vay **60%**:
 - Base: 400 → **588,1 tỷ**
 - **Khả dụng thực tế: 400 → 588,1 tỷ**
 
+*(IPC đưa vào ở cấp HĐTD thì phân bổ tiếp xuống mục đích như Ví dụ 1 mới
+làm tăng khả dụng của mục đích đó.)*
+
 Lưu ý trần: base có vượt hạn mức khung cũng không rút thêm được, vì
-khả dụng luôn là `min(hạn mức, base) − dư nợ`. Khi đó IPC đóng vai
+khả dụng của HĐTD là `min(hạn mức, base) − đã sử dụng`. Khi đó IPC đóng vai
 **đệm dự phòng** — BĐS bị định giá lại giảm thì đã có sẵn cơ sở bảo
 đảm bù vào, và là bằng chứng để đàm phán nâng hạn mức khung.
 
 ## 19.7. Lưu ý
 
 - Tỷ lệ cho vay = 0 (chưa khai) → tài sản **không được tính** vào
-  borrowing base và không kích hoạt cảnh báo — dữ liệu thế chấp cũ
-  chưa khai tỷ lệ không bị ảnh hưởng.
-- Facility/HĐTD **không có** TSBĐ nào đã khai tỷ lệ → bỏ ràng buộc
-  base tương ứng (hệ thống không quản bảo đảm phần đó).
-- Giá trị đảm bảo (secured_amount) khai trên lần thế chấp → base tính
-  theo số đó; bỏ trống → theo giá trị hiện hành của tài sản.
+  borrowing base, không phân bổ được, và HĐTD hiện banner nhắc số TSBĐ
+  chưa khai tỷ lệ.
+- HĐTD **không có** TSBĐ nào đã khai tỷ lệ → Khả dụng thực tế của HĐTD
+  chỉ theo hạn mức; KW không hiện banner "vượt khả dụng".
+- Mục đích **chưa được phân bổ** TSBĐ nào và chưa khai Bảo đảm khai ban
+  đầu → Khả dụng thực tế = 0. Không chặn khế ước, nhưng **chặn** đề nghị
+  bảo lãnh (§19.5).
+- Chỉ văn bản thế chấp **đang hiệu lực** được tính; giải chấp thì dòng
+  phân bổ mờ đi và khả dụng tự giảm.
+- **Đóng góp base** của một văn bản thế chấp = min(Giá trị đảm bảo trên
+  văn bản, Giá trị hiện hành theo định giá mới nhất) × tỷ lệ cho vay.
+  Định giá lại **giảm** → base giảm theo; định giá **tăng** thì vẫn trần
+  ở giá trị đảm bảo đã ký (muốn tăng phải ký phụ lục thế chấp). Bỏ trống
+  giá trị đảm bảo → lấy giá trị hiện hành của tài sản.
+- Giá trị đem thế chấp khai trên văn bản thế chấp không vượt phần còn
+  lại chưa thế chấp của tài sản — tính trên **mọi** HĐTD, nên một tài
+  sản thế chấp được cho nhiều HĐTD miễn tổng không vượt giá trị của nó.
 - Số liệu khả dụng là **ước tính quản trị** — tỷ lệ và cách tính thực
   tế theo thỏa thuận từng NH.
 - Chỉ IPC ở trạng thái **"CĐT đã ký nhận"** mới đem thế chấp được.

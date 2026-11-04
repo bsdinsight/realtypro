@@ -23,7 +23,10 @@ Xem tại KW → tab **Phụ lục**.
 | **Đổi lãi suất** | Lãi suất mới + ngày hiệu lực | Các kỳ chưa trả (từ ngày hiệu lực) tính LS mới |
 | **Đổi mục đích** | Mục đích sử dụng vốn | Ghi nhận, không đụng lịch |
 | **Đổi lịch trả gốc** | Bullet ↔ Trả gốc đều ↔ Tuỳ chỉnh | Regen phần gốc các kỳ chưa trả |
-| **Đổi tài sản thế chấp** | TS bảo đảm | Ghi nhận |
+| **Đổi tài sản đảm bảo** | TS bảo đảm | Ghi nhận (thay đổi văn bản thế chấp làm ở §14) |
+
+**Đổi số tiền** là cách duy nhất đổi Số tiền KW sau khi KW Hiệu lực —
+lúc này ô Số tiền trên KW không còn tự theo các đợt giải ngân (§9.7).
 
 ## 16.3. Tạo phụ lục
 
@@ -38,7 +41,10 @@ Tab **Phụ lục** → Thêm dòng:
 | Diễn giải | Ghi chú |
 
 Click **"Áp dụng"** → hệ thống ghi **Giá trị cũ → Giá trị mới**
-(audit) + cập nhật KW + regen lịch lãi nếu là thay đổi trọng yếu.
+(audit) + cập nhật KW + regen lịch lãi nếu là thay đổi trọng yếu (gia
+hạn, đổi số tiền, đổi lịch trả gốc). Ô Giá trị cũ/mới ghi ở dạng đọc
+được: ngày theo dd/mm/yyyy, lịch trả gốc bằng tên (vd "Trả gốc đều"),
+không phải mã kỹ thuật. Nhật ký KW ghi một dòng cho mỗi lần áp dụng.
 
 import AmendmentTab from './images/16-amendment-tab.png'
 
@@ -49,13 +55,45 @@ import AmendmentTab from './images/16-amendment-tab.png'
 Phụ lục đổi lãi suất **KHÔNG overwrite** trường "Lãi suất" gốc của KW
 (đó là LS ký ban đầu, immutable). Thay vào đó:
 
-- Các kỳ lịch lãi **chưa trả** có ngày ≥ ngày hiệu lực → nhận LS mới
+- Các kỳ lịch lãi còn **Dự kiến** có ngày bắt đầu ≥ ngày hiệu lực →
+  nhận LS mới (không dựng lại cả lịch)
 - Lịch sử LS xem qua danh sách phụ lục (mỗi lần đổi = 1 dòng)
 - LS hiệu lực hiện tại = phụ lục mới nhất đã áp dụng
+- Giá trị cũ = LS đang hiệu lực ngay trước ngày hiệu lực của phụ lục
+  (LS ký ban đầu, hoặc LS của phụ lục trước đó)
 
-> ⚠ Kỳ **đã thanh toán** trước khi phụ lục hiệu lực KHÔNG bị tính
-> lại — nếu có chênh lệch, chờ NH phát hành **Thông báo Nợ/Có**
-> (§9.8c) để ghi nhận truy thu/truy hoàn.
+> ⚠ Kỳ **đã ghi nhận / đã thanh toán** KHÔNG bị tính lại trên lịch lãi —
+> phần chênh xem ở bảng chênh lệch hồi tố bên dưới, và ghi vào lịch bằng
+> **Thông báo Nợ/Có** (§9.8c) khi NH phát hành truy thu/truy hoàn.
+
+### Phụ lục hồi tố — bảng chênh lệch lãi (Δ)
+
+NH ký phụ lục với **ngày hiệu lực ở quá khứ**, trong khi các kỳ từ ngày
+đó tới nay đã ghi nhận hoặc đã trả. Khi đó:
+
+- Ô **Hiệu lực hồi tố** **tự bật** nếu có kỳ Đã ghi nhận / Trả một phần /
+  Đã trả nằm sau ngày hiệu lực. Vẫn tick/bỏ tick tay được khi nghiệp vụ
+  khác suy đoán.
+- **Bảng chênh lệch tự dựng khi lưu**: lưu phụ lục (rồi lưu KW) là bảng
+  đã có, mở lại phụ lục là thấy. Đổi ngày hiệu lực hoặc LS mới thì bảng
+  tự dựng lại. Phụ lục **chưa lưu** thì chưa có nút, chỉ có câu nhắc
+  *"Bấm Lưu & Đóng rồi lưu khế ước…"*.
+- Mỗi dòng = 1 kỳ bị ảnh hưởng: số ngày lãi cũ / lãi mới, LS trước →
+  sau, **Lãi đã ghi nhận**, **Lãi tính lại**, **Chênh lệch Δ** (dương =
+  phải trả thêm NH, tô đỏ; âm = được hoàn, tô xanh). Kỳ vắt ngang ngày
+  hiệu lực được chẻ hai đoạn. Kỳ có tiền lãi **sửa tay** giữ nguyên, Δ
+  = 0, đánh dấu "Không tự tính".
+- Nút **"Tính chênh lệch"** để tính lại; **"Duyệt chênh lệch"** chốt bảng
+  (ghi người duyệt + thời điểm); **"Huỷ duyệt"** mở khoá để tính lại.
+  Bảng đã duyệt **không** bị tự dựng đè.
+- Không có kỳ nào cần tính lại → bấm "Tính chênh lệch" chỉ hiện thông
+  báo *"Không phát sinh chênh lệch"* (hộp xanh, không phải lỗi), kèm số
+  kỳ Dự kiến đã được ghi thẳng LS mới.
+
+> 💡 Bảng Δ **chỉ tính và ghi vết** — không sửa lịch lãi, không sinh
+> bút toán, không cấn trừ. Đưa phần lệch vào đâu (kỳ kế tiếp hay quyết
+> toán riêng) là quyết định của doanh nghiệp; ghi vào lịch bằng Thông
+> báo Nợ/Có (§9.8c).
 
 ## 16.5. Điều chỉnh lãi suất hàng loạt
 
@@ -87,8 +125,9 @@ KW 10 tỷ ban đầu lãi 9.5%, tenor 24 tháng:
 
 ## 16.7. Lưu ý
 
-- **Phụ lục đã áp dụng KHÔNG sửa/xoá** — tạo phụ lục mới nếu cần điều
+- **Phụ lục đã áp dụng KHÔNG xoá được** — tạo phụ lục mới nếu cần điều
   chỉnh tiếp (giữ chuỗi audit)
+- Số tiền mới phải > 0; LS mới không âm
 - Phụ lục chỉ áp dụng cho KW **Hiệu lực** (không áp cho Nháp/Huỷ)
 - Phân biệt **Phụ lục KW** (sửa 1 KW) vs **Phụ lục HĐTD** (sửa hợp
   đồng khung — §7.7)

@@ -29,28 +29,66 @@ của facility tương ứng. Hệ thống tự tính "Đã sử dụng" / "Còn
 | | Loại hạn mức (facility_type) | Mục đích (purpose) |
 |---|---|---|
 | Trả lời câu hỏi | "Hạn mức HOẠT ĐỘNG thế nào?" | "Tiền dùng để LÀM GÌ?" |
-| Các giá trị | Tuần hoàn (Revolving) / Có kỳ hạn (Term) / Thấu chi / HM bảo lãnh / HM L/C | Vốn lưu động / Đầu tư ngắn–trung–dài hạn / Bảo lãnh / L/C / Thấu chi / Tài trợ thương mại / Tái cấp vốn / Khác |
+| Các giá trị | **Tuần hoàn** (Revolving) / **Có kỳ hạn** (Term) | Danh mục **Mục đích sử dụng vốn**: Vốn lưu động / Đầu tư ngắn–trung–dài hạn / Bảo lãnh / L/C / Tài trợ thương mại / Tái cấp vốn / … và mục doanh nghiệp tự khai. Mỗi mục thuộc phân loại **Vay** hoặc **Bảo lãnh** |
 | Ví dụ | Tuần hoàn = trả xong rút lại được | Đầu tư dài hạn = mua sắm TSCĐ, xây dự án |
 
 **Tổ hợp phổ biến**: Tuần hoàn × Vốn lưu động (mua vật tư quay vòng);
 Có kỳ hạn × Đầu tư dài hạn (giải ngân theo tiến độ dự án);
-HM bảo lãnh × Bảo lãnh (phát hành BL thực hiện HĐ/tạm ứng/bảo hành).
+Tuần hoàn × mục đích phân loại **Bảo lãnh** (phát hành BL thực hiện
+HĐ/tạm ứng/bảo hành).
+
+> ℹ️ Các loại hạn mức cũ **Thấu chi**, **Hạn mức bảo lãnh**, **Hạn mức
+> L/C** đã ngưng dùng: không chọn được cho hạn mức mới (hệ thống chặn và
+> chỉ ra mục đích thay thế), bản ghi cũ vẫn giữ nhãn. Hạn mức bảo lãnh
+> nay khai bằng **Mục đích** phân loại Bảo lãnh, không khai bằng Loại.
+
+### Danh mục Mục đích sử dụng vốn
+
+**Cấu hình → Mục đích sử dụng vốn** liệt kê 25 mục dựng sẵn và mục tự
+khai; sửa tên ở đây thì ô chọn trên hạn mức đổi theo.
+
+- Khai mục mới: chỉ cần **Tên** và **Phân loại** (Vay / Bảo lãnh). Mã
+  tự sinh từ tên (bỏ dấu, chữ thường, gạch dưới; trùng thì thêm `_2`,
+  `_3`) và bị khoá.
+- Mục dựng sẵn: không đổi mã, không xoá được; mục "Bảo lãnh ngân hàng"
+  không đổi được phân loại. Mục đang có hạn mức dùng tới cũng không đổi
+  mã được. Muốn bỏ một mục thì bỏ tick **"Đang dùng"**.
+- Cột đếm số hạn mức đang dùng mỗi mục, kèm bộ lọc.
 
 ## 8.3. Tạo hạn mức
 
 Vào **Vốn & Ngân quỹ → HĐ tín dụng → Hạn mức tín dụng** → bấm **Mới**
-(hoặc thêm dòng trực tiếp trong tab "Hạn mức (Facility)" của HĐTD).
+(hoặc bấm **"Thêm facility"** trong tab **"Mục đích"** của HĐTD).
 
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
+| Dự án | Mục đích này để làm dự án nào (xem 8.6). Để trống nếu chia cho nhiều dự án | `KĐT nghỉ dưỡng Dalat` |
 | Tên hạn mức | Đặt theo mục đích cho dễ đọc | `VLĐ 2026 — VCB` |
 | HĐTD | HĐTD cha | `HĐTD/2026/001-VCB` |
-| Loại hạn mức | Cấu trúc kỹ thuật | `Tuần hoàn (Revolving)` |
-| Mục đích sử dụng vốn | Theo HĐTD đã ký | `Bổ sung vốn lưu động` |
+| Loại hạn mức | Tuần hoàn / Có kỳ hạn | `Tuần hoàn (Revolving)` |
+| Mục đích sử dụng vốn | Chọn trong danh mục | `Bổ sung vốn lưu động` |
 | Số tiền hạn mức | Cap của facility này | `50,000,000,000 đ` |
 | Lãi suất mặc định | Auto-fill khi tạo KW từ hạn mức này | `9.5%/năm` |
 | Phương pháp tính lãi | Dư nợ giảm dần / Cố định | `Dư nợ giảm dần` |
 | Quy ước ngày | Thực tế/360 · Thực tế/365 · 30/360 | `Thực tế/360` |
+
+### Số đầu kỳ — đưa HĐTD đang chạy dở vào hệ thống
+
+HĐTD hiếm khi được nhập đúng ngày ký. Khi đưa một HĐTD **đang chạy dở**
+vào, phần NH đã giải ngân trước đó không có khế ước tương ứng nên "Còn
+lại" báo nguyên hạn mức — mời người dùng rút một khoản không còn tồn tại.
+Khai trên hạn mức:
+
+| Trường | Mô tả |
+|---|---|
+| **Đã dùng đầu kỳ** | Số đã sử dụng tại ngày chốt, theo xác nhận số dư của NH. Cộng thẳng vào "Đã sử dụng" |
+| **Ngày chốt số đầu kỳ** | Ngày của số trên |
+| **Khả dụng đầu kỳ** | Tự tính, chỉ để đối chiếu với xác nhận số dư |
+
+Khai bằng số **đã dùng** chứ không phải số còn lại: "đã dùng" là sự
+thật lịch sử đứng yên, còn "còn lại" sẽ sai ngay khi hạn mức được nâng
+bằng phụ lục. Khai vượt trần thì bị chặn — thường là còn một phụ lục
+nâng hạn mức chưa nhập.
 
 > 🔒 **HARD RULE**: Σ hạn mức các facility ≤ Tổng hạn mức HĐTD. Hệ
 > thống chặn khi lưu nếu vượt — kể cả khi tick Liên thông (xem 8.5).
@@ -59,11 +97,22 @@ Vào **Vốn & Ngân quỹ → HĐ tín dụng → Hạn mức tín dụng** →
 
 | Trường | Công thức |
 |---|---|
-| Đã sử dụng | Σ dư nợ gốc các KW chưa tất toán thuộc facility (+ Σ giá trị BL outstanding nếu là hạn mức bảo lãnh) |
+| Đã sử dụng | Đã dùng đầu kỳ + Σ dư nợ gốc các KW **đã kích hoạt**, chưa tất toán thuộc facility. Hạn mức bảo lãnh: đề nghị BL đã kích hoạt + chứng thư đã phát hành / bị thu, chưa tất toán |
+| Đang chờ NH duyệt | Σ số tiền các KW **Đã gửi NH** — chưa tính vào Đã sử dụng |
 | Còn lại | Số tiền hạn mức − Đã sử dụng |
+
+KW **Nháp / Đã gửi NH không chiếm hạn mức**: NH chưa ký nhận nợ thì chưa
+có đồng nào ra. Chỗ chặn là lúc **Kích hoạt** KW. Đánh đổi: giữa lúc gửi
+và lúc kích hoạt hạn mức không được giữ chỗ — ô "Đang chờ NH duyệt" và
+dòng nhắc khi gửi giúp biết trước nếu hồ sơ đang chờ đã vượt phần còn
+lại.
 
 KW **trả gốc** → "Đã sử dụng" giảm → facility Tuần hoàn rút tiếp được
 (revolving). BL **tất toán** → giải phóng hạn mức bảo lãnh tương ứng.
+
+Khi cài module cơ sở bảo đảm, mỗi hạn mức còn có **Khả dụng thực tế** —
+số còn rút được theo tài sản bảo đảm đang có, không chỉ theo trần NH cấp
+(xem §19).
 
 import FacilityList from './images/08-facility-list.png'
 
@@ -85,8 +134,15 @@ F2 Đầu tư      (liên thông): limit 30 tỷ, dùng 25 tỷ → còn 5 tỷ 
 
 ## 8.6. Phân bổ hạn mức theo dự án × mục đích
 
-Với hạn mức lớn dùng cho nhiều dự án, tab **"Phân bổ dự án"** (mở
-dialog từ dòng facility trong HĐTD) cho phép chia:
+**Mục đích chỉ dùng cho một dự án** (trường hợp hay gặp nhất): chọn ô
+**Dự án** ở đầu form hạn mức. Tab "Phân bổ dự án" ẩn đi, hệ thống tự giữ
+**một** dòng phân bổ bằng trọn hạn mức, nên tab "Hạn mức theo dự án" trên
+HĐTD và mọi phép tính theo trục dự án vẫn có dữ liệu mà không phải nhập
+bảng. Hạn mức đang chia cho nhiều dự án thì không khai được dự án đơn —
+hệ thống không tự quyết hộ phần của dự án nào bị xoá.
+
+Với hạn mức lớn dùng cho nhiều dự án, để trống ô Dự án; tab **"Phân bổ
+dự án"** (mở dialog từ dòng facility trong HĐTD) cho phép chia:
 
 ```
 Hạn mức Đầu tư 30 tỷ
@@ -173,6 +229,7 @@ không còn ảnh hưởng tới chi phí vốn hiện tại.
   dùng thì để "Đã sử dụng" về 0 và không tạo KW mới.
 - **Lãi suất mặc định chỉ là default** — KW override được per-KW;
   đổi lãi suất giữa chừng dùng Phụ lục KW (§16) hoặc wizard
-  "Điều chỉnh LS hàng loạt" (§9.11).
-- **Hạn mức bảo lãnh** được cả Đề nghị phát hành BL (đang xử lý)
-  lẫn Chứng thư BL (đã phát hành) chiếm chỗ — tránh over-commit.
+  "Điều chỉnh LS hàng loạt" (§9.8d).
+- **Hạn mức bảo lãnh**: Đề nghị phát hành BL chiếm chỗ từ lúc **Kích
+  hoạt**; phát hành xong thì Chứng thư BL chiếm thay (tổng không đổi);
+  chứng thư **bị thu** vẫn chiếm tới khi tất toán — tránh over-commit.

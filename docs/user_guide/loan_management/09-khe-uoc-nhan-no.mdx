@@ -47,20 +47,27 @@ Hợp đồng tín dụng (HĐTD)         ← Ký 1 lần / NH / chu kỳ
 
 ## 9.2. Vòng đời (Workflow) của KW
 
-KW có **6 trạng thái**, đi tuần tự:
+Thanh trạng thái trên form KW đi theo thứ tự:
 
 | Trạng thái | Ý nghĩa | Hành động chuyển tiếp |
 |---|---|---|
-| **Nháp** | KTT tạo mới, đang điền | Click "Gửi NH duyệt" |
-| **Đã gửi NH** | Chờ NH duyệt | NH duyệt → KTT click "NH duyệt" |
-| **NH đã duyệt** | NH đã ký, chuẩn bị giải ngân | Tạo Giải ngân + chứng từ |
-| **Hiệu lực** | Đã giải ngân, đang trả nợ | Trả nợ định kỳ / trích thu auto |
-| **Đã tất toán** | Trả đủ gốc + lãi | (kết thúc) |
-| **Huỷ** | Huỷ trước khi NH duyệt | (kết thúc) |
+| **Nháp** | KTT đang khai KW và các dòng giải ngân | Bấm **"Gửi Ngân hàng"** |
+| **Đã gửi NH** | Hồ sơ đã gửi, chờ NH ký nhận nợ. **Chưa chiếm hạn mức** | NH ký xong → bấm **"Kích hoạt"**. Cần sửa thì **"Về Nháp"** |
+| **Hiệu lực** | NH đã nhận nợ: KW chiếm hạn mức, các dòng giải ngân tự chuyển "Đã giải ngân", lịch lãi tự sinh | Trả nợ theo lịch / trích thu tự động |
+| **Trả một phần** | Đã có khoản trả gốc hoặc lãi | Tiếp tục trả nợ |
+| **Đã tất toán** | Đã trả hết gốc | (kết thúc) |
+| **Đã huỷ** | Bỏ khế ước. Các đợt giải ngân chưa chuyển tiền bị huỷ theo | (kết thúc) |
 
-> 🔒 **Khi KW chuyển sang Hiệu lực**, hệ thống **KHÔNG cho sửa** các
-> trường giá trị (số tiền, lãi suất, tenor). Mọi thay đổi sau đó phải
-> qua **Phụ lục KW** (xem §16).
+Ngoài thanh trạng thái còn cờ **Quá hạn** (kèm số ngày trễ): bật khi KW
+quá ngày đáo hạn hoặc có kỳ lãi quá hạn mà chưa trả đủ.
+
+> 🔒 **Sau khi KW Hiệu lực**, ô **Lãi suất** và **Ngày kích hoạt** bị
+> khoá. Ô **Số tiền KW** thì luôn chỉ đọc (xem §9.3, Bước 3). Đổi số
+> tiền, lãi suất hay gia hạn sau thời điểm này phải qua **Phụ lục KW**
+> (xem §16); đổi ngày kích hoạt dùng nút **"Điều chỉnh ngày kích hoạt"**
+> (xem §9.8f).
+>
+> KW đã có khoản trả gốc thì không huỷ được.
 
 ---
 
@@ -83,67 +90,93 @@ Bấm nút **"Mới"** (góc trên trái).
 
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
-| Số KW | Tự sinh sau khi save (vd `KW/2026/001`) | (để trống, hệ thống tự gen) |
-| HĐTD | Chọn HĐTD đã ký với NH | `HĐTD/2026/001 — Vietcombank — 100 tỷ` |
-| Hạn mức | Auto-load các hạn mức thuộc HĐTD | `Vốn lưu động — 50 tỷ` |
-| Đối tác NH | Auto-load từ HĐTD | `Ngân hàng TMCP Ngoại thương VN` |
-| Mục đích sử dụng vốn | Auto-load từ Hạn mức, có thể override | `Vốn lưu động — Thi công móng dự án Dalat` |
-| Số tiền vay | **Số tiền rút trong đợt KW này** | `10,000,000,000 đ` |
+| Số khế ước | Số NH cấp cho khế ước, bắt buộc | `KW/2026/001` |
+| Hạn mức | Chỉ liệt kê hạn mức **cho vay** thuộc HĐTD **đang hiệu lực và còn hạn**. Hộp chọn hiện kèm HĐTD và Dự án của hạn mức, vì tên hạn mức giữa các HĐTD hay trùng nhau | `Vốn lưu động — 50 tỷ` |
+| HĐTD | Tự lấy theo Hạn mức | `HĐTD/2026/001 — Vietcombank — 100 tỷ` |
+| Đối tác | Ngân hàng, tự lấy theo HĐTD | `Ngân hàng TMCP Ngoại thương VN` |
+| Số tiền KW | **Chỉ đọc**, tự bằng tổng các dòng giải ngân chưa huỷ (xem Bước 3) | `10,000,000,000 đ` |
+
+> 💡 Khai KW từ nút **"Khai khế ước mới"** trên tab **Khế ước** của HĐTD
+> thì ô Hạn mức chỉ hiện hạn mức của đúng HĐTD đó.
 
 **Section "Lãi suất":**
 
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
-| Lãi suất (%/năm) | Auto-load từ Hạn mức, override nếu khác | `9.5%` |
+| Lãi suất (%/năm) | Tự lấy từ Hạn mức, sửa được khi KW còn Nháp / Đã gửi NH | `9.5%` |
 | Phương pháp tính lãi | Dư nợ giảm dần / Cố định | `Dư nợ giảm dần` |
 | Quy ước ngày tính lãi | Thực tế/360 / Thực tế/365 / 30/360 | `Thực tế/360` (chuẩn NH VN) |
+| Kế hoạch trả gốc | Bullet / Đều / Tuỳ chỉnh | `Trả gốc cuối kỳ (Bullet)` |
+| Cách tính phí KW | Không có phí / % trên lãi / Số tiền cố định (xem §9.8b) | `Không có phí` |
 
-**Section "Thời gian + Kế hoạch trả":**
+**Section "Thời gian":**
 
 | Trường | Mô tả | Ví dụ |
 |---|---|---|
-| Ngày giải ngân | Ngày tiền về | `15/03/2026` |
-| Tenor (tháng) | Thời gian vay | `24 tháng` |
-| Ngày đáo hạn | Auto = giải ngân + tenor | `15/03/2028` |
-| Kế hoạch trả gốc | Bullet / Đều / Tuỳ chỉnh | `Trả gốc cuối kỳ (Bullet)` |
-| Chu kỳ trả lãi | Hằng tháng / Quý / Năm | `Hằng tháng` |
+| Ngày nhận nợ | Ngày ghi trên khế ước, bắt buộc | `15/03/2026` |
+| Ngày kích hoạt | Để trống thì lãi tính từ Ngày nhận nợ. Khoá sau khi kích hoạt | (trống) |
+| Kỳ hạn (tháng) | Thời gian vay | `24` |
+| Ngày đáo hạn | Tự tính = (Ngày kích hoạt, không có thì Ngày nhận nợ) + kỳ hạn. Không được sau ngày hết hiệu lực của HĐTD | `15/03/2028` |
+
+Lịch lãi chia theo từng tháng kể từ ngày bắt đầu tính lãi.
 
 import KwForm from './images/09-kw-form.png'
 
 <img src={KwForm} alt="Form KW điền đầy đủ thông tin" />
 
-### Bước 3 — Save Nháp
+### Bước 3 — Khai các đợt giải ngân, rồi Lưu
 
-Click **"Lưu"** (góc dưới hoặc Cmd+S).
+Ở tab **Giải ngân**, bấm **"Thêm một dòng"** cho từng đợt NH sẽ chuyển
+tiền: nhà thầu nhận tiền, tài khoản NH của nhà thầu, giá trị, dự án (chi
+tiết xem §10).
 
-Sau khi save:
-- Số KW tự sinh
-- Trạng thái = **Nháp**
-- Có thể sửa mọi trường
+Ô **Số tiền KW** tự bằng **tổng các dòng giải ngân chưa huỷ**, không gõ
+tay. Thêm, sửa hay xoá dòng thì số tiền đổi theo ngay trên màn hình.
+Bấm **"Lưu"** để ghi lại.
 
-### Bước 4 — Gửi NH duyệt
+| Thao tác trên dòng giải ngân | Số tiền KW |
+|---|---|
+| Thêm / sửa giá trị dòng | = tổng các dòng chưa huỷ |
+| Xoá dòng cuối cùng | về 0 |
+| Bấm **"Huỷ"** trên dòng | giảm theo, màn hình báo *"Số tiền khế ước đã được cập nhật lại giá trị từ … sang …"* và ghi vào Nhật ký KW |
+| Bấm **"Về Nháp"** trên dòng đã huỷ | tăng lại, cũng báo như trên |
 
-Khi đã điền đầy đủ, click button **"Gửi NH duyệt"** ở thanh trạng thái
-trên cùng form.
+> ℹ️ KW **Cho vay lại** (vay nội bộ) và KW thuộc hạn mức bảo lãnh / L-C
+> không có đợt tiền NH chuyển về, nên vẫn nhập Số tiền KW bằng tay.
 
-Trạng thái chuyển sang **Đã gửi NH**. KTT KHÔNG sửa được giá trị nữa
-(chỉ sửa được nếu kéo về Nháp).
+### Bước 4 — Gửi Ngân hàng
 
-### Bước 5 — NH duyệt → Hiệu lực
+Khi đã điền đủ, bấm **"Gửi Ngân hàng"** trên thanh trạng thái.
 
-Sau khi NH thông báo đã duyệt (qua email/SMS/ký giấy):
+- Chưa có dòng giải ngân nào (hoặc mọi dòng đã huỷ) thì hệ thống báo
+  *"Khế ước … chưa nhập thông tin giải ngân. Vào tab Giải ngân thêm ít
+  nhất một dòng rồi thử lại."*
+- Trạng thái chuyển **Đã gửi NH**; các dòng giải ngân Nháp cũng chuyển
+  "Đã gửi NH" — cả bộ hồ sơ đi cùng nhau.
+- KW **chưa chiếm hạn mức** ở bước này (NH chưa nhận nợ). Hạn mức hiện
+  phần này ở ô **"Đang chờ NH duyệt"**; nếu tổng hồ sơ đang chờ đã vượt
+  phần hạn mức còn lại, Nhật ký KW ghi một dòng nhắc để biết sớm.
+- Cần sửa thì bấm **"Về Nháp"**.
 
-1. KTT click button **"NH duyệt"** → trạng thái chuyển **NH đã duyệt**
-2. Tiến hành **Giải ngân** (xem §10) — tạo Giải ngân + Hồ sơ giải ngân
-3. Sau khi giải ngân lần đầu thành công → KW tự chuyển **Hiệu lực**
-4. Lịch lãi auto-generate theo Tenor + Chu kỳ
+### Bước 5 — Kích hoạt → Hiệu lực
+
+Khi NH đã ký nhận nợ, bấm **"Kích hoạt"**:
+
+1. Hệ thống kiểm Số tiền KW không vượt **hạn mức còn lại** — đây là chỗ
+   chặn duy nhất về hạn mức. Cũng như lúc gửi, KW chưa có dòng giải ngân
+   thì bị báo thiếu.
+2. KW chuyển **Hiệu lực** và bắt đầu chiếm hạn mức.
+3. Mọi dòng giải ngân chưa đóng tự chuyển **Đã giải ngân**; ô **Đã giải
+   ngân** của KW hiện số từ lúc này (khi còn Nháp / Đã gửi NH ô này
+   bằng 0 vì tiền chưa ra khỏi NH).
+4. Lịch lãi tự sinh theo kỳ hạn (nếu chưa có).
 
 ---
 
 ## 9.4. Tab "Lịch lãi" — Lịch trả nợ tự động
 
-Sau khi KW vào trạng thái **NH đã duyệt** (hoặc **Hiệu lực**), tab
-**Lịch lãi** sẽ tự sinh các kỳ trả nợ.
+Khi KW được **Kích hoạt**, tab **Lịch lãi** tự sinh các kỳ trả nợ (chi
+tiết thao tác trên từng kỳ xem §12).
 
 ### Cơ chế tính lãi
 
@@ -176,13 +209,17 @@ Kế hoạch trả gốc **Bullet** → trả 10 tỷ vào kỳ 24 (15/03/2028).
 | Số ngày | Số ngày trong kỳ (29-31) |
 | Dư nợ kỳ | Dư nợ đầu kỳ |
 | Lãi suất (%/năm) | Lãi suất áp dụng kỳ này |
-| Gốc kỳ | Số gốc phải trả kỳ này (= 0 nếu Bullet, kỳ cuối = full) |
+| Gốc kỳ | Số gốc phải trả kỳ này (= 0 nếu Bullet, kỳ cuối = full). Trả gốc đều thì mỗi kỳ làm tròn, kỳ cuối nhận phần dư |
 | Lãi kỳ | Tiền lãi tính được |
-| Gốc đã trả | Σ amount_principal allocate vào kỳ |
-| Lãi đã trả | Σ amount_interest allocate vào kỳ |
+| Phí kỳ | Phí KW phân bổ vào kỳ (xem §9.8b) |
+| Gốc đã trả | Σ tiền gốc các lần trả nợ ghi vào kỳ |
+| Lãi đã trả | Σ tiền lãi các lần trả nợ ghi vào kỳ |
 | Gốc còn | = Gốc kỳ − Gốc đã trả |
 | Lãi còn | = Lãi kỳ − Lãi đã trả |
-| Trạng thái | Dự kiến / Một phần / Đã trả / Quá hạn |
+| Có net-off / Tiền net-off | Kỳ có chênh lệch đã bù trừ (xem §12) |
+| Trích dư / Dư đã net-off | Số đã thu vượt nghĩa vụ của kỳ, và phần đã net-off trong số đó |
+| Quá hạn / Ngày trễ | Kỳ đã qua ngày đến hạn mà còn gốc hoặc lãi chưa trả |
+| Trạng thái | Dự kiến / Đã ghi nhận / Trả một phần / Đã trả |
 
 import KwLichLai from './images/09-kw-lich-lai.png'
 
@@ -192,17 +229,18 @@ import KwLichLai from './images/09-kw-lich-lai.png'
 
 - **Phụ lục đổi lãi suất** → Lịch lãi tự re-compute từ kỳ áp dụng phụ lục
 - **Trả nợ trước hạn** → Số ngày kỳ rút ngắn, lãi giảm tương ứng
-- **Trả nợ qua giấy báo NH** → Auto-allocate vào đúng kỳ (xem §13)
+- **Trả nợ qua giấy báo NH** → Auto-allocate vào đúng kỳ (xem §11)
 
 ### Net-off chênh lệch lẻ
 
-Khi NH trích đủ tiền nhưng còn lệch vài đồng do làm tròn (vd kỳ lãi
-1,627,500,000 đ, NH trích 1,627,499,999 đ, chênh 1 đ):
+Khi số đã trả lệch nghĩa vụ của kỳ vài đồng do làm tròn — **thiếu** (vd
+kỳ lãi 1,627,500,000 đ, NH trích 1,627,499,999 đ) hoặc **thừa** — dòng
+kỳ đó hiện nút **"Net-off lẻ"**. Bấm vào thì kỳ khớp tròn mà không phải
+lập thêm chứng từ cho con số bé.
 
-→ Click button **"Net-off lẻ"** ở dòng kỳ đó → hệ thống tạo write-off
-repayment cho con số 1 đ → kỳ về **Đã trả đủ**.
-
-Ngưỡng auto net-off: **100,000 đ** (chi tiết xem §14).
+Nút chỉ hiện khi chênh lệch nằm trong **ngưỡng net-off** (mặc định
+100,000 đ, sửa ở **Cấu hình → Tham số phân hệ Vay**). Cách xử từng chiều
+xem §12.
 
 ---
 
@@ -234,7 +272,9 @@ Hiển thị các phụ lục đã apply lên KW (xem chi tiết §16):
 
 - **Gia hạn**: kéo dài ngày đáo hạn
 - **Đổi lãi suất**: lãi suất mới áp dụng từ kỳ X
-- **Đổi giá trị**: tăng/giảm số tiền vay (rút thêm hoặc trả bớt)
+- **Đổi giá trị**: tăng/giảm số tiền vay (rút thêm hoặc trả bớt). Đây
+  là cách đổi Số tiền KW sau khi KW Hiệu lực. Số tiền đã đổi qua phụ lục
+  không bị các dòng giải ngân ghi đè về sau
 - **Tất toán trước hạn**: kết thúc KW trước Tenor
 
 ---
@@ -244,7 +284,22 @@ Hiển thị các phụ lục đã apply lên KW (xem chi tiết §16):
 - **Giải ngân**: liệt kê các đợt giải ngân + hồ sơ giải ngân thuộc KW
   (xem §10)
 - **Trả nợ**: liệt kê các repayment đã thực hiện cho KW, gồm cả manual
-  và auto-debit từ giấy báo NH (xem §12, §13)
+  và auto-debit từ giấy báo NH (xem §11, §12)
+
+**Khế ước đã Hiệu lực mà thêm đợt giải ngân:** nếu Số tiền KW đang đúng
+bằng tổng các dòng thì nó đi theo các dòng như lúc Nháp. Nếu Số tiền KW
+đang khác tổng các dòng — số đã ký trên khế ước (vd KW 500 tỷ chưa khai
+dòng nào) hoặc số đã đổi qua phụ lục — thì nó **giữ nguyên**: thêm hay
+huỷ một đợt không làm số nợ tụt theo.
+
+Huỷ dòng giải ngân bị chặn trong hai trường hợp, kèm thông báo lý do:
+
+- KW đã gửi NH / đã kích hoạt mà đó là **dòng cuối cùng** (số tiền sẽ về
+  0) → rút KW về Nháp hoặc huỷ cả KW.
+- Số tiền mới **thấp hơn gốc đã trả**.
+
+KW đang Hiệu lực mà số tiền đổi theo dòng giải ngân thì các kỳ lãi còn
+**Dự kiến** được dựng lại theo số mới; kỳ đã ghi nhận / đã trả giữ nguyên.
 
 ---
 
@@ -260,11 +315,14 @@ công móng cọc khu A.
 
 1. **HĐTD đã ký**: HĐTD/2026/001 với Vietcombank, hạn mức tổng 100 tỷ
 2. **Hạn mức cho vay**: "Vốn lưu động" 50 tỷ (lãi 9.5%/năm)
-3. **Tạo KW** rút 10 tỷ từ hạn mức trên
-4. **Gửi NH duyệt** → NH ký giấy duyệt → KTT cập nhật state
-5. **Tạo Giải ngân**:
+3. **Tạo KW** trên hạn mức trên, khai hai dòng giải ngân:
    - Đợt 1: 6 tỷ thanh toán HĐ thi công móng cọc
    - Đợt 2: 4 tỷ thanh toán HĐ mua bê tông
+
+   → Số tiền KW tự thành **10 tỷ**
+4. **Gửi Ngân hàng** → hai đợt chuyển "Đã gửi NH"
+5. NH ký nhận nợ → **Kích hoạt** → hai đợt tự chuyển "Đã giải ngân", KW
+   chiếm 10 tỷ của hạn mức, lịch lãi 24 kỳ tự sinh
 
 6. **Theo dõi Lịch lãi**: mỗi tháng kỳ ~79 triệu đ
 
@@ -278,7 +336,7 @@ công móng cọc khu A.
 - ⏱ Tự động hóa toàn bộ: nhập 1 lần KW, hệ thống sinh Lịch lãi 24 kỳ
 - 🔍 Kiểm soát: KTT biết được dư nợ NH thực tế bất cứ lúc nào
 - 📊 Báo cáo: dữ liệu KW này tự xuất hiện trong "Kế hoạch thanh toán
-  năm" (§19) và "Tổng hợp HĐTD" (§20)
+  KW (năm)" và "Tổng hợp HĐTD" (xem trang Báo cáo & Kiểm thử)
 - 💰 Phân bổ công trình: lãi vay 1.9 tỷ tự cap vào giá thành dự án Đà
   Lạt theo VAS
 
@@ -314,7 +372,8 @@ lãi (tô đỏ, ref số thông báo), tăng/giảm số phải trả kỳ đó
 
 Nguyên tắc: **kỳ đã trả KHÔNG bị sửa** (khớp sổ phụ NH + audit) —
 chênh lệch luôn phân bổ vào kỳ chưa thanh toán. Dòng Điều chỉnh không
-bị xoá khi "Tạo lại lịch lãi".
+bị xoá khi "Tạo lại lịch lãi". Dòng Điều chỉnh chỉ mang tiền **lãi**,
+không bao giờ mang tiền gốc, kể cả khi áp vào kỳ có trả gốc.
 
 ## 9.8d. Điều chỉnh lãi suất hàng loạt
 
@@ -332,22 +391,51 @@ NH gửi 1 thông báo điều chỉnh LS áp cho nhiều KW: dùng **Vốn & Ng
 Cột cảnh báo **"⚠ Cần thông báo"**: KW có kỳ đã trả sau ngày hiệu lực
 — phần đó chờ Thông báo Nợ/Có của NH (9.8c), wizard không tính lại.
 
+## 9.8e. Nhân bản khế ước
+
+Nút **Nhân bản** (menu bánh răng) dùng để lấy lại **điều kiện vay** của
+một KW cũ. Bản sao:
+
+- Mang số **"<số cũ> (bản sao)"** — sửa lại thành số NH cấp trước khi lưu
+- Luôn ở trạng thái **Nháp**
+- **Không** chép các dòng phát sinh: giải ngân, trả nợ, lịch lãi, phụ
+  lục, khoản cho vay lại — nhân bản không được nhân đôi sổ nợ hay chiếm
+  hạn mức hai lần
+
+## 9.8f. Điều chỉnh ngày kích hoạt
+
+Sau khi kích hoạt, ô Ngày kích hoạt bị khoá. Muốn đổi (vd nhập bù hồ sơ
+của tuần trước), bấm **"Điều chỉnh ngày kích hoạt"** trên thanh trạng
+thái:
+
+1. Nhập ngày mới và **lý do** (bắt buộc)
+2. Hệ thống ghi vết ngày cũ → mới vào Nhật ký KW, dựng lại lịch lãi
+   (giữ kỳ đã ghi nhận / đã trả)
+3. Nếu dùng kèm EPCOne: ngày của các phiếu chi hoá đơn và ngày thanh toán
+   của các tạm ứng giải ngân qua KW cũng đổi theo; kỳ kế toán đã khoá thì
+   Nhật ký ghi rõ phiếu nào còn giữ ngày cũ
+
 ---
 
 ## 9.9. Lưu ý quan trọng
 
-> ⚠ **KHÔNG sửa giá trị KW sau khi NH đã duyệt** — phải qua Phụ lục
-> (§16) để có audit trail.
+> ⚠ **Sau khi KW Hiệu lực, đổi giá trị KW phải qua Phụ lục** (§16) để
+> có audit trail. Riêng ngày kích hoạt dùng §9.8f.
 
-> ⚠ **Lịch lãi tự sinh tự động** — KHÔNG cần nhập tay. Nếu cần điều
-> chỉnh số ngày kỳ, dùng wizard "Re-generate lịch lãi" trong menu thao
-> tác KW.
+> ⚠ **Lịch lãi tự sinh tự động** — KHÔNG cần nhập tay. Cần dựng lại thì
+> bấm **"Tạo lại lịch lãi"**: chỉ các kỳ còn Dự kiến được thay, kỳ đã
+> ghi nhận / đã trả giữ nguyên và không sinh trùng.
 
-> ⚠ **Net-off chênh lệch lẻ chỉ áp dụng khi ≤ 100,000 đ**. Vượt ngưỡng
-> phải tạo trả nợ chính thức (audit trail).
+> ⚠ **Net-off chênh lệch lẻ chỉ áp dụng trong ngưỡng đã cấu hình** (mặc
+> định 100,000 đ). Vượt ngưỡng phải tạo trả nợ chính thức (audit trail).
 
-> ⚠ **Tenor đếm theo tháng**, không phải ngày. Đáo hạn = ngày giải ngân
-> + N tháng (vd giải ngân 15/03/2026, tenor 24 → đáo hạn 15/03/2028).
+> ⚠ **Tenor đếm theo tháng**, không phải ngày. Đáo hạn = ngày kích hoạt
+> (không có thì ngày nhận nợ) + N tháng (vd 15/03/2026, tenor 24 → đáo
+> hạn 15/03/2028).
+
+> ⚠ **Gốc trả không được vượt Số tiền KW.** Dư nợ gốc = Số tiền KW − Đã
+> trả gốc: KW ký là nhận nợ toàn bộ, kể cả khi chưa nhập dòng giải ngân
+> nào.
 
 ---
 
@@ -360,16 +448,17 @@ Cột cảnh báo **"⚠ Cần thông báo"**: KW có kỳ đã trả sau ngày 
 | `Tab` | Di chuyển giữa các field |
 | `Cmd+B` | Toggle bookmark KW (xem nhanh) |
 
-**Mẹo**: trên list KW, dùng filter **"Sắp đáo hạn"** (cron hệ thống
-auto cập nhật) để nhanh chóng review các KW gần đáo hạn cần gia hạn
-hoặc tất toán.
+**Mẹo**: trên list KW, dùng filter **"Đáo hạn ≤ 30 ngày"** / **"Đáo hạn
+≤ 90 ngày"** để nhanh chóng review các KW gần đáo hạn cần gia hạn hoặc
+tất toán. Filter **"Quá hạn"** lấy cả KW còn hạn nhưng đã có kỳ lãi trễ
+chưa trả (filter riêng: **"Có kỳ lãi quá hạn"**).
 
 ---
 
 ## Tiếp theo
 
-→ §10 — **Giải ngân & Hồ sơ giải ngân**: cách tạo các đợt giải ngân
-sau khi KW được NH duyệt.
+→ §10 — **Giải ngân & Hồ sơ giải ngân**: cách khai các đợt giải ngân
+và hồ sơ đi kèm.
 
 → §16 — **Phụ lục KW**: cách lập phụ lục khi cần thay đổi giá trị,
 lãi suất, hoặc gia hạn KW.

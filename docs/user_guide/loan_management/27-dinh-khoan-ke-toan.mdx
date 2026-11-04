@@ -1,0 +1,101 @@
+---
+title: "Định khoản kế toán — Vốn & Ngân quỹ"
+description: "Các bút toán hệ thống sinh cho nghiệp vụ Vốn & Ngân quỹ — giải ngân, dồn tích lãi (vốn hoá / chi phí), trả nợ, đánh giá lại tỷ giá, phiếu chi tạm ứng và bảo lãnh — kèm ví dụ số."
+order: 27
+---
+
+# 27. Định khoản kế toán — Vốn & Ngân quỹ
+
+Số hiệu tài khoản dưới đây là **gợi ý theo Thông tư 200** — doanh
+nghiệp chọn tài khoản thực tế của mình khi cấu hình; hệ thống không cứng
+số tài khoản nào.
+
+## 27.1. Nguyên tắc chung
+
+- **Kế toán duyệt rồi mới ghi sổ.** Bút toán Vay tạo bằng nút trên từng
+  chứng từ, không tự ghi.
+- **Tài khoản lấy từ cấu hình**: **Vốn & Ngân quỹ → Cấu hình → Tài khoản
+  kế toán** (mặc định theo công ty: TK Vay, TK Tiền gửi NH, TK Lãi vay
+  phải trả, TK CP lãi vay, TK XDCB dở dang, TK Chênh lệch tỷ giá, TK Lỗ /
+  Lãi tỷ giá kết chuyển, Sổ Nhật ký Vay). Từng hạn mức ghi đè được (các
+  ô *"(override)"* trên form hạn mức).
+- Cần cài **module kế toán vay**. Chưa cài thì nghiệp vụ vay chỉ theo dõi
+  số liệu, không sinh bút toán.
+- Bút toán vay là bút toán sổ cái, **không VAT**. Khoản vay ngoại tệ ghi
+  cả nguyên tệ và quy đổi.
+
+## 27.2. Các bút toán
+
+| # | Nghiệp vụ | Nút | Nợ | Có |
+|---|---|---|---|---|
+| V1 | Giải ngân | **"Post"** trên dòng giải ngân | TK Tiền gửi NH *(112)* | TK Vay *(3411)* |
+| V2 | Dồn tích lãi kỳ | **"Ghi nhận"** trên dòng Lịch lãi | TK XDCB dở dang *(241)* — phần vốn hoá · TK CP lãi vay *(635)* — phần còn lại | TK Lãi vay phải trả *(3353)* |
+| V3 | Trả nợ | **"Post"** trên dòng trả nợ | TK Vay *(3411)* — gốc · TK Lãi vay phải trả *(3353)* — lãi | TK Tiền gửi NH *(112)* |
+| V4 | Đánh giá lại tỷ giá — tỷ giá **tăng** (lỗ) | **"Ghi sổ"** trên phiếu đánh giá lại | TK Chênh lệch tỷ giá *(413)* | TK Vay *(3411)* |
+| V5 | Đánh giá lại tỷ giá — tỷ giá **giảm** (lãi) | như trên | TK Vay *(3411)* | TK Chênh lệch tỷ giá *(413)* |
+| V6 | Kết chuyển chênh lệch tỷ giá | **"Kết chuyển 635 / 515"** | 635 (lỗ) / 413 (lãi) | 413 (lỗ) / 515 (lãi) |
+
+Ghi chú:
+
+- **V2 — phần vốn hoá**: tỷ lệ vốn hoá đọc từ phân bổ lãi vay vào hạng
+  mục chi phí dự án (dùng kèm EPCOne). Không có phân bổ → toàn bộ lãi
+  vào 635. Ghi nhận xong, kỳ chuyển **Đã ghi nhận**; trên dòng ghi rõ
+  phần vốn hoá và phần vào chi phí.
+- **V3 — phí**: bút toán trả nợ chỉ có vế gốc và lãi; vế tiền bằng đúng
+  tổng hai vế đó. Phí khế ước (§9.8b) chưa có vế riêng — kế toán hạch
+  toán phí bằng bút toán tay.
+- Mỗi chứng từ chỉ sinh **một** bút toán; bấm lại bị chặn và báo số bút
+  toán đã có. KW có nút xem toàn bộ bút toán của nó.
+
+## 27.3. Đánh giá lại tỷ giá cuối kỳ
+
+**Vốn & Ngân quỹ → Chứng từ & tiền từ NH → Đánh giá lại tỷ giá** (TT
+200 Điều 69):
+
+1. Tạo phiếu: **Ngày đánh giá lại**, **Sổ nhật ký**.
+2. **"Nạp khế ước ngoại tệ"** → mỗi khế ước ngoại tệ còn dư nợ (Hiệu
+   lực / Trả một phần / Quá hạn / Tái cơ cấu) một dòng: dư nợ nguyên tệ,
+   số đang ghi sổ, **Tỷ giá đánh giá lại** kèm **Nguồn tỷ giá** (sửa
+   được từng dòng), giá trị đánh giá lại, chênh lệch và chiều lãi/lỗ.
+   Khế ước cùng đồng tiền với công ty không phải đánh giá lại.
+3. Chênh lệch = dư nợ nguyên tệ × tỷ giá mới − **số đang nằm trên sổ cái**
+   của khế ước đó (không lấy từ sổ vay, để lần đánh giá sau không tính
+   trùng lần trước).
+4. **"Ghi sổ"** → mỗi khế ước một bút toán (V4/V5).
+5. **"Kết chuyển 635 / 515"** khi kế toán muốn kết chuyển (tách nút vì có
+   đơn vị kết chuyển theo lịch riêng).
+
+Khế ước **chưa có bút toán nào trên sổ** thì không đánh giá lại — được
+đánh dấu và loại khỏi bút toán (không thì chênh lệch bằng toàn bộ dư nợ).
+
+## 27.4. Phiếu chi / phiếu thu của nghiệp vụ liên quan
+
+| Nghiệp vụ | Chứng từ sinh ra | Nợ | Có |
+|---|---|---|---|
+| Hồ sơ giải ngân **Tạm ứng** (EPCOne), lúc KW kích hoạt (§17) | Phiếu chi | TK trả trước người bán *(331)* | TK NH *(112)* |
+| BL — trả **Phí BL** (§13) | Phiếu chi | TK chi phí — Phí BL *(642)* | TK NH |
+| BL — trả **Phạt quá hạn** | Phiếu chi | TK chi phí — Phạt quá hạn *(811)* | TK NH |
+| BL — nộp **Ký quỹ** | Phiếu chi | TK ký quỹ *(244)* | TK NH |
+| BL — hoàn **gốc BL bị thu** cho NH | Phiếu chi | TK hoàn gốc BL bị thu *(3411)* | TK NH |
+| BL — NH **hoàn ký quỹ** khi giải toả | Phiếu thu | TK NH | TK ký quỹ *(244)* |
+
+Tài khoản đối ứng khai ở cấu hình Tạm ứng và cấu hình Bảo lãnh. Với tạm
+ứng, phiếu chi ghép với bút toán giải ngân V1 ra đúng bản chất **Nợ 331 /
+Có 3411** (NH chuyển thẳng tiền vay cho nhà thầu).
+
+## 27.5. Ví dụ số
+
+Giải ngân **1 tỷ**, lãi kỳ 1 **10 tr** (vốn hoá 100%), trả kỳ 1 gốc **80
+tr** + lãi **10 tr**:
+
+| Nghiệp vụ | Nợ | Có |
+|---|---|---|
+| Giải ngân | 112 : 1.000 | 3411 : 1.000 |
+| Dồn tích lãi kỳ 1 | 241 : 10 | 3353 : 10 |
+| Trả nợ kỳ 1 | 3411 : 80 · 3353 : 10 | 112 : 90 |
+
+*(Đơn vị: triệu đồng.)*
+
+KW vay USD 1 triệu, sổ cái đang mang 25.000 tr; cuối quý tỷ giá 25.400 →
+chênh lệch 400 tr **lỗ**: Nợ 413 / Có 3411 400 tr; kết chuyển: Nợ 635 /
+Có 413 400 tr.

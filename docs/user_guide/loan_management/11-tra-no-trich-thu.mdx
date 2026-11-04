@@ -1,6 +1,6 @@
 ---
 title: "Trả nợ & Trích thu tự động"
-description: "Hướng dẫn trả nợ KW — trả tay theo kỳ, trích thu tự động từ giấy báo NH, import Excel/CSV, allocation lãi → phí → gốc, net-off chênh lệch."
+description: "Hướng dẫn trả nợ KW — trả tay theo kỳ, trích thu tự động từ giấy báo NH, import Excel/CSV, allocation lãi → phí → gốc, net-off hai chiều và phân bổ tiếp phần tiền còn treo."
 order: 11
 ---
 
@@ -18,14 +18,18 @@ Lãi + Phí** (phí KW nếu có — xem §9), allocate vào đúng kỳ lịch 
 
 ## 11.2. Trả tay theo kỳ
 
-Mở KW → tab **Lịch lãi** → click dòng kỳ → button **"Tạo thanh toán
-cho kỳ này"** → hệ thống tạo 1 repayment với gốc + lãi (+ phí) của kỳ.
+Mở KW → tab **Lịch lãi** → bấm **"Thanh toán"** ở cuối dòng kỳ (hoặc
+mở dòng kỳ → **"Tạo thanh toán cho kỳ này"**). Hệ thống mở một form trả
+nợ **trống, điền sẵn** gốc + lãi + phí còn phải trả của kỳ; sửa theo số
+thực trả rồi **Lưu**. Bấm **Huỷ** trên hộp thoại thì không có gì được
+ghi nhận.
 
 Hoặc tab **Trả nợ** → thêm dòng tự do: nhập Trả gốc / Trả lãi / Trả
 phí + Kỳ thanh toán + Chứng từ.
 
 Kỳ tự chuyển trạng thái: **Trả một phần** khi có tiền vào nhưng chưa
-đủ → **Đã trả** khi đủ cả gốc + lãi + phí.
+đủ → **Đã trả** khi đủ cả gốc + lãi + phí. Trả thừa hoặc thiếu vài đồng
+trong ngưỡng net-off thì dòng kỳ hiện nút **"Net-off lẻ"** (xem §12.9).
 
 ## 11.3. Trích thu tự động (NH)
 
@@ -35,7 +39,7 @@ Kỳ tự chuyển trạng thái: **Trả một phần** khi có tiền vào nh�
 2. Thêm dòng: mỗi dòng = 1 KW bị trích + số tiền
    - Có thể **chỉ định kỳ** (giấy báo ghi đích danh kỳ) hoặc để trống
      (hệ thống tự allocate kỳ cũ → mới)
-3. **Xác nhận** → hệ thống allocate:
+3. **"Xác nhận + Allocate"** → hệ thống allocate:
 
 ```
 Thứ tự allocation TRONG mỗi kỳ:  Lãi → Phí → Gốc
@@ -43,7 +47,37 @@ Thứ tự kỳ (khi không chỉ định):  kỳ cũ nhất chưa trả → m�
 ```
 
 4. Số dư không allocate hết → nằm ở cột **"Chưa allocate"** cho KTT
-   kiểm tra đối chiếu.
+   kiểm tra đối chiếu. Dòng chỉ định kỳ chỉ rót tối đa bằng nghĩa vụ của
+   kỳ đó, phần NH trích thừa nằm lại ở đây; kỳ trên Lịch lãi vẫn thấy
+   phần này ở cột **"Trích dư"**.
+
+Dưới các cột tiền của giấy báo có dòng cộng tổng: Số tiền trích thu, Đã
+allocate, Chênh lệch cần net-off, Chưa allocate, Đã chuyển phân bổ tiếp.
+
+### Trạng thái phân bổ
+
+Ngoài trạng thái chứng từ (Nháp / Đã xác nhận / Đã huỷ), mỗi giấy báo có
+trục **Trạng thái phân bổ** nói về tiền:
+
+| Trạng thái phân bổ | Ý nghĩa |
+|---|---|
+| **Chưa phân bổ** | Phiếu chưa xác nhận |
+| **Đã phân bổ đủ** | Tiền NH trích đã vào hết các kỳ, phần lẻ còn lại (nếu có) nằm trong ngưỡng net-off |
+| **Phân bổ dư** | NH trích nhiều hơn số các kỳ cần, phần thừa vượt ngưỡng net-off → phải **Phân bổ tiếp** |
+
+### Phân bổ tiếp phần tiền còn treo
+
+Giấy báo **Phân bổ dư** có nút **"Phân bổ tiếp"**: hệ thống sinh một
+phiếu **Nháp** mới, mỗi dòng còn treo thành một dòng với số tiền = phần
+chưa allocate, **không** chép kỳ chỉ định để tự tìm kỳ khác. Ngày giữ
+nguyên ngày NH trích của phiếu gốc.
+
+- Phần đã chuyển đi bị trừ khỏi "Chưa allocate" của phiếu gốc (cột
+  **"Đã chuyển phân bổ tiếp"**). Huỷ phiếu con thì tiền quay lại phiếu
+  gốc.
+- Không rót được nhiều hơn phần còn treo.
+- Phiếu phân bổ tiếp có cảnh báo riêng: số tiền của nó **không** phải
+  NH trích thêm, đừng cộng vào tổng tiền đã trích.
 
 import AdviceForm from './images/11-advice-form.png'
 
@@ -55,7 +89,9 @@ import AdviceForm from './images/11-advice-form.png'
 (Excel/CSV)** — NH gửi
 file sao kê trích thu nhiều KW: wizard đọc file, match số KW, preview
 từng dòng rồi tạo giấy báo + allocate như 11.3. Template file mẫu tải
-ngay trong wizard.
+ngay trong wizard bằng nút **"Tải template Excel"**, không cần khai
+trước Ngân hàng / Ngày trích thu / File; thiếu thông tin nào thì bước
+Preview báo rõ.
 
 import ImportWizard from './images/11-import-wizard.png'
 
@@ -64,18 +100,29 @@ import ImportWizard from './images/11-import-wizard.png'
 ## 11.5. Net-off chênh lệch
 
 NH tính lãi có thể lệch vài đồng/vài nghìn so với lịch dự kiến (quy
-ước ngày, làm tròn). Khi kỳ được chỉ định mà số NH trích ≠ số hệ
-thống tính:
+ước ngày, làm tròn). Sau khi giấy báo đã xác nhận, dòng nào còn chênh
+**trong ngưỡng net-off** hiện nút **"Net-off"** (trên phiếu có thêm nút
+**"Tự net-off chênh lệch lẻ"** cho mọi dòng một lần). Net-off xử lý
+**cả hai chiều**:
 
-- Chênh **≤ 100,000 đ** → button **"Net-off"** trên dòng giấy báo:
-  tạo 1 repayment write-off cho phần chênh → kỳ về "Đã trả" sạch
-- Chênh lớn hơn → kiểm tra lại lịch lãi (sửa tay tiền lãi kỳ bằng
-  "Sửa tay" trên dòng lịch — xem §12) hoặc liên hệ NH đối chiếu
+| Chiều | Net-off làm gì |
+|---|---|
+| **NH trích thiếu** (kỳ chỉ định còn phải trả) | Tạo 1 dòng trả nợ net-off cho phần chênh → kỳ về "Đã trả" |
+| **NH trích dư** (tiền trích nhiều hơn số các kỳ cần) | Ghi phần thừa vào cột **Net-off** của chính dòng giấy báo → "Chưa allocate" về 0. **Không** tạo dòng trả nợ: không kỳ nào nhận số tiền đó |
+
+Cùng thao tác này bấm được ngay trên Lịch lãi (nút "Net-off lẻ" của kỳ),
+không phải sang giấy báo.
+
+- **Ngưỡng net-off** mặc định 100,000 đ, sửa ở **Cấu hình → Tham số
+  phân hệ Vay**. Đặt 0 là cấm net-off.
+- Chênh vượt ngưỡng → nút ẩn. Chiều thiếu: kiểm tra lại lịch lãi (sửa
+  tay tiền lãi kỳ — xem §12) hoặc liên hệ NH đối chiếu. Chiều dư: dùng
+  **"Phân bổ tiếp"** (11.3).
 
 > 💡 Chênh lệch do **thay đổi lãi suất hồi tố** (khách trả trước khi
 > phụ lục có hiệu lực) KHÔNG xử lý bằng net-off — dùng chức năng
 > **Thông báo Nợ/Có** (Vốn & Ngân quỹ → Chứng từ & tiền từ NH): ghi nhận chứng từ
-> truy thu/truy hoàn của NH + apply vào kỳ chưa thanh toán. Xem §9.11.
+> truy thu/truy hoàn của NH + apply vào kỳ chưa thanh toán. Xem §9.8c.
 
 ## 11.6. Huỷ giấy báo
 
@@ -100,4 +147,6 @@ KW 10 tỷ, lãi 9.5%, trích thu tự động hằng tháng:
   để revert cả cụm (giữ khớp chứng từ NH).
 - Kỳ có **dòng Điều chỉnh** (Thông báo Nợ/Có): tổng phải trả của kỳ
   = kỳ gốc + điều chỉnh; trích thu allocate như thường.
-- Trả vượt tổng đã giải ngân → hệ thống chặn (constrain trên KW).
+- Tổng trả gốc vượt **Số tiền KW** → hệ thống chặn. So với số tiền KW,
+  không so với số đã giải ngân: KW ký là nhận nợ toàn bộ, nên KW chưa
+  nhập dòng giải ngân nào vẫn trả gốc được.

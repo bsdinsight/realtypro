@@ -26,7 +26,13 @@
                 <field name="cost_total" width="185px" optional="hide"
                        readonly="1"/>
                 <field name="cost_share" optional="hide" readonly="1"/>
+                <field name="unit_price_ex_vat" width="170px" readonly="1"
+                       optional="hide"/>
+                <field name="unit_price_inc_vat" width="170px" readonly="1"
+                       optional="hide"/>
                 <field name="unit_price_offer" width="185px" readonly="1"/>
+                <field name="amount_offer_ex_vat" sum="Σ" width="200px"
+                       readonly="1" optional="show"/>
                 <field name="amount_offer" sum="Σ" width="200px" readonly="1"/>
                 <field name="client_supplied_cost" width="185px"
                        optional="hide" readonly="1"/>
@@ -55,7 +61,10 @@
                             <field name="cost_spread"/>
                             <field name="cost_total"/>
                             <field name="cost_share"/>
+                            <field name="amount_offer_ex_vat"/>
                             <field name="amount_offer"/>
+                            <field name="unit_price_ex_vat"/>
+                            <field name="unit_price_inc_vat"/>
                             <field name="unit_price_offer"
                                    class="oe_subtotal_footer_separator"/>
                             <field name="client_supplied_cost"/>

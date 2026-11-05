@@ -32,6 +32,14 @@ class RpBidExport(models.Model):
             raise UserError(_(
                 'Chưa có dòng chào giá nào. Nhập BoQ mời thầu từ file Excel '
                 'của khách trước đã.'))
+        if not self.offer_vat_basis:
+            raise UserError(_(
+                'Chưa khai "Gốc VAT của biểu giá". Xem mẫu biểu giá trong '
+                'HSMT: đơn giá ghi chưa VAT (VAT cộng ở dòng tổng) hay đã gồm '
+                'VAT, rồi khai ở tab Bảng giá chào. Xuất sai gốc thì hồ sơ '
+                'nộp đi bị VAT hai lần, hoặc thiếu VAT.'))
+        excl = self.offer_vat_basis == 'excl'
+        vat_txt = '%g%%' % (self.vat_pct or 0.0)
         try:
             import xlsxwriter
         except ImportError:
@@ -85,20 +93,45 @@ class RpBidExport(models.Model):
             ws.write(row, 0, item.code or '', f_ctr)
             ws.write(row, 1, item.name, f_txt)
             ws.write(row, 2, item.uom_text or '', f_ctr)
+            amount = (item.amount_offer_ex_vat if excl
+                      else item.amount_offer) or 0.0
             ws.write_number(row, 3, item.quantity_client or 0.0, f_qty)
             ws.write_number(row, 4, round(item.unit_price_offer or 0.0), f_mny)
-            ws.write_number(row, 5, round(item.amount_offer or 0.0), f_mny)
-            total += item.amount_offer or 0.0
+            ws.write_number(row, 5, round(amount), f_mny)
+            total += amount
             row += 1
 
-        ws.write(row, 1, _('Tổng cộng (đã gồm thuế GTGT)'), f_tot)
-        ws.write(row, 5, round(total), f_tot)
+        if excl:
+            # Thuế tính trên CON SỐ ĐANG IN ở dòng trên, để người chấm lấy
+            # tổng nhân thuế suất ra đúng dòng thuế. Tổng sau thuế khớp giá
+            # dự thầu tới mức làm tròn.
+            pre = round(total)
+            vat = round(pre * (self.vat_pct or 0.0) / 100.0)
+            ws.write(row, 1, _('Tổng cộng (chưa gồm thuế GTGT)'), f_tot)
+            ws.write(row, 5, pre, f_tot)
+            row += 1
+            ws.write(row, 1, _('Thuế GTGT %s', vat_txt), f_tot)
+            ws.write(row, 5, vat, f_tot)
+            row += 1
+            ws.write(row, 1, _('Tổng cộng (đã gồm thuế GTGT)'), f_tot)
+            ws.write(row, 5, pre + vat, f_tot)
+        else:
+            ws.write(row, 1, _('Tổng cộng (đã gồm thuế GTGT)'), f_tot)
+            ws.write(row, 5, round(total), f_tot)
 
         # Ghi rõ giả định — người nhận hồ sơ phải thấy, không giấu trong mail
         row += 2
         ws.write(row, 0, _('Ghi chú:'), wb.add_format({'bold': True}))
-        notes = [_('Đơn giá đã bao gồm chi phí chung, nhà tạm, thu nhập '
-                   'chịu thuế tính trước và thuế GTGT.')]
+        gom = _('chi phí chung, nhà tạm, thu nhập chịu thuế tính trước')
+        if self.contingency_amount:
+            gom = _('%s và chi phí dự phòng', gom)
+        if excl:
+            notes = [_('Đơn giá đã bao gồm %(gom)s; CHƯA bao gồm thuế GTGT. '
+                       'Thuế GTGT %(vat)s tính ở dòng tổng.',
+                       gom=gom, vat=vat_txt)]
+        else:
+            notes = [_('Đơn giá đã bao gồm %(gom)s và thuế GTGT %(vat)s.',
+                       gom=gom, vat=vat_txt)]
         if self.client_supplied_cost:
             notes.append(_(
                 'Giá chào KHÔNG bao gồm vật tư do bên mời thầu cung cấp '

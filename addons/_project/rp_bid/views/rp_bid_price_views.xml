@@ -18,6 +18,8 @@
                 <field name="currency_id" column_invisible="1"/>
                 <field name="price" width="185px"/>
                 <field name="library_price" width="185px" readonly="1"/>
+                <field name="library_vat_unknown" string="TV không rõ VAT"
+                       readonly="1" optional="show"/>
                 <field name="variance" width="185px" readonly="1"
                        optional="show"/>
                 <field name="variance_pct" readonly="1" optional="show"/>
@@ -54,6 +56,9 @@
                         domain="[('variance_pct', '&lt;', -10)]"/>
                 <filter name="f_nolib" string="Thư viện chưa có giá"
                         domain="[('library_price', '=', 0)]"/>
+                <filter name="f_lib_vat_unknown"
+                        string="Giá thư viện không rõ VAT"
+                        domain="[('library_vat_unknown', '=', True)]"/>
                 <group>
                     <filter name="g_type" string="Loại"
                             context="{'group_by': 'resource_type'}"/>

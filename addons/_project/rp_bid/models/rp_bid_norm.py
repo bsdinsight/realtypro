@@ -25,6 +25,12 @@ thứ nhà thầu đã đàm phán được với nhà cung cấp cho ĐÚNG gó
 sự thật hơn mọi bảng công bố. Công bố giá đứng trên thư viện công ty vì
 nó gắn với một văn bản có số, có ngày, cãi được khi bị hỏi.
 
+CHI PHÍ LUÔN LÀ GIÁ CHƯA VAT. VAT đầu vào được khấu trừ, nên chi phí
+thật của nhà thầu là giá chưa VAT; giá dự thầu cộng VAT đúng một lần, ở
+cuối (`rp.bid._compute_amounts`). Dòng công bố ghi "đã gồm VAT" mà đưa
+nguyên số vào chi phí thì VAT bị tính hai lần — bản trước file này làm
+đúng như thế, vì đọc `price` thay cho `price_ex_vat`.
+
 KHÔNG ĐOÁN VAT. `rp.price.line` cố ý có trạng thái "KHÔNG RÕ" cho VAT
 (xem `rp_price.py` — bảng công bố thật hay ghi VAT trong tên nhóm, bằng
 văn xuôi). Khi kéo giá về mà gặp dòng không rõ VAT thì ĐẾM và BÁO ra,
@@ -33,6 +39,19 @@ vật liệu là đủ để thắng nhầm hoặc trượt oan một gói thầ
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+
+def price_line_cost(line):
+    """Giá của một dòng công bố, đưa vào chi phí: `(giá, vat)`.
+
+    `vat` là trạng thái VAT của dòng nguồn — 'no', 'yes' hoặc 'unknown'.
+    Dòng đã gồm VAT được quy về giá chưa VAT. Dòng không rõ VAT giữ
+    nguyên số đang ghi và báo 'unknown' để người gọi đếm và cảnh báo —
+    trả 0 thì dòng chi phí thành "chưa có giá", mất luôn manh mối.
+    """
+    if line.vat_included in ('yes', 'no'):
+        return line.price_ex_vat, line.vat_included
+    return line.price, 'unknown'
 
 
 class RpBidNormSource(models.Model):
@@ -61,21 +80,23 @@ class RpBidNormSource(models.Model):
 
     # ==================================================================
     def _resolve_unit_price(self, resource):
-        """Đơn giá của một tài nguyên cho hồ sơ này.
+        """Đơn giá CHƯA VAT của một tài nguyên cho hồ sơ này.
 
-        Trả về `(giá, nguồn, vat_chắc_chắn)`. `vat_chắc_chắn` chỉ False
-        khi giá lấy từ một dòng công bố giá không ghi rõ VAT — người
-        bấm nút phải biết điều đó, xem docstring đầu file.
+        Trả về `(giá, nguồn, vat)`. `vat` là trạng thái VAT của dòng giá
+        nguồn: 'no' — vốn chưa VAT; 'yes' — ghi đã gồm VAT, đã quy về
+        chưa VAT; 'unknown' — không rõ, giá giữ nguyên số đang ghi và
+        người bấm nút phải được báo, xem docstring đầu file.
         """
         self.ensure_one()
         if not resource:
-            return 0.0, False, True
+            return 0.0, False, 'no'
 
-        # ① Giá riêng của gói — đã đàm phán cho đúng gói này.
+        # ① Giá riêng của gói — đã đàm phán cho đúng gói này. Bảng giá
+        #    gói ghi giá chưa VAT (xem `rp.bid.price.price`).
         own = self.price_ids.filtered(
             lambda p: p.resource_id == resource)[:1]
         if own and own.price:
-            return own.price, 'bid', True
+            return own.price, 'bid', 'no'
 
         Line = self.env['rp.price.line']
         # ② Công bố giá đã chọn. Ưu tiên dòng đúng vùng, vì nhân công và
@@ -91,14 +112,16 @@ class RpBidNormSource(models.Model):
             if not found:
                 found = Line.search(base, order='id desc', limit=1)
             if found:
-                return found.price, 'publication', found.vat_certain
+                price, vat = price_line_cost(found)
+                return price, 'publication', vat
 
         # ③ Thư viện công ty — dòng giá mới nhất bất kể công bố nào.
         lib = Line.search([('resource_id', '=', resource.id)],
                           order='id desc', limit=1)
         if lib:
-            return lib.price, 'library', lib.vat_certain
-        return 0.0, False, True
+            price, vat = price_line_cost(lib)
+            return price, 'library', vat
+        return 0.0, False, 'no'
 
     def action_pull_norm_all(self):
         """Bung định mức cho MỌI dòng BoQ đã chọn định mức trong hồ sơ."""
@@ -179,6 +202,7 @@ class RpBidBoqLineNorm(models.Model):
         skipped = 0
         no_price = 0
         vat_unknown = 0
+        vat_converted = 0
         for rec in self:
             if not rec.norm_id:
                 raise UserError(_(
@@ -189,7 +213,7 @@ class RpBidBoqLineNorm(models.Model):
                 if nl.resource_id.id in have:
                     skipped += 1
                     continue
-                price, _src, vat_ok = rec.bid_id._resolve_unit_price(
+                price, _src, vat = rec.bid_id._resolve_unit_price(
                     nl.resource_id)
                 # Dòng khai theo % ("máy khác 5%") không có đơn giá riêng —
                 # xem `rp.bid.resource.line._compute_amount`.
@@ -197,8 +221,10 @@ class RpBidBoqLineNorm(models.Model):
                     price = 0.0
                 elif not price:
                     no_price += 1
-                elif not vat_ok:
+                elif vat == 'unknown':
                     vat_unknown += 1
+                elif vat == 'yes':
+                    vat_converted += 1
                 vals_list.append({
                     'line_id': rec.id,
                     'sequence': seq,
@@ -217,6 +243,9 @@ class RpBidBoqLineNorm(models.Model):
         if no_price:
             msg += _(' %s dòng CHƯA CÓ GIÁ — kiểm ở tab Bảng giá gói thầu.',
                      no_price)
+        if vat_converted:
+            msg += _(' %s dòng giá công bố ghi đã gồm VAT — đã quy về giá '
+                     'chưa VAT.', vat_converted)
         if vat_unknown:
             msg += _(' %s dòng lấy giá công bố KHÔNG RÕ VAT — phải xác nhận '
                      'trước khi chào.', vat_unknown)

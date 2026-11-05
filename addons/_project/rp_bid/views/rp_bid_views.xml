@@ -151,6 +151,19 @@
                                         string="Nhập BoQ mời thầu (Excel)"
                                         context="{'default_bid_id': id}"/>
                             </div>
+                            <group name="offer_vat">
+                                <field name="offer_vat_basis"
+                                       widget="radio"
+                                       readonly="state not in ('draft', 'pricing')"/>
+                            </group>
+                            <div class="alert alert-warning" role="alert"
+                                 invisible="offer_vat_basis or not item_ids">
+                                Chưa khai <b>gốc VAT của biểu giá</b> nên cột
+                                ĐƠN GIÁ CHÀO đang để trống và chưa xuất được
+                                file. Xem mẫu biểu giá trong HSMT: đơn giá ghi
+                                chưa VAT rồi cộng VAT ở dòng tổng, hay đơn giá
+                                đã gồm VAT.
+                            </div>
                             <field name="item_ids" nolabel="1"
                                    context="{'default_bid_id': id}">
                                 <list editable="bottom"
@@ -165,8 +178,16 @@
                                     <field name="is_section" optional="hide"/>
                                     <field name="structure_count" readonly="1"/>
                                     <field name="currency_id" column_invisible="1"/>
+                                    <field name="unit_price_ex_vat"
+                                           width="170px" readonly="1"
+                                           optional="hide"/>
+                                    <field name="unit_price_inc_vat"
+                                           width="170px" readonly="1"
+                                           optional="hide"/>
                                     <field name="unit_price_offer"
                                            width="185px" readonly="1"/>
+                                    <field name="amount_offer_ex_vat" sum="Σ"
+                                           width="200px" readonly="1"/>
                                     <field name="amount_offer" sum="Σ"
                                            width="200px" readonly="1"/>
                                 </list>
@@ -320,12 +341,20 @@
                                     <field name="price" width="185px"/>
                                     <field name="library_price" width="185px"
                                            readonly="1"/>
+                                    <field name="library_vat_unknown"
+                                           string="TV không rõ VAT"
+                                           readonly="1" optional="show"/>
                                     <field name="variance_pct" readonly="1"/>
                                     <field name="source"/>
                                     <field name="note" optional="hide"/>
                                 </list>
                             </field>
                             <div class="alert alert-info small" role="alert">
+                                Mọi giá ở đây là <b>giá chưa VAT</b> — chúng đi
+                                thẳng xuống chi phí, VAT chỉ cộng một lần ở giá
+                                dự thầu. Giá thư viện cũng đã quy về chưa VAT để
+                                so cùng gốc.
+                                <br/>
                                 Giá ở đây <b>chỉ áp dụng cho gói thầu này</b>.
                                 Cùng một loại thép: thư viện công ty 15.000 đ,
                                 gói này 16.000 đ, gói khác 16.500 đ — ba con số
@@ -372,6 +401,7 @@
                                 </group>
                                 <group string="Đối chiếu bảng chào">
                                     <field name="outside_cost"/>
+                                    <field name="offer_total_ex_vat"/>
                                     <field name="offer_total"/>
                                     <field name="offer_gap"
                                            class="oe_subtotal_footer_separator"/>

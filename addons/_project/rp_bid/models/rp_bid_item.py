@@ -30,6 +30,12 @@ VAT tính trên tổng), nên không thể gán thẳng cho từng dòng. Ở đ
 bổ **theo tỷ trọng chi phí trực tiếp**: dòng nào ngốn nhiều chi phí trực
 tiếp thì gánh nhiều markup. Đây là cách phân bổ thông dụng và giải thích
 được với bên mời thầu; nếu khách yêu cầu cách khác thì sửa ở một chỗ.
+
+GỐC VAT CỦA ĐƠN GIÁ CHÀO: mỗi dòng giữ cả hai đơn giá, chưa VAT và đã gồm
+VAT. Ô "ĐƠN GIÁ CHÀO" — ô điền vào file khách — lấy đơn giá nào là do
+mẫu biểu giá của HSMT quyết định, khai ở `rp.bid.offer_vat_basis`. Bản
+trước luôn lấy đơn giá đã gồm VAT (chia từ giá dự thầu); mẫu ghi đơn giá
+chưa VAT rồi cộng VAT ở dòng tổng thì hồ sơ nộp đi bị VAT hai lần.
 """
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -87,15 +93,25 @@ class RpBidItem(models.Model):
         string='Tỷ trọng %', digits=(5, 2),
         compute='_compute_amounts', store=True)
     amount_offer = fields.Monetary(
-        string='Thành tiền chào', currency_field='currency_id',
+        string='Thành tiền chào (gồm VAT)', currency_field='currency_id',
         compute='_compute_amounts', store=True,
         help='Giá dự thầu của hồ sơ phân bổ về dòng này theo tỷ trọng chi '
-             'phí trực tiếp.')
+             'phí trực tiếp. Đã gồm VAT và dự phòng.')
+    amount_offer_ex_vat = fields.Monetary(
+        string='Thành tiền chào (chưa VAT)', currency_field='currency_id',
+        compute='_compute_amounts', store=True)
+    unit_price_ex_vat = fields.Monetary(
+        string='Đơn giá chưa VAT', currency_field='currency_id',
+        compute='_compute_amounts', store=True)
+    unit_price_inc_vat = fields.Monetary(
+        string='Đơn giá gồm VAT', currency_field='currency_id',
+        compute='_compute_amounts', store=True)
     unit_price_offer = fields.Monetary(
         string='ĐƠN GIÁ CHÀO', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Thành tiền chào chia cho khối lượng mời thầu. Đây chính là ô '
-             'phải điền vào file gửi lại khách.')
+        help='Ô phải điền vào file gửi lại khách: đơn giá chưa VAT hoặc đã '
+             'gồm VAT, theo "Gốc VAT của biểu giá" khai ở hồ sơ. Chưa khai '
+             'gốc thì để 0 — không đoán.')
     client_supplied_cost = fields.Monetary(
         string='Vật tư bên mời cấp', currency_field='currency_id',
         compute='_compute_amounts', store=True)
@@ -113,6 +129,7 @@ class RpBidItem(models.Model):
                  'structure_ids.client_supplied_cost',
                  'bid_id.direct_cost', 'bid_id.bid_total',
                  'bid_id.spread_cost', 'bid_id.outside_cost',
+                 'bid_id.vat_pct', 'bid_id.offer_vat_basis',
                  'quantity_client')
     def _compute_amounts(self):
         """Rót giá dự thầu về từng dòng chào.
@@ -149,9 +166,15 @@ class RpBidItem(models.Model):
             share = (item.cost_total / total) if total else 0.0
             item.cost_share = share * 100.0
             item.amount_offer = (bid.offer_total or 0.0) * share
-            item.unit_price_offer = (
-                item.amount_offer / item.quantity_client
-                if item.quantity_client else 0.0)
+            item.amount_offer_ex_vat = item.amount_offer / bid._vat_factor()
+            qty = item.quantity_client
+            item.unit_price_inc_vat = item.amount_offer / qty if qty else 0.0
+            item.unit_price_ex_vat = (
+                item.amount_offer_ex_vat / qty if qty else 0.0)
+            item.unit_price_offer = {
+                'excl': item.unit_price_ex_vat,
+                'incl': item.unit_price_inc_vat,
+            }.get(bid.offer_vat_basis, 0.0)
 
             # Khối lượng ta bóc được, chỉ cộng dòng BoQ cùng đơn vị với
             # đơn vị mời thầu — cộng lẫn m³ với tấn ra một số vô nghĩa.

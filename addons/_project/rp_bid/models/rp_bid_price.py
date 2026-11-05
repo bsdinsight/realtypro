@@ -17,12 +17,18 @@ tới thư viện công ty và không lan sang hồ sơ khác.
 
 Tầng ③ giữ nguyên cho ngoại lệ ở một đầu việc lẻ.
 
+MỌI GIÁ Ở ĐÂY LÀ GIÁ CHƯA VAT, vì giá ở đây đi thẳng xuống dòng chi phí.
+Giá thư viện đem ra đối chiếu cũng quy về chưa VAT — so giá chưa VAT của
+gói với giá đã gồm VAT của thư viện thì "chênh" toàn là thuế.
+
 GIÁ TRỊ THẬT NẰM Ở CHỖ SỬA MỘT LẦN, ĐỔI CẢ HỒ SƠ. Giá thép tăng giữa
 kỳ làm giá: sửa một dòng ở đây rồi bấm áp dụng, toàn bộ dòng chi phí
 dùng thép được cập nhật và giá dự thầu tính lại. Không có tầng này thì
 phải dò tay trong 753 dòng chi phí.
 """
 from odoo import _, api, fields, models
+
+from .rp_bid_norm import price_line_cost
 
 
 class RpBidPrice(models.Model):
@@ -50,15 +56,25 @@ class RpBidPrice(models.Model):
     uom_id = fields.Many2one(related='resource_id.uom_id', string='ĐVT')
 
     price = fields.Monetary(
-        string='Giá cho gói này', currency_field='currency_id',
-        help='Giá áp dụng RIÊNG cho hồ sơ dự thầu này. Không ghi đè thư '
-             'viện công ty và không ảnh hưởng hồ sơ khác.')
+        string='Giá cho gói này (chưa VAT)', currency_field='currency_id',
+        help='Giá CHƯA VAT áp dụng RIÊNG cho hồ sơ dự thầu này — đi thẳng '
+             'xuống dòng chi phí, VAT chỉ cộng một lần ở giá dự thầu. Báo '
+             'giá nhà cung cấp ghi đã gồm VAT thì quy về chưa VAT trước khi '
+             'nhập. Không ghi đè thư viện công ty và không ảnh hưởng hồ sơ '
+             'khác.')
     library_price = fields.Monetary(
-        string='Giá thư viện công ty', currency_field='currency_id',
+        string='Giá thư viện công ty (chưa VAT)', currency_field='currency_id',
         compute='_compute_library', store=True,
-        help='Giá mới nhất trong thư viện đơn giá của công ty. Để đối '
-             'chiếu — nhà thầu chào theo giá mua thật của mình, còn thư '
-             'viện là thước đo xem mình đang lệch mặt bằng bao nhiêu.')
+        help='Giá mới nhất trong thư viện đơn giá của công ty, quy về chưa '
+             'VAT. Để đối chiếu — nhà thầu chào theo giá mua thật của mình, '
+             'còn thư viện là thước đo xem mình đang lệch mặt bằng bao '
+             'nhiêu.')
+    library_vat_unknown = fields.Boolean(
+        string='Giá thư viện không rõ VAT', compute='_compute_library',
+        store=True,
+        help='Dòng giá thư viện không ghi đã gồm hay chưa gồm VAT. Giá thư '
+             'viện đang hiện đúng số ghi trong thư viện, CHƯA quy đổi — xác '
+             'nhận VAT ở thư viện trước khi lấy giá này.')
     variance = fields.Monetary(
         string='Chênh với thư viện', currency_field='currency_id',
         compute='_compute_library', store=True)
@@ -109,7 +125,9 @@ class RpBidPrice(models.Model):
             lib = Price.search(
                 [('resource_id', '=', rec.resource_id.id)],
                 order='id desc', limit=1)
-            rec.library_price = lib.price if lib else 0.0
+            price, vat = price_line_cost(lib) if lib else (0.0, 'no')
+            rec.library_price = price
+            rec.library_vat_unknown = vat == 'unknown'
             rec.variance = (rec.price or 0.0) - rec.library_price
             rec.variance_pct = (
                 rec.variance / rec.library_price * 100.0
@@ -150,10 +168,20 @@ class RpBidPrice(models.Model):
             _('Đã cập nhật %s dòng chi phí.', n))
 
     def action_take_library_price(self):
+        unknown = 0
         for rec in self:
             if rec.library_price:
                 rec.price = rec.library_price
                 rec.source = 'library'
+                if rec.library_vat_unknown:
+                    unknown += 1
+                    rec.note = _('Giá thư viện KHÔNG RÕ VAT — xác nhận '
+                                 'trước khi chào.')
+        if unknown:
+            return self.env['rp.bid']._notify(_(
+                '%s dòng lấy giá thư viện KHÔNG RÕ VAT — giá đang lấy đúng '
+                'số ghi trong thư viện, chưa quy về chưa VAT. Xác nhận VAT '
+                'ở thư viện rồi lấy lại.', unknown))
 
 
 class RpBidPriceOnBid(models.Model):

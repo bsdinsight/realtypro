@@ -145,10 +145,28 @@ class RpBid(models.Model):
         help='Hạng mục đánh dấu claim riêng. KHÔNG nằm trong bảng chào giá, '
              'nhưng vẫn nằm trong chi phí để biết giá thành thật.')
     offer_total = fields.Monetary(
-        string='Tổng phải chào', currency_field='currency_id',
+        string='Tổng phải chào (gồm VAT)', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
         help='Giá dự thầu trừ phần đánh dấu ngoài giá chào. Đây là con số '
              'mà tổng bảng chào giá phải khớp.')
+    offer_total_ex_vat = fields.Monetary(
+        string='Tổng phải chào (chưa VAT)', currency_field='currency_id',
+        compute='_compute_unallocated', store=True)
+    # Không có mặc định, cố ý. Mẫu biểu giá của HSMT quyết định đơn giá
+    # ghi chưa VAT hay đã gồm VAT, và hai kiểu đều phổ biến. Bản trước
+    # luôn xuất đơn giá ĐÃ GỒM VAT: gặp mẫu ghi đơn giá chưa VAT rồi cộng
+    # VAT ở dòng tổng thì hồ sơ nộp đi bị VAT hai lần, ngay trên giấy.
+    # Mặc định kiểu nào thì cũng sai ở mọi gói dùng mẫu kiểu kia.
+    offer_vat_basis = fields.Selection(
+        [('excl', 'Đơn giá chưa VAT — VAT cộng ở dòng tổng'),
+         ('incl', 'Đơn giá đã gồm VAT')],
+        string='Gốc VAT của biểu giá', tracking=True,
+        help='Khai đúng theo MẪU BIỂU GIÁ trong HSMT. Quyết định ô Đơn giá '
+             'chào và file chào giá xuất ra:\n'
+             '· Chưa VAT — đơn giá và thành tiền từng dòng chưa VAT; file có '
+             'thêm dòng thuế GTGT và dòng tổng sau thuế.\n'
+             '· Đã gồm VAT — đơn giá và thành tiền từng dòng đã gồm VAT.\n'
+             'Chưa khai thì đơn giá chào để trống và không xuất được file.')
     offer_gap = fields.Monetary(
         string='Chênh bảng chào', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
@@ -294,7 +312,8 @@ class RpBid(models.Model):
 
     @api.depends('structure_ids.direct_cost', 'structure_ids.item_id',
                  'structure_ids.allocation_mode',
-                 'item_ids.amount_offer', 'direct_cost', 'bid_total')
+                 'item_ids.amount_offer', 'direct_cost', 'bid_total',
+                 'vat_pct')
     def _compute_unallocated(self):
         """Đối soát giữa GIÁ DỰ THẦU và BẢNG CHÀO GIÁ.
 
@@ -332,6 +351,9 @@ class RpBid(models.Model):
             bid.offer_total = (
                 (bid.bid_total or 0.0) * base / bid.direct_cost
                 if bid.direct_cost else 0.0)
+            # Giá dự thầu = G × (1 + VAT) × (1 + dự phòng), nên phần chưa
+            # VAT là chia lại cho (1 + VAT) — dự phòng ở lại trong đó.
+            bid.offer_total_ex_vat = bid.offer_total / bid._vat_factor()
             bid.offer_gap = bid.offer_total - sum(
                 bid.item_ids.mapped('amount_offer'))
             # Dung sai = số dòng chào. Mỗi dòng là Monetary nên làm tròn
@@ -340,6 +362,14 @@ class RpBid(models.Model):
             # bao giờ xanh và người dùng sẽ học cách phớt lờ nó.
             bid.offer_balanced = abs(bid.offer_gap) <= max(
                 1.0, len(bid.item_ids))
+
+    def _vat_factor(self):
+        """1 + thuế suất của hồ sơ — dùng để tách phần chưa VAT.
+
+        Không `ensure_one`: dòng chào mới tạo trên form riêng chưa có hồ
+        sơ, compute của nó gọi hàm này trên recordset rỗng → trả 1.
+        """
+        return 1.0 + (self.vat_pct or 0.0) / 100.0
 
     def action_open_unallocated(self):
         """Mở đúng các hạng mục còn treo, không bắt tự lọc."""

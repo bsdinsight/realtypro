@@ -128,3 +128,8 @@ msgstr "Concept estimates"
 msgid "Nhà thầu nộp HSDT"
 msgstr "Tender bidders"
 
+#. module: rp_estimate
+#: model:ir.ui.menu,name:rp_estimate.menu_cfg_supplier
+msgid "Nhà cung cấp"
+msgstr "Suppliers"
+

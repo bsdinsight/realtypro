@@ -17,11 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: rp_contractor
-#: model:ir.ui.menu,name:rp_contractor.menu_cfg_supplier
-msgid "Nhà cung cấp"
-msgstr "Suppliers"
-
-#. module: rp_contractor
 #: model:ir.model.fields,field_description:rp_contractor.field_rp_contractor__ward_id
 msgid "Ward / Phường-Xã"
 msgstr "Ward"

@@ -130,6 +130,18 @@
               action="rp_contractor.action_rp_contractor_specialty"
               sequence="30"/>
 
+    <!-- Danh bạ Nhà cung cấp — action nằm ở rp_contractor, menu mount ở
+         đây vì cha (menu_rp_configuration) thuộc module này. Trước đây
+         menu khai ở rp_contractor → cài mới gãy do rp_contractor nạp
+         TRƯỚC rp_estimate. Cơ sở dữ liệu cũ: migrations/19.0.2.2.0
+         chuyển xmlid rp_contractor.menu_cfg_supplier sang đây, giữ
+         nguyên bản ghi menu (không sinh menu thứ hai). -->
+    <menuitem id="menu_cfg_supplier"
+              name="Nhà cung cấp"
+              parent="menu_rp_configuration"
+              action="rp_contractor.action_partner_supplier"
+              sequence="50"/>
+
     <!--
         ===== Estimate submenu (sequence 10 group) =====
     -->

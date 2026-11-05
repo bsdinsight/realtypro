@@ -104,7 +104,6 @@ rp_contract.menu_rp_contract_payment_due	Payment milestones due
 rp_contract.menu_rp_contract_report_pivot	Contractor agreements pivot
 rp_contract_guarantee.menu_pm_rp_contract_guarantee	Contractor guarantees
 rp_contract_guarantee.menu_rp_contract_guarantee_expiring	Guarantees expiring / expired
-rp_contractor.menu_cfg_supplier	Suppliers
 rp_cost_account.menu_rp_account_chart	Chart of accounts
 rp_doc_folder.menu_doc_folder	Project document folders
 rp_doc_folder.menu_doc_folder_template	Standard folder sets
@@ -123,6 +122,7 @@ rp_erection.menu_rp_erection_blocked	Stuck & late
 rp_erection.menu_rp_erection_gate	Erection gates
 rp_erection.menu_rp_erection_generate	Generate the erection register
 rp_erection.menu_rp_erection_step	Erection register
+rp_estimate.menu_cfg_supplier	Suppliers
 rp_estimate.menu_construction	Construction
 rp_estimate.menu_construction_reports	Reports
 rp_estimate.menu_contracts	Contracts

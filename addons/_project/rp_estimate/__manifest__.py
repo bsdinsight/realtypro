@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EPCOne - Estimate & Tender",
-    "version": "19.0.2.1.0",
+    "version": "19.0.2.2.0",
     "category": "Realty/Project",
     "summary": "Gói thầu (P5.1+P5.2+P5.3: KH lựa chọn NT + bidder "
                "+ tiêu chuẩn đánh giá + HSMT) + Khái toán",

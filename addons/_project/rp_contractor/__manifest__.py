@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "EPCOne - Contractors",
-    "version": "19.0.2.3.0",
+    "version": "19.0.2.4.0",
     "category": "Realty/Project",
     "summary": "Nhà thầu (contractor) master data + specialty registry",
     "description": """

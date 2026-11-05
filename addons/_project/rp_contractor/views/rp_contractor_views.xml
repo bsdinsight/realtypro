@@ -268,10 +268,13 @@
         </field>
     </record>
 
-    <menuitem id="menu_cfg_supplier"
-              name="Nhà cung cấp"
-              parent="rp_estimate.menu_rp_configuration"
-              action="action_partner_supplier"
-              sequence="50"/>
+    <!-- KHÔNG khai menu ở đây. Menu "Nhà cung cấp" mount ở
+         rp_estimate (rp_estimate.menu_cfg_supplier), cạnh "Chuyên môn
+         nhà thầu": cha của nó là rp_estimate.menu_rp_configuration, mà
+         rp_estimate lại phụ thuộc module này — khai menu ở đây thì cài
+         mới cơ sở dữ liệu nào cũng gãy ("External ID not found") vì
+         cha chưa tồn tại lúc nạp rp_contractor. Module này chỉ khai
+         action, đúng như mô tả trong __manifest__ ("Menu placement:
+         NONE"). -->
 
 </odoo>

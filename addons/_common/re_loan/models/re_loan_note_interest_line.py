@@ -304,14 +304,29 @@ class ReLoanNoteInterestLine(models.Model):
                  'principal_due', 'interest_amount', 'fee_amount',
                  'bank_advice_line_ids.amount',
                  'bank_advice_line_ids.amount_allocated',
-                 'bank_advice_line_ids.state')
+                 'bank_advice_line_ids.state',
+                 'amount_over_net_off')
     def _compute_paid_amounts(self):
         """Tổng từ repayment_ids → paid/remaining + auto-state.
 
         State auto:
-          - paid: đủ cả gốc + lãi + phí
-          - partial_paid: có trả nhưng chưa đủ
+          - paid: đủ cả gốc + lãi + phí, và KHÔNG còn tiền thừa treo
+          - partial_paid: có trả nhưng chưa đủ, HOẶC đủ rồi mà còn thừa
+            chưa net-off (việc 1571 vòng 2)
           - planned: chưa trả
+
+        Vì sao kỳ trả THỪA không được đọc là "Đã trả": người dùng chốt
+        rằng kỳ còn chênh lệch — thiếu hay thừa — đều là kỳ chưa khép.
+        Chiều thiếu vốn đã ở "Trả một phần" cho tới khi bấm Net-off lẻ;
+        chiều thừa mà đọc "Đã trả" ngay thì hai chiều xử khác nhau, và
+        khoản thừa nằm im không ai nhìn thấy để xử. Bấm Net-off lẻ (ghi
+        vào `amount_over_net_off`) hoặc sửa chứng từ trả nợ cho đúng số
+        thì kỳ mới về "Đã trả".
+
+        Chỉ tính tiền trả THẲNG vào kỳ (dòng trả nợ). Phần ngân hàng
+        trích dư còn nằm ở giấy báo không làm kỳ treo: giấy báo chỉ định
+        kỳ chỉ rót tối đa bằng nghĩa vụ, phần thừa xử ở chính dòng giấy
+        báo (Net-off / Phân bổ tiếp).
         """
         for line in self:
             paid_p = sum(line.repayment_ids.mapped('amount_principal'))
@@ -356,10 +371,13 @@ class ReLoanNoteInterestLine(models.Model):
             # nếu state đang 'accrued' (manual), giữ nguyên.
             if line.state == 'accrued':
                 continue
+            over_open = ((paid_p + paid_i + paid_f) - max(0.0, due_total)
+                         - (line.amount_over_net_off or 0.0))
             if (line.amount_principal_remaining <= 0.01
                     and line.amount_interest_remaining <= 0.01
                     and line.amount_fee_remaining <= 0.01
-                    and (paid_p + paid_i + paid_f) > 0):
+                    and (paid_p + paid_i + paid_f) > 0
+                    and over_open <= 0.01):
                 line.state = 'paid'
             elif paid_p + paid_i + paid_f > 0:
                 line.state = 'partial_paid'
@@ -655,6 +673,18 @@ class ReLoanNoteInterestLine(models.Model):
         if self.total_due <= 0:
             raise UserError(_(
                 "Tổng phải trả kỳ này = 0, không cần tạo thanh toán."))
+        if (self.amount_principal_remaining <= 0.01
+                and self.amount_interest_remaining <= 0.01
+                and self.amount_fee_remaining <= 0.01):
+            # Kỳ "Trả một phần" vì THỪA tiền (việc 1571 vòng 2): không
+            # còn gì để trả, thêm thanh toán chỉ làm phần thừa to ra.
+            raise UserError(_(
+                "Kỳ %(p)s đã trả đủ gốc, lãi và phí; đang thừa %(o)s ₫ "
+                "chưa xử lý. Bấm \"Net-off lẻ\" nếu phần thừa trong ngưỡng "
+                "net-off, hoặc sửa lại chứng từ trả nợ của kỳ cho đúng "
+                "số.",
+                p=self.period_no,
+                o='{:,.0f}'.format(self._net_off_over_amount())))
         bank = self.note_id.company_id.partner_id.bank_ids[:1]
         return {
             'type': 'ir.actions.act_window',

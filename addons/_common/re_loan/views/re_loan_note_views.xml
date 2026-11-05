@@ -83,10 +83,13 @@
         <field name="arch" type="xml">
             <form string="Dòng lịch lãi">
                 <header>
+                    <field name="amount_principal_remaining" invisible="1"/>
+                    <field name="amount_interest_remaining" invisible="1"/>
+                    <field name="amount_fee_remaining" invisible="1"/>
                     <button name="action_create_repayment" type="object"
                             string="Tạo thanh toán cho kỳ này"
                             class="btn-primary"
-                            invisible="state == 'paid'"
+                            invisible="state == 'paid' or (state == 'partial_paid' and amount_principal_remaining &lt;= 0.01 and amount_interest_remaining &lt;= 0.01 and amount_fee_remaining &lt;= 0.01)"
                             confirm="Tạo 1 dòng trả nợ với gốc + lãi của kỳ này?"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="planned,accrued,paid"/>
@@ -467,12 +470,18 @@
                                             icon="fa-balance-scale"
                                             class="btn-link"
                                             invisible="not net_off_allowed"/>
+                                    <!-- Kỳ trả THỪA nằm ở "Trả một phần"
+                                         cho tới khi net-off (việc 1571):
+                                         không còn gì để trả thì ẩn nút,
+                                         chỉ còn "Net-off lẻ". -->
+                                    <field name="amount_fee_remaining"
+                                           column_invisible="1"/>
                                     <button name="action_create_repayment"
                                             type="object"
                                             string="Thanh toán"
                                             icon="fa-money"
                                             class="btn-primary"
-                                            invisible="state == 'paid'"/>
+                                            invisible="state == 'paid' or (state == 'partial_paid' and amount_principal_remaining &lt;= 0.01 and amount_interest_remaining &lt;= 0.01 and amount_fee_remaining &lt;= 0.01)"/>
                                     <field name="currency_id"
                                            column_invisible="1"/>
                                 </list>

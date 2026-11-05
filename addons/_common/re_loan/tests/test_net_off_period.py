@@ -59,14 +59,17 @@ class TestNetOffPeriod(TransactionCase):
 
     # ----- Trả THỪA --------------------------------------------------------
     def test_tra_thua_trong_nguong_co_nut(self):
+        """Vòng 2: kỳ thừa tiền chưa net-off là kỳ chưa khép — "Trả một
+        phần", giống chiều thiếu."""
         self._pay(interest=self.period.interest_amount + 50_000.0)
-        self.assertEqual(self.period.state, 'paid')
+        self.assertEqual(self.period.state, 'partial_paid')
         self.assertTrue(self.period.net_off_allowed)
 
     def test_net_off_chieu_thua_dong_khoan_du(self):
         rep = self._pay(interest=self.period.interest_amount + 50_000.0)
         paid_before = rep.amount_interest
         n_before = len(self.period.repayment_ids)
+        self.assertEqual(self.period.state, 'partial_paid')
         self._net_off()
         self.assertAlmostEqual(
             self.period.amount_over_net_off, 50_000.0, delta=1)
@@ -109,6 +112,39 @@ class TestNetOffPeriod(TransactionCase):
         self.period.invalidate_recordset()
         self.assertAlmostEqual(
             self.period.amount_over_net_off, 20_000.0, delta=1)
+        # Phần dư còn lại đã nằm trọn trong số đã net-off → kỳ vẫn khép
+        self.assertEqual(self.period.state, 'paid')
+
+    def test_tra_thua_vuot_nguong_van_tra_mot_phan(self):
+        """Thừa quá ngưỡng: không net-off được, kỳ vẫn treo ở "Trả một
+        phần" để người dùng thấy mà sửa chứng từ."""
+        self._pay(interest=self.period.interest_amount + 500_000.0)
+        self.assertEqual(self.period.state, 'partial_paid')
+        self.assertFalse(self.period.net_off_allowed)
+
+    def test_sua_phieu_thua_ve_dung_so_thi_da_tra(self):
+        rep = self._pay(interest=self.period.interest_amount + 500_000.0)
+        rep.amount_interest = self.period.interest_amount
+        self.period.invalidate_recordset()
+        self.assertEqual(self.period.state, 'paid')
+
+    def test_chi_con_thua_thi_khong_cho_thanh_toan_them(self):
+        """Kỳ "Trả một phần" vì thừa: không còn gì để trả, nút Thanh
+        toán phải chặn thay vì mở phiếu 0 đồng."""
+        self._pay(interest=self.period.interest_amount + 50_000.0)
+        with self.assertRaises(UserError):
+            self.period.action_create_repayment()
+
+    def test_ky_cu_da_tra_ma_thua_tinh_lai_thanh_tra_mot_phan(self):
+        """Giống migration 116: kỳ lưu "Đã trả" theo luật cũ, tính lại
+        thì về "Trả một phần"."""
+        self._pay(interest=self.period.interest_amount + 50_000.0)
+        self.period.state = 'paid'
+        self.env.add_to_compute(
+            self.period._fields['state'], self.period)
+        self.period.flush_recordset()
+        self.period.invalidate_recordset()
+        self.assertEqual(self.period.state, 'partial_paid')
 
     # ----- Trả THIẾU -------------------------------------------------------
     def test_tra_thieu_lai_co_nut_va_ve_da_tra(self):

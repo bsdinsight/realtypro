@@ -160,8 +160,14 @@ class ReLoanProjectCashflow(models.Model):
                         ('date_to', '>=', d0), ('date_to', '<=', d1)])
                     for dl in debts:
                         sh = shares.get(dl.note_id.id, 0.0)
-                        principal += (dl.principal_due or 0.0) * sh
-                        interest += (dl.interest_amount or 0.0) * sh
+                        # Lấy số CÒN PHẢI TRẢ, không lấy nghĩa vụ gốc
+                        # của kỳ: kỳ "Trả một phần" (kể cả kỳ đã trả đủ
+                        # mà còn thừa chưa net-off — việc 1571) chỉ còn
+                        # nợ phần chưa trả.
+                        principal += (
+                            dl.amount_principal_remaining or 0.0) * sh
+                        interest += (
+                            dl.amount_interest_remaining or 0.0) * sh
                 vals.append({
                     'cashflow_id': rec.id,
                     'date_start': d0, 'date_end': d1,

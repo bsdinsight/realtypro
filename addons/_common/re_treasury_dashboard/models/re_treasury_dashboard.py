@@ -538,8 +538,11 @@ class ReTreasuryDashboard(models.TransientModel):
         due = IL.search([('state', '!=', 'paid'),
                          ('date_to', '>=', today),
                          ('date_to', '<=', week_end)])
-        due_amt = sum(due.mapped('principal_due')) + \
-            sum(due.mapped('interest_amount'))
+        # Số CÒN PHẢI TRẢ của kỳ, không phải nghĩa vụ gốc: kỳ "Trả một
+        # phần" (kể cả kỳ đã đủ mà còn thừa chưa net-off — việc 1571)
+        # không còn nợ trọn kỳ.
+        due_amt = sum(due.mapped('amount_principal_remaining')) + \
+            sum(due.mapped('amount_interest_remaining'))
 
         Disb = env['re.loan.note.disbursement']
         pending_disb = Disb.search([('state', 'in',

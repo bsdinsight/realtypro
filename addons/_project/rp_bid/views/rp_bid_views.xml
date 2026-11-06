@@ -394,14 +394,15 @@
                         <page string="Tổng hợp vật tư" name="material_summary">
                             <field name="material_summary_ids" nolabel="1"
                                    readonly="1">
+                                <!-- Không cộng cột Số lượng: mỗi dòng một ĐVT
+                                     (công, ca, tấn…), tổng là vô nghĩa. -->
                                 <list decoration-info="supplied_by == 'client'"
-                                      decoration-danger="uom_mismatch"
-                                      default_group_by="resource_type">
-                                    <field name="resource_type" column_invisible="1"/>
+                                      decoration-danger="uom_mismatch">
+                                    <field name="resource_type"/>
                                     <field name="resource_id"/>
                                     <field name="categ_id" optional="show"/>
                                     <field name="uom_id"/>
-                                    <field name="quantity" sum="Σ"/>
+                                    <field name="quantity"/>
                                     <field name="supplied_by"/>
                                     <field name="line_count" optional="show"/>
                                     <field name="currency_id" column_invisible="1"/>

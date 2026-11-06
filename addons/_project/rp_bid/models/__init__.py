@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from . import rp_bid_uom
 from . import rp_bid_project
 from . import rp_bid
 from . import rp_bid_structure
@@ -10,3 +11,4 @@ from . import rp_bid_resource
 from . import rp_bid_element
 from . import rp_bid_price
 from . import rp_bid_norm
+from . import rp_bid_summary

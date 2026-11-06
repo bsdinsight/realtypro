@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'RealtyPro — Thư viện đơn giá (Cost Library)',
-    'version': '19.0.0.1.0',
+    'version': '19.0.0.2.0',
     'category': 'RealtyPro/Cost',
     'summary': 'Master tiêu chuẩn kỹ thuật (TCVN/QCVN/TCCS/nước ngoài) có '
                'phiên bản + thay thế. Nền cho thư viện đơn giá theo định '

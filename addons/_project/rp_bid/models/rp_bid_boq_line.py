@@ -28,6 +28,8 @@ gói lệch vài chục nghìn đồng, không chết ai nhưng hồ sơ thầu 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from .rp_bid_uom import same_unit
+
 SUPPLIED_BY = [
     ('contractor', 'Nhà thầu (ta) cấp'),
     ('client', 'Bên mời thầu cấp'),
@@ -63,8 +65,23 @@ class RpBidBoqLine(models.Model):
              'khi chưa nạp bộ định mức vào thư viện.')
     description = fields.Char(
         string='Nội dung công việc', required=True, translate=True)
+    # Bảng ĐVT chung `uom.uom` — cùng bảng với định mức và tài nguyên, nên
+    # chọn định mức là điền được ĐVT và so được hai bên (việc 1383). Xem
+    # `rp_bid_uom.py`.
     uom_id = fields.Many2one(
-        'rp.progress.uom', string='ĐVT', required=True)
+        'uom.uom', string='ĐVT', required=True, ondelete='restrict')
+    # ĐVT ở bảng xây dựng cũ trước khi chuyển — chỉ migration 19.0.18 ghi,
+    # để lần ngược được dòng nào đã quy đổi từ đâu.
+    progress_uom_id = fields.Many2one(
+        'rp.progress.uom', string='ĐVT cũ (bảng xây dựng)', readonly=True,
+        copy=False)
+    uom_mismatch = fields.Boolean(
+        string='ĐVT lệch định mức', compute='_compute_uom_mismatch',
+        store=True,
+        help='ĐVT của dòng BoQ khác ĐVT của định mức đã chọn. Chi phí = '
+             'khối lượng × hao phí, mà hao phí tính trên ĐVT của định mức — '
+             'lệch đơn vị là chi phí sai. Quy khối lượng về ĐVT của định '
+             'mức, hoặc chọn định mức khác.')
 
     quantity = fields.Float(
         string='Khối lượng', digits=(16, 5), default=0.0,
@@ -121,6 +138,11 @@ class RpBidBoqLine(models.Model):
     note = fields.Text(string='Ghi chú')
 
     # ==================================================================
+    @api.depends('uom_id', 'norm_id.eff_uom_id')
+    def _compute_uom_mismatch(self):
+        for rec in self:
+            rec.uom_mismatch = not same_unit(rec.uom_id, rec.norm_id.eff_uom_id)
+
     @api.depends('takeoff_ids.quantity', 'quantity')
     def _compute_takeoff(self):
         for rec in self:

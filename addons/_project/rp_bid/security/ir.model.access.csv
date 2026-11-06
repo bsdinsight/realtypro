@@ -31,3 +31,11 @@ access_rp_bid_project_admin,rp.bid.project.admin,model_rp_bid_project,re_base.gr
 access_rp_bid_package_user,rp.bid.package.user,model_rp_bid_package,re_base.group_re_user,1,0,0,0
 access_rp_bid_package_manager,rp.bid.package.manager,model_rp_bid_package,re_base.group_re_manager,1,1,1,0
 access_rp_bid_package_admin,rp.bid.package.admin,model_rp_bid_package,re_base.group_re_admin,1,1,1,1
+access_rp_bid_element_type_user,rp.bid.element.type.user,model_rp_bid_element_type,re_base.group_re_user,1,0,0,0
+access_rp_bid_element_type_manager,rp.bid.element.type.manager,model_rp_bid_element_type,re_base.group_re_manager,1,1,1,1
+access_rp_bid_element_type_admin,rp.bid.element.type.admin,model_rp_bid_element_type,re_base.group_re_admin,1,1,1,1
+access_rp_bid_element_generate_manager,rp.bid.element.generate.manager,model_rp_bid_element_generate,re_base.group_re_manager,1,1,1,1
+access_rp_bid_element_generate_admin,rp.bid.element.generate.admin,model_rp_bid_element_generate,re_base.group_re_admin,1,1,1,1
+access_rp_bid_element_generate_line_manager,rp.bid.element.generate.line.manager,model_rp_bid_element_generate_line,re_base.group_re_manager,1,1,1,1
+access_rp_bid_element_generate_line_admin,rp.bid.element.generate.line.admin,model_rp_bid_element_generate_line,re_base.group_re_admin,1,1,1,1
+access_rp_bid_material_summary_user,rp.bid.material.summary.user,model_rp_bid_material_summary,re_base.group_re_user,1,0,0,0

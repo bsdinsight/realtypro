@@ -21,6 +21,61 @@ cách đánh số của gói này không liên quan gói khác.
 """
 from odoo import _, api, fields, models
 
+ELEMENT_CATEGORIES = [
+    ('pile', 'Cọc'),
+    ('wall', 'Tường vây / panel'),
+    ('foundation', 'Móng / đài'),
+    ('column', 'Cột'),
+    ('beam', 'Dầm'),
+    ('slab', 'Sàn'),
+    ('other', 'Khác'),
+]
+
+
+class RpBidElementType(models.Model):
+    """Loại cấu kiện — danh mục DÙNG CHUNG cho mọi hồ sơ (việc 1404).
+
+    DANH MỤC LÀ LOẠI, KHÔNG PHẢI TỪNG CÁI. Giá trị của cấu kiện trong hồ
+    sơ nằm ở cấp từng cái: nhãn `CTN2 D1200` lặp 22 lần để đọc dọc theo
+    MỘT cây cọc (xem `rp.bid.element`). Danh mục chung mà chép 1:1 vào
+    hồ sơ thì mỗi hồ sơ chỉ có một "cọc D1200" — mất đúng cấp đó. Nên
+    danh mục giữ LOẠI (cọc D1200, panel T5A), còn nút "Tạo cấu kiện cho
+    hồ sơ" hỏi mỗi loại bao nhiêu cái rồi sinh ra từng cái.
+    """
+    _name = 'rp.bid.element.type'
+    _description = 'Loại cấu kiện (danh mục dùng chung)'
+    _order = 'sequence, code'
+
+    sequence = fields.Integer(default=10)
+    code = fields.Char(
+        string='Mã loại', required=True, index=True,
+        help='VD CKN-D1200, PNL-T5A. Mã từng cấu kiện trong hồ sơ vẫn sinh '
+             'theo tiền tố của hồ sơ.')
+    name = fields.Char(
+        string='Tên loại', required=True, translate=True,
+        help='VD "Cọc khoan nhồi D1200", "Panel tường vây T5A".')
+    category = fields.Selection(
+        ELEMENT_CATEGORIES, string='Nhóm', required=True, default='pile')
+    note = fields.Text(string='Ghi chú')
+    active = fields.Boolean(default=True)
+    element_count = fields.Integer(
+        string='Số cấu kiện đã tạo', compute='_compute_element_count')
+
+    _uniq_code = models.Constraint(
+        'unique(code)', 'Mã loại cấu kiện đã có.')
+
+    def _compute_element_count(self):
+        groups = self.env['rp.bid.element']._read_group(
+            [('type_id', 'in', self.ids)], ['type_id'], ['__count'])
+        counts = {t.id: n for t, n in groups}
+        for rec in self:
+            rec.element_count = counts.get(rec.id, 0)
+
+    @api.depends('code', 'name')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = '[%s] %s' % (rec.code or '', rec.name or '')
+
 
 class RpBidElement(models.Model):
     _name = 'rp.bid.element'
@@ -42,6 +97,12 @@ class RpBidElement(models.Model):
     name = fields.Char(
         string='Tên / diễn giải', required=True, translate=True,
         help='VD "Cọc thí nghiệm số 2, D1200", "Panel tường vây T5A".')
+    type_id = fields.Many2one(
+        'rp.bid.element.type', string='Loại cấu kiện', index=True,
+        ondelete='restrict',
+        help='Loại trong danh mục dùng chung. Cấu kiện tạo bằng nút "Tạo '
+             'cấu kiện cho hồ sơ" tự mang loại; tạo tay thì chọn hoặc để '
+             'trống.')
 
     takeoff_ids = fields.One2many(
         'rp.bid.takeoff', 'element_id', string='Dòng bóc tách')
@@ -128,6 +189,18 @@ class RpBidElementOnBid(models.Model):
     def _compute_element_count(self):
         for bid in self:
             bid.element_count = len(bid.element_ids)
+
+    def action_generate_elements(self):
+        """Mở hộp thoại "Tạo cấu kiện cho hồ sơ" (việc 1404)."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Tạo cấu kiện cho hồ sơ'),
+            'res_model': 'rp.bid.element.generate',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_bid_id': self.id},
+        }
 
     def action_open_elements(self):
         self.ensure_one()

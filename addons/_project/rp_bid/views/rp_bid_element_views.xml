@@ -8,6 +8,8 @@
             <list editable="bottom" sample="1">
                 <field name="code"/>
                 <field name="name"/>
+                <field name="type_id" optional="show"
+                       options="{'no_create': True}"/>
                 <field name="bid_id" optional="hide"/>
                 <field name="package_id" optional="hide"/>
                 <field name="takeoff_count" string="Số dòng bóc tách"
@@ -38,6 +40,7 @@
                     <group>
                         <group>
                             <field name="bid_id" options="{'no_create': True}"/>
+                            <field name="type_id" options="{'no_create': True}"/>
                             <field name="project_id"/>
                             <field name="package_id"/>
                         </group>
@@ -90,11 +93,14 @@
                 <field name="code"/>
                 <field name="name"/>
                 <field name="bid_id"/>
+                <field name="type_id"/>
                 <filter name="f_unused" string="Chưa dùng ở dòng nào"
                         domain="[('takeoff_count', '=', 0)]"/>
                 <group>
                     <filter name="g_bid" string="Hồ sơ dự thầu"
                             context="{'group_by': 'bid_id'}"/>
+                    <filter name="g_type" string="Loại cấu kiện"
+                            context="{'group_by': 'type_id'}"/>
                 </group>
                 <searchpanel>
                     <field name="project_id" string="Dự án"
@@ -122,5 +128,92 @@
               parent="menu_bid_grp_boq"
               action="action_rp_bid_element"
               sequence="30"/>
+
+    <!-- ============ Loại cấu kiện — danh mục dùng chung (việc 1404) ============ -->
+    <record id="view_rp_bid_element_type_list" model="ir.ui.view">
+        <field name="name">rp.bid.element.type.list</field>
+        <field name="model">rp.bid.element.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="element_count" readonly="1" optional="show"/>
+                <field name="note" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rp_bid_element_type_search" model="ir.ui.view">
+        <field name="name">rp.bid.element.type.search</field>
+        <field name="model">rp.bid.element.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <filter name="f_archived" string="Đã lưu trữ"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="g_category" string="Nhóm"
+                            context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rp_bid_element_type" model="ir.actions.act_window">
+        <field name="name">Loại cấu kiện</field>
+        <field name="res_model">rp.bid.element.type</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Chưa có loại cấu kiện nào</p>
+            <p>Danh mục <b>loại</b> cấu kiện dùng chung cho mọi hồ sơ: cọc
+               khoan nhồi D1200, panel tường vây T5A… Ở hồ sơ dự thầu, bấm
+               <b>Tạo cấu kiện</b> rồi nhập mỗi loại bao nhiêu cái — hệ
+               thống sinh từng cái với mã theo tiền tố của hồ sơ.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_rp_bid_element_type"
+              name="Loại cấu kiện"
+              parent="menu_bid_grp_lib"
+              action="action_rp_bid_element_type"
+              sequence="40"/>
+
+    <!-- ============ Hộp thoại tạo cấu kiện cho hồ sơ ============ -->
+    <record id="view_rp_bid_element_generate_form" model="ir.ui.view">
+        <field name="name">rp.bid.element.generate.form</field>
+        <field name="model">rp.bid.element.generate</field>
+        <field name="arch" type="xml">
+            <form string="Tạo cấu kiện cho hồ sơ">
+                <group>
+                    <field name="bid_id" readonly="1"/>
+                    <field name="element_prefix"/>
+                </group>
+                <field name="line_ids" nolabel="1">
+                    <list editable="bottom" create="1" delete="1">
+                        <field name="type_id" options="{'no_create': True}"/>
+                        <field name="category"/>
+                        <field name="quantity"/>
+                    </list>
+                </field>
+                <div class="alert alert-info small" role="alert">
+                    Nhập <b>mỗi loại bao nhiêu cái</b>; loại để 0 thì bỏ qua.
+                    Mỗi cái thành một cấu kiện riêng, mã sinh theo tiền tố
+                    của hồ sơ, tên là tên loại kèm số thứ tự (tiếp theo số
+                    đã có, nên tạo thêm lần nữa không trùng tên). Danh mục
+                    loại ở <b>Thư viện giá › Loại cấu kiện</b>.
+                </div>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Tạo cấu kiện" class="btn-primary"/>
+                    <button string="Huỷ" special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
 </odoo>

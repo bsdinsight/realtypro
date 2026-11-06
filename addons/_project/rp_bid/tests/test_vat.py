@@ -83,7 +83,7 @@ class TestBidVat(TransactionCase):
         struct = env['rp.bid.structure'].create({
             'bid_id': cls.bid.id, 'name': 'Hạng mục thử',
             'item_id': cls.item.id})
-        m3 = env['rp.progress.uom'].create({'name': 'm³ thử', 'code': 'TVAT-M3'})
+        m3 = env['uom.uom'].create({'name': 'm³ thử VAT'})
         cls.line = env['rp.bid.boq.line'].create({
             'bid_structure_id': struct.id, 'description': 'Công tác thử',
             'uom_id': m3.id, 'quantity': 10.0, 'norm_id': cls.norm.id})

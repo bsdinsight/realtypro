@@ -40,6 +40,8 @@ chưa VAT rồi cộng VAT ở dòng tổng thì hồ sơ nộp đi bị VAT hai
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+from .rp_bid_uom import uom_names, norm_uom_name
+
 
 class RpBidItem(models.Model):
     _name = 'rp.bid.item'
@@ -142,9 +144,14 @@ class RpBidItem(models.Model):
     note = fields.Text(string='Ghi chú')
 
     # ==================================================================
+    # `bid_id.offer_total`: thành tiền chào rót từ TỔNG PHẢI CHÀO, không
+    # phải từ giá dự thầu. Thiếu dòng này thì khi giá dự thầu đổi, có dòng
+    # chào được tính TRƯỚC khi tổng phải chào cập nhật và giữ số cũ — demo
+    # 06/11: hồ sơ 1 lệch 17.002 đ giữa tổng dòng chào và tổng phải chào.
     @api.depends('structure_ids.direct_cost',
                  'structure_ids.client_supplied_cost',
                  'bid_id.direct_cost', 'bid_id.bid_total',
+                 'bid_id.offer_total',
                  'bid_id.spread_cost', 'bid_id.outside_cost',
                  'bid_id.vat_pct', 'bid_id.offer_vat_basis',
                  'quantity_client')
@@ -195,11 +202,13 @@ class RpBidItem(models.Model):
 
             # Khối lượng ta bóc được, chỉ cộng dòng BoQ cùng đơn vị với
             # đơn vị mời thầu — cộng lẫn m³ với tấn ra một số vô nghĩa.
-            unit = (item.uom_text or '').strip().lower()
+            # So theo tên ĐVT đã chuẩn hoá: file mời thầu ghi "m3", dòng BoQ
+            # ghi "m³" là cùng một đơn vị.
+            unit = norm_uom_name(item.uom_text)
             qty = 0.0
             if unit:
                 for line in structs.mapped('line_ids'):
-                    if (line.uom_id.code or '').strip().lower() == unit:
+                    if unit in uom_names(line.uom_id):
                         qty += line.quantity
             item.takeoff_quantity = qty
 

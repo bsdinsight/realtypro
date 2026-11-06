@@ -16,6 +16,8 @@ import io
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+from .rp_bid_uom import progress_uom_from
+
 
 class RpBidExport(models.Model):
     _inherit = 'rp.bid'
@@ -231,7 +233,10 @@ class RpBidExport(models.Model):
                 'category_id': category.id,
                 'sequence': line.sequence,
                 'description': line.description,
-                'uom_id': line.uom_id.id,
+                # BoQ dự án vẫn ở bảng ĐVT xây dựng cũ (rp_progress chưa
+                # chuyển sang uom.uom — xem rp_bid_uom.py): quy ngược theo
+                # tên, thiếu thì tạo.
+                'uom_id': progress_uom_from(self.env, line.uom_id).id,
                 'quantity': line.quantity,
                 # BoQ dự án chỉ có MỘT ô đơn giá: lấy đơn giá đã vào giá
                 # chào (đã loại vật tư bên mời thầu cấp).

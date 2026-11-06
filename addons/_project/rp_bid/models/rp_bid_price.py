@@ -174,7 +174,10 @@ class RpBidPrice(models.Model):
         for rec in self:
             lines = RL.search([('bid_id', '=', rec.bid_id.id),
                                ('resource_id', '=', rec.resource_id.id)])
-            lines.write({'unit_price': rec.price})
+            # Áp giá từ bảng giá là việc của hệ thống, không phải sửa tay
+            # (xem `rp.bid.resource.line.write`).
+            lines.with_context(rp_bid_system_write=True).write(
+                {'unit_price': rec.price})
             n += len(lines)
         return self.env['rp.bid']._notify(
             _('Đã cập nhật %s dòng chi phí.', n))
@@ -282,7 +285,8 @@ class RpBidPriceOnBid(models.Model):
                 lines = self.env['rp.bid.resource.line'].search([
                     ('bid_id', '=', bid.id),
                     ('resource_id', '=', p.resource_id.id)])
-                lines.write({'unit_price': p.price})
+                lines.with_context(rp_bid_system_write=True).write(
+                    {'unit_price': p.price})
                 n += len(lines)
         after = sum(self.mapped('direct_cost'))
         delta = after - before

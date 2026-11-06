@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'EPCOne — Hồ sơ dự thầu (nhà thầu)',
-    'version': '19.0.17.0.0',
+    'version': '19.0.18.0.0',
     'category': 'Realty/Project',
     'summary': 'Nhà thầu nhận gói thầu, chia hạng mục của mình và dựng '
                'BoQ để tính ra giá dự thầu.',

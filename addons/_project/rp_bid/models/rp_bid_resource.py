@@ -77,6 +77,36 @@ class RpBidResourceLine(models.Model):
     amount = fields.Monetary(
         string='Thành tiền', currency_field='currency_id',
         compute='_compute_amount', store=True)
+    # Việc 1411: SỐ LƯỢNG tài nguyên cần dùng. Trước chỉ có định mức (cho
+    # MỘT đơn vị công việc) và thành tiền — cộng cột định mức của nhiều
+    # dòng lại là ra một con số vô nghĩa.
+    resource_qty = fields.Float(
+        string='Số lượng', digits=(16, 4),
+        compute='_compute_amount', store=True,
+        help='= Khối lượng dòng BoQ × Định mức, theo ĐVT của tài nguyên.\n'
+             'Chỉ đúng khi ĐVT của dòng BoQ khớp ĐVT của định mức. Dòng '
+             'khai theo % không có số lượng.')
+
+    # Việc 1381: biết dòng nào do nút "Lấy chi phí từ định mức" sinh ra,
+    # từ định mức nào, và đã bị sửa tay chưa — để đổi định mức thì bỏ
+    # đúng chi phí của định mức cũ, không đụng chi phí nhập từ file.
+    source_norm_id = fields.Many2one(
+        'rp.norm', string='Sinh từ định mức', readonly=True, index=True,
+        ondelete='set null', copy=False,
+        help='Định mức mà nút "Lấy chi phí từ định mức" đã bung ra dòng '
+             'này. Trống = dòng nhập từ file dự toán hoặc gõ tay — không '
+             'bao giờ bị tự xoá.')
+    manual_edit = fields.Boolean(
+        string='Đã sửa tay', readonly=True, copy=False,
+        help='Có người sửa tài nguyên, định mức hoặc đơn giá của dòng này. '
+             'Dòng đã sửa tay không bị tự xoá khi đổi định mức.')
+    norm_stale = fields.Boolean(
+        string='Của định mức cũ', compute='_compute_norm_stale', store=True,
+        help='Dòng sinh từ một định mức mà dòng BoQ không còn dùng nữa.')
+
+    # Ghi từ các nút áp giá của hệ thống thì KHÔNG tính là sửa tay.
+    _MANUAL_FIELDS = frozenset(
+        ('resource_id', 'norm_qty', 'is_percent', 'unit_price'))
 
     @api.depends('norm_qty', 'unit_price', 'is_percent', 'line_id.quantity')
     def _compute_amount(self):
@@ -85,10 +115,23 @@ class RpBidResourceLine(models.Model):
                 # Dòng % tính trên tổng của nhóm cùng loại — để phần tính
                 # đó cho bộ đơn giá gốc, ở đây không tự suy ra con số.
                 rec.amount = 0.0
+                rec.resource_qty = 0.0
             else:
-                rec.amount = ((rec.line_id.quantity or 0.0)
-                              * (rec.norm_qty or 0.0)
-                              * (rec.unit_price or 0.0))
+                rec.resource_qty = ((rec.line_id.quantity or 0.0)
+                                    * (rec.norm_qty or 0.0))
+                rec.amount = rec.resource_qty * (rec.unit_price or 0.0)
+
+    @api.depends('source_norm_id', 'line_id.norm_id')
+    def _compute_norm_stale(self):
+        for rec in self:
+            rec.norm_stale = bool(rec.source_norm_id
+                                  and rec.source_norm_id != rec.line_id.norm_id)
+
+    def write(self, vals):
+        if (not self.env.context.get('rp_bid_system_write')
+                and self._MANUAL_FIELDS & set(vals)):
+            vals = dict(vals, manual_edit=True)
+        return super().write(vals)
 
 
 class RpBidBoqLineResource(models.Model):

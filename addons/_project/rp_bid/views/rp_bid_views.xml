@@ -54,6 +54,10 @@
                             string="Chuyển BoQ sang dự án" class="btn-primary"
                             invisible="state != 'won'"
                             confirm="Đổ toàn bộ BoQ của hồ sơ này vào các hạng mục dự án đã map. Tiếp tục?"/>
+                    <button name="action_generate_elements" type="object"
+                            string="Tạo cấu kiện"
+                            invisible="state not in ('draft', 'pricing')"
+                            help="Sinh cấu kiện cho hồ sơ từ danh mục Loại cấu kiện: nhập mỗi loại bao nhiêu cái, mã theo tiền tố của hồ sơ."/>
                     <button name="action_export_offer" type="object"
                             string="Xuất bảng chào giá"
                             invisible="state in ('draft', 'cancelled')"/>
@@ -269,8 +273,10 @@
                                   sau thanh cuộn ngang (việc 1101).
                                 -->
                                 <list editable="bottom"
+                                      decoration-danger="uom_mismatch"
                                       decoration-warning="not quantity_matches"
                                       decoration-info="supplied_by == 'client'">
+                                    <field name="uom_mismatch" column_invisible="1"/>
                                     <button name="action_open_form"
                                             type="object" string="Xem"
                                             class="btn-link"
@@ -382,6 +388,41 @@
                                 <span class="text-success"><b>xanh</b></span> là
                                 thấp hơn &gt;10% — hai chỗ đáng rà lại trước khi
                                 nộp.
+                            </div>
+                        </page>
+
+                        <page string="Tổng hợp vật tư" name="material_summary">
+                            <field name="material_summary_ids" nolabel="1"
+                                   readonly="1">
+                                <list decoration-info="supplied_by == 'client'"
+                                      decoration-danger="uom_mismatch"
+                                      default_group_by="resource_type">
+                                    <field name="resource_type" column_invisible="1"/>
+                                    <field name="resource_id"/>
+                                    <field name="categ_id" optional="show"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity" sum="Σ"/>
+                                    <field name="supplied_by"/>
+                                    <field name="line_count" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Σ" width="185px"
+                                           optional="show"/>
+                                    <field name="uom_mismatch" optional="show"/>
+                                </list>
+                            </field>
+                            <div class="alert alert-info small" role="alert">
+                                Số lượng = <b>khối lượng đầu việc × định mức</b>,
+                                cộng mọi dòng chi phí của các BoQ nhà thầu, theo
+                                ĐVT của tài nguyên. Dòng khai theo % (vật liệu
+                                khác, máy khác) không có số lượng nên không có ở
+                                đây.
+                                <br/>
+                                Dòng <span class="text-info"><b>tô xanh</b></span>
+                                là vật tư bên mời thầu cấp — không vào giá chào
+                                nhưng vẫn cần đủ số lượng. Dòng
+                                <span class="text-danger"><b>tô đỏ</b></span> có
+                                đầu việc lệch ĐVT với định mức — số lượng chưa
+                                tin được, rà lại trước khi đặt hàng.
                             </div>
                         </page>
 

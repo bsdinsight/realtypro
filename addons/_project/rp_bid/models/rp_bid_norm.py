@@ -40,6 +40,8 @@ vật liệu là đủ để thắng nhầm hoặc trượt oan một gói thầ
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from .rp_bid_uom import same_unit
+
 
 def price_line_cost(line):
     """Giá của một dòng công bố, đưa vào chi phí: `(giá, vat)`.
@@ -154,27 +156,60 @@ class RpBidBoqLineNorm(models.Model):
         help='Mọi hao phí của định mức đều đã có dòng chi phí tương ứng.')
 
     @api.depends('norm_id', 'norm_id.line_ids',
-                 'resource_line_ids.resource_id')
+                 'resource_line_ids.resource_id',
+                 'resource_line_ids.source_norm_id',
+                 'resource_line_ids.manual_edit')
     def _compute_norm_lines(self):
         for rec in self:
             need = rec.norm_id.line_ids.mapped('resource_id')
             rec.norm_line_count = len(need)
             have = rec.resource_line_ids.mapped('resource_id')
-            rec.norm_pulled = bool(need) and not (need - have)
+            # Còn dòng sinh từ định mức CŨ chưa ai sửa thì chưa xong: nút
+            # "Lấy chi phí từ định mức" phải còn hiện để dọn chúng.
+            stale = rec.resource_line_ids.filtered(
+                lambda l: l.source_norm_id
+                and l.source_norm_id != rec.norm_id and not l.manual_edit)
+            rec.norm_pulled = bool(need) and not (need - have) and not stale
 
     @api.onchange('norm_id')
     def _onchange_norm_id(self):
-        """Chọn định mức thì điền mã hiệu và tên công tác.
+        """Chọn định mức thì điền mã hiệu, nội dung công việc và ĐVT.
 
-        Nội dung công việc chỉ điền khi đang TRỐNG: tên trong bộ định mức
-        là tên chuẩn của công tác, còn nội dung trong hồ sơ thầu phải
-        giữ theo cách bên mời thầu diễn đạt.
+        Nội dung công việc và ĐVT chỉ đổi khi người dùng CHƯA tự sửa (việc
+        1382): ô đang trống, hoặc vẫn y nguyên tên / ĐVT của định mức
+        trước đó. Đã sửa thì giữ — nội dung trong hồ sơ thầu phải theo
+        cách bên mời thầu diễn đạt, không theo tên chuẩn của bộ định mức.
+
+        "Định mức trước đó" là bản đã lưu, HOẶC mã hiệu đang nằm ở ô Mã
+        định mức: chọn hai định mức liền nhau mà chưa lưu thì bản đã lưu
+        chưa phải cái vừa chọn.
         """
-        if not self.norm_id:
+        new = self.norm_id
+        if not new:
             return
-        self.norm_code = self.norm_id.code
-        if not self.description:
-            self.description = self.norm_id.name
+        prev = self._origin.norm_id
+        if self.norm_code and (not prev or prev.code != self.norm_code):
+            prev = self.env['rp.norm'].search(
+                [('code', '=', self.norm_code),
+                 ('set_id', '=', new.set_id.id)], limit=1) or prev
+        if not self.description or (prev and self.description == prev.name):
+            self.description = new.name
+        new_uom = new.eff_uom_id
+        if new_uom and (not self.uom_id
+                        or (prev and self.uom_id == prev.eff_uom_id)):
+            self.uom_id = new_uom
+        self.norm_code = new.code
+        if new_uom and self.uom_id and not same_unit(self.uom_id, new_uom):
+            return {'warning': {
+                'title': _('ĐVT lệch định mức'),
+                'message': _(
+                    'Dòng BoQ đang tính theo "%(boq)s", định mức %(code)s '
+                    'tính theo "%(norm)s". Hao phí của định mức là cho MỘT '
+                    '%(norm)s — để nguyên thì chi phí sai. Quy khối lượng '
+                    'về %(norm)s, hoặc chọn định mức khác.',
+                    boq=self.uom_id.name, code=new.code,
+                    norm=new_uom.name),
+            }}
 
     @api.constrains('norm_id')
     def _check_norm_set(self):
@@ -192,11 +227,25 @@ class RpBidBoqLineNorm(models.Model):
     def action_pull_norm(self):
         """Bung hao phí của định mức thành dòng chi phí của dòng BoQ.
 
-        CHỈ THÊM CÁI CÒN THIẾU, không xoá và không ghi đè. Dòng chi phí
-        đang có thường là thứ người làm giá đã sửa tay cho đúng thực tế
-        thi công của mình — định mức nhà nước là mức trung bình, không
-        phải mức của một nhà thầu cụ thể. Ghi đè nghĩa là mỗi lần lỡ tay
-        bấm nút là mất hết phần hiệu chỉnh đó.
+        BẤM LẠI CÙNG ĐỊNH MỨC: chỉ thêm cái còn thiếu, không ghi đè. Dòng
+        chi phí đang có thường là thứ người làm giá đã sửa tay cho đúng
+        thực tế thi công của mình — định mức nhà nước là mức trung bình,
+        không phải mức của một nhà thầu cụ thể.
+
+        ĐÃ ĐỔI SANG ĐỊNH MỨC KHÁC (việc 1381): chi phí của định mức cũ phải
+        đi, giữ lại là cộng chi phí của hai công tác vào một dòng BoQ. Mỗi
+        dòng chi phí do nút này sinh ra ghi `source_norm_id`, nên biết
+        chính xác dòng nào thuộc định mức cũ:
+
+          · sinh từ định mức cũ, chưa ai sửa     → xoá
+          · sinh từ định mức cũ, đã sửa tay      → GIỮ, tô đỏ và báo ra
+          · không rõ nguồn (nhập từ file dự toán,
+            gõ tay, có từ trước khi có trường nguồn) → KHÔNG BAO GIỜ tự xoá
+
+        Vì sao không xoá theo kiểu "không thuộc định mức mới": dòng BoQ
+        đầu tiên của hồ sơ demo có 6 dòng chi phí khoan nhập từ file dự
+        toán (29,4 triệu) không thuộc định mức nào trong thư viện — xoá
+        theo kiểu đó là xoá chi phí đúng.
         """
         RL = self.env['rp.bid.resource.line']
         vals_list = []
@@ -204,10 +253,18 @@ class RpBidBoqLineNorm(models.Model):
         no_price = 0
         vat_unknown = 0
         vat_converted = 0
+        dropped = 0
+        kept_edited = 0
         for rec in self:
             if not rec.norm_id:
                 raise UserError(_(
                     'Dòng BoQ "%s" chưa chọn định mức.', rec.display_name))
+            stale = rec.resource_line_ids.filtered(
+                lambda l: l.source_norm_id and l.source_norm_id != rec.norm_id)
+            drop = stale.filtered(lambda l: not l.manual_edit)
+            kept_edited += len(stale - drop)
+            dropped += len(drop)
+            drop.unlink()
             have = set(rec.resource_line_ids.mapped('resource_id').ids)
             seq = 10
             for nl in rec.norm_id.line_ids:
@@ -233,12 +290,19 @@ class RpBidBoqLineNorm(models.Model):
                     'norm_qty': nl.quantity,
                     'is_percent': nl.is_percent,
                     'unit_price': price,
+                    'source_norm_id': rec.norm_id.id,
                 })
                 seq += 10
         if vals_list:
             RL.create(vals_list)
 
         msg = _('Đã thêm %s dòng chi phí.', len(vals_list))
+        if dropped:
+            msg += _(' Bỏ %s dòng chi phí của định mức cũ.', dropped)
+        if kept_edited:
+            msg += _(' GIỮ %s dòng của định mức cũ vì đã sửa tay — tô đỏ ở '
+                     'tab Chi phí, xem rồi xoá tay nếu không dùng.',
+                     kept_edited)
         if skipped:
             msg += _(' Bỏ qua %s dòng đã có.', skipped)
         if no_price:

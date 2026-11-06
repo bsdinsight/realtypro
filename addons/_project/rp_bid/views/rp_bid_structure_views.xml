@@ -34,7 +34,9 @@
                                 <!-- Nút Xem ở đầu dòng mở tab Bóc tách khối
                                      lượng / Chi phí — xem chú thích cùng
                                      kiểu ở `rp_bid_views.xml` (việc 1101). -->
-                                <list editable="bottom">
+                                <list editable="bottom"
+                                      decoration-danger="uom_mismatch">
+                                    <field name="uom_mismatch" column_invisible="1"/>
                                     <button name="action_open_form"
                                             type="object" string="Xem"
                                             class="btn-link"
@@ -197,6 +199,16 @@
                         chọn mã hiệu ở đây rồi bấm <b>Lấy chi phí từ định
                         mức</b> là hao phí và đơn giá tự bung ra.
                     </div>
+                    <field name="uom_mismatch" invisible="1"/>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not uom_mismatch">
+                        <b>ĐVT lệch định mức:</b> dòng BoQ tính theo
+                        <field name="uom_id" readonly="1" nolabel="1"
+                               class="oe_inline"/>, định mức tính theo đơn vị
+                        khác. Hao phí của định mức là cho MỘT đơn vị của định
+                        mức — để nguyên thì chi phí sai. Quy khối lượng về
+                        ĐVT của định mức, hoặc chọn định mức khác.
+                    </div>
                     <div class="alert alert-warning" role="alert"
                          invisible="quantity_matches">
                         Khối lượng đang dùng <b>không khớp</b> tổng các dòng
@@ -260,22 +272,31 @@
                         </page>
                         <page string="Chi phí" name="resources">
                             <field name="resource_line_ids" nolabel="1">
-                                <list editable="bottom">
+                                <list editable="bottom"
+                                      decoration-danger="norm_stale">
                                     <field name="sequence" widget="handle"/>
+                                    <field name="norm_stale" column_invisible="1"/>
                                     <field name="resource_id"/>
                                     <field name="resource_type"/>
                                     <field name="categ_id"/>
                                     <field name="uom_id"/>
                                     <field name="norm_qty"/>
                                     <field name="is_percent"/>
+                                    <field name="resource_qty" optional="show"/>
                                     <field name="currency_id" column_invisible="1"/>
                                     <field name="unit_price" width="185px"/>
                                     <field name="amount" sum="Σ" width="185px"/>
+                                    <field name="source_norm_id" optional="hide"/>
+                                    <field name="manual_edit" optional="hide"/>
                                 </list>
                             </field>
                             <div class="alert alert-info small" role="alert">
                                 Chi phí cho <b>một đơn vị</b> khối lượng của
-                                dòng BoQ. Dòng khai theo <b>%</b> (vật liệu
+                                dòng BoQ. Dòng
+                                <span class="text-danger"><b>tô đỏ</b></span>
+                                sinh từ định mức cũ mà đã sửa tay nên không tự
+                                xoá khi đổi định mức — xem rồi xoá tay nếu không
+                                dùng. Dòng khai theo <b>%</b> (vật liệu
                                 khác, máy khác) giữ nguyên là % — không quy
                                 đổi sẵn, vì quy đổi là mất dấu vết.
                             </div>
@@ -293,7 +314,9 @@
         <field name="name">rp.bid.boq.line.list</field>
         <field name="model">rp.bid.boq.line</field>
         <field name="arch" type="xml">
-            <list decoration-warning="not quantity_matches">
+            <list decoration-danger="uom_mismatch"
+                  decoration-warning="not quantity_matches">
+                <field name="uom_mismatch" column_invisible="1"/>
                 <field name="bid_structure_id" optional="show"/>
                 <field name="norm_id" optional="hide"/>
                 <field name="norm_code"/>

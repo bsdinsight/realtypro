@@ -42,8 +42,7 @@ class TestTask1081(TransactionCase):
             'package_id': package.id})
         cls.struct = env['rp.bid.structure'].create({
             'bid_id': cls.bid.id, 'name': 'Hạng mục thử 1081'})
-        m3 = env['rp.progress.uom'].create({
-            'name': 'm³ thử 1081', 'code': 'T1081-M3'})
+        m3 = env['uom.uom'].create({'name': 'm³ thử 1081'})
         cls.line = env['rp.bid.boq.line'].create({
             'bid_structure_id': cls.struct.id, 'description': 'Công tác thử',
             'uom_id': m3.id, 'quantity': 10.0})

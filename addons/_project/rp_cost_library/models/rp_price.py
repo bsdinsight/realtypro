@@ -197,6 +197,23 @@ class RpPriceLine(models.Model):
         help='False khi vat_included=unknown → không tính được tổng, và '
              'điều đó phải HIỆN RA, không giả vờ biết.')
 
+    # Việc 1388: chặn trùng dòng giá trong MỘT công bố — nhưng KHOÁ THEO
+    # (tài nguyên, vùng, nguồn cung), không theo tài nguyên đơn thuần. Cùng
+    # một tài nguyên được phép có nhiều dòng: nhân công và ca máy khác giá
+    # theo vùng ngay trong một tỉnh; cùng cát đen ở Hà Nội chênh 46% theo
+    # điểm bán (C1). Chặn theo tài nguyên là phá hai thứ đó.
+    # Trùng thật thì đang làm sai giá: hàm tra giá lấy dòng `id desc`, nên
+    # hồ sơ thầu âm thầm dùng dòng nhập sau cùng.
+    # UNIQUE INDEX + COALESCE, không phải `unique(...)`: vùng và nguồn cung
+    # hay để TRỐNG, mà với `unique` thường hai ô NULL là KHÁC nhau — đúng
+    # hai cặp trùng trên demo đều để trống cả hai và sẽ lọt. `NULLS NOT
+    # DISTINCT` thì cần Postgres 15, Odoo 19 còn chạy trên 13.
+    _uniq_pub_resource = models.UniqueIndex(
+        '(publication_id, resource_id, COALESCE(region_id, 0), '
+        'COALESCE(supplier_id, 0))',
+        'Tài nguyên này đã có giá trong công bố, cùng vùng và cùng nguồn '
+        'cung. Muốn ghi một giá khác thì chọn vùng hoặc nguồn cung khác.')
+
     @api.depends('price', 'vat_included', 'vat_rate')
     def _compute_vat_split(self):
         for l in self:

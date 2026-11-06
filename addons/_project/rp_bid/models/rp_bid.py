@@ -124,34 +124,44 @@ class RpBid(models.Model):
         'rp.bid.item', 'bid_id', string='Dòng chào giá')
     item_count = fields.Integer(compute='_compute_counts')
 
+    # Tooltip của các ô tính toán: CÔNG THỨC trước, lý do sau (việc 1097,
+    # 1398 — người dùng hỏi "số này ở đâu ra", không hỏi "để làm gì").
     unallocated_cost = fields.Monetary(
         string='Chi phí chưa có dòng chào', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
-        help='Chi phí trực tiếp của các hạng mục CHƯA gắn dòng chào giá '
-             'nào. Tiền này vẫn nằm trong giá dự thầu nhưng không có ô '
-             'nào trong file khách để ghi — nếu không xử lý thì hoặc mất '
-             'trắng, hoặc phải nhét ẩn vào đơn giá dòng khác.')
+        help='= Σ chi phí trực tiếp của các hạng mục để "Gắn vào dòng chào" '
+             'mà chưa chọn dòng chào nào.\n'
+             'Tiền này vẫn nằm trong giá dự thầu nhưng không có ô nào trong '
+             'file khách để ghi — không xử lý thì hoặc mất trắng, hoặc phải '
+             'nhét ẩn vào đơn giá dòng khác.')
     unallocated_pct = fields.Float(
         string='% chưa có dòng chào', digits=(5, 2),
-        compute='_compute_unallocated', store=True)
+        compute='_compute_unallocated', store=True,
+        help='= Chi phí chưa có dòng chào ÷ Chi phí trực tiếp (T) × 100.')
     spread_cost = fields.Monetary(
         string='Chi phí rải đều', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
-        help='Chi phí của hạng mục chọn "Rải đều" — chia về mọi dòng chào '
-             'theo tỷ trọng, thay vì dồn vào một dòng.')
+        help='= Σ chi phí trực tiếp của các hạng mục chọn "Rải đều".\n'
+             'Phần này chia về mọi dòng chào theo tỷ trọng chi phí trực tiếp '
+             'của từng dòng, thay vì dồn vào một dòng.')
     outside_cost = fields.Monetary(
         string='Chi phí ngoài giá chào', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
-        help='Hạng mục đánh dấu claim riêng. KHÔNG nằm trong bảng chào giá, '
-             'nhưng vẫn nằm trong chi phí để biết giá thành thật.')
+        help='= Σ chi phí trực tiếp của các hạng mục chọn "Ngoài giá chào".\n'
+             'Hạng mục để claim riêng: KHÔNG nằm trong bảng chào giá, nhưng '
+             'vẫn nằm trong chi phí để biết giá thành thật.')
     offer_total = fields.Monetary(
         string='Tổng phải chào (gồm VAT)', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
-        help='Giá dự thầu trừ phần đánh dấu ngoài giá chào. Đây là con số '
-             'mà tổng bảng chào giá phải khớp.')
+        help='= Giá dự thầu × (T − Chi phí ngoài giá chào) ÷ T.\n'
+             'Tức giá dự thầu bỏ đi phần ngoài giá chào, kèm phần chi phí '
+             'chung, TNCTT, VAT, dự phòng của phần đó. Tổng bảng chào giá '
+             'phải khớp con số này.')
     offer_total_ex_vat = fields.Monetary(
         string='Tổng phải chào (chưa VAT)', currency_field='currency_id',
-        compute='_compute_unallocated', store=True)
+        compute='_compute_unallocated', store=True,
+        help='= Tổng phải chào (gồm VAT) ÷ (1 + Thuế GTGT %).\n'
+             'Dự phòng vẫn nằm trong con số này.')
     # Không có mặc định, cố ý. Mẫu biểu giá của HSMT quyết định đơn giá
     # ghi chưa VAT hay đã gồm VAT, và hai kiểu đều phổ biến. Bản trước
     # luôn xuất đơn giá ĐÃ GỒM VAT: gặp mẫu ghi đơn giá chưa VAT rồi cộng
@@ -170,8 +180,10 @@ class RpBid(models.Model):
     offer_gap = fields.Monetary(
         string='Chênh bảng chào', currency_field='currency_id',
         compute='_compute_unallocated', store=True,
-        help='Tổng phải chào trừ tổng bảng chào giá. Khác 0 nghĩa là còn '
-             'chi phí chưa có chỗ đứng trong hồ sơ nộp đi.')
+        help='= Tổng phải chào (gồm VAT) − Σ Thành tiền chào (gồm VAT) của '
+             'các dòng chào.\n'
+             'Khác 0 nghĩa là còn chi phí chưa có chỗ đứng trong hồ sơ nộp '
+             'đi — thường là hạng mục chưa gắn dòng chào.')
     offer_balanced = fields.Boolean(
         string='Bảng chào đã khớp', compute='_compute_unallocated',
         store=True)
@@ -180,74 +192,101 @@ class RpBid(models.Model):
     # Markup — 5 tầng theo dự toán Việt Nam
     # ------------------------------------------------------------------
     overhead_pct = fields.Float(
-        string='Chi phí chung %', default=6.5, tracking=True)
+        string='Chi phí chung %', default=6.5, tracking=True,
+        help='Chi phí chung (C) = T × tỷ lệ này.')
     temp_facility_pct = fields.Float(
         string='Nhà tạm %', default=0.95, tracking=True,
-        help='Chi phí nhà tạm để ở và điều hành thi công. Tầng này hay bị '
+        help='Nhà tạm (LT) = T × tỷ lệ này.\n'
+             'Chi phí nhà tạm để ở và điều hành thi công. Tầng này hay bị '
              'bỏ sót vì nhiều mẫu dự toán gộp vào chi phí chung.')
     undefined_work_pct = fields.Float(
         string='CV không xác định KL %', default=2.5, tracking=True,
-        help='Chi phí một số công việc không xác định được khối lượng.')
+        help='CV không xác định KL (TT) = T × tỷ lệ này.\n'
+             'Chi phí một số công việc không xác định được khối lượng.')
     profit_pct = fields.Float(
         string='TNCTT %', default=5.5, tracking=True,
-        help='Thu nhập chịu thuế tính trước — đây là chỗ quyết định biên '
+        help='TNCTT (TL) = (T + GT) × tỷ lệ này.\n'
+             'Thu nhập chịu thuế tính trước — đây là chỗ quyết định biên '
              'lợi nhuận của gói thầu.')
-    vat_pct = fields.Float(string='Thuế GTGT %', default=10.0, tracking=True)
+    vat_pct = fields.Float(
+        string='Thuế GTGT %', default=10.0, tracking=True,
+        help='Thuế GTGT = G × tỷ lệ này.\n'
+             'Lấy theo HSMT: 10%, 8% trong thời gian giảm thuế, hoặc 0 với '
+             'khoản không chịu thuế.')
     contingency_pct = fields.Float(
-        string='Dự phòng %', default=0.0, tracking=True)
+        string='Dự phòng %', default=0.0, tracking=True,
+        help='Dự phòng = (G + Thuế GTGT) × tỷ lệ này.')
 
     # ------------------------------------------------------------------
     # Kết quả tính giá
     # ------------------------------------------------------------------
     cost_material = fields.Monetary(
         string='Vật liệu', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Σ (khối lượng × đơn giá vật liệu) của mọi dòng BoQ.\n'
+             'Không gồm vật tư bên mời thầu cấp. Đơn giá là giá chưa VAT.')
     cost_labor = fields.Monetary(
         string='Nhân công', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Σ (khối lượng × đơn giá nhân công) của mọi dòng BoQ.')
     cost_machine = fields.Monetary(
         string='Máy thi công', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Σ (khối lượng × đơn giá máy) của mọi dòng BoQ.')
     direct_cost = fields.Monetary(
         string='Chi phí trực tiếp (T)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='T = Vật liệu + Nhân công + Máy thi công.\n'
+             'Mọi giá trong chi phí là giá chưa VAT — VAT chỉ cộng một lần, '
+             'ở dòng Thuế GTGT.')
 
     overhead_amount = fields.Monetary(
         string='Chi phí chung (C)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='C = T × Chi phí chung %.')
     temp_facility_amount = fields.Monetary(
         string='Nhà tạm (LT)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='LT = T × Nhà tạm %.')
     undefined_work_amount = fields.Monetary(
         string='CV không xác định KL (TT)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='TT = T × CV không xác định KL %.')
     indirect_cost = fields.Monetary(
         string='Chi phí gián tiếp (GT)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='GT = C + LT + TT.')
 
     profit_amount = fields.Monetary(
         string='TNCTT (TL)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='TL = (T + GT) × TNCTT %.')
     pre_tax_total = fields.Monetary(
         string='Trước thuế (G)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='G = T + GT + TL.')
     vat_amount = fields.Monetary(
         string='Thuế GTGT', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= G × Thuế GTGT %.')
     contingency_amount = fields.Monetary(
         string='Dự phòng', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= (G + Thuế GTGT) × Dự phòng %.')
     bid_total = fields.Monetary(
         string='GIÁ DỰ THẦU', currency_field='currency_id',
-        compute='_compute_amounts', store=True, tracking=True)
+        compute='_compute_amounts', store=True, tracking=True,
+        help='= G + Thuế GTGT + Dự phòng.')
 
     # Phần bên mời thầu tự cấp — theo dõi nhưng KHÔNG vào giá chào.
     client_supplied_cost = fields.Monetary(
         string='Vật tư bên mời cấp', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Giá trị vật tư do bên mời thầu cấp, KHÔNG tính vào giá chào. '
-             'Bỏ sót việc loại phần này ra là cách phổ biến nhất để chào '
-             'cao gấp nhiều lần mà không hiểu vì sao trượt.')
+        help='= Σ (khối lượng × đơn giá vật liệu) của các dòng BoQ có vật '
+             'tư do bên mời thầu cấp.\n'
+             'KHÔNG tính vào giá chào. Bỏ sót việc loại phần này ra là cách '
+             'phổ biến nhất để chào cao gấp nhiều lần mà không hiểu vì sao '
+             'trượt.')
 
     max_approved_price = fields.Monetary(
         related='package_id.max_approved_price', string='Giá trần gói thầu',
@@ -257,7 +296,7 @@ class RpBid(models.Model):
     price_gap = fields.Monetary(
         string='So với giá trần', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Giá trần trừ giá dự thầu. Âm là vượt trần.')
+        help='= Giá trần gói thầu − Giá dự thầu. Âm là vượt trần.')
 
     state = fields.Selection(
         BID_STATES, string='Trạng thái', default='draft', required=True,
@@ -560,10 +599,21 @@ class RpBid(models.Model):
 
     @api.model
     def _notify(self, message):
+        """Báo kết quả của nút, RỒI nạp lại màn hình đang mở.
+
+        Nút trả về một client action thì form không tự đọc lại bản ghi:
+        bấm "Lấy chi phí từ định mức" xong, dòng chi phí mới đã nằm trong
+        CSDL nhưng phải F5 mới thấy (việc 1381). `next` là action chạy
+        ngay sau thông báo; `soft_reload` nạp lại controller hiện tại mà
+        không tải lại cả trang.
+        """
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
-            'params': {'message': message, 'type': 'success', 'sticky': False},
+            'params': {
+                'message': message, 'type': 'success', 'sticky': False,
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
         }
 
     def action_open_structures(self):

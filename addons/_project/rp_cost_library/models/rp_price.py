@@ -54,7 +54,7 @@ class RpPricePublication(models.Model):
         help='Bỏ TRỐNG = "đến khi có công bố mới" (TP.HCM, Bắc Ninh). '
              'Rỗng KHÔNG có nghĩa là vô hiệu.')
     superseded_by_id = fields.Many2one(
-        'rp.price.publication', string='Bị thay bởi',
+        'rp.price.publication', string='Bị thay bởi', copy=False,
         help='VD: QĐ 3443 bị QĐ 3461 thay sau 3 NGÀY (tư vấn tổng hợp sai '
              'số liệu khảo sát). Cảnh báo khi dự toán dùng bản đã bị thay.')
     is_superseded = fields.Boolean(
@@ -76,8 +76,10 @@ class RpPricePublication(models.Model):
         help='VD: Luật XD 135/2025, NĐ 206/2026. Lưu ý nhiều bảng còn dẫn '
              'căn cứ ĐÃ HẾT HIỆU LỰC (TP.HCM 8/7 vẫn dẫn NĐ 10/2021 đã bị '
              'NĐ 206 thay từ 1/7).')
+    # copy=True: người ta nhân bản công bố giá chính là để lấy lại dòng
+    # giá cho kỳ sau. One2many mặc định không chép — bản sao ra rỗng.
     line_ids = fields.One2many(
-        'rp.price.line', 'publication_id', string='Dòng giá')
+        'rp.price.line', 'publication_id', string='Dòng giá', copy=True)
     line_count = fields.Integer(compute='_compute_line_count')
     note = fields.Text(string='Ghi chú')
     active = fields.Boolean(default=True)
@@ -85,6 +87,20 @@ class RpPricePublication(models.Model):
     _uniq_doc = models.Constraint(
         'unique(doc_no, doc_date)',
         'Công bố giá này đã có (trùng số + ngày).')
+
+    def copy_data(self, default=None):
+        """Bản sao mang số văn bản "… (bản sao)".
+
+        Chép y số + ngày thì đụng ràng buộc (doc_no, doc_date) ngay khi
+        bấm nhân bản. Không xoá trống số văn bản vì ô này bắt buộc — đặt
+        hậu tố để người dùng sửa thành số của văn bản mới.
+        """
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'doc_no' not in default:
+            for rec, vals in zip(self, vals_list):
+                vals['doc_no'] = _('%s (bản sao)', rec.doc_no)
+        return vals_list
 
     @api.depends('doc_no', 'doc_date')
     def _compute_name(self):

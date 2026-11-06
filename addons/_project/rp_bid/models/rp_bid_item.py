@@ -77,50 +77,67 @@ class RpBidItem(models.Model):
         'rp.bid.structure', 'item_id', string='Hạng mục cuộn vào dòng này')
     structure_count = fields.Integer(compute='_compute_amounts', store=True)
 
+    # Tooltip: CÔNG THỨC trước, lý do sau (việc 1097).
     cost_direct = fields.Monetary(
         string='Chi phí trực tiếp', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Chi phí của các hạng mục gắn thẳng vào dòng này.')
+        help='= Σ chi phí trực tiếp của các hạng mục gắn vào dòng này (tab '
+             'Hạng mục cuộn vào).')
     cost_spread = fields.Monetary(
         string='Chi phí rải vào', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Phần chia về từ các hạng mục chọn "Rải đều" — thí nghiệm, '
+        help='= Chi phí rải đều của hồ sơ × Chi phí trực tiếp của dòng này '
+             '÷ Σ chi phí trực tiếp của mọi dòng chào.\n'
+             'Là phần chia về từ các hạng mục chọn "Rải đều" — thí nghiệm, '
              'vận chuyển, huy động… những thứ không thuộc riêng dòng nào.')
     cost_total = fields.Monetary(
         string='Chi phí gánh', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Chi phí trực tiếp + Chi phí rải vào.')
     cost_share = fields.Float(
         string='Tỷ trọng %', digits=(5, 2),
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Chi phí gánh ÷ (Chi phí trực tiếp T của hồ sơ − Chi phí '
+             'ngoài giá chào) × 100.\n'
+             'Mẫu số giữ cả chi phí chưa gắn dòng chào nào, nên khi còn chi '
+             'phí treo thì tổng tỷ trọng các dòng nhỏ hơn 100%.')
     amount_offer = fields.Monetary(
         string='Thành tiền chào (gồm VAT)', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Giá dự thầu của hồ sơ phân bổ về dòng này theo tỷ trọng chi '
-             'phí trực tiếp. Đã gồm VAT và dự phòng.')
+        help='= Tổng phải chào (gồm VAT) của hồ sơ × Tỷ trọng %.\n'
+             'Chi phí chung, nhà tạm, TNCTT, VAT, dự phòng tính ở cấp hồ sơ '
+             'nên rót về từng dòng theo tỷ trọng chi phí.')
     amount_offer_ex_vat = fields.Monetary(
         string='Thành tiền chào (chưa VAT)', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Thành tiền chào (gồm VAT) ÷ (1 + Thuế GTGT %).')
     unit_price_ex_vat = fields.Monetary(
         string='Đơn giá chưa VAT', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Thành tiền chào (chưa VAT) ÷ KL mời thầu.')
     unit_price_inc_vat = fields.Monetary(
         string='Đơn giá gồm VAT', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Thành tiền chào (gồm VAT) ÷ KL mời thầu.')
     unit_price_offer = fields.Monetary(
         string='ĐƠN GIÁ CHÀO', currency_field='currency_id',
         compute='_compute_amounts', store=True,
-        help='Ô phải điền vào file gửi lại khách: đơn giá chưa VAT hoặc đã '
-             'gồm VAT, theo "Gốc VAT của biểu giá" khai ở hồ sơ. Chưa khai '
-             'gốc thì để 0 — không đoán.')
+        help='= Đơn giá chưa VAT hoặc Đơn giá gồm VAT, theo "Gốc VAT của '
+             'biểu giá" khai ở hồ sơ.\n'
+             'Là ô điền vào file gửi lại khách. Chưa khai gốc thì để 0 — '
+             'không đoán.')
     client_supplied_cost = fields.Monetary(
         string='Vật tư bên mời cấp', currency_field='currency_id',
-        compute='_compute_amounts', store=True)
+        compute='_compute_amounts', store=True,
+        help='= Σ vật tư bên mời thầu cấp của các hạng mục gắn vào dòng '
+             'này. Không tính vào giá chào.')
 
     takeoff_quantity = fields.Float(
         string='KL ta bóc được', digits=(16, 5),
         compute='_compute_amounts', store=True,
-        help='Tổng khối lượng của các hạng mục cuộn vào dòng này, chỉ tính '
-             'các dòng BoQ CÙNG đơn vị với đơn vị mời thầu.')
+        help='= Σ khối lượng các dòng BoQ của hạng mục cuộn vào dòng này, '
+             'chỉ cộng dòng có ĐVT trùng ĐVT mời thầu.\n'
+             'Để so với KL mời thầu — lệch nhiều thì hỏi lại bên mời thầu.')
 
     note = fields.Text(string='Ghi chú')
 

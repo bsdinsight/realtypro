@@ -11,7 +11,9 @@
                   decoration-success="variance_pct &lt; -10">
                 <field name="bid_id" optional="hide"/>
                 <field name="package_id" optional="hide"/>
-                <field name="resource_id"/>
+                <field name="other_resource_ids" column_invisible="1"/>
+                <field name="resource_id"
+                       domain="[('id', 'not in', other_resource_ids)]"/>
                 <field name="resource_type"/>
                 <field name="categ_id" optional="show"/>
                 <field name="uom_id"/>

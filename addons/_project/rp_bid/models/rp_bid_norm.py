@@ -129,8 +129,9 @@ class RpBidNormSource(models.Model):
         lines = self.line_ids.filtered('norm_id')
         if not lines:
             raise UserError(_(
-                'Chưa dòng BoQ nào chọn định mức. Mở một dòng BoQ (mũi tên '
-                'cuối dòng), chọn ô "Định mức", rồi quay lại bấm nút này.'))
+                'Chưa dòng BoQ nào chọn định mức. Chọn ô "Định mức" của dòng '
+                'BoQ (ngay trong danh sách, hoặc bấm Xem ở đầu dòng), rồi '
+                'quay lại bấm nút này.'))
         return lines.action_pull_norm()
 
 

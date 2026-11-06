@@ -212,9 +212,15 @@
                             <field name="structure_ids" nolabel="1"
                                    context="{'default_bid_id': id}">
                                 <list editable="bottom"
-                                      open_form_view="True"
                                       decoration-warning="not item_id">
-                                                                        <field name="code"/>
+                                    <!-- Nút Xem ở ĐẦU dòng thay cho
+                                         `open_form_view` (luôn ở cuối, khuất
+                                         sau thanh cuộn ngang) — việc 1101. -->
+                                    <button name="action_open_form"
+                                            type="object" string="Xem"
+                                            class="btn-link"
+                                            title="Mở hạng mục: BoQ nhà thầu và chi phí"/>
+                                    <field name="code"/>
                                     <field name="name"/>
                                     <field name="item_id"
                                            options="{'no_create': True}"/>
@@ -254,17 +260,21 @@
                             <field name="line_ids" nolabel="1"
                                    context="{'default_bid_id': id}">
                                 <!--
-                                  `open_form_view` la thu mo ra tab Boc tach
-                                  khoi luong va tab Chi phi cua dong BoQ.
-                                  List `editable` an han form di: bam vao
-                                  dong la sua tai cho, khong co duong nao mo
-                                  form ra ca. Doi lai la mot mui ten o cuoi
-                                  moi dong.
+                                  Nút Xem ở đầu dòng là thứ mở ra tab Bóc tách
+                                  khối lượng và tab Chi phí của dòng BoQ.
+                                  List `editable` ẩn hẳn form đi: bấm vào
+                                  dòng là sửa tại chỗ, không có đường nào mở
+                                  form ra cả. Trước dùng `open_form_view`,
+                                  nhưng nút đó luôn nằm CUỐI dòng và khuất
+                                  sau thanh cuộn ngang (việc 1101).
                                 -->
                                 <list editable="bottom"
-                                      open_form_view="True"
                                       decoration-warning="not quantity_matches"
                                       decoration-info="supplied_by == 'client'">
+                                    <button name="action_open_form"
+                                            type="object" string="Xem"
+                                            class="btn-link"
+                                            title="Mở dòng BoQ: bóc tách khối lượng và chi phí"/>
                                     <!-- Lọc theo ĐÚNG hồ sơ đang mở. Không có
                                          domain này thì ô chọn đổ ra hạng mục
                                          của mọi hồ sơ, rất dễ gắn nhầm dòng
@@ -297,7 +307,7 @@
                                 </list>
                             </field>
                             <div class="alert alert-info small" role="alert">
-                                Bấm <b>mũi tên ở cuối dòng</b> để mở dòng BoQ
+                                Bấm <b>Xem</b> ở đầu dòng để mở dòng BoQ
                                 ra — trong đó có tab <b>Bóc tách khối lượng</b>
                                 (số bộ phận × dài × rộng × cao × hệ số, dòng trừ
                                 nhập số bộ phận âm, cột <b>Cấu kiện</b> chỉ ra
@@ -318,22 +328,29 @@
                         <page string="Bảng giá gói thầu" name="prices">
                             <div class="btn-group mb-2" role="group"
                                  invisible="state not in ('draft', 'pricing')">
+                                <!-- help = tooltip của nút (việc 1397). -->
                                 <button name="action_build_price_list"
                                         type="object" class="btn btn-primary"
                                         icon="fa-magic"
-                                        string="Dựng bảng giá từ chi phí"/>
+                                        string="Dựng bảng giá từ chi phí"
+                                        help="Tạo bảng giá của gói từ chính các đơn giá đang nằm trong chi phí: mỗi item một dòng, item đã có trong bảng thì bỏ qua. Dùng khi hồ sơ nhập từ file dự toán đã có sẵn giá — dựng xong thì sửa giá ở một chỗ này, rồi bấm Áp giá xuống chi phí. Item đang để nhiều mức giá khác nhau thì lấy mức chiếm nhiều tiền nhất và ghi chú các mức lệch."/>
                                 <button name="action_apply_price_list"
                                         type="object" class="btn btn-secondary"
                                         icon="fa-arrow-down"
                                         string="Áp giá xuống chi phí"
+                                        help="Ghi đè đơn giá của mọi dòng chi phí dùng item có trong bảng giá này, rồi tính lại giá dự thầu."
                                         confirm="Ghi đè đơn giá của mọi dòng chi phí theo bảng giá này. Tiếp tục?"/>
                             </div>
+                            <field name="price_resource_ids" invisible="1"/>
                             <field name="price_ids" nolabel="1"
                                    context="{'default_bid_id': id}">
                                 <list editable="bottom"
                                       decoration-warning="variance_pct &gt; 10"
                                       decoration-success="variance_pct &lt; -10">
-                                    <field name="resource_id"/>
+                                    <!-- Ẩn item đã khai, kể cả dòng vừa
+                                         thêm chưa lưu (việc 1396). -->
+                                    <field name="resource_id"
+                                           domain="[('id', 'not in', parent.price_resource_ids)]"/>
                                     <field name="resource_type"/>
                                     <field name="categ_id" optional="show"/>
                                     <field name="uom_id"/>

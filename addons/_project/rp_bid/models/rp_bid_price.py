@@ -48,6 +48,12 @@ class RpBidPrice(models.Model):
     resource_id = fields.Many2one(
         'rp.resource', string='Item', required=True,
         ondelete='restrict', index=True)
+    # Item các dòng KHÁC của cùng hồ sơ đã khai — để ô chọn ẩn đi khi sửa
+    # ở danh sách Bảng giá đứng riêng (ở trong form hồ sơ thì dùng
+    # `rp.bid.price_resource_ids`, tính được cả dòng chưa lưu).
+    other_resource_ids = fields.Many2many(
+        'rp.resource', string='Item đã có ở dòng khác',
+        compute='_compute_other_resource_ids')
     resource_type = fields.Selection(
         related='resource_id.resource_type', string='Loại',
         store=True, index=True)
@@ -118,6 +124,12 @@ class RpBidPrice(models.Model):
         'Item này đã có giá trong hồ sơ dự thầu.')
 
     # ==================================================================
+    @api.depends('bid_id', 'resource_id')
+    def _compute_other_resource_ids(self):
+        for rec in self:
+            rec.other_resource_ids = (
+                rec.bid_id.price_ids.resource_id - rec.resource_id)
+
     @api.depends('resource_id', 'price')
     def _compute_library(self):
         Price = self.env['rp.price.line']
@@ -190,11 +202,24 @@ class RpBidPriceOnBid(models.Model):
     price_ids = fields.One2many(
         'rp.bid.price', 'bid_id', string='Bảng giá hồ sơ')
     price_count = fields.Integer(compute='_compute_price_count')
+    # Cho ô chọn Item ở tab Bảng giá gói thầu ẩn item đã khai (việc 1396).
+    # Ràng buộc `_uniq_res` vẫn là chốt chặn cuối; thiếu cái này thì ô
+    # chọn vẫn đổ ra item đã có và người dùng chỉ biết trùng lúc bấm lưu.
+    # Không store: tính lại trong onchange nên tính cả dòng vừa thêm mà
+    # chưa lưu.
+    price_resource_ids = fields.Many2many(
+        'rp.resource', string='Item đã có giá',
+        compute='_compute_price_resource_ids')
 
     @api.depends('price_ids')
     def _compute_price_count(self):
         for bid in self:
             bid.price_count = len(bid.price_ids)
+
+    @api.depends('price_ids.resource_id')
+    def _compute_price_resource_ids(self):
+        for bid in self:
+            bid.price_resource_ids = bid.price_ids.resource_id
 
     def action_build_price_list(self):
         """Dựng bảng giá từ các item đang dùng trong chi phí.

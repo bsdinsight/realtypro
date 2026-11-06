@@ -173,3 +173,22 @@ class RpBidBoqLine(models.Model):
             if rec.takeoff_ids:
                 rec.quantity = rec.takeoff_quantity
         return True
+
+    def action_open_form(self):
+        """Nút "Xem" ở ĐẦU dòng của danh sách BoQ (việc 1101).
+
+        Thay cho `open_form_view` của Odoo: nút đó luôn nằm ở CUỐI dòng,
+        mà danh sách BoQ rộng hơn màn hình nên nó khuất sau thanh cuộn
+        ngang. Mở toàn trang như nút cũ — tab Bóc tách và tab Chi phí cần
+        chỗ, nhét vào hộp thoại thì chật.
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.display_name,
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'current',
+        }

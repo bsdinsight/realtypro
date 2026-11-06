@@ -106,3 +106,17 @@ class RpBidStructure(models.Model):
         for rec in self:
             rec.display_name = ('[%s] %s' % (rec.code, rec.name)
                                 if rec.code else rec.name)
+
+    def action_open_form(self):
+        """Nút "Xem" ở đầu dòng danh sách hạng mục — xem
+        `rp.bid.boq.line.action_open_form`."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.display_name,
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'target': 'current',
+        }

@@ -31,10 +31,14 @@
                     <notebook>
                         <page string="BoQ nhà thầu" name="boq">
                             <field name="line_ids" nolabel="1">
-                                <!-- Mui ten cuoi dong mo tab Boc tach khoi
-                                     luong / Chi phi — xem chu thich cung
-                                     kieu o `rp_bid_views.xml`. -->
-                                <list editable="bottom" open_form_view="True">
+                                <!-- Nút Xem ở đầu dòng mở tab Bóc tách khối
+                                     lượng / Chi phí — xem chú thích cùng
+                                     kiểu ở `rp_bid_views.xml` (việc 1101). -->
+                                <list editable="bottom">
+                                    <button name="action_open_form"
+                                            type="object" string="Xem"
+                                            class="btn-link"
+                                            title="Mở dòng BoQ: bóc tách khối lượng và chi phí"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="norm_set_id" column_invisible="1"/>
                                     <field name="norm_id" optional="show"

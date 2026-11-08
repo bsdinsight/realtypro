@@ -71,7 +71,8 @@ trong ba ngày.
     'license': 'LGPL-3',
     'depends': ['eam_core', 'eam_chain', 'eam_solar', 'eam_downtime',
                 'eam_availability', 'eam_historian', 'eam_work_order',
-                'eam_unit_day', 'eam_target'],
+                'eam_unit_day', 'eam_target',
+                're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_daily_profile_pv.xml',

@@ -106,7 +106,7 @@ Giới hạn nói thẳng
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_historian', 'eam_solar', 'eam_chain'],
+    'depends': ['eam_core', 'eam_historian', 'eam_solar', 'eam_chain', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'views/eam_import_views.xml',

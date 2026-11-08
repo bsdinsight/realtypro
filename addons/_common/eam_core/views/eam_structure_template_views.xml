@@ -82,8 +82,8 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_eam_structure_template" name="Mẫu cấu trúc cấu phần"
-              parent="menu_eam_config"
-              action="action_eam_structure_template" sequence="12"/>
+    <!-- Menu của màn này khai ở eam_menus.xml, không khai ở đây: tệp này
+         nạp TRƯỚC eam_menus.xml nên menu cha `menu_eam_config` chưa tồn
+         tại — cài mới chết ở đúng dòng này (08/11/2026). -->
 
 </odoo>

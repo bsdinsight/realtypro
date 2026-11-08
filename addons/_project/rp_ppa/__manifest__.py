@@ -46,6 +46,7 @@ làm thành trường riêng chứ không gộp:
     "depends": [
         "rp_energy",
         "account",
+                "rp_evm"
     ],
     "data": [
         "security/ir.model.access.csv",

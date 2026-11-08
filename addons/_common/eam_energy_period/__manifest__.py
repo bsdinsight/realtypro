@@ -51,7 +51,7 @@ bàn họp.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_unit_day', 'eam_target'],
+    'depends': ['eam_core', 'eam_unit_day', 'eam_target', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_energy_period_cron.xml',

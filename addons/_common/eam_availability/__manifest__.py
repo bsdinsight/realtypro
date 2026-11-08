@@ -72,7 +72,8 @@ chạy nguyên vẹn cho cơ sở mới mà không sửa một dòng nào bên �
     # eam.historian.tom_tat_ngay. Dựa vào phụ thuộc bắc cầu là
     # để thứ tự cài đặt quyết định mã có chạy hay không.
     'depends': ['eam_downtime', 'eam_om_contract', 'eam_chain',
-                'eam_historian'],
+                'eam_historian',
+                're_base'],
     'data': [
         'security/ir.model.access.csv',
         'views/eam_availability_views.xml',

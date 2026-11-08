@@ -75,7 +75,8 @@ thì luỹ kế nhỏ hơn thật, và đó là thứ người đọc phải th�
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
     'depends': ['eam_core', 'eam_historian', 'eam_downtime',
-                'eam_availability'],
+                'eam_availability',
+                're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_unit_day_cron.xml',

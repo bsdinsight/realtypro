@@ -56,7 +56,7 @@ cho cùng một tháng**, và tới lúc lệch thì không ai biết bên nào 
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core'],
+    'depends': ['eam_core', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'views/eam_energy_target_views.xml',

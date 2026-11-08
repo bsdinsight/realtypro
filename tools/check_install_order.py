@@ -41,8 +41,29 @@ PRIORITY_MAC_DINH = 16
 
 # Phần tử mang name= mà xpath hay trỏ tới.
 RX_XPATH_NAME = re.compile(r"""@name\s*=\s*['"]([^'"]+)['"]""")
-RX_REF = re.compile(r"""\bref=["']([\w.]+)["']""")
-RX_REC_ID = re.compile(r'<(?:record|template)\b[^>]*\bid="([\w.]+)"')
+# Mọi chỗ một tệp XML trỏ tới xmlid khác. Bản đầu chỉ dò `ref="…"` nên
+# bỏ lọt `<menuitem parent="…" action="…">`, `eval="ref('…')"` và
+# `name="%(…)d"` trên nút — và lọt đúng lỗi cài mới của eam_core
+# (menu con trỏ tới menu cha khai ở tệp nạp sau), 08/11/2026.
+RX_REF = re.compile(
+    r"""\b(?:ref|parent|action)=["']([\w.]+)["']"""
+    r"""|\bref\(\s*["']([\w.]+)["']\s*\)"""
+    r"""|%\(([\w.]+)\)d""")
+# `<menuitem id=…>` cũng là nơi KHAI xmlid. Thiếu nó thì menu cha khai
+# bằng menuitem không bao giờ được ghi nhận, nên không so được thứ tự.
+RX_REC_ID = re.compile(
+    r'<(?:record|template|menuitem)\b[^>]*\bid="([\w.]+)"')
+RX_COMMENT = re.compile(r'<!--.*?-->', re.S)
+
+
+def doc_xml(path):
+    """Nội dung tệp XML đã BỎ chú thích.
+
+    Tham chiếu nằm trong chú thích không được nạp, nên không được tính —
+    re_core có ba menu trỏ sang re_document/re_vendor đã comment lại, và
+    bản quét không bỏ chú thích báo nhầm thành thiếu phụ thuộc.
+    """
+    return RX_COMMENT.sub('', io.open(path, encoding='utf-8').read())
 
 
 def doc_data(mod_dir):
@@ -66,15 +87,16 @@ def kiem_thu_tu_tep(goc, mod, data):
     for vt, rel in enumerate(data):
         p = os.path.join(goc, mod, rel)
         if rel.endswith('.xml') and os.path.exists(p):
-            s = io.open(p, encoding='utf-8').read()
+            s = doc_xml(p)
             for rid in RX_REC_ID.findall(s):
                 khai.setdefault(rid, vt)
     for vt, rel in enumerate(data):
         p = os.path.join(goc, mod, rel)
         if not (rel.endswith('.xml') and os.path.exists(p)):
             continue
-        s = io.open(p, encoding='utf-8').read()
-        for r in set(RX_REF.findall(s)):
+        s = doc_xml(p)
+        refs = {next(g for g in m if g) for m in RX_REF.findall(s)}
+        for r in refs:
             ngan = r.split('.', 1)[1] if r.startswith(mod + '.') else r
             if '.' in ngan:
                 continue                      # xmlid của module khác
@@ -168,20 +190,119 @@ def kiem_thu_tu_ghep_view(views):
     return van_de
 
 
+# ----------------------------------------------------------------------
+# Lỗi 3: trỏ tới xmlid của module KHÔNG nằm trong chuỗi phụ thuộc
+# ----------------------------------------------------------------------
+# Gặp 08/11/2026 khi cài mới bản demo EPCOne: eam_om_contract chỉ khai
+# depends eam_core, nhưng bảng phân quyền dùng re_base.group_re_user.
+# Trên DB đang chạy thì re_base tình cờ đã cài trước nên không ai thấy;
+# cài mới thì Odoo nạp eam_om_contract trước re_base và chết:
+#
+#     No matching record found for external id 're_base.group_re_user'
+#
+# Chỉ xét module CỦA MÌNH (có trong thư mục quét). Thế là đủ chính xác:
+# module lõi Odoo không bao giờ phụ thuộc ngược về module của mình, nên
+# chuỗi phụ thuộc đi qua module lõi không thể dẫn tới một module BSD.
+RX_GROUPS = re.compile(r"""\bgroups=["']([^"']+)["']""")
+
+
+def doc_manifest(mod_dir):
+    p = os.path.join(mod_dir, '__manifest__.py')
+    if not os.path.exists(p):
+        return None
+    try:
+        return ast.literal_eval(io.open(p, encoding='utf-8').read())
+    except (ValueError, SyntaxError):
+        return None
+
+
+def tham_chieu_trong_tep(path):
+    """Mọi xmlid một tệp dữ liệu (XML hoặc CSV) trỏ tới."""
+    if path.endswith('.csv'):
+        s = io.open(path, encoding='utf-8').read()
+        dong = s.splitlines()
+        if not dong:
+            return set()
+        cot = [i for i, c in enumerate(dong[0].split(','))
+               if c.strip().endswith(':id')]
+        out = set()
+        for d in dong[1:]:
+            o = d.split(',')
+            out |= {o[i].strip() for i in cot if i < len(o) and o[i].strip()}
+        return out
+    s = doc_xml(path)
+    out = {next(g for g in m if g) for m in RX_REF.findall(s)}
+    for g in RX_GROUPS.findall(s):
+        out |= {x.strip().lstrip('!') for x in g.split(',') if x.strip()}
+    return out
+
+
+def kiem_phu_thuoc(manifests):
+    """manifests = {module: (thư mục, manifest)}."""
+    cache = {}
+
+    def chuoi(mod):
+        if mod in cache:
+            return cache[mod]
+        cache[mod] = set()                     # chặn vòng lặp
+        kq = set()
+        for d in manifests[mod][1].get('depends', []):
+            kq.add(d)
+            if d in manifests:
+                kq |= chuoi(d)
+        cache[mod] = kq
+        return kq
+
+    van_de = []
+    for mod, (thu_muc, man) in sorted(manifests.items()):
+        if not man.get('installable', True):
+            continue
+        thieu = {}
+        for rel in man.get('data', []):
+            p = os.path.join(thu_muc, rel)
+            if not (rel.endswith(('.xml', '.csv')) and os.path.exists(p)):
+                continue
+            for ref in tham_chieu_trong_tep(p):
+                if '.' not in ref:
+                    continue
+                m = ref.split('.', 1)[0]
+                if m == mod or m not in manifests or m in chuoi(mod):
+                    continue
+                thieu.setdefault(m, set()).add('%s (%s)' % (ref, rel))
+        for m, chung in sorted(thieu.items()):
+            vi_du = sorted(chung)
+            van_de.append(
+                '%s: dùng %s nhưng KHÔNG khai %s trong depends (kể cả bắc '
+                'cầu) — cài mới sẽ chết nếu %s chưa có. Ví dụ: %s%s'
+                % (mod, m, m, m, vi_du[0],
+                   ' và %d chỗ khác' % (len(vi_du) - 1)
+                   if len(vi_du) > 1 else ''))
+    return van_de
+
+
 def main():
-    goc_addons = sys.argv[1] if len(sys.argv) > 1 else 'addons'
-    thu_muc = [os.path.join(goc_addons, d)
-               for d in sorted(os.listdir(goc_addons))
-               if os.path.isdir(os.path.join(goc_addons, d))]
+    # Nhận NHIỀU thư mục addons: một DB thật nạp mã từ nhiều repo (bản
+    # tenants nạp cả realtypro-cnbuild lẫn realtypro-enterprise), và
+    # phụ thuộc chéo giữa hai repo chỉ thấy được khi quét chung.
+    goc_list = sys.argv[1:] or ['addons']
+    thu_muc = [os.path.join(g, d) for g in goc_list
+               for d in sorted(os.listdir(g))
+               if os.path.isdir(os.path.join(g, d))]
     van_de = []
     views = {}
+    manifests = {}
     for goc in thu_muc:
         for mod in sorted(os.listdir(goc)):
-            data = doc_data(os.path.join(goc, mod))
+            man = doc_manifest(os.path.join(goc, mod))
+            if man is None:
+                continue
+            manifests.setdefault(mod, (os.path.join(goc, mod), man))
+            data = man.get('data', [])
             if data:
                 van_de += kiem_thu_tu_tep(goc, mod, data)
         views.update(doc_views(goc))
     van_de += kiem_thu_tu_ghep_view(views)
+    van_de += kiem_phu_thuoc(manifests)
 
     if van_de:
         print('Thứ tự nạp/ghép có vấn đề — cài MỚI sẽ chết (%d):'

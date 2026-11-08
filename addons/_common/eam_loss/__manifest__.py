@@ -42,7 +42,8 @@ Gộp hai mốc làm một là đổ cho vận hành phần trời không cho.
     'category': 'Industries/Energy',
     'depends': ['eam_core', 'eam_downtime', 'eam_chain', 'eam_unit_day',
                 'eam_target', 'eam_historian', 'eam_availability',
-                'eam_solar'],
+                'eam_solar',
+                're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_loss_type_data.xml',

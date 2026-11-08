@@ -52,7 +52,7 @@ tháng trước.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_historian', 'eam_attr'],
+    'depends': ['eam_core', 'eam_historian', 'eam_attr', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_solar_category_data.xml',

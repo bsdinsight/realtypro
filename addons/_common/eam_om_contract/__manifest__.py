@@ -73,7 +73,7 @@ Realty CRM.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core'],
+    'depends': ['eam_core', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_om_contract_type_data.xml',

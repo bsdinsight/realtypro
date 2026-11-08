@@ -68,7 +68,7 @@ học đã trả giá ở hai engine EVM.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_historian'],
+    'depends': ['eam_core', 'eam_historian', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'data/eam_time_group_data.xml',

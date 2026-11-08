@@ -53,7 +53,7 @@ chính là sản lượng tại bậc **công-tơ bán điện**, nên có nút 
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_pm', 'eam_historian', 'eam_solar'],
+    'depends': ['eam_core', 'eam_pm', 'eam_historian', 'eam_solar', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'views/eam_chain_views.xml',

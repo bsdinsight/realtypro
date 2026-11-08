@@ -56,7 +56,7 @@ hệ ghi thẳng cảnh báo vào nhật ký của ca thay vì im lặng.
     'author': 'BSD Insight',
     'website': 'https://bsdinsight.com',
     'license': 'LGPL-3',
-    'depends': ['eam_core', 'eam_work_order'],
+    'depends': ['eam_core', 'eam_work_order', 're_base'],
     'data': [
         'security/ir.model.access.csv',
         'views/eam_shift_views.xml',

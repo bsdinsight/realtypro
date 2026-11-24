@@ -60,15 +60,22 @@ dựa trên trí nhớ.
 Với tiền **vào**, hệ thống đọc *mã tham chiếu* và *nội dung chuyển
 khoản*, rồi tìm IPC có số hiệu xuất hiện trong đó.
 
-Điểm đáng nói là cách so: cả hai vế đều được **chuẩn hoá** — bỏ hết ký
-tự không phải chữ và số, viết hoa — rồi mới so chuỗi con. Nhờ vậy khớp
+Điểm đáng nói là cách so: số IPC được tách thành các **cụm chữ và cụm
+số** (IPC/2026/0006 → IPC · 2026 · 0006), giữa các cụm cho phép mọi ký
+tự phân cách hoặc không có gì, không phân biệt hoa thường. Nhờ vậy khớp
 được dù kế toán bên chủ đầu tư gõ nội dung kiểu nào:
 
 ```
-IPC/2026/0006     →  IPC20260006
-IPC_0006          →  IPC0006
-"TT IPC 2026 0006 du an ABC"  →  TTIPC20260006DUANABC   ✔ khớp
+IPC/2026/0006  ✔  "TT IPC 2026 0006 du an ABC"
+IPC/2026/0006  ✔  "ipc20260006"
+IPC_1          ✘  "IPC_12"   — hai đầu không được dính tiếp cụm cùng loại
 ```
+
+Hệ thống chỉ **tự đối soát** khi chắc: nội dung chứa số của **đúng một**
+IPC và số tiền **không vượt phần còn phải thu** của IPC đó. Chứa số của
+nhiều IPC, hoặc số tiền vượt phần còn phải thu, thì giao dịch dừng ở
+**Đã khớp** kèm ghi chú lý do — người đối soát chọn IPC rồi bấm **"Xác
+nhận đối soát IPC"**.
 
 Không phụ thuộc một định dạng mã cố định — đây là điều kiện sống còn,
 vì nội dung chuyển khoản là thứ mình **không** kiểm soát được.

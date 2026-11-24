@@ -53,10 +53,10 @@ HĐTD có **5 trạng thái**:
 | Trạng thái | Ý nghĩa | Hành động chuyển tiếp |
 |---|---|---|
 | **Nháp** | KTT vừa tạo, đang điền | Click "Kích hoạt" → Hiệu lực |
-| **Hiệu lực** | Có thể tạo hạn mức + KW dưới HĐTD này | Tới `date_end` → tự "Hết hạn"; hoặc thủ công "Tất toán" |
-| **Hết hạn** | Qua `date_end` nhưng còn KW dư nợ | Trả nợ hết → "Tất toán" |
+| **Hiệu lực** | Có thể tạo hạn mức + KW dưới HĐTD này | Bấm **"Đánh dấu Hết hạn"** (không tự chuyển khi tới ngày hết hạn); hoặc **"Tất toán"** |
+| **Hết hạn** | Đã qua ngày hết hạn, còn theo dõi các KW dư nợ | Bấm **"Tất toán"** khi đã trả hết |
 | **Đã tất toán** | Đã tất toán hết KW, đóng HĐTD | (kết thúc) |
-| **Đã huỷ** | Huỷ trước khi kích hoạt | Có thể "Reset Nháp" |
+| **Đã huỷ** | Bấm **"Huỷ"** — được ở mọi trạng thái trừ Đã tất toán | **"Về Nháp"** để mở lại |
 
 > 🔒 **HĐTD trạng thái Nháp/Huỷ KHÔNG cho phép tạo KW dưới hạn mức của
 > nó** — phải kích hoạt HĐTD trước.
@@ -314,12 +314,17 @@ Khi tick **"Liên thông"** trên 1 facility → các facility cùng tick
 ⚠ Liên thông KHÔNG bypass total HĐTD. Σ (used của mọi facility) phải ≤
 Total HĐTD. Chi tiết logic ở §8.5.
 
-### Cảnh báo sắp hết hạn
+### Ngày hết hạn HĐTD
 
-Cron tự gửi activity nhắc KTT trước `date_end`:
-- 90 ngày trước: nhắc xin gia hạn / chuẩn bị HĐTD mới
-- 30 ngày trước: nhắc khẩn — nếu chưa có HĐTD mới sẽ block tạo KW mới
-- Quá hạn (`date_end < today` mà còn KW dư nợ): cảnh báo ĐỎ
+- Trạng thái HĐTD **không tự đổi** khi tới ngày hết hạn — bấm "Đánh dấu
+  Hết hạn" khi cần. Hệ thống chưa có nhắc trước ngày hết hạn.
+- Dù trạng thái còn Hiệu lực, KW mới vẫn bị chặn theo ngày:
+  - ngày đáo hạn KW không được sau ngày hết hạn HĐTD — gia hạn HĐTD
+    trước, hoặc rút ngắn kỳ hạn KW;
+  - HĐTD đã qua ngày hết hạn thì không nhận nợ mới (KW cũ có ngày nhận
+    nợ nằm trong kỳ hạn vẫn nhập bù được), và hạn mức của nó không còn
+    hiện ở ô Hạn mức khi lập KW.
+- Nút **Tất toán** không kiểm còn KW dư nợ — kiểm trước khi bấm.
 
 ### Không xoá được HĐTD có facility
 
